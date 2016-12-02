@@ -8,5 +8,6 @@ namespace DDI.Data
 {
     public class Class1
     {
+        // Empty
     }
 }
