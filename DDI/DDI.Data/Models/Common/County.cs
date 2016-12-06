@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class County
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         public string Description { get; set; }
@@ -36,7 +37,7 @@ namespace DDI.Data.Models.Common
         
         public virtual State State { get; set; }
 
-        public ICollection<City> Cities { get; set; }
+        public virtual ICollection<City> Cities { get; set; }
 
     }
 }

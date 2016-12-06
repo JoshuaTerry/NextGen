@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class Zip
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [MaxLength(5)]
@@ -29,8 +30,8 @@ namespace DDI.Data.Models.Common
 
         public virtual City City { get; set; }
 
-        public ICollection<ZipBranch> ZipBranches { get; set; }
+        public virtual ICollection<ZipBranch> ZipBranches { get; set; }
 
-        public ICollection<ZipStreet> ZipStreets { get; set; }
+        public virtual ICollection<ZipStreet> ZipStreets { get; set; }
     }
 }

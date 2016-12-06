@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class State
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [MaxLength(4)]
@@ -28,8 +29,8 @@ namespace DDI.Data.Models.Common
         
         public virtual Country Country { get; set; }
 
-        public ICollection<County> Counties { get; set; }
+        public virtual ICollection<County> Counties { get; set; }
 
-        public ICollection<City> Cities { get; set; }
+        public virtual ICollection<City> Cities { get; set; }
     }
 }

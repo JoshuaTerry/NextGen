@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class City
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [MaxLength(8)]
@@ -39,9 +40,9 @@ namespace DDI.Data.Models.Common
 
         public virtual County County { get; set; }
 
-        public ICollection<CityName> CityNames { get; set; }
+        public virtual ICollection<CityName> CityNames { get; set; }
 
-        public ICollection<Zip> Zips { get; set; }
+        public virtual ICollection<Zip> Zips { get; set; }
 
     }
 }

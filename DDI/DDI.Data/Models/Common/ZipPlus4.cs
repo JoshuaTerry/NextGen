@@ -14,6 +14,7 @@ namespace DDI.Data.Models.Common
     public class ZipPlus4
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [MaxLength(16)]

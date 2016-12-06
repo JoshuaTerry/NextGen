@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class CityName
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         public string Description { get; set; }
@@ -22,7 +23,7 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public City City { get; set; }
+        public virtual City City { get; set; }
 
     }
 }

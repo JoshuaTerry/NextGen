@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class Country
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [MaxLength(4)]

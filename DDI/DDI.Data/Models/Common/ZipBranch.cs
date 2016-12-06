@@ -12,6 +12,7 @@ namespace DDI.Data.Models.Common
     public class ZipBranch
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         public string Description { get; set; }
