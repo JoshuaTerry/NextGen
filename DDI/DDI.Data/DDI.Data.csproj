@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonContext.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
@@ -56,7 +57,26 @@
     <Compile Include="Migrations\201612052134024_InitialMigration.Designer.cs">
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612060132295_InitialCreate.cs" />
+    <Compile Include="Migrations\201612060132295_InitialCreate.Designer.cs">
+      <DependentUpon>201612060132295_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612060215518_ZipPlus4IsRange.cs" />
+    <Compile Include="Migrations\201612060215518_ZipPlus4IsRange.Designer.cs">
+      <DependentUpon>201612060215518_ZipPlus4IsRange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Common\Abbrev.cs" />
+    <Compile Include="Models\Common\City.cs" />
+    <Compile Include="Models\Common\CityName.cs" />
+    <Compile Include="Models\Common\Country.cs" />
+    <Compile Include="Models\Common\County.cs" />
+    <Compile Include="Models\Common\State.cs" />
+    <Compile Include="Models\Common\Thesaurus.cs" />
+    <Compile Include="Models\Common\Zip.cs" />
+    <Compile Include="Models\Common\ZipBranch.cs" />
+    <Compile Include="Models\Common\ZipPlus4.cs" />
+    <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
@@ -68,6 +88,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612052134024_InitialMigration.resx">
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612060132295_InitialCreate.resx">
+      <DependentUpon>201612060132295_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612060215518_ZipPlus4IsRange.resx">
+      <DependentUpon>201612060215518_ZipPlus4IsRange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
