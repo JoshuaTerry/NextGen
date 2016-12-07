@@ -9,6 +9,7 @@ namespace DDI.Shared.Test
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }
