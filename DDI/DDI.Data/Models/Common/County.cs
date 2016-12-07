@@ -28,10 +28,10 @@ namespace DDI.Data.Models.Common
         public int Population { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal PopPerSqMile { get; set; }
+        public decimal PopulationPerSqaureMile { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal PopPctChange { get; set; }
+        public decimal PopulationPercentageChange { get; set; }
 
         // Navigation Properties
         

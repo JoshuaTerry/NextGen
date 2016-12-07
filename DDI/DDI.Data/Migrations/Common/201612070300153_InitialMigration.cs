@@ -1,19 +1,19 @@
-namespace EFTest1.Migrations
+namespace DDI.Data.Migrations.Common
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class InitialMigration : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.Abbrev",
+                "dbo.Abbreviation",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         Word = c.String(maxLength: 32),
-                        USPSAbbrev = c.String(maxLength: 32),
+                        USPSAbbreviation = c.String(maxLength: 32),
                         AddressWord = c.String(maxLength: 32),
                         NameWord = c.String(maxLength: 32),
                         IsSuffix = c.Boolean(nullable: false),
@@ -27,15 +27,14 @@ namespace EFTest1.Migrations
                 "dbo.City",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         PlaceCode = c.String(maxLength: 8),
                         StateId = c.Guid(),
                         CountyId = c.Guid(),
                         Population = c.Int(nullable: false),
-                        PopPctChange = c.Decimal(nullable: false, storeType: "money"),
-                        CoordNS = c.Decimal(nullable: false, storeType: "money"),
-                        CoordEW = c.Decimal(nullable: false, storeType: "money"),
-                        OEOid = c.Int(nullable: false),
+                        PopulationPercentageChange = c.Decimal(nullable: false, storeType: "money"),
+                        CoordinateNS = c.Decimal(nullable: false, storeType: "money"),
+                        CoordinateEW = c.Decimal(nullable: false, storeType: "money"),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.County", t => t.CountyId)
@@ -47,7 +46,7 @@ namespace EFTest1.Migrations
                 "dbo.CityName",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         Description = c.String(),
                         IsPreferred = c.Boolean(nullable: false),
                         CityId = c.Guid(),
@@ -60,14 +59,14 @@ namespace EFTest1.Migrations
                 "dbo.County",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         Description = c.String(),
                         FipsCode = c.String(maxLength: 5),
                         LegacyCode = c.String(maxLength: 4),
                         StateId = c.Guid(),
                         Population = c.Int(nullable: false),
-                        PopPerSqMile = c.Decimal(nullable: false, storeType: "money"),
-                        PopPctChange = c.Decimal(nullable: false, storeType: "money"),
+                        PopulationPerSqaureMile = c.Decimal(nullable: false, storeType: "money"),
+                        PopulationPercentageChange = c.Decimal(nullable: false, storeType: "money"),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.State", t => t.StateId)
@@ -77,7 +76,7 @@ namespace EFTest1.Migrations
                 "dbo.State",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         StateCode = c.String(maxLength: 4),
                         Description = c.String(),
                         FipsCode = c.String(maxLength: 2),
@@ -91,17 +90,17 @@ namespace EFTest1.Migrations
                 "dbo.Country",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         CountryCode = c.String(maxLength: 4),
                         Description = c.String(),
                         ISOCode = c.String(maxLength: 2),
                         LegacyCode = c.String(maxLength: 4),
                         StateName = c.String(),
-                        StateAbbr = c.String(maxLength: 4),
+                        StateAbbreviation = c.String(maxLength: 4),
                         PostalCodeFormat = c.String(),
                         AddressFormat = c.String(),
                         CallingCode = c.String(maxLength: 4),
-                        IntlPrefix = c.String(maxLength: 4),
+                        InternationalPrefix = c.String(maxLength: 4),
                         TrunkPrefix = c.String(maxLength: 4),
                         PhoneFormat = c.String(),
                     })
@@ -111,10 +110,10 @@ namespace EFTest1.Migrations
                 "dbo.Zip",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         ZipCode = c.String(maxLength: 5),
-                        CoordNS = c.Decimal(nullable: false, storeType: "money"),
-                        CoordEW = c.Decimal(nullable: false, storeType: "money"),
+                        CoordinateNS = c.Decimal(nullable: false, storeType: "money"),
+                        CoordinateEW = c.Decimal(nullable: false, storeType: "money"),
                         CityId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -125,7 +124,7 @@ namespace EFTest1.Migrations
                 "dbo.ZipBranch",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         Description = c.String(),
                         USPSKey = c.String(maxLength: 8),
                         FacilityCode = c.String(maxLength: 2),
@@ -140,12 +139,12 @@ namespace EFTest1.Migrations
                 "dbo.ZipStreet",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         Prefix = c.String(maxLength: 8),
                         Street = c.String(),
                         Suffix = c.String(maxLength: 8),
                         Suffix2 = c.String(maxLength: 8),
-                        UrbKey = c.String(maxLength: 8),
+                        UrbanizationKey = c.String(maxLength: 8),
                         CityKey = c.String(maxLength: 8),
                         ZipId = c.Guid(),
                     })
@@ -157,16 +156,17 @@ namespace EFTest1.Migrations
                 "dbo.ZipPlus4",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         UpdateKey = c.String(maxLength: 16),
-                        AddrLow = c.String(maxLength: 16),
-                        AddrHigh = c.String(maxLength: 16),
+                        AddressLow = c.String(maxLength: 16),
+                        AddressHigh = c.String(maxLength: 16),
                         SecondaryAbbrev = c.String(maxLength: 8),
                         SecondaryLow = c.String(maxLength: 16),
                         SecondaryHigh = c.String(maxLength: 16),
                         Plus4 = c.String(maxLength: 4),
-                        AddrType = c.Int(nullable: false),
+                        AddressType = c.Int(nullable: false),
                         SecondaryType = c.Int(nullable: false),
+                        IsRange = c.Boolean(nullable: false),
                         ZipStreetId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -214,7 +214,7 @@ namespace EFTest1.Migrations
             DropTable("dbo.County");
             DropTable("dbo.CityName");
             DropTable("dbo.City");
-            DropTable("dbo.Abbrev");
+            DropTable("dbo.Abbreviation");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace DDI.Data.Models.Common
         public string Suffix2 { get; set; }
 
         [MaxLength(8)]
-        public string UrbKey { get; set; }
+        public string UrbanizationKey { get; set; }
 
         [MaxLength(8)]
         public string CityKey { get; set; }    

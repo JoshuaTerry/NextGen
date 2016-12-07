@@ -24,15 +24,13 @@ namespace DDI.Data.Models.Common
         public int Population { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal PopPctChange { get; set; }
+        public decimal PopulationPercentageChange { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal CoordNS { get; set; }
+        public decimal CoordinateNS { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal CoordEW { get; set; }
-
-        public int OEOid { get; set; }
+        public decimal CoordinateEW { get; set; }        
 
         // Navigation Properties
 

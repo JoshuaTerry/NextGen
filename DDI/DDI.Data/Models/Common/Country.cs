@@ -29,7 +29,7 @@ namespace DDI.Data.Models.Common
         public string StateName { get; set; }
 
         [MaxLength(4)]
-        public string StateAbbr { get; set; }
+        public string StateAbbreviation { get; set; }
 
         public string PostalCodeFormat { get; set; }
 
@@ -39,7 +39,7 @@ namespace DDI.Data.Models.Common
         public string CallingCode { get; set; }
 
         [MaxLength(4)]
-        public string IntlPrefix { get; set; }
+        public string InternationalPrefix { get; set; }
 
         [MaxLength(4)]
         public string TrunkPrefix { get; set; }

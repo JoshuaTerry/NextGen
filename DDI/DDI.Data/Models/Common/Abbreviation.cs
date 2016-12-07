@@ -8,8 +8,8 @@ using System.Text;
 
 namespace DDI.Data.Models.Common
 {
-    [Table("Abbrev")]
-    public class Abbrev
+    [Table("Abbreviation")]
+    public class Abbreviation
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,7 +19,7 @@ namespace DDI.Data.Models.Common
         public string Word { get; set; }
 
         [MaxLength(32)]
-        public string USPSAbbrev { get; set; }
+        public string USPSAbbreviation { get; set; }
 
         [MaxLength(32)]
         public string AddressWord { get; set; }

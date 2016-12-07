@@ -19,10 +19,10 @@ namespace DDI.Data.Models.Common
         public string ZipCode { get; set; }
 
         [Column(TypeName ="money")]
-        public decimal CoordNS { get; set; }
+        public decimal CoordinateNS { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal CoordEW { get; set; }
+        public decimal CoordinateEW { get; set; }
         
         public Guid? CityId { get; set; }
 

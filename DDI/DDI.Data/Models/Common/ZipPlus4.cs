@@ -21,10 +21,10 @@ namespace DDI.Data.Models.Common
         public string UpdateKey { get; set; }
 
         [MaxLength(16)]
-        public string AddrLow { get; set; }
+        public string AddressLow { get; set; }
 
         [MaxLength(16)]
-        public string AddrHigh { get; set; }
+        public string AddressHigh { get; set; }
 
         [MaxLength(8)]
         public string SecondaryAbbrev { get; set; }
@@ -38,7 +38,7 @@ namespace DDI.Data.Models.Common
         [MaxLength(4)]
         public string Plus4 { get; set; }
 
-        public EvenOddType AddrType { get; set; }
+        public EvenOddType AddressType { get; set; }
 
         public EvenOddType SecondaryType { get; set; }
 

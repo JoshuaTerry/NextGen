@@ -13,7 +13,7 @@ namespace DDI.Data
 	{
         #region Public Properties
 
-        public DbSet<Abbrev> AbbrevWords { get; set; }
+        public DbSet<Abbreviation> AbbrevWords { get; set; }
         public DbSet<Thesaurus> ThesaurusWords { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
