@@ -59,8 +59,8 @@ namespace DDI.Business.DataModels
         public Guid? ClergyStatusId { get; set; }
 
         public ClergyStatus ClergyStatus { get; set; }
-        
-       public DateTime? OrdinationDate { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? OrdinationDate { get; set; }
         
        public string PlaceOfOrdination { get; set; }
 
