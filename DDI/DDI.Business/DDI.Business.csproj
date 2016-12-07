@@ -242,6 +242,7 @@
     <Compile Include="DataModels\Prefix.cs" />
     <Compile Include="DataModels\Profession.cs" />
     <Compile Include="DataModels\State.cs" />
+    <Compile Include="Enums\PaymentMethodEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
