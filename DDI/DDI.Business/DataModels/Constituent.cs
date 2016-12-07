@@ -9,6 +9,7 @@ using System.Web;
 
 namespace DDI.Business.DataModels
 {
+    public enum PaymentMethod { None = 0, Check = 1, ACH = 2, Wire = 3, SWIFT = 4 }
     [Table("Constituent")]
     public class Constituent 
     {
@@ -69,7 +70,7 @@ namespace DDI.Business.DataModels
         
        public EducationLevel EducationLevel { get; set; }
         
-       public int? PreferredPaymentMethod { get; set; }
+       public PaymentMethod PreferredPaymentMethod { get; set; }
         
        public DateTime? BirthDate { get; set; }
         
