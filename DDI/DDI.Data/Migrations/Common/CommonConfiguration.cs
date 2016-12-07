@@ -2,13 +2,19 @@ using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
-namespace DDI.Data.Migrations
+namespace DDI.Data.Migrations.Common
 {
-	internal sealed class Configuration : DbMigrationsConfiguration<DomainContext>
+	internal sealed class CommonConfiguration : DbMigrationsConfiguration<CommonContext>
 	{
+        /*
+         * Commands
+         * add-migration <Name> -ConfigurationTypeName CommonConfiguration
+         * update-database -ConfigurationTypeName CommonConfiguration
+         */
+
 		#region Public Constructors
 
-		public Configuration()
+		public CommonConfiguration()
 		{
 			AutomaticMigrationsEnabled = false;
 		}
@@ -16,8 +22,8 @@ namespace DDI.Data.Migrations
 		#endregion Public Constructors
 
 		#region Protected Methods
-
-		protected override void Seed(DomainContext context)
+        
+		protected override void Seed(CommonContext context)
 		{
 			// This method will be called after migrating to the latest version.
 
