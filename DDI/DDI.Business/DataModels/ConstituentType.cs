@@ -14,8 +14,7 @@ namespace DDI.Business.DataModels
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
-        //Question - JLT Is the code still important or was it the Id in the old system?
+         
         public string Code { get; set; }
 
         public string Description { get; set; }

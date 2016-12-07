@@ -1,4 +1,5 @@
 ﻿using DDI.Shared;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,17 +10,18 @@ using System.Web;
 namespace DDI.Business.DataModels
 {
     [Table("Constituent")]
-    public class Constituent : IConstituent
+    public class Constituent 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         
        public int ConstituentNum { get; set; }
+        public Guid? ConstituentTypeId { get; set; }
+        public ConstituentType ConstituentType { get; set; }
         
-       public IConstituentType ConstituentType { get; set; }
-        
-       public IPrefix Prefix { get; set; }
+       public Guid? PrefixId { get; set; }
+       public Prefix Prefix { get; set; }
         
        public string FirstName { get; set; }
         
@@ -39,26 +41,24 @@ namespace DDI.Business.DataModels
         
        public string TaxId { get; set; }
         
-       public IGender Gender { get; set; }
+       public Guid? GenderId { get; set; }
+        public Gender Gender { get; set; }
         
        public string Source { get; set; }
-        
-       public IConstituentStatus ConstituentStatus { get; set; }
-        
-       public IClergyType ClergyType { get; set; }
-        
-       public IClergyStatus ClergyStatusID { get; set; }
+       public Guid? ConstituentStatusId { get; set; }
+        public ConstituentStatus ConstituentStatus { get; set; }
+        public Guid? ClergyTypeId { get; set; }
+        public ClergyType ClergyType { get; set; }
+        public Guid? ClergyStatusId { get; set; }
+        public ClergyStatus ClergyStatus { get; set; }
         
        public DateTime? OrdinationDate { get; set; }
         
        public string PlaceOfOrdination { get; set; }
+        public Guid? LanguageId { get; set; }
+        public Language Language { get; set; }
         
-       public ILanguage LanguageId { get; set; }
-        
-        //Question - Not sure I understand what this is for
-        //If its to determine the highest level of education 
-        //We can just use an Education Collection and get Max
-       public IEducationLevel EducationLevel { get; set; }
+       public EducationLevel EducationLevel { get; set; }
         
        public int? PreferredPaymentMethod { get; set; }
         
@@ -77,10 +77,10 @@ namespace DDI.Business.DataModels
        public DateTime? DivorceDate { get; set; }
         
        public DateTime? ProspectDate { get; set; }
-        
-       public IProfession Profession { get; set; }
-        
-       public IIncomeLevel IncomeLevel { get; set; }
+        public Guid? ProfessionId { get; set; }
+        public Profession Profession { get; set; }
+        public Guid? IncomeLevelId { get; set; }
+        public IncomeLevel IncomeLevel { get; set; }
         
        public DateTime? FirstEmploymentDate { get; set; }
         
@@ -93,9 +93,8 @@ namespace DDI.Business.DataModels
        public DateTime? EmploymentEndDate { get; set; }
         
        public bool IsEmployee { get; set; }
-        
-        //Question I dunno that we need Users and Constituents joined like this anymore
-        //User? UserID { get; set; }
+         
+       IUser UserId { get; set; }
         
        public int? MembershipCount { get; set; }
         
@@ -109,20 +108,20 @@ namespace DDI.Business.DataModels
  
        public bool IsIRSLetterReceived { get; set; }
    
-       public ICollection<IAddress> Addresses { get; set; }
+       public ICollection<Address> Addresses { get; set; }
      
-       public ICollection<IDenomination> Denominations { get; set; }
+       public ICollection<Denomination> Denominations { get; set; }
        
-       public ICollection<IEthnicity> Ethnicities { get; set; }
+       public ICollection<Ethnicity> Ethnicities { get; set; }
        
-       public ICollection<IDoingBusinessAs> DoingBusinessAs { get; set; }
+       public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
       
-       public ICollection<IEducation> Educations { get; set; }
+       public ICollection<Education> Educations { get; set; }
 
-       public ICollection<IPaymentPreference> PaymentPreferences { get; set; }
+       public ICollection<PaymentPreference> PaymentPreferences { get; set; }
 
-       public ICollection<IAlternateId> AlternateIds { get; set; }
+       public ICollection<AlternateId> AlternateIds { get; set; }
     
-       public ICollection<IContactInfo> ContactInfo { get; set; }
+       public ICollection<ContactInfo> ContactInfo { get; set; }
     }
 }

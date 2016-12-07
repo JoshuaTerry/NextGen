@@ -8,13 +8,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Business.DataModels
 {
-    [Table("AlternavteId")]
-    public class AlternateId : IAlternateId
+    [Table("AlternateId")]
+    public class AlternateId  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public IConstituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        //Is this 1to1 or 1toMany?
+        public Constituent Constituent { get; set; }
     }
 }

@@ -220,6 +220,7 @@
     <Compile Include="DataModels\ConstituentStatus.cs" />
     <Compile Include="DataModels\ConstituentType.cs" />
     <Compile Include="DataModels\ContactInfo.cs" />
+    <Compile Include="DataModels\ContactType.cs" />
     <Compile Include="DataModels\Denomination.cs" />
     <Compile Include="DataModels\DoingBusinessAs.cs" />
     <Compile Include="DataModels\Education.cs" />

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("DoingBusinessAs")]
-    public class DoingBusinessAs : IDoingBusinessAs
+    public class DoingBusinessAs  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

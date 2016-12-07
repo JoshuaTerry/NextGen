@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("Address")]
-    public class Address : IAddress
+    public class Address 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,7 +17,8 @@ namespace DDI.Business.DataModels
         public string Line1 { get; set; }
         public string Line2 { get; set; }
         public string City { get; set; }
-        public IState State { get; set; }
+        public Guid? StateId { get; set; }
+        public State State { get; set; }
         public string Zip { get; set; }
     }
 }

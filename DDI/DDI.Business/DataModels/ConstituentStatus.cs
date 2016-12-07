@@ -9,11 +9,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("ConstituentStatus")]
-    public class ConstituentStatus : IConstituentStatus
+    public class ConstituentStatus  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; } 
+        public bool IsActive { get; set; }
     }
 }
