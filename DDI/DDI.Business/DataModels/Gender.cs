@@ -9,12 +9,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("Gender")]
-    public class Gender : IGender
+    public class Gender  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public bool? IsMasculine { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
     }
 }

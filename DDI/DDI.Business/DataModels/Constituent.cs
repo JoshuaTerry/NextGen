@@ -42,20 +42,29 @@ namespace DDI.Business.DataModels
        public string TaxId { get; set; }
         
        public Guid? GenderId { get; set; }
+
         public Gender Gender { get; set; }
         
        public string Source { get; set; }
+
        public Guid? ConstituentStatusId { get; set; }
+
         public ConstituentStatus ConstituentStatus { get; set; }
+
         public Guid? ClergyTypeId { get; set; }
+
         public ClergyType ClergyType { get; set; }
+
         public Guid? ClergyStatusId { get; set; }
+
         public ClergyStatus ClergyStatus { get; set; }
         
        public DateTime? OrdinationDate { get; set; }
         
        public string PlaceOfOrdination { get; set; }
+
         public Guid? LanguageId { get; set; }
+
         public Language Language { get; set; }
         
        public EducationLevel EducationLevel { get; set; }
@@ -77,9 +86,13 @@ namespace DDI.Business.DataModels
        public DateTime? DivorceDate { get; set; }
         
        public DateTime? ProspectDate { get; set; }
+
         public Guid? ProfessionId { get; set; }
+
         public Profession Profession { get; set; }
+
         public Guid? IncomeLevelId { get; set; }
+
         public IncomeLevel IncomeLevel { get; set; }
         
        public DateTime? FirstEmploymentDate { get; set; }
@@ -108,20 +121,20 @@ namespace DDI.Business.DataModels
  
        public bool IsIRSLetterReceived { get; set; }
    
-       public ICollection<Address> Addresses { get; set; }
+       public virtual ICollection<Address> Addresses { get; set; }
      
-       public ICollection<Denomination> Denominations { get; set; }
+       public virtual ICollection<Denomination> Denominations { get; set; }
        
-       public ICollection<Ethnicity> Ethnicities { get; set; }
+       public virtual ICollection<Ethnicity> Ethnicities { get; set; }
        
-       public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
+       public virtual ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
       
-       public ICollection<Education> Educations { get; set; }
+       public virtual ICollection<Education> Educations { get; set; }
 
-       public ICollection<PaymentPreference> PaymentPreferences { get; set; }
+       public virtual ICollection<PaymentPreference> PaymentPreferences { get; set; }
 
-       public ICollection<AlternateId> AlternateIds { get; set; }
+       public virtual ICollection<AlternateId> AlternateIds { get; set; }
     
-       public ICollection<ContactInfo> ContactInfo { get; set; }
+       public virtual ICollection<ContactInfo> ContactInfo { get; set; }
     }
 }

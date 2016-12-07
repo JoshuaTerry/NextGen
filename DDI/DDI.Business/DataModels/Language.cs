@@ -9,12 +9,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("Language")]
-    public class Language : ILanguage
+    public class Language  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using DDI.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,13 +7,15 @@ using System.Web;
 
 namespace DDI.Business.DataModels
 {
-    [Table("State")]
-    public class State  
+    [Table("ConstituentEthnicity")]
+    public class ConstituentEthnicity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Abbreviation { get; set; }
+        public virtual Ethnicity Ethnicity { get; set; }
+        public Guid? EthnicityId { get; set; }
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
     }
 }

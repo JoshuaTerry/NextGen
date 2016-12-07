@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("PaymentPreference")]
-    public class PaymentPreference : IPaymentPreference
+    public class PaymentPreference  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

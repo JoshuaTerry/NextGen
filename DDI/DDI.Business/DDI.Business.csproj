@@ -217,6 +217,14 @@
     <Compile Include="DataModels\ClergyStatus.cs" />
     <Compile Include="DataModels\ClergyType.cs" />
     <Compile Include="DataModels\Constituent.cs" />
+    <Compile Include="DataModels\ConstituentAddress.cs" />
+    <Compile Include="DataModels\ConstituentAlternateId.cs" />
+    <Compile Include="DataModels\ConstituentContactInfo.cs" />
+    <Compile Include="DataModels\ConstituentDba.cs" />
+    <Compile Include="DataModels\ConstituentDemonination.cs" />
+    <Compile Include="DataModels\ConstituentEducation.cs" />
+    <Compile Include="DataModels\ConstituentEthnicity.cs" />
+    <Compile Include="DataModels\ConstituentPaymentPreference.cs" />
     <Compile Include="DataModels\ConstituentStatus.cs" />
     <Compile Include="DataModels\ConstituentType.cs" />
     <Compile Include="DataModels\ContactInfo.cs" />
@@ -225,6 +233,7 @@
     <Compile Include="DataModels\DoingBusinessAs.cs" />
     <Compile Include="DataModels\Education.cs" />
     <Compile Include="DataModels\EducationLevel.cs" />
+    <Compile Include="DataModels\EducationToLevel.cs" />
     <Compile Include="DataModels\Ethnicity.cs" />
     <Compile Include="DataModels\Gender.cs" />
     <Compile Include="DataModels\IncomeLevel.cs" />

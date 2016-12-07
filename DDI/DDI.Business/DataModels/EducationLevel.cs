@@ -9,11 +9,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("EducationLevel")]
-    public class EducationLevel : IEducationLevel
+    public class EducationLevel  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
     }

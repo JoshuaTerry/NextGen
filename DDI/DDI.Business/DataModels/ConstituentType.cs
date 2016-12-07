@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Business.DataModels
 {
     [Table("ConstituentType")]
-    public class ConstituentType :IConstituentType
+    public class ConstituentType  
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

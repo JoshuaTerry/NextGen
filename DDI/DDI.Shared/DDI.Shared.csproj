@@ -60,28 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="IAddress.cs" />
-    <Compile Include="IAlternateId.cs" />
-    <Compile Include="IClergyStatus.cs" />
-    <Compile Include="IClergyType.cs" />
-    <Compile Include="IConstituent.cs" />
-    <Compile Include="IConstituentStatus.cs" />
-    <Compile Include="IConstituentType.cs" />
-    <Compile Include="IContactInfo.cs" />
     <Compile Include="IDataResponse.cs" />
-    <Compile Include="IDenomination.cs" />
-    <Compile Include="IDoingBusinessAs.cs" />
-    <Compile Include="IEducation.cs" />
-    <Compile Include="IEducationLevel.cs" />
-    <Compile Include="IEthnicity.cs" />
-    <Compile Include="IGender.cs" />
-    <Compile Include="IIncomeLevel.cs" />
-    <Compile Include="ILanguage.cs" />
-    <Compile Include="IPaymentPreference.cs" />
-    <Compile Include="IPrefix.cs" />
-    <Compile Include="IProfession.cs" />
-    <Compile Include="IState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
