@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using DDI.Data;
+using DDI.Data.Models.Client;
 using DDI.Shared;
-using DDI.Shared.DTO;
 
 namespace DDI.Business.Services
 {
     public class ConstituentService : ServiceBase, IConstituentService
     {
-        public IDataResponse<List<DDI.Shared.DTO.DtoConstituent>> GetConstituents()
+        private DomainContext _db = new DomainContext();
+
+        public IDataResponse<IRepository<Constituent>> GetConstituents()
         {
-            throw new NotImplementedException();
+            IRepository<Constituent> list = new Repository<Constituent>(_db);
+
+            return GetIDataResponse(() => list);
         }
 
-        public IDataResponse<DtoConstituent> GetConstituentById(int id)
+        public IDataResponse<IRepository<Constituent>> GetConstituentById(int id)
         {
-            throw new NotImplementedException();
+            IRepository<Constituent> constituent = new Repository<Constituent>(_db);
+
+            return GetIDataResponse(() => constituent);
         }
     }
 }

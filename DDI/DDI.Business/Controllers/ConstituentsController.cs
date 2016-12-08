@@ -8,13 +8,14 @@ using DDI.Business.Services;
 
 namespace DDI.Business.Controllers
 {
-    [Authorize]
-    [RoutePrefix("api/constituents")]
+    //[Authorize]
+    [RoutePrefix("api/v1/constituents")]
     public class ConstituentsController : ApiController
     {
-        private IConstituentService _service;
+        private IConstituentService _service = new ConstituentService();
 
         // GET api/constituents
+        [HttpGet]
         public IHttpActionResult GetConstituents()
         {
             var constituents = _service.GetConstituents();
@@ -32,6 +33,7 @@ namespace DDI.Business.Controllers
         }
 
         // GET api/constituents/5
+        [HttpGet]
         public IHttpActionResult GetConstituentById(int id)
         {
             var constituent = _service.GetConstituents();
