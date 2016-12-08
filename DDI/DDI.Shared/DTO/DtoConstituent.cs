@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.DTO
 {
-    class DtoConstituent
+    public class DtoConstituent
     {
     }
 }
