@@ -11,7 +11,7 @@ using DDI.Business.Controllers;
 namespace DDI.Business.Tests.Controllers
 {
     [TestClass]
-    public class ValuesControllerTest
+    public class ConstituentControllerTest
     {
         [TestMethod]
         public void Get()
@@ -20,13 +20,10 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IEnumerable<string> result = controller.Get();
+            IHttpActionResult result = controller.GetConstituents();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
-            Assert.AreEqual("value1", result.ElementAt(0));
-            Assert.AreEqual("value2", result.ElementAt(1));
+            
         }
 
         [TestMethod]
@@ -36,10 +33,10 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            string result = controller.Get(5);
+            IHttpActionResult result = controller.GetConstituent(5);
 
             // Assert
-            Assert.AreEqual("value", result);
+            
         }
 
         [TestMethod]
