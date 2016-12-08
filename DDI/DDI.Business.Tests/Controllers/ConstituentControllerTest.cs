@@ -33,7 +33,7 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IHttpActionResult result = controller.GetConstituent(5);
+            IHttpActionResult result = controller.GetConstituentById(5);
 
             // Assert
             

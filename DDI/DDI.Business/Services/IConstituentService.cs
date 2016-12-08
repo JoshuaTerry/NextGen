@@ -8,6 +8,6 @@ namespace DDI.Business.Services
     public interface IConstituentService
     {
         IDataResponse<List<DtoConstituent>> GetConstituents();
-        IDataResponse<DtoConstituent> GetConstituent(int id);
+        IDataResponse<DtoConstituent> GetConstituentById(int id);
     }
 }

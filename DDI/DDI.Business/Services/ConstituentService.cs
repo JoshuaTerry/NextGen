@@ -15,7 +15,7 @@ namespace DDI.Business.Services
             throw new NotImplementedException();
         }
 
-        public IDataResponse<DtoConstituent> GetConstituent(int id)
+        public IDataResponse<DtoConstituent> GetConstituentById(int id)
         {
             throw new NotImplementedException();
         }
