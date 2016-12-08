@@ -51,18 +51,28 @@ namespace DDI.Business.Controllers
         }
 
         // POST api/constituents
+        [HttpPost]
         public IHttpActionResult Post([FromBody]string value)
         {
             return Ok();
         }
 
         // PUT api/constituents/5
+        [HttpPut]
         public IHttpActionResult Put(int id, [FromBody]string value)
         {
             return Ok();
         }
 
+        // api/constituents/5
+        [HttpPatch]
+        public IHttpActionResult Patch(int id, [FromBody]string value)
+        {
+            return Ok();
+        }
+
         // DELETE api/constituents/5
+        [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
             return Ok();
