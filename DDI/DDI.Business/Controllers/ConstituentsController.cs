@@ -54,6 +54,11 @@ namespace DDI.Business.Controllers
         [HttpPost]
         public IHttpActionResult Post([FromBody]string value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 
@@ -61,6 +66,11 @@ namespace DDI.Business.Controllers
         [HttpPut]
         public IHttpActionResult Put(int id, [FromBody]string value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 
@@ -68,6 +78,11 @@ namespace DDI.Business.Controllers
         [HttpPatch]
         public IHttpActionResult Patch(int id, [FromBody]string value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 
