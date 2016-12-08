@@ -23,6 +23,10 @@ namespace DDI.Business.Controllers
             {
                 return NotFound();
             }
+            if (!constituents.IsSuccessful)
+            {
+                return InternalServerError();
+            } 
 
             return Ok(constituents);
         }
@@ -35,6 +39,10 @@ namespace DDI.Business.Controllers
             if (constituent == null)
             {
                 return NotFound();
+            }
+            if (!constituent.IsSuccessful)
+            {
+                return InternalServerError();
             }
 
             return Ok(constituent);
