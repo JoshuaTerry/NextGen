@@ -56,7 +56,7 @@ namespace DDI.Business.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid Model");
             }
 
             return Ok();
@@ -68,7 +68,7 @@ namespace DDI.Business.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid Model");
             }
 
             return Ok();
@@ -80,7 +80,7 @@ namespace DDI.Business.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid Model");
             }
 
             return Ok();
