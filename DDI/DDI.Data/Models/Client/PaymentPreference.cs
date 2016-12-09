@@ -20,8 +20,10 @@ namespace DDI.Data.Models.Client
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
+        public virtual Constituent Constituent { get; set; }
 
-		public string Name { get; set; }
+        public Guid? ConstituentId { get; set; }
+        public string Name { get; set; }
 
 		#endregion Public Properties
 	}
