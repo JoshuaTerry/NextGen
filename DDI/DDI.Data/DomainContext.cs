@@ -49,9 +49,7 @@ namespace DDI.Data
 		public virtual DbSet<Education> Educations { get; set; }
 
 		public virtual DbSet<EducationLevel> EducationLevels { get; set; }
-
-		public virtual DbSet<EducationToLevel> EducationToLevels { get; set; }
-
+         
 		public virtual DbSet<Ethnicity> Ethnicities { get; set; }
 
 		public virtual DbSet<Gender> Genders { get; set; }

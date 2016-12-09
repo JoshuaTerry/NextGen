@@ -28,7 +28,7 @@ namespace DDI.Data.Models.Client
 		public string School { get; set; }
 
 		public DateTime? Start { get; set; }
-
-		#endregion Public Properties
-	}
+        public virtual ICollection<EducationLevel> EducationLevels { get; set; }
+        #endregion Public Properties
+    }
 }

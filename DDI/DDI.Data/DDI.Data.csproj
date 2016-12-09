@@ -87,7 +87,6 @@
     <Compile Include="Models\Client\DoingBusinessAs.cs" />
     <Compile Include="Models\Client\Education.cs" />
     <Compile Include="Models\Client\EducationLevel.cs" />
-    <Compile Include="Models\Client\EducationToLevel.cs" />
     <Compile Include="Models\Client\Ethnicity.cs" />
     <Compile Include="Models\Client\Gender.cs" />
     <Compile Include="Models\Client\IncomeLevel.cs" />

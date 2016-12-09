@@ -20,7 +20,9 @@ namespace DDI.Data.Models.Client
 		public bool IsActive { get; set; }
 
 		public string Name { get; set; }
+        public virtual Education Education { get; set; }
 
-		#endregion Public Properties
-	}
+        public Guid? EducationId { get; set; }
+        #endregion Public Properties
+    }
 }
