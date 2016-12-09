@@ -9,9 +9,7 @@ namespace DDI.Data.Models.Client
 	[Table("AlternateId")]
 	public class AlternateId
 	{
-		#region Public Properties
-
-		//Is this 1to1 or 1toMany?
+		#region Public Properties        
 		public Constituent Constituent { get; set; }
 
 		public Guid? ConstituentId { get; set; }
