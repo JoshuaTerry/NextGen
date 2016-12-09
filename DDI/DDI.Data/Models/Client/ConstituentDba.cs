@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-	[Table("ConstituentDba")]
-	public class ConstituentDba
+	[Table("ConstituentDBA")]
+	public class ConstituentDBA
 	{
 		#region Public Properties
 

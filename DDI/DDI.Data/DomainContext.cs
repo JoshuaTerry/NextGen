@@ -29,7 +29,7 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentContactInfo> ConstituentContactInfo { get; set; }
 
-		public virtual DbSet<ConstituentDba> ConstituentDbas { get; set; }
+		public virtual DbSet<ConstituentDBA> ConstituentDBAs { get; set; }
 
 		public virtual DbSet<ConstituentDemonination> ConstituentDenominations { get; set; }
 

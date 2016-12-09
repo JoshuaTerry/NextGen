@@ -75,7 +75,7 @@
     <Compile Include="Models\Client\ConstituentAddress.cs" />
     <Compile Include="Models\Client\ConstituentAlternateId.cs" />
     <Compile Include="Models\Client\ConstituentContactInfo.cs" />
-    <Compile Include="Models\Client\ConstituentDba.cs" />
+    <Compile Include="Models\Client\ConstituentDBA.cs" />
     <Compile Include="Models\Client\ConstituentDemonination.cs" />
     <Compile Include="Models\Client\ConstituentEducation.cs" />
     <Compile Include="Models\Client\ConstituentEthnicity.cs" />
