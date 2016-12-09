@@ -80,9 +80,7 @@
     <Compile Include="Models\Client\ConstituentAlternateId.cs" />
     <Compile Include="Models\Client\ConstituentContactInfo.cs" />
     <Compile Include="Models\Client\ConstituentDBA.cs" />
-    <Compile Include="Models\Client\ConstituentDemonination.cs" />
     <Compile Include="Models\Client\ConstituentEducation.cs" />
-    <Compile Include="Models\Client\ConstituentEthnicity.cs" />
     <Compile Include="Models\Client\ConstituentStatus.cs" />
     <Compile Include="Models\Client\ConstituentType.cs" />
     <Compile Include="Models\Client\ContactInfo.cs" />

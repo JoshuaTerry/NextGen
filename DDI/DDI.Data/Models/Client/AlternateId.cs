@@ -9,17 +9,13 @@ namespace DDI.Data.Models.Client
 	[Table("AlternateId")]
 	public class AlternateId
 	{
-		#region Public Properties        
-		public virtual Constituent Constituent { get; set; }
-
-		public Guid? ConstituentId { get; set; }
-
+		#region Public Properties      
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
-		public string Name { get; set; }
-
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        public string Name { get; set; }
 		#endregion Public Properties
 	}
 }

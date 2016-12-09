@@ -10,7 +10,6 @@ namespace DDI.Data.Models.Client
 	public class EducationLevel
 	{
 		#region Public Properties
-		public string Code { get; set; }
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
@@ -18,6 +17,7 @@ namespace DDI.Data.Models.Client
 		public string Name { get; set; }
         public virtual Education Education { get; set; }
         public Guid? EducationId { get; set; }
+        public string Code { get; set; }
         #endregion Public Properties
     }
 }

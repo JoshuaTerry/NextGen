@@ -10,19 +10,13 @@ namespace DDI.Data.Models.Client
 	public class ConstituentDBA
 	{
 		#region Public Properties
-
-		public virtual Constituent Constituent { get; set; }
-
-		public Guid? ConstituentId { get; set; }
-
-		public virtual DoingBusinessAs DoingBusinessAs { get; set; }
-
-		public Guid? DoingBusinessAsId { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
-		#endregion Public Properties
-	}
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        public virtual DoingBusinessAs DoingBusinessAs { get; set; }
+        public Guid? DoingBusinessAsId { get; set; }
+        #endregion Public Properties
+    }
 }

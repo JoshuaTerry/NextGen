@@ -10,21 +10,15 @@ namespace DDI.Data.Models.Client
 	public class PaymentPreference
 	{
 		#region Public Properties
-
-		public int ABANumber { get; set; }
-
-		public string AccountNumber { get; set; }
-
-		public string AccountType { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
         public virtual Constituent Constituent { get; set; }
-
         public Guid? ConstituentId { get; set; }
         public string Name { get; set; }
-
-		#endregion Public Properties
-	}
+        public int ABANumber { get; set; }
+        public string AccountNumber { get; set; }
+        public string AccountType { get; set; }
+        #endregion Public Properties
+    }
 }

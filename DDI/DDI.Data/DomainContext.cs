@@ -32,11 +32,7 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentDBA> ConstituentDBAs { get; set; }
 
-		public virtual DbSet<ConstituentDemonination> ConstituentDenominations { get; set; }
-
-		public virtual DbSet<ConstituentEducation> ConstituentEducations { get; set; }
-
-		public virtual DbSet<ConstituentEthnicity> ConstituentEthnicities { get; set; }
+		public virtual DbSet<ConstituentEducation> ConstituentEducations { get; set; }        
 		 
 		public virtual DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
 
