@@ -13,7 +13,7 @@ namespace DDI.Data.Models.Client
 
 		public string Abbreviation { get; set; }
 
-		public string Descriptin { get; set; }
+		public string Description { get; set; }
 
 		public Gender Gender { get; set; }
 
