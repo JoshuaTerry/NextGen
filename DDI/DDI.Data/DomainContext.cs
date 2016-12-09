@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DDI.Data.Models.Client;
+using DDI.Data.Models.Common;
 
 namespace DDI.Data
 {
