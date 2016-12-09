@@ -10,7 +10,7 @@ namespace DDI.Data.Models.Client
 	public class AlternateId
 	{
 		#region Public Properties        
-		public Constituent Constituent { get; set; }
+		public virtual Constituent Constituent { get; set; }
 
 		public Guid? ConstituentId { get; set; }
 
