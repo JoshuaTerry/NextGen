@@ -1,11 +1,14 @@
 ﻿
-     
-public enum PaymentMethod
+namespace DDI.Business.Enums
 {
-    None = 0,
-    Check = 1,
-    ACH = 2,
-    Wire = 3,
-    SWIFT = 4
+    public enum PaymentMethod
+    {
+        None = 0,
+        Check = 1,
+        ACH = 2,
+        Wire = 3,
+        SWIFT = 4
+    }
+
 }
     
