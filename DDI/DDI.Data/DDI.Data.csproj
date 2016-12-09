@@ -53,6 +53,10 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Migrations\201612091710348_RenameColumns.cs" />
+    <Compile Include="Migrations\201612091710348_RenameColumns.Designer.cs">
+      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.cs" />
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.designer.cs">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
@@ -117,6 +121,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201612091710348_RenameColumns.resx">
+      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
     </EmbeddedResource>

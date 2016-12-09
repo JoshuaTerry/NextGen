@@ -18,7 +18,7 @@ namespace DDI.Data.Models.Common
         public string Description { get; set; }
 
         [MaxLength(5)]
-        public string FipsCode { get; set; }
+        public string FIPSCode { get; set; }
 
         [MaxLength(4)]
         public string LegacyCode { get; set; }
