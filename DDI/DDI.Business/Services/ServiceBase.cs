@@ -1,16 +1,16 @@
-﻿using DDI.Shared;
-using log4net;
-using log4net.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
+using DDI.Shared;
+using DDI.Shared.Logger;
 
 namespace DDI.Business.Services
 {
     public class ServiceBase
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServiceBase));
+        private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
         public IDataResponse<T> GetIDataResponse<T>(Func<T> funcToExecute)
         {
             return GetDataResponse(funcToExecute);
