@@ -61,7 +61,7 @@ namespace DDI.Data.Migrations.Common
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         Description = c.String(),
-                        FipsCode = c.String(maxLength: 5),
+                        FIPSCode = c.String(maxLength: 5),
                         LegacyCode = c.String(maxLength: 4),
                         StateId = c.Guid(),
                         Population = c.Int(nullable: false),
@@ -79,7 +79,7 @@ namespace DDI.Data.Migrations.Common
                         Id = c.Guid(nullable: false, identity: true),
                         StateCode = c.String(maxLength: 4),
                         Description = c.String(),
-                        FipsCode = c.String(maxLength: 2),
+                        FIPSCode = c.String(maxLength: 2),
                         CountryId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)

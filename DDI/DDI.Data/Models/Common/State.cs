@@ -21,7 +21,7 @@ namespace DDI.Data.Models.Common
         public string Description { get; set; }
 
         [MaxLength(2)]
-        public string FipsCode { get; set; }
+        public string FIPSCode { get; set; }
 
         public Guid? CountryId { get; set; }
 
