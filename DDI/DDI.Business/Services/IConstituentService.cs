@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DDI.Data;
@@ -10,6 +11,6 @@ namespace DDI.Business.Services
     public interface IConstituentService
     {
         IDataResponse<IQueryable<Constituent>> GetConstituents();
-        IDataResponse<Constituent> GetConstituentById(int id);
+        IDataResponse<Constituent> GetConstituentById(Guid id);
     }
 }

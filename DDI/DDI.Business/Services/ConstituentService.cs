@@ -31,7 +31,7 @@ namespace DDI.Business.Services
             return GetIDataResponse(() => constituents);
         }
 
-        public IDataResponse<Constituent> GetConstituentById(int id)
+        public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
             Constituent constituent = _repository.GetById(id);
 

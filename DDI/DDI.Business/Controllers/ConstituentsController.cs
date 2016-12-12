@@ -43,7 +43,7 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult GetConstituentById(int id)
+        public IHttpActionResult GetConstituentById(Guid id)
         {
             var constituent = _service.GetConstituentById(id);
 
