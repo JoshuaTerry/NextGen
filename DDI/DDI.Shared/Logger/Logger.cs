@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using log4net;
 using log4net.Config;
-using log4net.Core;
-using log4net.Repository.Hierarchy;
 
 namespace DDI.Shared.Logger
 {
@@ -32,11 +30,17 @@ namespace DDI.Shared.Logger
     /// performed.
     /// </para>
     /// </remarks>
-    public static class Logger
+    public class Logger
     {
-        //private static Dictionary<Type, Logger> _logs = new Dictionary<Type, Logger>();
+        #region Private Fields
 
-        //private ILog _log;
+        private static Dictionary<Type, Logger> _logs = new Dictionary<Type, Logger>();
+
+        private ILog _log;
+
+        #endregion Private Fields
+
+        #region Private Constructors
 
         /// <summary>
         /// Gets the appropriate <see cref="ILog"/> instance from the <see cref="LogManager"/> and
@@ -44,10 +48,12 @@ namespace DDI.Shared.Logger
         /// </summary>
         /// <param name="callerType"></param>
         /// <returns></returns>
-        //private Logger(Type callerType)
-        //{
-        //	_log = LogManager.GetLogger(callerType);
-        //}
+        private Logger(Type callerType)
+        {
+            _log = LogManager.GetLogger(callerType);
+        }
+
+        #endregion Private Constructors
 
         #region Public Methods
 
@@ -58,7 +64,7 @@ namespace DDI.Shared.Logger
 
         public static void DebugWithFormat(Type callerType, string format, params object[] data)
         {
-            GetLogger(callerType).DebugFormat(format, data);
+            GetLogger(callerType).DebugWithFormat(format, data);
         }
 
         public static void Error(Type callerType, object message, Exception exception = null)
@@ -68,7 +74,7 @@ namespace DDI.Shared.Logger
 
         public static void ErrorWithFormat(Type callerType, string format, params object[] data)
         {
-            GetLogger(callerType).ErrorFormat(format, data);
+            GetLogger(callerType).ErrorWithFormat(format, data);
         }
 
         public static void Fatal(Type callerType, object message, Exception exception = null)
@@ -78,7 +84,19 @@ namespace DDI.Shared.Logger
 
         public static void FatalWithFormat(Type callerType, string format, params object[] data)
         {
-            GetLogger(callerType).FatalFormat(format, data);
+            GetLogger(callerType).FatalWithFormat(format, data);
+        }
+
+        public static Logger GetLogger(Type callerType)
+        {
+            Logger log;
+            if (!(_logs.TryGetValue(callerType, out log)))
+            {
+                log = new Logger(callerType);
+                _logs.Add(callerType, log);
+            }
+
+            return log;
         }
 
         public static void Info(Type callerType, object message, Exception exception = null)
@@ -86,24 +104,17 @@ namespace DDI.Shared.Logger
             GetLogger(callerType).Info(message, exception);
         }
 
-        //	return log;
-        //}
         public static void InfoWithFormat(Type callerType, string format, params object[] data)
         {
-            GetLogger(callerType).InfoFormat(format, data);
+            GetLogger(callerType).InfoWithFormat(format, data);
         }
 
-        // if (!(_logs.TryGetValue(callerType, out log))) { log = new Logger(callerType);
-        // _logs.Add(callerType, log); }
         public static void Initialize()
         {
             XmlConfigurator.Configure();
             GetLogger(typeof(Logger)).Info("log4net has been initialized.");
         }
 
-        //public static Logger GetLogger(Type callerType)
-        //{
-        //	Logger log;
         public static void Warn(Type callerType, object message, Exception exception = null)
         {
             GetLogger(callerType).Warn(message, exception);
@@ -111,70 +122,59 @@ namespace DDI.Shared.Logger
 
         public static void WarnWithFormat(Type callerType, string format, params object[] data)
         {
-            GetLogger(callerType).WarnFormat(format, data);
+            GetLogger(callerType).WarnWithFormat(format, data);
+        }
+
+        public void Debug(object message, Exception exception = null)
+        {
+            _log.Debug(message, exception);
+        }
+
+        public void DebugWithFormat(string format, params object[] data)
+        {
+            _log.DebugFormat(format, data);
+        }
+
+        public void Error(object message, Exception exception = null)
+        {
+            _log.Error(message, exception);
+        }
+
+        public void ErrorWithFormat(string format, params object[] data)
+        {
+            _log.ErrorFormat(format, data);
+        }
+
+        public void Fatal(object message, Exception exception = null)
+        {
+            _log.Fatal(message, exception);
+        }
+
+        public void FatalWithFormat(string format, params object[] data)
+        {
+            _log.FatalFormat(format, data);
+        }
+
+        public void Info(object message, Exception exception = null)
+        {
+            _log.Info(message, exception);
+        }
+
+        public void InfoWithFormat(string format, params object[] data)
+        {
+            _log.InfoFormat(format, data);
+        }
+
+        public void Warn(object message, Exception exception = null)
+        {
+            _log.Warn(message, exception);
+        }
+
+        public void WarnWithFormat(string format, params object[] data)
+        {
+            _log.WarnFormat(format, data);
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        //private static ILog GetLogger(Type callerType) => LogManager.GetLogger(callerType);
-        private static ILog GetLogger(Type callerType)
-        {
-            return LogManager.GetLogger(callerType);
-        }
-
-
-        #endregion Private Methods
-
-        //public void Debug(object message, Exception exception = null)
-        //{
-        //	_log.Debug(message, exception);
-        //}
-
-        //public void DebugWithFormat(string format, params object[] data)
-        //{
-        //	_log.DebugFormat(format, data);
-        //}
-
-        //public void Error(object message, Exception exception = null)
-        //{
-        //	_log.Error(message, exception);
-        //}
-
-        //public void ErrorWithFormat(string format, params object[] data)
-        //{
-        //	_log.ErrorFormat(format, data);
-        //}
-
-        //public void Fatal(object message, Exception exception = null)
-        //{
-        //	_log.Fatal(message, exception);
-        //}
-
-        //public void FatalWithFormat(string format, params object[] data)
-        //{
-        //	_log.FatalFormat(format, data);
-        //}
-
-        //public void Info(object message, Exception exception = null)
-        //{
-        //	_log.Info(message, exception);
-        //}
-
-        //public void InfoWithFormat(string format, params object[] data)
-        //{
-        //	_log.InfoFormat(format, data);
-        //}
-
-        //public void Warn(object message, Exception exception = null)
-        //{
-        //	_log.Warn(message, exception);
-        //}
-
-        //public void WarnWithFormat(string format, params object[] data)
-        //{
-        //	_log.WarnFormat(format, data);
-        //}
     }
 }
