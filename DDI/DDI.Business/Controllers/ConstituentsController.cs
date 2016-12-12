@@ -8,12 +8,23 @@ using DDI.Business.Services;
 
 namespace DDI.Business.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ConstituentsController : ApiController
     {
         private IConstituentService _service;
 
-        // GET api/constituents
+        public ConstituentsController()
+            :this(new ConstituentService())
+        {
+        }
+
+        internal ConstituentsController(IConstituentService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents")]
         public IHttpActionResult GetConstituents()
         {
             var constituents = _service.GetConstituents();
@@ -22,36 +33,70 @@ namespace DDI.Business.Controllers
             {
                 return NotFound();
             }
+            if (!constituents.IsSuccessful)
+            {
+                return InternalServerError();
+            } 
 
-            return Ok();
+            return Ok(constituents);
         }
 
-        // GET api/constituents/5
-        public IHttpActionResult GetConstituent(int id)
+        [HttpGet]
+        [Route("api/v1/constituents/{id}")]
+        public IHttpActionResult GetConstituentById(Guid id)
         {
-            var constituent = _service.GetConstituents();
+            var constituent = _service.GetConstituentById(id);
 
             if (constituent == null)
             {
                 return NotFound();
             }
+            if (!constituent.IsSuccessful)
+            {
+                return InternalServerError();
+            }
 
-            return Ok();
+            return Ok(constituent);
         }
 
-        // POST api/constituents
+        [HttpPost]
+        [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody]string value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid Model");
+            }
+
             return Ok();
         }
 
-        // PUT api/constituents/5
+        [HttpPut]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Put(int id, [FromBody]string value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid Model");
+            }
+
             return Ok();
         }
 
-        // DELETE api/constituents/5
+        [HttpPatch]
+        [Route("api/v1/constituents/{id}")]
+        public IHttpActionResult Patch(int id, [FromBody]string value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid Model");
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Delete(int id)
         {
             return Ok();

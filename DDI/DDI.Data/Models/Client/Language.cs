@@ -9,18 +9,13 @@ namespace DDI.Data.Models.Client
 	[Table("Language")]
 	public class Language
 	{
-		#region Public Properties
-
-		public string Code { get; set; }
-
+		#region Public Properties        
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public bool IsActive { get; set; }
-
 		public string Name { get; set; }
-
-		#endregion Public Properties
-	}
+        public string Code { get; set; }
+        #endregion Public Properties
+    }
 }

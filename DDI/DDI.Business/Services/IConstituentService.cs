@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using DDI.Data;
+using DDI.Data.Models.Client;
 using DDI.Shared;
-using DDI.Shared.DTO;
 
 namespace DDI.Business.Services
 {
     public interface IConstituentService
     {
-        IDataResponse<List<DtoConstituent>> GetConstituents();
-        IDataResponse<DtoConstituent> GetConstituent(int id);
+        IDataResponse<IQueryable<Constituent>> GetConstituents();
+        IDataResponse<Constituent> GetConstituentById(Guid id);
     }
 }

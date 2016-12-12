@@ -10,17 +10,12 @@ namespace DDI.Data.Models.Client
 	public class DoingBusinessAs
 	{
 		#region Public Properties
-
-		public DateTime? EndDate { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public string Name { get; set; }
-
 		public DateTime? StartDate { get; set; }
-
-		#endregion Public Properties
-	}
+        public DateTime? EndDate { get; set; }
+        #endregion Public Properties
+    }
 }

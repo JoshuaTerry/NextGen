@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DDI.Data.Models.Client;
+using DDI.Data.Models.Common;
 
 namespace DDI.Data
 {
@@ -29,16 +30,10 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentContactInfo> ConstituentContactInfo { get; set; }
 
-		public virtual DbSet<ConstituentDba> ConstituentDbas { get; set; }
+		public virtual DbSet<ConstituentDBA> ConstituentDBAs { get; set; }
 
-		public virtual DbSet<ConstituentDemonination> ConstituentDenominations { get; set; }
-
-		public virtual DbSet<ConstituentEducation> ConstituentEducations { get; set; }
-
-		public virtual DbSet<ConstituentEthnicity> ConstituentEthnicities { get; set; }
-
-		public virtual DbSet<ConstituentPaymentPreference> ConstituentPaymentPreferences { get; set; }
-
+		public virtual DbSet<ConstituentEducation> ConstituentEducations { get; set; }        
+		 
 		public virtual DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
 
 		public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
@@ -50,9 +45,7 @@ namespace DDI.Data
 		public virtual DbSet<Education> Educations { get; set; }
 
 		public virtual DbSet<EducationLevel> EducationLevels { get; set; }
-
-		public virtual DbSet<EducationToLevel> EducationToLevels { get; set; }
-
+         
 		public virtual DbSet<Ethnicity> Ethnicities { get; set; }
 
 		public virtual DbSet<Gender> Genders { get; set; }

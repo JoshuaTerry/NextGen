@@ -10,25 +10,21 @@ namespace DDI.Data.Models.Client
 	public class Education
 	{
 		#region Public Properties
-
-		public EducationLevel Degree { get; set; }
-
-		public Guid? DegreeId { get; set; }
-
-		public DateTime? End { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public string Major { get; set; }
-
 		public string Name { get; set; }
-
 		public string School { get; set; }
-
+        public string SchoolCode { get; set; }
+        public string SchoolOther { get; set; }
 		public DateTime? Start { get; set; }
-
-		#endregion Public Properties
-	}
+        public EducationLevel Degree { get; set; }
+        public Guid? DegreeId { get; set; }
+        public string DegreeCode { get; set; }
+        public string DegreeOther { get; set; }
+        public DateTime? End { get; set; }
+        public virtual ICollection<EducationLevel> EducationLevels { get; set; }
+        #endregion Public Properties
+    }
 }

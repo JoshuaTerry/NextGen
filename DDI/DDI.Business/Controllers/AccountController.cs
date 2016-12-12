@@ -19,7 +19,7 @@ using DDI.Business.Results;
 
 namespace DDI.Business.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
