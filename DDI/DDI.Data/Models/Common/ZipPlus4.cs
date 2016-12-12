@@ -27,7 +27,7 @@ namespace DDI.Data.Models.Common
         public string AddressHigh { get; set; }
 
         [MaxLength(8)]
-        public string SecondaryAbbrev { get; set; }
+        public string SecondaryAbbreviation { get; set; }
 
         [MaxLength(16)]
         public string SecondaryLow { get; set; }
