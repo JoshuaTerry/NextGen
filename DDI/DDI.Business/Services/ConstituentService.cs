@@ -12,18 +12,28 @@ namespace DDI.Business.Services
 {
     public class ConstituentService : ServiceBase, IConstituentService
     {
-        private DomainContext _db = new DomainContext();
+        private IRepository<Constituent> _repository; 
 
-        public IDataResponse<IRepository<Constituent>> GetConstituents()
+        public ConstituentService():
+            this(new Repository<Constituent>())
         {
-            IRepository<Constituent> list = new Repository<Constituent>(_db);
-
-            return GetIDataResponse(() => list);
+            
         }
 
-        public IDataResponse<IRepository<Constituent>> GetConstituentById(int id)
+        internal ConstituentService(IRepository<Constituent> repository)
         {
-            IRepository<Constituent> constituent = new Repository<Constituent>(_db);
+            _repository = repository;
+        }
+
+        public IDataResponse<IQueryable<Constituent>> GetConstituents()
+        {
+            IQueryable<Constituent> constituents = _repository.Entities;
+            return GetIDataResponse(() => constituents);
+        }
+
+        public IDataResponse<Constituent> GetConstituentById(int id)
+        {
+            Constituent constituent = _repository.GetById(id);
 
             return GetIDataResponse(() => constituent);
         }

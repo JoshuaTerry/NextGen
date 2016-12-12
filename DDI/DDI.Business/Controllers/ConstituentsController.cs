@@ -9,13 +9,22 @@ using DDI.Business.Services;
 namespace DDI.Business.Controllers
 {
     //[Authorize]
-    [RoutePrefix("api/v1/constituents")]
     public class ConstituentsController : ApiController
     {
-        private IConstituentService _service = new ConstituentService();
+        private IConstituentService _service;
 
-        // GET api/constituents
+        public ConstituentsController()
+            :this(new ConstituentService())
+        {
+        }
+
+        internal ConstituentsController(IConstituentService service)
+        {
+            _service = service;
+        }
+
         [HttpGet]
+        [Route("api/v1/constituents")]
         public IHttpActionResult GetConstituents()
         {
             var constituents = _service.GetConstituents();
@@ -32,11 +41,11 @@ namespace DDI.Business.Controllers
             return Ok(constituents);
         }
 
-        // GET api/constituents/5
         [HttpGet]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult GetConstituentById(int id)
         {
-            var constituent = _service.GetConstituents();
+            var constituent = _service.GetConstituentById(id);
 
             if (constituent == null)
             {
@@ -50,8 +59,8 @@ namespace DDI.Business.Controllers
             return Ok(constituent);
         }
 
-        // POST api/constituents
         [HttpPost]
+        [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody]string value)
         {
             if (!ModelState.IsValid)
@@ -62,8 +71,8 @@ namespace DDI.Business.Controllers
             return Ok();
         }
 
-        // PUT api/constituents/5
         [HttpPut]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Put(int id, [FromBody]string value)
         {
             if (!ModelState.IsValid)
@@ -74,8 +83,8 @@ namespace DDI.Business.Controllers
             return Ok();
         }
 
-        // api/constituents/5
         [HttpPatch]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Patch(int id, [FromBody]string value)
         {
             if (!ModelState.IsValid)
@@ -86,8 +95,8 @@ namespace DDI.Business.Controllers
             return Ok();
         }
 
-        // DELETE api/constituents/5
         [HttpDelete]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Delete(int id)
         {
             return Ok();

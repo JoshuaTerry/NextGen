@@ -11,7 +11,7 @@ using DDI.Business.Controllers;
 namespace DDI.Business.Tests.Controllers
 {
     [TestClass]
-    public class ConstituentControllerTest
+    public class ConstituentsControllerTest
     {
         [TestMethod]
         public void Get()
