@@ -9,18 +9,13 @@ namespace DDI.Data.Models.Client
 	[Table("ConstituentStatus")]
 	public class ConstituentStatus
 	{
-		#region Public Properties
-
-		public string Code { get; set; }
-
+		#region Public Properties        
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
-		public bool IsActive { get; set; }
-
+        public string Code { get; set; }
+        public bool IsActive { get; set; }
 		public string Name { get; set; }
-
 		#endregion Public Properties
 	}
 }

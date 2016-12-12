@@ -9,10 +9,7 @@ namespace DDI.Data.Models.Client
 	[Table("Ethnicity")]
 	public class Ethnicity
 	{
-		#region Public Properties
-
-		public string Code { get; set; }
-
+		#region Public Properties	
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
@@ -20,7 +17,9 @@ namespace DDI.Data.Models.Client
 		public bool IsActive { get; set; }
 
 		public string Name { get; set; }
-
-		#endregion Public Properties
-	}
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        public string Code { get; set; }
+        #endregion Public Properties
+    }
 }

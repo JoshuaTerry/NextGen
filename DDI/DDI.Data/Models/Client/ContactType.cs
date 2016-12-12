@@ -10,17 +10,12 @@ namespace DDI.Data.Models.Client
 	public class ContactType
 	{
 		#region Public Properties
-
-		public string Code { get; set; }
-
-		public string Description { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public bool IsActive { get; set; }
-
-		#endregion Public Properties
-	}
+        public string Code { get; set; }
+        public string Description { get; set; }
+        #endregion Public Properties
+    }
 }

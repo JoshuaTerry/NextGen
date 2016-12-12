@@ -9,20 +9,14 @@ namespace DDI.Data.Models.Client
 	[Table("ConstituentEducation")]
 	public class ConstituentEducation
 	{
-		#region Public Properties
-
-		public virtual Constituent Constituent { get; set; }
-
-		public Guid? ConstituentId { get; set; }
-
-		public virtual Education Education { get; set; }
-
-		public Guid? EducationId { get; set; }
-
+		#region Public Properties 
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
-		#endregion Public Properties
-	}
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        public virtual Education Education { get; set; }
+        public Guid? EducationId { get; set; }
+        #endregion Public Properties
+    }
 }
