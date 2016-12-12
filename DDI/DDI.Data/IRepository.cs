@@ -24,6 +24,8 @@ namespace DDI.Data
 
 		T GetById(object id);
 
+	    T Find(params object[] keyValues); 
+
 		void Insert(T entity);
 
 		void Update(T entity);

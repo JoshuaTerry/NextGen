@@ -9,22 +9,17 @@ namespace DDI.Data.Models.Client
 	[Table("Denomination")]
 	public class Denomination
 	{
-		#region Public Properties
-
-		public string Affiliation { get; set; }
-
-		public string Code { get; set; }
-
+		#region Public Properties     	
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
-		public bool IsActive { get; set; }
-
+        public string Affiliation { get; set; }
+        public string Code { get; set; }
+        public bool IsActive { get; set; }
 		public string Name { get; set; }
-
 		public string Religion { get; set; }
-
-		#endregion Public Properties
-	}
+        public virtual Constituent Constituent { get; set; }
+        public Guid? ConstituentId { get; set; }
+        #endregion Public Properties
+    }
 }

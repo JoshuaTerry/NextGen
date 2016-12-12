@@ -12,23 +12,15 @@ namespace DDI.Data.Models.Client
 	public class Address
 	{
 		#region Public Properties
-
-		public string City { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public string Line1 { get; set; }
-
 		public string Line2 { get; set; }
-
-		public State State { get; set; }
-
+        public string City { get; set; }
+        public State State { get; set; }
 		public Guid? StateId { get; set; }
-
 		public string Zip { get; set; }
-
 		#endregion Public Properties
 	}
 }

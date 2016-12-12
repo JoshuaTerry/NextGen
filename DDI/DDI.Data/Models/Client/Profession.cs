@@ -10,17 +10,12 @@ namespace DDI.Data.Models.Client
 	public class Profession
 	{
 		#region Public Properties
-
-		public string Code { get; set; }
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-
 		public bool IsActive { get; set; }
-
 		public string Name { get; set; }
-
-		#endregion Public Properties
-	}
+        public string Code { get; set; }
+        #endregion Public Properties
+    }
 }

@@ -53,9 +53,17 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="Migrations\Client\201612121753013_Constituent.cs" />
-    <Compile Include="Migrations\Client\201612121753013_Constituent.Designer.cs">
-      <DependentUpon>201612121753013_Constituent.cs</DependentUpon>
+    <Compile Include="Migrations\201612122040239_fixingMigration.cs" />
+    <Compile Include="Migrations\201612122040239_fixingMigration.Designer.cs">
+      <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Common\201612091710348_RenameColumns.cs" />
+    <Compile Include="Migrations\Common\201612091710348_RenameColumns.Designer.cs">
+      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612091853462_ModelChanges.cs" />
+    <Compile Include="Migrations\201612091853462_ModelChanges.Designer.cs">
+      <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.cs" />
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.designer.cs">
@@ -79,11 +87,8 @@
     <Compile Include="Models\Client\ConstituentAddress.cs" />
     <Compile Include="Models\Client\ConstituentAlternateId.cs" />
     <Compile Include="Models\Client\ConstituentContactInfo.cs" />
-    <Compile Include="Models\Client\ConstituentDba.cs" />
-    <Compile Include="Models\Client\ConstituentDemonination.cs" />
+    <Compile Include="Models\Client\ConstituentDBA.cs" />
     <Compile Include="Models\Client\ConstituentEducation.cs" />
-    <Compile Include="Models\Client\ConstituentEthnicity.cs" />
-    <Compile Include="Models\Client\ConstituentPaymentPreference.cs" />
     <Compile Include="Models\Client\ConstituentStatus.cs" />
     <Compile Include="Models\Client\ConstituentType.cs" />
     <Compile Include="Models\Client\ContactInfo.cs" />
@@ -92,7 +97,6 @@
     <Compile Include="Models\Client\DoingBusinessAs.cs" />
     <Compile Include="Models\Client\Education.cs" />
     <Compile Include="Models\Client\EducationLevel.cs" />
-    <Compile Include="Models\Client\EducationToLevel.cs" />
     <Compile Include="Models\Client\Ethnicity.cs" />
     <Compile Include="Models\Client\Gender.cs" />
     <Compile Include="Models\Client\IncomeLevel.cs" />
@@ -100,7 +104,6 @@
     <Compile Include="Models\Client\PaymentPreference.cs" />
     <Compile Include="Models\Client\Prefix.cs" />
     <Compile Include="Models\Client\Profession.cs" />
-    <Compile Include="Models\Client\State.cs" />
     <Compile Include="Models\Common\Abbreviation.cs" />
     <Compile Include="Models\Common\City.cs" />
     <Compile Include="Models\Common\CityName.cs" />
@@ -121,8 +124,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Client\201612121753013_Constituent.resx">
-      <DependentUpon>201612121753013_Constituent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>

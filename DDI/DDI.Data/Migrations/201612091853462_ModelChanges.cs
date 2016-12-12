@@ -1,28 +1,22 @@
-namespace DDI.Data.Migrations.Common
+namespace DDI.Data.Migrations.Client
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialMigration : DbMigration
+    public partial class ModelChanges : DbMigration
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.Abbreviation",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false, identity: true),
-                        Word = c.String(maxLength: 32),
-                        USPSAbbreviation = c.String(maxLength: 32),
-                        AddressWord = c.String(maxLength: 32),
-                        NameWord = c.String(maxLength: 32),
-                        IsSuffix = c.Boolean(nullable: false),
-                        IsCaps = c.Boolean(nullable: false),
-                        IsSecondary = c.Boolean(nullable: false),
-                        Priority = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id);
-            
+            DropForeignKey("dbo.ConstituentPaymentPreference", "ConstituentId", "dbo.Constituent");
+            DropForeignKey("dbo.ConstituentPaymentPreference", "PaymentPreferenceId", "dbo.PaymentPreference");
+            DropForeignKey("dbo.EducationToLevel", "EducationId", "dbo.Education");
+            DropForeignKey("dbo.EducationToLevel", "EducationLevelId", "dbo.EducationLevel");
+            DropIndex("dbo.ConstituentPaymentPreference", new[] { "ConstituentId" });
+            DropIndex("dbo.ConstituentPaymentPreference", new[] { "PaymentPreferenceId" });
+            DropIndex("dbo.EducationToLevel", new[] { "EducationId" });
+            DropIndex("dbo.EducationToLevel", new[] { "EducationLevelId" });
+            RenameColumn(table: "dbo.PaymentPreference", name: "Constituent_Id", newName: "ConstituentId");
+            RenameIndex(table: "dbo.PaymentPreference", name: "IX_Constituent_Id", newName: "IX_ConstituentId");
             CreateTable(
                 "dbo.City",
                 c => new
@@ -61,7 +55,7 @@ namespace DDI.Data.Migrations.Common
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         Description = c.String(),
-                        FIPSCode = c.String(maxLength: 5),
+                        FipsCode = c.String(maxLength: 5),
                         LegacyCode = c.String(maxLength: 4),
                         StateId = c.Guid(),
                         Population = c.Int(nullable: false),
@@ -71,40 +65,6 @@ namespace DDI.Data.Migrations.Common
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.State", t => t.StateId)
                 .Index(t => t.StateId);
-            
-            CreateTable(
-                "dbo.State",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false, identity: true),
-                        StateCode = c.String(maxLength: 4),
-                        Description = c.String(),
-                        FIPSCode = c.String(maxLength: 2),
-                        CountryId = c.Guid(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Country", t => t.CountryId)
-                .Index(t => t.CountryId);
-            
-            CreateTable(
-                "dbo.Country",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false, identity: true),
-                        CountryCode = c.String(maxLength: 4),
-                        Description = c.String(),
-                        ISOCode = c.String(maxLength: 2),
-                        LegacyCode = c.String(maxLength: 4),
-                        StateName = c.String(),
-                        StateAbbreviation = c.String(maxLength: 4),
-                        PostalCodeFormat = c.String(),
-                        AddressFormat = c.String(),
-                        CallingCode = c.String(maxLength: 4),
-                        InternationalPrefix = c.String(maxLength: 4),
-                        TrunkPrefix = c.String(maxLength: 4),
-                        PhoneFormat = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Zip",
@@ -174,47 +134,117 @@ namespace DDI.Data.Migrations.Common
                 .Index(t => t.ZipStreetId);
             
             CreateTable(
-                "dbo.Thesaurus",
+                "dbo.Country",
                 c => new
                     {
-                        Word = c.String(nullable: false, maxLength: 50),
-                        Expansion = c.String(),
+                        Id = c.Guid(nullable: false, identity: true),
+                        CountryCode = c.String(maxLength: 4),
+                        Description = c.String(),
+                        ISOCode = c.String(maxLength: 2),
+                        LegacyCode = c.String(maxLength: 4),
+                        StateName = c.String(),
+                        StateAbbreviation = c.String(maxLength: 4),
+                        PostalCodeFormat = c.String(),
+                        AddressFormat = c.String(),
+                        CallingCode = c.String(maxLength: 4),
+                        InternationalPrefix = c.String(maxLength: 4),
+                        TrunkPrefix = c.String(maxLength: 4),
+                        PhoneFormat = c.String(),
                     })
-                .PrimaryKey(t => t.Word);
+                .PrimaryKey(t => t.Id);
             
+            AddColumn("dbo.State", "StateCode", c => c.String(maxLength: 4));
+            AddColumn("dbo.State", "Description", c => c.String());
+            AddColumn("dbo.State", "FipsCode", c => c.String(maxLength: 2));
+            AddColumn("dbo.State", "CountryId", c => c.Guid());
+            AddColumn("dbo.EducationLevel", "EducationId", c => c.Guid());
+            AddColumn("dbo.EducationLevel", "Education_Id", c => c.Guid());
+            AddColumn("dbo.Prefix", "Description", c => c.String());
+            CreateIndex("dbo.State", "CountryId");
+            CreateIndex("dbo.EducationLevel", "EducationId");
+            CreateIndex("dbo.EducationLevel", "Education_Id");
+            AddForeignKey("dbo.State", "CountryId", "dbo.Country", "Id");
+            AddForeignKey("dbo.EducationLevel", "Education_Id", "dbo.Education", "Id");
+            AddForeignKey("dbo.EducationLevel", "EducationId", "dbo.Education", "Id");
+            DropColumn("dbo.State", "Abbreviation");
+            DropColumn("dbo.State", "Name");
+            DropColumn("dbo.Prefix", "Descriptin");
+            DropTable("dbo.ConstituentPaymentPreference");
+            DropTable("dbo.EducationToLevel");
         }
         
         public override void Down()
         {
+            CreateTable(
+                "dbo.EducationToLevel",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        EducationId = c.Guid(),
+                        EducationLevelId = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.ConstituentPaymentPreference",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        ConstituentId = c.Guid(),
+                        PaymentPreferenceId = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            AddColumn("dbo.Prefix", "Descriptin", c => c.String());
+            AddColumn("dbo.State", "Name", c => c.String());
+            AddColumn("dbo.State", "Abbreviation", c => c.String());
+            DropForeignKey("dbo.EducationLevel", "EducationId", "dbo.Education");
+            DropForeignKey("dbo.EducationLevel", "Education_Id", "dbo.Education");
+            DropForeignKey("dbo.State", "CountryId", "dbo.Country");
             DropForeignKey("dbo.ZipPlus4", "ZipStreetId", "dbo.ZipStreet");
             DropForeignKey("dbo.ZipStreet", "ZipId", "dbo.Zip");
             DropForeignKey("dbo.ZipBranch", "ZipId", "dbo.Zip");
             DropForeignKey("dbo.Zip", "CityId", "dbo.City");
-            DropForeignKey("dbo.State", "CountryId", "dbo.Country");
-            DropForeignKey("dbo.County", "StateId", "dbo.State");
             DropForeignKey("dbo.City", "StateId", "dbo.State");
+            DropForeignKey("dbo.County", "StateId", "dbo.State");
             DropForeignKey("dbo.City", "CountyId", "dbo.County");
             DropForeignKey("dbo.CityName", "CityId", "dbo.City");
+            DropIndex("dbo.EducationLevel", new[] { "Education_Id" });
+            DropIndex("dbo.EducationLevel", new[] { "EducationId" });
             DropIndex("dbo.ZipPlus4", new[] { "ZipStreetId" });
             DropIndex("dbo.ZipStreet", new[] { "ZipId" });
             DropIndex("dbo.ZipBranch", new[] { "ZipId" });
             DropIndex("dbo.Zip", new[] { "CityId" });
-            DropIndex("dbo.State", new[] { "CountryId" });
             DropIndex("dbo.County", new[] { "StateId" });
             DropIndex("dbo.CityName", new[] { "CityId" });
             DropIndex("dbo.City", new[] { "CountyId" });
             DropIndex("dbo.City", new[] { "StateId" });
-            DropTable("dbo.Thesaurus");
+            DropIndex("dbo.State", new[] { "CountryId" });
+            DropColumn("dbo.Prefix", "Description");
+            DropColumn("dbo.EducationLevel", "Education_Id");
+            DropColumn("dbo.EducationLevel", "EducationId");
+            DropColumn("dbo.State", "CountryId");
+            DropColumn("dbo.State", "FipsCode");
+            DropColumn("dbo.State", "Description");
+            DropColumn("dbo.State", "StateCode");
+            DropTable("dbo.Country");
             DropTable("dbo.ZipPlus4");
             DropTable("dbo.ZipStreet");
             DropTable("dbo.ZipBranch");
             DropTable("dbo.Zip");
-            DropTable("dbo.Country");
-            DropTable("dbo.State");
             DropTable("dbo.County");
             DropTable("dbo.CityName");
             DropTable("dbo.City");
-            DropTable("dbo.Abbreviation");
+            RenameIndex(table: "dbo.PaymentPreference", name: "IX_ConstituentId", newName: "IX_Constituent_Id");
+            RenameColumn(table: "dbo.PaymentPreference", name: "ConstituentId", newName: "Constituent_Id");
+            CreateIndex("dbo.EducationToLevel", "EducationLevelId");
+            CreateIndex("dbo.EducationToLevel", "EducationId");
+            CreateIndex("dbo.ConstituentPaymentPreference", "PaymentPreferenceId");
+            CreateIndex("dbo.ConstituentPaymentPreference", "ConstituentId");
+            AddForeignKey("dbo.EducationToLevel", "EducationLevelId", "dbo.EducationLevel", "Id");
+            AddForeignKey("dbo.EducationToLevel", "EducationId", "dbo.Education", "Id");
+            AddForeignKey("dbo.ConstituentPaymentPreference", "PaymentPreferenceId", "dbo.PaymentPreference", "Id");
+            AddForeignKey("dbo.ConstituentPaymentPreference", "ConstituentId", "dbo.Constituent", "Id");
         }
     }
 }

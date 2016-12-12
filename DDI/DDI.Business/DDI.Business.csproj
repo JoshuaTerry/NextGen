@@ -279,6 +279,10 @@
     <Content Include="Scripts\_references.js" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
+      <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
+      <Name>DDI.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
