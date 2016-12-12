@@ -59,6 +59,27 @@ namespace DDI.Business.Controllers
             return Ok(constituent);
         }
 
+        [HttpGet]
+        [Route("api/v1/constituents/number/{num}")]
+        public IHttpActionResult GetConstituentByConstituentNum(int num)
+        {
+            {
+                var constituent = _service.GetConstituentByConstituentNum(num);
+
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+                if (!constituent.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                return Ok(constituent);
+
+            }
+        }
+
         [HttpPost]
         [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody]string value)
@@ -73,7 +94,7 @@ namespace DDI.Business.Controllers
 
         [HttpPut]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(Guid id, [FromBody]string value)
         {
             if (!ModelState.IsValid)
             {
@@ -85,7 +106,7 @@ namespace DDI.Business.Controllers
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Patch(int id, [FromBody]string value)
+        public IHttpActionResult Patch(Guid id, [FromBody]string value)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +118,7 @@ namespace DDI.Business.Controllers
 
         [HttpDelete]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Delete(int id)
+        public IHttpActionResult Delete(Guid id)
         {
             return Ok();
         }

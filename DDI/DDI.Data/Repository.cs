@@ -87,6 +87,8 @@ namespace DDI.Data
 
 		public T GetById(object id) => EntitySet.Find(id);
 
+	    public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
+
 		public void Insert(T entity)
 		{
 			try

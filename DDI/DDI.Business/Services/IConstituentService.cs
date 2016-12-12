@@ -12,5 +12,6 @@ namespace DDI.Business.Services
     {
         IDataResponse<IQueryable<Constituent>> GetConstituents();
         IDataResponse<Constituent> GetConstituentById(Guid id);
+        IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
     }
 }

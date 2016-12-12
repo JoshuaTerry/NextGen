@@ -33,7 +33,7 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IHttpActionResult result = controller.GetConstituentById(5);
+            IHttpActionResult result = controller.GetConstituentById(new Guid());
 
             // Assert
             
@@ -58,7 +58,7 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            controller.Put(5, "value");
+            controller.Put(new Guid(), "value");
 
             // Assert
         }
@@ -70,7 +70,7 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            controller.Delete(5);
+            controller.Delete(new Guid());
 
             // Assert
         }

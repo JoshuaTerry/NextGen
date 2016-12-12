@@ -37,5 +37,12 @@ namespace DDI.Business.Services
 
             return GetIDataResponse(() => constituent);
         }
+
+        public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
+        {
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNum == constituentNum);
+
+            return GetIDataResponse(() => constituent);
+        }
     }
 }
