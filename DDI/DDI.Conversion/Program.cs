@@ -6,14 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DDI.Data;
-using DDI.Conversion.LoadDataCRM;
+using DDI.Conversion;
+using DDI.Data.Models.Client;
+using System.Data.Entity.Migrations;
 
 namespace DDI.Conversion
 {
     class Program
     {
 
-        
+
 
         static void Main(string[] args)
         {
@@ -21,15 +23,16 @@ namespace DDI.Conversion
             //Hard coding for quick demo purposes.
 
 
-            DomainContext context;
-            string organization = "NG";
-            string filePath = "J:\\DDI\\Dept 00 - Common\\Projects\\NextGen\\Conversion\\Data";
+            using (DomainContext context = new DomainContext())
+            { 
+                string organization = "NG";
+                string filePath = "\\\\ddifs2\\ddi\\DDI\\Dept 00 - Common\\Projects\\NextGen\\Conversion\\Data";
 
-            ExecuteCRMLoad(context, organization, filePath);
-
+                LoadDataCRM.ExecuteCRMLoad(context, organization, filePath);
+                context.SaveChanges();
             }
+
         }
-        
 
     }
     

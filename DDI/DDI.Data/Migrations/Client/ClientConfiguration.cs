@@ -61,7 +61,7 @@ namespace DDI.Data.Migrations.Client
                 new ConstituentType { BaseType = ConstituentCategory.Organization.ToString(), Code = "O", Description = "Organization", IsActive = true, IsRequired = true }
             );
 
-            // Genders
+            //Genders
             context.Genders.AddOrUpdate(
                 p => p.Code,
                 new Gender { Code = "M", IsMasculine = true, Name = "Male"},

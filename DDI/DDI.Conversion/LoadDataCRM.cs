@@ -13,10 +13,10 @@ using System.Data.Entity.Migrations;
 
 namespace DDI.Conversion
 {
-    class LoadDataCRM
+    class LoadDataCRM : DbMigrationsConfiguration<DomainContext>
     {
 
-        private const string NACODES_FILE = "nacodes.csv";
+        private const string NACODES_FILE = "NACodes.csv";
         private const string ADDRESSES_FILE = "address.csv";
         private const string PREFIX_FILE = "NamePrefix.csv";
         private const string INDIVIDUAL_CONSTITUENT_FILE = "individual.csv";
@@ -32,6 +32,7 @@ namespace DDI.Conversion
         //private const int ADDRESS_TYPE_SET = 6;
         private const int CONSTITUENT_TYPE = 7;
         private const int EDUCATION_LEVEL_SET = 8;
+        private const int STATE_SET = 10;
         //private const int PROFESSION_SET = 11;
         //private const int EARNINGS_SET = 14;
         private const int LANGUAGE_SET = 26;
@@ -44,113 +45,151 @@ namespace DDI.Conversion
         //private const int DEGREE_SET = 42;
 
 
-        public void ExecuteCRMLoad(DomainContext context, string organization, string filePath)
+        public static void ExecuteCRMLoad(DomainContext context, string organization, string filePath)
         {
             string dataFile = "";
 
 
-            // Load legacy nacodes
-            // - 5 denominations
-            // - 7 constituent types
-            // - 8 education levels
-            // - 26 language
-            // - 33 ethnicities
-            // - 34 clergy types 
-            // - 35 clergy status
-            // - 38 genders
-            dataFile = filePath + "\\" + organization + "\\CRM\\" + NACODES_FILE;
-            using (System.IO.StreamReader sr = new StreamReader(dataFile))
-            {
-                String line;
+            //// Load legacy nacodes
+            //// - 5 denominations
+            //// - 7 constituent types
+            //// - 8 education levels
+            //// - 10 states
+            //// - 26 language
+            //// - 33 ethnicities
+            //// - 34 clergy types 
+            //// - 35 clergy status
+            //// - 38 genders
+            //dataFile = filePath + "\\" + organization + "\\CRM\\" + NACODES_FILE;
+            //using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            //{
+            //    String line;
 
-                while ((line = sr.ReadLine()) != null)
-                {
-                    string[] parts = line.Split(',');
-                    int codeSet;
-                    int.TryParse(parts[1], out codeSet);
-                    string code = parts[2];
-                    string description = parts[3];
-                    int int1;
-                    int.TryParse(parts[4], out int1);
-                    int int2;
-                    int.TryParse(parts[5], out int2);
-                    string text1 = parts[6];
-                    string text2 = parts[7];
-                    string security = parts[8];
-                    bool active = Convert.ToBoolean(parts[9] == "yes");
-                    string baseType = "";
-                    bool required = false;
-                    bool masculine = true;
+            //    while ((line = sr.ReadLine()) != null)
+            //    {
+            //        int codeSet;
+            //        string code = null;
+            //        string description = null;
+            //        int int1;
+            //        int int2;
+            //        string text1 = null;
+            //        string text2 = null;
+            //        string security = null;
+            //        bool active = false;
+            //        string baseType = null;
+            //        bool required = false;
+            //        bool masculine = true;
 
-                    switch (codeSet)
-                    {
-                        case DENOMINATION_SET:
-                            context.Denominations.AddOrUpdate(
-                                p => p.Code,
-                                new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
-                            break;
-                        case CONSTITUENT_TYPE:
-                            if (code == "I" || code == "F")
-                            {
-                                baseType = ConstituentCategory.Individual.ToString();
-                               
-                            }
-                            else
-                            {
-                                baseType = ConstituentCategory.Organization.ToString();
-                            }
-                            if (code == "I" || code == "O")
-                            {
-                                required = true;
-                            }
-                            context.ConstituentTypes.AddOrUpdate(
-                                p => p.Code,
-                                new ConstituentType { BaseType = baseType, Code = code, Description = description, IsActive = active, IsRequired = required });
-                            break;
-                        case EDUCATION_LEVEL_SET:
-                            context.EducationLevels.AddOrUpdate(
-                                p => p.Code,
-                                new EducationLevel { Code = code, Name = description, IsActive = active });
-                            break;
-                        case LANGUAGE_SET:
-                            context.Languages.AddOrUpdate(
-                               p => p.Code,
-                               new Language { Code = code, Name = description, IsActive = active });
-                            break;
-                        case ETHNICITY_SET:
-                            context.Ethnicities.AddOrUpdate(
-                               p => p.Code,
-                               new Ethnicity { Code = code, Name = description, IsActive = active });
-                            break;
-                        case CLERGY_TYPE_SET:
-                            context.ClergyTypes.AddOrUpdate(
-                               p => p.Code,
-                               new ClergyType { Code = code, Description = description, IsActive = active });
-                            break;
-                        case CLERGY_STATUS_SET:
-                            context.ClergyStatuses.AddOrUpdate(
-                               p => p.Code,
-                               new ClergyStatus { Code = code, Name = description, Description = description, IsActive = active });
-                            break;
-                        case GENDER_SET:
-                            if (code == "M")
-                            {
-                                masculine = true;
-                                required = true;
-                            }
-                            else if (code == "F")
-                            {
-                                masculine = false;
-                                required = true;
-                            }
-                            context.Genders.AddOrUpdate(
-                               p => p.Code,
-                               new Gender { Code = code, Name = description, IsMasculine = masculine });
-                            break;
-                    }
+            //        Console.WriteLine(line);
+            //        string[] parts = ParseLine(line);
+            //        int.TryParse(parts[0], out codeSet);
+            //        if (parts.Length >= 2)
+            //        {
+            //            code = parts[1];
+            //        }
+            //        if (parts.Length >= 3)
+            //        {
+            //            description = parts[2];
+            //        }
+            //        if (parts.Length >= 4)
+            //        {
+            //            int.TryParse(parts[3], out int1);
+            //        }
+            //        if (parts.Length >= 5)
+            //        {
+            //            int.TryParse(parts[4], out int2);
+            //        }
+            //        if (parts.Length >= 6)
+            //        {
+            //            text1 = parts[5];
+            //        }
+            //        if (parts.Length >= 7)
+            //        {
+            //            text2 = parts[6];
+            //        }
+            //        if (parts.Length >= 8)
+            //        {
+            //            security = parts[7];
+            //        }
+            //        if (parts.Length >= 9)
+            //        {
+            //            active = (parts[8] == "yes");
+            //        }
 
-                }
-            }
+            //        switch (codeSet)
+            //        {
+            //            case DENOMINATION_SET:
+            //                context.Denominations.AddOrUpdate(
+            //                    p => p.Code,
+            //                    new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
+            //                break;
+            //            case CONSTITUENT_TYPE:
+            //                if (code == "I" || code == "F")
+            //                {
+            //                    baseType = ConstituentCategory.Individual.ToString();
+
+            //                }
+            //                else
+            //                {
+            //                    baseType = ConstituentCategory.Organization.ToString();
+            //                }
+            //                if (code == "I" || code == "O")
+            //                {
+            //                    required = true;
+            //                }
+            //                context.ConstituentTypes.AddOrUpdate(
+            //                    p => p.Code,
+            //                    new ConstituentType { BaseType = baseType, Code = code, Description = description, IsActive = active, IsRequired = required });
+            //                break;
+            //            case EDUCATION_LEVEL_SET:
+            //                context.EducationLevels.AddOrUpdate(
+            //                    p => p.Code,
+            //                    new EducationLevel { Code = code, Name = description, IsActive = active });
+            //                break;
+            //            case STATE_SET:
+            //                context.States.AddOrUpdate(
+            //                    p => p.Abbreviation,
+            //                    new State { Abbreviation = code, Name = description });
+            //                break;
+            //            case LANGUAGE_SET:
+            //                context.Languages.AddOrUpdate(
+            //                   p => p.Code,
+            //                   new Language { Code = code, Name = description, IsActive = active });
+            //                break;
+            //            case ETHNICITY_SET:
+            //                context.Ethnicities.AddOrUpdate(
+            //                   p => p.Code,
+            //                   new Ethnicity { Code = code, Name = description, IsActive = active });
+            //                break;
+            //            case CLERGY_TYPE_SET:
+            //                context.ClergyTypes.AddOrUpdate(
+            //                   p => p.Code,
+            //                   new ClergyType { Code = code, Description = description, IsActive = active });
+            //                break;
+            //            case CLERGY_STATUS_SET:
+            //                context.ClergyStatuses.AddOrUpdate(
+            //                   p => p.Code,
+            //                   new ClergyStatus { Code = code, Name = description, Description = description, IsActive = active });
+            //                break;
+            //            case GENDER_SET:
+            //                if (code == "M")
+            //                {
+            //                    masculine = true;
+            //                    required = true;
+            //                }
+            //                else if (code == "F")
+            //                {
+            //                    masculine = false;
+            //                    required = true;
+            //                }
+            //                context.Genders.AddOrUpdate(
+            //                   p => p.Code,
+            //                   new Gender { Code = code, Name = description, IsMasculine = masculine });
+            //                break;
+            //        }
+
+            //    }
+            //}
 
             // Load Addresses
             dataFile = filePath + "\\" + organization + "\\CRM\\" + ADDRESSES_FILE;
@@ -160,230 +199,313 @@ namespace DDI.Conversion
 
                 while ((line = sr.ReadLine()) != null)
                 {
-                    string[] parts = line.Split(',');
                     int legacyId;
-                    int.TryParse(parts[1], out legacyId);
-                    string streetAddress = parts[2];
-                    string countryCode = parts[3];
-                    string stateCode = parts[4];
-                    int countyFips;
-                    int.TryParse(parts[5], out countyFips);
-                    string postalCode = parts[6];
-                    string city = parts[7];
-                    int region1;
-                    int.TryParse(parts[8], out region1);
-                    int region2;
-                    int.TryParse(parts[9], out region2);
-                    int region3;
-                    int.TryParse(parts[10], out region3);
-                    int region4;
-                    int.TryParse(parts[11], out region4);
+                    string streetAddress = null;
+                    string countryCode = null;
+                    string stateCode = null;
+                    int countyFips = 0;
+                    string postalCode = null;
+                    string city = null;
+                    string line2;
 
-                    State state = context.States.First(p => p.Abbreviation == stateCode);
-                    //TODO: need to assign legacyID to new field in Address table
-
-                    context.Addresses.AddOrUpdate(
-                        p => p.Line2,
-                        new Address { Line1 = streetAddress, Line2 = legacyId.ToString(), City = city, State = state, StateId = state.Id, Zip = postalCode });
-
-                }
-            }
-
-            // Load prefixes
-            dataFile = filePath + "\\" + organization + "\\CRM\\" + PREFIX_FILE;
-            using (System.IO.StreamReader sr = new StreamReader(dataFile))
-            {
-                String line;
-
-                while ((line = sr.ReadLine()) != null)
-                {
-                    string[] parts = line.Split(',');
-                    string prefix = parts[1];
-                    string salutation = parts[2];
-                    string label = parts[3];
-                    string gender = parts[4];
-                    string prior = parts[5];
-                    string labelAbbreviation = parts[6];
-                    bool isWebAvailable = (parts[7] == "yes");
-
-                    Gender g1 = context.Genders.First(p => p.Code == gender);
-
-                    context.Prefixes.AddOrUpdate(
-                        p => p.Abbreviation,
-                        new Prefix { Abbreviation = labelAbbreviation, Descriptin = label, Gender = g1, GenderId = g1.Id });
-
-                }
-            }
-
-            // Load constituents and constituent denomination cross reference and constituent ethnicity - was 1 to 1 in legacy app
-            dataFile = filePath + "\\" + organization + "\\CRM\\" + INDIVIDUAL_CONSTITUENT_FILE;
-            using (System.IO.StreamReader sr = new StreamReader(dataFile))
-            {
-                String line;
-
-                while ((line = sr.ReadLine()) != null)
-                {
-                    string[] parts = line.Split(',');
-                    int constituentId;
-                    int.TryParse(parts[1], out constituentId);
-                    string constituentType = parts[2];
-                    string name = parts[3];
-                    string name2 = parts[4];
-                    string sourceCode = parts[5];
-                    string taxId = parts[6];
-                    string ethnicity = parts[7];
-                    string denomination = parts[8];
-                    string correspondencePreference = parts[9];
-                    string salutationFormat = parts[10];
-                    string salutationText = parts[11];
-                    string prefix = parts[12];
-                    string firstName = parts[13];
-                    string middleName = parts[14];
-                    string lastName = parts[15];
-                    string suffix = parts[16];
-                    string nickname = parts[17];
-                    string nameFormat = parts[18];
-                    string gender = parts[19];
-                    string earnings = parts[20];
-                    string educationLevel = parts[21];
-                    string employer = parts[22];
-                    string position = parts[23];
-                    DateTime employmentStartDate;
-                    DateTime.TryParse(parts[24], out employmentStartDate);
-                    DateTime employmentEndDate;
-                    DateTime.TryParse(parts[25], out employmentEndDate);
-                    DateTime firstEmploymentDate;
-                    DateTime.TryParse(parts[26], out firstEmploymentDate);
-                    bool isClientEmployee = (parts[27] == "yes");
-                    string profession = parts[28];
-                    string clergyType = parts[29];
-                    string clergyStatus = parts[30];
-                    DateTime ordinationDate;
-                    DateTime.TryParse(parts[31], out ordinationDate);
-                    string ordinationPlace = parts[32];
-                    DateTime prospectDate;
-                    DateTime.TryParse(parts[33], out prospectDate);
-                    string maritalStatus = parts[34];
-                    DateTime marriageDate;
-                    DateTime.TryParse(parts[35], out marriageDate);
-                    DateTime divorceDate;
-                    DateTime.TryParse(parts[36], out divorceDate);
-                    DateTime deceasedDate;
-                    DateTime.TryParse(parts[37], out deceasedDate);
-                    int birthMonth;
-                    int.TryParse(parts[38], out birthMonth);
-                    int birthDay;
-                    int.TryParse(parts[39], out birthDay);
-                    int birthYear1;
-                    int.TryParse(parts[40], out birthYear1);
-                    int birthYear2;
-                    int.TryParse(parts[41], out birthYear2);
-                    string deletionCode = parts[42];
-                    DateTime deletionDate;
-                    DateTime.TryParse(parts[43], out deletionDate);
-
-                    Gender g1 = context.Genders.First(p => p.Code == gender);
-                    ClergyStatus cs1 = context.ClergyStatuses.First(p => p.Code == clergyStatus);
-                    ClergyType ct1 = context.ClergyTypes.First(p => p.Code == clergyType);
-                    ConstituentStatus cs2;
-                    if (deletionDate == null)
-                    {
-                        cs2 = context.ConstituentStatuses.First(p => p.Code == "AC");
-                    }
-                    else
-                    {
-                        cs2 = context.ConstituentStatuses.First(p => p.Code == "IN");
-                    }
-                    ConstituentType ct2 = context.ConstituentTypes.First(p => p.Code == constituentType);
-                    EducationLevel e1 = context.EducationLevels.First(p => p.Code == educationLevel);
-                    string formattedName = firstName;
-                    if (middleName != null)
-                    {
-                        formattedName = formattedName + " " + middleName;
-                    }
-                    if(lastName != null)
-                    {
-                        formattedName = formattedName + " " + lastName;
-                    }
-                    DateTime birthDate;
-                    if (birthMonth != 0 && birthDay != 0 && birthYear1 != 0)
-                    {
-                        birthDate = new DateTime(birthYear1, birthMonth, birthDay);
-                    }
-                    else
-                    {
-                        birthDate = new DateTime(1000,1,1);
-                    }
-                    IncomeLevel il1 = context.IncomeLevels.First(p => p.Code == earnings);
-                    Prefix p1 = context.Prefixes.First(p => p.Abbreviation == prefix);
-                    Profession p2 = context.Professions.First(p => p.Code == profession);
-                    int ms1;
-                    int.TryParse(maritalStatus, out ms1);
-                    //TODO: run salutation through the salutation logic when it gets there if salutation text is not filled in.
                    
+                    string[] parts = ParseLine(line);
+                    Console.WriteLine(line);
+                    if (parts.Length >= 7)
+                    {
+                        int.TryParse(parts[0], out legacyId);
+                        streetAddress = parts[1];
+                        //countryCode = parts[2];
+                        stateCode = parts[3];
+                        int.TryParse(parts[4], out countyFips);
+                        postalCode = parts[5];
+                        city = parts[6];
+                        //int region1;
+                        //int.TryParse(parts[7], out region1);
+                        //int region2;
+                        //int.TryParse(parts[8], out region2);
+                        //int region3;
+                        //int.TryParse(parts[9], out region3);
+                        //int region4;
+                        //int.TryParse(parts[10], out region4);
+                        line2 = legacyId.ToString();
+                        stateCode = stateCode.Trim('"');
 
-                    //TODO: create constituent
-                    context.Constituents.AddOrUpdate(
-                        p => p.ConstituentNum,
-                        new Constituent { BirthDate = birthDate, BirthYearFrom = birthYear1, BirthYearTo = birthYear2, Business = profession, ClergyStatus = cs1, ClergyStatusId = cs1.Id,
-                            ClergyType = ct1, ClergyTypeId = ct1.Id, ConstituentStatus = cs2, ConstituentStatusId = cs2.Id, ConstituentNum = constituentId,
-                            ConstituentType = ct2, ConstituentTypeId = ct2.Id, DeceasedDate = deceasedDate, DivorceDate = divorceDate, EducationLevel = e1, Employer = employer,
-                            EmploymentStartDate = employmentStartDate, EmploymentEndDate = employmentEndDate, FirstEmploymentDate = firstEmploymentDate, FirstName = firstName,
-                            FormattedName =  formattedName, IncomeLevel = il1, IncomeLevelId = il1.Id, IsEmployee = isClientEmployee, LastName = lastName, MaritalStatus = ms1,
-                            MarriageDate = marriageDate, MiddleName = middleName, Name2 = name2, Nickname = nickname, OrdinationDate = ordinationDate, PlaceOfOrdination = ordinationPlace,
-                            Position = position, Prefix = p1, PrefixId = p1.Id, Profession = p2, ProfessionId = p2.Id, ProspectDate = prospectDate, Salutation = salutationText,
-                            Source = sourceCode, Suffix = suffix, TaxId = taxId});
-
-                    
-
+                        if (legacyId < 33616 && stateCode != null && stateCode != "")
+                        {
+                            State state = context.States.FirstOrDefault(p => p.Abbreviation == stateCode);
+                            //TODO: need to assign legacyID to new field in Address table
+                            if (state != null)
+                            {
+                                context.Addresses.AddOrUpdate(
+                                    p => p.Line2,
+                                    new Address { Line1 = streetAddress, Line2 = line2, City = city, State = state, StateId = state.Id, Zip = postalCode });
+                            }
+                        }
+                    }
                 }
             }
 
-            // Load Doing BusinessAs
+            //// Load prefixes
+            //dataFile = filePath + "\\" + organization + "\\CRM\\" + PREFIX_FILE;
+            //using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            //{
+            //    String line;
 
-            // Load Education
+            //    while ((line = sr.ReadLine()) != null)
+            //    {
+            //        string[] parts = ParseLine(line);
+            //        string prefix = parts[0];
+            //        string salutation = parts[1];
+            //        string label = parts[2];
+            //        string gender = parts[3];
+            //        string prior = parts[4];
+            //        string labelAbbreviation = parts[5];
+            //        bool isWebAvailable = (parts[6] == "yes");
 
-            // Load Payment Preferences - may be in a different module
+            //        Gender g1 = context.Genders.First(p => p.Code == gender);
 
-            // Load AleternatIDs
+            //        context.Prefixes.AddOrUpdate(
+            //            p => p.Abbreviation,
+            //            new Prefix { Abbreviation = labelAbbreviation, Descriptin = label, Gender = g1, GenderId = g1.Id });
 
-            // Load Constituent Address cross reference
-            dataFile = filePath + "\\" + organization + "\\CRM\\" + CONSTITUENT_ADDRESS_FILE;
-            using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            //    }
+            //}
+
+            //// Load constituents and constituent denomination cross reference and constituent ethnicity - was 1 to 1 in legacy app
+            //dataFile = filePath + "\\" + organization + "\\CRM\\" + INDIVIDUAL_CONSTITUENT_FILE;
+            //using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            //{
+            //    String line;
+
+            //    while ((line = sr.ReadLine()) != null)
+            //    {
+            //        string[] parts = ParseLine(line);
+            //        int constituentId;
+            //        int.TryParse(parts[0], out constituentId);
+            //        string constituentType = parts[1];
+            //        string name = parts[2];
+            //        string name2 = parts[3];
+            //        string sourceCode = parts[4];
+            //        string taxId = parts[5];
+            //        string ethnicity = parts[6];
+            //        string denomination = parts[7];
+            //        string correspondencePreference = parts[8];
+            //        string salutationFormat = parts[9];
+            //        string salutationText = parts[10];
+            //        string prefix = parts[11];
+            //        string firstName = parts[12];
+            //        string middleName = parts[13];
+            //        string lastName = parts[14];
+            //        string suffix = parts[15];
+            //        string nickname = parts[16];
+            //        string nameFormat = parts[17];
+            //        string gender = parts[18];
+            //        string earnings = parts[19];
+            //        string educationLevel = parts[20];
+            //        string employer = parts[21];
+            //        string position = parts[22];
+            //        DateTime employmentStartDate;
+            //        DateTime.TryParse(parts[23], out employmentStartDate);
+            //        DateTime employmentEndDate;
+            //        DateTime.TryParse(parts[24], out employmentEndDate);
+            //        DateTime firstEmploymentDate;
+            //        DateTime.TryParse(parts[25], out firstEmploymentDate);
+            //        bool isClientEmployee = (parts[26] == "yes");
+            //        string profession = parts[27];
+            //        string clergyType = parts[28];
+            //        string clergyStatus = parts[29];
+            //        DateTime ordinationDate;
+            //        DateTime.TryParse(parts[30], out ordinationDate);
+            //        string ordinationPlace = parts[31];
+            //        DateTime prospectDate;
+            //        DateTime.TryParse(parts[32], out prospectDate);
+            //        string maritalStatus = parts[33];
+            //        DateTime marriageDate;
+            //        DateTime.TryParse(parts[34], out marriageDate);
+            //        DateTime divorceDate;
+            //        DateTime.TryParse(parts[35], out divorceDate);
+            //        DateTime deceasedDate;
+            //        DateTime.TryParse(parts[36], out deceasedDate);
+            //        int birthMonth;
+            //        int.TryParse(parts[37], out birthMonth);
+            //        int birthDay;
+            //        int.TryParse(parts[38], out birthDay);
+            //        int birthYear1;
+            //        int.TryParse(parts[39], out birthYear1);
+            //        int birthYear2;
+            //        int.TryParse(parts[40], out birthYear2);
+            //        string deletionCode = parts[41];
+            //        DateTime deletionDate;
+            //        DateTime.TryParse(parts[42], out deletionDate);
+
+            //        Gender g1 = context.Genders.First(p => p.Code == gender);
+            //        ClergyStatus cs1 = context.ClergyStatuses.First(p => p.Code == clergyStatus);
+            //        ClergyType ct1 = context.ClergyTypes.First(p => p.Code == clergyType);
+            //        ConstituentStatus cs2;
+            //        if (deletionDate == null)
+            //        {
+            //            cs2 = context.ConstituentStatuses.First(p => p.Code == "AC");
+            //        }
+            //        else
+            //        {
+            //            cs2 = context.ConstituentStatuses.First(p => p.Code == "IN");
+            //        }
+            //        ConstituentType ct2 = context.ConstituentTypes.First(p => p.Code == constituentType);
+            //        EducationLevel e1 = context.EducationLevels.First(p => p.Code == educationLevel);
+            //        string formattedName = firstName;
+            //        if (middleName != null)
+            //        {
+            //            formattedName = formattedName + " " + middleName;
+            //        }
+            //        if (lastName != null)
+            //        {
+            //            formattedName = formattedName + " " + lastName;
+            //        }
+            //        DateTime birthDate;
+            //        if (birthMonth != 0 && birthDay != 0 && birthYear1 != 0)
+            //        {
+            //            birthDate = new DateTime(birthYear1, birthMonth, birthDay);
+            //        }
+            //        else
+            //        {
+            //            birthDate = new DateTime(1000, 1, 1);
+            //        }
+            //        IncomeLevel il1 = context.IncomeLevels.First(p => p.Code == earnings);
+            //        Prefix p1 = context.Prefixes.First(p => p.Abbreviation == prefix);
+            //        Profession p2 = context.Professions.First(p => p.Code == profession);
+            //        int ms1;
+            //        int.TryParse(maritalStatus, out ms1);
+            //        //TODO: run salutation through the salutation logic when it gets there if salutation text is not filled in.
+
+
+            //        //TODO: create constituent
+            //        context.Constituents.AddOrUpdate(
+            //            p => p.ConstituentNum,
+            //            new Constituent
+            //            {
+            //                BirthDate = birthDate,
+            //                BirthYearFrom = birthYear1,
+            //                BirthYearTo = birthYear2,
+            //                Business = profession,
+            //                ClergyStatus = cs1,
+            //                ClergyStatusId = cs1.Id,
+            //                ClergyType = ct1,
+            //                ClergyTypeId = ct1.Id,
+            //                ConstituentStatus = cs2,
+            //                ConstituentStatusId = cs2.Id,
+            //                ConstituentNum = constituentId,
+            //                ConstituentType = ct2,
+            //                ConstituentTypeId = ct2.Id,
+            //                DeceasedDate = deceasedDate,
+            //                DivorceDate = divorceDate,
+            //                EducationLevel = e1,
+            //                Employer = employer,
+            //                EmploymentStartDate = employmentStartDate,
+            //                EmploymentEndDate = employmentEndDate,
+            //                FirstEmploymentDate = firstEmploymentDate,
+            //                FirstName = firstName,
+            //                FormattedName = formattedName,
+            //                IncomeLevel = il1,
+            //                IncomeLevelId = il1.Id,
+            //                IsEmployee = isClientEmployee,
+            //                LastName = lastName,
+            //                MaritalStatus = ms1,
+            //                MarriageDate = marriageDate,
+            //                MiddleName = middleName,
+            //                Name2 = name2,
+            //                Nickname = nickname,
+            //                OrdinationDate = ordinationDate,
+            //                PlaceOfOrdination = ordinationPlace,
+            //                Position = position,
+            //                Prefix = p1,
+            //                PrefixId = p1.Id,
+            //                Profession = p2,
+            //                ProfessionId = p2.Id,
+            //                ProspectDate = prospectDate,
+            //                Salutation = salutationText,
+            //                Source = sourceCode,
+            //                Suffix = suffix,
+            //                TaxId = taxId
+            //            });
+
+
+
+            //    }
+            //}
+
+            //// Load Doing BusinessAs
+
+            //// Load Education
+
+            //// Load Payment Preferences - may be in a different module
+
+            //// Load AleternatIDs
+
+            //// Load Constituent Address cross reference
+            //dataFile = filePath + "\\" + organization + "\\CRM\\" + CONSTITUENT_ADDRESS_FILE;
+            //using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            //{
+            //    String line;
+
+            //    while ((line = sr.ReadLine()) != null)
+            //    {
+            //        string[] parts = ParseLine(line);
+            //        int legacyAddressId;
+            //        int.TryParse(parts[0], out legacyAddressId);
+            //        int constituentNum;
+            //        int.TryParse(parts[1], out constituentNum);
+            //        string addressTypeCode = parts[2];
+            //        string comment = parts[3];
+            //        DateTime startDate;
+            //        DateTime.TryParse(parts[4], out startDate);
+            //        DateTime endDate;
+            //        DateTime.TryParse(parts[5], out endDate);
+            //        int startDay;
+            //        int.TryParse(parts[6], out startDay);
+            //        int endDay;
+            //        int.TryParse(parts[7], out endDay);
+            //        bool isPrimary = (parts[8] == "yes");
+            //        string residentType = parts[9];
+
+            //        Address a1 = context.Addresses.First(p => p.Line2 == legacyAddressId.ToString());
+            //        Constituent c1 = context.Constituents.First(p => p.ConstituentNum == constituentNum);
+
+            //        context.ConstituentAddresses.AddOrUpdate(
+            //            p => p.Id,
+            //            new ConstituentAddress { Address = a1, AddressId = a1.Id, Constituent = c1, ConstituentId = c1.Id, IsPrimary = isPrimary });
+
+            //    }
+            //}
+            //// Load contact info
+
+        }
+        public static string[] ParseLine(string line)
+        {
+            string[] parts = line.Split(',');
+
+            int i = 0;
+            while (i < parts.Length - 1)
             {
-                String line;
-
-                while ((line = sr.ReadLine()) != null)
+                if (parts[i] != null && parts[i] != "")
                 {
-                    string[] parts = line.Split(',');
-                    int legacyAddressId;
-                    int.TryParse(parts[1], out legacyAddressId);
-                    int constituentNum;
-                    int.TryParse(parts[2], out constituentNum);
-                    string addressTypeCode = parts[3];
-                    string comment = parts[4];
-                    DateTime startDate;
-                    DateTime.TryParse(parts[5], out startDate);
-                    DateTime endDate;
-                    DateTime.TryParse(parts[6], out endDate);
-                    int startDay;
-                    int.TryParse(parts[7], out startDay);
-                    int endDay;
-                    int.TryParse(parts[8], out endDay);
-                    bool isPrimary = (parts[9] == "yes");
-                    string residentType = parts[10];
+                    if (parts[i].First() == '"' && parts[i].Last() != '"')
+                    {
+                        parts[i] = parts[i] + "," + parts[i + 1];
 
-                    Address a1 = context.Addresses.First(p => p.Line2 == legacyAddressId.ToString());
-                    Constituent c1 = context.Constituents.First(p => p.ConstituentNum == constituentNum);
-
-                    context.ConstituentAddresses.AddOrUpdate(
-                        p => p.Id,
-                        new ConstituentAddress { Address = a1, AddressId = a1.Id, Constituent = c1, ConstituentId = c1.Id, IsPrimary = isPrimary });
-
+                        int j = i+1;
+                        while (j < parts.Length - 1)
+                        {
+                            parts[j] = parts[j+1];
+                            j++;
+                        }
+                    }
                 }
-            }
-            // Load contact info
+                i++;
 
+            }
+
+            return parts;
         }
     }
 }
