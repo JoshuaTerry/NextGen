@@ -10,7 +10,7 @@ namespace DDI.Business.Services
 {
     public class ServiceBase
     {
-        private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
+        //private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
         public IDataResponse<T> GetIDataResponse<T>(Func<T> funcToExecute)
         {
             return GetDataResponse(funcToExecute);
