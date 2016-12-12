@@ -11,7 +11,7 @@ using DDI.Business.Controllers;
 namespace DDI.Business.Tests.Controllers
 {
     [TestClass]
-    public class ConstituentControllerTest
+    public class ConstituentsControllerTest
     {
         [TestMethod]
         public void Get()
@@ -33,7 +33,7 @@ namespace DDI.Business.Tests.Controllers
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IHttpActionResult result = controller.GetConstituent(5);
+            IHttpActionResult result = controller.GetConstituentById(5);
 
             // Assert
             

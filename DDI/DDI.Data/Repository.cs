@@ -53,16 +53,21 @@ namespace DDI.Data
 
 		#region Public Constructors
 
-		public Repository(DbContext context)
+		public Repository():
+            this(new DomainContext())
 		{
-			_context = context;
 		}
 
-		#endregion Public Constructors
+        internal Repository(DbContext context)
+        {
+            _context = context;
+        }
 
-		#region Public Methods
+        #endregion Public Constructors
 
-		public void Delete(T entity)
+        #region Public Methods
+
+        public void Delete(T entity)
 		{
 			try
 			{
