@@ -15,7 +15,7 @@ namespace DDI.Business.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/prefixes")]
+        [Route("api/v1/professions")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
