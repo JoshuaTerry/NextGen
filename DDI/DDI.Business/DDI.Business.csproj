@@ -211,6 +211,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Enums\PaymentMethodEnum.cs" />
     <Compile Include="Global.asax.cs">
@@ -222,9 +223,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\ClergyStatusesService.cs" />
+    <Compile Include="Services\ClergyTypesService.cs" />
+    <Compile Include="Services\ConstituentStatusesService.cs" />
+    <Compile Include="Services\CountriesService.cs" />
     <Compile Include="Services\ConstituentService.cs" />
     <Compile Include="Services\DataResponse.cs" />
+    <Compile Include="Services\DenominationsServices.cs" />
+    <Compile Include="Services\GendersService.cs" />
+    <Compile Include="Services\GenericServiceBase.cs" />
+    <Compile Include="Services\IClergyStatusesService.cs" />
+    <Compile Include="Services\IClergyTypesService.cs" />
+    <Compile Include="Services\ICountriesService.cs" />
     <Compile Include="Services\IConstituentService.cs" />
+    <Compile Include="Services\IGendersService.cs" />
+    <Compile Include="Services\IGenericService.cs" />
+    <Compile Include="Services\IPrefixesService.cs" />
+    <Compile Include="Services\PrefixesService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
