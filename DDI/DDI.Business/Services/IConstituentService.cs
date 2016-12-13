@@ -10,7 +10,7 @@ namespace DDI.Business.Services
 {
     public interface IConstituentService
     {
-        IDataResponse<IQueryable<Constituent>> GetConstituents();
+        IDataResponse<List<Constituent>> GetConstituents();
         IDataResponse<Constituent> GetConstituentById(Guid id);
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
     }

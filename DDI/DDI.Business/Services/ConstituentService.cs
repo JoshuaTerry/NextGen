@@ -25,9 +25,9 @@ namespace DDI.Business.Services
             _repository = repository;
         }
 
-        public IDataResponse<IQueryable<Constituent>> GetConstituents()
+        public IDataResponse<List<Constituent>> GetConstituents()
         {
-            IQueryable<Constituent> constituents = _repository.Entities;
+            List<Constituent> constituents = _repository.Entities.ToList();
             return GetIDataResponse(() => constituents);
         }
 

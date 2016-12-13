@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using DDI.Business.Services;
+using DDI.Data.Models.Client;
 using System.Web.Http;
-using DDI.Business.Services;
-using DDI.Data.Models.Common;
 
 namespace DDI.Business.Controllers
 {
-    public class CountriesController : ApiController
+    public class EthnicityController : ApiController
     {
-        GenericServiceBase<Country> _service;
+        GenericServiceBase<Ethnicity> _service;
 
-        public CountriesController() : this(new GenericServiceBase<Country>()) { }
-        internal CountriesController(GenericServiceBase<Country> service)
+        public EthnicityController() : this(new GenericServiceBase<Ethnicity>()) { }
+        internal EthnicityController(GenericServiceBase<Ethnicity> service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [Route("api/v1/countries")]
+        [Route("api/v1/ethnicity")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
@@ -32,7 +27,7 @@ namespace DDI.Business.Controllers
             if (!result.IsSuccessful)
             {
                 return InternalServerError();
-            } 
+            }
             return Ok(result);
         }
     }

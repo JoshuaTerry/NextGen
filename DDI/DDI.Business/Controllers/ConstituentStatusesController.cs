@@ -6,21 +6,22 @@ using System.Net.Http;
 using System.Web.Http;
 using DDI.Business.Services;
 using DDI.Data.Models.Common;
+using DDI.Data.Models.Client;
 
 namespace DDI.Business.Controllers
 {
-    public class CountriesController : ApiController
+    public class ConstituentStatusesController : ApiController
     {
-        GenericServiceBase<Country> _service;
+        GenericServiceBase<ConstituentStatus> _service;
 
-        public CountriesController() : this(new GenericServiceBase<Country>()) { }
-        internal CountriesController(GenericServiceBase<Country> service)
+        public ConstituentStatusesController() : this(new GenericServiceBase<ConstituentStatus>()) { }
+        internal ConstituentStatusesController(GenericServiceBase<ConstituentStatus> service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [Route("api/v1/countries")]
+        [Route("api/v1/constituentstatues")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
@@ -32,7 +33,7 @@ namespace DDI.Business.Controllers
             if (!result.IsSuccessful)
             {
                 return InternalServerError();
-            } 
+            }
             return Ok(result);
         }
     }
