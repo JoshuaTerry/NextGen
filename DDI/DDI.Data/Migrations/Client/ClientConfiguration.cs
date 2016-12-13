@@ -2,7 +2,7 @@ using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
-using DDI.Business.Enums;
+using DDI.Data.Enums;
 using DDI.Data.Models;
 using DDI.Data.Models.Client;
 

@@ -1,4 +1,4 @@
-﻿namespace DDI.Business.Enums
+﻿namespace DDI.Data.Enums
 {
 
     public enum ConstituentCategory

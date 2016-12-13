@@ -24,11 +24,12 @@ namespace DDI.Conversion
 
 
             using (DomainContext context = new DomainContext())
-            { 
+            {
+                var common = new CommonContext();
                 string organization = "NG";
                 string filePath = "\\\\ddifs2\\ddi\\DDI\\Dept 00 - Common\\Projects\\NextGen\\Conversion\\Data";
 
-                LoadDataCRM.ExecuteCRMLoad(context, organization, filePath);
+                LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath);
                 context.SaveChanges();
             }
 

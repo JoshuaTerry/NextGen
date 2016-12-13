@@ -212,8 +212,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Enums\ConstituentCategoryEnum.cs" />
-    <Compile Include="Enums\PaymentMethodEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

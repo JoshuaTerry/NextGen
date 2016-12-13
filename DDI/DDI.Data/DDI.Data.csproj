@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="CommonContext.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="Enums\ConstituentCategoryEnum.cs" />
+    <Compile Include="Enums\PaymentMethodEnum.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Migrations\201612122040239_fixingMigration.cs" />
@@ -134,12 +136,6 @@
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
-      <Project>{7c76aaf9-fad1-40a6-8140-d33229a9b942}</Project>
-      <Name>DDI.Business</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
