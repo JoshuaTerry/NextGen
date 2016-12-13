@@ -53,6 +53,11 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+<<<<<<< HEAD
+    <Compile Include="Migrations\Client\201612121753013_Constituent.cs" />
+    <Compile Include="Migrations\Client\201612121753013_Constituent.Designer.cs">
+      <DependentUpon>201612121753013_Constituent.cs</DependentUpon>
+=======
     <Compile Include="Migrations\201612122040239_fixingMigration.cs" />
     <Compile Include="Migrations\201612122040239_fixingMigration.Designer.cs">
       <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
@@ -64,6 +69,7 @@
     <Compile Include="Migrations\201612091853462_ModelChanges.cs" />
     <Compile Include="Migrations\201612091853462_ModelChanges.Designer.cs">
       <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
+>>>>>>> develop
     </Compile>
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.cs" />
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.designer.cs">
@@ -124,6 +130,20 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <EmbeddedResource Include="Migrations\Client\201612121753013_Constituent.resx">
+      <DependentUpon>201612121753013_Constituent.cs</DependentUpon>
+=======
+    <EmbeddedResource Include="Migrations\201612122040239_fixingMigration.resx">
+      <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Common\201612091710348_RenameColumns.resx">
+      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612091853462_ModelChanges.resx">
+      <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
+>>>>>>> develop
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
     </EmbeddedResource>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Data.Models;
 using DDI.Data.Models.Client;
+using DDI.Data.Models.Common;
 using DDI.Business.Enums;
 using System.Data.Entity.Migrations;
 
@@ -50,146 +51,146 @@ namespace DDI.Conversion
             string dataFile = "";
 
 
-            //// Load legacy nacodes
-            //// - 5 denominations
-            //// - 7 constituent types
-            //// - 8 education levels
-            //// - 10 states
-            //// - 26 language
-            //// - 33 ethnicities
-            //// - 34 clergy types 
-            //// - 35 clergy status
-            //// - 38 genders
-            //dataFile = filePath + "\\" + organization + "\\CRM\\" + NACODES_FILE;
-            //using (System.IO.StreamReader sr = new StreamReader(dataFile))
-            //{
-            //    String line;
+            // Load legacy nacodes
+            // - 5 denominations
+            // - 7 constituent types
+            // - 8 education levels
+            // - 10 states
+            // - 26 language
+            // - 33 ethnicities
+            // - 34 clergy types 
+            // - 35 clergy status
+            // - 38 genders
+            dataFile = filePath + "\\" + organization + "\\CRM\\" + NACODES_FILE;
+            using (System.IO.StreamReader sr = new StreamReader(dataFile))
+            {
+                String line;
 
-            //    while ((line = sr.ReadLine()) != null)
-            //    {
-            //        int codeSet;
-            //        string code = null;
-            //        string description = null;
-            //        int int1;
-            //        int int2;
-            //        string text1 = null;
-            //        string text2 = null;
-            //        string security = null;
-            //        bool active = false;
-            //        string baseType = null;
-            //        bool required = false;
-            //        bool masculine = true;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    int codeSet;
+                    string code = null;
+                    string description = null;
+                    int int1;
+                    int int2;
+                    string text1 = null;
+                    string text2 = null;
+                    string security = null;
+                    bool active = false;
+                    string baseType = null;
+                    bool required = false;
+                    bool masculine = true;
 
-            //        Console.WriteLine(line);
-            //        string[] parts = ParseLine(line);
-            //        int.TryParse(parts[0], out codeSet);
-            //        if (parts.Length >= 2)
-            //        {
-            //            code = parts[1];
-            //        }
-            //        if (parts.Length >= 3)
-            //        {
-            //            description = parts[2];
-            //        }
-            //        if (parts.Length >= 4)
-            //        {
-            //            int.TryParse(parts[3], out int1);
-            //        }
-            //        if (parts.Length >= 5)
-            //        {
-            //            int.TryParse(parts[4], out int2);
-            //        }
-            //        if (parts.Length >= 6)
-            //        {
-            //            text1 = parts[5];
-            //        }
-            //        if (parts.Length >= 7)
-            //        {
-            //            text2 = parts[6];
-            //        }
-            //        if (parts.Length >= 8)
-            //        {
-            //            security = parts[7];
-            //        }
-            //        if (parts.Length >= 9)
-            //        {
-            //            active = (parts[8] == "yes");
-            //        }
+                    Console.WriteLine(line);
+                    string[] parts = ParseLine(line);
+                    int.TryParse(parts[0], out codeSet);
+                    if (parts.Length >= 2)
+                    {
+                        code = parts[1];
+                    }
+                    if (parts.Length >= 3)
+                    {
+                        description = parts[2];
+                    }
+                    if (parts.Length >= 4)
+                    {
+                        int.TryParse(parts[3], out int1);
+                    }
+                    if (parts.Length >= 5)
+                    {
+                        int.TryParse(parts[4], out int2);
+                    }
+                    if (parts.Length >= 6)
+                    {
+                        text1 = parts[5];
+                    }
+                    if (parts.Length >= 7)
+                    {
+                        text2 = parts[6];
+                    }
+                    if (parts.Length >= 8)
+                    {
+                        security = parts[7];
+                    }
+                    if (parts.Length >= 9)
+                    {
+                        active = (parts[8] == "yes");
+                    }
 
-            //        switch (codeSet)
-            //        {
-            //            case DENOMINATION_SET:
-            //                context.Denominations.AddOrUpdate(
-            //                    p => p.Code,
-            //                    new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
-            //                break;
-            //            case CONSTITUENT_TYPE:
-            //                if (code == "I" || code == "F")
-            //                {
-            //                    baseType = ConstituentCategory.Individual.ToString();
+                    switch (codeSet)
+                    {
+                        case DENOMINATION_SET:
+                            context.Denominations.AddOrUpdate(
+                                p => p.Code,
+                                new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
+                            break;
+                        case CONSTITUENT_TYPE:
+                            if (code == "I" || code == "F")
+                            {
+                                baseType = ConstituentCategory.Individual.ToString();
 
-            //                }
-            //                else
-            //                {
-            //                    baseType = ConstituentCategory.Organization.ToString();
-            //                }
-            //                if (code == "I" || code == "O")
-            //                {
-            //                    required = true;
-            //                }
-            //                context.ConstituentTypes.AddOrUpdate(
-            //                    p => p.Code,
-            //                    new ConstituentType { BaseType = baseType, Code = code, Description = description, IsActive = active, IsRequired = required });
-            //                break;
-            //            case EDUCATION_LEVEL_SET:
-            //                context.EducationLevels.AddOrUpdate(
-            //                    p => p.Code,
-            //                    new EducationLevel { Code = code, Name = description, IsActive = active });
-            //                break;
-            //            case STATE_SET:
-            //                context.States.AddOrUpdate(
-            //                    p => p.Abbreviation,
-            //                    new State { Abbreviation = code, Name = description });
-            //                break;
-            //            case LANGUAGE_SET:
-            //                context.Languages.AddOrUpdate(
-            //                   p => p.Code,
-            //                   new Language { Code = code, Name = description, IsActive = active });
-            //                break;
-            //            case ETHNICITY_SET:
-            //                context.Ethnicities.AddOrUpdate(
-            //                   p => p.Code,
-            //                   new Ethnicity { Code = code, Name = description, IsActive = active });
-            //                break;
-            //            case CLERGY_TYPE_SET:
-            //                context.ClergyTypes.AddOrUpdate(
-            //                   p => p.Code,
-            //                   new ClergyType { Code = code, Description = description, IsActive = active });
-            //                break;
-            //            case CLERGY_STATUS_SET:
-            //                context.ClergyStatuses.AddOrUpdate(
-            //                   p => p.Code,
-            //                   new ClergyStatus { Code = code, Name = description, Description = description, IsActive = active });
-            //                break;
-            //            case GENDER_SET:
-            //                if (code == "M")
-            //                {
-            //                    masculine = true;
-            //                    required = true;
-            //                }
-            //                else if (code == "F")
-            //                {
-            //                    masculine = false;
-            //                    required = true;
-            //                }
-            //                context.Genders.AddOrUpdate(
-            //                   p => p.Code,
-            //                   new Gender { Code = code, Name = description, IsMasculine = masculine });
-            //                break;
-            //        }
+                            }
+                            else
+                            {
+                                baseType = ConstituentCategory.Organization.ToString();
+                            }
+                            if (code == "I" || code == "O")
+                            {
+                                required = true;
+                            }
+                            context.ConstituentTypes.AddOrUpdate(
+                                p => p.Code,
+                                new ConstituentType { BaseType = baseType, Code = code, Description = description, IsActive = active, IsRequired = required });
+                            break;
+                        case EDUCATION_LEVEL_SET:
+                            context.EducationLevels.AddOrUpdate(
+                                p => p.Code,
+                                new EducationLevel { Code = code, Name = description, IsActive = active });
+                            break;
+                        //case STATE_SET:
+                        //    context.States.AddOrUpdate(
+                        //        p => p.StateCode,
+                        //        new State { StateCode = code, Description = description });
+                        //    break;
+                        case LANGUAGE_SET:
+                            context.Languages.AddOrUpdate(
+                               p => p.Code,
+                               new Language { Code = code, Name = description, IsActive = active });
+                            break;
+                        case ETHNICITY_SET:
+                            context.Ethnicities.AddOrUpdate(
+                               p => p.Code,
+                               new Ethnicity { Code = code, Name = description, IsActive = active });
+                            break;
+                        case CLERGY_TYPE_SET:
+                            context.ClergyTypes.AddOrUpdate(
+                               p => p.Code,
+                               new ClergyType { Code = code, Description = description, IsActive = active });
+                            break;
+                        case CLERGY_STATUS_SET:
+                            context.ClergyStatuses.AddOrUpdate(
+                               p => p.Code,
+                               new ClergyStatus { Code = code, Name = description, Description = description, IsActive = active });
+                            break;
+                        case GENDER_SET:
+                            if (code == "M")
+                            {
+                                masculine = true;
+                                required = true;
+                            }
+                            else if (code == "F")
+                            {
+                                masculine = false;
+                                required = true;
+                            }
+                            context.Genders.AddOrUpdate(
+                               p => p.Code,
+                               new Gender { Code = code, Name = description, IsMasculine = masculine });
+                            break;
+                    }
 
-            //    }
-            //}
+                }
+            }
 
             // Load Addresses
             dataFile = filePath + "\\" + organization + "\\CRM\\" + ADDRESSES_FILE;
@@ -231,9 +232,9 @@ namespace DDI.Conversion
                         line2 = legacyId.ToString();
                         stateCode = stateCode.Trim('"');
 
-                        if (legacyId < 33616 && stateCode != null && stateCode != "")
+                        if (legacyId < 20000 && stateCode != null && stateCode != "")
                         {
-                            State state = context.States.FirstOrDefault(p => p.Abbreviation == stateCode);
+                            State state = context.States.FirstOrDefault(p => p.StateCode == stateCode);
                             //TODO: need to assign legacyID to new field in Address table
                             if (state != null)
                             {

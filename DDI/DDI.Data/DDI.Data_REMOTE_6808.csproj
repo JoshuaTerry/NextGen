@@ -124,6 +124,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201612122040239_fixingMigration.resx">
+      <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Common\201612091710348_RenameColumns.resx">
+      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612091853462_ModelChanges.resx">
+      <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
     </EmbeddedResource>
@@ -135,12 +144,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
-      <Project>{7c76aaf9-fad1-40a6-8140-d33229a9b942}</Project>
-      <Name>DDI.Business</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
