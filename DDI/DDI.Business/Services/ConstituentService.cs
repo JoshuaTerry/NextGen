@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using DDI.Data;
@@ -25,9 +26,18 @@ namespace DDI.Business.Services
             _repository = repository;
         }
 
-        public IDataResponse<IQueryable<Constituent>> GetConstituents()
+        public IDataResponse<IQueryable<Constituent>> GetConstituents(ConstituentSearch search)
         {
-            IQueryable<Constituent> constituents = _repository.Entities;
+            IQueryable<Constituent> constituents = _repository.Entities; 
+            constituents = constituents.Where(c => (c.FirstName.Contains(search.Name) || c.LastName.Contains(search.Name)));
+            constituents = constituents.OrderBy(c => c.LastName);
+            var pageSize = (search.Limit ?? 100);
+            if ((search.Offset ?? 0) > 0)
+            {
+                constituents = constituents.Skip(search.Offset.Value * pageSize);
+            }
+            constituents = constituents.Take(pageSize);
+
             return GetIDataResponse(() => constituents);
         }
 

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using DDI.Business.Services;
 
 namespace DDI.Business.Controllers
 {
     //[Authorize]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ConstituentsController : ApiController
     {
         private IConstituentService _service;
@@ -25,9 +27,23 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents")]
-        public IHttpActionResult GetConstituents()
+        public IHttpActionResult GetConstituents(string quickSearch = null, string name = null, int? constituentNumber = null, string address = null, string city = null, string state = null, string zip = null, int? offset = null, int? limit = 25, string orderby = null)
         {
-            var constituents = _service.GetConstituents();
+            var search = new ConstituentSearch()
+            {
+                QuickSearch = quickSearch,
+                Name = name,
+                ConstituentNumber = constituentNumber,
+                Address = address,
+                City = city,
+                State = state,
+                Zip = zip,
+                Offset = offset,
+                Limit = limit,
+                OrderBy = orderby
+            };
+
+            var constituents = _service.GetConstituents(search);
 
             if (constituents == null)
             {
@@ -36,7 +52,7 @@ namespace DDI.Business.Controllers
             if (!constituents.IsSuccessful)
             {
                 return InternalServerError();
-            } 
+            }
 
             return Ok(constituents);
         }
