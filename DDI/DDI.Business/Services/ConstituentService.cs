@@ -37,22 +37,52 @@ namespace DDI.Business.Services
                 constituents = constituents.Skip(search.Offset.Value * pageSize);
             }
             constituents = constituents.Take(pageSize);
+            var response = GetIDataResponse(() => constituents);
+            response.Links = new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = "",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituents);
+            return response;
         }
 
         public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
             Constituent constituent = _repository.GetById(id);
+            var response = GetIDataResponse(() => constituent);
+            response.Links= new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = $"api/v1/constituents/{id}",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituent);
+            return response;
         }
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNum == constituentNum);
+            var response = GetIDataResponse(() => constituent);
+            response.Links = new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = $"api/v1/constituents?constituentNum={constituentNum}",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituent);
+            return response;
         }
     }
 }
