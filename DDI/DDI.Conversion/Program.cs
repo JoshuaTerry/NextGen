@@ -9,6 +9,7 @@ using DDI.Data;
 using DDI.Conversion;
 using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
+using log4net;
 
 namespace DDI.Conversion
 {
@@ -19,16 +20,17 @@ namespace DDI.Conversion
 
         static void Main(string[] args)
         {
-            // At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
-            //Hard coding for quick demo purposes.
+			// At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
+			//Hard coding for quick demo purposes.
 
+			log4net.Config.XmlConfigurator.Configure();
 
             using (DomainContext context = new DomainContext())
             {
                 var common = new CommonContext();
                 string organization = "NG";
-                string filePath = "\\\\ddifs2\\ddi\\DDI\\Dept 00 - Common\\Projects\\NextGen\\Conversion\\Data";
-
+                string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
+											
                 LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath);
                 context.SaveChanges();
             }
