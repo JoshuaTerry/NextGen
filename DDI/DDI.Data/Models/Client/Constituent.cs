@@ -33,7 +33,7 @@ namespace DDI.Data.Models.Client
 
         public Guid? ClergyTypeId { get; set; }
 
-        public int ConstituentNum { get; set; }
+        public int ConstituentNumber { get; set; }
 
         public Guid? ConstituentStatusId { get; set; }
 

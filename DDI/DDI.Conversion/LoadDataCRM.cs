@@ -545,7 +545,7 @@ namespace DDI.Conversion
 					{
 						try
 						{
-							c1 = context.Constituents?.First(p => p.ConstituentNum == constituentNum);
+							c1 = context.Constituents?.First(p => p.ConstituentNumber == constituentNum);
 						}
 						catch (Exception e)
 						{

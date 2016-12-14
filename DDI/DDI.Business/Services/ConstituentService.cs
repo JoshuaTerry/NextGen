@@ -50,7 +50,7 @@ namespace DDI.Business.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNum == constituentNum);
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
 
             return GetIDataResponse(() => constituent);
         }
