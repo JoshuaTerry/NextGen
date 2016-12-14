@@ -1,7 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
-    <siteMapNode url="" title=""  description="">
-        <siteMapNode url="" title=""  description="" />
-        <siteMapNode url="" title=""  description="" />
+  <siteMapNode url="~/Default.aspx" title="Home"  description="Home">
+
+      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM">
+
+      <siteMapNode url="~/Accounting.aspx" title="Accounting"  description="Accounting">
+        <siteMapNode url="~/AccountsPayable.aspx" title="Accounts Payable" description="Accounts Payable" />
+        <siteMapNode url="~/AccountsReceivable.aspx" title="Accounts Receivable" description="Accounts Receivable" />
+        <siteMapNode url="~/FixedAssets.aspx" title="Fixed Assets" description="Fixed Assets" />
+        <siteMapNode url="~/GeneralLedger.aspx" title="General Ledger" description="General Ledger">
+          <siteMapNode url="~/Accounts.aspx" title="Accounts" description="Accounts" />
+          <siteMapNode url="~/Journals.aspx" title="Journals" description="Journals" />
+        </siteMapNode>
+      </siteMapNode>
+      
+      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM" />
+      
+      <siteMapNode url="~/FinancialTransactions.aspx" title="Financial Transactions"  description="Financial Transactions">
+        <siteMapNode url="~/BatchDeposits.aspx" title="Batch Deposits"  description="Batch Deposits" />
+        <siteMapNode url="~/Disbursements.aspx" title="Disbursements"  description="Disbursements" />
+        <siteMapNode url="~/JobProcessing.aspx" title="Job Processing"  description="Job Processing">
+          <siteMapNode url="~/Jobs.aspx" title="Jobs"  description="Jobs" />
+          <siteMapNode url="~/JobQueues.aspx" title="Job Queues"  description="Job Queues" />
+        </siteMapNode>
+        <siteMapNode url="~/TransactionInquirReversals.aspx" title="Transaction Inquiry &amp; Reversals"  description="Transaction Inquiry &amp; Reversals" />
+        <siteMapNode url="~/Transactions.aspx" title="Transactions"  description="Transactions" />
+      </siteMapNode>
+
+      <siteMapNode url="~/Donations.aspx" title="Donations"  description="Donations">
+        <siteMapNode url="~/DonationInquiry.aspx" title="Donation Inquiry"  description="Donation Inquiry" />
+      </siteMapNode>
+          
     </siteMapNode>
+
+    <siteMapNode url="~/Reports.aspx" title="Reports"  description="Reports">
+
+      <siteMapNode url="~/ArchivedReports.aspx" title="Archived Reports"  description="Archived Reports" />
+
+      <siteMapNode url="~/CRMReports.aspx" title="CRM"  description="CRM">
+        <siteMapNode url="~/Constituents.aspx" title="Constituents"  description="Constituents" />
+      </siteMapNode>
+
+      <siteMapNode url="~/AccountingReports.aspx" title="Accounting"  description="Accounting">
+        <siteMapNode url="~/ChartOfAccountListing.aspx" title="Chart Of Account Listing"  description="Chart Of Account Listing" />
+        <siteMapNode url="~/TrialBalanceReport.aspx" title="Trial Balance Report"  description="Trial Balance Report" />
+      </siteMapNode>
+
+      <siteMapNode url="~/DonationReports.aspx" title="Donation"  description="Donation">
+        <siteMapNode url="~/DonationActivityGLAccount.aspx" title="Donation Activity by GL Account"  description="Donation Activity by GL Account" />
+        <siteMapNode url="~/LetterandStatementsReport.aspx" title="Letter and Statements Report"  description="Letter and Statements Report" />
+      </siteMapNode>
+
+    </siteMapNode>
+
+    <siteMapNode url="~/Dashboard.aspx" title="Dashboard"  description="Dashboard" />
+
+    <siteMapNode url="~/Admin.aspx" title="Admin"  description="Admin">
+      <siteMapNode url="~/Security.aspx" title="Security"  description="Security" />
+      <siteMapNode url="~/SystemSettings.aspx" title="System Settings"  description="System Settings" />
+    </siteMapNode>
+    
+  </siteMapNode>
 </siteMap>

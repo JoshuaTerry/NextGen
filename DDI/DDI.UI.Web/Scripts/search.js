@@ -19,12 +19,12 @@ $(document).ready(function () {
 
     $(document).keypress(function (e) {
         if (e.which == 13) {
-            DoSearch2();
+            DoSearch();
         }
     });
 
     $('.dosearch').click(function () {
-        DoSearch2();
+        DoSearch();
     });
 
     $(window).resize(function () {
@@ -117,71 +117,7 @@ function AddColumnHeaders() {
 
 function DoSearch() {
 
-    var data = JSON.stringify({ properties: GetSearchParameters() });
-
-    $.ajax({
-        url: 'Search.aspx/PerformSearch',
-        method: 'POST',
-        data: data,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        success: function (data) {
-
-            if (data.d.length == 1) {
-                DisplayConstituent(data.d[0].ConstituentNum);
-            }
-            else {
-
-                $('.gridcontainer').dxDataGrid({
-                    dataSource: data.d,
-                    columns: [
-                        { dataField: 'ConstituentNum', caption: 'ID', alignment: 'center', width: '75px' },
-                        { dataField: 'FormattedName', caption: 'Name' },
-                        { dataField: 'FullAddress', caption: 'Primary Address' },
-                        'Contact Information'
-                    ],
-                    paging: {
-                        pageSize: 15
-                    },
-                    pager: {
-                        showNavigationButtons: true,
-                        showPageSizeSelector: true,
-                        showInfo: true,
-                        allowedPageSizes: [15, 25, 50, 100]
-                    },
-                    groupPanel: {
-                        visible: true,
-                        allowColumnDragging: true
-                    },
-                    filterRow: {
-                        visible: true,
-                        showOperationChooser: false
-                    },
-                    onRowClick: function (info) {
-                        DisplayConstituent(info.values[0]);
-                    }
-                });
-
-            }
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
-}
-
-function DoSearch2() {
-
-    var parameters = GetSearchParameters2();
-
-    /*
-
-    limit: pagesize
-    offset: pagenumber
-    orderby: <string> not setup yet
-
-    */
+    var parameters = GetSearchParameters();
 
     $.ajax({
         url: WEB_API_ADDRESS + 'constituents/?' + parameters,
@@ -198,7 +134,7 @@ function DoSearch2() {
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
                     columns: [
-                        { dataField: 'ConstituentNum', caption: 'ID', alignment: 'center', width: '100px' },
+                        { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
                         { dataField: 'FullAddress', caption: 'Primary Address' },
                         'Contact Information'
@@ -236,32 +172,6 @@ function DoSearch2() {
 }
 
 function GetSearchParameters() {
-
-    var p = [];
-
-    $('.searchcriteria div.fieldblock input').each(function () {
-        var property = $(this).attr('class').replace('search', '');
-        var value = $(this).val();
-
-        if (value)
-            p.push('"' + property + '": "' + value + '"');
-    });
-
-    $('.searchcriteria div.fieldblock select').each(function () {
-        var property = $(this).attr('class').replace('search', '');
-        var value = $(this).val();
-
-        if (value)
-            p.push('"' + property + '": "' + value + '"');
-    });
-
-    p = '{' + p + '}';
-
-    return p;
-
-}
-
-function GetSearchParameters2() {
 
     var p = '';
 
