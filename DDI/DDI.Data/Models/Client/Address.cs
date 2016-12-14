@@ -17,7 +17,10 @@ namespace DDI.Data.Models.Client
         public Guid Id { get; set; }
 
         [MaxLength(255)]
-        public string StreetAddress { get; set; }
+        public string AddressLine1 { get; set; }
+
+        [MaxLength(255)]
+        public string AddressLine2 { get; set; }
 
         [MaxLength(128)]
         public string City { get; set; }
@@ -35,13 +38,44 @@ namespace DDI.Data.Models.Client
 
         // Non-mapped properties
         [NotMapped]
-        public Country Country { get; set; }
+        public Country Country
+        {
+            get
+            {
+                return CommonDataCache.GetCountry(CountryId);
+            }
+            set
+            {
+                CountryId = value.Id;
+            }
+        }
 
         [NotMapped]
-        public State State { get; set; }
+        public State State
+        {
+            get
+            {
+                return CommonDataCache.GetState(CountryId);
+            }
+            set
+            {
+                StateId = value.Id;
+            }
+        }
+
 
         [NotMapped]
-        public County County { get; set; }
+        public County County
+        {
+            get
+            {
+                return CommonDataCache.GetCounty(CountryId);
+            }
+            set
+            {
+                CountyId = value.Id;
+            }
+        }
 
         // Navigation Properties
         public virtual ICollection<ConstituentAddress> ConstituentAddresses { get; set; }

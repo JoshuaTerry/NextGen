@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonContext.cs" />
+    <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\ConstituentCategory.cs" />
     <Compile Include="Enums\BirthDateType.cs" />
@@ -59,6 +60,14 @@
     <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Migrations\Client\201612141657201_Constituent_v6.cs" />
+    <Compile Include="Migrations\Client\201612141657201_Constituent_v6.Designer.cs">
+      <DependentUpon>201612141657201_Constituent_v6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201612141647490_Constituent_v5.cs" />
+    <Compile Include="Migrations\Client\201612141647490_Constituent_v5.Designer.cs">
+      <DependentUpon>201612141647490_Constituent_v5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201612141422218_Constituent_v2.cs" />
     <Compile Include="Migrations\Client\201612141422218_Constituent_v2.Designer.cs">
       <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
@@ -139,6 +148,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201612141657201_Constituent_v6.resx">
+      <DependentUpon>201612141657201_Constituent_v6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201612141647490_Constituent_v5.resx">
+      <DependentUpon>201612141647490_Constituent_v5.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612141422218_Constituent_v2.resx">
       <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
     </EmbeddedResource>
