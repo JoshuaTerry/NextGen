@@ -26,7 +26,7 @@ namespace DDI.Business.Services
             _repository = repository;
         }
 
-        public IDataResponse<IQueryable<Constituent>> GetConstituents(ConstituentSearch search)
+        public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
         {
             IQueryable<Constituent> constituents = _repository.Entities; 
             constituents = constituents.Where(c => (c.FirstName.Contains(search.Name) || c.LastName.Contains(search.Name)));
@@ -38,7 +38,7 @@ namespace DDI.Business.Services
             }
             constituents = constituents.Take(pageSize);
 
-            return GetIDataResponse(() => constituents);
+            return GetIDataResponse(() => constituents.ToList());
         }
 
         public IDataResponse<Constituent> GetConstituentById(Guid id)
@@ -50,7 +50,7 @@ namespace DDI.Business.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNum == constituentNum);
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
 
             return GetIDataResponse(() => constituent);
         }

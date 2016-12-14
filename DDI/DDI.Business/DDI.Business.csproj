@@ -224,7 +224,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Enums\PaymentMethodEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -239,8 +238,10 @@
     <Compile Include="Services\ConstituentSearch.cs" />
     <Compile Include="Services\ConstituentService.cs" />
     <Compile Include="Services\DataResponse.cs" />
+    <Compile Include="Services\GenericServiceBase.cs" />
     <Compile Include="Services\IConstituentService.cs" />
     <Compile Include="Services\IPageable.cs" />
+    <Compile Include="Services\IGenericService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
