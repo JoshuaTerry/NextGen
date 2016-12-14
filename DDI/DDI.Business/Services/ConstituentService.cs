@@ -42,7 +42,7 @@ namespace DDI.Business.Services
             {
                 new HATEOASLink()
                 {
-                    Href = "",
+                    Href = search.ToQueryString(),
                     Relationship = "self",
                     Method = "GET"
                 }

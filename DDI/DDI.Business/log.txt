@@ -6,3 +6,7 @@
 [End Message]
 [Begin Message]
 2016-12-14 11:58:43,176 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+[Begin Message]
+2016-12-14 15:13:02,158 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+[Begin Message]
+2016-12-14 15:20:09,599 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
