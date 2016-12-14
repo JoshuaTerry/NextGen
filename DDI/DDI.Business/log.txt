@@ -5,8 +5,11 @@
 2016-12-12 15:23:51,514 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
 [End Message]
 [Begin Message]
-2016-12-14 11:58:43,176 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+2016-12-14 12:16:12,359 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+[End Message]
 [Begin Message]
-2016-12-14 15:13:02,158 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+2016-12-14 12:17:57,714 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+[End Message]
 [Begin Message]
-2016-12-14 15:20:09,599 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+2016-12-14 14:19:04,406 [1] INFO  DDI.Shared.Logger.Logger [(null)] - log4net has been initialized.
+[End Message]

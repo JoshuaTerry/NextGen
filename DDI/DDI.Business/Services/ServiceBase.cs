@@ -10,7 +10,8 @@ namespace DDI.Business.Services
 {
     public class ServiceBase
     {
-        //private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
+        private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
+
         public IDataResponse<T> GetIDataResponse<T>(Func<T> funcToExecute)
         {
             return GetDataResponse(funcToExecute);
@@ -29,7 +30,7 @@ namespace DDI.Business.Services
             }
             catch (Exception e)
             {
-                //Add Log4Net here
+                _logger.Error(e.Message, e);
                 var response = new DataResponse<T> { IsSuccessful = false };
                 response.ErrorMessages.Add(e.Message);
                 response.VerboseErrorMessages.Add(e.ToString());
@@ -51,6 +52,7 @@ namespace DDI.Business.Services
             }
             catch (Exception ex)
             {
+                _logger.Error(ex.Message, ex);
                 response = new DataResponse { IsSuccessful = false };
                 response.ErrorMessages.Add(ex.Message);
                 response.VerboseErrorMessages.Add(ex.ToString());
@@ -61,6 +63,8 @@ namespace DDI.Business.Services
 
         public DataResponse<T> GetErrorResponse<T>(string errorMessage, string verboseErrorMessage = null)
         {
+            _logger.Error($"Message: {errorMessage} | Verbose Message: {verboseErrorMessage}");
+
             return (verboseErrorMessage == null)
                 ? GetErrorResponse<T>(new List<string> { errorMessage })
                 : GetErrorResponse<T>(new List<string> { errorMessage }, new List<string> { verboseErrorMessage });
