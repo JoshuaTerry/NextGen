@@ -25,14 +25,6 @@ namespace DDI.Data
 		public virtual DbSet<Constituent> Constituents { get; set; }
 
 		public virtual DbSet<ConstituentAddress> ConstituentAddresses { get; set; }
-
-		public virtual DbSet<ConstituentAlternateId> ConstituentAlternateIds { get; set; }
-
-		public virtual DbSet<ConstituentContactInfo> ConstituentContactInfo { get; set; }
-
-		public virtual DbSet<ConstituentDBA> ConstituentDBAs { get; set; }
-
-		public virtual DbSet<ConstituentEducation> ConstituentEducations { get; set; }        
 		 
 		public virtual DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
 

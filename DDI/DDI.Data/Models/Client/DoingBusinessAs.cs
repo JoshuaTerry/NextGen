@@ -13,9 +13,17 @@ namespace DDI.Data.Models.Client
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
-		public string Name { get; set; }
-		public DateTime? StartDate { get; set; }
+
+        [MaxLength(128)]
+        public string Name { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? StartDate { get; set; }
+
+        [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
+
+        public ICollection<Constituent> Constituents { get; set; }
         #endregion Public Properties
     }
 }

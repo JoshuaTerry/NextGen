@@ -6,16 +6,21 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-	[Table("ClergyType")]
-	public class ClergyType
-	{
-		#region Public Properties
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+    [Table("ClergyType")]
+    public class ClergyType
+    {
+        #region Public Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        [MaxLength(128)]
         public string Code { get; set; }
-        public string Description { get; set; }
+
+        [MaxLength(128)]
+        public string Name { get; set; }
+
         public bool IsActive { get; set; }
-		#endregion Public Properties
-	}
+        #endregion Public Properties
+    }
 }

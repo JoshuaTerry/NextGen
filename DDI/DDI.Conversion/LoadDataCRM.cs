@@ -536,7 +536,7 @@ namespace DDI.Conversion
 					{
 						try
 						{
-							a1 = context.Addresses.First(p => p.Line2 == legacyAddressId.ToString());
+							a1 = context.Addresses.First(p => p.LegacyKey == legacyAddressId);
 						}
 						catch (Exception e)
 						{ }

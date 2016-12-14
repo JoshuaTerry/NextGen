@@ -57,8 +57,8 @@ namespace DDI.Data.Migrations.Client
             //Constituent Types
             context.ConstituentTypes.AddOrUpdate(
                 p => p.Code, 
-                new ConstituentType { BaseType = ConstituentCategory.Individual.ToString(), Code = "I", Description = "Individual", IsActive = true, IsRequired = true },
-                new ConstituentType { BaseType = ConstituentCategory.Organization.ToString(), Code = "O", Description = "Organization", IsActive = true, IsRequired = true }
+                new ConstituentType { BaseType = ConstituentCategory.Individual.ToString(), Code = "I", Name = "Individual", IsActive = true, IsRequired = true },
+                new ConstituentType { BaseType = ConstituentCategory.Organization.ToString(), Code = "O", Name = "Organization", IsActive = true, IsRequired = true }
             );
 
             //Genders

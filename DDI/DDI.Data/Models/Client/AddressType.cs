@@ -6,28 +6,20 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-    [Table("PaymentPreference")]
-    public class PaymentPreference
+    [Table("AddressType")]
+    public class AddressType
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public bool IsActive { get; set; }
 
-        public virtual Constituent Constituent { get; set; }
-
-        public Guid? ConstituentId { get; set; }
+        [MaxLength(128)]
+        public string Code { get; set; }
 
         [MaxLength(128)]
         public string Name { get; set; }
-
-        public int ABANumber { get; set; }
-
-        [MaxLength(128)]
-        public string AccountNumber { get; set; }
-
-        [MaxLength(128)]
-        public string AccountType { get; set; }
         #endregion Public Properties
     }
 }
