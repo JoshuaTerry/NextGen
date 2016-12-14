@@ -6,15 +6,19 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-	[Table("ContactType")]
-	public class ContactType
-	{
-		#region Public Properties
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
-		public bool IsActive { get; set; }
+    [Table("ContactType")]
+    public class ContactType
+    {
+        #region Public Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public bool IsActive { get; set; }
+
+        [MaxLength(128)]
         public string Code { get; set; }
+
+        [MaxLength(128)]
         public string Description { get; set; }
         #endregion Public Properties
     }

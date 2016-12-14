@@ -26,7 +26,7 @@ namespace DDI.Business.Services
             _repository = repository;
         }
 
-        public IDataResponse<IQueryable<Constituent>> GetConstituents(ConstituentSearch search)
+        public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
         {
             IQueryable<Constituent> constituents = _repository.Entities; 
             constituents = constituents.Where(c => (c.FirstName.Contains(search.Name) || c.LastName.Contains(search.Name)));
@@ -37,7 +37,7 @@ namespace DDI.Business.Services
                 constituents = constituents.Skip(search.Offset.Value * pageSize);
             }
             constituents = constituents.Take(pageSize);
-            var response = GetIDataResponse(() => constituents);
+            var response = GetIDataResponse(() => constituents.ToList());
             response.Links = new List<HATEOASLink>()
             {
                 new HATEOASLink()
@@ -70,7 +70,7 @@ namespace DDI.Business.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNum == constituentNum);
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
             var response = GetIDataResponse(() => constituent);
             response.Links = new List<HATEOASLink>()
             {

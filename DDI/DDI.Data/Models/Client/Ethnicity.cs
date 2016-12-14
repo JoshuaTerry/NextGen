@@ -6,20 +6,24 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-	[Table("Ethnicity")]
-	public class Ethnicity
-	{
-		#region Public Properties	
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+    [Table("Ethnicity")]
+    public class Ethnicity
+    {
+        #region Public Properties   
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-		public bool IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-		public string Name { get; set; }
-        public virtual Constituent Constituent { get; set; }
-        public Guid? ConstituentId { get; set; }
+        [MaxLength(128)]
+        public string Name { get; set; }
+
+        public virtual ICollection<Constituent> Constituents { get; set; }
+
+        [MaxLength(128)]
         public string Code { get; set; }
+
         #endregion Public Properties
     }
 }
