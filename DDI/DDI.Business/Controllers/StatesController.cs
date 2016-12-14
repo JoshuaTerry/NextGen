@@ -4,12 +4,12 @@ using DDI.Data.Models.Common;
 
 namespace DDI.Business.Controllers
 {
-    public class CountriesController : ApiController
+    public class StatesController : ApiController
     {
-        GenericServiceBase<Country> _service;
+        GenericServiceBase<State> _service;
 
-        public CountriesController() : this(new GenericServiceBase<Country>()) { }
-        internal CountriesController(GenericServiceBase<Country> service)
+        public StatesController() : this(new GenericServiceBase<State>()) { }
+        internal StatesController(GenericServiceBase<State> service)
         {
             _service = service;
         }
@@ -27,7 +27,7 @@ namespace DDI.Business.Controllers
             if (!result.IsSuccessful)
             {
                 return InternalServerError();
-            } 
+            }
             return Ok(result);
         }
     }
