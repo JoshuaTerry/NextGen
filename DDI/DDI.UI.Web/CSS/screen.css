@@ -1,0 +1,75 @@
+﻿body { margin: 0px; padding: 0px; font-size: 12px; font-family: Arial; background-color: #eeeeee; }
+
+h1, h2, h3 { margin: 0px; padding: 0px; }
+h1 {  }
+h2 {  }
+h3 {  }
+
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+fieldset { border: solid 1px #999999; margin-bottom: 10px; }
+fieldset legend { font-weight: bold; }
+
+.scrollable { overflow-y: scroll; }
+
+header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px #cccccc; }
+
+.logo { display: inline-block; margin: 25px 0 0 30px; }
+.logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; }
+
+.topnav { display: inline-block; vertical-align: top; height: 100%; width: 80%; text-align: right; }
+.topnav ul { list-style: none; margin: 20px 0 0 30px; padding: 0px; }
+.topnav ul li { display: inline-block; }
+.topnav ul li a { display: block; font-size: 14px; color: #303030; font-weight: bold; line-height: 35px; padding: 0px 15px; }
+.topnav ul li a:hover { text-decoration: underline; }
+
+.maincontainer { width: 90%; }
+
+div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
+div.threecolumn>div { width: 33%; display: inline-block; vertical-align: top; }
+
+div.inline div.fieldblock { display: inline-block; }
+
+div.fieldblock { margin: 0 0 10px 0; }
+div.fieldblock.inline { display: inline-block; }
+div.fieldblock label { display: block; }
+div.fieldblock label.inline { display: inline-block; }
+div.fieldblock input,
+div.fieldblock select { width: 90%; }
+div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
+div.fieldblock.range {  }
+div.fieldblock.range input { display: inline-block; width: 25%; }
+
+/*.dx-datagrid-table { width: 100%; border-collapse: collapse; }
+.dx-header-row td:hover { cursor: pointer; }
+.dx-data-row { margin: 0px; padding: 0px 3px; }
+.dx-data-row { padding: 3px 0px; }*/
+.dx-data-row:hover { background-color: #cccccc; cursor: pointer; }
+
+.searchcriteria { width: 15%; display: inline-block; margin: 10px 0 0 1%; vertical-align: top; }
+.searchcriteria div.fieldblock input,
+.searchcriteria div.fieldblock select { width: 100%; }
+.searchcriteria div.buttons { margin-top: 10px; }
+
+.searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
+.searchresults div.scrollable { width: 100%; }
+
+.constituentcontainer { margin-top: 10px; vertical-align: top; }
+.constituentcontainer h1 { margin: 0px; padding: 5px; color: #333333; background-color: #cccccc; font-size: 14px; }
+
+.constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
+.constituentpic { height: 150px; }
+.constituentpic img { height: 150px; }
+.constituentinformation { height: 175px; }
+.constituentinformation div { padding: 5px; margin-bottom: 10px; }
+.constituentinformation div label { display: block; text-align: left; }
+
+.constituentrealtionships { height: 175px; }
+.constituentname { font-weight: bold; text-align: center; }
+.constituenttags { width: 100%; }
+
+.tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
+.tabscontainer.inner { width: 100%; }
+
+.dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
