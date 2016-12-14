@@ -51,18 +51,36 @@
   <ItemGroup>
     <Compile Include="CommonContext.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="Enums\ConstituentCategory.cs" />
+    <Compile Include="Enums\BirthDateType.cs" />
+    <Compile Include="Enums\ResidentType.cs" />
+    <Compile Include="Enums\SalutationType.cs" />
+    <Compile Include="Enums\CorrespondencePreference.cs" />
+    <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="Migrations\201612122040239_fixingMigration.cs" />
-    <Compile Include="Migrations\201612122040239_fixingMigration.Designer.cs">
+    <Compile Include="Migrations\Client\201612141422218_Constituent_v2.cs" />
+    <Compile Include="Migrations\Client\201612141422218_Constituent_v2.Designer.cs">
+      <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201612141508500_Constituent_v3.cs" />
+    <Compile Include="Migrations\Client\201612141508500_Constituent_v3.Designer.cs">
+      <DependentUpon>201612141508500_Constituent_v3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201612141546004_Constituent_v4.cs" />
+    <Compile Include="Migrations\Client\201612141546004_Constituent_v4.Designer.cs">
+      <DependentUpon>201612141546004_Constituent_v4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201612122040239_fixingMigration.cs" />
+    <Compile Include="Migrations\Client\201612122040239_fixingMigration.Designer.cs">
       <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.cs" />
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.Designer.cs">
       <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612091853462_ModelChanges.cs" />
-    <Compile Include="Migrations\201612091853462_ModelChanges.Designer.cs">
+    <Compile Include="Migrations\Client\201612091853462_ModelChanges.cs" />
+    <Compile Include="Migrations\Client\201612091853462_ModelChanges.Designer.cs">
       <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.cs" />
@@ -85,13 +103,10 @@
     <Compile Include="Models\Client\ClergyType.cs" />
     <Compile Include="Models\Client\Constituent.cs" />
     <Compile Include="Models\Client\ConstituentAddress.cs" />
-    <Compile Include="Models\Client\ConstituentAlternateId.cs" />
-    <Compile Include="Models\Client\ConstituentContactInfo.cs" />
-    <Compile Include="Models\Client\ConstituentDBA.cs" />
-    <Compile Include="Models\Client\ConstituentEducation.cs" />
     <Compile Include="Models\Client\ConstituentStatus.cs" />
     <Compile Include="Models\Client\ConstituentType.cs" />
     <Compile Include="Models\Client\ContactInfo.cs" />
+    <Compile Include="Models\Client\AddressType.cs" />
     <Compile Include="Models\Client\ContactType.cs" />
     <Compile Include="Models\Client\Denomination.cs" />
     <Compile Include="Models\Client\DoingBusinessAs.cs" />
@@ -124,14 +139,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612122040239_fixingMigration.resx">
-      <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201612141422218_Constituent_v2.resx">
+      <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Common\201612091710348_RenameColumns.resx">
-      <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201612141508500_Constituent_v3.resx">
+      <DependentUpon>201612141508500_Constituent_v3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612091853462_ModelChanges.resx">
-      <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201612141546004_Constituent_v4.resx">
+      <DependentUpon>201612141546004_Constituent_v4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
@@ -144,7 +159,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
