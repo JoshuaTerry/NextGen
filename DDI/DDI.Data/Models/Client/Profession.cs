@@ -6,15 +6,20 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-	[Table("Profession")]
-	public class Profession
-	{
-		#region Public Properties
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
-		public bool IsActive { get; set; }
-		public string Name { get; set; }
+    [Table("Profession")]
+    public class Profession
+    {
+        #region Public Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        public bool IsActive { get; set; }
+
+        [MaxLength(128)]
+        public string Name { get; set; }
+
+        [MaxLength(128)]
         public string Code { get; set; }
         #endregion Public Properties
     }
