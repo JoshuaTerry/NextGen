@@ -13,9 +13,15 @@ namespace DDI.Data.Models.Client
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
+
+        [MaxLength(128)]
         public string Abbreviation { get; set; }
+
+        [MaxLength(128)]
         public string Description { get; set; }
-        public Gender Gender { get; set; }
+
+        public virtual Gender Gender { get; set; }
+
         public Guid? GenderId { get; set; }
         #endregion Public Properties
     }
