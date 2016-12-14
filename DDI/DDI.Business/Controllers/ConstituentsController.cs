@@ -27,7 +27,16 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents")]
-        public IHttpActionResult GetConstituents(string quickSearch = null, string name = null, int? constituentNumber = null, string address = null, string city = null, string state = null, string zip = null, int? offset = null, int? limit = 25, string orderby = null)
+        public IHttpActionResult GetConstituents(string quickSearch = null, 
+                                                 string name = null, 
+                                                 int? constituentNumber = null, 
+                                                 string address = null, 
+                                                 string city = null, 
+                                                 string state = null, 
+                                                 string zip = null, 
+                                                 int? offset = null, 
+                                                 int? limit = 25, 
+                                                 string orderby = null)
         {
             var search = new ConstituentSearch()
             {
