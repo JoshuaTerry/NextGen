@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+
 using DDI.Business.Services;
 using DDI.Data.Models.Common;
 
@@ -6,16 +7,34 @@ namespace DDI.Business.Controllers
 {
     public class StatesController : ApiController
     {
-        GenericServiceBase<State> _service;
+        #region Private Fields
 
-        public StatesController() : this(new GenericServiceBase<State>()) { }
-        internal StatesController(GenericServiceBase<State> service)
+        private GenericServiceCommonBase<State> _service;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public StatesController()
+            : this(new GenericServiceCommonBase<State>())
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Internal Constructors
+
+        internal StatesController(GenericServiceCommonBase<State> service)
         {
             _service = service;
         }
 
+        #endregion Internal Constructors
+
+        #region Public Methods
+
         [HttpGet]
-        [Route("api/v1/countries")]
+        [Route("api/v1/states")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
@@ -30,5 +49,7 @@ namespace DDI.Business.Controllers
             }
             return Ok(result);
         }
+
+        #endregion Public Methods
     }
 }
