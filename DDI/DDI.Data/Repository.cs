@@ -67,7 +67,7 @@ namespace DDI.Data
 
         #region Public Methods
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             try
             {
@@ -75,7 +75,12 @@ namespace DDI.Data
                 {
                     throw new ArgumentNullException(nameof(entity));
                 }
-                
+
+                if (_context.Entry(entity).State == EntityState.Detached)
+                {
+                    EntitySet.Attach(entity);
+                }
+
                 EntitySet.Remove(entity);
                 _context.SaveChanges();
             }
@@ -89,7 +94,7 @@ namespace DDI.Data
 
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public void Insert(T entity)
+        public virtual void Insert(T entity)
         {
             try
             {
@@ -107,7 +112,7 @@ namespace DDI.Data
             }
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             try
             {
@@ -115,6 +120,9 @@ namespace DDI.Data
                 {
                     throw new ArgumentNullException(nameof(entity));
                 }
+
+                EntitySet.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
                 _context.SaveChanges();
             }
             catch (DbEntityValidationException e)
