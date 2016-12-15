@@ -38,22 +38,52 @@ namespace DDI.Business.Services
                 constituents = constituents.Skip(search.Offset.Value * pageSize);
             }
             constituents = constituents.Take(pageSize);
+            var response = GetIDataResponse(() => constituents.ToList());
+            response.Links = new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = search.ToQueryString(),
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituents.ToList());
+            return response;
         }
 
         public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
             Constituent constituent = _repository.GetById(id);
+            var response = GetIDataResponse(() => constituent);
+            response.Links= new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = $"api/v1/constituents/{id}",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituent);
+            return response;
         }
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            var response = GetIDataResponse(() => constituent);
+            response.Links = new List<HATEOASLink>()
+            {
+                new HATEOASLink()
+                {
+                    Href = $"api/v1/constituents?constituentNum={constituentNum}",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
 
-            return GetIDataResponse(() => constituent);
+            return response;
         }
 
         public IDataResponse<Constituent> UpdateConstituent(Guid id, object constituentChanges)

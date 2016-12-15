@@ -222,8 +222,21 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClergyStatusesController.cs" />
+    <Compile Include="Controllers\ClergyTypesController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
+    <Compile Include="Controllers\ConstituentStatusesController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\DenominationsController.cs" />
+    <Compile Include="Controllers\EducationLevelsController.cs" />
+    <Compile Include="Controllers\EthnicityController.cs" />
+    <Compile Include="Controllers\GendersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IncomeLevelsController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
+    <Compile Include="Controllers\PrefixesController.cs" />
+    <Compile Include="Controllers\ProfessionsController.cs" />
+    <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -239,6 +252,7 @@
     <Compile Include="Services\ConstituentService.cs" />
     <Compile Include="Services\DataResponse.cs" />
     <Compile Include="Services\GenericServiceBase.cs" />
+    <Compile Include="Services\GenericServiceCommonBase.cs" />
     <Compile Include="Services\IConstituentService.cs" />
     <Compile Include="Services\IPageable.cs" />
     <Compile Include="Services\IGenericService.cs" />
