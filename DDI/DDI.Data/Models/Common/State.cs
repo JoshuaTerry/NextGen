@@ -27,10 +27,10 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
         
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
-        public virtual ICollection<County> Counties { get; set; }
+        public ICollection<County> Counties { get; set; }
 
-        public virtual ICollection<City> Cities { get; set; }
+        public ICollection<City> Cities { get; set; }
     }
 }

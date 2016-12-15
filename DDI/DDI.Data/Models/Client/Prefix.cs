@@ -20,7 +20,7 @@ namespace DDI.Data.Models.Client
         [MaxLength(128)]
         public string Description { get; set; }
 
-        public virtual Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
         public Guid? GenderId { get; set; }
         #endregion Public Properties

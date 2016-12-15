@@ -19,7 +19,7 @@ namespace DDI.Data.Models.Client
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public virtual ICollection<Constituent> Constituents { get; set; }
+        public ICollection<Constituent> Constituents { get; set; }
 
         [MaxLength(128)]
         public string Code { get; set; }
