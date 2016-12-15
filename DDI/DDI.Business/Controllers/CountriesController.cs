@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+
 using DDI.Business.Services;
 using DDI.Data.Models.Common;
 
@@ -6,13 +7,31 @@ namespace DDI.Business.Controllers
 {
     public class CountriesController : ApiController
     {
-        GenericServiceBase<Country> _service;
+        #region Private Fields
 
-        public CountriesController() : this(new GenericServiceBase<Country>()) { }
-        internal CountriesController(GenericServiceBase<Country> service)
+        private GenericServiceCommonBase<Country> _service;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public CountriesController()
+            : this(new GenericServiceCommonBase<Country>())
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Internal Constructors
+
+        internal CountriesController(GenericServiceCommonBase<Country> service)
         {
             _service = service;
         }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
 
         [HttpGet]
         [Route("api/v1/countries")]
@@ -27,8 +46,10 @@ namespace DDI.Business.Controllers
             if (!result.IsSuccessful)
             {
                 return InternalServerError();
-            } 
+            }
             return Ok(result);
         }
+
+        #endregion Public Methods
     }
 }

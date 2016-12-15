@@ -48,7 +48,7 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual ZipStreet ZipStreet { get; set; }
+        public ZipStreet ZipStreet { get; set; }
 
     }
 }

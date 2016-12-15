@@ -240,6 +240,7 @@
     <Compile Include="Services\ConstituentService.cs" />
     <Compile Include="Services\DataResponse.cs" />
     <Compile Include="Services\GenericServiceBase.cs" />
+    <Compile Include="Services\GenericServiceCommonBase.cs" />
     <Compile Include="Services\IConstituentService.cs" />
     <Compile Include="Services\IPageable.cs" />
     <Compile Include="Services\IGenericService.cs" />

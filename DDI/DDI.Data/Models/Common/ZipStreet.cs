@@ -36,9 +36,9 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual Zip Zip { get; set; }
+        public Zip Zip { get; set; }
 
-        public virtual ICollection<ZipPlus4> ZipPlus4s { get; set; }
+        public ICollection<ZipPlus4> ZipPlus4s { get; set; }
 
     }
 }

@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HATEOASLink.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
