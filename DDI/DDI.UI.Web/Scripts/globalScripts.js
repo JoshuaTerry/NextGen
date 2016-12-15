@@ -4,6 +4,8 @@
 
 $(document).ready(function () {
 
+    $.support.cors = true;
+
     LoadDatePickers();
 
     LoadTabs();

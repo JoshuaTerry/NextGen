@@ -44,7 +44,7 @@ function Resize() {
 
 function PopulateDropDowns() {
 
-    LoadConstituentTypes();
+    //LoadConstituentTypes();
 
     LoadCountries();
 
@@ -54,17 +54,21 @@ function PopulateDropDowns() {
 function LoadConstituentTypes() {
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'countries',
+        url: WEB_API_ADDRESS + 'constituenttypes',
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.searchtype').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.searchtype'));
 
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
-                $(option).appendTo($('.searchcountry'));
+            $.map(data.Data, function (item) {
+
+                option = $('<option>').val(item.Id).text(item.Name);
+                $(option).appendTo($('.searchtype'));
 
             });
 
@@ -86,7 +90,11 @@ function LoadCountries() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.searchcountry').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.searchcountry'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.CountryCode);
                 $(option).appendTo($('.searchcountry'));
@@ -111,10 +119,14 @@ function LoadStates() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.searchstate').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.searchstate'));
 
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
-                $(option).appendTo($('.searchcountry'));
+            $.map(data.Data, function (item) {
+
+                var option = $('<option>').val(item.Id).text(item.Description);
+                $(option).appendTo($('.searchstate'));
 
             });
 

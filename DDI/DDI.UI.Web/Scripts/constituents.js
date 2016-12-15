@@ -61,7 +61,11 @@ function LoadConstituentStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-ConstituentStatusId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-ConstituentStatusId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-ConstituentStatusId'));
@@ -86,7 +90,11 @@ function LoadPrefixes() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-Prefix').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-Prefix'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Abbreviation);
                 $(option).appendTo($('.c-Prefix'));
@@ -111,7 +119,11 @@ function LoadGenders() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-Gender').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-Gender'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-Gender'));
@@ -136,7 +148,11 @@ function LoadClergyTypes() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-ClergyTypeId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-ClergyTypeId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Code);
                 $(option).appendTo($('.c-ClergyTypeId'));
@@ -161,7 +177,11 @@ function LoadClergyStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-ClergyStatusId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-ClergyStatusId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-ClergyStatusId'));
@@ -186,7 +206,11 @@ function LoadDenominations() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-Denomination').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-Denomination'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-Denomination'));
@@ -211,7 +235,11 @@ function LoadEthnicities() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-Ethnicity').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-Ethnicity'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-Ethnicity'));
@@ -236,7 +264,11 @@ function LoadLanguages() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-LanguageId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-LanguageId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-LanguageId'));
@@ -261,7 +293,11 @@ function LoadEducationLevels() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-EducationLevel').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-EducationLevel'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-EducationLevel'));
@@ -286,10 +322,14 @@ function LoadMaritalStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-MaritalStatus').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-MaritalStatus'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ProfessionId'));
+                $(option).appendTo($('.c-MaritalStatus'));
 
             });
 
@@ -311,7 +351,11 @@ function LoadProfessions() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-ProfessionId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-ProfessionId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-ProfessionId'));
@@ -336,7 +380,11 @@ function LoadIncomeLevels() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.d, function (item) {
+            $('.c-IncomeLevelId').html('');
+            var option = $('<option>').val('').text('');
+            $(option).appendTo($('.c-IncomeLevelId'));
+
+            $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
                 $(option).appendTo($('.c-IncomeLevelId'));
@@ -365,15 +413,22 @@ function GetConstituentData(id) {
 
             $.map(data.Data, function (value, key) {
 
-                $('.c-' + key).text(value);
-                $('.c-' + key).val(value);
+                 if (typeof(value) == 'string')
+                     value = value.replace('"', '').replace('"', '');
 
-                if (key.toLowerCase().indexOf('date') !== -1) {
+                if (key != '$id') {
 
-                    var date = FormatJSONDate(value);
+                    $('.c-' + key).text(value);
+                    $('.c-' + key).val(value);
 
-                    $('.c-' + key).text(date);
-                    $('.c-' + key).val(date);
+                    if (key.toLowerCase().indexOf('date') !== -1) {
+
+                        var date = FormatJSONDate(value);
+
+                        $('.c-' + key).text(date);
+                        $('.c-' + key).val(date);
+                    }
+
                 }
             });
 
