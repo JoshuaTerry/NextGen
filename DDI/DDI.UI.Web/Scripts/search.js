@@ -4,8 +4,6 @@ $(document).ready(function () {
     Resize();
 
     PopulateDropDowns();
-
-    // AddColumnHeaders();
     
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
@@ -46,9 +44,36 @@ function Resize() {
 
 function PopulateDropDowns() {
 
-    // LoadCountries();
+    LoadConstituentTypes();
 
-    // LoadStates();
+    LoadCountries();
+
+    LoadStates();
+}
+
+function LoadConstituentTypes() {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'countries',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $.map(data.d, function (item) {
+
+                var option = $('<option>').val(item.Id).text(item.CountryCode);
+                $(option).appendTo($('.searchcountry'));
+
+            });
+
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
 }
 
 function LoadCountries() {
