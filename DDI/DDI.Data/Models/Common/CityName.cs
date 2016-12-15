@@ -23,7 +23,7 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual City City { get; set; }
+        public City City { get; set; }
 
     }
 }

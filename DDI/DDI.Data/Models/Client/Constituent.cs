@@ -140,25 +140,25 @@ namespace DDI.Data.Models.Client
 
         // Navigation Properties
 
-        public virtual ClergyStatus ClergyStatus { get; set; }
-        public virtual ClergyType ClergyType { get; set; }
-        public virtual ConstituentStatus ConstituentStatus { get; set; }
-        public virtual ConstituentType ConstituentType { get; set; }
-        public virtual EducationLevel EducationLevel { get; set; }
-        public virtual Gender Gender { get; set; }
-        public virtual IncomeLevel IncomeLevel { get; set; }
-        public virtual Language Language { get; set; }
-        public virtual Prefix Prefix { get; set; }
-        public virtual Profession Profession { get; set; }
+        public ClergyStatus ClergyStatus { get; set; }
+        public ClergyType ClergyType { get; set; }
+        public ConstituentStatus ConstituentStatus { get; set; }
+        public ConstituentType ConstituentType { get; set; }
+        public EducationLevel EducationLevel { get; set; }
+        public Gender Gender { get; set; }
+        public IncomeLevel IncomeLevel { get; set; }
+        public Language Language { get; set; }
+        public Prefix Prefix { get; set; }
+        public Profession Profession { get; set; }
 
-        public virtual ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
-        public virtual ICollection<AlternateId> AlternateIds { get; set; }
-        public virtual ICollection<ContactInfo> ContactInfo { get; set; }
-        public virtual ICollection<Denomination> Denominations { get; set; }
-        public virtual ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
-        public virtual ICollection<Education> Educations { get; set; }
-        public virtual ICollection<Ethnicity> Ethnicities { get; set; }
-        public virtual ICollection<PaymentPreference> PaymentPreferences { get; set; }
+        public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
+        public ICollection<AlternateId> AlternateIds { get; set; }
+        public ICollection<ContactInfo> ContactInfo { get; set; }
+        public ICollection<Denomination> Denominations { get; set; }
+        public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
+        public ICollection<Education> Educations { get; set; }
+        public ICollection<Ethnicity> Ethnicities { get; set; }
+        public ICollection<PaymentPreference> PaymentPreferences { get; set; }
 
         #endregion Public Properties
 

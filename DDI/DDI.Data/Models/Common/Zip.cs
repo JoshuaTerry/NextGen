@@ -28,10 +28,10 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual City City { get; set; }
+        public City City { get; set; }
 
-        public virtual ICollection<ZipBranch> ZipBranches { get; set; }
+        public ICollection<ZipBranch> ZipBranches { get; set; }
 
-        public virtual ICollection<ZipStreet> ZipStreets { get; set; }
+        public ICollection<ZipStreet> ZipStreets { get; set; }
     }
 }

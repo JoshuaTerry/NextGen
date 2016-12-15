@@ -35,9 +35,9 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
         
-        public virtual State State { get; set; }
+        public State State { get; set; }
 
-        public virtual ICollection<City> Cities { get; set; }
+        public ICollection<City> Cities { get; set; }
 
     }
 }

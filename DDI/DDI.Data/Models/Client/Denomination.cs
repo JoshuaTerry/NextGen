@@ -28,7 +28,7 @@ namespace DDI.Data.Models.Client
         [MaxLength(128)]
         public string Religion { get; set; }
 
-        public virtual ICollection<Constituent> Constituents { get; set; }
+        public ICollection<Constituent> Constituents { get; set; }
         #endregion Public Properties
     }
 }
