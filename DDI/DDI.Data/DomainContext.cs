@@ -54,13 +54,16 @@ namespace DDI.Data
 
 		public virtual DbSet<Profession> Professions { get; set; }
 
-		public virtual DbSet<State> States { get; set; }
+        public virtual DbSet<Region> Regions { get; set; }
 
-		#endregion Public Properties
+        public virtual DbSet<RegionLevel> RegionLevels { get; set; }
 
-		#region Public Constructors
 
-		public DomainContext()
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public DomainContext()
 			: base("name=DomainContext")
 		{
 		}
