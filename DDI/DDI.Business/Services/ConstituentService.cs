@@ -35,7 +35,7 @@ namespace DDI.Business.Services
             //            constituents = constituents.Where(c => (c.FirstName.Contains(search.Name) || c.LastName.Contains(search.Name)));
             //            constituents = constituents.OrderBy(c => c.LastName);
 
-            return GetIDataResponse(() => query.GetQueryable());
+            return GetIDataResponse(() => query.GetQueryable().ToList());
 
             var pageSize = (search.Limit ?? 100);
             if ((search.Offset ?? 0) > 0)
