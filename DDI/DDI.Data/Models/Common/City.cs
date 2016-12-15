@@ -34,13 +34,13 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual State State { get; set; }
+        public State State { get; set; }
 
-        public virtual County County { get; set; }
+        public County County { get; set; }
 
-        public virtual ICollection<CityName> CityNames { get; set; }
+        public ICollection<CityName> CityNames { get; set; }
 
-        public virtual ICollection<Zip> Zips { get; set; }
+        public ICollection<Zip> Zips { get; set; }
 
     }
 }

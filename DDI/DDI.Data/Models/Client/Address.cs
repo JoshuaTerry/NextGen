@@ -78,7 +78,7 @@ namespace DDI.Data.Models.Client
         }
 
         // Navigation Properties
-        public virtual ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
+        public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         
         #endregion Public Properties
     }

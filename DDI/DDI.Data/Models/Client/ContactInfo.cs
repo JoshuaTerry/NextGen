@@ -25,8 +25,8 @@ namespace DDI.Data.Models.Client
         public Guid? ContactTypeId { get; set; }        
 
         // Navigation Properties
-        public virtual Constituent Constituent { get; set; }
-        public virtual ContactType ContactType { get; set; }
+        public Constituent Constituent { get; set; }
+        public ContactType ContactType { get; set; }
 
         #endregion Public Properties
     }
