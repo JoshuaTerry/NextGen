@@ -128,6 +128,7 @@
     <Compile Include="Models\Client\PaymentPreference.cs" />
     <Compile Include="Models\Client\Prefix.cs" />
     <Compile Include="Models\Client\Profession.cs" />
+    <Compile Include="Models\Client\SectionPreference.cs" />
     <Compile Include="Models\Common\Abbreviation.cs" />
     <Compile Include="Models\Common\City.cs" />
     <Compile Include="Models\Common\CityName.cs" />
