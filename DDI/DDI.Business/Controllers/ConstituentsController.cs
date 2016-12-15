@@ -10,7 +10,6 @@ using DDI.Business.Services;
 namespace DDI.Business.Controllers
 {
     //[Authorize]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ConstituentsController : ApiController
     {
         private IConstituentService _service;
