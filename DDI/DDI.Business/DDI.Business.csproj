@@ -225,6 +225,7 @@
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Enums\PaymentMethodEnum.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

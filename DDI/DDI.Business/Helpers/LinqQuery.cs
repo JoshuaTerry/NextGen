@@ -8,19 +8,19 @@ using LinqKit;
 
 namespace DDIX.Module.Helpers
 {
-    public class LinqQuery<T>
+    public class LinqQuery<TEntity>
     {
         #region Private Fields
 
-        private ExpressionStarter<T> _predicate = PredicateBuilder.New<T>();
+        private ExpressionStarter<TEntity> _predicate = PredicateBuilder.New<TEntity>();
 
-        private IQueryable<T> _query;
+        private IQueryable<TEntity> _query;
 
         #endregion Private Fields
 
         #region Public Properties
 
-        public ExpressionStarter<T> Predicate
+        public ExpressionStarter<TEntity> Predicate
         {
             get { return _predicate; }
         }
@@ -29,7 +29,7 @@ namespace DDIX.Module.Helpers
 
         #region Public Constructors
 
-        public LinqQuery(IQueryable<T> query)
+        public LinqQuery(IQueryable<TEntity> query)
         {
             _query = query;
         }
@@ -38,9 +38,9 @@ namespace DDIX.Module.Helpers
 
         #region Public Methods
 
-        public IQueryable<T> GetQueryable() => _query?.AsExpandable().Where(_predicate);
+        public IQueryable<TEntity> GetQueryable() => _query?.AsExpandable().Where(_predicate);
 
-        public LinqQuery<T> Or(Expression<Func<T, bool>> expression)
+        public LinqQuery<TEntity> Or(Expression<Func<TEntity, bool>> expression)
         {
             if (expression != null)
             {
@@ -54,7 +54,7 @@ namespace DDIX.Module.Helpers
 
         #region Protected Methods
 
-        protected void PredicateAnd(Expression<Func<T, bool>> expression)
+        protected void PredicateAnd(Expression<Func<TEntity, bool>> expression)
         {
             if (expression != null)
             {
