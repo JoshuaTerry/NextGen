@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
@@ -53,17 +54,21 @@ namespace DDI.Data
 
         #region Public Constructors
 
-        public Repository():
+        public Repository() :
             this(new DomainContext())
         {
         }
 
-        public Repository(DbContext context)
+        #endregion Public Constructors
+
+        #region Internal Constructors
+
+        internal Repository(DbContext context)
         {
             _context = context;
         }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
         #region Public Methods
 
@@ -90,9 +95,9 @@ namespace DDI.Data
             }
         }
 
-        public T GetById(object id) => EntitySet.Find(id);
-
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
+
+        public T GetById(object id) => EntitySet.Find(id);
 
         public virtual T Insert(T entity)
         {
@@ -133,6 +138,20 @@ namespace DDI.Data
             {
                 throw new Exception(e.GetFriendlyMessage(), e);
             }
+        }
+
+        public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues)
+        {
+            T entity = GetById(id);
+            DbEntityEntry<T> entry = _context.Entry(entity);
+            DbPropertyValues currentValues = entry.CurrentValues;
+
+            foreach (KeyValuePair<string, object> keyValue in propertyValues)
+            {
+                currentValues[keyValue.Key] = keyValue.Value;
+            }
+
+            return _context.SaveChanges();
         }
 
         #endregion Public Methods
