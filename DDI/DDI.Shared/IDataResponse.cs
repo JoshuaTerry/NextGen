@@ -11,6 +11,7 @@ namespace DDI.Shared
         bool IsSuccessful { get; set; }
         List<string> ErrorMessages { get; set; }
         List<string> VerboseErrorMessages { get; set; }
+        List<HATEOASLink> Links { get; set; } 
     }
 
     public interface IDataResponse<T> : IDataResponse
