@@ -43,11 +43,11 @@ namespace DDI.Data.Models.Client
         public string DuplicateKey { get; set; }
 
         // Navigation Properties
-        public virtual Address Address { get; set; }
+        public Address Address { get; set; }
 
-        public virtual Constituent Constituent { get; set; }
+        public Constituent Constituent { get; set; }
 
-        public virtual AddressType AddressType { get; set; }
+        public AddressType AddressType { get; set; }
 
         #endregion Public Properties
     }

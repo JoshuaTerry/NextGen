@@ -41,7 +41,7 @@ namespace DDI.Data.Models.Client
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
 
-        public virtual ICollection<EducationLevel> EducationLevels { get; set; }
+        public ICollection<EducationLevel> EducationLevels { get; set; }
         #endregion Public Properties
     }
 }

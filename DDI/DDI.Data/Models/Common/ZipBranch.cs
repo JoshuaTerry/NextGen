@@ -29,7 +29,7 @@ namespace DDI.Data.Models.Common
 
         // Navigation Properties
 
-        public virtual Zip Zip { get; set; }
+        public Zip Zip { get; set; }
 
     }
 }
