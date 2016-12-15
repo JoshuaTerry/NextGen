@@ -89,7 +89,7 @@ namespace DDI.Data
 
 	    public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-		public void Insert(T entity)
+		public T Insert(T entity)
 		{
 			try
 			{
@@ -100,6 +100,8 @@ namespace DDI.Data
 
 				EntitySet.Add(entity);
 				_context.SaveChanges();
+
+			    return entity;
 			}
 			catch (DbEntityValidationException e)
 			{
@@ -107,7 +109,7 @@ namespace DDI.Data
 			}
 		}
 
-		public void Update(T entity)
+		public T Update(T entity)
 		{
 			try
 			{
@@ -116,6 +118,8 @@ namespace DDI.Data
 					throw new ArgumentNullException(nameof(entity));
 				}
 				_context.SaveChanges();
+
+			    return entity;
 			}
 			catch (DbEntityValidationException e)
 			{

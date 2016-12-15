@@ -8,6 +8,7 @@ using System.Web.Http;
 using DDI.Data;
 using DDI.Data.Models.Client;
 using DDI.Shared;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Business.Services
 {
@@ -51,6 +52,21 @@ namespace DDI.Business.Services
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+
+            return GetIDataResponse(() => constituent);
+        }
+
+        public IDataResponse<Constituent> UpdateConstituent(Guid id, object constituentChanges)
+        {
+            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+            var props = ((JObject)constituentChanges);
+
+            foreach (var pair in props)
+            {
+                changedProperties.Add(pair.Key, pair.Value);
+            }
+
+            var constituent = _repository.GetById(id);
 
             return GetIDataResponse(() => constituent);
         }
