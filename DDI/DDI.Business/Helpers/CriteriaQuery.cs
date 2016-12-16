@@ -33,13 +33,13 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfAtLeast<V>(Expression<Func<TSearchModel, V>> test, Expression<Func<TDatabaseType, V>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankAndDatabaseFieldIsGreaterThanOrEqualToIt<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
             var testValue = GetTestValue(test);
 
-            if (testValue != null && !(testValue.Equals(typeof(V).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
             {
-                var constantExpression = Expression.Constant(testValue, typeof(V));
+                var constantExpression = Expression.Constant(testValue, typeof(TModelPropertyType));
                 var compExpression = Expression.GreaterThanOrEqual(expression.Body, constantExpression);
                 var lambda = (Expression<Func<TDatabaseType, bool>>) Expression.Lambda(compExpression, expression.Parameters[0]);
 
@@ -49,13 +49,13 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfAtMost<V>(Expression<Func<TSearchModel, V>> test, Expression<Func<TDatabaseType, V>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankAndDatabaseFieldIsLessThanOrEqualToIt<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
             var testValue = GetTestValue(test);
 
-            if (testValue != null && !(testValue.Equals(typeof(V).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
             {
-                var constantExpression = Expression.Constant(testValue, typeof(V));
+                var constantExpression = Expression.Constant(testValue, typeof(TModelPropertyType));
                 var compExpression = Expression.LessThanOrEqual(expression.Body, constantExpression);
                 var lambda = (Expression<Func<TDatabaseType, bool>>) Expression.Lambda(compExpression, expression.Parameters[0]);
 
@@ -65,27 +65,27 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfBetween<V>(Expression<Func<TSearchModel, V>> lowerBoundTest, Expression<Func<TSearchModel, V>> upperBoundTest, Expression<Func<TDatabaseType, V>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertiesAreNotBlankAndDatabaseFieldIsBetweenThem<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> lowerBoundTest, Expression<Func<TSearchModel, TModelPropertyType>> upperBoundTest, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
-            IfAtLeast(lowerBoundTest, expression);
-            IfAtMost(upperBoundTest, expression);
+            IfModelPropertyIsNotBlankAndDatabaseFieldIsGreaterThanOrEqualToIt(lowerBoundTest, expression);
+            IfModelPropertyIsNotBlankAndDatabaseFieldIsLessThanOrEqualToIt(upperBoundTest, expression);
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfContains<TypeOfProperty>(Expression<Func<TSearchModel, TypeOfProperty>> test, Expression<Func<TDatabaseType, TypeOfProperty>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankAndDatabaseContainsIt<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
             IfCheckMethod("Contains", test, expression);
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfEquals<V>(Expression<Func<TSearchModel, V>> test, Expression<Func<TDatabaseType, V>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankAndItEqualsDatabaseField<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
             //if (HasValue(test))
             var testValue = GetTestValue(test);
 
-            if (!IsNullOrBlankOrDefault<V>(testValue))
+            if (!IsNullOrBlankOrDefault<TModelPropertyType>(testValue))
             {
-                var constantExpression = Expression.Constant(testValue, typeof(V));
+                var constantExpression = Expression.Constant(testValue, typeof(TModelPropertyType));
                 var equalExpression = Expression.Equal(expression.Body, constantExpression);
                 var lambda = (Expression<Func<TDatabaseType, bool>>) Expression.Lambda(equalExpression, expression.Parameters[0]);
 
@@ -95,10 +95,10 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfHasValue<V>(Expression<Func<TSearchModel, V>> test, Expression<Func<TDatabaseType, bool>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankThenAndTheExpression<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, bool>> expression)
         {
             var testValue = test.Compile().Invoke(Model);
-            if (testValue != null && !(testValue.Equals(typeof(V).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
             {
                 PredicateAnd(expression);
             }
@@ -106,13 +106,13 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfStartsWith<TypeOfProperty>(Expression<Func<TSearchModel, TypeOfProperty>> test, Expression<Func<TDatabaseType, TypeOfProperty>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankAndDatabaseFieldStartsWithIt<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, TModelPropertyType>> expression)
         {
             IfCheckMethod("StartsWith", test, expression);
             return this;
         }
 
-        public CriteriaQuery<TDatabaseType, TSearchModel> IfThen(Expression<Func<TSearchModel, bool>> condition, Expression<Func<TDatabaseType, bool>> expression)
+        public CriteriaQuery<TDatabaseType, TSearchModel> IfModelExpressionIsTrueThenAndTheExpression(Expression<Func<TSearchModel, bool>> condition, Expression<Func<TDatabaseType, bool>> expression)
         {
             if (condition.Compile().Invoke(Model))
             {
@@ -127,9 +127,28 @@ namespace DDI.Business.Helpers
             return propertyExpression.Compile().Invoke(Model);
         }
 
-        private TValue GetTestValue<TValue>(Expression<Func<TSearchModel, TValue>> test)
+        public CriteriaQuery<TDatabaseType, TSearchModel> SetOffset(int? offset)
         {
-            TValue testValue;
+            Offset = offset ?? 0;
+            return this;
+        }
+
+        public CriteriaQuery<TDatabaseType, TSearchModel> SetLimit(int? limit)
+        {
+            Limit = limit ?? 0;
+            return this;
+        }
+
+        public CriteriaQuery<TDatabaseType, TSearchModel> SetOrderBy(string orderBy)
+        {
+            var orderByList = orderBy.Split(',').ToList();
+            OrderBy = orderByList;
+            return this;
+        }
+
+        private TPropertyType GetTestValue<TPropertyType>(Expression<Func<TSearchModel, TPropertyType>> test)
+        {
+            TPropertyType testValue;
 
             try
             {
@@ -137,20 +156,20 @@ namespace DDI.Business.Helpers
             }
             catch
             {
-                testValue = default(TValue);
+                testValue = default(TPropertyType);
             }
 
             return testValue;
         }
 
-        private CriteriaQuery<TDatabaseType, TSearchModel> IfCheckMethod<TypeOfProperty>(string method, Expression<Func<TSearchModel, TypeOfProperty>> test, Expression<Func<TDatabaseType, TypeOfProperty>> expression)
+        private CriteriaQuery<TDatabaseType, TSearchModel> IfCheckMethod<TPropertyType>(string method, Expression<Func<TSearchModel, TPropertyType>> test, Expression<Func<TDatabaseType, TPropertyType>> expression)
         {
             var testValue = GetTestValue(test);
 
-            if (!IsNullOrBlankOrDefault<TypeOfProperty>(testValue))
+            if (!IsNullOrBlankOrDefault<TPropertyType>(testValue))
             {
-                var constantExpression = Expression.Constant(testValue, typeof(TypeOfProperty));
-                MethodInfo contains = typeof(TypeOfProperty).GetMethod(method, new Type[] { typeof(TypeOfProperty) });
+                var constantExpression = Expression.Constant(testValue, typeof(TPropertyType));
+                MethodInfo contains = typeof(TPropertyType).GetMethod(method, new Type[] { typeof(TPropertyType) });
                 var expressionBody = Expression.Call(expression.Body, contains, constantExpression);
                 var lambda = (Expression<Func<TDatabaseType, bool>>) Expression.Lambda(expressionBody, expression.Parameters[0]);
 
@@ -160,13 +179,15 @@ namespace DDI.Business.Helpers
             return this;
         }
 
-        private bool IsNullOrBlankOrDefault<V>(object testValue)
+        private bool IsNullOrBlankOrDefault<TType>(object testValue)
         {
             if (testValue == null)
                 return true;
-            if (testValue.Equals(typeof(V).DefaultValue()))
+            if (testValue.Equals(typeof(TType).DefaultValue()))
                 return true;
-            if (testValue is string && string.IsNullOrWhiteSpace((string)testValue))
+            if (testValue is string && string.IsNullOrWhiteSpace((string) testValue))
+                return true;
+            if (testValue is Guid && (Guid.Empty.ToString() == testValue.ToString()))
                 return true;
             return false;
         }

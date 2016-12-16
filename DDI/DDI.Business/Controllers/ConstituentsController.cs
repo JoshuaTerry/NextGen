@@ -32,8 +32,11 @@ namespace DDI.Business.Controllers
                                                  int? constituentNumber = null, 
                                                  string address = null, 
                                                  string city = null, 
-                                                 string state = null, 
-                                                 string zip = null, 
+                                                 string state = null,
+                                                 string zipFrom = null,
+                                                 string zipTo = null,
+                                                 string alternateId = null,
+                                                 Guid? constituentTypeId = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
                                                  string orderby = null)
@@ -46,10 +49,13 @@ namespace DDI.Business.Controllers
                 Address = address,
                 City = city,
                 State = state,
-                Zip = zip,
                 Offset = offset,
                 Limit = limit,
-                OrderBy = orderby
+                OrderBy = orderby,
+                AlternateId = alternateId,
+                ZipFrom =  zipFrom,
+                ZipTo = zipTo,
+                ConstituentTypeId = constituentTypeId
             };
 
             var constituents = _service.GetConstituents(search);
