@@ -141,11 +141,8 @@ namespace DDI.Business.Controllers
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Patch(Guid id, object constituentChanges)
+        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
-            var props = ((JObject) constituentChanges).Properties();
-            
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

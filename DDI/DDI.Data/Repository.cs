@@ -63,7 +63,7 @@ namespace DDI.Data
 
         #region Internal Constructors
 
-        internal Repository(DbContext context)
+        public Repository(DbContext context)
         {
             _context = context;
         }
