@@ -1,6 +1,4 @@
 ﻿
-var constituent = null;
-
 $(document).ready(function () {
 
     Resize();
@@ -63,14 +61,14 @@ function LoadConstituentStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-ConstituentStatusId').html('');
+            $('.ConstituentStatusId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-ConstituentStatusId'));
+            $(option).appendTo($('.ConstituentStatusId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ConstituentStatusId'));
+                $(option).appendTo($('.ConstituentStatusId'));
 
             });
 
@@ -92,14 +90,14 @@ function LoadPrefixes() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-Prefix').html('');
+            $('.Prefix').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-Prefix'));
+            $(option).appendTo($('.Prefix'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Abbreviation);
-                $(option).appendTo($('.c-Prefix'));
+                $(option).appendTo($('.Prefix'));
 
             });
 
@@ -121,14 +119,14 @@ function LoadGenders() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-Gender').html('');
+            $('.Gender').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-Gender'));
+            $(option).appendTo($('.Gender'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Gender'));
+                $(option).appendTo($('.Gender'));
 
             });
 
@@ -150,14 +148,14 @@ function LoadClergyTypes() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-ClergyTypeId').html('');
+            $('.ClergyTypeId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-ClergyTypeId'));
+            $(option).appendTo($('.ClergyTypeId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Code + ' : ' + item.Name);
-                $(option).appendTo($('.c-ClergyTypeId'));
+                $(option).appendTo($('.ClergyTypeId'));
 
             });
 
@@ -179,14 +177,14 @@ function LoadClergyStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-ClergyStatusId').html('');
+            $('.ClergyStatusId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-ClergyStatusId'));
+            $(option).appendTo($('.ClergyStatusId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ClergyStatusId'));
+                $(option).appendTo($('.ClergyStatusId'));
 
             });
 
@@ -208,14 +206,14 @@ function LoadDenominations() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-Denomination').html('');
+            $('.Denomination').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-Denomination'));
+            $(option).appendTo($('.Denomination'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Denomination'));
+                $(option).appendTo($('.Denomination'));
 
             });
 
@@ -237,14 +235,14 @@ function LoadEthnicities() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-Ethnicity').html('');
+            $('.Ethnicity').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-Ethnicity'));
+            $(option).appendTo($('.Ethnicity'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Ethnicity'));
+                $(option).appendTo($('.Ethnicity'));
 
             });
 
@@ -266,14 +264,14 @@ function LoadLanguages() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-LanguageId').html('');
+            $('.LanguageId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-LanguageId'));
+            $(option).appendTo($('.LanguageId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-LanguageId'));
+                $(option).appendTo($('.LanguageId'));
 
             });
 
@@ -295,14 +293,14 @@ function LoadEducationLevels() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-EducationLevel').html('');
+            $('.EducationLevel').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-EducationLevel'));
+            $(option).appendTo($('.EducationLevel'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-EducationLevel'));
+                $(option).appendTo($('.EducationLevel'));
 
             });
 
@@ -324,14 +322,14 @@ function LoadMaritalStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-MaritalStatus').html('');
+            $('.MaritalStatus').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-MaritalStatus'));
+            $(option).appendTo($('.MaritalStatus'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-MaritalStatus'));
+                $(option).appendTo($('.MaritalStatus'));
 
             });
 
@@ -353,14 +351,14 @@ function LoadProfessions() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-ProfessionId').html('');
+            $('.ProfessionId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-ProfessionId'));
+            $(option).appendTo($('.ProfessionId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ProfessionId'));
+                $(option).appendTo($('.ProfessionId'));
 
             });
 
@@ -382,14 +380,14 @@ function LoadIncomeLevels() {
         crossDomain: true,
         success: function (data) {
 
-            $('.c-IncomeLevelId').html('');
+            $('.IncomeLevelId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-IncomeLevelId'));
+            $(option).appendTo($('.IncomeLevelId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-IncomeLevelId'));
+                $(option).appendTo($('.IncomeLevelId'));
 
             });
 
@@ -404,16 +402,14 @@ function LoadIncomeLevels() {
 function GetConstituentData(id) {
 
     $.ajax({
-        //url: 'Constituents.aspx/GetConstituentById',
         url: WEB_API_ADDRESS + 'constituents/number/' + id,
         method: 'GET',
-        // data: '{ constituentnumber: "' + id + '" }',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            constituent = data.Data;
+            currentEntity = data.Data;
 
             DisplayConstituentData();
             
@@ -424,7 +420,7 @@ function GetConstituentData(id) {
     });
 }
 
-function ResetEntity() {
+function RefreshEntity() {
 
     DisplayConstituentData();
 
@@ -432,29 +428,32 @@ function ResetEntity() {
 
 function DisplayConstituentData() {
 
-    $.map(constituent, function (value, key) {
+    $.map(currentEntity, function (value, key) {
 
         if (typeof (value) == 'string')
             value = value.replace('"', '').replace('"', '');
 
         if (key != '$id') {
 
-            $('.c-' + key).text(value);
-            $('.c-' + key).val(value);
+            var classname = '.' + key;
+
+            $(classname).text(value);
+            $(classname).val(value);
 
             if (key.toLowerCase().indexOf('date') !== -1) {
 
                 var date = FormatJSONDate(value);
 
-                $('.c-' + key).text(date);
+                $(classname).text(date);
             }
 
         }
     });
 
+    $('.constituentpic').html('');
     var img = $('<img>');
 
-    if (constituent.IsMasculine) {
+    if (currentEntity.IsMasculine) {
         $(img).attr('src', 'Images/Male.png');
     } else {
         $(img).attr('src', 'Images/Female.png');

@@ -2,6 +2,9 @@
 // var WEB_API_ADDRESS = 'http://devapi.ddi.org';   // TEST
 // var WEB_API_ADDRESS = '';   // PROD
 
+var editing = false;
+var currentEntity = null;
+
 $(document).ready(function () {
 
     $.support.cors = true;
@@ -31,6 +34,25 @@ function LoadAccordions() {
         collapsible: true
     });
 
+    /*
+
+    TODO: Accordion expand/collapse all
+    
+    <a id="collapseAll">Collapse All</a>
+    <a id="expandAll">Expand All</a>
+
+
+    $("#collapseAll").click(function(){
+        $(".ui-accordion-content").hide()
+    });
+
+
+    $("#expandAll").click(function(){
+        $(".ui-accordion-content").show()
+    });
+
+    */
+
 }
 
 function LoadDatePickers() {
@@ -50,8 +72,6 @@ function FormatJSONDate(jsonDate) {
     
     return date;
 }
-
-var editing = false;
 
 function CreateEditControls() {
 
@@ -166,27 +186,25 @@ function StopEdit(editcontainer) {
 function SaveEdit(editcontainer) {
 
     // Get just the fields that have been edited
+    var fields = GetEditedFields(editcontainer);
 
     // Save the entity
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituentstatues',
-        method: 'GET',
+        url: WEB_API_ADDRESS + 'constituent/' + currentEntity.Id,
+        method: 'PATCH',
+        data: fields,
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            $('.c-ConstituentStatusId').html('');
-            var option = $('<option>').val('').text('');
-            $(option).appendTo($('.c-ConstituentStatusId'));
+            // Display success
+            alert('BOOM... saved!');
 
-            $.map(data.Data, function (item) {
+            // Display updated entity data
+            currentEntity = data.Data;
 
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ConstituentStatusId'));
-
-            });
-
+            RefreshEntity();
         },
         failure: function (response) {
             alert(response);
@@ -195,8 +213,45 @@ function SaveEdit(editcontainer) {
 
 }
 
+function GetEditedFields(editcontainer) {
+
+    var p = [];
+
+    $(editcontainer).find('input.editable').each(function () {
+        var property = $(this).attr('class').replace('editable ', '');
+        var value = $(this).val();
+
+        if (value) {
+            for (var key in currentEntity) {
+                if (key == property && currentEntity[key] != value) {
+                    p.push('"' + property + '": "' + value + '"');
+                }
+            }
+        }
+
+    });
+
+    $(editcontainer).find('select').each(function () {
+        var property = $(this).attr('class').replace('', '');
+        var value = $(this).val();
+
+        if (value) {
+            for (var key in currentEntity) {
+                if (key == property && currentEntity[key] != value) {
+                    p.push('"' + property + '": "' + value + '"');
+                }
+            }
+        }
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+
 function CancelEdit() {
 
-    ResetEntity();
+    RefreshEntity();
 
 }

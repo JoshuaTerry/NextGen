@@ -17,20 +17,20 @@
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
-                    Status: <span class="editable c-ConstituentStatus">Active</span>
+                    Status: <span class="editable ConstituentStatus">Active</span>
                 </div>
                 <div>
-                    <label class="editable c-FormattedName"></label>
-                    <label class="editable c-Address"></label>
-                    <label class="editable c-CityStateZip"></label>
+                    <label class="editable FormattedName"></label>
+                    <label class="editable Address"></label>
+                    <label class="editable CityStateZip"></label>
                 </div>
                 <div>
-                    <span class="editable c-PhoneNumber"></span>
+                    <span class="editable PhoneNumber"></span>
                 </div>
             </div>
 
             <h1>Relationships</h1>
-            <div class="editable c-Realtionships">
+            <div class="editable Realtionships">
 
             </div>
         </div>
@@ -53,26 +53,26 @@
                         
                         <div class="fieldblock">
                             <label>ID:</label>
-                            <input type="text" class="editable c-ConstituentNum" />
+                            <input type="text" class="editable ConstituentNum" />
                         </div>
 
                         <div class="fieldblock">
-                            <label class="editable c-FormattedName"></label>
+                            <label class="editable FormattedName"></label>
                         </div>
 
                         <div class="fieldblock">
                             <label>Status</label>
-                            <select class="editable c-ConstituentStatusId"></select>
+                            <select class="editable ConstituentStatusId"></select>
                         </div>
                     </div>
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <input type="text" class="editable c-Tags" />
+                        <input type="text" class="editable Tags" />
                     </div>
 
                     <div class="fieldlock">
-                        Created: <span class="c-CreatedDate"></span> by <span class="c-CreatedBy"></span>
+                        Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
                     
                 </div>
@@ -85,57 +85,57 @@
                         <div class="inline">
                             <div class="fieldblock">
                                 <label>Prefix</label>
-                                <select class="editable c-Prefix"></select>
+                                <select class="editable Prefix"></select>
                             </div>
 
                             <div class="fieldblock">
                                 <label>First:</label>
-                                <input type="text" class="editable c-FirstName" />
+                                <input type="text" class="editable FirstName" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Middle:</label>
-                                <input type="text" class="editable c-MiddleName" />
+                                <input type="text" class="editable MiddleName" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Last:</label>
-                                <input type="text" class="editable c-LastName" />
+                                <input type="text" class="editable LastName" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Suffix:</label>
-                                <input type="text" class="editable c-Suffix" />
+                                <input type="text" class="editable Suffix" />
                             </div>
                         </div>
 
                         <div class="fieldblock">
                             <label>Name 2:</label>
-                            <input type="text" class="editable c-Name2" />
+                            <input type="text" class="editable Name2" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Nickname</label>
-                            <input type="text" class="editable c-NickName" />
+                            <input type="text" class="editable NickName" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Salutation:</label>
-                            <input type="text" class="editable c-Salutation" />
+                            <input type="text" class="editable Salutation" />
                         </div>
 
                         <div class="inline">
                             <div class="fieldblock">
                                 <label>Tax ID:</label>
-                                <input type="text" class="editable c-TaxId" />
+                                <input type="text" class="editable TaxId" />
                             </div>
                             <div class="fieldblock">
                                 <label>Gender:</label>
-                                <select class="editable c-Gender"></select>
+                                <select class="editable Gender"></select>
                             </div>
                             <div class="fieldblock">
                                 <label>Source:</label>
-                                <input type="text" class="editable c-Source" />
+                                <input type="text" class="editable Source" />
                             </div>
                         </div>
 
@@ -146,17 +146,17 @@
 
                         <div class="fieldblock">
                             <label class="inline">Is Conditional</label>
-                            <input type="checkbox" class="editable c-IsConditional" />
+                            <input type="checkbox" class="editable IsConditional" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Number of pets</label>
-                            <input type="text" class="editable c-NumberOfPets" />
+                            <input type="text" class="editable NumberOfPets" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Income Prod Assets</label>
-                            <input type="text" class="editable c-IncomeProdAssets" />
+                            <input type="text" class="editable IncomeProdAssets" />
                         </div>
 
                     </div>
@@ -166,22 +166,22 @@
                         
                         <div class="fieldblock">
                             <label>Clergy Type:</label>
-                            <select class="editable c-ClergyTypeId"></select>
+                            <select class="editable ClergyTypeId"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Clergy Status:</label>
-                            <select class="editable c-ClergyStatusId"></select>
+                            <select class="editable ClergyStatusId"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Ordination Date:</label>
-                            <input type="text" class="editable c-OrdinationDate datepicker" />
+                            <input type="text" class="editable OrdinationDate datepicker" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Place of Ordination:</label>
-                            <input type="text" class="editable c-PlaceOfOrdination" />
+                            <input type="text" class="editable PlaceOfOrdination" />
                         </div>
 
                     </div>
@@ -191,17 +191,17 @@
 
                         <div class="fieldblock">
                             <label>Denomination:</label>
-                            <select class="editable c-Denomination"></select>
+                            <select class="editable Denomination"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Ethnicity:</label>
-                            <select class="editable c-Ethnicity"></select>
+                            <select class="editable Ethnicity"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Language:</label>
-                            <select class="editable c-LanguageId"></select>
+                            <select class="editable LanguageId"></select>
                         </div>
 
                     </div>
@@ -224,7 +224,7 @@
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Education Level</label>
-                            <select class="editable c-EducationLevel"></select>
+                            <select class="editable EducationLevel"></select>
                         </div>
 
                         <table class="datagrid educationleveltable" border="0">
@@ -248,7 +248,7 @@
                             <select class="editable paymentmethod"></select>
                         </div>
 
-                        <table class="editable c-PaymentPreferences">
+                        <table class="editable PaymentPreferences">
                             <thead>
                                 <tr>
                                     <th>Description</th>
@@ -270,41 +270,41 @@
                             <div>
                                 <div class="fieldblock">
                                     <label>Birth Date:</label>
-                                    <input type="text" class="editable c-BirthDate datepicker" />
+                                    <input type="text" class="editable BirthDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Deceased:</label>
-                                    <input type="text" class="editable c-DeceasedDate datepicker" />
+                                    <input type="text" class="editable DeceasedDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Marriage Date:</label>
-                                    <input type="text" class="editable c-MarriageDate datepicker" />
+                                    <input type="text" class="editable MarriageDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Divorce Date:</label>
-                                    <input type="text" class="editable c-DivorceDate datepicker" />
+                                    <input type="text" class="editable DivorceDate datepicker" />
                                 </div>
                             </div>
 
                             <div>
                                 <div class="fieldblock range">
                                     <label>Age:</label>
-                                    <input type="number" class="editable c-AgeFrom" />
+                                    <input type="number" class="editable AgeFrom" />
                                     to:
-                                    <input type="number" class="editable c-AgeTo" />
+                                    <input type="number" class="editable AgeTo" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Marital Status:</label>
-                                    <select class="editable c-MaritalStatus"></select>
+                                    <select class="editable MaritalStatus"></select>
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Prospect Date:</label>
-                                    <input type="text" class="editable c-ProspectDate datepicker" />
+                                    <input type="text" class="editable ProspectDate datepicker" />
                                 </div>
                             </div>
 
@@ -317,50 +317,50 @@
 
                         <div class="fieldblock">
                             <label>Profession:</label>
-                            <select class="editable c-ProfessionId"></select>
+                            <select class="editable ProfessionId"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Income Level:</label>
-                            <select class="editable c-IncomeLevelId"></select>
+                            <select class="editable IncomeLevelId"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>First Employed:</label>
-                            <input type="text" class="editable c-FirstEmploymentDate datepicker" />
+                            <input type="text" class="editable FirstEmploymentDate datepicker" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Employer:</label>
-                            <input type="text" class="editable c-Employer" />
+                            <input type="text" class="editable Employer" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Position:</label>
-                            <input type="text" class="editable c-Position" />
+                            <input type="text" class="editable Position" />
                         </div>
 
                         <div class="twocolumn">
                             <div class="fieldblock">
                                 <label>Start:</label>
-                                <input type="text" class="editable c-EmploymentStartDate datepicker" />
+                                <input type="text" class="editable EmploymentStartDate datepicker" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>End:</label>
-                                <input type="text" class="editable c-EmploymentEndDate datepicker" />
+                                <input type="text" class="editable EmploymentEndDate datepicker" />
                             </div>
                         </div>
 
                         <div class="twocolumn">
                             <div class="fieldblock">
                                 <label>Employee</label>
-                                <input type="checkbox" class="editable c-IsEmployee" />
+                                <input type="checkbox" class="editable IsEmployee" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>User ID:</label>
-                                <select class="editable c-UserId"></select>
+                                <select class="editable UserId"></select>
                             </div>
                         </div>
                         
