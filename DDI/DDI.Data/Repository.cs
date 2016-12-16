@@ -138,7 +138,11 @@ namespace DDI.Data
 
         public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues)
         {
-            T entity = GetById(id);
+            return UpdateChangedProperties(GetById(id), propertyValues);
+        }
+
+        public virtual int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues)
+        {
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
 
