@@ -1,4 +1,6 @@
 ﻿
+var constituent = null;
+
 $(document).ready(function () {
 
     Resize();
@@ -154,7 +156,7 @@ function LoadClergyTypes() {
 
             $.map(data.Data, function (item) {
 
-                var option = $('<option>').val(item.Id).text(item.Code);
+                var option = $('<option>').val(item.Id).text(item.Code + ' : ' + item.Name);
                 $(option).appendTo($('.c-ClergyTypeId'));
 
             });
@@ -411,40 +413,54 @@ function GetConstituentData(id) {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.Data, function (value, key) {
+            constituent = data.Data;
 
-                 if (typeof(value) == 'string')
-                     value = value.replace('"', '').replace('"', '');
-
-                if (key != '$id') {
-
-                    $('.c-' + key).text(value);
-                    $('.c-' + key).val(value);
-
-                    if (key.toLowerCase().indexOf('date') !== -1) {
-
-                        var date = FormatJSONDate(value);
-
-                        $('.c-' + key).text(date);
-                        $('.c-' + key).val(date);
-                    }
-
-                }
-            });
-
-            var img = $('<img>');
-
-            if (data.Data.IsMasculine) {
-                $(img).attr('src', 'Images/Male.png');
-            } else {
-                $(img).attr('src', 'Images/Female.png');
-            }
-
-            $(img).appendTo($('.constituentpic'));
+            DisplayConstituentData();
+            
         },
         failure: function (response) {
             alert(response);
         }
     });
+}
+
+function ResetEntity() {
+
+    DisplayConstituentData();
+
+}
+
+function DisplayConstituentData() {
+
+    $.map(constituent, function (value, key) {
+
+        if (typeof (value) == 'string')
+            value = value.replace('"', '').replace('"', '');
+
+        if (key != '$id') {
+
+            $('.c-' + key).text(value);
+            $('.c-' + key).val(value);
+
+            if (key.toLowerCase().indexOf('date') !== -1) {
+
+                var date = FormatJSONDate(value);
+
+                $('.c-' + key).text(date);
+            }
+
+        }
+    });
+
+    var img = $('<img>');
+
+    if (constituent.IsMasculine) {
+        $(img).attr('src', 'Images/Male.png');
+    } else {
+        $(img).attr('src', 'Images/Female.png');
+    }
+
+    $(img).appendTo($('.constituentpic'));
+
 }
 

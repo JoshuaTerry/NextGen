@@ -5,11 +5,15 @@ h1 {  }
 h2 {  }
 h3 {  }
 
-a { text-decoration: none; }
+a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
+
+input:disabled,
+select:disabled { border: solid 1px transparent; background-color: white; color: black; }
+select:disabled::-ms-expand { display: none; }
 
 .scrollable { overflow-y: scroll; }
 
@@ -41,6 +45,18 @@ div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; dis
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
 
+.tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
+.tabscontainer.inner { width: 100%; }
+
+.editcontainer {  }
+.editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }
+
+.editcontrols { margin-right: 10px; text-align: right; }
+.editcontrols a { color: #0f75b4; padding: 5px; }
+.editmode-active { display: none; }
+
+
+/* SEARCH SCREEN */
 /*.dx-datagrid-table { width: 100%; border-collapse: collapse; }
 .dx-header-row td:hover { cursor: pointer; }
 .dx-data-row { margin: 0px; padding: 0px 3px; }
@@ -54,10 +70,14 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 .searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
 .searchresults div.scrollable { width: 100%; }
+/* END SEARCH SCREEN */
 
+
+/* CONSTIUENT SCREEN */
 .constituentcontainer { margin-top: 10px; vertical-align: top; }
 .constituentcontainer h1 { margin: 0px; padding: 5px; color: #333333; background-color: #cccccc; font-size: 14px; }
 
+.constituenttopinfo { padding: 1em 2.2em; }
 .constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
 .constituentpic { height: 150px; }
 .constituentpic img { height: 150px; }
@@ -69,7 +89,5 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .constituentname { font-weight: bold; text-align: center; }
 .constituenttags { width: 100%; }
 
-.tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
-.tabscontainer.inner { width: 100%; }
-
 .dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
+/* END CONSTIUENT SCREEN */

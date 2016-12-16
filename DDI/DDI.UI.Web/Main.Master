@@ -7,8 +7,6 @@
 
     <title>DDI Connect</title>
 
-    <link rel="stylesheet" href="CSS\screen.css" />
-    
     <script type="text/javascript" src="Scripts\jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="Scripts\jquery-ui.min.js"></script>
@@ -19,6 +17,8 @@
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    
+    <link rel="stylesheet" href="CSS\screen.css" />
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
