@@ -34,6 +34,8 @@ namespace DDI.Data
 
         int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues);
 
+        List<string> GetModifiedProperties(T entity);
+
         #endregion Public Methods
     }
 }

@@ -8,7 +8,7 @@ using DDI.Data.Enums;
 namespace DDI.Data.Models.Client
 {
     [Table("ConstituentAddress")]
-    public class ConstituentAddress
+    public class ConstituentAddress : BaseEntity, IEntity
     {
         #region Public Properties
         [Key]

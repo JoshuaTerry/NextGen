@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("AlternateId")]
-    public class AlternateId
+    public class AlternateId : BaseEntity, IEntity
     {
         #region Public Properties      
         [Key]

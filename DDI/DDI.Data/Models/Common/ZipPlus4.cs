@@ -11,7 +11,7 @@ namespace DDI.Data.Models.Common
     public enum EvenOddType { Any, Even, Odd }
 
     [Table("ZipPlus4")]
-    public class ZipPlus4
+    public class ZipPlus4 : BaseEntity, IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

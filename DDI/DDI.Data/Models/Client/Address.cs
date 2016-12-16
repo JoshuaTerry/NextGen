@@ -9,7 +9,7 @@ using DDI.Data.Models.Common;
 namespace DDI.Data.Models.Client
 {
     [Table("Address")]
-    public class Address
+    public class Address : BaseEntity, IEntity
     {
         #region Public Properties
         [Key]

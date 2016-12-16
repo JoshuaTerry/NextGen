@@ -7,8 +7,8 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
 	[Table("Prefix")]
-	public class Prefix
-	{
+	public class Prefix : BaseEntity, IEntity
+    {
 		#region Public Properties 
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

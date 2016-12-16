@@ -7,8 +7,8 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
 	[Table("DoingBusinessAs")]
-	public class DoingBusinessAs
-	{
+	public class DoingBusinessAs : BaseEntity, IEntity
+    {
 		#region Public Properties
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

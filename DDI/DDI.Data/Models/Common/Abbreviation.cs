@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("Abbreviation")]
-    public class Abbreviation
+    public class Abbreviation : BaseEntity, IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

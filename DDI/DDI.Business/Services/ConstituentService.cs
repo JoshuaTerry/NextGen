@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using DDI.Business.Domain;
 using DDI.Data;
 using DDI.Data.Models.Client;
 using DDI.Shared;
@@ -13,17 +14,21 @@ namespace DDI.Business.Services
 {
     public class ConstituentService : ServiceBase, IConstituentService
     {
-        private IRepository<Constituent> _repository; 
+        private IRepository<Constituent> _repository;
+
+        private ConstituentDomain _domain;
 
         public ConstituentService():
-            this(new Repository<Constituent>())
+            this(null)
         {
             
         }
 
         internal ConstituentService(IRepository<Constituent> repository)
         {
-            _repository = repository;
+            _domain = new ConstituentDomain();
+            _domain.Repository = repository;
+            _repository = _domain.Repository; 
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)

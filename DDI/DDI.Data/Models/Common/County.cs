@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("County")]
-    public class County
+    public class County : BaseEntity, IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

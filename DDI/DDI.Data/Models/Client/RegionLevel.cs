@@ -7,8 +7,8 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
 	[Table("RegionLevel")]
-	public class RegionLevel
-	{
+	public class RegionLevel : BaseEntity, IEntity
+    {
 		#region Public Properties 
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

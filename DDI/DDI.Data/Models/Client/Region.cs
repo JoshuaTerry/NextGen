@@ -8,8 +8,8 @@ namespace DDI.Data.Models.Client
 {
     
 	[Table("Region")]
-	public class Region
-	{
+	public class Region : BaseEntity, IEntity
+    {
 		#region Public Properties 
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

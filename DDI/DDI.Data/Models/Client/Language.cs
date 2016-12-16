@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("Language")]
-    public class Language
+    public class Language : BaseEntity, IEntity
     {
         #region Public Properties        
         [Key]

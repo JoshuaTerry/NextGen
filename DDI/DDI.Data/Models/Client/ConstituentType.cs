@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("ConstituentType")]
-    public class ConstituentType
+    public class ConstituentType : BaseEntity, IEntity
     {
         #region Public Properties 
         [Key]

@@ -8,7 +8,7 @@ using DDI.Data.Enums;
 namespace DDI.Data.Models.Client
 {
     [Table("Constituent")]
-    public class Constituent
+    public class Constituent : BaseEntity, IEntity
     {
         #region Public Properties
 
@@ -159,6 +159,15 @@ namespace DDI.Data.Models.Client
         public ICollection<Education> Educations { get; set; }
         public ICollection<Ethnicity> Ethnicities { get; set; }
         public ICollection<PaymentPreference> PaymentPreferences { get; set; }
+
+        [NotMapped]
+        public override string DisplayName
+        {
+            get
+            {
+                return FormattedName;
+            }
+        }
 
         #endregion Public Properties
 

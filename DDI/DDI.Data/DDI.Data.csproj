@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Client\Address.cs" />
     <Compile Include="Models\Client\AlternateId.cs" />
     <Compile Include="Models\Client\ClergyStatus.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\Client\LogEntry.cs" />
+    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
   </ItemGroup>

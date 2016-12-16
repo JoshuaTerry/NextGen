@@ -16,7 +16,7 @@ namespace DDI.Data.Models.Client
     /// the DbSet names in the context class ("LogEntries" instead of "LogEntry").
     /// </remarks>
     [Table("LogEntry")]
-    public class LogEntry
+    public class LogEntry : BaseEntity, IEntity
     {
         #region Public Properties
 

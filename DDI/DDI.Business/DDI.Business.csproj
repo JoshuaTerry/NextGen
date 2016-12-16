@@ -224,6 +224,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Domain\BaseEntityDomain.cs" />
+    <Compile Include="Domain\ConstituentDomain.cs" />
+    <Compile Include="Domain\IEntityDomain.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
