@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
@@ -53,21 +54,25 @@ namespace DDI.Data
 
         #region Public Constructors
 
-        public Repository():
+        public Repository() :
             this(new DomainContext())
         {
         }
+
+        #endregion Public Constructors
+
+        #region Internal Constructors
 
         public Repository(DbContext context)
         {
             _context = context;
         }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
         #region Public Methods
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             try
             {
@@ -75,7 +80,12 @@ namespace DDI.Data
                 {
                     throw new ArgumentNullException(nameof(entity));
                 }
-                
+
+                if (_context.Entry(entity).State == EntityState.Detached)
+                {
+                    EntitySet.Attach(entity);
+                }
+
                 EntitySet.Remove(entity);
                 _context.SaveChanges();
             }
@@ -85,11 +95,11 @@ namespace DDI.Data
             }
         }
 
-        public T GetById(object id) => EntitySet.Find(id);
-
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public void Insert(T entity)
+        public T GetById(object id) => EntitySet.Find(id);
+
+        public virtual T Insert(T entity)
         {
             try
             {
@@ -100,6 +110,8 @@ namespace DDI.Data
 
                 EntitySet.Add(entity);
                 _context.SaveChanges();
+
+                return entity;
             }
             catch (DbEntityValidationException e)
             {
@@ -107,7 +119,7 @@ namespace DDI.Data
             }
         }
 
-        public void Update(T entity)
+        public virtual T Update(T entity)
         {
             try
             {
@@ -115,12 +127,35 @@ namespace DDI.Data
                 {
                     throw new ArgumentNullException(nameof(entity));
                 }
+
+                EntitySet.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
                 _context.SaveChanges();
+
+                return entity;
             }
             catch (DbEntityValidationException e)
             {
                 throw new Exception(e.GetFriendlyMessage(), e);
             }
+        }
+
+        public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues)
+        {
+            return UpdateChangedProperties(GetById(id), propertyValues);
+        }
+
+        public virtual int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues)
+        {
+            DbEntityEntry<T> entry = _context.Entry(entity);
+            DbPropertyValues currentValues = entry.CurrentValues;
+
+            foreach (KeyValuePair<string, object> keyValue in propertyValues)
+            {
+                currentValues[keyValue.Key] = keyValue.Value;
+            }
+
+            return _context.SaveChanges();
         }
 
         #endregion Public Methods

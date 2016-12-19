@@ -36,6 +36,11 @@ namespace DDI.Data.Models.Client
         
         public int LegacyKey { get; set; } // Used for data conversion
 
+        public Guid? Region1Id { get; set; }
+        public Guid? Region2Id { get; set; }
+        public Guid? Region3Id { get; set; }
+        public Guid? Region4Id { get; set; }
+
         // Non-mapped properties
         [NotMapped]
         public Country Country
@@ -79,7 +84,12 @@ namespace DDI.Data.Models.Client
 
         // Navigation Properties
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
-        
+
+        public Region Region1 { get; set; }
+        public Region Region2 { get; set; }
+        public Region Region3 { get; set; }
+        public Region Region4 { get; set; }
+
         #endregion Public Properties
     }
 }
