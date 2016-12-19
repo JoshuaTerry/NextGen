@@ -52,8 +52,8 @@
                     <div class="threecolumn">
                         
                         <div class="fieldblock">
-                            <label>ID:</label>
-                            <input type="text" class="editable ConstituentNum" />
+                            <label>ID</label>
+                            <input type="text" class="editable ConstituentNum" maxlength="9" />
                         </div>
 
                         <div class="fieldblock">
@@ -85,32 +85,32 @@
                         <div class="inline">
                             <div class="fieldblock">
                                 <label>Prefix</label>
-                                <select class="editable Prefix"></select>
+                                <select class="editable PrefixId"></select>
                             </div>
 
                             <div class="fieldblock">
-                                <label>First:</label>
+                                <label>First</label>
                                 <input type="text" class="editable FirstName" />
                             </div>
 
                             <div class="fieldblock">
-                                <label>Middle:</label>
+                                <label>Middle</label>
                                 <input type="text" class="editable MiddleName" />
                             </div>
 
                             <div class="fieldblock">
-                                <label>Last:</label>
+                                <label>Last</label>
                                 <input type="text" class="editable LastName" />
                             </div>
 
                             <div class="fieldblock">
-                                <label>Suffix:</label>
+                                <label>Suffix</label>
                                 <input type="text" class="editable Suffix" />
                             </div>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Name 2:</label>
+                            <label>Name 2</label>
                             <input type="text" class="editable Name2" />
                         </div>
 
@@ -120,21 +120,21 @@
                         </div>
 
                         <div class="fieldblock">
-                            <label>Salutation:</label>
+                            <label>Salutation</label>
                             <input type="text" class="editable Salutation" />
                         </div>
 
                         <div class="inline">
                             <div class="fieldblock">
-                                <label>Tax ID:</label>
+                                <label>Tax ID</label>
                                 <input type="text" class="editable TaxId" />
                             </div>
                             <div class="fieldblock">
-                                <label>Gender:</label>
-                                <select class="editable Gender"></select>
+                                <label>Gender</label>
+                                <select class="editable GenderId"></select>
                             </div>
                             <div class="fieldblock">
-                                <label>Source:</label>
+                                <label>Source</label>
                                 <input type="text" class="editable Source" />
                             </div>
                         </div>
@@ -165,22 +165,22 @@
                     <div class="editcontainer">
                         
                         <div class="fieldblock">
-                            <label>Clergy Type:</label>
+                            <label>Clergy Type</label>
                             <select class="editable ClergyTypeId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Clergy Status:</label>
+                            <label>Clergy Status</label>
                             <select class="editable ClergyStatusId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Ordination Date:</label>
+                            <label>Ordination Date</label>
                             <input type="text" class="editable OrdinationDate datepicker" />
                         </div>
 
                         <div class="fieldblock">
-                            <label>Place of Ordination:</label>
+                            <label>Place of Ordination</label>
                             <input type="text" class="editable PlaceOfOrdination" />
                         </div>
 
@@ -190,17 +190,17 @@
                     <div class="editcontainer">
 
                         <div class="fieldblock">
-                            <label>Denomination:</label>
-                            <select class="editable Denomination"></select>
+                            <label>Denomination</label>
+                            <select class="editable DenominationId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Ethnicity:</label>
-                            <select class="editable Ethnicity"></select>
+                            <label>Ethnicity</label>
+                            <select class="editable EthnicityId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Language:</label>
+                            <label>Language</label>
                             <select class="editable LanguageId"></select>
                         </div>
 
@@ -224,7 +224,7 @@
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Education Level</label>
-                            <select class="editable EducationLevel"></select>
+                            <select class="editable EducationLevelId"></select>
                         </div>
 
                         <table class="datagrid educationleveltable" border="0">
@@ -244,8 +244,8 @@
                     <div class="editcontainer">
 
                         <div class="fieldblock">
-                            <label>Method:</label>
-                            <select class="editable paymentmethod"></select>
+                            <label>Method</label>
+                            <select class="editable PaymentMethodId"></select>
                         </div>
 
                         <table class="editable PaymentPreferences">
@@ -269,41 +269,41 @@
 
                             <div>
                                 <div class="fieldblock">
-                                    <label>Birth Date:</label>
+                                    <label>Birth Date</label>
                                     <input type="text" class="editable BirthDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
-                                    <label>Deceased:</label>
+                                    <label>Deceased</label>
                                     <input type="text" class="editable DeceasedDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
-                                    <label>Marriage Date:</label>
+                                    <label>Marriage Date</label>
                                     <input type="text" class="editable MarriageDate datepicker" />
                                 </div>
 
                                 <div class="fieldblock">
-                                    <label>Divorce Date:</label>
+                                    <label>Divorce Date</label>
                                     <input type="text" class="editable DivorceDate datepicker" />
                                 </div>
                             </div>
 
                             <div>
                                 <div class="fieldblock range">
-                                    <label>Age:</label>
+                                    <label>Age</label>
                                     <input type="number" class="editable AgeFrom" />
                                     to:
                                     <input type="number" class="editable AgeTo" />
                                 </div>
 
                                 <div class="fieldblock">
-                                    <label>Marital Status:</label>
-                                    <select class="editable MaritalStatus"></select>
+                                    <label>Marital Status</label>
+                                    <select class="editable MaritalStatusId"></select>
                                 </div>
 
                                 <div class="fieldblock">
-                                    <label>Prospect Date:</label>
+                                    <label>Prospect Date</label>
                                     <input type="text" class="editable ProspectDate datepicker" />
                                 </div>
                             </div>
@@ -316,38 +316,38 @@
                     <div class="editcontainer">
 
                         <div class="fieldblock">
-                            <label>Profession:</label>
+                            <label>Profession</label>
                             <select class="editable ProfessionId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Income Level:</label>
+                            <label>Income Level</label>
                             <select class="editable IncomeLevelId"></select>
                         </div>
 
                         <div class="fieldblock">
-                            <label>First Employed:</label>
+                            <label>First Employed</label>
                             <input type="text" class="editable FirstEmploymentDate datepicker" />
                         </div>
 
                         <div class="fieldblock">
-                            <label>Employer:</label>
+                            <label>Employer</label>
                             <input type="text" class="editable Employer" />
                         </div>
 
                         <div class="fieldblock">
-                            <label>Position:</label>
+                            <label>Position</label>
                             <input type="text" class="editable Position" />
                         </div>
 
                         <div class="twocolumn">
                             <div class="fieldblock">
-                                <label>Start:</label>
+                                <label>Start</label>
                                 <input type="text" class="editable EmploymentStartDate datepicker" />
                             </div>
 
                             <div class="fieldblock">
-                                <label>End:</label>
+                                <label>End</label>
                                 <input type="text" class="editable EmploymentEndDate datepicker" />
                             </div>
                         </div>
@@ -359,7 +359,7 @@
                             </div>
 
                             <div class="fieldblock">
-                                <label>User ID:</label>
+                                <label>User ID</label>
                                 <select class="editable UserId"></select>
                             </div>
                         </div>

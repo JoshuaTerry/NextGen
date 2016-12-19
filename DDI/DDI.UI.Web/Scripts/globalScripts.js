@@ -4,6 +4,7 @@
 
 var editing = false;
 var currentEntity = null;
+var modal = null;
 
 $(document).ready(function () {
 
@@ -19,7 +20,49 @@ $(document).ready(function () {
 
     SetupEditControls();
 
+    $('.addconstituent').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.addconstituentmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 800,
+            height: 600,
+            resizable: false
+        });
+
+        $('.savenewconstituent').click(function () {
+
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal();
+
+        });
+
+    });
+
 });
+
+function CloseModal() {
+
+    ClearFields();
+    
+    $(modal).dialog('close');
+
+}
+
+function ClearFields() {
+
+    $('input').val('');
+
+    $('select').val(0);
+
+}
 
 function LoadTabs() {
 
@@ -34,24 +77,29 @@ function LoadAccordions() {
         collapsible: true
     });
 
-    /*
+    $('<div>').addClass('accordion-buttons').append(
+        $('<a>').attr('href', '#').text('Collapse All').addClass('accordion-collapseall')
+    ).append(
+        $('<a>').attr('href', '#').text('Expand All').addClass('accordion-expandall')
+        
+    ).insertBefore('.accordions');
 
-    TODO: Accordion expand/collapse all
-    
-    <a id="collapseAll">Collapse All</a>
-    <a id="expandAll">Expand All</a>
+    $('.accordion-collapseall').click(function (e) {
+        e.preventDefault();
 
+        $('.accordions').accordion({
+            active: false
+        });
 
-    $("#collapseAll").click(function(){
-        $(".ui-accordion-content").hide()
+        $(".ui-accordion-content").hide('fast');
     });
 
+    $('.accordion-expandall').click(function (e) {
+        e.preventDefault();
 
-    $("#expandAll").click(function(){
-        $(".ui-accordion-content").show()
+        $(".ui-accordion-content").show('fast');
+        
     });
-
-    */
 
 }
 
@@ -190,7 +238,7 @@ function SaveEdit(editcontainer) {
 
     // Save the entity
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituent/' + currentEntity.Id,
+        url: WEB_API_ADDRESS + save_route + currentEntity.Id,
         method: 'PATCH',
         data: fields,
         contentType: 'application/json; charset-utf-8',
@@ -221,25 +269,21 @@ function GetEditedFields(editcontainer) {
         var property = $(this).attr('class').replace('editable ', '');
         var value = $(this).val();
 
-        if (value) {
-            for (var key in currentEntity) {
-                if (key == property && currentEntity[key] != value) {
-                    p.push('"' + property + '": "' + value + '"');
-                }
+        for (var key in currentEntity) {
+            if (key == property && currentEntity[key] != value) {
+                p.push('"' + property + '": "' + value + '"');
             }
         }
 
     });
 
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('', '');
+        var property = $(this).attr('class').replace('editable ', '');
         var value = $(this).val();
 
-        if (value) {
-            for (var key in currentEntity) {
-                if (key == property && currentEntity[key] != value) {
-                    p.push('"' + property + '": "' + value + '"');
-                }
+        for (var key in currentEntity) {
+            if (key == property && currentEntity[key] != value) {
+                p.push('"' + property + '": "' + value + '"');
             }
         }
     });

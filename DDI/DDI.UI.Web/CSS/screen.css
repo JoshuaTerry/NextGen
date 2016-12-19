@@ -12,7 +12,7 @@ fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
 
 input:disabled,
-select:disabled { border: solid 1px transparent; background-color: white; color: black; }
+select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }
 select:disabled::-ms-expand { display: none; }
 
 .scrollable { overflow-y: scroll; }
@@ -33,14 +33,14 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
 div.threecolumn>div { width: 33%; display: inline-block; vertical-align: top; }
 
-div.inline div.fieldblock { display: inline-block; }
+div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
 div.fieldblock { margin: 0 0 10px 0; }
 div.fieldblock.inline { display: inline-block; }
 div.fieldblock label { display: block; }
 div.fieldblock label.inline { display: inline-block; }
 div.fieldblock input,
-div.fieldblock select { width: 90%; }
+div.fieldblock select { width: 99%; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
@@ -48,12 +48,17 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
 .tabscontainer.inner { width: 100%; }
 
+.accordion-buttons { text-align: right; }
+.accordion-buttons a { display: inline-block; padding: 3px 5px; color: #0f75b4; }
+
+/* EDIT CONTROLS */
 .editcontainer {  }
 .editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }
 
 .editcontrols { margin-right: 10px; text-align: right; }
 .editcontrols a { color: #0f75b4; padding: 5px; }
 .editmode-active { display: none; }
+/* END EDIT CONTROLS */
 
 
 /* SEARCH SCREEN */
@@ -91,3 +96,20 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 .dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
 /* END CONSTIUENT SCREEN */
+
+
+/* MODAL CONTENT */
+
+.ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; }
+.ui-dialog-titlebar { background-color: #0f75b4; color: white; }
+
+.modalcontent {  }
+.modalcontent fieldset { margin-bottom: 10px; }
+.modalcontent div.inline { margin-bottom: 5px; }
+
+.modalbuttons { text-align: right; padding-top: 15px; }
+.modalbuttons input[type="button"] { margin-right: 10px; }
+.modalbuttons a { color: #0f75b4; }
+
+
+/* END MODAL CONTENT */

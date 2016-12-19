@@ -96,7 +96,7 @@ function LoadCountries() {
 
             $.map(data.Data, function (item) {
 
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
+                var option = $('<option>').val(item.Id).text(item.Description);
                 $(option).appendTo($('.searchcountry'));
 
             });

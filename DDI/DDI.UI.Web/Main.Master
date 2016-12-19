@@ -36,6 +36,9 @@
                         <a runat="server" href="~/Constituents.aspx">Constituents</a>
                     </li>
                     <li>
+                        <a href="#" class="addconstituent">Add Constituent</a>
+                    </li>
+                    <li>
                         <a runat="server" href="~/Search.aspx" class="searchbutton">Search</a>
                     </li>
                 </ul>
@@ -44,6 +47,152 @@
 
         <div class="maincontainer">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </div>
+
+        <div class="addconstituentmodal" title="Add Constituent" style="display: none;">
+
+            <div class="modalcontent">
+
+                <div class="inline">
+                    <div class="fieldblock">
+                        <label>Prefix</label>
+                        <select class="PrefixId"></select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>First</label>
+                        <input type="text" class="FirstName" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Middle</label>
+                        <input type="text" class="MiddleName" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Last</label>
+                        <input type="text" class="LastName" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Suffix</label>
+                        <input type="text" class="Suffix" />
+                    </div>
+                </div>
+
+                <div class="inline">
+                    <div class="fieldblock">
+                        <label>Nick Name</label>
+                        <input type="text" class="NickName" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Name2</label>
+                        <input type="text" class="Name2" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Salutation</label>
+                        <select class="Salutation"></select>
+                    </div>
+                </div>
+
+                <div class="inline">
+                    <div class="fieldblock">
+                        <label>Tax ID</label>
+                        <input type="text" class="TaxID" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Gender</label>
+                        <input type="text" class="Gender" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Source</label>
+                        <input type="text" class="Source" />
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>Primary Address</legend>
+
+                    <div class="fieldblock">
+                        <label>Address Type</label>
+                        <select class="AddressType"></select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Address Line 1</label>
+                        <input type="text" class="AddressLine1" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Address Line 2</label>
+                        <input type="text" class="AddressLine2" />
+                    </div>
+
+                    <div class="inline">
+                        <div class="fieldblock">
+                            <label>Country</label>
+                            <select class="Country"></select>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>State</label>
+                            <select class="State"></select>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>City</label>
+                            <select class="City"></select>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>County</label>
+                            <select class="County"></select>
+                        </div>
+                    </div>
+
+                </fieldset>
+                
+                <fieldset>
+                    <legend>Contact Information</legend>
+
+                    <div class="inline">
+                        <div class="fieldblock">
+                            <label>Email</label>
+                            <input type="email" class="Email" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Email Type</label>
+                            <select class="EmailType"></select>
+                        </div>
+                    </div>
+
+                    <div class="inline">
+                        <div class="fieldblock">
+                            <label>Phone</label>
+                            <input type="text" class="Phone" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Phone Type</label>
+                            <select class="PhoneType"></select>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+                <div class="modalbuttons">
+                    <input type="button" class="savenewconstituent" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
+
+            </div>
+            
         </div>
 
     </form>

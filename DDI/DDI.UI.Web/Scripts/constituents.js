@@ -1,4 +1,6 @@
 ﻿
+var save_route = 'constituents/';
+
 $(document).ready(function () {
 
     Resize();
@@ -90,14 +92,14 @@ function LoadPrefixes() {
         crossDomain: true,
         success: function (data) {
 
-            $('.Prefix').html('');
+            $('.PrefixId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.Prefix'));
+            $(option).appendTo($('.PrefixId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Abbreviation);
-                $(option).appendTo($('.Prefix'));
+                $(option).appendTo($('.PrefixId'));
 
             });
 
@@ -119,14 +121,14 @@ function LoadGenders() {
         crossDomain: true,
         success: function (data) {
 
-            $('.Gender').html('');
+            $('.GenderId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.Gender'));
+            $(option).appendTo($('.GenderId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.Gender'));
+                $(option).appendTo($('.GenderId'));
 
             });
 
@@ -206,14 +208,14 @@ function LoadDenominations() {
         crossDomain: true,
         success: function (data) {
 
-            $('.Denomination').html('');
+            $('.DenominationId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.Denomination'));
+            $(option).appendTo($('.DenominationId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.Denomination'));
+                $(option).appendTo($('.DenominationId'));
 
             });
 
@@ -235,14 +237,14 @@ function LoadEthnicities() {
         crossDomain: true,
         success: function (data) {
 
-            $('.Ethnicity').html('');
+            $('.EthnicityId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.Ethnicity'));
+            $(option).appendTo($('.EthnicityId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.Ethnicity'));
+                $(option).appendTo($('.EthnicityId'));
 
             });
 
@@ -293,14 +295,14 @@ function LoadEducationLevels() {
         crossDomain: true,
         success: function (data) {
 
-            $('.EducationLevel').html('');
+            $('.EducationLevelId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.EducationLevel'));
+            $(option).appendTo($('.EducationLevelId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.EducationLevel'));
+                $(option).appendTo($('.EducationLevelId'));
 
             });
 
@@ -322,14 +324,14 @@ function LoadMaritalStatuses() {
         crossDomain: true,
         success: function (data) {
 
-            $('.MaritalStatus').html('');
+            $('.MaritalStatusId').html('');
             var option = $('<option>').val('').text('');
-            $(option).appendTo($('.MaritalStatus'));
+            $(option).appendTo($('.MaritalStatusId'));
 
             $.map(data.Data, function (item) {
 
                 var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.MaritalStatus'));
+                $(option).appendTo($('.MaritalStatusId'));
 
             });
 
@@ -437,9 +439,14 @@ function DisplayConstituentData() {
 
             var classname = '.' + key;
 
-            $(classname).text(value);
-            $(classname).val(value);
+            if ($(classname).is('input')) {
+                $(classname).val(value);
+            }
 
+            if ($(classname).is('select')) {
+                $(classname).val(value);
+            }
+            
             if (key.toLowerCase().indexOf('date') !== -1) {
 
                 var date = FormatJSONDate(value);
