@@ -4,6 +4,9 @@ using System.Linq;
 
 using DDI.Data;
 using DDI.Shared;
+using DDI.Business.Helpers;
+using DDI.Data.Models;
+using DDI.Data.Models.Common;
 
 namespace DDI.Business.Services
 {
@@ -36,10 +39,18 @@ namespace DDI.Business.Services
 
         #region Public Methods
 
-        public IDataResponse<List<T>> GetAll()
+        public IDataResponse<List<T>> GetAll(string orderBy= "Description")
         {
-            var result = _repository.Entities.ToList();
-            return GetIDataResponse(() => result);
+            var search = new PageableSearch
+            {
+                OrderBy = orderBy //nameof(IEntity.DisplayName)
+            };
+            var result = _repository.Entities;
+            var query = new CriteriaQuery<T, PageableSearch>(result, search)
+                .SetOrderBy(search.OrderBy);
+
+            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
+            return GetIDataResponse(() => query.GetQueryable().ToList());
         }
 
         #endregion Public Methods

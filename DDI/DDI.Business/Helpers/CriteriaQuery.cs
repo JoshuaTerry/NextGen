@@ -141,7 +141,7 @@ namespace DDI.Business.Helpers
 
         public CriteriaQuery<TDatabaseType, TSearchModel> SetOrderBy(string orderBy)
         {
-            var orderByList = orderBy.Split(',').ToList();
+            var orderByList = orderBy?.Split(',').ToList();
             OrderBy = orderByList;
             return this;
         }

@@ -11,6 +11,6 @@ namespace DDI.Business.Services
 {
     public interface IGenericService<T>
     {
-        IDataResponse<List<T>> GetAll();
+        IDataResponse<List<T>> GetAll(string orderBy = "");
     }
 }
