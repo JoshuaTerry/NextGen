@@ -42,15 +42,21 @@ namespace DDI.Business.Services
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId)
-                .SetLimit(search.Limit)
-                .SetOffset(search.Offset)
                 .SetOrderBy(search.OrderBy);
             // Created Range
             ApplyZipFilter(query, search);
             ApplyQuickFilter(query, search);
 
+            var totalCount = query.GetQueryable().ToList().Count;
+
+            query = query.SetLimit(search.Limit)
+                         .SetOffset(search.Offset);
+
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            response.TotalResults = totalCount;
+            response.PageSize = search.Limit;
+            response.PageNumber = search.Offset;
             response.Links = new List<HATEOASLink>()
             {
                 new HATEOASLink()
@@ -60,8 +66,83 @@ namespace DDI.Business.Services
                     Method = "GET"
                 }
             };
+            if (response.TotalResults > 1)
+            {
+                response.Links.AddRange(AddPagingLinks(search, response));
+            }
 
             return response;
+        }
+
+        private List<HATEOASLink> AddPagingLinks(ConstituentSearch originalSearch, IDataResponse response)
+        {
+            var pagingLinks = new List<HATEOASLink>();
+
+            pagingLinks.Add(CreateFirstPageLink(originalSearch, response));
+            pagingLinks.Add(CreatePreviousPageLink(originalSearch, response));
+            pagingLinks.Add(CreateNextPageLink(originalSearch, response));
+            pagingLinks.Add(CreateLastPageLink(originalSearch, response));
+
+            return pagingLinks;
+        }
+
+        private HATEOASLink CreateFirstPageLink(ConstituentSearch originalSearch, IDataResponse response)
+        {
+            HATEOASLink firstPageLink = null;
+            firstPageLink = new HATEOASLink()
+            {
+                Href = $"{originalSearch.ToQueryString()}&offset=0&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                Relationship = "first-page",
+                Method = "GET"
+            };
+            
+            return firstPageLink;
+        }
+
+        private HATEOASLink CreatePreviousPageLink(ConstituentSearch originalSearch, IDataResponse response)
+        {
+            HATEOASLink previousPageLink = null;
+            if (originalSearch.Offset > 0)
+            {
+                previousPageLink = new HATEOASLink()
+                {
+                    Href = $"{originalSearch.ToQueryString()}&offset={--originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                    Relationship = "previous-page",
+                    Method = "GET"
+                };
+            }
+
+            return previousPageLink;
+        }
+
+        private HATEOASLink CreateNextPageLink(ConstituentSearch originalSearch, IDataResponse response)
+        {
+            HATEOASLink nextPageLink = null;
+            if (originalSearch.Offset < response.TotalResults/originalSearch.Limit)
+            {
+                nextPageLink = new HATEOASLink()
+                {
+                    Href = $"{originalSearch.ToQueryString()}&offset={++originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                    Relationship = "next-page",
+                    Method = "GET"
+                };
+            }
+
+            return nextPageLink;
+        }
+
+        private HATEOASLink CreateLastPageLink(ConstituentSearch originalSearch, IDataResponse response)
+        {
+            HATEOASLink lastPageLink = null;
+            lastPageLink = new HATEOASLink()
+            {
+                Href = $"{originalSearch.ToQueryString()}&offset={response.TotalResults / originalSearch.Limit}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                Relationship = "last-page",
+                Method = "GET"
+            };
+
+
+            return lastPageLink;
         }
 
         private void ApplyQuickFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
@@ -137,7 +218,7 @@ namespace DDI.Business.Services
 
             foreach (var pair in constituentChanges)
             {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType(pair.Key, new Constituent())));
+                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType(pair.Key, typeof(Constituent))));
             }
 
             _repository.UpdateChangedProperties(id, changedProperties);

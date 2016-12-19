@@ -137,7 +137,7 @@ namespace DDI.Business.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.ToString());
             }
         }
 
@@ -145,14 +145,22 @@ namespace DDI.Business.Controllers
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.UpdateConstituent(id, constituentChanges);
+
+                return Ok(response);
+
             }
-
-            _service.UpdateConstituent(id, constituentChanges);
-
-            return Ok();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
 
         [HttpDelete]
