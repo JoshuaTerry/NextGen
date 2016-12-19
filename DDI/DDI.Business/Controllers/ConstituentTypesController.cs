@@ -2,20 +2,21 @@
 using DDI.Data.Models.Client;
 using System.Web.Http;
 
+
 namespace DDI.Business.Controllers
 {
-    public class DenominationsController : ApiController
+    public class ConstituentTypesController : ApiController
     {
-        GenericServiceBase<Denomination> _service;
+        GenericServiceBase<ConstituentType> _service;
 
-        public DenominationsController() : this(new GenericServiceBase<Denomination>()) { }
-        internal DenominationsController(GenericServiceBase<Denomination> service)
+        public ConstituentTypesController() : this(new GenericServiceBase<ConstituentType>()) { }
+        internal ConstituentTypesController(GenericServiceBase<ConstituentType> service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [Route("api/v1/denominations")]
+        [Route("api/v1/constituenttypes")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();

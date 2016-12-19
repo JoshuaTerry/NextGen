@@ -129,6 +129,7 @@
     <Compile Include="Models\Client\Gender.cs" />
     <Compile Include="Models\Client\IncomeLevel.cs" />
     <Compile Include="Models\Client\Language.cs" />
+    <Compile Include="Models\Client\MaritalStatus.cs" />
     <Compile Include="Models\Client\PaymentPreference.cs" />
     <Compile Include="Models\Client\Prefix.cs" />
     <Compile Include="Models\Client\Profession.cs" />
