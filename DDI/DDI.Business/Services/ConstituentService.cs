@@ -8,6 +8,9 @@ using System.Web.Http;
 using DDI.Data;
 using DDI.Data.Models.Client;
 using DDI.Shared;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Business.Services
 {
@@ -83,6 +86,33 @@ namespace DDI.Business.Services
             };
 
             return response;
+        }
+
+        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges)
+        {
+            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+
+            foreach (var pair in constituentChanges)
+            {
+                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType(pair.Key, new Constituent())));
+            }
+
+            _repository.UpdateChangedProperties(id, changedProperties);
+
+            var constituent = _repository.GetById(id);
+
+            return GetIDataResponse(() => constituent);
+        }
+
+        private Type ConvertToType<T>(string property, T entity)
+        {
+            Type classType = entity.GetType();
+
+            PropertyInfo[] properties = classType.GetProperties();
+
+            var propertyType = properties.Where(p => p.Name == property).Select(p => p.PropertyType).Single();
+
+            return propertyType;
         }
     }
 }

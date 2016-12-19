@@ -63,7 +63,7 @@ namespace DDI.Data
 
         #region Internal Constructors
 
-        internal Repository(DbContext context)
+        public Repository(DbContext context)
         {
             _context = context;
         }
@@ -99,7 +99,7 @@ namespace DDI.Data
 
         public T GetById(object id) => EntitySet.Find(id);
 
-        public virtual void Insert(T entity)
+        public virtual T Insert(T entity)
         {
             try
             {
@@ -110,6 +110,8 @@ namespace DDI.Data
 
                 EntitySet.Add(entity);
                 _context.SaveChanges();
+
+                return entity;
             }
             catch (DbEntityValidationException e)
             {
@@ -117,7 +119,7 @@ namespace DDI.Data
             }
         }
 
-        public virtual void Update(T entity)
+        public virtual T Update(T entity)
         {
             try
             {
@@ -129,6 +131,8 @@ namespace DDI.Data
                 EntitySet.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
                 _context.SaveChanges();
+
+                return entity;
             }
             catch (DbEntityValidationException e)
             {
