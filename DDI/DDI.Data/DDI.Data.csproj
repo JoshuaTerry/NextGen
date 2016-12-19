@@ -134,6 +134,7 @@
     <Compile Include="Models\Client\Profession.cs" />
     <Compile Include="Models\Client\Region.cs" />
     <Compile Include="Models\Client\RegionLevel.cs" />
+    <Compile Include="Models\Client\SectionPreference.cs" />
     <Compile Include="Models\Common\Abbreviation.cs" />
     <Compile Include="Models\Common\City.cs" />
     <Compile Include="Models\Common\CityName.cs" />

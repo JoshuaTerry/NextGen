@@ -2,25 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Extensions;
 using LinqKit;
 
 namespace DDIX.Module.Helpers
 {
-    public class LinqQuery<T>
+    public class LinqQuery<TEntity>
     {
         #region Private Fields
 
-        private ExpressionStarter<T> _predicate = PredicateBuilder.New<T>();
+        private ExpressionStarter<TEntity> _predicate = PredicateBuilder.New<TEntity>();
 
-        private IQueryable<T> _query;
+        private List<string> _orderBy = new List<string>();
+
+        public List<string> OrderBy
+        {
+            get { return _orderBy; }
+            set { _orderBy = value; }
+        }
+
+        private IQueryable<TEntity> _query;
 
         #endregion Private Fields
 
         #region Public Properties
 
-        public ExpressionStarter<T> Predicate
+        public int Offset { get; set; }
+        public int Limit { get; set; }
+
+        public ExpressionStarter<TEntity> Predicate
         {
             get { return _predicate; }
         }
@@ -29,7 +42,7 @@ namespace DDIX.Module.Helpers
 
         #region Public Constructors
 
-        public LinqQuery(IQueryable<T> query)
+        public LinqQuery(IQueryable<TEntity> query)
         {
             _query = query;
         }
@@ -38,9 +51,16 @@ namespace DDIX.Module.Helpers
 
         #region Public Methods
 
-        public IQueryable<T> GetQueryable() => _query?.AsExpandable().Where(_predicate);
+        public IQueryable<TEntity> GetQueryable()
+        {
+            var query = _query?.AsExpandable().Where(_predicate);
+            query = AddSorting(query);
+            query = AddPaging(query);
 
-        public LinqQuery<T> Or(Expression<Func<T, bool>> expression)
+            return query;
+        }
+
+        public LinqQuery<TEntity> Or(Expression<Func<TEntity, bool>> expression)
         {
             if (expression != null)
             {
@@ -54,7 +74,7 @@ namespace DDIX.Module.Helpers
 
         #region Protected Methods
 
-        protected void PredicateAnd(Expression<Func<T, bool>> expression)
+        protected void PredicateAnd(Expression<Func<TEntity, bool>> expression)
         {
             if (expression != null)
             {
@@ -63,5 +83,43 @@ namespace DDIX.Module.Helpers
         }
 
         #endregion Protected Methods
+
+        private IQueryable<TEntity> AddPaging(IQueryable<TEntity> query)
+        {
+            if (Offset > 0)
+            {
+                query = query.Skip(Offset * Limit);
+            }
+            if (Limit > 0)
+            {
+                query = query.Take(Limit);
+            }
+            return query;
+        }
+
+        private IQueryable<TEntity> AddSorting(IQueryable<TEntity> query)
+        {
+            if (_orderBy.Count > 0)
+            {
+                int orderNumber = 0;
+                foreach (string orderByColumn in _orderBy)
+                {
+                    orderNumber++;
+                    string propertyName = orderByColumn;
+                    bool descending = true;
+                    if (propertyName.StartsWith("-"))
+                    {
+                        descending = false;
+                        propertyName = propertyName.TrimStart('-');
+                    }
+                    query = query.DynamicOrderBy(propertyName, descending, orderNumber==1);
+                }
+            }
+            else if (Offset > 0 || Limit > 0)
+            {
+                query = query.DynamicOrderBy("Id", true, true);
+            }
+            return query;
+        }
     }
 }

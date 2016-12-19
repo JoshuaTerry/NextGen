@@ -226,6 +226,7 @@
     <Compile Include="Controllers\ClergyTypesController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
+    <Compile Include="Controllers\ConstituentTypeController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\DenominationsController.cs" />
     <Compile Include="Controllers\EducationLevelsController.cs" />
@@ -235,8 +236,11 @@
     <Compile Include="Controllers\IncomeLevelsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\PrefixesController.cs" />
-    <Compile Include="Controllers\ProfessionsController.cs" />
+    <Compile Include="Controllers\SectionPreferencesController.cs" />
+ 
     <Compile Include="Controllers\StatesController.cs" />
+    <Compile Include="Extensions\QueryableExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -256,6 +260,8 @@
     <Compile Include="Services\IConstituentService.cs" />
     <Compile Include="Services\IPageable.cs" />
     <Compile Include="Services\IGenericService.cs" />
+    <Compile Include="Services\ISectionPreferenceService.cs" />
+    <Compile Include="Services\SectionPreferenceService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
