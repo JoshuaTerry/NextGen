@@ -5,7 +5,7 @@ using System.Web;
 
 namespace DDI.Business.Services
 {
-    public class ConstituentSearch : IPageable
+    public class ConstituentSearch : PageableSearch
     {
         public string QuickSearch { get; set; }
         public Guid? ConstituentTypeId { get; set; }
@@ -19,12 +19,6 @@ namespace DDI.Business.Services
         public string ZipTo { get; set; }
         public DateTime? CreatedDateFrom { get; set; }
         public DateTime? CreatedDateTo { get; set; }
-
-        #region IPageable
-        public int? Offset { get; set; }
-        public int? Limit { get; set; }
-        public string OrderBy { get; set; }
-        #endregion
 
         public string ToQueryString()
         {

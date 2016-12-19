@@ -14,6 +14,7 @@ namespace DDIX.Module.Helpers
     {
         #region Private Fields
 
+        private bool _hasPredicate = false;
         private ExpressionStarter<TEntity> _predicate = PredicateBuilder.New<TEntity>();
 
         private List<string> _orderBy = new List<string>();
@@ -53,7 +54,11 @@ namespace DDIX.Module.Helpers
 
         public IQueryable<TEntity> GetQueryable()
         {
-            var query = _query?.AsExpandable().Where(_predicate);
+            var query = _query?.AsExpandable();
+            if (_hasPredicate)
+            {
+                query = query.Where(_predicate);
+            }
             query = AddSorting(query);
             query = AddPaging(query);
 
@@ -64,6 +69,7 @@ namespace DDIX.Module.Helpers
         {
             if (expression != null)
             {
+                _hasPredicate = true;
                 _predicate = _predicate.Or(expression);
             }
 
@@ -78,6 +84,7 @@ namespace DDIX.Module.Helpers
         {
             if (expression != null)
             {
+                _hasPredicate = true;
                 _predicate = _predicate.And(expression);
             }
         }
@@ -99,17 +106,17 @@ namespace DDIX.Module.Helpers
 
         private IQueryable<TEntity> AddSorting(IQueryable<TEntity> query)
         {
-            if (_orderBy.Count > 0)
+            if (_orderBy?.Count > 0)
             {
                 int orderNumber = 0;
                 foreach (string orderByColumn in _orderBy)
                 {
                     orderNumber++;
                     string propertyName = orderByColumn;
-                    bool descending = true;
+                    bool descending = false;
                     if (propertyName.StartsWith("-"))
                     {
-                        descending = false;
+                        descending = true;
                         propertyName = propertyName.TrimStart('-');
                     }
                     query = query.DynamicOrderBy(propertyName, descending, orderNumber==1);
