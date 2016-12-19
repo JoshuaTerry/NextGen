@@ -301,3 +301,14 @@ function CancelEdit() {
     RefreshEntity();
 
 }
+
+function DisplayMessage(heading, text, icon) {
+
+    $.toast({
+        heading: heading,
+        text: text,
+        icon: icon,
+        showHideTransition: 'slide'
+    });
+
+}
