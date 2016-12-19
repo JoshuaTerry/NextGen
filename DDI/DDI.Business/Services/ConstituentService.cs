@@ -147,6 +147,12 @@ namespace DDI.Business.Services
             return GetIDataResponse(() => constituent);
         }
 
+        public IDataResponse AddConstituent(Constituent constituent)
+        {
+            var response = SafeExecute(() => { _repository.Insert(constituent); });
+            return response;
+        }
+
         private Type ConvertToType<T>(string property, T entity)
         {
             Type classType = entity.GetType();

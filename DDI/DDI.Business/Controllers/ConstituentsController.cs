@@ -117,7 +117,8 @@ namespace DDI.Business.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok();
+            var response =_service.AddConstituent(constituent);
+            return Ok(response);
         }
 
         [HttpPut]
