@@ -53,7 +53,7 @@
                         
                         <div class="fieldblock">
                             <label>ID</label>
-                            <input type="text" class="editable ConstituentNum" maxlength="9" />
+                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
                         </div>
 
                         <div class="fieldblock">

@@ -47,97 +47,22 @@ function PopulateDropDowns() {
     // LoadConstituentTypes();
 
     LoadCountries();
-
-    // LoadStates();
 }
 
 function LoadConstituentTypes() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituenttypes',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $('.searchtype').html('');
-            var option = $('<option>').val('').text('');
-            $(option).appendTo($('.searchtype'));
-
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.searchtype'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.searchtype', 'constituenttypes', '', '');
 
 }
 
 function LoadCountries() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'countries',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    PopulateDropDown('.searchcountry', 'countries', '', '', function () {
+        $('.searchcountry').change(function () {
 
-            $('.searchcountry').html('');
-            var option = $('<option>').val('').text('');
-            $(option).appendTo($('.searchcountry'));
+            PopulateDropDown('.searchstate', 'states/?countryid=' + $('.searchcountry').val(), '', '');
 
-            $.map(data.Data, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Description);
-                $(option).appendTo($('.searchcountry'));
-
-            });
-
-            $('.searchcountry').change(function () {
-                LoadStates($(this).val());
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
-
-}
-
-function LoadStates(country) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'states/?countryid=' + country,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $('.searchstate').html('');
-            var option = $('<option>').val('').text('');
-            $(option).appendTo($('.searchstate'));
-
-            $.map(data.Data, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Description);
-                $(option).appendTo($('.searchstate'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
+        });
     });
 
 }

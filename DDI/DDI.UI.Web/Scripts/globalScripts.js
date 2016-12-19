@@ -60,9 +60,9 @@ function CloseModal() {
 
 function ClearFields() {
 
-    $('input').val('');
+    $('div.fieldblock input').val('');
 
-    $('select').val(0);
+    $('div.fieldblock select').val(0);
 
 }
 
@@ -123,6 +123,9 @@ function FormatJSONDate(jsonDate) {
     return date;
 }
 
+
+// EDITING
+//
 function CreateEditControls() {
 
     $('.editcontainer').each(function () {
@@ -240,7 +243,7 @@ function SaveEdit(editcontainer) {
 
     // Save the entity
     $.ajax({
-        url: WEB_API_ADDRESS + save_route + currentEntity.Id,
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
         method: 'PATCH',
         data: fields,
         contentType: 'application/json; charset-utf-8',
@@ -249,15 +252,15 @@ function SaveEdit(editcontainer) {
         success: function (data) {
 
             // Display success
-            alert('BOOM... saved!');
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
             // Display updated entity data
             currentEntity = data.Data;
 
             RefreshEntity();
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
         }
     });
 
@@ -301,6 +304,27 @@ function CancelEdit() {
     RefreshEntity();
 
 }
+//
+// END EDITING
+
+
+// MESSAGING
+//
+function DisplayInfoMessage(heading, text) {
+    DisplayMessage(heading, text, 'info');
+}
+
+function DisplayErrorMessage(heading, text) {
+    DisplayMessage(heading, text, 'error');
+}
+
+function DisplayWarningMessage(heading, text) {
+    DisplayMessage(heading, text, 'warning');
+}
+
+function DisplaySuccessMessage(heading, text) {
+    DisplayMessage(heading, text, 'success');
+}
 
 function DisplayMessage(heading, text, icon) {
 
@@ -308,7 +332,10 @@ function DisplayMessage(heading, text, icon) {
         heading: heading,
         text: text,
         icon: icon,
-        showHideTransition: 'slide'
+        showHideTransition: 'slide',
+        position: 'top-right'
     });
 
 }
+//
+// END MESSAGING
