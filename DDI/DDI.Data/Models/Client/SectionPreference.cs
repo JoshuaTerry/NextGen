@@ -6,21 +6,17 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client
 {
-    [Table("Profession")]
-    public class Profession : BaseEntity
+    [Table("SectionPreference")]
+    public class SectionPreference
     {
-        #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override Guid Id { get; set; }
-
-        public bool IsActive { get; set; }
-
+        public Guid Id { get; set; }
+        [MaxLength(128)]
+        public string SectionName { get; set; }
         [MaxLength(128)]
         public string Name { get; set; }
-
-        [MaxLength(128)]
-        public string Code { get; set; }
-        #endregion Public Properties
+        [MaxLength(256)]
+        public object Value { get; set; }
     }
 }

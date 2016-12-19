@@ -158,6 +158,22 @@ namespace DDI.Data
             return _context.SaveChanges();
         }
 
+        public List<string> GetModifiedProperties(T entity) 
+        {
+            var list = new List<string>();
+
+            var entry = _context.Entry(entity);
+            foreach (var property in entry.OriginalValues.PropertyNames)
+            {
+                if (entry.Property(property).IsModified)
+                {
+                    list.Add(property);
+                }
+            }
+
+            return list;
+        }
+
         #endregion Public Methods
     }
 }

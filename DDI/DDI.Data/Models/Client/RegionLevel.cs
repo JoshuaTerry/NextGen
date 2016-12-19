@@ -7,12 +7,12 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
 	[Table("RegionLevel")]
-	public class RegionLevel
-	{
-		#region Public Properties 
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+	public class RegionLevel : BaseEntity
+    {
+        #region Public Properties 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public override Guid Id { get; set; }
 
         [MaxLength(128)]
         public string Abbreviation { get; set; }

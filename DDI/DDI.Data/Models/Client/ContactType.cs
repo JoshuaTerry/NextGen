@@ -7,12 +7,13 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("ContactType")]
-    public class ContactType
+    public class ContactType : BaseEntity
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
 
         [MaxLength(128)]

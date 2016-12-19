@@ -58,7 +58,6 @@ namespace DDI.Data
 
         public virtual DbSet<RegionLevel> RegionLevels { get; set; }
 
-
         #endregion Public Properties
 
         #region Public Constructors

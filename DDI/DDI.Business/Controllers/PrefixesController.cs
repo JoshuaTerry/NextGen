@@ -18,7 +18,7 @@ namespace DDI.Business.Controllers
         [Route("api/v1/prefixes")]
         public IHttpActionResult GetAll()
         {
-            var result = _service.GetAll();
+            var result = _service.GetAll(orderBy: nameof(Prefix.Abbreviation));
 
             if (result == null)
             {

@@ -5,18 +5,20 @@ using System.Web;
 
 namespace DDI.Business.Services
 {
-    public class ConstituentSearch : IPageable
+    public class ConstituentSearch : PageableSearch
     {
         public string QuickSearch { get; set; }
+        public Guid? ConstituentTypeId { get; set; }
+        public string AlternateId { get; set; }
         public string Name { get; set; }
         public int? ConstituentNumber { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Zip { get; set; }
-        public int? Offset { get; set; }
-        public int? Limit { get; set; }
-        public string OrderBy { get; set; }
+        public string ZipFrom { get; set; }
+        public string ZipTo { get; set; }
+        public DateTime? CreatedDateFrom { get; set; }
+        public DateTime? CreatedDateTo { get; set; }
 
         public string ToQueryString()
         {
@@ -29,7 +31,6 @@ namespace DDI.Business.Services
             querystring += (!string.IsNullOrWhiteSpace(Address)) ? $"&address={Address}" : string.Empty;
             querystring += (!string.IsNullOrWhiteSpace(City)) ? $"&city={City}" : string.Empty;
             querystring += (!string.IsNullOrWhiteSpace(State)) ? $"&state={State}" : string.Empty;
-            querystring += (!string.IsNullOrWhiteSpace(Zip)) ? $"&zip={Zip}" : string.Empty;
 
             querystring = baseUrl + querystring.TrimStart('&');
             
