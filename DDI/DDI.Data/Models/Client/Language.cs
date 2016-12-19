@@ -7,12 +7,12 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("Language")]
-    public class Language : BaseEntity, IEntity
+    public class Language : BaseEntity
     {
         #region Public Properties        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -7,12 +7,13 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("IncomeLevel")]
-    public class IncomeLevel : BaseEntity, IEntity
+    public class IncomeLevel : BaseEntity
     {
         #region Public Properties 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
 
         [MaxLength(128)]

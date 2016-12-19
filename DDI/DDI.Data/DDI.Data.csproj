@@ -54,6 +54,7 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\ConstituentCategory.cs" />
     <Compile Include="Enums\BirthDateType.cs" />
+    <Compile Include="Enums\EvenOddType.cs" />
     <Compile Include="Enums\ResidentType.cs" />
     <Compile Include="Enums\SalutationType.cs" />
     <Compile Include="Enums\CorrespondencePreference.cs" />

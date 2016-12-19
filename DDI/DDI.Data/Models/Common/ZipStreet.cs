@@ -9,11 +9,11 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("ZipStreet")]
-    public class ZipStreet : BaseEntity, IEntity
+    public class ZipStreet : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(8)]
         public string Prefix { get; set; }

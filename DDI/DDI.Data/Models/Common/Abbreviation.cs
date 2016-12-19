@@ -9,11 +9,11 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("Abbreviation")]
-    public class Abbreviation : BaseEntity, IEntity
+    public class Abbreviation : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(32)]
         public string Word { get; set; }

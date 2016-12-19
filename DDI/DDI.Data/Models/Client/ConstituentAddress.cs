@@ -8,12 +8,12 @@ using DDI.Data.Enums;
 namespace DDI.Data.Models.Client
 {
     [Table("ConstituentAddress")]
-    public class ConstituentAddress : BaseEntity, IEntity
+    public class ConstituentAddress : BaseEntity
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public Guid? AddressId { get; set; }
 

@@ -9,11 +9,11 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("State")]
-    public class State : BaseEntity, IEntity
+    public class State : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(4)]
         public string StateCode { get; set; }

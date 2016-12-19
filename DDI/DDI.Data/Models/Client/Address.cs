@@ -9,12 +9,12 @@ using DDI.Data.Models.Common;
 namespace DDI.Data.Models.Client
 {
     [Table("Address")]
-    public class Address : BaseEntity, IEntity
+    public class Address : BaseEntity
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(255)]
         public string AddressLine1 { get; set; }

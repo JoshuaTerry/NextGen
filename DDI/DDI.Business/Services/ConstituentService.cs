@@ -19,16 +19,14 @@ namespace DDI.Business.Services
         private ConstituentDomain _domain;
 
         public ConstituentService():
-            this(null)
-        {
-            
+            this(new ConstituentDomain())
+        {            
         }
 
-        internal ConstituentService(IRepository<Constituent> repository)
+        internal ConstituentService(ConstituentDomain domain)
         {
-            _domain = new ConstituentDomain();
-            _domain.Repository = repository;
-            _repository = _domain.Repository; 
+            _domain = domain;
+            _repository = domain.Repository; 
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)

@@ -8,13 +8,12 @@ using DDI.Data.Enums;
 namespace DDI.Data.Models.Client
 {
     [Table("Constituent")]
-    public class Constituent : BaseEntity, IEntity
+    public class Constituent : BaseEntity
     {
         #region Public Properties
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public BirthDateType BirthDateType { get; set; }
 

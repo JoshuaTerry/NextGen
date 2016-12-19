@@ -7,12 +7,12 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
 	[Table("Prefix")]
-	public class Prefix : BaseEntity, IEntity
+	public class Prefix : BaseEntity
     {
-		#region Public Properties 
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+        #region Public Properties 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public override Guid Id { get; set; }
 
         [MaxLength(128)]
         public string Abbreviation { get; set; }
