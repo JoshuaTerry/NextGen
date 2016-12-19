@@ -32,6 +32,8 @@ namespace DDI.Data
 
         int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues);
 
+        int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues);
+
         #endregion Public Methods
     }
 }
