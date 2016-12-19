@@ -430,43 +430,46 @@ function RefreshEntity() {
 
 function DisplayConstituentData() {
 
-    $.map(currentEntity, function (value, key) {
+    if (currentEntity) {
 
-        if (typeof (value) == 'string')
-            value = value.replace('"', '').replace('"', '');
+        $.map(currentEntity, function (value, key) {
 
-        if (key != '$id') {
+            if (typeof (value) == 'string')
+                value = value.replace('"', '').replace('"', '');
 
-            var classname = '.' + key;
+            if (key != '$id') {
 
-            if ($(classname).is('input')) {
-                $(classname).val(value);
-            }
+                var classname = '.' + key;
 
-            if ($(classname).is('select')) {
-                $(classname).val(value);
-            }
+                if ($(classname).is('input')) {
+                    $(classname).val(value);
+                }
+
+                if ($(classname).is('select')) {
+                    $(classname).val(value);
+                }
             
-            if (key.toLowerCase().indexOf('date') !== -1) {
+                if (key.toLowerCase().indexOf('date') !== -1) {
 
-                var date = FormatJSONDate(value);
+                    var date = FormatJSONDate(value);
 
-                $(classname).text(date);
+                    $(classname).text(date);
+                }
+
             }
+        });
 
+        $('.constituentpic').html('');
+        var img = $('<img>');
+
+        if (currentEntity.IsMasculine) {
+            $(img).attr('src', 'Images/Male.png');
+        } else {
+            $(img).attr('src', 'Images/Female.png');
         }
-    });
 
-    $('.constituentpic').html('');
-    var img = $('<img>');
+        $(img).appendTo($('.constituentpic'));
 
-    if (currentEntity.IsMasculine) {
-        $(img).attr('src', 'Images/Male.png');
-    } else {
-        $(img).attr('src', 'Images/Female.png');
     }
-
-    $(img).appendTo($('.constituentpic'));
-
 }
 
