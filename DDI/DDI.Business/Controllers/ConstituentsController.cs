@@ -6,11 +6,12 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Business.Services;
+using DDI.Data.Models.Client;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Business.Controllers
 {
     //[Authorize]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ConstituentsController : ApiController
     {
         private IConstituentService _service;
@@ -32,8 +33,11 @@ namespace DDI.Business.Controllers
                                                  int? constituentNumber = null, 
                                                  string address = null, 
                                                  string city = null, 
-                                                 string state = null, 
-                                                 string zip = null, 
+                                                 string state = null,
+                                                 string zipFrom = null,
+                                                 string zipTo = null,
+                                                 string alternateId = null,
+                                                 Guid? constituentTypeId = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
                                                  string orderby = null)
@@ -46,10 +50,13 @@ namespace DDI.Business.Controllers
                 Address = address,
                 City = city,
                 State = state,
-                Zip = zip,
                 Offset = offset,
                 Limit = limit,
-                OrderBy = orderby
+                OrderBy = orderby,
+                AlternateId = alternateId,
+                ZipFrom =  zipFrom,
+                ZipTo = zipTo,
+                ConstituentTypeId = constituentTypeId
             };
 
             var constituents = _service.GetConstituents(search);
@@ -107,36 +114,47 @@ namespace DDI.Business.Controllers
 
         [HttpPost]
         [Route("api/v1/constituents")]
-        public IHttpActionResult Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody] Constituent constituent)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid Model");
+                return BadRequest(ModelState);
             }
 
             return Ok();
         }
 
         [HttpPut]
-        [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Put(Guid id, [FromBody]string value)
+        [Route("api/v1/constituents/")]
+        public IHttpActionResult Put(Constituent constituentChanges)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest("Invalid Model");
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            return Ok();
+                //var updatedConstituent = _service.UpdateConstituent(constituentChanges);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Patch(Guid id, [FromBody]string value)
+        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid Model");
+                return BadRequest(ModelState);
             }
+
+            _service.UpdateConstituent(id, constituentChanges);
 
             return Ok();
         }
