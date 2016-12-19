@@ -44,11 +44,11 @@ function Resize() {
 
 function PopulateDropDowns() {
 
-    //LoadConstituentTypes();
+    // LoadConstituentTypes();
 
     LoadCountries();
 
-    LoadStates();
+    // LoadStates();
 }
 
 function LoadConstituentTypes() {
@@ -96,9 +96,13 @@ function LoadCountries() {
 
             $.map(data.Data, function (item) {
 
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
+                var option = $('<option>').val(item.Id).text(item.Description);
                 $(option).appendTo($('.searchcountry'));
 
+            });
+
+            $('.searchcountry').change(function () {
+                LoadStates($(this).val());
             });
 
         },
@@ -109,10 +113,10 @@ function LoadCountries() {
 
 }
 
-function LoadStates() {
+function LoadStates(country) {
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'states',
+        url: WEB_API_ADDRESS + 'states/?countryid=' + country,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -173,7 +177,7 @@ function DoSearch() {
                     columns: [
                         { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
-                        { dataField: 'FullAddress', caption: 'Primary Address' },
+                        { dataField: 'PrimaryAddress', caption: 'Primary Address' },
                         'Contact Information'
                     ],
                     paging: {
@@ -229,6 +233,8 @@ function GetSearchParameters() {
             p += property + '=' + value + '&';
         }
     });
+
+    p += 'limit=100&';
 
     p = p.substring(0, p.length - 1);
 

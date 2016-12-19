@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Business.Services;
+using DDI.Data.Models.Client;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Business.Controllers
 {
@@ -112,36 +114,47 @@ namespace DDI.Business.Controllers
 
         [HttpPost]
         [Route("api/v1/constituents")]
-        public IHttpActionResult Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody] Constituent constituent)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid Model");
+                return BadRequest(ModelState);
             }
 
             return Ok();
         }
 
         [HttpPut]
-        [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Put(Guid id, [FromBody]string value)
+        [Route("api/v1/constituents/")]
+        public IHttpActionResult Put(Constituent constituentChanges)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest("Invalid Model");
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            return Ok();
+                //var updatedConstituent = _service.UpdateConstituent(constituentChanges);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Patch(Guid id, [FromBody]string value)
+        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid Model");
+                return BadRequest(ModelState);
             }
+
+            _service.UpdateConstituent(id, constituentChanges);
 
             return Ok();
         }
