@@ -161,5 +161,41 @@ namespace DDI.Business.Controllers
         {
             return Ok();
         }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/dbas")]
+        public IHttpActionResult GetConstituentDBAs(Guid constituentId)
+        {
+            var result = _service.GetConstituentDBAs(constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/educationlevel")]
+        public IHttpActionResult GetEducationLevels(Guid constituentId)
+        {
+            var result = _service.GetEducationLevels(constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
+        }
     }
 }

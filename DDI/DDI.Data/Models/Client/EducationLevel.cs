@@ -21,6 +21,10 @@ namespace DDI.Data.Models.Client
 
         [MaxLength(128)]
         public string Code { get; set; }
+
+        public Constituent Constituent { get; set; }
+
+        public Guid? ConstituentId { get; set; }
         #endregion Public Properties
     }
 }
