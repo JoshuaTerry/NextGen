@@ -8,13 +8,12 @@ using DDI.Data.Enums;
 namespace DDI.Data.Models.Client
 {
     [Table("Constituent")]
-    public class Constituent
+    public class Constituent : BaseEntity
     {
         #region Public Properties
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public BirthDateType BirthDateType { get; set; }
 
@@ -159,6 +158,15 @@ namespace DDI.Data.Models.Client
         public ICollection<Education> Educations { get; set; }
         public ICollection<Ethnicity> Ethnicities { get; set; }
         public ICollection<PaymentPreference> PaymentPreferences { get; set; }
+
+        [NotMapped]
+        public override string DisplayName
+        {
+            get
+            {
+                return FormattedName;
+            }
+        }
 
         #endregion Public Properties
 

@@ -5,17 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using DDI.Data.Enums;
 
 namespace DDI.Data.Models.Common
 {
-    public enum EvenOddType { Any, Even, Odd }
 
     [Table("ZipPlus4")]
-    public class ZipPlus4
+    public class ZipPlus4 : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(16)]
         public string UpdateKey { get; set; }

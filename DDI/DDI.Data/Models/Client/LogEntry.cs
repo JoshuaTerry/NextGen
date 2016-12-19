@@ -16,7 +16,7 @@ namespace DDI.Data.Models.Client
     /// the DbSet names in the context class ("LogEntries" instead of "LogEntry").
     /// </remarks>
     [Table("LogEntry")]
-    public class LogEntry
+    public class LogEntry : BaseEntity
     {
         #region Public Properties
 
@@ -28,7 +28,7 @@ namespace DDI.Data.Models.Client
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [Required]
         [MaxLength(50)]

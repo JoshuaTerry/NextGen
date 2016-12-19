@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using DDI.Business.Domain;
 using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Data.Models.Client;
@@ -18,17 +19,19 @@ namespace DDI.Business.Services
 {
     public class ConstituentService : ServiceBase, IConstituentService
     {
-        private IRepository<Constituent> _repository; 
+        private IRepository<Constituent> _repository;
+
+        private ConstituentDomain _domain;
 
         public ConstituentService():
-            this(new Repository<Constituent>())
-        {
-            
+            this(new ConstituentDomain())
+        {            
         }
 
-        internal ConstituentService(IRepository<Constituent> repository)
+        internal ConstituentService(ConstituentDomain domain)
         {
-            _repository = repository;
+            _domain = domain;
+            _repository = domain.Repository; 
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
@@ -69,11 +72,11 @@ namespace DDI.Business.Services
                 query.Or(c => c.AlternateIds.Any(a => a.Name.Contains(search.QuickSearch)));
                 int quickSearchNumber;
                 if (int.TryParse(search.QuickSearch, out quickSearchNumber))
-                {
+            {
                     query.Or(c => c.ConstituentNumber.Equals(quickSearchNumber));
                 }
             }
-        }
+            }
 
         private void ApplyZipFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
         {
@@ -153,6 +156,6 @@ namespace DDI.Business.Services
             var propertyType = properties.Where(p => p.Name == property).Select(p => p.PropertyType).Single();
 
             return propertyType;
-        }
     }
+}
 }

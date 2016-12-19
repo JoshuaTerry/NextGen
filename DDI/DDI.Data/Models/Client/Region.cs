@@ -8,12 +8,13 @@ namespace DDI.Data.Models.Client
 {
     
 	[Table("Region")]
-	public class Region
-	{
-		#region Public Properties 
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+	public class Region : BaseEntity
+    {
+        #region Public Properties 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public override Guid Id { get; set; }
+
 
         public int Level { get; set; }
 

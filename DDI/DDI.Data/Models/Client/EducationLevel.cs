@@ -7,12 +7,13 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("EducationLevel")]
-    public class EducationLevel
+    public class EducationLevel : BaseEntity
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
 
         [MaxLength(128)]

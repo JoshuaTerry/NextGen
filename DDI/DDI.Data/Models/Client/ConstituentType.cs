@@ -7,12 +7,13 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("ConstituentType")]
-    public class ConstituentType
+    public class ConstituentType : BaseEntity
     {
         #region Public Properties 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
         public bool IsRequired { get; set; }
 
