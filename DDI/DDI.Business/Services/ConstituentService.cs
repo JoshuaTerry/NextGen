@@ -206,7 +206,7 @@ namespace DDI.Business.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
             var response = GetIDataResponse(() => constituent);
             response.Links = new List<HATEOASLink>()
             {
