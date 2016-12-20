@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CSS\jquery.toast.min.css" />
+    <Content Include="CSS\jquery.validators.css" />
     <Content Include="packages.config" />
     <Content Include="Main.Master" />
     <Content Include="CSS\icons\dxicons.eot" />
@@ -83,6 +84,7 @@
     </None>
     <Content Include="Scripts\data.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
+    <Content Include="Scripts\jquery.validators.js" />
     <Content Include="Web.sitemap" />
   </ItemGroup>
   <ItemGroup>
