@@ -69,7 +69,13 @@ namespace DDI.Business.Domain
 
         public int GetNextConstituentNumber()
         {
-            int nextNum = Repository.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+            int nextNum = 0;
+            while (true)
+            {
+                nextNum = Repository.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+                if (Repository.Entities.Count(p => p.ConstituentNumber == nextNum) == 0)
+                    break;
+            }
             return nextNum;
         }
 
