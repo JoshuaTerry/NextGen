@@ -67,6 +67,63 @@ function LoadNewConstituentModalDropDowns() {
 
 }
 
+function SaveNewConstituent() {
+
+    // Get the fields
+    var fields = GetNewFields();
+
+    // Save the Constituent
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituent/' + currentEntity.Id,
+        method: 'POST',
+        data: fields,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+            // Display updated entity data
+            currentEntity = data.Data;
+
+            ClearFields();
+
+            CloseModal();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+        }
+    });
+
+}
+
+function GetNewFields() {
+
+    var p = [];
+
+    $(modal).find('.modalcontent input').each(function () {
+        var property = $(this).attr('class').replace('nc- ', '');
+        var value = $(this).val();
+
+        p.push('"' + property + '": "' + value + '"');
+    });
+
+    $(modal).find('.modalcontent select').each(function () {
+        var property = $(this).attr('class').replace('nc- ', '');
+        var value = $(this).val();
+
+        p.push('"' + property + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+
 function CloseModal() {
 
     ClearFields();
