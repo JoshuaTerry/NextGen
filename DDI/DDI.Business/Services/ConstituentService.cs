@@ -158,8 +158,8 @@ namespace DDI.Business.Services
 
         public IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId)
         {
-            Repository<EducationLevel> elRepo = new Repository<EducationLevel>();
-            var data = elRepo.Entities.FirstOrDefault(e => e.ConstituentId == constituentId);
+            Repository<Constituent> repo = new Repository<Constituent>();
+            var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;
 
             var response = new DataResponse<EducationLevel> { Data = data };
             return response;
