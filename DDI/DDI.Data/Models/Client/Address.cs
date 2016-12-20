@@ -60,7 +60,7 @@ namespace DDI.Data.Models.Client
         {
             get
             {
-                return CommonDataCache.GetState(CountryId);
+                return CommonDataCache.GetState(StateId);
             }
             set
             {
@@ -74,7 +74,7 @@ namespace DDI.Data.Models.Client
         {
             get
             {
-                return CommonDataCache.GetCounty(CountryId);
+                return CommonDataCache.GetCounty(CountyId);
             }
             set
             {
