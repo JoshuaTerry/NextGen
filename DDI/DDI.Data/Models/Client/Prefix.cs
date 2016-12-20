@@ -31,7 +31,7 @@ namespace DDI.Data.Models.Client
         {
             get
             {
-                return Description;
+                return Abbreviation;
             }
         }
 
