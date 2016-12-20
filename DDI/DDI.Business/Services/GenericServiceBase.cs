@@ -11,7 +11,7 @@ namespace DDI.Business.Services
     {
         private IRepository<T> _repository;
         public GenericServiceBase(): this(new Repository<T>()) { }
-        internal GenericServiceBase(IRepository<T> repository)
+        public GenericServiceBase(IRepository<T> repository)
         {
             _repository = repository;
         }

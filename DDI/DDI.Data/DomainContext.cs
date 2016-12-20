@@ -61,7 +61,8 @@ namespace DDI.Data
         public virtual DbSet<Region> Regions { get; set; }
 
         public virtual DbSet<RegionLevel> RegionLevels { get; set; }
-
+        public virtual DbSet<SectionPreference> SectionPreferences { get; set; }
+        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
         #endregion Public Properties
 
         #region Public Constructors

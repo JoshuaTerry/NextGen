@@ -1,17 +1,16 @@
-﻿using System.Web.Http;
-using System.Web.Http.Cors;
-using DDI.Business.Services;
+﻿using DDI.Business.Services;
 using DDI.Data.Models.Client;
+using System.Web.Http;
+
 
 namespace DDI.Business.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class ConstituentTypeController : ApiController
+    public class ConstituentTypesController : ApiController
     {
         GenericServiceBase<ConstituentType> _service;
 
-        public ConstituentTypeController() : this(new GenericServiceBase<ConstituentType>()) { }
-        internal ConstituentTypeController(GenericServiceBase<ConstituentType> service)
+        public ConstituentTypesController() : this(new GenericServiceBase<ConstituentType>()) { }
+        internal ConstituentTypesController(GenericServiceBase<ConstituentType> service)
         {
             _service = service;
         }
