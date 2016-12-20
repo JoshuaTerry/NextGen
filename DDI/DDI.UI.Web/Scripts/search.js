@@ -57,12 +57,12 @@ function LoadConstituentTypes() {
 
 function LoadCountries() {
 
-    PopulateDropDown('.searchcountry', 'countries', '', '', function () {
-        $('.searchcountry').change(function () {
+    PopulateDropDown('.searchcountry', 'countries', '', '');
 
-            PopulateDropDown('.searchstate', 'states/?countryid=' + $('.searchcountry').val(), '', '');
+    $('.searchcountry').change(function () {
 
-        });
+        PopulateDropDown('.searchstate', 'states/?countryid=' + $('.searchcountry').val(), '', '');
+
     });
 
 }

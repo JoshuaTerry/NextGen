@@ -25,7 +25,7 @@ function MakeServiceCall(e, method) {
 
             $.map(data.Data, function (item) {
 
-                option = $('<option>').val(item.Id).text(item.Name || item.Description);
+                option = $('<option>').val(item.Id).text(item.DisplayName); //item.Name || item.Description
                 $(option).appendTo($(e));
 
             });
@@ -40,7 +40,7 @@ function MakeServiceCall(e, method) {
 
 function PopulateDropDown(e, method, defaultText, defaultValue) {
 
-    ClearElement();
+    ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
     MakeServiceCall(e, method);
@@ -49,12 +49,14 @@ function PopulateDropDown(e, method, defaultText, defaultValue) {
 
 function PopulateDropDown(e, method, defaultText, defaultValue, callback) {
 
-    ClearElement();
+    ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
     MakeServiceCall(e, method);
 
     if (callback) {
+
+        $(e).unbind('change');
 
         $(e).change(function () {
             callback();
