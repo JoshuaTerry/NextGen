@@ -23,15 +23,28 @@ namespace DDI.Data
     {
         #region Private Fields
 
-        private readonly DbContext _context;
-
-        private IDbSet<T> _entities;
+        private readonly DbContext _context = null;
+        private IDbSet<T> _entities = null;
+        private SQLUtilities _utilities = null;
 
         #endregion Private Fields
 
         #region Public Properties
 
         public IQueryable<T> Entities => EntitySet;
+
+        public SQLUtilities Utilities
+        {
+            get
+            {
+                if (_utilities == null)
+                {
+                    _utilities = new SQLUtilities(_context);
+                }
+
+                return _utilities;
+            }
+        }                       
 
         #endregion Public Properties
 
@@ -172,7 +185,7 @@ namespace DDI.Data
             }
 
             return list;
-        }
+        }        
 
         #endregion Public Methods
     }

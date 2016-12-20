@@ -1,4 +1,4 @@
-﻿namespace DDI.Business.Services
+﻿namespace DDI.Business.Services.Search
 {
     public interface IPageable
     {

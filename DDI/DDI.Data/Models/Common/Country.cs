@@ -10,7 +10,9 @@ namespace DDI.Data.Models.Common
 {
     [Table("Country")]
     public class Country : BaseEntity
-    { 
+    {
+        #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get; set; }
@@ -49,6 +51,20 @@ namespace DDI.Data.Models.Common
         // Navigation Properties
 
         public ICollection<State> States { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
 
     }
 }

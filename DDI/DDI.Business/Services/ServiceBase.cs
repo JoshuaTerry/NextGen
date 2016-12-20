@@ -81,5 +81,37 @@ namespace DDI.Business.Services
                 VerboseErrorMessages = verboseErrorMessages?.ToList()
             };
         }
+
+        public static IDataResponse SafeExecute(Action method)
+        {
+            var response = new DataResponse();
+            try
+            {
+                method.Invoke();                
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+                _logger.Error(ex);
+            }
+            return response;
+        }
+
+        public static IDataResponse<T> SafeExecute<T>(Func<T> method)
+        {
+            var response = new DataResponse<T>();
+            try
+            {                
+                response.Data = method.Invoke();
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+                _logger.Error(ex);
+            }
+            return response;
+        }
     }
 }

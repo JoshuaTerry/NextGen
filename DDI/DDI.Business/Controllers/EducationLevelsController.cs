@@ -1,6 +1,7 @@
 ﻿using DDI.Business.Services;
 using DDI.Data.Models.Client;
 using System.Web.Http;
+using DDI.Business.Services.Search;
 
 
 namespace DDI.Business.Controllers
@@ -17,9 +18,9 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/educationlevels")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(string orderBy = "Name")
         {
-            var result = _service.GetAll();
+            var result = _service.GetAll(new PageableSearch { OrderBy = orderBy });
 
             if (result == null)
             {

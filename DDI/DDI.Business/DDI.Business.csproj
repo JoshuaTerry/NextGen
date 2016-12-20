@@ -226,7 +226,7 @@
     <Compile Include="Controllers\ClergyTypesController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
-    <Compile Include="Controllers\ConstituentTypeController.cs" />
+    <Compile Include="Controllers\ConstituentTypesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\DenominationsController.cs" />
     <Compile Include="Controllers\EducationLevelsController.cs" />
@@ -235,7 +235,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeLevelsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
+    <Compile Include="Controllers\MaritalStatusesController.cs" />
     <Compile Include="Controllers\PrefixesController.cs" />
+    <Compile Include="Controllers\ProfessionsController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
     <Compile Include="Domain\BaseEntityDomain.cs" />
     <Compile Include="Domain\ConstituentDomain.cs" />
@@ -254,13 +256,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
-    <Compile Include="Services\ConstituentSearch.cs" />
+    <Compile Include="Services\StateService.cs" />
+    <Compile Include="Services\Search\StateSearch.cs" />
+    <Compile Include="Services\Search\PageableSearch.cs" />
+    <Compile Include="Services\Search\ConstituentSearch.cs" />
     <Compile Include="Services\ConstituentService.cs" />
     <Compile Include="Services\DataResponse.cs" />
     <Compile Include="Services\GenericServiceBase.cs" />
     <Compile Include="Services\GenericServiceCommonBase.cs" />
     <Compile Include="Services\IConstituentService.cs" />
-    <Compile Include="Services\IPageable.cs" />
+    <Compile Include="Services\Search\IPageable.cs" />
     <Compile Include="Services\IGenericService.cs" />
     <Compile Include="Services\ISectionPreferenceService.cs" />
     <Compile Include="Services\SectionPreferenceService.cs" />

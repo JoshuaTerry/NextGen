@@ -12,7 +12,9 @@ namespace DDI.Data
 {
 	public class DomainContext : DbContext
 	{
-		#region Public Properties
+        #region Public Properties
+
+        public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
 		public virtual DbSet<Address> Addresses { get; set; }
 
@@ -29,6 +31,10 @@ namespace DDI.Data
 		public virtual DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
 
 		public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
+
+        public virtual DbSet<ContactInfo> ContactInfoes { get; set; }
+
+        public virtual DbSet<ContactType> ContactTypes { get; set; }
 
 		public virtual DbSet<Denomination> Denominations { get; set; }
 
@@ -57,7 +63,8 @@ namespace DDI.Data
         public virtual DbSet<Region> Regions { get; set; }
 
         public virtual DbSet<RegionLevel> RegionLevels { get; set; }
-
+        public virtual DbSet<SectionPreference> SectionPreferences { get; set; }
+        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
         #endregion Public Properties
 
         #region Public Constructors

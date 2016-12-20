@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Business.Services;
+using DDI.Business.Services.Search;
 using DDI.Data.Models.Client;
 using Newtonsoft.Json.Linq;
 
@@ -108,6 +109,13 @@ namespace DDI.Business.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/constituents/nextnumber")]
+        public IHttpActionResult GetNextConstituentNumber()
+        {
+            return Ok(_service.GetNextConstituentNumber());
+        }
+
         [HttpPost]
         [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody] Constituent constituent)
@@ -117,7 +125,8 @@ namespace DDI.Business.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok();
+            var response =_service.AddConstituent(constituent);
+            return Ok(response);
         }
 
         [HttpPut]
@@ -168,6 +177,42 @@ namespace DDI.Business.Controllers
         public IHttpActionResult Delete(Guid id)
         {
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/dbas")]
+        public IHttpActionResult GetConstituentDBAs(Guid constituentId)
+        {
+            var result = _service.GetConstituentDBAs(constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/educationlevel")]
+        public IHttpActionResult GetEducationLevels(Guid constituentId)
+        {
+            var result = _service.GetEducationLevels(constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
         }
     }
 }

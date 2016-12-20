@@ -11,6 +11,8 @@ namespace DDI.Data.Models.Common
     [Table("CityName")]
     public class CityName : BaseEntity
     {
+        #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get; set; }
@@ -24,6 +26,20 @@ namespace DDI.Data.Models.Common
         // Navigation Properties
 
         public City City { get; set; }
+        
+        #endregion
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
 
     }
 }

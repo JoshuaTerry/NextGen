@@ -1,6 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 
 using DDI.Business.Services;
+using DDI.Business.Services.Search;
 using DDI.Data.Models.Common;
 
 namespace DDI.Business.Controllers
@@ -9,14 +11,14 @@ namespace DDI.Business.Controllers
     {
         #region Private Fields
 
-        private GenericServiceCommonBase<State> _service;
+        private StateService _service;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public StatesController()
-            : this(new GenericServiceCommonBase<State>())
+            : this(new StateService())
         {
         }
 
@@ -24,7 +26,7 @@ namespace DDI.Business.Controllers
 
         #region Internal Constructors
 
-        internal StatesController(GenericServiceCommonBase<State> service)
+        internal StatesController(StateService service)
         {
             _service = service;
         }
@@ -35,9 +37,15 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/states")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(Guid? countryId = null,
+                                        string orderBy = "Description")
         {
-            var result = _service.GetAll();
+            var search = new StateSearch()
+            {
+                CountryId = countryId,
+                OrderBy = orderBy,
+            };
+            var result = _service.GetAll(search);
 
             if (result == null)
             {
