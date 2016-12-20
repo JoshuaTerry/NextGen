@@ -100,7 +100,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 /* MODAL CONTENT */
 
-.ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; }
+.ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; border-radius: 5px; }
 .ui-dialog-titlebar { background-color: #0f75b4; color: white; }
 
 .modalcontent {  }

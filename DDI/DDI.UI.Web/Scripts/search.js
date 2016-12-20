@@ -93,7 +93,7 @@ function DoSearch() {
         success: function (data) {
 
             if (data.Data.length == 1) {
-                DisplayConstituent(data.Data[0].ConstituentNum);
+                DisplayConstituent(data.Data[0].ConstituentNumber);
             }
             else {
 

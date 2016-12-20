@@ -58,6 +58,11 @@
 
             <div class="modalcontent">
 
+                <div class="fieldblock">
+                    <label>ID</label>
+                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                </div>
+
                 <div class="inline">
                     <div class="fieldblock">
                         <label>Prefix</label>

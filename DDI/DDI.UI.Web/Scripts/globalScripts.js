@@ -28,7 +28,7 @@ $(document).ready(function () {
             closeOnEscape: false,
             modal: true,
             width: 800,
-            height: 600,
+            height: 640,
             resizable: false
         });
 
@@ -84,10 +84,7 @@ function SaveNewConstituent() {
 
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-            // Display updated entity data
-            currentEntity = data.Data;
-
+            
             ClearFields();
 
             CloseModal();
