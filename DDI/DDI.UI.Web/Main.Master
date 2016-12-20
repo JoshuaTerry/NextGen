@@ -10,14 +10,19 @@
     <script type="text/javascript" src="Scripts\jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="Scripts\jquery-ui.min.js"></script>
-    <script type="text/javascript" src="Scripts\globalScripts.js"></script>
+    <script type="text/javascript" src="Scripts\jquery.toast.min.js"></script>
 
     <!-- DevExtreme Files -->
     <script type="text/javascript" src="Scripts/dx.web.js"></script>
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
+    <!-- DevExtreme Files -->
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     
+    <script type="text/javascript" src="Scripts\data.js"></script>
+    <script type="text/javascript" src="Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\screen.css" />
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
@@ -53,64 +58,69 @@
 
             <div class="modalcontent">
 
+                <div class="fieldblock">
+                    <label>ID</label>
+                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                </div>
+
                 <div class="inline">
                     <div class="fieldblock">
                         <label>Prefix</label>
-                        <select class="PrefixId"></select>
+                        <select class="nc-PrefixId"></select>
                     </div>
 
                     <div class="fieldblock">
                         <label>First</label>
-                        <input type="text" class="FirstName" />
+                        <input type="text" class="nc-FirstName" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Middle</label>
-                        <input type="text" class="MiddleName" />
+                        <input type="text" class="nc-MiddleName" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Last</label>
-                        <input type="text" class="LastName" />
+                        <input type="text" class="nc-LastName" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Suffix</label>
-                        <input type="text" class="Suffix" />
+                        <input type="text" class="nc-Suffix" />
                     </div>
                 </div>
 
                 <div class="inline">
                     <div class="fieldblock">
                         <label>Nick Name</label>
-                        <input type="text" class="NickName" />
+                        <input type="text" class="nc-NickName" />
                     </div>
 
                     <div class="fieldblock">
-                        <label>Name2</label>
-                        <input type="text" class="Name2" />
+                        <label>Name 2</label>
+                        <input type="text" class="nc-Name2" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Salutation</label>
-                        <select class="Salutation"></select>
+                        <input type="text" class="nc-Salutation" />
                     </div>
                 </div>
 
                 <div class="inline">
                     <div class="fieldblock">
                         <label>Tax ID</label>
-                        <input type="text" class="TaxID" />
+                        <input type="text" class="nc-TaxID" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Gender</label>
-                        <input type="text" class="Gender" />
+                        <select class="nc-GenderId"></select>
                     </div>
 
                     <div class="fieldblock">
                         <label>Source</label>
-                        <input type="text" class="Source" />
+                        <input type="text" class="nc-Source" />
                     </div>
                 </div>
 
@@ -119,38 +129,38 @@
 
                     <div class="fieldblock">
                         <label>Address Type</label>
-                        <select class="AddressType"></select>
+                        <select class="nc-AddressType"></select>
                     </div>
 
                     <div class="fieldblock">
                         <label>Address Line 1</label>
-                        <input type="text" class="AddressLine1" />
+                        <input type="text" class="nc-AddressLine1" />
                     </div>
 
                     <div class="fieldblock">
                         <label>Address Line 2</label>
-                        <input type="text" class="AddressLine2" />
+                        <input type="text" class="nc-AddressLine2" />
                     </div>
 
                     <div class="inline">
                         <div class="fieldblock">
                             <label>Country</label>
-                            <select class="Country"></select>
+                            <select class="nc-Country"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>State</label>
-                            <select class="State"></select>
+                            <select class="nc-State"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>City</label>
-                            <select class="City"></select>
+                            <select class="nc-City"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>County</label>
-                            <select class="County"></select>
+                            <select class="nc-County"></select>
                         </div>
                     </div>
 
@@ -162,24 +172,24 @@
                     <div class="inline">
                         <div class="fieldblock">
                             <label>Email</label>
-                            <input type="email" class="Email" />
+                            <input type="email" class="nc-Email" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Email Type</label>
-                            <select class="EmailType"></select>
+                            <select class="nc-EmailType"></select>
                         </div>
                     </div>
 
                     <div class="inline">
                         <div class="fieldblock">
                             <label>Phone</label>
-                            <input type="text" class="Phone" />
+                            <input type="text" class="nc-Phone" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Phone Type</label>
-                            <select class="PhoneType"></select>
+                            <select class="nc-PhoneType"></select>
                         </div>
 
                     </div>
