@@ -17,9 +17,9 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/ethnicity")]
-        public IHttpActionResult GetAll(string orderBy = "Name")
+        public IHttpActionResult GetAll()
         {
-            var result = _service.GetAll(new PageableSearch { OrderBy = orderBy });
+            var result = _service.GetAll();
 
             if (result == null)
             {

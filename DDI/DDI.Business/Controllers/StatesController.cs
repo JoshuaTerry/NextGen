@@ -37,13 +37,11 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/states")]
-        public IHttpActionResult GetAll(Guid? countryId = null,
-                                        string orderBy = "Description")
+        public IHttpActionResult GetAll(Guid? countryId = null)
         {
             var search = new StateSearch()
             {
-                CountryId = countryId,
-                OrderBy = orderBy,
+                CountryId = countryId
             };
             var result = _service.GetAll(search);
 

@@ -13,7 +13,7 @@ using DDI.Data.Models.Common;
 namespace DDI.Business.Services
 {
     public class GenericServiceCommonBase<T> : ServiceBase, IGenericService<T>
-        where T : class
+        where T : class, IEntity
     {
         #region Private Fields
 
@@ -44,12 +44,8 @@ namespace DDI.Business.Services
 
         public IDataResponse<List<T>> GetAll(IPageable search= null)
         {
-            var result = _repository.Entities;
-            var query = new CriteriaQuery<T, IPageable>(result, search)
-                .SetOrderBy(search?.OrderBy);
-
-            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            return GetIDataResponse(() => query.GetQueryable().ToList());
+            var result = _repository.Entities.ToList().OrderBy(a => a.DisplayName).ToList();
+            return GetIDataResponse(() => result);
         }
 
         #endregion Public Methods
