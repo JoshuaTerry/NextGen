@@ -230,7 +230,10 @@ namespace DDI.Business.Services
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
-            _repository.UpdateChangedProperties(id, changedProperties);
+            _repository.UpdateChangedProperties(id, changedProperties, constituent =>
+            {
+                _constituentDomain.Validate(constituent);
+            });
 
             var constituent = _repository.GetById(id);
 
@@ -256,7 +259,11 @@ namespace DDI.Business.Services
         }
         public IDataResponse AddConstituent(Constituent constituent)
         {
-            var response = SafeExecute(() => { _repository.Insert(constituent); });
+            var response = SafeExecute(() => 
+            {
+                _constituentDomain.Validate(constituent);
+                _repository.Insert(constituent);
+            });
             return response;
         }
 
