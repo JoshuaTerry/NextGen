@@ -20,11 +20,10 @@ namespace DDI.Business.Services
         {
             var result = Repository.Entities;
             var query = new CriteriaQuery<State, StateSearch>(result, search)
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m=> m.CountryId, d => d.CountryId)
-                .SetOrderBy(search?.OrderBy);
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.CountryId, d => d.CountryId);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            return GetIDataResponse(() => query.GetQueryable().ToList());
+            return GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(a => a.DisplayName).ToList());
         }
 
         #endregion Public Methods
