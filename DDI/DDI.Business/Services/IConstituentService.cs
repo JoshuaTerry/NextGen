@@ -14,5 +14,6 @@ namespace DDI.Business.Services
         IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges);
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId);
+        IDataResponse AddConstituent(Constituent constituent);
     }
 }

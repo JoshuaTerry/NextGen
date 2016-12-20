@@ -164,6 +164,12 @@ namespace DDI.Business.Services
             var response = new DataResponse<EducationLevel> { Data = data };
             return response;
         }
+        public IDataResponse AddConstituent(Constituent constituent)
+        {
+            var response = SafeExecute(() => { _repository.Insert(constituent); });
+            return response;
+        }
+
         private Type ConvertToType<T>(string property, T entity)
         {
             Type classType = entity.GetType();
