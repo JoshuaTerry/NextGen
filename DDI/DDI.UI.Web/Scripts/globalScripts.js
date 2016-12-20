@@ -46,9 +46,83 @@ $(document).ready(function () {
 
         });
 
+        LoadNewConstituentModalDropDowns();
+
     });
 
 });
+
+function LoadNewConstituentModalDropDowns() {
+
+    PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
+    PopulateDropDown('.nc-GenderId', 'genders', '', '');
+
+    PopulateDropDown('.nc-Country', 'countries', '', '', function () {
+        $('.nc-Country').change(function () {
+
+            PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+
+        });
+    });
+
+}
+
+function SaveNewConstituent() {
+
+    // Get the fields
+    var fields = GetNewFields();
+
+    // Save the Constituent
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituent',
+        method: 'POST',
+        data: fields,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+            // Display updated entity data
+            currentEntity = data.Data;
+
+            ClearFields();
+
+            CloseModal();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+        }
+    });
+
+}
+
+function GetNewFields() {
+
+    var p = [];
+
+    $(modal).find('.modalcontent input').each(function () {
+        var property = $(this).attr('class').replace('nc- ', '');
+        var value = $(this).val();
+
+        p.push('"' + property + '": "' + value + '"');
+    });
+
+    $(modal).find('.modalcontent select').each(function () {
+        var property = $(this).attr('class').replace('nc- ', '');
+        var value = $(this).val();
+
+        p.push('"' + property + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
 
 function CloseModal() {
 
@@ -60,9 +134,9 @@ function CloseModal() {
 
 function ClearFields() {
 
-    $('input').val('');
+    $('div.fieldblock input').val('');
 
-    $('select').val(0);
+    $('div.fieldblock select').val(0);
 
 }
 
@@ -123,6 +197,9 @@ function FormatJSONDate(jsonDate) {
     return date;
 }
 
+
+// EDITING
+//
 function CreateEditControls() {
 
     $('.editcontainer').each(function () {
@@ -240,7 +317,7 @@ function SaveEdit(editcontainer) {
 
     // Save the entity
     $.ajax({
-        url: WEB_API_ADDRESS + save_route + currentEntity.Id,
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
         method: 'PATCH',
         data: fields,
         contentType: 'application/json; charset-utf-8',
@@ -249,15 +326,15 @@ function SaveEdit(editcontainer) {
         success: function (data) {
 
             // Display success
-            alert('BOOM... saved!');
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
             // Display updated entity data
             currentEntity = data.Data;
 
             RefreshEntity();
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
         }
     });
 
@@ -301,3 +378,38 @@ function CancelEdit() {
     RefreshEntity();
 
 }
+//
+// END EDITING
+
+
+// MESSAGING
+//
+function DisplayInfoMessage(heading, text) {
+    DisplayMessage(heading, text, 'info');
+}
+
+function DisplayErrorMessage(heading, text) {
+    DisplayMessage(heading, text, 'error');
+}
+
+function DisplayWarningMessage(heading, text) {
+    DisplayMessage(heading, text, 'warning');
+}
+
+function DisplaySuccessMessage(heading, text) {
+    DisplayMessage(heading, text, 'success');
+}
+
+function DisplayMessage(heading, text, icon) {
+
+    $.toast({
+        heading: heading,
+        text: text,
+        icon: icon,
+        showHideTransition: 'slide',
+        position: 'top-right'
+    });
+
+}
+//
+// END MESSAGING
