@@ -13,7 +13,7 @@ namespace DDI.Business.Domain
     /// </summary>
     public class ConstituentDomain : BaseEntityDomain<Constituent>
     { 
-        public ConstituentDomain(IRepository<Constituent> repo) :base(repo)
+        public ConstituentDomain(IRepository<Constituent> repository) :base(repository)
         {
                     
         }

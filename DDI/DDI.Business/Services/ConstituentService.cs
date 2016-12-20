@@ -21,17 +21,25 @@ namespace DDI.Business.Services
     {
         private IRepository<Constituent> _repository;
 
-        private ConstituentDomain _domain;
+        private ConstituentDomain _constituentDomain;
 
-        public ConstituentService() :
-            this(new Repository<Constituent>())
+        public ConstituentService()
         {
+            var repository = new Repository<Constituent>();
+            var constituentDomain = new ConstituentDomain(repository);
+            Initialize(repository, constituentDomain);
         }
 
-        internal ConstituentService(IRepository<Constituent> repo)
+
+        internal ConstituentService(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
         {
-            _repository = repo;
-            _domain = new ConstituentDomain(repo);
+            Initialize(repository, constituentDomain);
+        }
+
+        private void Initialize(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
+        {
+            _repository = repository;
+            _constituentDomain = new ConstituentDomain(repository);
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
