@@ -30,6 +30,10 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
 
+        public virtual DbSet<ContactInfo> ContactInfoes { get; set; }
+
+        public virtual DbSet<ContactType> ContactTypes { get; set; }
+
 		public virtual DbSet<Denomination> Denominations { get; set; }
 
 		public virtual DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
