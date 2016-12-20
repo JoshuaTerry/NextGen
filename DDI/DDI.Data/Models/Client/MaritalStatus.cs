@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Data.Models.Client
 {
-    [Table("AlternateId")]
+    [Table("MaritialStatus")]
     public class MaritalStatus
     {
         [Key]
