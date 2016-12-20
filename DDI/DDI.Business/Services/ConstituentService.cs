@@ -227,7 +227,7 @@ namespace DDI.Business.Services
 
             foreach (var pair in constituentChanges)
             {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType(pair.Key, typeof(Constituent))));
+                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
             _repository.UpdateChangedProperties(id, changedProperties);
@@ -265,9 +265,9 @@ namespace DDI.Business.Services
             return new DataResponse<int>() { Data = _constituentDomain.GetNextConstituentNumber() };
         }
 
-        internal Type ConvertToType(string property, Type entity)
+        internal Type ConvertToType<T>(string property)
         {
-            Type classType = entity.GetType();
+            Type classType = typeof(T);
 
             var propertyType = classType.GetProperty(property).PropertyType;
 

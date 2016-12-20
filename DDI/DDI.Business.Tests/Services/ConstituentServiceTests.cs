@@ -17,7 +17,7 @@ namespace DDI.Business.Tests.Services
         {
             var repo = new Mock<IRepository<Constituent>>();             
             var service = new ConstituentService();   
-            var result = service.ConvertToType("GenderId", typeof(Constituent));
+            var result = service.ConvertToType<Constituent>("GenderId");
             
             Assert.IsTrue(result == typeof(Guid?));
         }
