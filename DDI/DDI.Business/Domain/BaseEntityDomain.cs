@@ -10,8 +10,13 @@ namespace DDI.Business.Domain
     public class BaseEntityDomain<T> : IEntityDomain<T> where T : class, IEntity
     {
 
-        public BaseEntityDomain()
+        public BaseEntityDomain() : this(new Repository<T>())
         {
+        }
+
+        internal BaseEntityDomain(IRepository<T> repository)
+        {
+            this.Repository = repository;
         }
 
         private IRepository<T> _repository = null;

@@ -23,15 +23,15 @@ namespace DDI.Business.Services
 
         private ConstituentDomain _domain;
 
-        public ConstituentService():
-            this(new ConstituentDomain())
-        {            
+        public ConstituentService() :
+            this(new Repository<Constituent>())
+        {
         }
 
-        internal ConstituentService(ConstituentDomain domain)
+        internal ConstituentService(IRepository<Constituent> repo)
         {
-            _domain = domain;
-            _repository = domain.Repository; 
+            _repository = repo;
+            _domain = new ConstituentDomain(repo);
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
@@ -153,11 +153,11 @@ namespace DDI.Business.Services
                 query.Or(c => c.AlternateIds.Any(a => a.Name.Contains(search.QuickSearch)));
                 int quickSearchNumber;
                 if (int.TryParse(search.QuickSearch, out quickSearchNumber))
-            {
+                {
                     query.Or(c => c.ConstituentNumber.Equals(quickSearchNumber));
                 }
             }
-            }
+        }
 
         private void ApplyZipFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
         {
@@ -182,7 +182,7 @@ namespace DDI.Business.Services
         {
             Constituent constituent = _repository.GetById(id);
             var response = GetIDataResponse(() => constituent);
-            response.Links= new List<HATEOASLink>()
+            response.Links = new List<HATEOASLink>()
             {
                 new HATEOASLink()
                 {
@@ -218,7 +218,7 @@ namespace DDI.Business.Services
 
             foreach (var pair in constituentChanges)
             {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType(pair.Key, typeof(Constituent))));
+                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
             _repository.UpdateChangedProperties(id, changedProperties);
@@ -228,15 +228,15 @@ namespace DDI.Business.Services
             return GetIDataResponse(() => constituent);
         }
 
-        private Type ConvertToType<T>(string property, T entity)
+        public Type ConvertToType<T>(string property)
         {
-            Type classType = entity.GetType();
+            Type classType = typeof(T);
 
             PropertyInfo[] properties = classType.GetProperties();
 
-            var propertyType = properties.Where(p => p.Name == property).Select(p => p.PropertyType).Single();
+            var propertyType = classType.GetProperty(property).PropertyType;
 
             return propertyType;
+        }
     }
-}
 }
