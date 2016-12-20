@@ -61,6 +61,10 @@
     <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Migrations\Client\201612201429096_EdLevel_DBA.cs" />
+    <Compile Include="Migrations\Client\201612201429096_EdLevel_DBA.Designer.cs">
+      <DependentUpon>201612201429096_EdLevel_DBA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201612151525388_Region_v1.cs" />
     <Compile Include="Migrations\Client\201612151525388_Region_v1.Designer.cs">
       <DependentUpon>201612151525388_Region_v1.cs</DependentUpon>
@@ -131,6 +135,7 @@
     <Compile Include="Models\Client\Gender.cs" />
     <Compile Include="Models\Client\IncomeLevel.cs" />
     <Compile Include="Models\Client\Language.cs" />
+    <Compile Include="Models\Client\MaritalStatus.cs" />
     <Compile Include="Models\Client\PaymentPreference.cs" />
     <Compile Include="Models\Client\Prefix.cs" />
     <Compile Include="Models\Client\Profession.cs" />
@@ -158,6 +163,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201612201429096_EdLevel_DBA.resx">
+      <DependentUpon>201612201429096_EdLevel_DBA.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612151525388_Region_v1.resx">
       <DependentUpon>201612151525388_Region_v1.cs</DependentUpon>
     </EmbeddedResource>

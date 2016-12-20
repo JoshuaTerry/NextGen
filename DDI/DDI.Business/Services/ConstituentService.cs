@@ -148,6 +148,29 @@ namespace DDI.Business.Services
             return GetIDataResponse(() => constituent);
         }
 
+        public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)
+        {
+            Repository<DoingBusinessAs> dbaRepo = new Repository<DoingBusinessAs>();
+            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
+
+            var response = new DataResponse<List<DoingBusinessAs>> { Data = data.ToList() };
+            return response;
+        }
+
+        public IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId)
+        {
+            Repository<Constituent> repo = new Repository<Constituent>();
+            var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;
+
+            var response = new DataResponse<EducationLevel> { Data = data };
+            return response;
+        }
+        public IDataResponse AddConstituent(Constituent constituent)
+        {
+            var response = SafeExecute(() => { _repository.Insert(constituent); });
+            return response;
+        }
+
         private Type ConvertToType<T>(string property, T entity)
         {
             Type classType = entity.GetType();

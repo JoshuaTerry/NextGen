@@ -30,6 +30,10 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
 
+        public virtual DbSet<ContactInfo> ContactInfoes { get; set; }
+
+        public virtual DbSet<ContactType> ContactTypes { get; set; }
+
 		public virtual DbSet<Denomination> Denominations { get; set; }
 
 		public virtual DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
@@ -57,7 +61,8 @@ namespace DDI.Data
         public virtual DbSet<Region> Regions { get; set; }
 
         public virtual DbSet<RegionLevel> RegionLevels { get; set; }
-
+        public virtual DbSet<SectionPreference> SectionPreferences { get; set; }
+        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
         #endregion Public Properties
 
         #region Public Constructors

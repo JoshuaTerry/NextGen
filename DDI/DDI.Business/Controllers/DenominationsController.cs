@@ -1,7 +1,7 @@
-﻿using System.Web.Http;
 using DDI.Business.Services;
 using DDI.Business.Services.Search;
 using DDI.Data.Models.Client;
+using System.Web.Http;
 
 namespace DDI.Business.Controllers
 {

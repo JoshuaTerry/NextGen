@@ -24,5 +24,18 @@ namespace DDI.Data.Models.Client
 
         public Guid? GenderId { get; set; }
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
+
     }
 }
