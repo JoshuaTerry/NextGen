@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Business.Services;
+using DDI.Business.Services.Search;
 using DDI.Data.Models.Client;
 using Newtonsoft.Json.Linq;
 

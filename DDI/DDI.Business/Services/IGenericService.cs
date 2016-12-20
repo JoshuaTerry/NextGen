@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DDI.Business.Services.Search;
 
 namespace DDI.Business.Services
 {
     public interface IGenericService<T>
     {
-        IDataResponse<List<T>> GetAll();
+        IDataResponse<List<T>> GetAll(IPageable searchTerms = null);
     }
 }

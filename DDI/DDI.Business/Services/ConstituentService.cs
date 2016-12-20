@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Http;
 using DDI.Business.Domain;
 using DDI.Business.Helpers;
+using DDI.Business.Services.Search;
 using DDI.Data;
 using DDI.Data.Models.Client;
 using DDI.Shared;
