@@ -18,17 +18,10 @@ namespace DDI.Business.Services
 
         public IDataResponse<List<State>> GetAll(StateSearch search= null)
         {
-            if (search == null)
-            {
-                search = new StateSearch()
-                {
-                    OrderBy = "Description" //nameof(IEntity.DisplayName)
-                };
-            }
             var result = Repository.Entities;
             var query = new CriteriaQuery<State, StateSearch>(result, search)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m=> m.CountryId, d => d.CountryId)
-                .SetOrderBy(search.OrderBy);
+                .SetOrderBy(search?.OrderBy);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             return GetIDataResponse(() => query.GetQueryable().ToList());
