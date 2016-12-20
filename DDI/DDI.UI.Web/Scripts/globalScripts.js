@@ -46,9 +46,26 @@ $(document).ready(function () {
 
         });
 
+        LoadNewConstituentModalDropDowns();
+
     });
 
 });
+
+function LoadNewConstituentModalDropDowns() {
+
+    PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
+    PopulateDropDown('.nc-GenderId', 'genders', '', '');
+
+    PopulateDropDown('.nc-Country', 'countries', '', '', function () {
+        $('.nc-Country').change(function () {
+
+            PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+
+        });
+    });
+
+}
 
 function CloseModal() {
 
