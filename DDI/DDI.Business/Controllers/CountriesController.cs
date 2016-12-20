@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 
 using DDI.Business.Services;
+using DDI.Business.Services.Search;
 using DDI.Data.Models.Common;
 
 namespace DDI.Business.Controllers
@@ -35,9 +36,9 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/countries")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(string orderBy = "Description")
         {
-            var result = _service.GetAll();
+            var result = _service.GetAll(new PageableSearch { OrderBy = orderBy });
 
             if (result == null)
             {

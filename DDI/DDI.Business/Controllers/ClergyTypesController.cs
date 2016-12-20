@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DDI.Business.Services;
+using DDI.Business.Services.Search;
 using DDI.Data.Models.Common;
 using DDI.Data.Models.Client;
 
@@ -22,9 +23,9 @@ namespace DDI.Business.Controllers
 
         [HttpGet]
         [Route("api/v1/clergytypes")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(string orderBy = "Name")
         {
-            var result = _service.GetAll();
+            var result = _service.GetAll(new PageableSearch { OrderBy = orderBy });
 
             if (result == null)
             {
