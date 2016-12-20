@@ -181,6 +181,8 @@ function DisplayConstituentData() {
             }
         });
 
+        DisplayConstituentPrimaryAddress();
+
         $('.constituentpic').html('');
         var img = $('<img>');
 
@@ -193,5 +195,29 @@ function DisplayConstituentData() {
         $(img).appendTo($('.constituentpic'));
 
     }
+}
+
+function DisplayConstituentPrimaryAddress() {
+
+    if (currentEntity.ConstituentAddresses) {
+
+        $.map(currentEntity.ConstituentAddresses, function (item) {
+
+            if (item.IsPrimary) {
+
+                $('.Address').text(item.Address.AddressLine1);
+
+                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
+                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+                }
+
+                $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+
+            }
+
+        });
+
+    }
+
 }
 
