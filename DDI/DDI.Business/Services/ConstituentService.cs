@@ -230,9 +230,9 @@ namespace DDI.Business.Services
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
-            _repository.UpdateChangedProperties(id, changedProperties, constituent =>
+            _repository.UpdateChangedProperties(id, changedProperties, p =>
             {
-                _constituentDomain.Validate(constituent);
+                _constituentDomain.Validate(p);
             });
 
             var constituent = _repository.GetById(id);
