@@ -44,7 +44,7 @@ function Resize() {
 
 function PopulateDropDowns() {
 
-    // LoadConstituentTypes();
+    LoadConstituentTypes();
 
     LoadCountries();
 }

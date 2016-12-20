@@ -74,7 +74,7 @@ function SaveNewConstituent() {
 
     // Save the Constituent
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituent/' + currentEntity.Id,
+        url: WEB_API_ADDRESS + 'constituent',
         method: 'POST',
         data: fields,
         contentType: 'application/json; charset-utf-8',
