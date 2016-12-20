@@ -47,6 +47,7 @@ namespace DDI.Business.Services
         {
             IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
