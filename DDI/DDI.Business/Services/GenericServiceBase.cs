@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DDI.Business.Helpers;
+using DDI.Business.Services.Search;
 using DDI.Shared;
 
 namespace DDI.Business.Services
@@ -16,15 +17,11 @@ namespace DDI.Business.Services
         {
             _repository = repository;
         }
-        public IDataResponse<List<T>> GetAll(string orderBy = "Name")
+        public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var search = new PageableSearch
-            {
-                OrderBy = orderBy //nameof(IEntity.DisplayName)
-            };
             var result = _repository.Entities;
-            var query = new CriteriaQuery<T, PageableSearch>(result, search)
-                .SetOrderBy(search.OrderBy);
+            var query = new CriteriaQuery<T, IPageable>(result, search)
+                .SetOrderBy(search?.OrderBy);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             return GetIDataResponse(() => query.GetQueryable().ToList());
