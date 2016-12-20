@@ -42,6 +42,10 @@ namespace DDI.Data.Models.Client
         public DateTime? EndDate { get; set; }
 
         public ICollection<EducationLevel> EducationLevels { get; set; }
+
+        public Constituent Constituent { get; set; }
+
+        public Guid? ConstituentId { get; set; }
         #endregion Public Properties
     }
 }
