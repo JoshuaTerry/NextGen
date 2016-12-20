@@ -34,7 +34,7 @@ $(document).ready(function () {
 
         $('.savenewconstituent').click(function () {
 
-
+            SaveNewConstituent();
 
         });
 
@@ -74,7 +74,7 @@ function SaveNewConstituent() {
 
     // Save the Constituent
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituent',
+        url: WEB_API_ADDRESS + 'constituents',
         method: 'POST',
         data: fields,
         contentType: 'application/json; charset-utf-8',
@@ -104,18 +104,22 @@ function GetNewFields() {
 
     var p = [];
 
-    $(modal).find('.modalcontent input').each(function () {
-        var property = $(this).attr('class').replace('nc- ', '');
+    $(modal).find('.modalcontent div.fieldblock input').each(function () {
+        var property = $(this).attr('class');
+        property = property.replace('nc-', '');
         var value = $(this).val();
 
-        p.push('"' + property + '": "' + value + '"');
+        if (value && value.length > 0)
+            p.push('"' + property + '": "' + value + '"');
     });
 
-    $(modal).find('.modalcontent select').each(function () {
-        var property = $(this).attr('class').replace('nc- ', '');
+    $(modal).find('.modalcontent div.fieldblock select').each(function () {
+        var property = $(this).attr('class');
+        property = property.replace('nc-', '');
         var value = $(this).val();
 
-        p.push('"' + property + '": "' + value + '"');
+        if (value && value.length > 0)
+            p.push('"' + property + '": "' + value + '"');
     });
 
     p = '{' + p + '}';
@@ -350,7 +354,13 @@ function GetEditedFields(editcontainer) {
 
         for (var key in currentEntity) {
             if (key == property && currentEntity[key] != value) {
-                p.push('"' + property + '": "' + value + '"');
+                if (value == 'null') {
+                    p.push('"' + property + '": ' + null);
+                }
+                else {
+                    p.push('"' + property + '": "' + value + '"');
+                }
+                
             }
         }
 
@@ -362,7 +372,12 @@ function GetEditedFields(editcontainer) {
 
         for (var key in currentEntity) {
             if (key == property && currentEntity[key] != value) {
-                p.push('"' + property + '": "' + value + '"');
+                if (value == 'null') {
+                    p.push('"' + property + '": ' + null);
+                }
+                else {
+                    p.push('"' + property + '": "' + value + '"');
+                }
             }
         }
     });

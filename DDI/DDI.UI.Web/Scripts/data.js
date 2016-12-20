@@ -8,7 +8,7 @@ function ClearElement(e) {
 
 function AddDefaultOption(e, text, val) {
 
-    var option = $('<option>').val('').text('');
+    var option = $('<option>').val('null').text('');
     $(option).appendTo($(e));
 
 }
