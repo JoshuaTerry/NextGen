@@ -143,6 +143,12 @@
                     </div>
 
                     <div class="inline">
+
+                        <div class="fieldblock">
+                            <label>Postal Code</label>
+                            <input type="text" class="nc-PostalCode" />
+                        </div>
+
                         <div class="fieldblock">
                             <label>Country</label>
                             <select class="nc-Country"></select>
@@ -155,7 +161,7 @@
 
                         <div class="fieldblock">
                             <label>City</label>
-                            <select class="nc-City"></select>
+                            <input type="text" class="nc-City" />
                         </div>
 
                         <div class="fieldblock">
