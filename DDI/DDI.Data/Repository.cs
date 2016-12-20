@@ -50,7 +50,7 @@ namespace DDI.Data
 
         #region Protected Properties
 
-        protected IDbSet<T> EntitySet
+        protected virtual IDbSet<T> EntitySet
         {
             get
             {
