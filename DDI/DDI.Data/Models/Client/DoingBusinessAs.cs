@@ -23,7 +23,9 @@ namespace DDI.Data.Models.Client
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
 
-        public ICollection<Constituent> Constituents { get; set; }
+        public Constituent Constituent { get; set; }
+
+        public Guid? ConstituentId { get; set; }
         #endregion Public Properties
     }
 }

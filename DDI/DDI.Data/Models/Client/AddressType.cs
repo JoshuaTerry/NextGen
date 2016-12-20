@@ -20,6 +20,24 @@ namespace DDI.Data.Models.Client
 
         [MaxLength(128)]
         public string Name { get; set; }
+
+        // Navigation Properties
+        public ICollection<Address> Addresses { get; set; }
+
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Code + ": " + Name;
+            }
+        }
+
+        #endregion
+
+
     }
 }

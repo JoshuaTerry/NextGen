@@ -21,6 +21,20 @@ namespace DDI.Data.Models.Client
 
         [MaxLength(128)]
         public string Description { get; set; }
+
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
+
     }
 }

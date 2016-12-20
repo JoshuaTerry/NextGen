@@ -23,5 +23,18 @@ namespace DDI.Data.Models.Client
         public string Code { get; set; }
 
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Name;
+            }
+        }
+
+        #endregion
+
     }
 }

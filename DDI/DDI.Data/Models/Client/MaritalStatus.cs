@@ -4,20 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Data.Models.Client
 {
-    [Table("AlternateId")]
-    public class AlternateId : BaseEntity
+    [Table("MaritialStatus")]
+    public class MaritalStatus
     {
-        #region Public Properties      
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override Guid Id { get; set; }
-
-        public Constituent Constituent { get; set; }
-
-        public Guid? ConstituentId { get; set; }
-
+        public Guid Id { get; set; }         
         [MaxLength(128)]
         public string Name { get; set; }
-        #endregion Public Properties
     }
 }

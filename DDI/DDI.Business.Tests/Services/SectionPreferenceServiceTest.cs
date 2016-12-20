@@ -1,16 +1,10 @@
-﻿using System;
+﻿using DDI.Business.Services;
+using DDI.Data;
+using DDI.Data.Models.Client;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.Business;
-using DDI.Business.Controllers;
-using DDI.Business.Services;
-using Moq;
-using DDI.Data.Models.Client;
-using DDI.Data;
 
 namespace DDI.Business.Tests.Services
 {

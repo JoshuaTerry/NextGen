@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
+﻿using DDI.Business.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.Business;
-using DDI.Business.Controllers;
+using System;
+using System.Web.Http;
 
 namespace DDI.Business.Tests.Controllers
 {

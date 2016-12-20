@@ -21,6 +21,20 @@ namespace DDI.Data.Models.Client
         public string Name { get; set; }
 
         public bool IsActive { get; set; }
+
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Code + ": " + Name;
+            }
+        }
+
+        #endregion
+
     }
 }
