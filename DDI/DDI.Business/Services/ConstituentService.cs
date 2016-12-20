@@ -171,6 +171,11 @@ namespace DDI.Business.Services
             return response;
         }
 
+        public IDataResponse<int> GetNextConstituentNumber()
+        {
+            return new DataResponse<int>() { Data = _domain.GetNextConstituentNumber() };
+        }
+
         private Type ConvertToType<T>(string property, T entity)
         {
             Type classType = entity.GetType();

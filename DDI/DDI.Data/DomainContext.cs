@@ -12,7 +12,9 @@ namespace DDI.Data
 {
 	public class DomainContext : DbContext
 	{
-		#region Public Properties
+        #region Public Properties
+
+        public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
 		public virtual DbSet<Address> Addresses { get; set; }
 

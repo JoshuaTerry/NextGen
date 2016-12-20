@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using DDI.Data;
 using DDI.Data.Models.Client;
 
 namespace DDI.Business.Domain
@@ -64,6 +65,17 @@ namespace DDI.Business.Domain
                 constituent.FormattedName = GetFormattedName(constituent);
                 constituent.Name = GetSortName(constituent);
             }
+        }
+
+        public int GetNextConstituentNumber()
+        {
+            int nextNum = Repository.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+            return nextNum;
+        }
+
+        public void SetNextConstituentNumber(int newValue)
+        {
+            Repository.Utilities.SetNextSequenceValue(DomainContext.ConstituentNumberSequence, newValue);
         }
     }
 }

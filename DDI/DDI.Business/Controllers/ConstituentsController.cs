@@ -109,6 +109,13 @@ namespace DDI.Business.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/constituents/nextnumber")]
+        public IHttpActionResult GetNextConstituentNumber()
+        {
+            return Ok(_service.GetNextConstituentNumber());
+        }
+
         [HttpPost]
         [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody] Constituent constituent)

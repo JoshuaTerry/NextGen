@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace DDI.Data
         #region Public Properties
 
         IQueryable<T> Entities { get; }
+
+        SQLUtilities Utilities { get; }
 
         #endregion Public Properties
 

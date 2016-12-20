@@ -16,5 +16,6 @@ namespace DDI.Business.Services
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId);
         IDataResponse AddConstituent(Constituent constituent);
+        IDataResponse<int> GetNextConstituentNumber();
     }
 }
