@@ -53,7 +53,7 @@
                         
                         <div class="fieldblock">
                             <label>ID</label>
-                            <input type="text" class="editable ConstituentNum" maxlength="9" />
+                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
                         </div>
 
                         <div class="fieldblock">
@@ -141,7 +141,7 @@
 
                     </div>
 
-                    <h1>Addional Data</h1>
+                    <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -159,7 +159,7 @@
                             <input type="text" class="editable IncomeProdAssets" />
                         </div>
 
-                    </div>
+                    </div>--%>
 
                     <h1>Clergy Section</h1>
                     <div class="editcontainer">
@@ -206,7 +206,7 @@
 
                     </div>
 
-                    <h1>Doing Business As</h1>
+                    <h1>Doing Business As (Not Implemented Yet)</h1>
                     <div>
                         <table class="datagrid doingbusinessastable">
                             <thead>
@@ -220,7 +220,7 @@
                         </table>
                     </div>
 
-                    <h1>Education</h1>
+                    <h1>Education (Not Implemented Yet)</h1>
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Education Level</label>
@@ -240,7 +240,7 @@
                         </table>
                     </div>
 
-                    <h1>Payment Preferences</h1>
+                    <h1>Payment Preferences (Not Implemented Yet)</h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -364,6 +364,20 @@
                             </div>
                         </div>
                         
+
+                    </div>
+
+                    <h1>Alternate ID (Not Implemented Yet)</h1>
+                    <div>
+
+
+
+                    </div>
+
+                    <h1>Contact Information (Not Implemented Yet)</h1>
+                    <div>
+
+
 
                     </div>
 
