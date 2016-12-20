@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Web.Http; 
 using DDI.Business.Services;
 using DDI.Business.Services.Search;
-using DDI.Data.Models.Common;
 using DDI.Data.Models.Client;
+using Newtonsoft.Json.Linq;
+
 
 namespace DDI.Business.Controllers
 {
-    public class ClergyStatusesController : ApiController
+    public class ContactTypesController : ApiController
     {
-        GenericServiceBase<ClergyStatus> _service;
+        GenericServiceBase<ContactType> _service;
 
-        public ClergyStatusesController() : this(new GenericServiceBase<ClergyStatus>()) { }
-        internal ClergyStatusesController(GenericServiceBase<ClergyStatus> service)
+        public ContactTypesController() : this(new GenericServiceBase<ContactType>()) { }
+        internal ContactTypesController(GenericServiceBase<ContactType> service)
         {
             _service = service;
         }
-
         [HttpGet]
-        [Route("api/v1/clergystatuses")]
+        [Route("api/v1/contacttypes")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();

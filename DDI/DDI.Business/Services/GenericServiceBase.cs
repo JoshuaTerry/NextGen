@@ -5,11 +5,12 @@ using System.Linq;
 using System.Web;
 using DDI.Business.Helpers;
 using DDI.Business.Services.Search;
+using DDI.Data.Models;
 using DDI.Shared;
 
 namespace DDI.Business.Services
 {
-    public class GenericServiceBase<T> : ServiceBase, IGenericService<T> where T : class
+    public class GenericServiceBase<T> : ServiceBase, IGenericService<T> where T : class, IEntity
     {
         private IRepository<T> _repository;
         public GenericServiceBase(): this(new Repository<T>()) { }
@@ -19,12 +20,8 @@ namespace DDI.Business.Services
         }
         public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var result = _repository.Entities;
-            var query = new CriteriaQuery<T, IPageable>(result, search)
-                .SetOrderBy(search?.OrderBy);
-
-            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            return GetIDataResponse(() => query.GetQueryable().ToList());
+            var result = _repository.Entities.ToList().OrderBy(a => a.DisplayName).ToList();
+            return GetIDataResponse(() => result);
         }
 
     }

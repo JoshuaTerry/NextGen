@@ -47,6 +47,7 @@ namespace DDI.Business.Services
         {
             IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
@@ -206,7 +207,7 @@ namespace DDI.Business.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
             var response = GetIDataResponse(() => constituent);
             response.Links = new List<HATEOASLink>()
             {
@@ -230,7 +231,10 @@ namespace DDI.Business.Services
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
-            _repository.UpdateChangedProperties(id, changedProperties);
+            _repository.UpdateChangedProperties(id, changedProperties, p =>
+            {
+                _constituentDomain.Validate(p);
+            });
 
             var constituent = _repository.GetById(id);
 
@@ -256,7 +260,11 @@ namespace DDI.Business.Services
         }
         public IDataResponse AddConstituent(Constituent constituent)
         {
-            var response = SafeExecute(() => { _repository.Insert(constituent); });
+            var response = SafeExecute(() => 
+            {
+                _constituentDomain.Validate(constituent);
+                _repository.Insert(constituent);
+            });
             return response;
         }
 
