@@ -56,7 +56,7 @@ namespace DDI.Business.Services
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
             response.TotalResults = totalCount;
             response.PageSize = search.Limit;
-            response.PageNumber = search.Offset;
+            response.PageNumber = search.Offset + 1;
             response.Links = new List<HATEOASLink>()
             {
                 new HATEOASLink()
