@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using DDI.Data;
 using DDI.Data.Models.Client;
+using DDI.Data;
 
 namespace DDI.Business.Domain
 {
@@ -12,7 +13,11 @@ namespace DDI.Business.Domain
     /// Business domain class for constituents
     /// </summary>
     public class ConstituentDomain : BaseEntityDomain<Constituent>
-    {
+    { 
+        public ConstituentDomain(IRepository<Constituent> repository) :base(repository)
+        {
+                    
+        }
         /// <summary>
         /// Get the formatted name for a constituent.
         /// </summary>
