@@ -31,7 +31,7 @@ namespace DDI.Data
 
         #region Public Properties
 
-        public IQueryable<T> Entities => EntitySet;
+        public virtual IQueryable<T> Entities => EntitySet;
 
         public SQLUtilities Utilities
         {
@@ -50,7 +50,7 @@ namespace DDI.Data
 
         #region Protected Properties
 
-        protected virtual IDbSet<T> EntitySet
+        protected IDbSet<T> EntitySet
         {
             get
             {

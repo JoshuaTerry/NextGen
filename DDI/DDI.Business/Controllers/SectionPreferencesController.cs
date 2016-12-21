@@ -1,6 +1,8 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Business.Services;
+using DDI.Data.Models.Client;
+using DDI.Data;
 
 namespace DDI.Business.Controllers
 {
@@ -10,7 +12,7 @@ namespace DDI.Business.Controllers
         private ISectionPreferenceService _service;
 
         public SectionPreferencesController()
-            :this(new SectionPreferenceService())
+            :this(new SectionPreferenceService(new CachedRepository<SectionPreference>()))
         {
         }
 

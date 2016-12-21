@@ -22,7 +22,7 @@ namespace DDI.Business.Services
     {
         private IRepository<Constituent> _repository;
 
-        private ConstituentDomain _constituentDomain;
+        private ConstituentDomain _domain;
 
         public ConstituentService()
         {
@@ -40,7 +40,7 @@ namespace DDI.Business.Services
         private void Initialize(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
         {
             _repository = repository;
-            _constituentDomain = new ConstituentDomain(repository);
+            _domain = new ConstituentDomain(repository);
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
@@ -265,9 +265,9 @@ namespace DDI.Business.Services
             return new DataResponse<int>() { Data = _domain.GetNextConstituentNumber() };
         }
 
-        private Type ConvertToType<T>(string property, T entity)
+        private Type ConvertToType<T>(string property)
         {
-            Type classType = entity.GetType();
+            Type classType = typeof(T);
 
             var propertyType = classType.GetProperty(property).PropertyType;
 

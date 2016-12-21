@@ -37,5 +37,18 @@ namespace DDI.Business.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("api/v1/clergystatuses")]
+        public IHttpActionResult Post([FromBody] ClergyStatus item)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //var response = _service.(constituent);
+            return Ok();
+        }
     }
 }

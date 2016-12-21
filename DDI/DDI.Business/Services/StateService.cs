@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-using DDI.Data;
 using DDI.Shared;
 using DDI.Business.Helpers;
 using DDI.Business.Services.Search;
-using DDI.Data.Models;
 using DDI.Data.Models.Common;
+using DDI.Data;
 
 namespace DDI.Business.Services
 {
-    public class StateService: GenericServiceCommonBase<State>
+    public class StateService : GenericServiceCommonBase<State>
     {
+        public StateService() : this(new CachedRepository<State>(new CommonContext()))
+        {
+        }
 
+        internal StateService(IRepository<State> repository) : base(repository)
+        { 
+        }
         #region Public Methods
 
         public IDataResponse<List<State>> GetAll(StateSearch search= null)
