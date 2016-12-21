@@ -2,7 +2,7 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
   <siteMapNode url="~/Default.aspx" title="Home"  description="Home">
 
-      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM">
+    <siteMapNode url="~/CONNECT.aspx" title="CONNECT"  description="CONNECT">
 
       <siteMapNode url="~/Accounting.aspx" title="Accounting"  description="Accounting">
         <siteMapNode url="~/AccountsPayable.aspx" title="Accounts Payable" description="Accounts Payable" />
@@ -14,7 +14,7 @@
         </siteMapNode>
       </siteMapNode>
       
-      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM" />
+      <siteMapNode url="~/Search.aspx" title="CRM"  description="CRM" />
       
       <siteMapNode url="~/FinancialTransactions.aspx" title="Financial Transactions"  description="Financial Transactions">
         <siteMapNode url="~/BatchDeposits.aspx" title="Batch Deposits"  description="Batch Deposits" />
@@ -23,7 +23,7 @@
           <siteMapNode url="~/Jobs.aspx" title="Jobs"  description="Jobs" />
           <siteMapNode url="~/JobQueues.aspx" title="Job Queues"  description="Job Queues" />
         </siteMapNode>
-        <siteMapNode url="~/TransactionInquirReversals.aspx" title="Transaction Inquiry &amp; Reversals"  description="Transaction Inquiry &amp; Reversals" />
+        <siteMapNode url="~/TransactionInquireReversals.aspx" title="Transaction Inquiry &amp; Reversals"  description="Transaction Inquiry &amp; Reversals" />
         <siteMapNode url="~/Transactions.aspx" title="Transactions"  description="Transactions" />
       </siteMapNode>
 

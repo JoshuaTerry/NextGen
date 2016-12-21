@@ -10,7 +10,7 @@
 namespace DDI.UI.Web {
     
     
-    public partial class Main {
+    public partial class Blank {
         
         /// <summary>
         /// head control.
@@ -29,24 +29,6 @@ namespace DDI.UI.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
-        /// <summary>
-        /// mainmenu control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Menu mainmenu;
-        
-        /// <summary>
-        /// sitemapdatasource1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SiteMapDataSource sitemapdatasource1;
         
         /// <summary>
         /// ContentPlaceHolder1 control.
