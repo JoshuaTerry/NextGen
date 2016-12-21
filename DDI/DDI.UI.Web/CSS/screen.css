@@ -22,7 +22,12 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .logo { display: inline-block; height: 75px;  }
 .logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; margin: 20px 0 0 35px; }
 
-.topnav { display: inline-block; width: 80%; margin-left: 30px; }
+.globalnav { position: absolute; top: 15px; right: 30px; border: solid 1px #0f75b4; box-shadow: -1px 1px 10px #999999; border-top: none; padding: 8px 15px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+.globalnav ul { list-style: none; margin: 0px; padding: 0px; }
+.globalnav ul li { display: inline-block; }
+.globalnav ul li a {  }
+
+.topnav { display: inline-block; width: 80%; margin-left: 30px; clear: both; }
 .topnav ul { list-style: none; margin: 0px; padding: 0px; }
 .topnav ul li { display: block; margin-right: 25px; }
 .topnav ul li:hover { background-color: #0f75b4; }
@@ -33,11 +38,11 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .topnav ul li ul li { margin: 0px; }
 #mainmenu a.static { padding: 0 15px !important; }
 
-.login { width: 400px; height: 150px; margin: 10% auto 0 auto; background-color: white; padding: 60px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 3px 3px 8px #999999; }
+.login { width: 400px; height: 150px; margin: 10% auto 0 auto; background-color: white; padding: 60px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 0px 3px 10px #999999; }
 .login div.buttons { width: 82%; text-align: right; }
 .login div.buttons input {  }
 .login div.fieldblock { margin-bottom: 25px; }
-.login div.fieldblock label { width: 24%; text-align: right; margin-right: 3px; }
+.login div.fieldblock label { width: 24%; text-align: right; margin-right: 3px; font-weight: bold; font-size: 14px; }
 .login div.fieldblock input,
 .login div.fieldblock select { width: 55%; }
 

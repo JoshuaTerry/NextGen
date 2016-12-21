@@ -33,7 +33,7 @@
           
     </siteMapNode>
 
-    <siteMapNode url="~/Reports.aspx" title="Reports"  description="Reports">
+    <siteMapNode url="~/Reports.aspx" title="REPORTS"  description="Reports">
 
       <siteMapNode url="~/ArchivedReports.aspx" title="Archived Reports"  description="Archived Reports" />
 
@@ -53,9 +53,9 @@
 
     </siteMapNode>
 
-    <siteMapNode url="~/Dashboard.aspx" title="Dashboard"  description="Dashboard" />
+    <siteMapNode url="~/Dashboard.aspx" title="DASHBOARD"  description="Dashboard" />
 
-    <siteMapNode url="~/Admin.aspx" title="Admin"  description="Admin">
+    <siteMapNode url="~/Admin.aspx" title="ADMIN"  description="Admin">
       <siteMapNode url="~/Security.aspx" title="Security"  description="Security" />
       <siteMapNode url="~/SystemSettings.aspx" title="System Settings"  description="System Settings" />
     </siteMapNode>
