@@ -1,6 +1,8 @@
 ﻿using DDI.Business.Services;
 using DDI.Business.Services.Search;
 using DDI.Data.Models.Client;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Web.Http;
 
 
@@ -31,6 +33,41 @@ namespace DDI.Business.Controllers
                 return InternalServerError();
             }
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("api/v1/constituenttypes")]
+        public IHttpActionResult Post([FromBody] ConstituentType item)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = _service.Add(item);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Route("api/v1/constituenttypes/{id}")]
+        public IHttpActionResult Patch(Guid id, JObject changes)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Update(id, changes);
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
     }
 }

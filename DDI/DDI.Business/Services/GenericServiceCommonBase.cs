@@ -9,6 +9,7 @@ using DDI.Business.Helpers;
 using DDI.Business.Services.Search;
 using DDI.Data.Models;
 using DDI.Data.Models.Common;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Business.Services
 {
@@ -52,6 +53,77 @@ namespace DDI.Business.Services
             return GetIDataResponse(() => query.GetQueryable().ToList());
         }
 
+        public IDataResponse Update(T entity)
+        {
+            var response = new DataResponse();
+            try
+            {
+                _repository.Update(entity);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        public IDataResponse<T> Update(Guid id, JObject changes)
+        {
+            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+
+            foreach (var pair in changes)
+            {
+                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+            }
+
+            _repository.UpdateChangedProperties(id, changedProperties);
+
+            T t = _repository.GetById(id);
+
+            return GetIDataResponse(() => t);
+        }
+        public IDataResponse Add(T entity)
+        {
+            var response = new DataResponse();
+            try
+            {
+                _repository.Insert(entity);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        public IDataResponse Delete(T entity)
+        {
+            var response = new DataResponse();
+            try
+            {
+                _repository.Delete(entity);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        private Type ConvertToType<T>(string property)
+        {
+            Type classType = typeof(T);
+
+            var propertyType = classType.GetProperty(property).PropertyType;
+
+            return propertyType;
+        }
         #endregion Public Methods
     }
 }

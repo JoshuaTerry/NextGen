@@ -221,11 +221,11 @@ namespace DDI.Business.Services
             return response;
         }
 
-        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges)
+        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 
-            foreach (var pair in constituentChanges)
+            foreach (var pair in changes)
             {
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
