@@ -17,18 +17,36 @@ select:disabled::-ms-expand { display: none; }
 
 .scrollable { overflow-y: scroll; }
 
-header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px #cccccc; }
+header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px #cccccc; vertical-align: bottom; }
 
-.logo { display: inline-block; margin: 25px 0 0 30px; }
-.logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; }
+.logo { display: inline-block; height: 75px;  }
+.logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; margin: 20px 0 0 35px; }
 
-.topnav { display: inline-block; vertical-align: top; height: 100%; width: 80%; text-align: right; }
-.topnav ul { list-style: none; margin: 20px 0 0 30px; padding: 0px; }
-.topnav ul li { display: inline-block; }
+.globalnav { position: absolute; top: 15px; right: 30px; border: solid 1px #0f75b4; box-shadow: -1px 1px 10px #999999; border-top: none; padding: 8px 15px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+.globalnav ul { list-style: none; margin: 0px; padding: 0px; }
+.globalnav ul li { display: inline-block; }
+.globalnav ul li a {  }
+
+.topnav { display: inline-block; width: 80%; margin-left: 30px; clear: both; }
+.topnav ul { list-style: none; margin: 0px; padding: 0px; }
+.topnav ul li { display: block; margin-right: 25px; }
+.topnav ul li:hover { background-color: #0f75b4; }
+.topnav ul li:hover>a { color: white; }
 .topnav ul li a { display: block; font-size: 14px; color: #303030; font-weight: bold; line-height: 35px; padding: 0px 15px; }
 .topnav ul li a:hover { text-decoration: underline; }
+.topnav ul li ul { background-color: white; box-shadow: 3px 3px 8px #999999; }
+.topnav ul li ul li { margin: 0px; }
+#mainmenu a.static { padding: 0 15px !important; }
 
-.maincontainer { width: 90%; }
+.login { width: 300px; height: 125px; margin: 10% auto 0 auto; background-color: white; padding: 45px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 0px 3px 10px #999999; }
+.login div.buttons { width: 82%; text-align: right; }
+.login div.buttons input {  }
+.login div.fieldblock { margin-bottom: 25px; }
+.login div.fieldblock label { width: 29%; text-align: right; margin-right: 3px; font-weight: bold; font-size: 14px; }
+.login div.fieldblock input,
+.login div.fieldblock select { width: 55%; }
+
+.maincontainer { width: 100%; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
 div.threecolumn>div { width: 33%; display: inline-block; vertical-align: top; }
@@ -48,6 +66,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
 .tabscontainer.inner { width: 100%; }
 
+.ui-state-active { background-color: #0f75b4 !important; border-color: #0f75b4 !important; }
 .accordion-buttons { text-align: right; }
 .accordion-buttons a { display: inline-block; padding: 3px 5px; color: #0f75b4; }
 
@@ -110,3 +129,20 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .modalbuttons input[type="button"] { margin-right: 10px; }
 .modalbuttons a { color: #0f75b4; }
 /* END MODAL CONTENT */
+
+
+
+
+/* SYSTEM SETTINGS */
+
+.systemsettings {  }
+.systemsettings div.ui-accordion-content { padding: 0px; }
+.systemsettings div.left-accordions { width: 12%; }
+.systemsettings div.left-accordions ul { list-style: none; margin: 0px; padding: 0px; }
+.systemsettings div.left-accordions ul li {  }
+.systemsettings div.left-accordions ul li a { display: block; text-decoration: none; padding: 3px 8px; }
+.systemsettings div.left-accordions ul li a:hover { text-decoration: none; background-color: #999999; color: white; }
+.systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
+
+/* END SYSTEM SETTINGS */
+

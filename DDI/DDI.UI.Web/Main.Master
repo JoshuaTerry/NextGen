@@ -32,11 +32,22 @@
     <form id="form1" runat="server">
 
         <header>
+            <div class="globalnav">
+                <ul>
+                    <li><a href="#" class="addconstituent">Add Constituent</a></li>
+                </ul>
+            </div>
             <div class="logo">
                 <a runat="server" href="~/Default.aspx" title="DDI"></a>
             </div>
             <div class="topnav">
-                <ul>
+                <asp:Menu ID="mainmenu" runat="server" DataSourceID="sitemapdatasource1" Orientation="Horizontal"
+                    DynamicEnableDefaultPopOutImage="false" 
+                    StaticEnableDefaultPopOutImage="false">
+                </asp:Menu>
+                <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
+                    ShowStartingNode="false" />
+                <%--<ul>
                     <li>
                         <a runat="server" href="~/Constituents.aspx">Constituents</a>
                     </li>
@@ -46,7 +57,7 @@
                     <li>
                         <a runat="server" href="~/Search.aspx" class="searchbutton">Search</a>
                     </li>
-                </ul>
+                </ul>--%>
             </div>
         </header>
 
@@ -146,27 +157,27 @@
 
                         <div class="fieldblock">
                             <label>Postal Code</label>
-                            <input type="text" class="nc-PostalCode" />
+                            <input type="text" class="nc-PostalCode" style="width: 75px;" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Country</label>
-                            <select class="nc-Country"></select>
+                            <select class="nc-Country" style="width: 150px;"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>State</label>
-                            <select class="nc-State"></select>
+                            <select class="nc-State" style="width: 150px;"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>City</label>
-                            <input type="text" class="nc-City" />
+                            <input type="text" class="nc-City" style="width: 150px;" />
                         </div>
 
                         <div class="fieldblock">
                             <label>County</label>
-                            <select class="nc-County"></select>
+                            <select class="nc-County" style="width: 150px;"></select>
                         </div>
                     </div>
 

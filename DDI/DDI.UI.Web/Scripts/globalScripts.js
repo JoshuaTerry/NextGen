@@ -57,12 +57,12 @@ function LoadNewConstituentModalDropDowns() {
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
-    PopulateDropDown('.nc-Country', 'countries', '', '', function () {
-        $('.nc-Country').change(function () {
+    PopulateDropDown('.nc-Country', 'countries', '', '');
 
-            PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+    $('.nc-Country').change(function () {
 
-        });
+        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+
     });
 
 }
@@ -154,12 +154,19 @@ function LoadAccordions() {
         collapsible: true
     });
 
-    $('<div>').addClass('accordion-buttons').append(
-        $('<a>').attr('href', '#').text('Collapse All').addClass('accordion-collapseall')
-    ).append(
-        $('<a>').attr('href', '#').text('Expand All').addClass('accordion-expandall')
+    $('.accordions').each(function () {
+
+        if (!$(this).hasClass('nocontrols')) {
+            $('<div>').addClass('accordion-buttons').append(
+                $('<a>').attr('href', '#').text('Collapse All').addClass('accordion-collapseall')
+            ).append(
+                $('<a>').attr('href', '#').text('Expand All').addClass('accordion-expandall')
+
+            ).insertBefore(this);
+        }
         
-    ).insertBefore('.accordions');
+    });
+    
 
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
@@ -169,12 +176,14 @@ function LoadAccordions() {
         });
 
         $(".ui-accordion-content").hide('fast');
+        $('.ui-accordion-header').removeClass('ui-state-active');
     });
 
     $('.accordion-expandall').click(function (e) {
         e.preventDefault();
 
         $(".ui-accordion-content").show('fast');
+        $('.ui-accordion-header').addClass('ui-state-active');
         
     });
 

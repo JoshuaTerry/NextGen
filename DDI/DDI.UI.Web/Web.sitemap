@@ -2,7 +2,7 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
   <siteMapNode url="~/Default.aspx" title="Home"  description="Home">
 
-      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM">
+    <siteMapNode url="~/Connect.aspx" title="CONNECT"  description="CONNECT">
 
       <siteMapNode url="~/Accounting.aspx" title="Accounting"  description="Accounting">
         <siteMapNode url="~/AccountsPayable.aspx" title="Accounts Payable" description="Accounts Payable" />
@@ -14,7 +14,7 @@
         </siteMapNode>
       </siteMapNode>
       
-      <siteMapNode url="~/CRM.aspx" title="CRM"  description="CRM" />
+      <siteMapNode url="~/Search.aspx" title="CRM"  description="CRM" />
       
       <siteMapNode url="~/FinancialTransactions.aspx" title="Financial Transactions"  description="Financial Transactions">
         <siteMapNode url="~/BatchDeposits.aspx" title="Batch Deposits"  description="Batch Deposits" />
@@ -23,7 +23,7 @@
           <siteMapNode url="~/Jobs.aspx" title="Jobs"  description="Jobs" />
           <siteMapNode url="~/JobQueues.aspx" title="Job Queues"  description="Job Queues" />
         </siteMapNode>
-        <siteMapNode url="~/TransactionInquirReversals.aspx" title="Transaction Inquiry &amp; Reversals"  description="Transaction Inquiry &amp; Reversals" />
+        <siteMapNode url="~/TransactionInquireReversals.aspx" title="Transaction Inquiry &amp; Reversals"  description="Transaction Inquiry &amp; Reversals" />
         <siteMapNode url="~/Transactions.aspx" title="Transactions"  description="Transactions" />
       </siteMapNode>
 
@@ -33,12 +33,12 @@
           
     </siteMapNode>
 
-    <siteMapNode url="~/Reports.aspx" title="Reports"  description="Reports">
+    <siteMapNode url="~/Reports.aspx" title="REPORTS"  description="Reports">
 
       <siteMapNode url="~/ArchivedReports.aspx" title="Archived Reports"  description="Archived Reports" />
 
       <siteMapNode url="~/CRMReports.aspx" title="CRM"  description="CRM">
-        <siteMapNode url="~/Constituents.aspx" title="Constituents"  description="Constituents" />
+        <siteMapNode url="~/ConstituentReport.aspx" title="Constituents"  description="Constituents" />
       </siteMapNode>
 
       <siteMapNode url="~/AccountingReports.aspx" title="Accounting"  description="Accounting">
@@ -48,14 +48,14 @@
 
       <siteMapNode url="~/DonationReports.aspx" title="Donation"  description="Donation">
         <siteMapNode url="~/DonationActivityGLAccount.aspx" title="Donation Activity by GL Account"  description="Donation Activity by GL Account" />
-        <siteMapNode url="~/LetterandStatementsReport.aspx" title="Letter and Statements Report"  description="Letter and Statements Report" />
+        <siteMapNode url="~/LetterandStatementReport.aspx" title="Letter and Statements Report"  description="Letter and Statements Report" />
       </siteMapNode>
 
     </siteMapNode>
 
-    <siteMapNode url="~/Dashboard.aspx" title="Dashboard"  description="Dashboard" />
+    <siteMapNode url="~/Dashboard.aspx" title="DASHBOARD"  description="Dashboard" />
 
-    <siteMapNode url="~/Admin.aspx" title="Admin"  description="Admin">
+    <siteMapNode url="~/Admin.aspx" title="ADMIN"  description="Admin">
       <siteMapNode url="~/Security.aspx" title="Security"  description="Security" />
       <siteMapNode url="~/SystemSettings.aspx" title="System Settings"  description="System Settings" />
     </siteMapNode>
