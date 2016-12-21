@@ -11,7 +11,7 @@
     <div class="login">
 
         <div class="fieldblock">
-            <label class="inline">Username</label>
+            <label class="inline">Email</label>
             <input type="text" class="username" />
         </div>
 
