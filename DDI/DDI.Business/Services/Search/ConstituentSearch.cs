@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Web;
+using DDI.Business.Extensions;
 
 namespace DDI.Business.Services.Search
 {
@@ -35,6 +38,34 @@ namespace DDI.Business.Services.Search
             querystring = baseUrl + querystring.TrimStart('&');
             
             return querystring;
+        }
+
+        public string GenericToQueryString<T>(T searchObject)
+        {
+            string queryString = string.Empty;
+            var classType = typeof (T);
+
+            PropertyInfo[] properties = classType.GetProperties();
+            foreach (var property in properties)
+            {
+                switch (property.Name)
+                {
+                    case "Limit":
+                    case "OrderBy":
+                    case "Offset":
+                        continue;
+                }
+
+                var camelName = property.Name.ConvertProperCaseToCamelCase();
+                var searchValue = searchObject.GetType().GetProperty(property.Name).GetValue(searchObject);
+                if (searchValue != null)
+                {
+                    queryString += $"&{camelName}={searchValue}";
+                }
+            }
+
+            queryString = queryString.TrimStart('&');
+            return queryString;
         }
     }
 }

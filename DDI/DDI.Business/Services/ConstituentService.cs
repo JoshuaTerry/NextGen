@@ -101,7 +101,7 @@ namespace DDI.Business.Services
             HATEOASLink firstPageLink = null;
             firstPageLink = new HATEOASLink()
             {
-                Href = $"{originalSearch.ToQueryString()}&offset=0&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset=0&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
                 Relationship = "first-page",
                 Method = "GET"
             };
@@ -116,7 +116,7 @@ namespace DDI.Business.Services
             {
                 previousPageLink = new HATEOASLink()
                 {
-                    Href = $"{originalSearch.ToQueryString()}&offset={--originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={--originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
                     Relationship = "previous-page",
                     Method = "GET"
                 };
@@ -132,7 +132,7 @@ namespace DDI.Business.Services
             {
                 nextPageLink = new HATEOASLink()
                 {
-                    Href = $"{originalSearch.ToQueryString()}&offset={++originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={++originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
                     Relationship = "next-page",
                     Method = "GET"
                 };
@@ -146,7 +146,7 @@ namespace DDI.Business.Services
             HATEOASLink lastPageLink = null;
             lastPageLink = new HATEOASLink()
             {
-                Href = $"{originalSearch.ToQueryString()}&offset={response.TotalResults / originalSearch.Limit}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
+                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={response.TotalResults / originalSearch.Limit}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
                 Relationship = "last-page",
                 Method = "GET"
             };
