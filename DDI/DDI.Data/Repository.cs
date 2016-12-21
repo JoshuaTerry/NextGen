@@ -31,7 +31,7 @@ namespace DDI.Data
 
         #region Public Properties
 
-        public IQueryable<T> Entities => EntitySet;
+        public virtual IQueryable<T> Entities => EntitySet;
 
         public SQLUtilities Utilities
         {

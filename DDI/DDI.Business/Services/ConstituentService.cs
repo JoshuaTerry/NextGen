@@ -22,7 +22,7 @@ namespace DDI.Business.Services
     {
         private IRepository<Constituent> _repository;
 
-        private ConstituentDomain _constituentDomain;
+        private ConstituentDomain _domain;
 
         public ConstituentService()
         {
@@ -40,7 +40,7 @@ namespace DDI.Business.Services
         private void Initialize(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
         {
             _repository = repository;
-            _constituentDomain = new ConstituentDomain(repository);
+            _domain = new ConstituentDomain(repository);
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
@@ -222,18 +222,18 @@ namespace DDI.Business.Services
             return response;
         }
 
-        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges)
+        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 
-            foreach (var pair in constituentChanges)
+            foreach (var pair in changes)
             {
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
             }
 
             _repository.UpdateChangedProperties(id, changedProperties, p =>
             {
-                _constituentDomain.Validate(p);
+                _domain.Validate(p);
             });
 
             var constituent = _repository.GetById(id);
@@ -262,7 +262,7 @@ namespace DDI.Business.Services
         {
             var response = SafeExecute(() => 
             {
-                _constituentDomain.Validate(constituent);
+                _domain.Validate(constituent);
                 _repository.Insert(constituent);
             });
             return response;
@@ -270,10 +270,10 @@ namespace DDI.Business.Services
 
         public IDataResponse<int> GetNextConstituentNumber()
         {
-            return new DataResponse<int>() { Data = _constituentDomain.GetNextConstituentNumber() };
+            return new DataResponse<int>() { Data = _domain.GetNextConstituentNumber() };
         }
 
-        internal Type ConvertToType<T>(string property)
+        private Type ConvertToType<T>(string property)
         {
             Type classType = typeof(T);
 

@@ -8,6 +8,7 @@ using DDI.Business.Services;
 using DDI.Business.Services.Search;
 using DDI.Data.Models.Common;
 using DDI.Data.Models.Client;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Business.Controllers
 {
@@ -36,6 +37,41 @@ namespace DDI.Business.Controllers
                 return InternalServerError();
             }
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("api/v1/clergystatuses")]
+        public IHttpActionResult Post([FromBody] ClergyStatus item)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = _service.Add(item);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Route("api/v1/clergystatuses/{id}")]
+        public IHttpActionResult Patch(Guid id, JObject changes)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Update(id, changes);
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
     }
 }

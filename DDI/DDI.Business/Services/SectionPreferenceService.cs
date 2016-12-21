@@ -8,11 +8,11 @@ using DDI.Data;
 
 namespace DDI.Business.Services
 {
-    public class SectionPreferenceService : ServiceBase, ISectionPreferenceService
+    public class SectionPreferenceService : GenericServiceBase<SectionPreference>, ISectionPreferenceService
     {
         private IRepository<SectionPreference> _repository;
 
-        public SectionPreferenceService() : this(new Repository<SectionPreference>())
+        public SectionPreferenceService() : this(new CachedRepository<SectionPreference>())
         { 
         }
         public SectionPreferenceService(IRepository<SectionPreference> repo) 

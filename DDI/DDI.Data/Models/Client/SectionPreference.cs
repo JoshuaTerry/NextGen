@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Data.Models.Client
 {
     [Table("SectionPreference")]
-    public class SectionPreference
+    public class SectionPreference : IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,5 +18,7 @@ namespace DDI.Data.Models.Client
         public string Name { get; set; }
         [MaxLength(256)]
         public object Value { get; set; }
+
+        public string DisplayName { get; set; }
     }
 }
