@@ -2,7 +2,7 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
   <siteMapNode url="~/Default.aspx" title="Home"  description="Home">
 
-    <siteMapNode url="~/CONNECT.aspx" title="CONNECT"  description="CONNECT">
+    <siteMapNode url="~/Connect.aspx" title="CONNECT"  description="CONNECT">
 
       <siteMapNode url="~/Accounting.aspx" title="Accounting"  description="Accounting">
         <siteMapNode url="~/AccountsPayable.aspx" title="Accounts Payable" description="Accounts Payable" />
@@ -38,7 +38,7 @@
       <siteMapNode url="~/ArchivedReports.aspx" title="Archived Reports"  description="Archived Reports" />
 
       <siteMapNode url="~/CRMReports.aspx" title="CRM"  description="CRM">
-        <siteMapNode url="~/Constituents.aspx" title="Constituents"  description="Constituents" />
+        <siteMapNode url="~/ConstituentReport.aspx" title="Constituents"  description="Constituents" />
       </siteMapNode>
 
       <siteMapNode url="~/AccountingReports.aspx" title="Accounting"  description="Accounting">
@@ -48,7 +48,7 @@
 
       <siteMapNode url="~/DonationReports.aspx" title="Donation"  description="Donation">
         <siteMapNode url="~/DonationActivityGLAccount.aspx" title="Donation Activity by GL Account"  description="Donation Activity by GL Account" />
-        <siteMapNode url="~/LetterandStatementsReport.aspx" title="Letter and Statements Report"  description="Letter and Statements Report" />
+        <siteMapNode url="~/LetterandStatementReport.aspx" title="Letter and Statements Report"  description="Letter and Statements Report" />
       </siteMapNode>
 
     </siteMapNode>
