@@ -13,7 +13,7 @@
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
             <div class="constituentpic"></div>
-
+             
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
