@@ -25,7 +25,7 @@ namespace DDI.Data
 
         void Delete(T entity);
 
-        T GetById(object id);
+        T GetById(Guid id);
 
         T Find(params object[] keyValues); 
 

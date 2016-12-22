@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Data.Models;
+using DDI.Data.Models.Client;
 
 namespace DDI.Data
 {
@@ -19,7 +25,7 @@ namespace DDI.Data
     /// class provides.
     /// </remarks>
     public class Repository<T> : IRepository<T>
-        where T : class
+        where T : class, IEntity
     {
         #region Private Fields
 
@@ -110,7 +116,104 @@ namespace DDI.Data
 
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public T GetById(object id) => EntitySet.Find(id);
+        public T GetById(Guid id) => EntitySet.Find(id);
+
+        public T GetById(Guid id, params Func<T, string>[] includes)
+        {
+            T entity = EntitySet.Find(id);
+            DbEntityEntry<T> dbEntry = _context.Entry(entity);
+
+            foreach (Func<T, string> include in includes)
+            {
+                dbEntry.Reference(include(entity)).Load();
+                //dbEntry.Collection()
+                dbEntry.Collection(include(entity)).Load();
+                //dbEntry.Member()
+                //dbEntry.ComplexProperty()
+                //dbEntry.Collection()
+                //dbEntry.Reference(include).Load();
+            }
+
+            return dbEntry.Entity;
+        }
+
+        public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            //try
+            //{
+            //DbQuery<T> query = _context.Set<T>();
+            //    string includePath = string.Join(".", includes.Select(i => NameFor(i)));
+
+            //    return _context.Set<T>()
+            //            .Include(includePath)
+            //            .First(entity => entity.Id == id);
+            //}
+            //catch(Exception exception)
+            //{
+            //    Console.WriteLine(exception);
+
+            //}
+            T entity = EntitySet.Find(id);
+            Type type = typeof(T);
+            DbEntityEntry<T> dbEntry = _context.Entry(entity);
+            //return null;
+            //query.Include(includePath).First(entity => entity.Id == id);
+
+            try
+            {
+                foreach (Expression<Func<T, object>> include in includes)
+                {
+                    string property = NameFor(include, true);
+                    var prop = type.GetProperty(property);
+
+                    if (prop.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
+                    {
+                        dbEntry.Collection(property).Load();
+                    }
+
+                    else if (!prop.PropertyType.IsValueType)
+                    {
+                        //dbEntry.Property(property)
+                        dbEntry.Reference(property).Load();
+                    }
+                    //query.Include(property);
+                    //dbEntry.Reference(property).Load();
+                }
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+
+            //query.Where(e => e.Id == id).Load();
+            //return query.First(entity => entity.Id == id);
+
+            return dbEntry.Entity;
+        }
+
+        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        {
+            var member = property.Body as MemberExpression;
+            if (member == null)
+            {
+                var unary = property.Body as UnaryExpression;
+                if (unary != null)
+                {
+                    member = unary.Operand as MemberExpression;
+                }
+            }
+            if (shouldContainObjectPath && member != null)
+            {
+                var path = member.Expression.ToString();
+                var objectPath = member.Expression.ToString().Split('.');
+                if (objectPath.Length >= 2)
+                {
+                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
+                    return $"{path}.{member.Member.Name}";
+                }
+            }
+            return member?.Member.Name ?? String.Empty;
+        }
 
         public virtual T Insert(T entity)
         {

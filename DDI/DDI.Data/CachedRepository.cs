@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
+using DDI.Data.Models;
 
 namespace DDI.Data
 {
-    public class CachedRepository<T> : Repository<T> where T : class
+    public class CachedRepository<T> : Repository<T> where T : class, IEntity
     {
         private readonly string _cacheKey;
         private static readonly object _cacheItemLock = new object();
