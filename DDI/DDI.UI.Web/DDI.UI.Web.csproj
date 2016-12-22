@@ -66,34 +66,34 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Accounting.aspx" />
-    <Content Include="AccountingReports.aspx" />
-    <Content Include="Accounts.aspx" />
-    <Content Include="AccountsPayable.aspx" />
-    <Content Include="AccountsReceivable.aspx" />
-    <Content Include="Admin.aspx" />
-    <Content Include="ArchivedReports.aspx" />
-    <Content Include="BatchDeposits.aspx" />
-    <Content Include="ChartOfAccountListing.aspx" />
+    <Content Include="Pages\GL\Accounting.aspx" />
+    <Content Include="Pages\Reports\AccountingReports.aspx" />
+    <Content Include="Pages\GL\Accounts.aspx" />
+    <Content Include="Pages\GL\AccountsPayable.aspx" />
+    <Content Include="Pages\GL\AccountsReceivable.aspx" />
+    <Content Include="Pages\Admin\Admin.aspx" />
+    <Content Include="Pages\Reports\ArchivedReports.aspx" />
+    <Content Include="Pages\FR\BatchDeposits.aspx" />
+    <Content Include="Pages\Reports\ChartOfAccountListing.aspx" />
     <Content Include="Connect.aspx" />
-    <Content Include="ConstituentReport.aspx" />
-    <Content Include="CRMReports.aspx" />
+    <Content Include="Pages\Reports\ConstituentReport.aspx" />
+    <Content Include="Pages\Reports\CRMReports.aspx" />
     <Content Include="CSS\jquery.toast.min.css" />
     <Content Include="CSS\jquery.validators.css" />
     <Content Include="Dashboard.aspx" />
-    <Content Include="Disbursements.aspx" />
-    <Content Include="DonationActivityGLAccount.aspx" />
-    <Content Include="DonationInquiry.aspx" />
-    <Content Include="DonationReports.aspx" />
-    <Content Include="Donations.aspx" />
-    <Content Include="FinancialTransactions.aspx" />
-    <Content Include="FixedAssets.aspx" />
-    <Content Include="GeneralLedger.aspx" />
-    <Content Include="JobProcessing.aspx" />
-    <Content Include="JobQueues.aspx" />
-    <Content Include="Jobs.aspx" />
-    <Content Include="Journals.aspx" />
-    <Content Include="LetterAndStatementReport.aspx" />
+    <Content Include="Pages\FR\Disbursements.aspx" />
+    <Content Include="Pages\Reports\DonationActivityGLAccount.aspx" />
+    <Content Include="Pages\FR\DonationInquiry.aspx" />
+    <Content Include="Pages\Reports\DonationReports.aspx" />
+    <Content Include="Pages\FR\Donations.aspx" />
+    <Content Include="Pages\FR\FinancialTransactions.aspx" />
+    <Content Include="Pages\GL\FixedAssets.aspx" />
+    <Content Include="Pages\GL\GeneralLedger.aspx" />
+    <Content Include="Pages\JP\JobProcessing.aspx" />
+    <Content Include="Pages\JP\JobQueues.aspx" />
+    <Content Include="Pages\JP\Jobs.aspx" />
+    <Content Include="Pages\GL\Journals.aspx" />
+    <Content Include="Pages\Reports\LetterAndStatementReport.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="packages.config" />
     <Content Include="Main.Master" />
@@ -110,21 +110,21 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="Reports.aspx" />
+    <Content Include="Pages\Reports\Reports.aspx" />
     <Content Include="Scripts\data.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validators.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\systemsettings.js" />
-    <Content Include="Security.aspx" />
-    <Content Include="SystemSettings.aspx" />
-    <Content Include="TransactionInquireReversals.aspx" />
-    <Content Include="Transactions.aspx" />
-    <Content Include="TrialBalanceReport.aspx" />
+    <Content Include="Pages\Admin\Security.aspx" />
+    <Content Include="Pages\Admin\SystemSettings.aspx" />
+    <Content Include="Pages\FR\TransactionInquireReversals.aspx" />
+    <Content Include="Pages\FR\Transactions.aspx" />
+    <Content Include="Pages\Reports\TrialBalanceReport.aspx" />
     <Content Include="Web.sitemap" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Constituents.aspx" />
+    <Content Include="Pages\CRM\Constituents.aspx" />
     <Content Include="CSS\dx.common.css" />
     <Content Include="CSS\generic.light.custom.css" />
     <Content Include="CSS\screen.css" />
@@ -258,64 +258,64 @@
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\search.js" />
-    <Content Include="Search.aspx" />
+    <Content Include="Pages\CRM\Search.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accounting.aspx.cs">
+    <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Accounting.aspx.designer.cs">
+    <Compile Include="Pages\GL\Accounting.aspx.designer.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
     </Compile>
-    <Compile Include="AccountingReports.aspx.cs">
+    <Compile Include="Pages\Reports\AccountingReports.aspx.cs">
       <DependentUpon>AccountingReports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AccountingReports.aspx.designer.cs">
+    <Compile Include="Pages\Reports\AccountingReports.aspx.designer.cs">
       <DependentUpon>AccountingReports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Accounts.aspx.cs">
+    <Compile Include="Pages\GL\Accounts.aspx.cs">
       <DependentUpon>Accounts.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Accounts.aspx.designer.cs">
+    <Compile Include="Pages\GL\Accounts.aspx.designer.cs">
       <DependentUpon>Accounts.aspx</DependentUpon>
     </Compile>
-    <Compile Include="AccountsPayable.aspx.cs">
+    <Compile Include="Pages\GL\AccountsPayable.aspx.cs">
       <DependentUpon>AccountsPayable.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AccountsPayable.aspx.designer.cs">
+    <Compile Include="Pages\GL\AccountsPayable.aspx.designer.cs">
       <DependentUpon>AccountsPayable.aspx</DependentUpon>
     </Compile>
-    <Compile Include="AccountsReceivable.aspx.cs">
+    <Compile Include="Pages\GL\AccountsReceivable.aspx.cs">
       <DependentUpon>AccountsReceivable.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AccountsReceivable.aspx.designer.cs">
+    <Compile Include="Pages\GL\AccountsReceivable.aspx.designer.cs">
       <DependentUpon>AccountsReceivable.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin.aspx.cs">
+    <Compile Include="Pages\Admin\Admin.aspx.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin.aspx.designer.cs">
+    <Compile Include="Pages\Admin\Admin.aspx.designer.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ArchivedReports.aspx.cs">
+    <Compile Include="Pages\Reports\ArchivedReports.aspx.cs">
       <DependentUpon>ArchivedReports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ArchivedReports.aspx.designer.cs">
+    <Compile Include="Pages\Reports\ArchivedReports.aspx.designer.cs">
       <DependentUpon>ArchivedReports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="BatchDeposits.aspx.cs">
+    <Compile Include="Pages\FR\BatchDeposits.aspx.cs">
       <DependentUpon>BatchDeposits.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="BatchDeposits.aspx.designer.cs">
+    <Compile Include="Pages\FR\BatchDeposits.aspx.designer.cs">
       <DependentUpon>BatchDeposits.aspx</DependentUpon>
     </Compile>
     <Compile Include="Blank.Master.cs">
@@ -325,11 +325,11 @@
     <Compile Include="Blank.Master.designer.cs">
       <DependentUpon>Blank.Master</DependentUpon>
     </Compile>
-    <Compile Include="ChartOfAccountListing.aspx.cs">
+    <Compile Include="Pages\Reports\ChartOfAccountListing.aspx.cs">
       <DependentUpon>ChartOfAccountListing.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ChartOfAccountListing.aspx.designer.cs">
+    <Compile Include="Pages\Reports\ChartOfAccountListing.aspx.designer.cs">
       <DependentUpon>ChartOfAccountListing.aspx</DependentUpon>
     </Compile>
     <Compile Include="Connect.aspx.cs">
@@ -339,25 +339,25 @@
     <Compile Include="Connect.aspx.designer.cs">
       <DependentUpon>Connect.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConstituentReport.aspx.cs">
+    <Compile Include="Pages\Reports\ConstituentReport.aspx.cs">
       <DependentUpon>ConstituentReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConstituentReport.aspx.designer.cs">
+    <Compile Include="Pages\Reports\ConstituentReport.aspx.designer.cs">
       <DependentUpon>ConstituentReport.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Constituents.aspx.cs">
+    <Compile Include="Pages\CRM\Constituents.aspx.cs">
       <DependentUpon>Constituents.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Constituents.aspx.designer.cs">
+    <Compile Include="Pages\CRM\Constituents.aspx.designer.cs">
       <DependentUpon>Constituents.aspx</DependentUpon>
     </Compile>
-    <Compile Include="CRMReports.aspx.cs">
+    <Compile Include="Pages\Reports\CRMReports.aspx.cs">
       <DependentUpon>CRMReports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="CRMReports.aspx.designer.cs">
+    <Compile Include="Pages\Reports\CRMReports.aspx.designer.cs">
       <DependentUpon>CRMReports.aspx</DependentUpon>
     </Compile>
     <Compile Include="Dashboard.aspx.cs">
@@ -374,98 +374,98 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Disbursements.aspx.cs">
+    <Compile Include="Pages\FR\Disbursements.aspx.cs">
       <DependentUpon>Disbursements.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Disbursements.aspx.designer.cs">
+    <Compile Include="Pages\FR\Disbursements.aspx.designer.cs">
       <DependentUpon>Disbursements.aspx</DependentUpon>
     </Compile>
-    <Compile Include="DonationActivityGLAccount.aspx.cs">
+    <Compile Include="Pages\Reports\DonationActivityGLAccount.aspx.cs">
       <DependentUpon>DonationActivityGLAccount.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DonationActivityGLAccount.aspx.designer.cs">
+    <Compile Include="Pages\Reports\DonationActivityGLAccount.aspx.designer.cs">
       <DependentUpon>DonationActivityGLAccount.aspx</DependentUpon>
     </Compile>
-    <Compile Include="DonationInquiry.aspx.cs">
+    <Compile Include="Pages\FR\DonationInquiry.aspx.cs">
       <DependentUpon>DonationInquiry.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DonationInquiry.aspx.designer.cs">
+    <Compile Include="Pages\FR\DonationInquiry.aspx.designer.cs">
       <DependentUpon>DonationInquiry.aspx</DependentUpon>
     </Compile>
-    <Compile Include="DonationReports.aspx.cs">
+    <Compile Include="Pages\Reports\DonationReports.aspx.cs">
       <DependentUpon>DonationReports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DonationReports.aspx.designer.cs">
+    <Compile Include="Pages\Reports\DonationReports.aspx.designer.cs">
       <DependentUpon>DonationReports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Donations.aspx.cs">
+    <Compile Include="Pages\FR\Donations.aspx.cs">
       <DependentUpon>Donations.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Donations.aspx.designer.cs">
+    <Compile Include="Pages\FR\Donations.aspx.designer.cs">
       <DependentUpon>Donations.aspx</DependentUpon>
     </Compile>
-    <Compile Include="FinancialTransactions.aspx.cs">
+    <Compile Include="Pages\FR\FinancialTransactions.aspx.cs">
       <DependentUpon>FinancialTransactions.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FinancialTransactions.aspx.designer.cs">
+    <Compile Include="Pages\FR\FinancialTransactions.aspx.designer.cs">
       <DependentUpon>FinancialTransactions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="FixedAssets.aspx.cs">
+    <Compile Include="Pages\GL\FixedAssets.aspx.cs">
       <DependentUpon>FixedAssets.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FixedAssets.aspx.designer.cs">
+    <Compile Include="Pages\GL\FixedAssets.aspx.designer.cs">
       <DependentUpon>FixedAssets.aspx</DependentUpon>
     </Compile>
-    <Compile Include="GeneralLedger.aspx.cs">
+    <Compile Include="Pages\GL\GeneralLedger.aspx.cs">
       <DependentUpon>GeneralLedger.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="GeneralLedger.aspx.designer.cs">
+    <Compile Include="Pages\GL\GeneralLedger.aspx.designer.cs">
       <DependentUpon>GeneralLedger.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="JobProcessing.aspx.cs">
+    <Compile Include="Pages\JP\JobProcessing.aspx.cs">
       <DependentUpon>JobProcessing.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="JobProcessing.aspx.designer.cs">
+    <Compile Include="Pages\JP\JobProcessing.aspx.designer.cs">
       <DependentUpon>JobProcessing.aspx</DependentUpon>
     </Compile>
-    <Compile Include="JobQueues.aspx.cs">
+    <Compile Include="Pages\JP\JobQueues.aspx.cs">
       <DependentUpon>JobQueues.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="JobQueues.aspx.designer.cs">
+    <Compile Include="Pages\JP\JobQueues.aspx.designer.cs">
       <DependentUpon>JobQueues.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Jobs.aspx.cs">
+    <Compile Include="Pages\JP\Jobs.aspx.cs">
       <DependentUpon>Jobs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Jobs.aspx.designer.cs">
+    <Compile Include="Pages\JP\Jobs.aspx.designer.cs">
       <DependentUpon>Jobs.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Journals.aspx.cs">
+    <Compile Include="Pages\GL\Journals.aspx.cs">
       <DependentUpon>Journals.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Journals.aspx.designer.cs">
+    <Compile Include="Pages\GL\Journals.aspx.designer.cs">
       <DependentUpon>Journals.aspx</DependentUpon>
     </Compile>
-    <Compile Include="LetterAndStatementReport.aspx.cs">
+    <Compile Include="Pages\Reports\LetterAndStatementReport.aspx.cs">
       <DependentUpon>LetterAndStatementReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="LetterAndStatementReport.aspx.designer.cs">
+    <Compile Include="Pages\Reports\LetterAndStatementReport.aspx.designer.cs">
       <DependentUpon>LetterAndStatementReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
@@ -483,59 +483,64 @@
       <DependentUpon>Main.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports.aspx.cs">
+    <Compile Include="Pages\Reports\Reports.aspx.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Reports.aspx.designer.cs">
+    <Compile Include="Pages\Reports\Reports.aspx.designer.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Search.aspx.cs">
+    <Compile Include="Pages\CRM\Search.aspx.cs">
       <DependentUpon>Search.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Search.aspx.designer.cs">
+    <Compile Include="Pages\CRM\Search.aspx.designer.cs">
       <DependentUpon>Search.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Security.aspx.cs">
+    <Compile Include="Pages\Admin\Security.aspx.cs">
       <DependentUpon>Security.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Security.aspx.designer.cs">
+    <Compile Include="Pages\Admin\Security.aspx.designer.cs">
       <DependentUpon>Security.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SystemSettings.aspx.cs">
+    <Compile Include="Pages\Admin\SystemSettings.aspx.cs">
       <DependentUpon>SystemSettings.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SystemSettings.aspx.designer.cs">
+    <Compile Include="Pages\Admin\SystemSettings.aspx.designer.cs">
       <DependentUpon>SystemSettings.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TransactionInquireReversals.aspx.cs">
+    <Compile Include="Pages\FR\TransactionInquireReversals.aspx.cs">
       <DependentUpon>TransactionInquireReversals.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TransactionInquireReversals.aspx.designer.cs">
+    <Compile Include="Pages\FR\TransactionInquireReversals.aspx.designer.cs">
       <DependentUpon>TransactionInquireReversals.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Transactions.aspx.cs">
+    <Compile Include="Pages\FR\Transactions.aspx.cs">
       <DependentUpon>Transactions.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Transactions.aspx.designer.cs">
+    <Compile Include="Pages\FR\Transactions.aspx.designer.cs">
       <DependentUpon>Transactions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TrialBalanceReport.aspx.cs">
+    <Compile Include="Pages\Reports\TrialBalanceReport.aspx.cs">
       <DependentUpon>TrialBalanceReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TrialBalanceReport.aspx.designer.cs">
+    <Compile Include="Pages\Reports\TrialBalanceReport.aspx.designer.cs">
       <DependentUpon>TrialBalanceReport.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Pages\Common\" />
+    <Folder Include="Pages\CP\" />
+    <Folder Include="Pages\DDI\" />
+    <Folder Include="Pages\MM\" />
+    <Folder Include="Pages\NewFolder1\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

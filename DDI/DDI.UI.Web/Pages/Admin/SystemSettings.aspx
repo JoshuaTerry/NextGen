@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script type="text/javascript" src="Scripts\systemsettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
 
 </asp:Content>
 
