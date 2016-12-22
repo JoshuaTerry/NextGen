@@ -187,9 +187,9 @@ function DisplayConstituentData() {
         var img = $('<img>');
 
         if (currentEntity.IsMasculine) {
-            $(img).attr('src', 'Images/Male.png');
+            $(img).attr('src', '../../Images/Male.png');
         } else {
-            $(img).attr('src', 'Images/Female.png');
+            $(img).attr('src', '../../Images/Female.png');
         }
 
         $(img).appendTo($('.constituentpic'));
