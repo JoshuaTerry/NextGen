@@ -1,9 +1,19 @@
 ﻿$(document).ready(function () {
 
-    $('.loginbutton').click(function () {
-
-        location.href = "Default.aspx";
-
+    $('#form1').validate({
+        submitHandler: function (form) {
+            location.href = "Default.aspx";
+        },
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true
+            }
+        }
     });
 
 });
+
