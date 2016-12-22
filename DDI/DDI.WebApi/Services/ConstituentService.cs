@@ -263,9 +263,24 @@ namespace DDI.WebApi.Services
             return response;
         }
 
-        public IDataResponse<int> GetNextConstituentNumber()
+        public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
         {
-            return new DataResponse<int>() { Data = _domain.GetNextConstituentNumber() };
+            Repository<ConstituentType> repo = new Repository<ConstituentType>();
+
+            var constituentType = repo.GetById(constituentTypeId);
+            if (constituentType == null)
+            {
+                throw new ArgumentException("Constituent type ID is not valid.");               
+            }
+
+            var constituent = new Constituent();
+            constituent.ConstituentNumber = _domain.GetNextConstituentNumber();
+            constituent.ConstituentType = constituentType;
+
+            // ToDo:  Other new constituent tasks, such as initial tags, status code.
+
+            return new DataResponse<Constituent>(constituent);
+
         }
 
         private Type ConvertToType<T>(string property)
