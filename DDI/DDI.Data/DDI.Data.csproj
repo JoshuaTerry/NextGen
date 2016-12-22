@@ -64,6 +64,10 @@
     <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.cs" />
+    <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.Designer.cs">
+      <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.cs" />
     <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.Designer.cs">
       <DependentUpon>201612201635019_ConsitituentNumSequence.cs</DependentUpon>
@@ -175,6 +179,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.resx">
+      <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612201635019_ConsitituentNumSequence.resx">
       <DependentUpon>201612201635019_ConsitituentNumSequence.cs</DependentUpon>
     </EmbeddedResource>
