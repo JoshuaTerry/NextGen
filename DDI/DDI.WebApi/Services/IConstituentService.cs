@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
 using DDI.WebApi.Services.Search;
 using Newtonsoft.Json.Linq;
