@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {
