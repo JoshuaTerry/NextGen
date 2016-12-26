@@ -2,9 +2,8 @@ using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
-using DDI.Data.Enums;
-using DDI.Data.Models;
-using DDI.Data.Models.Client;
+using DDI.Data.Enums.CRM;
+using DDI.Data.Models.Client.CRM;
 
 namespace DDI.Data.Migrations.Client
 {

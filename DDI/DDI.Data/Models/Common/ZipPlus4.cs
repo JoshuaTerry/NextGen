@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using DDI.Data.Enums;
+using DDI.Data.Enums.Common;
 
 namespace DDI.Data.Models.Common
 {

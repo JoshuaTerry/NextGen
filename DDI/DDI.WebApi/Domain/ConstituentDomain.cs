@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DDI.Data;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 
 namespace DDI.WebApi.Domain
 {
