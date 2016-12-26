@@ -55,13 +55,15 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
-    <Compile Include="Enums\ConstituentCategory.cs" />
-    <Compile Include="Enums\BirthDateType.cs" />
-    <Compile Include="Enums\EvenOddType.cs" />
-    <Compile Include="Enums\ResidentType.cs" />
-    <Compile Include="Enums\SalutationType.cs" />
-    <Compile Include="Enums\CorrespondencePreference.cs" />
-    <Compile Include="Enums\PaymentMethod.cs" />
+    <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CRM\TagSelectionType.cs" />
+    <Compile Include="Enums\CRM\ConstituentCategory.cs" />
+    <Compile Include="Enums\CRM\BirthDateType.cs" />
+    <Compile Include="Enums\Common\EvenOddType.cs" />
+    <Compile Include="Enums\CRM\ResidentType.cs" />
+    <Compile Include="Enums\CRM\SalutationType.cs" />
+    <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
+    <Compile Include="Enums\CRM\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.cs" />
@@ -108,6 +110,10 @@
     <Compile Include="Migrations\Client\201612122040239_fixingMigration.Designer.cs">
       <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.cs" />
+    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.Designer.cs">
+      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.cs" />
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.Designer.cs">
       <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
@@ -131,32 +137,41 @@
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
     <Compile Include="Models\BaseEntity.cs" />
-    <Compile Include="Models\Client\Address.cs" />
-    <Compile Include="Models\Client\AlternateId.cs" />
-    <Compile Include="Models\Client\ClergyStatus.cs" />
-    <Compile Include="Models\Client\ClergyType.cs" />
-    <Compile Include="Models\Client\Constituent.cs" />
-    <Compile Include="Models\Client\ConstituentAddress.cs" />
-    <Compile Include="Models\Client\ConstituentStatus.cs" />
-    <Compile Include="Models\Client\ConstituentType.cs" />
-    <Compile Include="Models\Client\ContactInfo.cs" />
-    <Compile Include="Models\Client\AddressType.cs" />
-    <Compile Include="Models\Client\ContactType.cs" />
-    <Compile Include="Models\Client\Denomination.cs" />
-    <Compile Include="Models\Client\DoingBusinessAs.cs" />
-    <Compile Include="Models\Client\Education.cs" />
-    <Compile Include="Models\Client\EducationLevel.cs" />
-    <Compile Include="Models\Client\Ethnicity.cs" />
-    <Compile Include="Models\Client\Gender.cs" />
-    <Compile Include="Models\Client\IncomeLevel.cs" />
-    <Compile Include="Models\Client\Language.cs" />
-    <Compile Include="Models\Client\MaritalStatus.cs" />
-    <Compile Include="Models\Client\PaymentPreference.cs" />
-    <Compile Include="Models\Client\Prefix.cs" />
-    <Compile Include="Models\Client\Profession.cs" />
-    <Compile Include="Models\Client\Region.cs" />
-    <Compile Include="Models\Client\RegionLevel.cs" />
-    <Compile Include="Models\Client\SectionPreference.cs" />
+    <Compile Include="Models\Client\CRM\Address.cs" />
+    <Compile Include="Models\Client\CRM\AlternateId.cs" />
+    <Compile Include="Models\Client\CRM\Degree.cs" />
+    <Compile Include="Models\Client\CRM\Tag.cs" />
+    <Compile Include="Models\Client\CRM\TagGroup.cs" />
+    <Compile Include="Models\Client\CRM\Relationship.cs" />
+    <Compile Include="Models\Client\CRM\RegionArea.cs" />
+    <Compile Include="Models\Client\CRM\RelationshipType.cs" />
+    <Compile Include="Models\Client\CRM\RelationshipCategory.cs" />
+    <Compile Include="Models\Client\CRM\School.cs" />
+    <Compile Include="Models\Client\CRM\ClergyStatus.cs" />
+    <Compile Include="Models\Client\CRM\ClergyType.cs" />
+    <Compile Include="Models\Client\CRM\Constituent.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentAddress.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentStatus.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentType.cs" />
+    <Compile Include="Models\Client\CRM\ContactInfo.cs" />
+    <Compile Include="Models\Client\CRM\AddressType.cs" />
+    <Compile Include="Models\Client\CRM\ContactCategory.cs" />
+    <Compile Include="Models\Client\CRM\ContactType.cs" />
+    <Compile Include="Models\Client\CRM\Denomination.cs" />
+    <Compile Include="Models\Client\CRM\DoingBusinessAs.cs" />
+    <Compile Include="Models\Client\CRM\Education.cs" />
+    <Compile Include="Models\Client\CRM\EducationLevel.cs" />
+    <Compile Include="Models\Client\CRM\Ethnicity.cs" />
+    <Compile Include="Models\Client\CRM\Gender.cs" />
+    <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
+    <Compile Include="Models\Client\Core\Language.cs" />
+    <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
+    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
+    <Compile Include="Models\Client\CRM\Prefix.cs" />
+    <Compile Include="Models\Client\CRM\Profession.cs" />
+    <Compile Include="Models\Client\CRM\Region.cs" />
+    <Compile Include="Models\Client\CRM\RegionLevel.cs" />
+    <Compile Include="Models\Client\Core\SectionPreference.cs" />
     <Compile Include="Models\Common\Abbreviation.cs" />
     <Compile Include="Models\Common\City.cs" />
     <Compile Include="Models\Common\CityName.cs" />
@@ -168,7 +183,7 @@
     <Compile Include="Models\Common\ZipBranch.cs" />
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
-    <Compile Include="Models\Client\LogEntry.cs" />
+    <Compile Include="Models\Client\Core\LogEntry.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
@@ -211,6 +226,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201612262059020_Relationship_Tag.resx">
+      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612070300153_InitialMigration.resx">
       <DependentUpon>201612070300153_InitialMigration.cs</DependentUpon>

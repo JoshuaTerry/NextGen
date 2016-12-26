@@ -1,5 +1,5 @@
 ﻿using DDI.Data;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
