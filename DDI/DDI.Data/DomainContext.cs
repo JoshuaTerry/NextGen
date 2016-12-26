@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
+using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Common;
 
 namespace DDI.Data
@@ -34,9 +35,13 @@ namespace DDI.Data
 
         public virtual DbSet<ContactInfo> ContactInfoes { get; set; }
 
+        public virtual DbSet<ContactCategory> ContactCategories { get; set; }
+
         public virtual DbSet<ContactType> ContactTypes { get; set; }
 
-		public virtual DbSet<Denomination> Denominations { get; set; }
+        public virtual DbSet<Degree> Degrees { get; set; }
+
+        public virtual DbSet<Denomination> Denominations { get; set; }
 
 		public virtual DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
 
@@ -54,7 +59,9 @@ namespace DDI.Data
 
 		public virtual DbSet<LogEntry> LogEntries { get; set; }
 
-		public virtual DbSet<PaymentPreference> PaymentPreferences { get; set; }
+        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
+
+        public virtual DbSet<PaymentPreference> PaymentPreferences { get; set; }
 
 		public virtual DbSet<Prefix> Prefixes { get; set; }
 
@@ -62,9 +69,29 @@ namespace DDI.Data
 
         public virtual DbSet<Region> Regions { get; set; }
 
+        public virtual DbSet<RegionArea> RegionAreas { get; set; }
+
         public virtual DbSet<RegionLevel> RegionLevels { get; set; }
+        
+        public virtual DbSet<Relationship> Relationships { get; set; }
+
+        public virtual DbSet<RelationshipCategory> RelationshipCategories { get; set; }
+
+        public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
+
+        public virtual DbSet<School> Schools { get; set; }
+
         public virtual DbSet<SectionPreference> SectionPreferences { get; set; }
-        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
+
+        public virtual DbSet<Tag> Tags { get; set; }
+
+        public virtual DbSet<TagGroup> TagGroups { get; set; }
+
+
+
+
+
+
         #endregion Public Properties
 
         #region Public Constructors

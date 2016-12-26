@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 using DDI.WebApi.Services;
 using Newtonsoft.Json.Linq;
 

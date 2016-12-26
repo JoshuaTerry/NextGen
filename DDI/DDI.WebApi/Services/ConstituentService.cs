@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using DDI.Business.CRM;
 using DDI.Data;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
 using DDI.WebApi.Domain;
 using DDI.WebApi.Helpers;
