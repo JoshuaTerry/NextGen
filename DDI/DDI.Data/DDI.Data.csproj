@@ -66,10 +66,6 @@
     <Compile Include="Enums\CRM\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="Migrations\201612262059020_Relationship_Tag.cs" />
-    <Compile Include="Migrations\201612262059020_Relationship_Tag.Designer.cs">
-      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.cs" />
     <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.Designer.cs">
       <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
@@ -113,6 +109,10 @@
     <Compile Include="Migrations\Client\201612122040239_fixingMigration.cs" />
     <Compile Include="Migrations\Client\201612122040239_fixingMigration.Designer.cs">
       <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.cs" />
+    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.Designer.cs">
+      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.cs" />
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.Designer.cs">
@@ -194,9 +194,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612262059020_Relationship_Tag.resx">
-      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.resx">
       <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
     </EmbeddedResource>
@@ -229,6 +226,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
       <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201612262059020_Relationship_Tag.resx">
+      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612070300153_InitialMigration.resx">
       <DependentUpon>201612070300153_InitialMigration.cs</DependentUpon>
