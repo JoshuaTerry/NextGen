@@ -16,7 +16,9 @@ namespace DDI.Data
 
 		public virtual DbSet<Address> Addresses { get; set; }
 
-		public virtual DbSet<AlternateId> AlternateIds { get; set; }
+        public virtual DbSet<AddressType> AddressTypes { get; set; }
+
+        public virtual DbSet<AlternateId> AlternateIds { get; set; }
 
 		public virtual DbSet<ClergyStatus> ClergyStatuses { get; set; }
 
@@ -30,7 +32,9 @@ namespace DDI.Data
 
 		public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
 
-		public virtual DbSet<Denomination> Denominations { get; set; }
+        public virtual DbSet<ContactType> ContactTypes { get; set; }
+
+        public virtual DbSet<Denomination> Denominations { get; set; }
 
 		public virtual DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
 
