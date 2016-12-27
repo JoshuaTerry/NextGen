@@ -19,7 +19,9 @@ namespace DDI.Data
 
 		public virtual DbSet<Address> Addresses { get; set; }
 
-		public virtual DbSet<AlternateId> AlternateIds { get; set; }
+        public virtual DbSet<AddressType> AddressTypes { get; set; }
+
+        public virtual DbSet<AlternateId> AlternateIds { get; set; }
 
 		public virtual DbSet<ClergyStatus> ClergyStatuses { get; set; }
 
