@@ -63,6 +63,7 @@
     <Compile Include="Enums\CorrespondencePreference.cs" />
     <Compile Include="Enums\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="Extensions\System\Data\Entity\Infrastructure\DbEntityEntryExtensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.cs" />
     <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.Designer.cs">

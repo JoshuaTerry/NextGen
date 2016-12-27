@@ -6,12 +6,11 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 using DDI.Data.Models;
-using DDI.Data.Models.Client;
 
 namespace DDI.Data
 {
@@ -50,7 +49,7 @@ namespace DDI.Data
 
                 return _utilities;
             }
-        }                       
+        }
 
         #endregion Public Properties
 
@@ -78,18 +77,38 @@ namespace DDI.Data
         {
         }
 
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
         public Repository(DbContext context)
         {
             _context = context;
         }
 
-        #endregion Internal Constructors
+        #endregion Public Constructors
 
         #region Public Methods
+
+        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        {
+            var member = property.Body as MemberExpression;
+            if (member == null)
+            {
+                var unary = property.Body as UnaryExpression;
+                if (unary != null)
+                {
+                    member = unary.Operand as MemberExpression;
+                }
+            }
+            if (shouldContainObjectPath && member != null)
+            {
+                var path = member.Expression.ToString();
+                var objectPath = member.Expression.ToString().Split('.');
+                if (objectPath.Length >= 2)
+                {
+                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
+                    return $"{path}.{member.Member.Name}";
+                }
+            }
+            return member?.Member.Name ?? String.Empty;
+        }
 
         public virtual void Delete(T entity)
         {
@@ -116,103 +135,88 @@ namespace DDI.Data
 
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public T GetById(Guid id) => EntitySet.Find(id);
-
-        public T GetById(Guid id, params Func<T, string>[] includes)
+        public IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes)
         {
-            T entity = EntitySet.Find(id);
-            DbEntityEntry<T> dbEntry = _context.Entry(entity);
+            Type entityType = typeof(T);
+            DbQuery<T> query = _context.Set<T>();
 
-            foreach (Func<T, string> include in includes)
+            foreach(Expression<Func<T, object>> include in includes)
             {
-                dbEntry.Reference(include(entity)).Load();
-                //dbEntry.Collection()
-                dbEntry.Collection(include(entity)).Load();
-                //dbEntry.Member()
-                //dbEntry.ComplexProperty()
-                //dbEntry.Collection()
-                //dbEntry.Reference(include).Load();
+                query.Include(t => entityType.GetProperty(NameFor(include, true)));
             }
 
-            return dbEntry.Entity;
+            return query.AsQueryable();
         }
+
+        public IQueryable<T> Query(params Type[] includeTypes)
+        {
+            var properties = new List<PropertyInfo>();
+
+            foreach (Type type in includeTypes)
+            {
+                PropertyInfo[] allProps = typeof(T).GetProperties();
+                properties.AddRange(allProps.Where(p => p.PropertyType == type));
+
+                IEnumerable<PropertyInfo> generic = allProps.Where(p => p.PropertyType.IsGenericType);
+                properties.AddRange(allProps.Where(p => p.PropertyType.GenericTypeArguments.Contains(type)));
+            }
+
+            var query = _context.Set<T>();
+            foreach (PropertyInfo info in properties)
+            {
+                query.Include(info.Name);
+            }
+
+            return query;
+        }
+
+        public T GetById(Guid id) => EntitySet.Find(id);
 
         public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
         {
-            //try
-            //{
-            //DbQuery<T> query = _context.Set<T>();
-            //    string includePath = string.Join(".", includes.Select(i => NameFor(i)));
-
-            //    return _context.Set<T>()
-            //            .Include(includePath)
-            //            .First(entity => entity.Id == id);
-            //}
-            //catch(Exception exception)
-            //{
-            //    Console.WriteLine(exception);
-
-            //}
+            Type entityType = typeof(T);
             T entity = EntitySet.Find(id);
-            Type type = typeof(T);
             DbEntityEntry<T> dbEntry = _context.Entry(entity);
-            //return null;
-            //query.Include(includePath).First(entity => entity.Id == id);
-
-            try
+            
+            foreach (Expression<Func<T, object>> include in includes)
             {
-                foreach (Expression<Func<T, object>> include in includes)
+                try
                 {
                     string property = NameFor(include, true);
-                    var prop = type.GetProperty(property);
+                    PropertyInfo prop = entityType.GetProperty(property);
 
                     if (prop.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
                     {
                         dbEntry.Collection(property).Load();
                     }
-
                     else if (!prop.PropertyType.IsValueType)
                     {
-                        //dbEntry.Property(property)
                         dbEntry.Reference(property).Load();
                     }
-                    //query.Include(property);
-                    //dbEntry.Reference(property).Load();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
                 }
             }
-            catch(Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-
-            //query.Where(e => e.Id == id).Load();
-            //return query.First(entity => entity.Id == id);
 
             return dbEntry.Entity;
         }
 
-        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        public List<string> GetModifiedProperties(T entity)
         {
-            var member = property.Body as MemberExpression;
-            if (member == null)
+            var list = new List<string>();
+            DbEntityEntry<T> entry = _context.Entry(entity);
+
+            foreach (string property in entry.OriginalValues.PropertyNames)
             {
-                var unary = property.Body as UnaryExpression;
-                if (unary != null)
+                if (entry.Property(property).IsModified)
                 {
-                    member = unary.Operand as MemberExpression;
+                    list.Add(property);
                 }
             }
-            if (shouldContainObjectPath && member != null)
-            {
-                var path = member.Expression.ToString();
-                var objectPath = member.Expression.ToString().Split('.');
-                if (objectPath.Length >= 2)
-                {
-                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
-                    return $"{path}.{member.Member.Name}";
-                }
-            }
-            return member?.Member.Name ?? String.Empty;
+
+            return list;
         }
 
         public virtual T Insert(T entity)
@@ -275,22 +279,6 @@ namespace DDI.Data
 
             return _context.SaveChanges();
         }
-
-        public List<string> GetModifiedProperties(T entity) 
-        {
-            var list = new List<string>();
-
-            var entry = _context.Entry(entity);
-            foreach (var property in entry.OriginalValues.PropertyNames)
-            {
-                if (entry.Property(property).IsModified)
-                {
-                    list.Add(property);
-                }
-            }
-
-            return list;
-        }        
 
         #endregion Public Methods
     }
