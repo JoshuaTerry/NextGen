@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 using DDI.Data;
 using DDI.Data.Models;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
+using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Common;
 using DDI.Data.Enums;
 using System.Data.Entity.Migrations;
@@ -120,12 +121,11 @@ namespace DDI.Conversion
                         case CONSTITUENT_TYPE:
                             if (code == "I" || code == "F")
                             {
-                                baseType = ConstituentCategory.Individual.ToString();
-
+                                baseType = "I";
                             }
                             else
                             {
-                                baseType = ConstituentCategory.Organization.ToString();
+                                baseType = "O";
                             }
                             if (code == "I" || code == "O")
                             {
@@ -138,7 +138,7 @@ namespace DDI.Conversion
                         case CONTACT_TYPE:
                             context.ContactTypes.AddOrUpdate(
                                 p => p.Code,
-                                new ContactType { Code = code, Description = description, IsActive = active });
+                                new ContactType { Code = code, Name = description, IsActive = active });
                             break;
                         case DENOMINATION_SET:
                             context.Denominations.AddOrUpdate(

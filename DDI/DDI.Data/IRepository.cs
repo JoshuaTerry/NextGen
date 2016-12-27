@@ -1,35 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DDI.Data
 {
-	/// <summary>
-	/// Defines the required functionality for a class to act as a "Repository" by accessing and
-	/// returning entities from a data store.
-	/// </summary>
-	public interface IRepository<T> where T : class
-	{
-		#region Public Properties
+    /// <summary>
+    /// Defines the required functionality for a class to act as a "Repository" by accessing and
+    /// returning entities from a data store.
+    /// </summary>
+    public interface IRepository<T> where T : class
+    {
+        #region Public Properties
 
-		IQueryable<T> Entities { get; }
+        IQueryable<T> Entities { get; }
 
-		#endregion Public Properties
+        SQLUtilities Utilities { get; }
 
-		#region Public Methods
+        #endregion Public Properties
 
-		void Delete(T entity);
+        #region Public Methods
 
-		T GetById(object id);
+        void Delete(T entity);
 
-	    T Find(params object[] keyValues); 
+        T GetById(object id);
 
-		void Insert(T entity);
+        T Find(params object[] keyValues); 
 
-		void Update(T entity);
+		T Insert(T entity);
 
-		#endregion Public Methods
-	}
+		T Update(T entity);
+
+        int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null);
+
+        int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null);
+
+        List<string> GetModifiedProperties(T entity);
+
+        #endregion Public Methods
+    }
 }

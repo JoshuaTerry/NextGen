@@ -4,8 +4,6 @@ $(document).ready(function () {
     Resize();
 
     PopulateDropDowns();
-
-    // AddColumnHeaders();
     
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
@@ -46,57 +44,25 @@ function Resize() {
 
 function PopulateDropDowns() {
 
-    // LoadCountries();
+    LoadConstituentTypes();
 
-    // LoadStates();
+    LoadCountries();
+}
+
+function LoadConstituentTypes() {
+
+    PopulateDropDown('.searchtype', 'constituenttypes', '', '');
+
 }
 
 function LoadCountries() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'countries',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    PopulateDropDown('.searchcountry', 'countries', '', '');
 
-            $.map(data.d, function (item) {
+    $('.searchcountry').change(function () {
 
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
-                $(option).appendTo($('.searchcountry'));
+        PopulateDropDown('.searchstate', 'states/?countryid=' + $('.searchcountry').val(), '', '');
 
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
-
-}
-
-function LoadStates() {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'states',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.CountryCode);
-                $(option).appendTo($('.searchcountry'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
     });
 
 }
@@ -127,7 +93,7 @@ function DoSearch() {
         success: function (data) {
 
             if (data.Data.length == 1) {
-                DisplayConstituent(data.Data[0].ConstituentNum);
+                DisplayConstituent(data.Data[0].ConstituentNumber);
             }
             else {
 
@@ -136,7 +102,7 @@ function DoSearch() {
                     columns: [
                         { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
-                        { dataField: 'FullAddress', caption: 'Primary Address' },
+                        { dataField: 'PrimaryAddress', caption: 'Primary Address' },
                         'Contact Information'
                     ],
                     paging: {
@@ -192,6 +158,8 @@ function GetSearchParameters() {
             p += property + '=' + value + '&';
         }
     });
+
+    p += 'limit=100&';
 
     p = p.substring(0, p.length - 1);
 

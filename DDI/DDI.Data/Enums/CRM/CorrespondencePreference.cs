@@ -1,0 +1,12 @@
+﻿
+namespace DDI.Data.Enums.CRM
+{
+	public enum CorrespondencePreference
+	{
+		None = 0,
+		Paper = 1,
+		Email = 2,
+		Both = 3
+	}
+
+}

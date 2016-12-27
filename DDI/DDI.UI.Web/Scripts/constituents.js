@@ -1,4 +1,6 @@
 ﻿
+var SAVE_ROUTE = 'constituents/';
+
 $(document).ready(function () {
 
     Resize();
@@ -53,343 +55,169 @@ function LoadDropDowns() {
 
 function LoadConstituentStatuses() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituentstatues',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ConstituentStatusId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
-
+    PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
 }
 
 function LoadPrefixes() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'prefixes',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Abbreviation);
-                $(option).appendTo($('.c-Prefix'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
-
+    PopulateDropDown('.PrefixId', 'prefixes', '', '');
 }
 
 function LoadGenders() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'genders',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Gender'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.GenderId', 'genders', '', '');
 
 }
 
 function LoadClergyTypes() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergytypes',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Code);
-                $(option).appendTo($('.c-ClergyTypeId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
 
 }
 
 function LoadClergyStatuses() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergystatuses',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ClergyStatusId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
 
 }
 
 function LoadDenominations() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'denominations',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Denomination'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.DenominationId', 'denominations', '', '');
 
 }
 
 function LoadEthnicities() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'ethnicity',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-Ethnicity'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.EthnicityId', 'ethnicity', '', '');
 
 }
 
 function LoadLanguages() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'languages',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-LanguageId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.LanguageId', 'languages', '', '');
 
 }
 
 function LoadEducationLevels() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'educationlevels',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-EducationLevel'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
 
 }
 
 function LoadMaritalStatuses() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'professions',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ProfessionId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
 
 }
 
 function LoadProfessions() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'professions',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-ProfessionId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.ProfessionId', 'professions', '', '');
 
 }
 
 function LoadIncomeLevels() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'incomelevels',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.d, function (item) {
-
-                var option = $('<option>').val(item.Id).text(item.Name);
-                $(option).appendTo($('.c-IncomeLevelId'));
-
-            });
-
-        },
-        failure: function (response) {
-            alert(response);
-        }
-    });
+    PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
 
 }
 
 function GetConstituentData(id) {
 
     $.ajax({
-        //url: 'Constituents.aspx/GetConstituentById',
         url: WEB_API_ADDRESS + 'constituents/number/' + id,
         method: 'GET',
-        // data: '{ constituentnumber: "' + id + '" }',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.Data, function (value, key) {
+            currentEntity = data.Data;
 
-                $('.c-' + key).text(value);
-                $('.c-' + key).val(value);
-
-                if (key.toLowerCase().indexOf('date') !== -1) {
-
-                    var date = FormatJSONDate(value);
-
-                    $('.c-' + key).text(date);
-                    $('.c-' + key).val(date);
-                }
-            });
-
-            var img = $('<img>');
-
-            if (data.Data.IsMasculine) {
-                $(img).attr('src', 'Images/Male.png');
-            } else {
-                $(img).attr('src', 'Images/Female.png');
-            }
-
-            $(img).appendTo($('.constituentpic'));
+            DisplayConstituentData();
+            
         },
         failure: function (response) {
             alert(response);
         }
     });
+}
+
+function RefreshEntity() {
+
+    DisplayConstituentData();
+
+}
+
+function DisplayConstituentData() {
+
+    if (currentEntity) {
+
+        $.map(currentEntity, function (value, key) {
+
+            if (typeof (value) == 'string')
+                value = value.replace('"', '').replace('"', '');
+
+            if (key != '$id') {
+
+                var classname = '.' + key;
+
+                if ($(classname).is('input')) {
+                    $(classname).val(value);
+                }
+
+                if ($(classname).is('select')) {
+                    $(classname).val(value);
+                }
+            
+                if (key.toLowerCase().indexOf('date') !== -1) {
+
+                    var date = FormatJSONDate(value);
+
+                    $(classname).text(date);
+                }
+
+            }
+        });
+
+        DisplayConstituentPrimaryAddress();
+
+        $('.constituentpic').html('');
+        var img = $('<img>');
+
+        if (currentEntity.IsMasculine) {
+            $(img).attr('src', '../../Images/Male.png');
+        } else {
+            $(img).attr('src', '../../Images/Female.png');
+        }
+
+        $(img).appendTo($('.constituentpic'));
+
+    }
+}
+
+function DisplayConstituentPrimaryAddress() {
+
+    if (currentEntity.ConstituentAddresses) {
+
+        $.map(currentEntity.ConstituentAddresses, function (item) {
+
+            if (item.IsPrimary) {
+
+                $('.Address').text(item.Address.AddressLine1);
+
+                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
+                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+                }
+
+                $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+
+            }
+
+        });
+
+    }
+
 }
 

@@ -9,11 +9,11 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("City")]
-    public class City
+    public class City : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(8)]
         public string PlaceCode { get; set; }

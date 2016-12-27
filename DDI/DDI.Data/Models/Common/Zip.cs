@@ -9,11 +9,13 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("Zip")]
-    public class Zip
+    public class Zip : BaseEntity
     {
+        #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(5)]
         public string ZipCode { get; set; }
@@ -33,5 +35,20 @@ namespace DDI.Data.Models.Common
         public ICollection<ZipBranch> ZipBranches { get; set; }
 
         public ICollection<ZipStreet> ZipStreets { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return ZipCode;
+            }
+        }
+
+        #endregion
+
     }
 }

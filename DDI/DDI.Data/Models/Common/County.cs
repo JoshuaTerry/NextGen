@@ -9,11 +9,13 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("County")]
-    public class County
+    public class County : BaseEntity
     {
+        #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public string Description { get; set; }
 
@@ -38,6 +40,21 @@ namespace DDI.Data.Models.Common
         public State State { get; set; }
 
         public ICollection<City> Cities { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
+
 
     }
 }

@@ -9,11 +9,13 @@ using System.Text;
 namespace DDI.Data.Models.Common
 {
     [Table("State")]
-    public class State
+    public class State : BaseEntity
     {
+        #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [MaxLength(4)]
         public string StateCode { get; set; }
@@ -32,5 +34,20 @@ namespace DDI.Data.Models.Common
         public ICollection<County> Counties { get; set; }
 
         public ICollection<City> Cities { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Description;
+            }
+        }
+
+        #endregion
+
     }
 }
