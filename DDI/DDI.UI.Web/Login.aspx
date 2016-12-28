@@ -25,6 +25,27 @@
             <input type="submit" class="loginbutton" value="Login" />
         </div>
 
-    </div>  
+        <div class="forgotpassword">
+            <a href="#" class="forgotpasswordlink">Forgot Password?</a>
+        </div>
+
+    </div>
+
+    <div class="forgotpasswordmodal" title="Forgot Password" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label class="inline">Email</label>
+                <input type="email" name="email" class="username" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitforgotpassword" value="Submit" />
+            </div>
+
+        </div>
+
+    </div>
 
 </asp:Content>

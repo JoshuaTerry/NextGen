@@ -47,6 +47,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .login div.fieldblock label { width: 29%; text-align: right; margin-right: 3px; font-weight: bold; font-size: 14px; }
 .login div.fieldblock input,
 .login div.fieldblock select { width: 55%; }
+.login div.forgotpassword { text-align: center; margin: 20px 0 0 0; }
+.forgotpasswordmodal div.modalcontent { padding: 20px; }
+.forgotpasswordmodal div.modalcontent div.fieldblock input { display: inline-block; width: 70%; }
+.forgotpasswordmodal div.modalcontent div.fieldblock label.inline { display: inline-block; width: 14%; text-align: right; margin-right: 5px; font-weight: bold; }
 
 .maincontainer { width: 100%; }
 
