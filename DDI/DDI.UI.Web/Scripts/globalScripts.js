@@ -58,6 +58,7 @@ function LoadNewConstituentModalDropDowns() {
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
     PopulateDropDown('.nc-Country', 'countries', '', '');
+    PopulateDropDown('.nc-AddressType', 'addresstypes', '', '');
 
     $('.nc-Country').change(function () {
 

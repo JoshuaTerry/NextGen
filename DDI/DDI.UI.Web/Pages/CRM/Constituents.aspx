@@ -13,7 +13,7 @@
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
             <div class="constituentpic"></div>
-
+            
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
@@ -208,16 +208,7 @@
 
                     <h1>Doing Business As (Not Implemented Yet)</h1>
                     <div>
-                        <table class="datagrid doingbusinessastable">
-                            <thead>
-                                <tr>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>DBA Name</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="doingbusinessastable"></div>
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>
@@ -227,17 +218,7 @@
                             <select class="editable EducationLevelId"></select>
                         </div>
 
-                        <table class="datagrid educationleveltable" border="0">
-                            <thead>
-                                <tr>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>School</th>
-                                    <th>Degree</th>
-                                    <th>Major</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <div class="educationleveltable"></div>
                     </div>
 
                     <h1>Payment Preferences (Not Implemented Yet)</h1>
@@ -248,17 +229,8 @@
                             <select class="editable PaymentMethodId"></select>
                         </div>
 
-                        <table class="editable PaymentPreferences">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>ABA Number</th>
-                                    <th>Account Number</th>
-                                    <th>Ch/S</th>
-                                    <th><img src="Images/Note_16.png" /></th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <label>ETF Information</label>
+                        <div class="paymentpreferencestable"></div>
 
                     </div>
 
