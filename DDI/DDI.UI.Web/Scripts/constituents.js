@@ -26,99 +26,18 @@ function Resize() {
 }
 
 function LoadDropDowns() {
-
-    LoadConstituentStatuses();
-
-    LoadPrefixes();
-
-    LoadGenders();
-
-    LoadClergyTypes();
-
-    LoadClergyStatuses();
-
-    LoadDenominations();
-
-    LoadEthnicities();
-
-    LoadLanguages();
-
-    LoadEducationLevels();
-
-    LoadMaritalStatuses();
-
-    LoadProfessions();
-
-    LoadIncomeLevels();
-
-}
-
-function LoadConstituentStatuses() {
-
+    
     PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
-}
-
-function LoadPrefixes() {
-
     PopulateDropDown('.PrefixId', 'prefixes', '', '');
-}
-
-function LoadGenders() {
-
     PopulateDropDown('.GenderId', 'genders', '', '');
-
-}
-
-function LoadClergyTypes() {
-
     PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
-
-}
-
-function LoadClergyStatuses() {
-
     PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
-
-}
-
-function LoadDenominations() {
-
     PopulateDropDown('.DenominationId', 'denominations', '', '');
-
-}
-
-function LoadEthnicities() {
-
     PopulateDropDown('.EthnicityId', 'ethnicity', '', '');
-
-}
-
-function LoadLanguages() {
-
     PopulateDropDown('.LanguageId', 'languages', '', '');
-
-}
-
-function LoadEducationLevels() {
-
     PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
-
-}
-
-function LoadMaritalStatuses() {
-
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
-
-}
-
-function LoadProfessions() {
-
     PopulateDropDown('.ProfessionId', 'professions', '', '');
-
-}
-
-function LoadIncomeLevels() {
-
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
 
 }
@@ -181,8 +100,6 @@ function DisplayConstituentData() {
             }
         });
 
-        DisplayConstituentPrimaryAddress();
-
         $('.constituentpic').html('');
         var img = $('<img>');
 
@@ -194,6 +111,13 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
+        DisplayConstituentPrimaryAddress();
+
+        LoadDBATable();
+
+        LoadEducationTable();
+
+        LoadPaymentPreferencesTable();
     }
 }
 
@@ -220,4 +144,111 @@ function DisplayConstituentPrimaryAddress() {
     }
 
 }
+
+function LoadDBATable() {
+
+    $('.doingbusinessastable').dxDataGrid({
+        dataSource: currentEntity.DoingBusinessAs,
+        columns: [
+            { dataField: 'StartDate', caption: 'From', },
+            { dataField: 'EndDate', caption: 'To' },
+            { dataField: 'Name', caption: 'Name' }
+        ],
+        paging: {
+            pageSize: 15
+        },
+        pager: {
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            showInfo: true,
+            allowedPageSizes: [15, 25, 50, 100]
+        },
+        groupPanel: {
+            visible: true,
+            allowColumnDragging: true
+        },
+        filterRow: {
+            visible: true,
+            showOperationChooser: false
+        },
+        onRowClick: function (info) {
+            DisplayConstituent(info.values[0]);
+        }
+    });
+
+}
+
+function LoadEducationTable() {
+
+    $('.educationleveltable').dxDataGrid({
+        dataSource: currentEntity.Educations,
+        columns: [
+            { dataField: 'StartDate', caption: 'Start Date', },
+            { dataField: 'EndDate', caption: 'End Date' },
+            { dataField: 'School', caption: 'School' },
+            { dataField: 'Degree', caption: 'Degree' },
+            { dataField: 'Major', caption: 'Major' }
+        ],
+        paging: {
+            pageSize: 15
+        },
+        pager: {
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            showInfo: true,
+            allowedPageSizes: [15, 25, 50, 100]
+        },
+        groupPanel: {
+            visible: true,
+            allowColumnDragging: true
+        },
+        filterRow: {
+            visible: true,
+            showOperationChooser: false
+        },
+        onRowClick: function (info) {
+            DisplayConstituent(info.values[0]);
+        }
+    });
+
+}
+
+function LoadPaymentPreferencesTable() {
+
+    $('.paymentpreferencestable').dxDataGrid({
+        dataSource: currentEntity.PaymentPreferences,
+        columns: [
+            { dataField: 'Name', caption: 'Description', },
+            { dataField: 'ABANumber', caption: 'ABA Number' },
+            { dataField: 'AccountNumber', caption: 'Account Number' },
+            { dataField: '', caption: 'Ch/S' },
+            { dataField: '', caption: 'Notes' }
+        ],
+        paging: {
+            pageSize: 15
+        },
+        pager: {
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            showInfo: true,
+            allowedPageSizes: [15, 25, 50, 100]
+        },
+        groupPanel: {
+            visible: true,
+            allowColumnDragging: true
+        },
+        filterRow: {
+            visible: true,
+            showOperationChooser: false
+        },
+        onRowClick: function (info) {
+            DisplayConstituent(info.values[0]);
+        }
+    });
+
+}
+
+
+
+
 

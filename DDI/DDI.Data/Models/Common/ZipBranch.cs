@@ -17,6 +17,7 @@ namespace DDI.Data.Models.Common
 
         public string Description { get; set; }
 
+        [Index]
         [MaxLength(8)]
         public string USPSKey { get; set; }
 
