@@ -194,12 +194,6 @@ function LoadClergy() {
 
 }
 
-function LoadCRMClientCustomFields() {
-
-
-
-}
-
 function LoadConstituentTypes() {
 
 
@@ -315,12 +309,6 @@ function LoadTags() {
 
 
 /* DONATIONS SETTINGS */
-function LoadDonationClientCustomFields() {
-
-
-
-}
-
 function LoadDonationSettings() {
 
 
@@ -361,12 +349,6 @@ function LoadBudgetSettings() {
 }
 
 function LoadChartAccountsSettings() {
-
-
-
-}
-
-function LoadGLClientCustomFields() {
 
 
 
@@ -435,5 +417,30 @@ function LoadReportHeaders() {
 
 }
 /* END REPORTS SETTINGS */
+
+
+/* CUSTOM FIELDS */
+function LoadCRMClientCustomFields() {
+
+
+
+}
+
+function LoadDonationClientCustomFields() {
+
+
+
+}
+
+function LoadGLClientCustomFields() {
+
+
+
+}
+/* END CUSTOM FIELDS */
+
+
+
+
 
 

@@ -42,7 +42,6 @@
                 <ul>
                     <li><a href="#" class="LoadAlternateID">Alternate ID</a></li>
                     <li><a href="#" class="LoadClergy">Clergy</a></li>
-                    <li><a href="#" class="LoadCRMClientCustomFields">Client Custom Fields</a></li>
                     <li><a href="#" class="LoadConstituentTypes">Constituent Types</a></li>
                     <li><a href="#" class="LoadContactInformation">Contact Information</a></li>
                     <li><a href="#" class="LoadDemographics">Demographics</a></li>
@@ -64,7 +63,6 @@
             <h1>Donations</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadDonationClientCustomFields">Client Custom Fields</a></li>
                     <li><a href="#" class="LoadDonationSettings">Donation Settings</a></li>
                     <li><a href="#" class="LoadDonorSettings">Donor Settings</a></li>
                     <li><a href="#" class="LoadGLAccountAutoAssign">GL Account Auto Assign</a></li>
@@ -78,7 +76,6 @@
                     <li><a href="#" class="LoadAccountingSettings">Accounting Settings</a></li>
                     <li><a href="#" class="LoadBudgetSettings">Budget Settings</a></li>
                     <li><a href="#" class="LoadChartAccountsSettings">Chart of Accounts Settings</a></li>
-                    <li><a href="#" class="LoadGLClientCustomFields">Client Custom Fields</a></li>
                     <li><a href="#" class="LoadEntities">Entities</a></li>
                     <li><a href="#" class="LoadFiscalYearSettings">Fiscal Year Settings</a></li>
                     <li><a href="#" class="LoadFundAccountingSettings">Fund Accounting Settings</a></li>
@@ -98,6 +95,14 @@
                 </ul>
             </div>
 
+            <h1>Custom Fields</h1>
+            <div>
+                <ul>
+                    <li><a href="#" class="LoadCRMClientCustomFields">Client Custom Fields</a></li>
+                    <li><a href="#" class="LoadDonationClientCustomFields">Donation Custom Fields</a></li>
+                    <li><a href="#" class="LoadGLClientCustomFields">GL Format Custom Fields</a></li>
+                </ul>
+            </div>
         </div>
 
         <div class="contentcontainer">
