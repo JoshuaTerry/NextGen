@@ -39,6 +39,18 @@ namespace DDI.Data
 
         List<string> GetModifiedProperties(T entity);
 
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<T> GetLocal();
+
+        void Attach(T entity);
+
         #endregion Public Methods
     }
 }

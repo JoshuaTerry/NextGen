@@ -26,6 +26,7 @@ namespace DDI.Data
         private readonly DbContext _context = null;
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
+        private bool _isUOW = false;
 
         #endregion Private Fields
 
@@ -37,7 +38,7 @@ namespace DDI.Data
         {
             get
             {
-                if (_utilities == null)
+                if (_utilities == null && _context != null)
                 {
                     _utilities = new SQLUtilities(_context);
                 }
@@ -70,6 +71,7 @@ namespace DDI.Data
         public Repository() :
             this(new DomainContext())
         {
+            _isUOW = false;
         }
 
         #endregion Public Constructors
@@ -79,11 +81,14 @@ namespace DDI.Data
         public Repository(DbContext context)
         {
             _context = context;
+            _isUOW = (context != null);
         }
 
         #endregion Internal Constructors
 
         #region Public Methods
+
+
 
         public virtual void Delete(T entity)
         {
@@ -100,7 +105,10 @@ namespace DDI.Data
                 }
 
                 EntitySet.Remove(entity);
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }                
             }
             catch (DbEntityValidationException e)
             {
@@ -108,6 +116,70 @@ namespace DDI.Data
             }
         }
 
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            var entryCollection = _context.Entry(entity).Collection(collection);
+
+            if (!entryCollection.IsLoaded)
+                entryCollection.Load();
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            var reference = _context.Entry(entity).Reference(property);
+
+            if (!reference.IsLoaded)
+                reference.Load();
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            var entryCollection = _context.Entry(entity).Collection(collection);
+
+            if (!entryCollection.IsLoaded)
+                entryCollection.Load();
+
+            return entryCollection.CurrentValue;
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            var reference = _context.Entry(entity).Reference(property);
+
+            if (!reference.IsLoaded)
+                reference.Load();
+
+            return reference.CurrentValue;
+        }
+
+        /// <summary>
+        /// Return a collection of entities that have already been loaded or added to the repository.
+        /// </summary>
+        public ICollection<T> GetLocal()
+        {
+            return EntitySet.Local;
+        }
+
+        /// <summary>
+        /// Attach an entity (which may belong to another context) to the repository.
+        /// </summary>
+        public void Attach(T entity)
+        {
+            EntitySet.Attach(entity);
+        }
+        
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public T GetById(object id) => EntitySet.Find(id);
@@ -122,7 +194,10 @@ namespace DDI.Data
                 }
 
                 EntitySet.Add(entity);
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -143,7 +218,10 @@ namespace DDI.Data
 
                 EntitySet.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -170,7 +248,7 @@ namespace DDI.Data
 
             action?.Invoke(entity);
 
-            return _context.SaveChanges();
+            return _isUOW ? 0 : _context.SaveChanges();
         }
 
         public List<string> GetModifiedProperties(T entity) 
