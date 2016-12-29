@@ -29,6 +29,7 @@ namespace DDI.Data.Models.Common
         [MaxLength(8)]
         public string UrbanizationKey { get; set; }
 
+        [Index]
         [MaxLength(8)]
         public string CityKey { get; set; }    
 

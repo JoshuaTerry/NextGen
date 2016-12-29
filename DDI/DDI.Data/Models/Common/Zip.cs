@@ -17,6 +17,7 @@ namespace DDI.Data.Models.Common
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get; set; }
 
+        [Index]
         [MaxLength(5)]
         public string ZipCode { get; set; }
 
