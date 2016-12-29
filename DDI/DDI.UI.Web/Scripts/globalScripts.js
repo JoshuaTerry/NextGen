@@ -208,6 +208,21 @@ function FormatJSONDate(jsonDate) {
     return date;
 }
 
+function ExecuteFunction(functionName, context) {
+
+    var args = [].slice.call(arguments).splice(2);
+    var namespaces = functionName.split(".");
+    var func = namespaces.pop();
+
+    for (var i = 0; i < namespaces.length; i++) {
+        context = context[namespaces[i]];
+    }
+
+    if (context[func])
+        return context[func].apply(context, args);
+
+}
+
 
 // EDITING
 //
