@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -79,6 +80,80 @@ namespace DDI.Data
 
                 _isDisposed = true;
             }
+        }
+
+        public IQueryable<T> Where<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Return a queryable collection of entities.
+        /// </summary>
+        public IQueryable<T> GetEntities<T>() where T : class
+        {
+            return GetRepository<T>().Entities;
+        }
+
+        /// <summary>
+        /// Returns the first entity that satisfies a condition or null if no such entity is found.
+        /// </summary>
+        public T FirstOrDefault<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.FirstOrDefault(predicate);
+        }
+
+        public void LoadReference<T, TElement>(T entity, Expression<Func<T, ICollection<TElement>>> collection)
+            where T : class
+            where TElement : class
+        {
+            // Nothing to do
+        }
+
+        public void LoadReference<T, TElement>(T entity, Expression<Func<T, TElement>> property)
+            where T : class
+            where TElement : class
+        {
+            // Nothing to do
+        }
+
+        public ICollection<TElement> GetReference<T, TElement>(T entity, Expression<Func<T, ICollection<TElement>>> collection)
+            where T : class
+            where TElement : class
+        {
+            // Compile then invoke the expression, passing it the entity.  This should return the collection.
+            return collection.Compile().Invoke(entity);
+        }
+
+        public TElement GetReference<T, TElement>(T entity, Expression<Func<T, TElement>> property)
+            where T : class
+            where TElement : class
+        {
+            // Compile then invoke the expression, passing it the entity.  This should return the property value.
+            return property.Compile().Invoke(entity);
+        }
+
+        public ICollection<T> GetLocal<T>() where T : class
+        {
+            // Just return the set of entities.
+            return GetEntities<T>().ToList();
+        }
+
+        public void Attach<T>(T entity) where T : class
+        {
+            var entities = (ICollection<T>)(GetRepository<T>().Entities);
+            if (!entities.Contains(entity))
+                entities.Add(entity);
+        }
+
+        public void Insert<T>(T entity) where T : class
+        {
+            ((ICollection<T>)(GetRepository<T>().Entities)).Add(entity);
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
         #endregion Protected Methods

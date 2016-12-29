@@ -10,7 +10,7 @@ using DDI.Data.Models.Common;
 
 namespace DDI.Business.Common
 {
-    public class ZipLookup
+    public class ZipLookup : IDisposable
     {
         internal class Address
         {
@@ -44,12 +44,20 @@ namespace DDI.Business.Common
         }
 
         private static List<Abbreviation> _abbreviations = null;
+        private IUnitOfWork _uow = null;
 
-        private void Initialize(UnitOfWorkEF uow)
+        public ZipLookup() : this(new UnitOfWorkEF()) { }
+
+        public ZipLookup(IUnitOfWork uow)
+        {
+            _uow = uow;
+        }
+
+        internal void Initialize()
         {
             if (_abbreviations == null)
             {
-                _abbreviations = uow.GetEntities<Abbreviation>().ToList();                
+                _abbreviations = _uow.GetEntities<Abbreviation>().ToList();                
             }
         }
 
@@ -76,193 +84,190 @@ namespace DDI.Business.Common
             List<string> zipList = new List<string>();
             string preferredBranch = string.Empty;
 
-            using (var uow = new UnitOfWorkEF())
+            Initialize();
+
+            Address workAddr = SplitAddress(fullAddr);
+            string zipCode = addr.PostalCode ?? string.Empty;
+            if (zipCode.Length > 5)
+                zipCode = zipCode.Substring(0, 5);
+
+            if (addr.State != null)
             {
-                Initialize(uow);
+                _uow.Attach(addr.State);
+            }
 
-                Address workAddr = SplitAddress(fullAddr);
-                string zipCode = addr.PostalCode ?? string.Empty;
-                if (zipCode.Length > 5)
-                    zipCode = zipCode.Substring(0, 5);
-
-                if (addr.State != null)
-                {
-                    uow.Attach(addr.State);
-                }
-
-                if (zipCode.Length == 5)
-                {
-                    Zip z = uow.GetEntities<Zip>().IncludePath(p => p.City.State).IncludePath(p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
+            if (zipCode.Length == 5)
+            {
+                Zip z = _uow.GetEntities<Zip>().IncludePath(p => p.City.State).IncludePath(p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
                     
-                    if (z != null)
-                    {
-                        preferredBranch = GetPreferredBranch(z);
+                if (z != null)
+                {
+                    preferredBranch = GetPreferredBranch(z);
 
-                        // If no city was provided, or if the city doesn't match the preferred or any other branch, set the city to the preferred branch name.
-                        if (string.IsNullOrWhiteSpace(addr.City) || (addr.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addr.City)))
-                            addr.City = preferredBranch;
-                        // Set the state code.
-                        addr.State = z.City.State;
+                    // If no city was provided, or if the city doesn't match the preferred or any other branch, set the city to the preferred branch name.
+                    if (string.IsNullOrWhiteSpace(addr.City) || (addr.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addr.City)))
+                        addr.City = preferredBranch;
+                    // Set the state code.
+                    addr.State = z.City.State;
+                }
+
+                zipList.Add(zipCode);
+
+                if (z != null && z.City != null)
+                {
+                    _uow.LoadReference(z.City, p => p.Zips);
+                    // Add in all the other zips for this city.  They will be checked if we can't find a match for the provided zip.
+                    foreach (Zip other in z.City.Zips)
+                    {
+                        if (!zipList.Contains(other.ZipCode))
+                            zipList.Add(other.ZipCode);
                     }
+                }
 
-                    zipList.Add(zipCode);
+            }
+            else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(fullAddr))
+            {
+                // No ZIP provided, use city & state to find branches & build a list of ZIPs.
+                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addr.City && p.Zip.City.StateId == addr.State.Id))
+                    //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
+                {
+                    if (!zipList.Contains(branch.Zip.ZipCode))
+                        zipList.Add(branch.Zip.ZipCode);
+                }
+            }
 
-                    if (z != null && z.City != null)
+            if (string.IsNullOrWhiteSpace(fullAddr))
+                return string.Empty;
+
+            Address tempAddr = new Address(workAddr);
+            foreach (string zipItem in zipList)
+            {
+                zipCode = zipItem;
+                workAddr.CopyFrom(tempAddr);
+
+                Zip zip = _uow.GetEntities<Zip>().IncludePath(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
+
+                List<ZipStreet> streetList = GetStreetList(zip.ZipStreets, workAddr);
+
+                foreach (ZipStreet item in streetList)
+                {
+                    _uow.LoadReference(item, p => p.ZipPlus4s);
+
+                    foreach (ZipPlus4 z4item in item.ZipPlus4s)
                     {
-                        uow.LoadReference(z.City, p => p.Zips);
-                        // Add in all the other zips for this city.  They will be checked if we can't find a match for the provided zip.
-                        foreach (Zip other in z.City.Zips)
+                        int rtemp = 0;
+
+                        if (!string.IsNullOrWhiteSpace(workAddr.StreetNum) || z4item.AddressLow != z4item.SecondaryLow)
                         {
-                            if (!zipList.Contains(other.ZipCode))
-                                zipList.Add(other.ZipCode);
+                            if (!CompareAddressNumber(workAddr.StreetNum, z4item.AddressLow, z4item.AddressHigh, z4item.AddressType))
+                                continue;
+                            rtemp = CalcRating(z4item.AddressLow, z4item.AddressHigh);
+                            if (rtemp == -1)
+                                rtemp = (string.IsNullOrWhiteSpace(z4item.AddressHigh) && string.IsNullOrWhiteSpace(z4item.AddressLow) ? 0 : rating);
+
                         }
-                    }
+                        else
+                            rtemp = (!string.IsNullOrWhiteSpace(workAddr.SecondaryAbbr) ? 0 : rating);
 
-                }
-                else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(fullAddr))
-                {
-                    // No ZIP provided, use city & state to find branches & build a list of ZIPs.
-                    foreach (var branch in uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addr.City && p.Zip.City.StateId == addr.State.Id))
-                        //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
-                    {
-                        if (!zipList.Contains(branch.Zip.ZipCode))
-                            zipList.Add(branch.Zip.ZipCode);
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(fullAddr))
-                    return string.Empty;
-
-                Address tempAddr = new Address(workAddr);
-                foreach (string zipItem in zipList)
-                {
-                    zipCode = zipItem;
-                    workAddr.CopyFrom(tempAddr);
-
-                    Zip zip = uow.GetEntities<Zip>().IncludePath(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
-
-                    List<ZipStreet> streetList = GetStreetList(uow, zip.ZipStreets, workAddr);
-
-                    foreach (ZipStreet item in streetList)
-                    {
-                        uow.LoadReference(item, p => p.ZipPlus4s);
-
-                        foreach (ZipPlus4 z4item in item.ZipPlus4s)
+                        if (!string.IsNullOrWhiteSpace(workAddr.SecondaryAbbr))
                         {
-                            int rtemp = 0;
-
-                            if (!string.IsNullOrWhiteSpace(workAddr.StreetNum) || z4item.AddressLow != z4item.SecondaryLow)
+                            if (string.IsNullOrWhiteSpace(z4item.SecondaryAbbreviation))
                             {
-                                if (!CompareAddressNumber(workAddr.StreetNum, z4item.AddressLow, z4item.AddressHigh, z4item.AddressType))
-                                    continue;
-                                rtemp = CalcRating(z4item.AddressLow, z4item.AddressHigh);
-                                if (rtemp == -1)
-                                    rtemp = (string.IsNullOrWhiteSpace(z4item.AddressHigh) && string.IsNullOrWhiteSpace(z4item.AddressLow) ? 0 : rating);
-
-                            }
-                            else
-                                rtemp = (!string.IsNullOrWhiteSpace(workAddr.SecondaryAbbr) ? 0 : rating);
-
-                            if (!string.IsNullOrWhiteSpace(workAddr.SecondaryAbbr))
-                            {
-                                if (string.IsNullOrWhiteSpace(z4item.SecondaryAbbreviation))
+                                rtemp += 100000;
+                                rtemp += CalcRating(z4item.SecondaryLow, z4item.SecondaryHigh);
+                                if (rtemp < rating)
                                 {
-                                    rtemp += 100000;
-                                    rtemp += CalcRating(z4item.SecondaryLow, z4item.SecondaryHigh);
-                                    if (rtemp < rating)
-                                    {
-                                        rating = rtemp;
-                                        bestZip4 = z4item;
-                                    }
-                                    continue;
+                                    rating = rtemp;
+                                    bestZip4 = z4item;
                                 }
-
-                                if (workAddr.SecondaryAbbr != z4item.SecondaryAbbreviation)
-                                    rtemp += 2000000;
-
-                                if (!CompareAddressNumber(workAddr.SecondaryNum, z4item.SecondaryLow, z4item.SecondaryHigh, z4item.SecondaryType))
-                                    continue;
-                            }
-                            else if (!string.IsNullOrWhiteSpace(z4item.SecondaryAbbreviation))
-                                rtemp += 3000000;
-
-                            if (rtemp < rating)
-                            {
-                                rating = rtemp;
-                                bestZip4 = z4item;
+                                continue;
                             }
 
-                        } // each zip4
-                    } // each street
+                            if (workAddr.SecondaryAbbr != z4item.SecondaryAbbreviation)
+                                rtemp += 2000000;
 
-                    if (bestZip4 != null)
-                        break;
-                }
+                            if (!CompareAddressNumber(workAddr.SecondaryNum, z4item.SecondaryLow, z4item.SecondaryHigh, z4item.SecondaryType))
+                                continue;
+                        }
+                        else if (!string.IsNullOrWhiteSpace(z4item.SecondaryAbbreviation))
+                            rtemp += 3000000;
 
-                if (bestZip4 == null)
-                    return string.Empty;
+                        if (rtemp < rating)
+                        {
+                            rating = rtemp;
+                            bestZip4 = z4item;
+                        }
 
-                addr.PostalCode = zipCode;
+                    } // each zip4
+                } // each street
 
-                if (addr.County == null)
+                if (bestZip4 != null)
+                    break;
+            }
+
+            if (bestZip4 == null)
+                return string.Empty;
+
+            addr.PostalCode = zipCode;
+
+            if (addr.County == null)
+            {
+                _uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
+                _uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
+
+                addr.County = bestZip4.ZipStreet.Zip.City.County;                    
+            }
+
+            if (addr.Country == null && addr.State != null)
+            {
+                addr.Country = _uow.GetReference(addr.State, p => p.Country);
+            }
+
+            // Build result address
+            List<string> rslt = new List<string>();
+            rslt.Add(workAddr.StreetNum);
+
+            if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Prefix))
+                rslt.Add(bestZip4.ZipStreet.Prefix);
+            if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Street))
+                rslt.Add(bestZip4.ZipStreet.Street);
+            if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Suffix))
+                rslt.Add(bestZip4.ZipStreet.Suffix);
+            if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Suffix2))
+                rslt.Add(bestZip4.ZipStreet.Suffix2);
+
+            if (!string.IsNullOrWhiteSpace(bestZip4.SecondaryAbbreviation))
+            {
+                rslt.Add(bestZip4.SecondaryAbbreviation);
+                if (!string.IsNullOrWhiteSpace(workAddr.SecondaryNum))
+                    rslt.Add(workAddr.SecondaryNum);
+            }
+
+            resultAddress = string.Join(" ", rslt);
+
+            // Non-deliverable address...
+            if (bestZip4.Plus4.IndexOf("ND") >= 0)
+                return string.Empty;
+
+            string plus4;
+
+            if (!bestZip4.IsRange)
+                plus4 = bestZip4.Plus4;
+            else
+            {
+                try
                 {
-                    uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
-                    uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
-
-                    addr.County = bestZip4.ZipStreet.Zip.City.County;                    
+                    int diff = int.Parse(workAddr.StreetNum) - int.Parse(bestZip4.AddressLow);
+                    plus4 = (int.Parse(bestZip4.Plus4) + diff).ToString("D4");
                 }
-
-                if (addr.Country == null && addr.State != null)
+                catch
                 {
-                    addr.Country = uow.GetReference(addr.State, p => p.Country);
+                    plus4 = string.Empty;
                 }
-
-                // Build result address
-                List<string> rslt = new List<string>();
-                rslt.Add(workAddr.StreetNum);
-
-                if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Prefix))
-                    rslt.Add(bestZip4.ZipStreet.Prefix);
-                if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Street))
-                    rslt.Add(bestZip4.ZipStreet.Street);
-                if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Suffix))
-                    rslt.Add(bestZip4.ZipStreet.Suffix);
-                if (!string.IsNullOrWhiteSpace(bestZip4.ZipStreet.Suffix2))
-                    rslt.Add(bestZip4.ZipStreet.Suffix2);
-
-                if (!string.IsNullOrWhiteSpace(bestZip4.SecondaryAbbreviation))
-                {
-                    rslt.Add(bestZip4.SecondaryAbbreviation);
-                    if (!string.IsNullOrWhiteSpace(workAddr.SecondaryNum))
-                        rslt.Add(workAddr.SecondaryNum);
-                }
-
-                resultAddress = string.Join(" ", rslt);
-
-                // Non-deliverable address...
-                if (bestZip4.Plus4.IndexOf("ND") >= 0)
-                    return string.Empty;
-
-                string plus4;
-
-                if (!bestZip4.IsRange)
-                    plus4 = bestZip4.Plus4;
-                else
-                {
-                    try
-                    {
-                        int diff = int.Parse(workAddr.StreetNum) - int.Parse(bestZip4.AddressLow);
-                        plus4 = (int.Parse(bestZip4.Plus4) + diff).ToString("D4");
-                    }
-                    catch
-                    {
-                        plus4 = string.Empty;
-                    }
-                }
-                if (plus4.Length > 0)
-                    addr.PostalCode = addr.PostalCode + "-" + plus4;
-                return plus4;
-            } // using os
+            }
+            if (plus4.Length > 0)
+                addr.PostalCode = addr.PostalCode + "-" + plus4;
+            return plus4;
 
         }
 
@@ -295,7 +300,7 @@ namespace DDI.Business.Common
                 s1 == s2;
         }
 
-        internal List<ZipStreet> GetStreetList(UnitOfWorkEF ses, IEnumerable<ZipStreet> zipStreets, Address workAddr)
+        internal List<ZipStreet> GetStreetList(IEnumerable<ZipStreet> zipStreets, Address workAddr)
         {
 
             int passNum = 0;
@@ -883,6 +888,30 @@ namespace DDI.Business.Common
         {
             return !string.IsNullOrEmpty(word) && "E,S,W,N,SE,NE,SW,NW".IndexOf(word) >= 0;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _uow?.Dispose();
+                }
+
+                _uow = null;
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
 
     }
 

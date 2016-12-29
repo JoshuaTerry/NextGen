@@ -102,7 +102,7 @@ namespace DDI.Data
         /// <summary>
         /// Explicitly load a reference property or collection for an entity and return the value.
         /// </summary>
-        ICollection<TElement> GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class where T : class
+        public ICollection<TElement> GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class where T : class
         {
             return GetRepository<T>().GetReference<TElement>(entity, collection);
         }
