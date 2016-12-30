@@ -131,6 +131,11 @@ namespace DDI.Data
             GetRepository<T>().Attach(entity);
         }
 
+        public T Create<T>() where T : class
+        {
+            return GetRepository<T>().Create();
+        }
+
         public void Insert<T>(T entity) where T : class
         {
             GetRepository<T>().Insert(entity);

@@ -63,7 +63,7 @@ namespace DDI.Business.Tests.Common
         private const string TESTDESCR = "Common | Business";
 
         [TestMethod,TestCategory(TESTDESCR)]
-        public void Zip4Lookup_AbbreviateWords()
+        public void ZipLookup_AbbreviateWords()
         {
             // This method assumes words are capitalized.
             Assert.AreEqual(_zipLookup.AbbreviateWords("NORTH RIVER ROAD"), "N RIV RD", "Basic functionality test.");
@@ -72,7 +72,7 @@ namespace DDI.Business.Tests.Common
         }
 
         [TestMethod,TestCategory(TESTDESCR)]
-        public void Zip4Lookup_SplitNumber()
+        public void ZipLookup_SplitNumber()
         {
 
             CollectionAssert.AreEquivalent(_zipLookup.SplitNumber("123ABC456"), new string[] { "123", "ABC", "456" }, "Basic functionality.");            
@@ -83,7 +83,7 @@ namespace DDI.Business.Tests.Common
         /// Test WordSplit: Split an address into words delimited by space or other delimiters.
         /// </summary>
         [TestMethod,TestCategory(TESTDESCR)]
-        public void Zip4Lookup_WordSplit()
+        public void ZipLookup_WordSplit()
         {
             string[] rslt = new string[] { "A1C", "D2F" };
             CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C D2F"), rslt, "Basic functionality.");
@@ -96,21 +96,21 @@ namespace DDI.Business.Tests.Common
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void Zip4Lookup_WordCombine()
+        public void ZipLookup_WordCombine()
         {
-            Zip4Lookup_WordCombine_Test("P O Box 1234", "PO Box 1234");
-            Zip4Lookup_WordCombine_Test("R R 5", "RR 5");
-            Zip4Lookup_WordCombine_Test("RURAL RT 5", "RR 5");
-            Zip4Lookup_WordCombine_Test("H C 6", "HC 6");
-            Zip4Lookup_WordCombine_Test("HWY CONTRACT 6", "HC 6");
-            Zip4Lookup_WordCombine_Test("HIGHWAY C 6", "HC 6");
-            Zip4Lookup_WordCombine_Test("RT 7", "RR 7");
-            Zip4Lookup_WordCombine_Test("100 MAIN ST #5", "100 MAIN ST APT 5");
-            Zip4Lookup_WordCombine_Test("100 MAIN ST APARTMENT 5", "100 MAIN ST APT 5");
-            Zip4Lookup_WordCombine_Test("100 MAIN ST APT #5", "100 MAIN ST APT 5");
+            ZipLookup_WordCombine_Test("P O Box 1234", "PO Box 1234");
+            ZipLookup_WordCombine_Test("R R 5", "RR 5");
+            ZipLookup_WordCombine_Test("RURAL RT 5", "RR 5");
+            ZipLookup_WordCombine_Test("H C 6", "HC 6");
+            ZipLookup_WordCombine_Test("HWY CONTRACT 6", "HC 6");
+            ZipLookup_WordCombine_Test("HIGHWAY C 6", "HC 6");
+            ZipLookup_WordCombine_Test("RT 7", "RR 7");
+            ZipLookup_WordCombine_Test("100 MAIN ST #5", "100 MAIN ST APT 5");
+            ZipLookup_WordCombine_Test("100 MAIN ST APARTMENT 5", "100 MAIN ST APT 5");
+            ZipLookup_WordCombine_Test("100 MAIN ST APT #5", "100 MAIN ST APT 5");
         }
 
-        private void Zip4Lookup_WordCombine_Test(string text1, string text2)
+        private void ZipLookup_WordCombine_Test(string text1, string text2)
         {
             List<string> list = text1.Split(' ').ToList();
             List<string> rsltList = text2.Split(' ').ToList();
@@ -124,7 +124,7 @@ namespace DDI.Business.Tests.Common
         /// Test CompareAddressNumber: Address number comparison for Zip+4 lookup
         /// </summary>
         [TestMethod,TestCategory(TESTDESCR)]
-        public void Zip4Lookup_CompareAddressNumber()
+        public void ZipLookup_CompareAddressNumber()
         {
             Assert.IsTrue(_zipLookup.CompareAddressNumber("555", "500", "600", EvenOddType.Any), 
                 "Within range test failed.");
@@ -177,7 +177,7 @@ namespace DDI.Business.Tests.Common
         /// Test SplitAddress: Split a street address into an Address object.
         /// </summary>
         [TestMethod, TestCategory(TESTDESCR)]
-        public void Zip4Lookup_SplitAddress()
+        public void ZipLookup_SplitAddress()
         {
             ZipLookup.Address rslt;
             string descr;

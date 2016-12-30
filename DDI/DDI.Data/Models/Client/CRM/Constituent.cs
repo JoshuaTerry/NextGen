@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Data.Attributes;
 using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.Core;
 
 namespace DDI.Data.Models.Client.CRM
 {
-    [Table("Constituent")]
+    [Table("Constituent"), EntityType("NANA")]
     public class Constituent : BaseEntity
     {
         #region Public Properties
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public BirthDateType BirthDateType { get; set; }

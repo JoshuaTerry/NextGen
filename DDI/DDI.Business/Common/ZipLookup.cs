@@ -10,42 +10,18 @@ using DDI.Data.Models.Common;
 
 namespace DDI.Business.Common
 {
+    /// <summary>
+    /// Business logic class for zip code lookups
+    /// </summary>
     public class ZipLookup : IDisposable
     {
-        internal class Address
-        {
-            public string Prefix { get; set; }
-            public string Street { get; set; }
-            public string Suffix { get; set; }
-            public string Suffix2 { get; set; }
-            public string StreetNum { get; set; }
-            public string SecondaryAbbr { get; set; }
-            public string SecondaryNum { get; set; }
-            public Address()
-            {
-                Prefix = Street = Suffix = Suffix2 = StreetNum = SecondaryAbbr = SecondaryNum = string.Empty;
-            }
-
-            public Address(Address c) : base()
-            {
-                CopyFrom(c);
-            }
-
-            public void CopyFrom(Address c)
-            {
-                Prefix = c.Prefix;
-                Street = c.Street;
-                Suffix = c.Suffix;
-                Suffix2 = c.Suffix2;
-                StreetNum = c.StreetNum;
-                SecondaryAbbr = c.SecondaryAbbr;
-                SecondaryNum = c.SecondaryNum;
-            }
-        }
+        #region Fields
 
         private static List<Abbreviation> _abbreviations = null;
         private IUnitOfWork _uow = null;
+        #endregion
 
+        #region Constructors 
         public ZipLookup() : this(new UnitOfWorkEF()) { }
 
         public ZipLookup(IUnitOfWork uow)
@@ -53,27 +29,14 @@ namespace DDI.Business.Common
             _uow = uow;
         }
 
-        internal void Initialize()
-        {
-            if (_abbreviations == null)
-            {
-                _abbreviations = _uow.GetEntities<Abbreviation>().ToList();                
-            }
-        }
+        #endregion
 
-        private string GetPreferredBranch(Zip zip)
-        {
-            ZipBranch zb = zip.ZipBranches.FirstOrDefault(p => p.IsPreferred)
-                                ??
-                           zip.ZipBranches.FirstOrDefault();
-            return zb?.Description ?? string.Empty;
-        }
-
+        #region Public Methods
         /// <summary>
         /// Perform Zip+4 lookup on an address.
         /// </summary>
         /// <returns></returns>
-        public string Lookup(ZipLookupInfo addr, out string resultAddress)
+        public string Zip4Lookup(ZipLookupInfo addr, out string resultAddress)
         {
 
             resultAddress = string.Empty;
@@ -99,14 +62,16 @@ namespace DDI.Business.Common
             if (zipCode.Length == 5)
             {
                 Zip z = _uow.GetEntities<Zip>().IncludePath(p => p.City.State).IncludePath(p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
-                    
+
                 if (z != null)
                 {
                     preferredBranch = GetPreferredBranch(z);
 
                     // If no city was provided, or if the city doesn't match the preferred or any other branch, set the city to the preferred branch name.
                     if (string.IsNullOrWhiteSpace(addr.City) || (addr.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addr.City)))
+                    {
                         addr.City = preferredBranch;
+                    }
                     // Set the state code.
                     addr.State = z.City.State;
                 }
@@ -120,7 +85,9 @@ namespace DDI.Business.Common
                     foreach (Zip other in z.City.Zips)
                     {
                         if (!zipList.Contains(other.ZipCode))
+                        {
                             zipList.Add(other.ZipCode);
+                        }
                     }
                 }
 
@@ -129,15 +96,19 @@ namespace DDI.Business.Common
             {
                 // No ZIP provided, use city & state to find branches & build a list of ZIPs.
                 foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addr.City && p.Zip.City.StateId == addr.State.Id))
-                    //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
+                //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
                 {
                     if (!zipList.Contains(branch.Zip.ZipCode))
+                    {
                         zipList.Add(branch.Zip.ZipCode);
+                    }
                 }
             }
 
             if (string.IsNullOrWhiteSpace(fullAddr))
+            {
                 return string.Empty;
+            }
 
             Address tempAddr = new Address(workAddr);
             foreach (string zipItem in zipList)
@@ -160,10 +131,14 @@ namespace DDI.Business.Common
                         if (!string.IsNullOrWhiteSpace(workAddr.StreetNum) || z4item.AddressLow != z4item.SecondaryLow)
                         {
                             if (!CompareAddressNumber(workAddr.StreetNum, z4item.AddressLow, z4item.AddressHigh, z4item.AddressType))
+                            {
                                 continue;
+                            }
                             rtemp = CalcRating(z4item.AddressLow, z4item.AddressHigh);
                             if (rtemp == -1)
+                            {
                                 rtemp = (string.IsNullOrWhiteSpace(z4item.AddressHigh) && string.IsNullOrWhiteSpace(z4item.AddressLow) ? 0 : rating);
+                            }
 
                         }
                         else
@@ -184,13 +159,19 @@ namespace DDI.Business.Common
                             }
 
                             if (workAddr.SecondaryAbbr != z4item.SecondaryAbbreviation)
+                            {
                                 rtemp += 2000000;
+                            }
 
                             if (!CompareAddressNumber(workAddr.SecondaryNum, z4item.SecondaryLow, z4item.SecondaryHigh, z4item.SecondaryType))
+                            {
                                 continue;
+                            }
                         }
                         else if (!string.IsNullOrWhiteSpace(z4item.SecondaryAbbreviation))
+                        {
                             rtemp += 3000000;
+                        }
 
                         if (rtemp < rating)
                         {
@@ -202,11 +183,15 @@ namespace DDI.Business.Common
                 } // each street
 
                 if (bestZip4 != null)
+                {
                     break;
+                }
             }
 
             if (bestZip4 == null)
+            {
                 return string.Empty;
+            }
 
             addr.PostalCode = zipCode;
 
@@ -215,7 +200,7 @@ namespace DDI.Business.Common
                 _uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
                 _uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
 
-                addr.County = bestZip4.ZipStreet.Zip.City.County;                    
+                addr.County = bestZip4.ZipStreet.Zip.City.County;
             }
 
             if (addr.Country == null && addr.State != null)
@@ -247,12 +232,16 @@ namespace DDI.Business.Common
 
             // Non-deliverable address...
             if (bestZip4.Plus4.IndexOf("ND") >= 0)
+            {
                 return string.Empty;
+            }
 
             string plus4;
 
             if (!bestZip4.IsRange)
+            {
                 plus4 = bestZip4.Plus4;
+            }
             else
             {
                 try
@@ -266,17 +255,43 @@ namespace DDI.Business.Common
                 }
             }
             if (plus4.Length > 0)
+            {
                 addr.PostalCode = addr.PostalCode + "-" + plus4;
+            }
             return plus4;
 
         }
+        #endregion
+
+        #region Private/Internal Methods
+
+        internal void Initialize()
+        {
+            if (_abbreviations == null)
+            {
+                _abbreviations = _uow.GetEntities<Abbreviation>().ToList();                
+            }
+        }
+
+        private string GetPreferredBranch(Zip zip)
+        {
+            ZipBranch zb = zip.ZipBranches.FirstOrDefault(p => p.IsPreferred)
+                                ??
+                           zip.ZipBranches.FirstOrDefault();
+            return zb?.Description ?? string.Empty;
+        }
+
 
         internal int CalcRating(string low, string high)
         {
             if (low == null)
+            {
                 low = string.Empty;
+            }
             if (high == null)
+            {
                 high = string.Empty;
+            }
 
             int len = low.Length;
 
@@ -289,7 +304,9 @@ namespace DDI.Business.Common
 
             int rslt = 0;
             for (int idx = 0; idx < len; idx++)
+            {
                 rslt = rslt * 10 + high[idx] - low[idx];
+            }
 
             return rslt;
         }
@@ -319,25 +336,43 @@ namespace DDI.Business.Common
                 {
                     // If prefix & suffix are specified, ignore explicit mismatches.
                     if (!string.IsNullOrWhiteSpace(item.Prefix) && !string.IsNullOrWhiteSpace(workAddr.Prefix) && item.Prefix != workAddr.Prefix)
+                    {
                         continue;
+                    }
 
                     if (!string.IsNullOrWhiteSpace(item.Suffix) && !string.IsNullOrWhiteSpace(workAddr.Suffix) && item.Suffix != workAddr.Suffix)
+                    {
                         continue;
+                    }
 
                     if (!StringSameAs(item.Suffix, workAddr.Suffix) && !StringSameAs(item.Prefix, workAddr.Prefix))
+                    {
                         streetList3.Add(item);
+                    }
                     else if (!StringSameAs(item.Suffix, workAddr.Suffix) || !StringSameAs(item.Prefix, workAddr.Prefix))
+                    {
                         streetList2.Add(item);
+                    }
                     else
+                    {
                         streetList1.Add(item);
+                    }
                 }
 
                 if (streetList2.Count == 0)
+                {
                     streetList2 = streetList3;
+                }
+
                 if (streetList1.Count == 0)
+                {
                     streetList1 = streetList2;
+                }
+
                 if (streetList1.Count > 0)
+                {
                     break;
+                }
 
                 // At this point, no matches were found.
                 if (passNum == 0 && !string.IsNullOrWhiteSpace(workAddr.Suffix2))
@@ -390,7 +425,9 @@ namespace DDI.Business.Common
 
             // Empty address?
             if (abbrs.Count == 0)
+            {
                 return rslt;
+            }
 
             // Logic from "wordclass" procedure in z4spladr.p
 
@@ -403,7 +440,9 @@ namespace DDI.Business.Common
                     // It might be "APARTMENT ROAD" or "FLOOR STREET" - these aren't secondary addresses.
                     if (idx + 1 < abbrs.Count &&
                         _abbreviations.Any(p => p.Word == abbrs[idx + 1] && p.IsSuffix))
+                    {
                         continue;
+                    }
 
                     rslt.SecondaryAbbr = sec.USPSAbbreviation;
 
@@ -423,12 +462,19 @@ namespace DDI.Business.Common
                             string term = words[pos];
                             // Stop if we find something that looks like an abbreviation
                             if (_abbreviations.Any(p => p.Word == term && (p.IsSuffix || p.IsSecondary)))
+                            {
                                 break;
+                            }
 
-                            if (term.IndexOf('/') >= 0) // Something like BLDG 5 1/2
+                            if (term.IndexOf('/') >= 0)
+                            {
+                                // Something like BLDG 5 1/2
                                 rslt.SecondaryNum = (rslt.SecondaryNum + " " + term).Trim();
+                            }
                             else
+                            {
                                 rslt.SecondaryNum = rslt.SecondaryNum + term;
+                            }
                             words[pos] = string.Empty;
                             abbrs[pos] = string.Empty;
                         }
@@ -439,13 +485,21 @@ namespace DDI.Business.Common
 
                     // Convert ordinal numbers to regular numbers in secondary address number.
                     if (rslt.SecondaryNum == "1ST")
+                    {
                         rslt.SecondaryNum = "1";
+                    }
                     else if (rslt.SecondaryNum == "2ND")
+                    {
                         rslt.SecondaryNum = "2";
+                    }
                     else if (rslt.SecondaryNum == "3RD")
+                    {
                         rslt.SecondaryNum = "3";
+                    }
                     else if (rslt.SecondaryNum.Length >= 3 && char.IsDigit(rslt.SecondaryNum[0]) && rslt.SecondaryNum.EndsWith("TH"))
+                    {
                         rslt.SecondaryNum = rslt.SecondaryNum.Substring(0, rslt.SecondaryNum.Length - 2);
+                    }
 
                     break;
                 }
@@ -461,11 +515,17 @@ namespace DDI.Business.Common
                 for (int pos = 1; pos < words.Count; pos++)
                 {
                     if (!foundBox && abbrs[pos] == "BOX")
+                    {
                         foundBox = true;
+                    }
                     else if (!foundBox)
+                    {
                         rslt.Street = (rslt.Street + " " + words[pos]).Trim();
+                    }
                     else
+                    {
                         rslt.StreetNum = (rslt.StreetNum + " " + words[pos]).Trim();
+                    }
                 }
                 return rslt;
             }
@@ -480,21 +540,33 @@ namespace DDI.Business.Common
                 for (int pos = 0; pos < words.Count; pos++)
                 {
                     if (!foundBox && abbrs[pos] == "BOX")
+                    {
                         foundBox = true;
+                    }
                     else if (foundBox)
+                    {
                         rslt.StreetNum = rslt.StreetNum + words[pos];
+                    }
                 }
                 return rslt;
             }
 
             // Remove empty entries at the end
             for (idx = abbrs.Count - 1; idx >= 0; idx--)
+            {
                 if (string.IsNullOrWhiteSpace(abbrs[idx]))
+                {
                     abbrs.RemoveAt(idx);
+                }
+            }
 
             for (idx = words.Count - 1; idx >= 0; idx--)
+            {
                 if (string.IsNullOrWhiteSpace(words[idx]))
+                {
                     words.RemoveAt(idx);
+                }
+            }
 
             int suffixLen = int.MaxValue;
             int suffix2Len = 0;
@@ -507,7 +579,9 @@ namespace DDI.Business.Common
                 string abbr = abbrs[idx];
                 string word = words[idx];
                 if (string.IsNullOrWhiteSpace(abbr))
+                {
                     continue;
+                }
 
                 if (IsDirectional(abbr))
                 {
@@ -563,15 +637,23 @@ namespace DDI.Business.Common
                         !word.Contains("ST") && !word.Contains("ND") && !word.Contains("RD") && !word.Contains("TH"))
                     {
                         if (word.Contains('/'))
+                        {
                             rslt.StreetNum = (rslt.StreetNum + " " + word).Trim();
+                        }
                         else
+                        {
                             rslt.StreetNum = rslt.StreetNum + word;
+                        }
                     }
                     else
+                    {
                         rslt.Street = (rslt.Street + " " + word).Trim();
+                    }
                 }
                 else
+                {
                     rslt.Street = (rslt.Street + " " + word).Trim();
+                }
             }
 
             if (string.IsNullOrWhiteSpace(rslt.Street))
@@ -587,7 +669,9 @@ namespace DDI.Business.Common
             }
 
             if (rslt.Street.StartsWith("MC "))
+            {
                 rslt.Street = "MC" + rslt.Street.Substring(3);
+            }
 
             return rslt;
         }
@@ -616,7 +700,9 @@ namespace DDI.Business.Common
 
             // # of parts in addrLow and addrHigh must be the same.  
             if (addrLowParts.Count != addrHighParts.Count)
+            {
                 return false;
+            }
 
             // USPS should ensure that only one of the parts is variable.  Determine which part this is.
             int variablePart = -1;
@@ -662,7 +748,10 @@ namespace DDI.Business.Common
 
                     // Compare
                     if (string.Compare(addrPart, lowPart) < 0 ||
-                        string.Compare(addrPart, highPart) > 0) return false;
+                        string.Compare(addrPart, highPart) > 0)
+                    {
+                        return false;
+                    }
 
                     rslt = true;
 
@@ -673,12 +762,16 @@ namespace DDI.Business.Common
                         if (int.TryParse(addrNum, out n))
                         {
                             if (n > 0)
+                            {
                                 //        Odd?     ==               Odd?
                                 rslt = ((n % 2 == 1) == (evenOdd == EvenOddType.Odd));
+                            }
                         }
                     }
                     if (!rslt)
+                    {
                         return false;
+                    }
                 }
             }
 
@@ -703,7 +796,9 @@ namespace DDI.Business.Common
                     if (!numeric)  // Start of a numeric part
                     {
                         if (sb.Length > 0)
+                        {
                             rslt.Add(sb.ToString()); // Add previous non-numeric part to the list.
+                        }
                         sb.Clear();
                         numeric = true;
                     }
@@ -714,7 +809,9 @@ namespace DDI.Business.Common
                     if (numeric) // Start of a non-numeric part
                     {
                         if (sb.Length > 0)
+                        {
                             rslt.Add(sb.ToString()); // Add previous numeric part to the list.
+                        }
                         sb.Clear();
                         numeric = false;
                     }
@@ -724,7 +821,9 @@ namespace DDI.Business.Common
 
             // Add any final part to the list.
             if (sb.Length > 0)
+            {
                 rslt.Add(sb.ToString());
+            }
 
             return rslt;
 
@@ -760,16 +859,22 @@ namespace DDI.Business.Common
                 if (" .,'\"-".IndexOf(c) >= 0)
                 {
                     if (sb.Length > 0)
+                    {
                         rslt.Add(sb.ToString());
+                    }
                     sb.Clear();
                 }
                 else
+                {
                     sb.Append(c);
+                }
             }
 
             // Get final entry
             if (sb.Length > 0)
+            {
                 rslt.Add(sb.ToString());
+            }
 
             return rslt;
         }
@@ -780,7 +885,9 @@ namespace DDI.Business.Common
         internal void WordCombine(List<string> wordList)
         {
             if (wordList.Count < 1)
+            {
                 return;
+            }
 
             List<string> rslt = new List<string>();
             int startPos = 0;
@@ -859,8 +966,11 @@ namespace DDI.Business.Common
             {
                 char c = text[idx];
 
-                if (char.IsLetter(c)) // build sequence of letters
+                if (char.IsLetter(c))
+                {
+                    // build sequence of letters
                     sb.Append(c);
+                }
                 if (idx == text.Length - 1 || !char.IsLetter(c)) // if end of a word or end of the text
                 {
                     if (sb.Length > 0)
@@ -869,15 +979,21 @@ namespace DDI.Business.Common
                         string word = sb.ToString();
                         var abbr = _abbreviations.FirstOrDefault(p => p.Word == word && p.AddressWord != null && p.AddressWord.Length > 0);
                         if (abbr != null)
+                        {
                             rslt.Append(abbr.USPSAbbreviation);
+                        }
                         else
+                        {
                             rslt.Append(word); // no abbrevation found for this word.
+                        }
                         sb.Clear();
                     }
 
                     // Omit periods, otherwise append non-letters to the result
                     if (c != '.' && !char.IsLetter(c))
+                    {
                         rslt.Append(c);
+                    }
                 }
             }
 
@@ -888,6 +1004,7 @@ namespace DDI.Business.Common
         {
             return !string.IsNullOrEmpty(word) && "E,S,W,N,SE,NE,SW,NW".IndexOf(word) >= 0;
         }
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -913,17 +1030,42 @@ namespace DDI.Business.Common
         }
         #endregion
 
-    }
+        #region Nested Classes
+        /// <summary>
+        /// Class for representing address information.
+        /// </summary>
+        internal class Address
+        {
+            public string Prefix { get; set; }
+            public string Street { get; set; }
+            public string Suffix { get; set; }
+            public string Suffix2 { get; set; }
+            public string StreetNum { get; set; }
+            public string SecondaryAbbr { get; set; }
+            public string SecondaryNum { get; set; }
+            public Address()
+            {
+                Prefix = Street = Suffix = Suffix2 = StreetNum = SecondaryAbbr = SecondaryNum = string.Empty;
+            }
 
-    public class ZipLookupInfo
-    {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public Country Country { get; set; }
-        public County County { get; set; }        
-        public string PostalCode { get; set; }
-        public State State { get; set; }
+            public Address(Address c) : base()
+            {
+                CopyFrom(c);
+            }
+
+            public void CopyFrom(Address c)
+            {
+                Prefix = c.Prefix;
+                Street = c.Street;
+                Suffix = c.Suffix;
+                Suffix2 = c.Suffix2;
+                StreetNum = c.StreetNum;
+                SecondaryAbbr = c.SecondaryAbbr;
+                SecondaryNum = c.SecondaryNum;
+            }
+        }
+        #endregion
+
 
     }
 }

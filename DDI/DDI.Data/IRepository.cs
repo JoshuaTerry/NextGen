@@ -27,9 +27,11 @@ namespace DDI.Data
 
         T GetById(object id);
 
-        T Find(params object[] keyValues); 
+        T Find(params object[] keyValues);
 
-		T Insert(T entity);
+        T Create();
+
+        T Insert(T entity);
 
 		T Update(T entity);
 

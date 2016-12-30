@@ -21,7 +21,7 @@ namespace DDI.WebApi
                 addr.State = uow.FirstOrDefault<Data.Models.Common.State>(p => p.StateCode == "FL" && p.Country.ISOCode == "US");
 
                 string result;
-                lookup.Lookup(addr, out result);
+                lookup.Zip4Lookup(addr, out result);
             }
 
         }

@@ -143,7 +143,14 @@ namespace DDI.Data
         {
             var entities = (ICollection<T>)(GetRepository<T>().Entities);
             if (!entities.Contains(entity))
+            {
                 entities.Add(entity);
+            }
+        }
+
+        public T Create<T>() where T : class
+        {
+            return GetRepository<T>().Create();
         }
 
         public void Insert<T>(T entity) where T : class

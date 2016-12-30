@@ -6,6 +6,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Data.Models;
 
 namespace DDI.Data
 {
@@ -121,21 +122,15 @@ namespace DDI.Data
         /// </summary>
         public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
         {
-            var entryCollection = _context.Entry(entity).Collection(collection);
-
-            if (!entryCollection.IsLoaded)
-                entryCollection.Load();
+            GetReference<TElement>(entity, collection);
         }
-
+        
         /// <summary>
         /// Explicitly load a reference property or collection for an entity.
         /// </summary>
         public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
-            var reference = _context.Entry(entity).Reference(property);
-
-            if (!reference.IsLoaded)
-                reference.Load();
+            GetReference<TElement>(entity, property);
         }
 
         /// <summary>
@@ -144,11 +139,18 @@ namespace DDI.Data
         public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
         {
             var entryCollection = _context.Entry(entity).Collection(collection);
+            if (entryCollection != null)
+            {
 
-            if (!entryCollection.IsLoaded)
-                entryCollection.Load();
-
-            return entryCollection.CurrentValue;
+                if (!entryCollection.IsLoaded)
+                    entryCollection.Load();
+                return entryCollection.CurrentValue;
+            }
+            else
+            {
+                // TODO: Maybe the collection is a LinkedEntityCollection?
+                return null;
+            }
         }
 
         /// <summary>
@@ -158,10 +160,21 @@ namespace DDI.Data
         {
             var reference = _context.Entry(entity).Reference(property);
 
-            if (!reference.IsLoaded)
-                reference.Load();
-
-            return reference.CurrentValue;
+            if (reference != null)
+            {
+                if (!reference.IsLoaded)
+                    reference.Load();
+                return reference.CurrentValue;
+            }
+            else if (entity is BaseLinkedEntity)
+            {
+                // TODO: Need to do something!
+                return null;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -184,6 +197,15 @@ namespace DDI.Data
 
         public T GetById(object id) => EntitySet.Find(id);
 
+        public virtual T Create()
+        {
+            T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
+            (entity as BaseEntity)?.AssignPrimaryKey();
+            EntitySet.Add(entity);
+
+            return entity;
+        }
+
         public virtual T Insert(T entity)
         {
             try
@@ -193,7 +215,12 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                EntitySet.Add(entity);
+                if (_context.Entry(entity).State != EntityState.Added)
+                {
+                    // Add it only if not already added.
+                    EntitySet.Add(entity);
+                }
+
                 if (!_isUOW)
                 {
                     _context.SaveChanges();

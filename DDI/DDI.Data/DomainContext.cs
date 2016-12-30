@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using DDI.Data.Models.Client.CRM;
 using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Common;
+using System.Data.Entity.Validation;
+using DDI.Data.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace DDI.Data
 {
@@ -89,11 +92,6 @@ namespace DDI.Data
 
         public virtual DbSet<TagGroup> TagGroups { get; set; }
 
-
-
-
-
-
         #endregion Public Properties
 
         #region Public Constructors
@@ -103,6 +101,24 @@ namespace DDI.Data
 		{
 		}
 
-		#endregion Public Constructors
-	}
+        #endregion Public Constructors
+
+        #region Method Overrides 
+        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
+        {
+            BaseEntity entity = entityEntry.Entity as BaseEntity;
+            if (entity != null)
+            {
+                //Ensure new entities have an ID
+                if (entityEntry.State == EntityState.Added && entity.Id == default(Guid))
+                {
+                    entity.Id = Guid.NewGuid();
+                }  
+            }
+
+            return base.ValidateEntity(entityEntry, items);
+        }
+        #endregion
+
+    }
 }

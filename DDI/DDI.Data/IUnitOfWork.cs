@@ -34,6 +34,8 @@ namespace DDI.Data
 
         void Attach<T>(T entity) where T : class;
 
+        T Create<T>() where T : class;
+
         void Insert<T>(T entity) where T : class;
 
         void Delete<T>(T entity) where T : class;
