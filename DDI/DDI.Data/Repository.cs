@@ -26,6 +26,7 @@ namespace DDI.Data
         private readonly DbContext _context = null;
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
+        private bool _isUOW = false;
 
         #endregion Private Fields
 
@@ -37,7 +38,7 @@ namespace DDI.Data
         {
             get
             {
-                if (_utilities == null)
+                if (_utilities == null && _context != null)
                 {
                     _utilities = new SQLUtilities(_context);
                 }
@@ -70,6 +71,7 @@ namespace DDI.Data
         public Repository() :
             this(new DomainContext())
         {
+            _isUOW = false;
         }
 
         #endregion Public Constructors
@@ -79,6 +81,7 @@ namespace DDI.Data
         public Repository(DbContext context)
         {
             _context = context;
+            _isUOW = (context != null);
         }
 
         #endregion Internal Constructors
@@ -100,7 +103,10 @@ namespace DDI.Data
                 }
 
                 EntitySet.Remove(entity);
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
             }
             catch (DbEntityValidationException e)
             {
@@ -122,7 +128,10 @@ namespace DDI.Data
                 }
 
                 EntitySet.Add(entity);
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -143,7 +152,10 @@ namespace DDI.Data
 
                 EntitySet.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -170,7 +182,7 @@ namespace DDI.Data
 
             action?.Invoke(entity);
 
-            return _context.SaveChanges();
+            return _isUOW ? 0 : _context.SaveChanges();
         }
 
         public List<string> GetModifiedProperties(T entity) 

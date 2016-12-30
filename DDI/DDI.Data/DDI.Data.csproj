@@ -55,6 +55,8 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="Enums\Common\CustomFieldEntity.cs" />
+    <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Enums\CRM\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
@@ -141,6 +144,9 @@
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\Client\Core\CustomFieldData.cs" />
+    <Compile Include="Models\Client\Core\CustomFieldOptions.cs" />
+    <Compile Include="Models\Client\Core\CustomFields.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />
     <Compile Include="Models\Client\CRM\AlternateId.cs" />
     <Compile Include="Models\Client\CRM\Degree.cs" />
@@ -192,6 +198,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
+    <Compile Include="UnitOfWorkNoDb.cs" />
+    <Compile Include="UnitOfWorkEF.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

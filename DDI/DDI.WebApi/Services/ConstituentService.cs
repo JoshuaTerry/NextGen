@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using DDI.Business.CRM;
 using DDI.Data;
 using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
@@ -17,25 +18,25 @@ namespace DDI.WebApi.Services
     {
         private IRepository<Constituent> _repository;
 
-        private ConstituentDomain _domain;
+        private IUnitOfWork _unitOfWork;
+        private ConstituentLogic _constituentlogic;
 
         public ConstituentService()
         {
-            var repository = new Repository<Constituent>();
-            var constituentDomain = new ConstituentDomain(repository);
-            Initialize(repository, constituentDomain);
+            Initialize(new UnitOfWorkEF());
         }
 
 
-        internal ConstituentService(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
+        public ConstituentService(IUnitOfWork uow)
         {
-            Initialize(repository, constituentDomain);
+            Initialize(uow);
         }
 
-        private void Initialize(IRepository<Constituent> repository, ConstituentDomain constituentDomain)
+        private void Initialize(IUnitOfWork uow)
         {
-            _repository = repository;
-            _domain = new ConstituentDomain(repository);
+            _unitOfWork = uow;
+            _constituentlogic = new ConstituentLogic(_unitOfWork);
+            _repository = _unitOfWork.GetRepository<Constituent>();
         }
 
         public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
@@ -228,8 +229,10 @@ namespace DDI.WebApi.Services
 
             _repository.UpdateChangedProperties(id, changedProperties, p =>
             {
-                _domain.Validate(p);
+                _constituentlogic.Validate(p);
             });
+
+            _unitOfWork.SaveChanges();
 
             var constituent = _repository.GetById(id);
 
@@ -253,19 +256,21 @@ namespace DDI.WebApi.Services
             var response = new DataResponse<EducationLevel> { Data = data };
             return response;
         }
+
         public IDataResponse AddConstituent(Constituent constituent)
         {
             var response = SafeExecute(() => 
             {
-                _domain.Validate(constituent);
+                _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
+                _unitOfWork.SaveChanges();
             });
             return response;
         }
 
         public IDataResponse<int> GetNextConstituentNumber()
         {
-            return new DataResponse<int>() { Data = _domain.GetNextConstituentNumber() };
+            return new DataResponse<int>() { Data = _constituentlogic.GetNextConstituentNumber() };
         }
 
         private Type ConvertToType<T>(string property)
