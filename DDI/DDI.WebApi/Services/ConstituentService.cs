@@ -6,7 +6,6 @@ using DDI.Business.CRM;
 using DDI.Data;
 using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
-using DDI.WebApi.Domain;
 using DDI.WebApi.Helpers;
 using DDI.WebApi.Services.Search;
 using Microsoft.Ajax.Utilities;
