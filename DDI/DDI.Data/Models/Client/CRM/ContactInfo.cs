@@ -7,7 +7,7 @@ using DDI.Data.Attributes;
 
 namespace DDI.Data.Models.Client.CRM
 {
-    [Table("ContactInfo"), EntityType("NACI")]
+    [Table("ContactInfo"), EntityType("CRM_ContactInfo")]
     public class ContactInfo : BaseEntity
     {
         #region Public Properties

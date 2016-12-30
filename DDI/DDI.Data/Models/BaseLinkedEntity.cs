@@ -30,11 +30,13 @@ namespace DDI.Data.Models
         /// <summary>
         /// ID of linked parent entity.
         /// </summary>
+        [Index]
         public Guid? ParentEntityId { get; set; }
 
         /// <summary>
         /// Entity type string value.
         /// </summary>
+        [Index]
         public string EntityType { get; set; }
 
         /// <summary>

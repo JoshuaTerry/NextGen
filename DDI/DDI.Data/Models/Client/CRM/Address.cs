@@ -8,7 +8,7 @@ using DDI.Data.Models.Common;
 
 namespace DDI.Data.Models.Client.CRM
 {
-    [Table("Address"), EntityType("NAAD")]
+    [Table("Address"), EntityType("CRM_Address")]
     public class Address : BaseEntity
     {
         #region Public Properties

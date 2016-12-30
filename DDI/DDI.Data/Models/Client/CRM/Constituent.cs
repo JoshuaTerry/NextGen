@@ -9,7 +9,7 @@ using DDI.Data.Models.Client.Core;
 
 namespace DDI.Data.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("NANA")]
+    [Table("Constituent"), EntityType("CRM_Constituent")]
     public class Constituent : BaseEntity
     {
         #region Public Properties
