@@ -51,7 +51,7 @@ namespace DDI.Data.Models
             }
             set
             {
-                SetParentEntityValue(value);
+                SetParentEntityValue(value, true);
             }
         }
 
@@ -72,7 +72,6 @@ namespace DDI.Data.Models
             }
         }
 
-
         /// <summary>
         /// Get the generic type of a LinkedEntityCollection for this specific entity's type.
         /// </summary>
@@ -85,7 +84,7 @@ namespace DDI.Data.Models
         /// Set the value of the ParentEntity property to the specified entity.
         /// </summary>
         /// <param name="newValue"></param>
-        private void SetParentEntityValue(BaseEntity newValue)
+        internal void SetParentEntityValue(BaseEntity newValue, bool updateParentCollection)
         {
             // Avoid recursion
             if (_ignoreChanges)
@@ -93,47 +92,50 @@ namespace DDI.Data.Models
                 return;
             }
 
-            if (_thisGenericType == null)
+            if (updateParentCollection)
             {
-                GetGenericType();
-            }
-
-            _ignoreChanges = true;
-
-            if ((newValue != null || _parentEntity != null) && !object.ReferenceEquals(_parentEntity, newValue))
-            {
-                // value is being changed.
-                if (_parentEntity != null)
+                if (_thisGenericType == null)
                 {
-                    // Try to find a property in the current parent entity that is a LinkedEntityCollection for this entity's type.
-                    PropertyInfo prop = _parentEntity.GetType().GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance)
-                            .FirstOrDefault(p => p.PropertyType == _thisGenericType);
-                    // Updating the ParentEntity where ParentEntity is not null...
-                    if (prop != null)
-                    {
-                        // Try to remove this entity from the parent entity's LinkedEntityCollection.
-                        var ecCollection = prop.GetValue(_parentEntity);
-                        if (ecCollection != null)
-                        {
-                            ((IList)ecCollection).Remove(this);
-                        }
-                    }
+                    GetGenericType();
                 }
 
-                if (newValue != null)
-                {
-                    // Try to find a property in the new parent entity that is a LinkedEntityCollection for this entity's type.
-                    PropertyInfo prop = newValue.GetType().GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance)
-                        .FirstOrDefault(p => p.PropertyType == _thisGenericType);
+                _ignoreChanges = true;
 
-                    // Updating the ParentEntity to a new entity...
-                    if (prop != null)
+                if ((newValue != null || _parentEntity != null) && !object.ReferenceEquals(_parentEntity, newValue))
+                {
+                    // value is being changed.
+                    if (_parentEntity != null)
                     {
-                        // Try to add this entity to the parent entity's LinkedEntityCollection.
-                        var ecCollection = prop.GetValue(newValue);
-                        if (ecCollection != null)
+                        // Try to find a property in the current parent entity that is a LinkedEntityCollection for this entity's type.
+                        PropertyInfo prop = _parentEntity.GetType().GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance)
+                                .FirstOrDefault(p => p.PropertyType == _thisGenericType);
+                        // Updating the ParentEntity where ParentEntity is not null...
+                        if (prop != null)
                         {
-                            ((IList)ecCollection).Add(this);
+                            // Try to remove this entity from the parent entity's LinkedEntityCollection.
+                            var ecCollection = prop.GetValue(_parentEntity);
+                            if (ecCollection != null)
+                            {
+                                ((IList)ecCollection).Remove(this);
+                            }
+                        }
+                    }
+
+                    if (newValue != null)
+                    {
+                        // Try to find a property in the new parent entity that is a LinkedEntityCollection for this entity's type.
+                        PropertyInfo prop = newValue.GetType().GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance)
+                            .FirstOrDefault(p => p.PropertyType == _thisGenericType);
+
+                        // Updating the ParentEntity to a new entity...
+                        if (prop != null)
+                        {
+                            // Try to add this entity to the parent entity's LinkedEntityCollection.
+                            var ecCollection = prop.GetValue(newValue);
+                            if (ecCollection != null)
+                            {
+                                ((IList)ecCollection).Add(this);
+                            }
                         }
                     }
                 }

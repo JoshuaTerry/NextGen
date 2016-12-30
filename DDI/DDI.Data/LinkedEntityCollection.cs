@@ -17,7 +17,8 @@ namespace DDI.Data
     public class LinkedEntityCollection<T> : ObservableCollection<T> where T : BaseLinkedEntity
     {
         private BaseEntity _entity = null;
-        private bool _ignoreEvents = false;
+        private bool _isLoading = false;
+        private bool _isLoaded = false;
 
         public LinkedEntityCollection(BaseEntity entity) : base()
         {
@@ -26,7 +27,7 @@ namespace DDI.Data
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (_ignoreEvents)
+            if (_isLoading)
                 return;
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
@@ -47,21 +48,34 @@ namespace DDI.Data
             }
         }
 
+        public void LoadCollection(DbContext context)
+        {
+            LoadCollection(context, false);
+        }
+
         /// <summary>
         /// Load the entity's collection.
         /// </summary>
-        public void LoadCollection(DbContext context)
+        public void LoadCollection(DbContext context, bool reload)
         {
-            DbSet<T> dbSet = context.Set<T>();
-            _ignoreEvents = true;
-
-            foreach (var item in dbSet.Where(p => p.EntityType == _entity.GetEntityType() && p.ParentEntityId == _entity.Id))
+            if (_isLoaded && !reload)
             {
-                this.Add(item);
-                item.ParentEntity = _entity;
+                return;
             }
 
-            _ignoreEvents = false;
+            DbSet<T> dbSet = context.Set<T>();
+            _isLoading = true;
+
+            string entityType = _entity.GetEntityType();
+
+            foreach (var item in dbSet.Where(p => p.EntityType == entityType && p.ParentEntityId == _entity.Id))
+            {
+                this.Add(item);
+                item.SetParentEntityValue(_entity, false);
+            }
+
+            _isLoading = false;
+            _isLoaded = true;
 
         }
 

@@ -85,6 +85,10 @@ namespace DDI.Data.Models
             return _entityType;
         }
 
+
+        /// <summary>
+        /// Ensure the entity's primary key has been assigned.
+        /// </summary>
         public void AssignPrimaryKey()
         {
             if (this.Id == default(Guid))
