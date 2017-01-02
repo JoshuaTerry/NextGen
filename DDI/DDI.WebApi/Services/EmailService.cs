@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -7,26 +8,29 @@ using System.Web;
 using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.Remoting;
+using System.Web.Configuration;
 using Microsoft.Ajax.Utilities;
 
 namespace DDI.WebApi.Services
 {
     public class EmailService
     {
-        private const string SMTP_HOST = "coloex1.ddi.net";
-        private const int SMTP_PORT = 25;
-        
-        private SmtpClient _smtpClient { get; set; }
-
+        private SmtpClient _smtpClient;
 
         public EmailService()
-            :this(new SmtpClient(SMTP_HOST, SMTP_PORT))
+            :this(new SmtpClient())
         {
 
         }
 
         internal EmailService(SmtpClient smtpClient)
         {
+            if (string.IsNullOrWhiteSpace(smtpClient.Host))
+            {
+                smtpClient.Host = ConfigurationManager.AppSettings["SmtpHost"];
+                smtpClient.Port = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+            }
+
             _smtpClient = smtpClient;
         }
 

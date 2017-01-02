@@ -18,6 +18,7 @@ namespace DDI.WebApi.Tests.Services
             Exception expectedException = null;
 
             var service = new EmailService(new SmtpClient("fakeDDI.smtp.net", 25));
+            
 
             var To = new MailAddress("RClough@ddi.org");
             var From = new MailAddress("no-reply@ddi.org");
@@ -40,5 +41,36 @@ namespace DDI.WebApi.Tests.Services
             //Assert
             Assert.IsNotNull(expectedException);
         }
+
+
+        [TestMethod]
+        public void When_correct_SMTP_info_is_used_Should_send_email()
+        {
+            //Arrange
+            Exception expectedException = null;
+
+            var service = new EmailService();
+
+            var To = new MailAddress("RClough@ddi.org");
+            var From = new MailAddress("no-reply@ddi.org");
+            var body = "This was sent using our new email service.";
+            var subject = "Test email service";
+
+            var message = service.CreateMailMessage(To, From, subject, body);
+            
+            //Act
+            try
+            {
+                service.SendMailMessage(message);
+            }
+            catch (Exception ex)
+            {
+                expectedException = ex;
+            }
+
+            //Assert
+            Assert.IsNull(expectedException);
+        }
+
     }
 }
