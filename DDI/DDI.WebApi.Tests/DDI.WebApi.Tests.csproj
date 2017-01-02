@@ -116,6 +116,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
+      <Project>{0e7d7e11-80b4-4751-8c21-b05a08a19473}</Project>
+      <Name>DDI.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.WebApi\DDI.WebApi.csproj">
       <Project>{7C76AAF9-FAD1-40A6-8140-D33229A9B942}</Project>
       <Name>DDI.WebApi</Name>
