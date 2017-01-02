@@ -42,8 +42,8 @@ namespace DDI.WebApi.Tests.Services
             Assert.IsNotNull(expectedException);
         }
 
-
-        [TestMethod]
+        //Uncomment the TestMethod Attribute to run this integration test.  PLEASE remember to change the To MailAddress to YOUR OWN.
+        //[TestMethod]
         public void When_correct_SMTP_info_is_used_Should_send_email()
         {
             //Arrange
@@ -57,7 +57,7 @@ namespace DDI.WebApi.Tests.Services
             var subject = "Test email service";
 
             var message = service.CreateMailMessage(To, From, subject, body);
-            
+
             //Act
             try
             {
