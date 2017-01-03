@@ -4,8 +4,11 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Data.Models;
 
 namespace DDI.Data
 {
@@ -88,6 +91,8 @@ namespace DDI.Data
 
         #region Public Methods
 
+
+
         public virtual void Delete(T entity)
         {
             try
@@ -106,7 +111,7 @@ namespace DDI.Data
                 if (!_isUOW)
                 {
                     _context.SaveChanges();
-                }
+                }                
             }
             catch (DbEntityValidationException e)
             {
@@ -114,9 +119,128 @@ namespace DDI.Data
             }
         }
 
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            GetReference<TElement>(entity, collection);
+        }
+        
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            GetReference<TElement>(entity, property);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            var entryCollection = _context.Entry(entity).Collection(collection);
+            if (!entryCollection.IsLoaded)
+                entryCollection.Load();
+            return entryCollection.CurrentValue;
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            try
+            {
+                // Anything that's not an EF mapped property will throw an exception.
+
+                var reference = _context.Entry(entity).Reference(property);
+
+                if (!reference.IsLoaded)
+                    reference.Load();
+                return reference.CurrentValue;
+            }
+            catch(Exception e)
+            {
+                // Logic to handle BaseLinkedEntity and LinkedEntityCollection:
+
+                // Consult the lambda expression to get the property info.
+                if (property.Body is MemberExpression)
+                {
+                    PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
+                    if (propInfo != null)
+                    {
+                        if (entity is BaseLinkedEntity)
+                        {
+                            // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
+                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
+                            {
+                                // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
+                                var linkedEntity = entity as BaseLinkedEntity;
+                                linkedEntity.LoadParentEntity(_context);
+                                return linkedEntity.ParentEntity as TElement;
+                            }
+                            
+                            throw e;  // Wrong property name...
+                        }
+
+                        else if (typeof(TElement).GetInterfaces().Contains(typeof(ILinkedEntityCollection)))
+                        {
+                            // Trying to load a LinkedEntityCollection property.
+                            // Get the property value.
+                            object memberValue = propInfo.GetValue(entity);
+
+                            if (memberValue == null)
+                            {
+                                // If null, the LinkedEntityCollection needs to be created.
+                                memberValue = (TElement)Activator.CreateInstance(typeof(TElement), entity);
+                                propInfo.SetValue(entity, memberValue);
+                            }
+
+                            if (memberValue is TElement)
+                            {
+                                // Ensure the collection is loaded.
+                                ((ILinkedEntityCollection)memberValue).LoadCollection(_context);
+
+                                return (TElement)memberValue;
+                            }
+                        }
+                    }
+                }
+
+                throw e; // Couldn't determine the reference, so rethrow the exception.
+            }
+        }
+
+        /// <summary>
+        /// Return a collection of entities that have already been loaded or added to the repository.
+        /// </summary>
+        public ICollection<T> GetLocal()
+        {
+            return EntitySet.Local;
+        }
+
+        /// <summary>
+        /// Attach an entity (which may belong to another context) to the repository.
+        /// </summary>
+        public void Attach(T entity)
+        {
+            EntitySet.Attach(entity);
+        }
+        
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public T GetById(object id) => EntitySet.Find(id);
+
+        public virtual T Create()
+        {
+            T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
+            (entity as BaseEntity)?.AssignPrimaryKey();
+            EntitySet.Add(entity);
+
+            return entity;
+        }
 
         public virtual T Insert(T entity)
         {
@@ -127,7 +251,12 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                EntitySet.Add(entity);
+                if (_context.Entry(entity).State != EntityState.Added)
+                {
+                    // Add it only if not already added.
+                    EntitySet.Add(entity);
+                }
+
                 if (!_isUOW)
                 {
                     _context.SaveChanges();

@@ -11,7 +11,7 @@ namespace DDI.Data.Models.Client.Core
     {
         #region Public Properties        
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public bool IsActive { get; set; }
