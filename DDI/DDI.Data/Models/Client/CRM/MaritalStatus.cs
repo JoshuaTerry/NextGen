@@ -8,7 +8,7 @@ namespace DDI.Data.Models.Client.CRM
     public class MaritalStatus : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }         
 
         [MaxLength(4)]

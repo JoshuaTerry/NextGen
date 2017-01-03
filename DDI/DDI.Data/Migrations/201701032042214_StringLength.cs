@@ -3,7 +3,7 @@ namespace DDI.Data.Migrations.Client
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class StringLengths : DbMigration
+    public partial class StringLength : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,7 @@ namespace DDI.Data.Migrations.Client
             AlterColumn("dbo.ClergyStatus", "Code", c => c.String(maxLength: 4));
             AlterColumn("dbo.ClergyType", "Code", c => c.String(maxLength: 4));
             AlterColumn("dbo.ConstituentStatus", "Code", c => c.String(maxLength: 16));
-            AlterColumn("dbo.ConstituentType", "BaseType", c => c.String(maxLength: 4));
+            AlterColumn("dbo.ConstituentType", "BaseType", c => c.String(maxLength: 16));
             AlterColumn("dbo.ConstituentType", "Code", c => c.String(maxLength: 4));
             AlterColumn("dbo.Tag", "Code", c => c.String(maxLength: 16));
             AlterColumn("dbo.ContactType", "Code", c => c.String(maxLength: 4));

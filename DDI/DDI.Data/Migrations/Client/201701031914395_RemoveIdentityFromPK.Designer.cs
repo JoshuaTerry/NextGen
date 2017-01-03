@@ -7,13 +7,13 @@ namespace DDI.Data.Migrations.Client
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class StringLengths : IMigrationMetadata
+    public sealed partial class RemoveIdentityFromPK : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(StringLengths));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RemoveIdentityFromPK));
         
         string IMigrationMetadata.Id
         {
-            get { return "201701031810235_StringLengths"; }
+            get { return "201701031914395_RemoveIdentityFromPK"; }
         }
         
         string IMigrationMetadata.Source

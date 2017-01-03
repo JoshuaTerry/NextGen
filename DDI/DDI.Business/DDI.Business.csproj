@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntityLogic.cs" />
+    <Compile Include="Common\ZipLookup.cs" />
+    <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\ConstituentLogic.cs" />
+    <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

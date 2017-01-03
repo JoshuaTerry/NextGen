@@ -27,7 +27,7 @@ namespace DDI.Data.Models.Client.Core
         public string Exception { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [Required]
