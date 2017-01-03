@@ -71,6 +71,15 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
+    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
+      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
+    <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
+      <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
     </Compile>
@@ -205,6 +214,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
+      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
+      <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612280326437_Indexes.resx">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
     </EmbeddedResource>
