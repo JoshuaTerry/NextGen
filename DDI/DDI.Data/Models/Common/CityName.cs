@@ -17,6 +17,8 @@ namespace DDI.Data.Models.Common
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get; set; }
 
+        [Index]
+        [MaxLength(128)]
         public string Description { get; set; }
 
         public bool IsPreferred { get; set; }

@@ -19,7 +19,7 @@ namespace DDI.Data.Models.Client.CRM
         [MaxLength(128)]
         public string Name { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(4)]
         public string Code { get; set; }
 
         public ICollection<Constituent> Constituents { get; set; }

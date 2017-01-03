@@ -20,7 +20,6 @@ namespace DDI.Data.Models.Client.CRM
 
         public Guid? RegionId { get; set; }
 
-        // Navigation Properties
         public Region Region { get; set; }
 
         public Guid? CountryId { get; set; }

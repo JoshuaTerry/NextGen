@@ -19,6 +19,7 @@ namespace DDI.Data.Models.Common
 
         public string Description { get; set; }
 
+        [Index]
         [MaxLength(5)]
         public string FIPSCode { get; set; }
 

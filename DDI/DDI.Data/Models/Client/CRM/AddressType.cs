@@ -15,7 +15,7 @@ namespace DDI.Data.Models.Client.CRM
         public override Guid Id { get; set; }
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(4)]
         public string Code { get; set; }
 
         [MaxLength(128)]

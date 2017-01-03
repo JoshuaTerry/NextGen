@@ -18,7 +18,7 @@ namespace DDI.Data.Models.Client.CRM
 
         public int Level { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(16)]
         public string Code { get; set; }
 
         [MaxLength(128)]
@@ -26,7 +26,6 @@ namespace DDI.Data.Models.Client.CRM
 
         public Guid? ParentRegionId { get; set; }
 
-        // Navigation Properties
         public Region ParentRegion { get; set; }
 
         [InverseProperty(nameof(ParentRegion))]
