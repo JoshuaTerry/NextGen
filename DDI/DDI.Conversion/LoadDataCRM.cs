@@ -143,7 +143,7 @@ namespace DDI.Conversion
                         case DENOMINATION_SET:
                             context.Denominations.AddOrUpdate(
                                 p => p.Code,
-                                new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
+                                new Denomination { Code = code, Name = description, IsActive = active });
                             break;
                         case EDUCATION_LEVEL_SET:
                             context.EducationLevels.AddOrUpdate(
@@ -400,14 +400,14 @@ namespace DDI.Conversion
                     if (g1 != null)
                     {
                         context.Prefixes.AddOrUpdate(
-                            p => p.Abbreviation,
-                            new Prefix { Abbreviation = prefix, Description = label, Gender = g1, GenderId = g1.Id });
+                            p => p.Code,
+                            new Prefix { Code = prefix, Name = label, Gender = g1, GenderId = g1.Id });
                     }
                     else
                     {
                         context.Prefixes.AddOrUpdate(
-                            p => p.Abbreviation,
-                            new Prefix { Abbreviation = prefix, Description = label });
+                            p => p.Code,
+                            new Prefix { Code = prefix, Name = label });
                     }
 
 
