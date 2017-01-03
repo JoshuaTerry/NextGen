@@ -11,13 +11,13 @@ namespace DDI.Data.Models.Client.CRM
     {
         #region Public Properties       
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(128)]
         public string Affiliation { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(16)]
         public string Code { get; set; }
 
         public bool IsActive { get; set; }

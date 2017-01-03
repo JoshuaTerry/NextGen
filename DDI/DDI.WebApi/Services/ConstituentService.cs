@@ -6,7 +6,6 @@ using DDI.Business.CRM;
 using DDI.Data;
 using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
-using DDI.WebApi.Domain;
 using DDI.WebApi.Helpers;
 using DDI.WebApi.Services.Search;
 using Microsoft.Ajax.Utilities;
@@ -268,9 +267,22 @@ namespace DDI.WebApi.Services
             return response;
         }
 
-        public IDataResponse<int> GetNextConstituentNumber()
-        {
-            return new DataResponse<int>() { Data = _constituentlogic.GetNextConstituentNumber() };
+        public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
+        {            
+            var constituentType = _unitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
+            if (constituentType == null)
+            {
+                throw new ArgumentException("Constituent type ID is not valid.");               
+            }
+
+            var constituent = new Constituent();
+            constituent.ConstituentNumber = _constituentlogic.GetNextConstituentNumber();
+            constituent.ConstituentType = constituentType;
+
+            // ToDo:  Other new constituent tasks, such as initial tags, status code.
+
+            return new DataResponse<Constituent>() { Data = constituent };
+
         }
 
         private Type ConvertToType<T>(string property)
