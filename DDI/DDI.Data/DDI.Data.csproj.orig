@@ -57,8 +57,6 @@
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
-    <Compile Include="Enums\CRM\Affiliation.cs" />
-    <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
@@ -72,11 +70,12 @@
     <Compile Include="ILinkedEntityCollection.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
+<<<<<<< HEAD
+    <Compile Include="Migrations\Client\201701031810235_StringLengths.cs" />
+    <Compile Include="Migrations\Client\201701031810235_StringLengths.Designer.cs">
+      <DependentUpon>201701031810235_StringLengths.cs</DependentUpon>
+=======
     <Compile Include="LinkedEntityCollection.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.Designer.cs">
-      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
@@ -84,6 +83,7 @@
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+>>>>>>> develop
     </Compile>
     <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
@@ -220,14 +220,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701032042214_StringLength.resx">
-      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
-    </EmbeddedResource>
+<<<<<<< HEAD
+    <EmbeddedResource Include="Migrations\Client\201701031810235_StringLengths.resx">
+      <DependentUpon>201701031810235_StringLengths.cs</DependentUpon>
+=======
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+>>>>>>> develop
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612280326437_Indexes.resx">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
@@ -275,12 +277,6 @@
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
-      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
-      <Name>DDI.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

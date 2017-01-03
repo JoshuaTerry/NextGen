@@ -102,6 +102,8 @@ namespace DDI.Data
         }
 
         #endregion Public Constructors
+<<<<<<< HEAD
+=======
 
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
@@ -120,5 +122,6 @@ namespace DDI.Data
         }
         #endregion
 
+>>>>>>> develop
     }
 }
