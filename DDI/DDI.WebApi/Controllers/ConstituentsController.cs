@@ -108,13 +108,6 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/v1/constituents/nextnumber")]
-        public IHttpActionResult GetNextConstituentNumber()
-        {
-            return Ok(_service.GetNextConstituentNumber());
-        }
-
         [HttpPost]
         [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody] Constituent constituent)
@@ -127,6 +120,28 @@ namespace DDI.WebApi.Controllers
             var response =_service.AddConstituent(constituent);
             return Ok(response);
         }
+
+        [HttpPost]
+        [Route("api/v1/constituents/{id}")]
+        public IHttpActionResult Post(Guid id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.NewConstituent(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
 
         [HttpPut]
         [Route("api/v1/constituents/")]

@@ -24,7 +24,7 @@ namespace DDI.Data
 
         #region Public Constructors
 
-        public UnitOfWorkEF() : this(null) 
+        public UnitOfWorkEF() : this(null)
         {
 
         }
@@ -41,7 +41,7 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Models.Common.Country).Namespace;            
+            _commonNamespace = typeof(Models.Common.Country).Namespace;
         }
 
         #endregion Public Constructors
@@ -57,6 +57,93 @@ namespace DDI.Data
         public void SetRepository<T>(IRepository<T> repository) where T : class
         {
             _repositories[typeof(T)] = repository;
+        }
+
+        /// <summary>
+        /// Return a queryable collection of entities filtered by a predicate.
+        /// </summary>
+        public IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Return a queryable collection of entities.
+        /// </summary>
+        public IQueryable<T> GetEntities<T>() where T : class
+        {
+            return GetRepository<T>().Entities;
+        }
+
+        /// <summary>
+        /// Returns the first entity that satisfies a condition or null if no such entity is found.
+        /// </summary>
+        public T FirstOrDefault<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.FirstOrDefault(predicate);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class where T : class
+        {
+            GetRepository<T>().LoadReference(entity, collection);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class where T : class
+        {
+            GetRepository<T>().LoadReference(entity, property);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public ICollection<TElement> GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class where T : class
+        {
+            return GetRepository<T>().GetReference<TElement>(entity, collection);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public TElement GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class where T : class
+        {
+            return GetRepository<T>().GetReference<TElement>(entity, property);
+        }
+
+        /// <summary>
+        /// Return a collection of entities that have already been loaded or added to the repository.
+        /// </summary>
+        public ICollection<T> GetLocal<T>() where T : class
+        {
+            return GetRepository<T>().GetLocal();
+        }
+
+        /// <summary>
+        /// Attach an entity (which may belong to another context) to the unit of work.
+        /// </summary>
+        public void Attach<T>(T entity) where T : class
+        {
+            GetRepository<T>().Attach(entity);
+        }
+
+        public T Create<T>() where T : class
+        {
+            return GetRepository<T>().Create();
+        }
+
+        public void Insert<T>(T entity) where T : class
+        {
+            GetRepository<T>().Insert(entity);
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            GetRepository<T>().Delete(entity);
         }
 
         public IRepository<T> GetRepository<T>() where T : class
@@ -103,6 +190,9 @@ namespace DDI.Data
             return repository;
         }
 
+        /// <summary>
+        /// Saves all changes made to the unit of work to the database.
+        /// </summary>
         public int SaveChanges()
         {
             return (_clientContext?.SaveChanges() ?? 0) +

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using DDI.Data.Models;
 using DDI.Data.Models.Common;
 
 namespace DDI.Data
@@ -34,6 +36,25 @@ namespace DDI.Data
 		{
 		}
 
-		#endregion Public Constructors
-	}
+        #endregion Public Constructors
+    
+        #region Method Overrides 
+        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
+        {
+            BaseEntity entity = entityEntry.Entity as BaseEntity;
+            if (entity != null)
+            {
+                //Ensure new entities have an ID
+                if (entityEntry.State == EntityState.Added && entity.Id == default(Guid))
+                {
+                    entity.AssignPrimaryKey();
+                }
+            }
+
+            return base.ValidateEntity(entityEntry, items);
+        }
+        #endregion
+    }
+
+
 }

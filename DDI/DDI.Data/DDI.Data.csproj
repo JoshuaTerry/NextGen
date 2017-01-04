@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EntityTypeAttribute.cs" />
     <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CRM\Affiliation.cs" />
+    <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
@@ -67,8 +70,27 @@
     <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
     <Compile Include="Enums\CRM\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="ILinkedEntityCollection.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701032042214_StringLength.cs" />
+    <Compile Include="Migrations\Client\201701032042214_StringLength.Designer.cs">
+      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
+    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
+      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
+    <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
+      <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
@@ -143,6 +165,7 @@
     </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
+    <Compile Include="Models\BaseLinkedEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOptions.cs" />
@@ -206,6 +229,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701032042214_StringLength.resx">
+      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
+      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
+      <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612280326437_Indexes.resx">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,6 +287,12 @@
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
