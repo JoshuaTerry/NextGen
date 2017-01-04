@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Web.Http;
 using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
+using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -186,7 +188,45 @@ namespace DDI.WebApi.Controllers
                 return GetErrorResult(result);
             }
 
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = "http://www.ddi.org/";
+
+            var service = new EmailService();
+            var from = new MailAddress("no-reply@ddi.org");
+            var to = new MailAddress(model.Email);
+            var body = "Please confirm your email by clicking the following link " + callbackUrl;
+            var message = service.CreateMailMessage(from, to, "Confirm your email", body);
+
+            service.SendMailMessage(message);
+            
             return Ok();
+        }
+
+        // POST api/Account/ConfirmEmail
+        [HttpPost]
+        [Route("ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
+            {
+                ModelState.AddModelError("", "User Id and Code are required");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityResult result = await UserManager.ConfirmEmailAsync(model.Email, model.Code);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         protected override void Dispose(bool disposing)
