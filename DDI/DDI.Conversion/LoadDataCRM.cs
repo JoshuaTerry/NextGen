@@ -58,13 +58,13 @@ namespace DDI.Conversion
 
             //LoadLegacyCodes(context, common, organization, filePath, minCount, maxCount);
             //LoadAddresses(context, common, organization, filePath, minCount, maxCount);
-            //LoadPrefixes(context, common, organization, filePath, minCount, maxCount);
+            LoadPrefixes(context, common, organization, filePath, minCount, maxCount);
             //LoadConstituents(context, common, organization, filePath, minCount, maxCount);
             //LoadDoingBusinessAs(context, common, organization, filePath, minCount, maxCount);
             //LoadEducation(context, common, organization, filePath, minCount, maxCount);
             //LoadPaymentPreferences(context, common, organization, filePath, minCount, maxCount);
             //LoadAleternateIDs(context, common, organization, filePath, minCount, maxCount);
-            LoadConstituentAddress(context, common, organization, filePath, minCount, maxCount);
+            //LoadConstituentAddress(context, common, organization, filePath, minCount, maxCount);
             //LoadContactInfo(context, common, organization, filePath, minCount, maxCount);
 
         }
@@ -411,38 +411,45 @@ namespace DDI.Conversion
             // Load prefixes
             //dataFile = filePath + PREFIX_FILE;
             dataFile = Path.Combine(filePath, PREFIX_FILE);
+
+            // Force loading of genders
+            context.Genders.ToList();        
+
             using (var importer = new FileImport(dataFile, "Prefix"))
             {
                 while (importer.GetNextRow())
                 {
-                    string prefix = importer.GetString(0);
-                    string salutation = importer.GetString(1);
+                    string code = importer.GetString(0);
+                    string salutation = importer.GetString(4);
+                    string name = importer.GetString(1);
                     string label = importer.GetString(2);
-                    string gender = importer.GetString(3);
-                    string prior = importer.GetString(4);
-                    string labelAbbreviation = importer.GetString(5);
-                    bool isWebAvailable = (importer.GetString(6) == "yes");
+                    string gender = importer.GetString(5);
+                    string labelAbbreviation = importer.GetString(3);
+                    bool showOnline = importer.GetBool(6);
                     Gender g1 = null;
 
-                    if (gender != null && gender != "")
+                    if (!string.IsNullOrWhiteSpace(gender))
                     {
-                        g1 = context.Genders.First(p => p.Code == gender);
-                    }
-                    if (g1 != null)
-                    {
-                        context.Prefixes.AddOrUpdate(
-                            p => p.Code,
-                            new Prefix { Code = prefix, Name = label, Gender = g1, GenderId = g1.Id });
-                    }
-                    else
-                    {
-                        context.Prefixes.AddOrUpdate(
-                            p => p.Code,
-                            new Prefix { Code = prefix, Name = label });
+                        g1 = context.Genders.Local.FirstOrDefault(p => p.Code == gender);
                     }
 
+                    
+                    Prefix prefix = new Prefix();
 
+                    prefix.Code = code;
+                    prefix.Name = name;
+                    prefix.LabelPrefix = label;
+                    prefix.LabelAbbreviation = labelAbbreviation;
+                    prefix.Salutation = salutation;
+                    prefix.Gender = g1;
+                    prefix.ShowOnline = showOnline;
+
+                    context.Prefixes.AddOrUpdate(
+                        p => p.Code,
+                        prefix);
                 }
+
+                context.SaveChanges();
             }
         }
 
