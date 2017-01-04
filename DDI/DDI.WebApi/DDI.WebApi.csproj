@@ -243,9 +243,6 @@
     <Compile Include="Controllers\PrefixesController.cs" />
     <Compile Include="Controllers\ProfessionsController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
-    <Compile Include="Domain\BaseEntityDomain.cs" />
-    <Compile Include="Domain\ConstituentDomain.cs" />
-    <Compile Include="Domain\IEntityDomain.cs" />
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -262,6 +259,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\CountyService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\Search\CountySearch.cs" />
     <Compile Include="Services\StateService.cs" />
     <Compile Include="Services\Search\StateSearch.cs" />

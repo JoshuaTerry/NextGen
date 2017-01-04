@@ -11,14 +11,25 @@ namespace DDI.Data.Models.Client.CRM
     {
         #region Public Properties 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(128)]
-        public string Abbreviation { get; set; }
+        [MaxLength(16)]
+        public string Code { get; set; }
 
         [MaxLength(128)]
-        public string Description { get; set; }
+        public string Name { get; set; }
+
+        [MaxLength(128)]
+        public string LabelPrefix { get; set; }
+
+        [MaxLength(128)]
+        public string LabelAbbreviation { get; set; }
+
+        [MaxLength(128)]
+        public string Salutation { get; set; }
+
+        public bool ShowOnline { get; set; }
 
         public Gender Gender { get; set; }
 
@@ -31,7 +42,7 @@ namespace DDI.Data.Models.Client.CRM
         {
             get
             {
-                return Abbreviation;
+                return Name;
             }
         }
 

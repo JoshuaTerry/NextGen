@@ -27,9 +27,11 @@ namespace DDI.Data
 
         T GetById(object id);
 
-        T Find(params object[] keyValues); 
+        T Find(params object[] keyValues);
 
-		T Insert(T entity);
+        T Create();
+
+        T Insert(T entity);
 
 		T Update(T entity);
 
@@ -38,6 +40,18 @@ namespace DDI.Data
         int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null);
 
         List<string> GetModifiedProperties(T entity);
+
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<T> GetLocal();
+
+        void Attach(T entity);
 
         #endregion Public Methods
     }
