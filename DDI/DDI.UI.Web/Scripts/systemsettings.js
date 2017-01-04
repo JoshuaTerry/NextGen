@@ -60,7 +60,7 @@ function LoadGrid(grid, container, columns, route) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Genders.');
+            DisplayErrorMessage('Error', 'An error loading Grid.');
         }
     });
 
@@ -422,7 +422,7 @@ function LoadReportHeaders() {
 /* CUSTOM FIELDS */
 function LoadCRMClientCustomFields() {
 
-
+    
 
 }
 

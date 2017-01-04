@@ -8,13 +8,13 @@ namespace DDI.Data.Enums.Common
 {
     public enum CustomFieldType
     {
-        Number,
-        TextBox,
-        TextArea,
-        DropDown,
-        Radio,
-        CheckBox,
-        Date,
-        DateTime        
+        Number = 0,
+        TextBox = 1,
+        TextArea = 2,
+        DropDown = 3,
+        Radio = 4,
+        CheckBox = 5,
+        Date = 6,
+        DateTime = 7
     }
 }

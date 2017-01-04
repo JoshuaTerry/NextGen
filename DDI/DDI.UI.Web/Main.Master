@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\screen.css" />
 
