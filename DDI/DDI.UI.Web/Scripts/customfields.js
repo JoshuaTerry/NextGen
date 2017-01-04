@@ -70,7 +70,7 @@ function CustomFieldsGrid(container, entity) {
 
 }
 
-function DisplayCustFields(container, entity) {
+function DisplayCustomFields(container, entity) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -84,7 +84,7 @@ function DisplayCustFields(container, entity) {
         crossDomain: true,
         success: function (data) {
 
-            if (data.IsSuccessful) {
+            if (data && data.IsSuccessful) {
 
                 $.map(data.Data, function (item) {
 
@@ -110,33 +110,81 @@ function CreateCustomField(item) {
 
     switch (item.FieldType) {
         case customfieldtype.Number:
-
+            CreateNumberField();
             break;
         case customfieldtype.TextBox:
-
+            CreateTextField();
             break;
         case customfieldtype.TextArea:
-
+            CreateTextAreaField();
             break;
         case customfieldtype.DropDown:
-
+            CreateDropDownField();
             break;
         case customfieldtype.Radio:
-
+            CreateRadioField();
             break;
         case customfieldtype.CheckBox:
-
+            CreateCheckBoxField();
             break;
         case customfieldtype.Date:
-
+            CreateDateField();
             break;
         case customfieldtype.DateTime:
-
+            CreateDateTimeField();
             break;
     }
 
 
     return div;
+
+}
+
+function CreateNumberField() {
+
+
+
+}
+
+function CreateTextField() {
+
+
+
+}
+
+function CreateTextAreaField() {
+
+
+
+}
+
+function CreateDropDownField() {
+
+
+
+}
+
+function CreateRadioField() {
+
+
+
+}
+
+function CreateCheckBoxField() {
+
+
+
+}
+
+function CreateDateField() {
+
+
+
+}
+
+function CreateDateTimeField() {
+
+
 
 }
 
