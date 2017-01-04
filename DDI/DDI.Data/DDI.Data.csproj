@@ -73,8 +73,12 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.Designer.cs">
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701032042214_StringLength.cs" />
+    <Compile Include="Migrations\Client\201701032042214_StringLength.Designer.cs">
       <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
@@ -220,7 +224,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701032042214_StringLength.resx">
+    <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701032042214_StringLength.resx">
       <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
