@@ -14,11 +14,12 @@ namespace DDI.Data.Models.Common
         #region Public Properties
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public string Description { get; set; }
 
+        [Index]
         [MaxLength(5)]
         public string FIPSCode { get; set; }
 

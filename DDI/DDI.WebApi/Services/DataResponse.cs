@@ -19,11 +19,18 @@ namespace DDI.WebApi.Services
             ErrorMessages = new List<string>();
             VerboseErrorMessages = new List<string>();
             Links = new List<HATEOASLink>();
-        }
+        }        
     }
 
     public class DataResponse<T> : DataResponse, IDataResponse<T>
     {
         public T Data { get; set; }
+
+        public DataResponse() : base() { }
+
+        public DataResponse(T data) : this()
+        {
+            Data = data;
+        }
     }
 }

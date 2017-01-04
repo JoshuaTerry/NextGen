@@ -14,9 +14,11 @@ namespace DDI.Data.Models.Common
         #region Public Properties
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index]
+        [MaxLength(128)]
         public string Description { get; set; }
 
         public bool IsPreferred { get; set; }

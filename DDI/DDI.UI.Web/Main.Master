@@ -75,7 +75,7 @@
                     <input type="text" class="nc-ConstituentNumber" maxlength="9" />
                 </div>
 
-                <div class="inline">
+                <div class="fivecolumn">
                     <div class="fieldblock">
                         <label>Prefix</label>
                         <select class="nc-PrefixId"></select>
@@ -139,19 +139,21 @@
                 <fieldset>
                     <legend>Primary Address</legend>
 
-                    <div class="fieldblock">
-                        <label>Address Type</label>
-                        <select class="nc-AddressType"></select>
-                    </div>
+                    <div>
+                        <div class="fieldblock">
+                            <label>Address Type</label>
+                            <select class="nc-AddressType"></select>
+                        </div>
 
-                    <div class="fieldblock">
-                        <label>Address Line 1</label>
-                        <input type="text" class="nc-AddressLine1" />
-                    </div>
+                        <div class="fieldblock">
+                            <label>Address Line 1</label>
+                            <input type="text" class="nc-AddressLine1" />
+                        </div>
 
-                    <div class="fieldblock">
-                        <label>Address Line 2</label>
-                        <input type="text" class="nc-AddressLine2" />
+                        <div class="fieldblock">
+                            <label>Address Line 2</label>
+                            <input type="text" class="nc-AddressLine2" />
+                        </div>
                     </div>
 
                     <div class="inline">
@@ -180,6 +182,7 @@
                             <label>County</label>
                             <select class="nc-County" style="width: 150px;"></select>
                         </div>
+
                     </div>
 
                 </fieldset>

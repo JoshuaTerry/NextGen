@@ -20,8 +20,22 @@ namespace DDI.Conversion
 
         static void Main(string[] args)
         {
-			// At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
-			//Hard coding for quick demo purposes.
+            // At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
+            //Hard coding for quick demo purposes.
+            int minCount;
+            int maxCount;
+            if (args.Length == 2)
+            {
+                int.TryParse(args[0], out minCount);
+                int.TryParse(args[1], out maxCount);
+            }
+            else
+            {
+                minCount = 0;
+                maxCount = 999999;
+            }
+
+
 
 			log4net.Config.XmlConfigurator.Configure();
 
@@ -31,7 +45,7 @@ namespace DDI.Conversion
                 string organization = "NG";
                 string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
 											
-                LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath);
+                LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath, minCount, maxCount);
                 context.SaveChanges();
             }
 

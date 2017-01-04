@@ -12,11 +12,12 @@ namespace DDI.Data.Models.Common
     public class ZipBranch : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public string Description { get; set; }
 
+        [Index]
         [MaxLength(8)]
         public string USPSKey { get; set; }
 

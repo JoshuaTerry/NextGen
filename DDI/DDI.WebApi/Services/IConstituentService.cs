@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDI.Data.Models.Client;
+using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
 using DDI.WebApi.Services.Search;
 using Newtonsoft.Json.Linq;
@@ -16,6 +16,6 @@ namespace DDI.WebApi.Services
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId);
         IDataResponse AddConstituent(Constituent constituent);
-        IDataResponse<int> GetNextConstituentNumber();
+        IDataResponse<Constituent> NewConstituent(Guid constituentTypeID);
     }
 }
