@@ -12,6 +12,7 @@ using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Common;
 using DDI.Data.Enums;
 using System.Data.Entity.Migrations;
+using DDI.Data.Enums.CRM;
 
 namespace DDI.Conversion
 {
@@ -141,9 +142,39 @@ namespace DDI.Conversion
                                 new ContactType { Code = code, Name = description, IsActive = active });
                             break;
                         case DENOMINATION_SET:
+                            Affiliation affiliation;
+                            Religion religion;
+
+                            switch(text1.ToUpper())
+                            {
+                                case "PROT": religion = Religion.Protestant; break;
+                                case "ORTH": religion = Religion.Orthodox; break;
+                                case "BUD": religion = Religion.Buddhist; break;
+                                case "HIND": religion = Religion.Hindu; break;
+                                case "ISL": religion = Religion.Islam; break;
+                                case "JEW": religion = Religion.Jewish; break;
+                                case "CATH": religion = Religion.Catholic; break;
+                                default: religion = Religion.None; break;
+                            }
+
+                            switch(text2.ToUpper())
+                            {
+                                case "AC":
+                                case "A":
+                                    affiliation = Affiliation.Affiliated; break;
+                                case "UC":
+                                case "U":
+                                    affiliation = Affiliation.Unaffiliated; break;
+                                case "OC":
+                                case "O":
+                                    affiliation = Affiliation.Other; break;
+                                default:
+                                    affiliation = Affiliation.None; break;
+                            }
+
                             context.Denominations.AddOrUpdate(
                                 p => p.Code,
-                                new Denomination { Code = code, Name = description, Religion = text1, Affiliation = text2, IsActive = active });
+                                new Denomination { Code = code, Name = description, IsActive = active, Religion = religion, Affiliation = affiliation });
                             break;
                         case EDUCATION_LEVEL_SET:
                             context.EducationLevels.AddOrUpdate(
@@ -400,14 +431,14 @@ namespace DDI.Conversion
                     if (g1 != null)
                     {
                         context.Prefixes.AddOrUpdate(
-                            p => p.Abbreviation,
-                            new Prefix { Abbreviation = prefix, Description = label, Gender = g1, GenderId = g1.Id });
+                            p => p.Code,
+                            new Prefix { Code = prefix, Name = label, Gender = g1, GenderId = g1.Id });
                     }
                     else
                     {
                         context.Prefixes.AddOrUpdate(
-                            p => p.Abbreviation,
-                            new Prefix { Abbreviation = prefix, Description = label });
+                            p => p.Code,
+                            new Prefix { Code = prefix, Name = label });
                     }
 
 

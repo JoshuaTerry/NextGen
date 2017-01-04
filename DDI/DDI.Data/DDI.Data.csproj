@@ -57,6 +57,8 @@
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CRM\Affiliation.cs" />
+    <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
@@ -71,8 +73,12 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.cs" />
-    <Compile Include="Migrations\201701032042214_StringLength.Designer.cs">
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701032042214_StringLength.cs" />
+    <Compile Include="Migrations\Client\201701032042214_StringLength.Designer.cs">
       <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
@@ -218,7 +224,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701032042214_StringLength.resx">
+    <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701032042214_StringLength.resx">
       <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
@@ -273,6 +282,12 @@
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
