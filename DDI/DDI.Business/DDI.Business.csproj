@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,9 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntityLogic.cs" />
+    <Compile Include="Common\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\ConstituentLogic.cs" />
+    <Compile Include="CRM\NameFormatter.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -17,7 +17,7 @@ namespace DDI.Business.Common
     {
         #region Fields
 
-        private static List<Abbreviation> _abbreviations = null;
+        private static IList<Abbreviation> _abbreviations = null;
         private IUnitOfWork _uow = null;
         #endregion
 
@@ -269,7 +269,7 @@ namespace DDI.Business.Common
         {
             if (_abbreviations == null)
             {
-                _abbreviations = _uow.GetEntities<Abbreviation>().ToList();                
+                _abbreviations = AbbreviationHelper.GetAbbreviations(_uow);                
             }
         }
 
@@ -583,7 +583,7 @@ namespace DDI.Business.Common
                     continue;
                 }
 
-                if (IsDirectional(abbr))
+                if (AbbreviationHelper.IsDirectional(abbr))
                 {
                     if (!string.IsNullOrWhiteSpace(rslt.Street) && (idx == abbrs.Count - 1 || !string.IsNullOrWhiteSpace(rslt.Suffix2)))
                     {
@@ -1000,10 +1000,6 @@ namespace DDI.Business.Common
             return rslt.ToString();
         }
 
-        private bool IsDirectional(string word)
-        {
-            return !string.IsNullOrEmpty(word) && "E,S,W,N,SE,NE,SW,NW".IndexOf(word) >= 0;
-        }
         #endregion
 
         #region IDisposable Support

@@ -80,6 +80,19 @@ namespace DDI.Shared.Helpers
         }
 
         /// <summary>
+        /// Capitalize the first letter of a word with all remaining letters in lowercase.
+        /// </summary>
+        public static string FormalCase(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+            if (text.Length == 1)
+                return text.ToUpper();
+            else
+                return text.Substring(0, 1).ToUpper() + text.Substring(1).ToLower();
+        }
+
+        /// <summary>
         /// Similar to SQL LIKE function: _ matches a single character, and % matches any number of
         /// characters.
         /// </summary>
