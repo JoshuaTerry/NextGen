@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
@@ -189,12 +192,12 @@ namespace DDI.WebApi.Controllers
             }
 
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = "http://www.ddi.org/";
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
 
             var service = new EmailService();
             var from = new MailAddress("no-reply@ddi.org");
             var to = new MailAddress(model.Email);
-            var body = "Please confirm your email by clicking the following link " + callbackUrl;
+            var body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>.";
             var message = service.CreateMailMessage(from, to, "Confirm your email", body);
 
             service.SendMailMessage(message);
@@ -213,20 +216,23 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
+            var user = UserManager.Users.Where(u => u.Email == model.Email).ToList();
+            if (user.Count != 1)
             {
-                IdentityResult result = await UserManager.ConfirmEmailAsync(model.Email, model.Code);
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
+                return BadRequest();
+            }
+            if (user[0].Id == null)
+            {
+                return NotFound();
+            }
 
-                return Ok();
-            }
-            catch (Exception)
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user[0].Id, model.Code);
+            if (!result.Succeeded)
             {
-                return InternalServerError();
+                return GetErrorResult(result);
             }
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)
