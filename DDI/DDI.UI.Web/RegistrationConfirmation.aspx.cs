@@ -7,11 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace DDI.UI.Web
 {
-    public partial class TrialBalanceReport : BasePage
+    public partial class RegistrationConfirmation : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

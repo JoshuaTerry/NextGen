@@ -39,7 +39,8 @@ namespace DDI.WebApi.Services
             var mailMessage = new MailMessage(from, to)
             {
                 Subject = subject,
-                Body = body
+                Body = body,
+                IsBodyHtml = true
             };
 
             return mailMessage;
