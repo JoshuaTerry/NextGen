@@ -10,6 +10,7 @@ using DDI.Conversion;
 using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
+using System.Data.Entity;
 
 namespace DDI.Conversion
 {
@@ -39,15 +40,9 @@ namespace DDI.Conversion
 
 			log4net.Config.XmlConfigurator.Configure();
 
-            var bl = new Business.CRM.NameFormatter();
-            var name = bl.UnitOfWork.FirstOrDefault<Data.Models.Client.CRM.Constituent>(p => p.LastName.StartsWith("Byers"));
-            string line1, line2;
-            bl.BuildIndividualNameLines(name, null, Business.CRM.NameFormatter.LabelRecipient.Both, false, false, false, 0, out line1, out line2);
-            return;
 
             using (DomainContext context = new DomainContext())
-            {
-                
+            { 
                 var common = new CommonContext();
                 string organization = "NG";
                 string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";

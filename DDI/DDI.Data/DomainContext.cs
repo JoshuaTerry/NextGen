@@ -99,6 +99,8 @@ namespace DDI.Data
         public DomainContext()
             : base("name=DomainContext")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         #endregion Public Constructors
