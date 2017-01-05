@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
+using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -181,6 +186,47 @@ namespace DDI.WebApi.Controllers
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
+
+            var service = new EmailService();
+            var from = new MailAddress("no-reply@ddi.org");
+            var to = new MailAddress(model.Email);
+            var body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>.";
+            var message = service.CreateMailMessage(from, to, "Confirm your email", body);
+
+            service.SendMailMessage(message);
+            
+            return Ok();
+        }
+
+        // POST api/Account/ConfirmEmail
+        [HttpPost]
+        [Route("ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
+            {
+                ModelState.AddModelError("", "User Id and Code are required");
+                return BadRequest(ModelState);
+            }
+
+            var user = UserManager.Users.Where(u => u.Email == model.Email).ToList();
+            if (user.Count != 1)
+            {
+                return BadRequest();
+            }
+            if (user[0].Id == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user[0].Id, model.Code);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
