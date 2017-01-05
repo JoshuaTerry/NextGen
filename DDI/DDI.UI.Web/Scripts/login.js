@@ -29,9 +29,51 @@
 
     });
 
+    $('.newuser').click(function (e) {
+
+        e.preventDefault();
+
+        $('.newusermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            height: 225,
+            resizable: false
+        });
+
+        $('.submitnewuser').click(function () {
+
+            var model = {
+                Email: $('.newusername').val(),
+                Password: $('.newpassword').val(),
+                ConfirmPassword: $('.newconfirmpassword').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'Register',
+                data: model,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    location.href = "/Login.aspx";
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during registration.');
+                }
+            });
+
+        });
+
+    });
+
 });
 
 function Login() {
+
+    // var loginData = 'grant_type=password&username=' + $('.username').val() + '&password=' + $('.password').val();
 
     var loginData = {
         grant_type: 'password',
@@ -41,9 +83,9 @@ function Login() {
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'login',
+        url: WEB_API_ADDRESS + 'Login',
         data: loginData,
-        contentType: 'application/json; charset-utf-8',
+        contentType: 'application/x-www-form-urlencoded',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
@@ -56,9 +98,7 @@ function Login() {
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during logging in.');
         }
-    })
-
-    
+    });
 
 }
 

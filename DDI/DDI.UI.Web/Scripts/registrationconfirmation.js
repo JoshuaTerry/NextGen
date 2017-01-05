@@ -8,14 +8,15 @@ $(document).ready(function () {
 
     if (params['email'] && params['code']) {
         
+        ConfirmEmail(params['email'], params['code']);
+
         counter = setInterval(CountDown, 1000);
 
     }
     else {
+
         location.href = '/Login.aspx';
     }
-
-    
 
 });
 
@@ -30,4 +31,27 @@ function CountDown() {
     }
 
     $('.timer').text(count);
+}
+
+function ConfirmEmail(email, code) {
+
+    var model = {
+        Email: email,
+        Code: code
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: WEB_API_ADDRESS + 'ConfirmEmail',
+        data: model,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during email confirmation.');
+        }
+    });
+
 }
