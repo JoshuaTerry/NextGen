@@ -208,25 +208,87 @@ namespace DDI.WebApi.Controllers
         // POST api/Account/ConfirmEmail
         [HttpPost]
         [Route("ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
             {
-                ModelState.AddModelError("", "User Id and Code are required");
+                ModelState.AddModelError("", "User Email and Code are required");
                 return BadRequest(ModelState);
             }
 
-            var user = UserManager.Users.Where(u => u.Email == model.Email).ToList();
-            if (user.Count != 1)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-            if (user[0].Id == null)
+
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            IdentityResult result = await UserManager.ConfirmEmailAsync(user[0].Id, model.Code);
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<IHttpActionResult> ForgotPassword(string email)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/forgotPassword.aspx?email={new HtmlString(user.Email)}&code={code}");
+
+            var service = new EmailService();
+            var from = new MailAddress("no-reply@ddi.org");
+            var to = new MailAddress(user.Email);
+            var body = "Click <a href=\"" + callbackUrl + "\">here</a> to reset your password.";
+            var message = service.CreateMailMessage(from, to, "Forgotten Password", body);
+
+            service.SendMailMessage(message);
+
+            return Ok();
+
+        }
+
+        // POST api/Account/ForgotPassword
+        [HttpPost]
+        [Route("ForgotPasswordConfirm")]
+        public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
+        {
+            if (model.Email == null || model.Code == null || model.NewPassword == null || model.ConfirmPassword == null)
+            {
+                ModelState.AddModelError("", "User Email, Code, NewPassword, and ConfirmPassword are required");
+                return BadRequest(ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.NewPassword);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
