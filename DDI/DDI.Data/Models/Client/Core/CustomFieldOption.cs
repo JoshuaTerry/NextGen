@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client.Core
 {
-    [Table("CustomFieldOptions")]
-    public class CustomFieldOptions : IEntity
+    [Table("CustomFieldOption")]
+    public class CustomFieldOption : IEntity
     {
         #region Properties
 

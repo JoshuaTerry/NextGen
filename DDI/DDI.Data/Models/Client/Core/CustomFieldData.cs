@@ -18,7 +18,7 @@ namespace DDI.Data.Models.Client.Core
         public string EntityType { get; set; }
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
-        public CustomFields CustomField { get; set; }
+        public CustomField CustomField { get; set; }
 
         [NotMapped]
         public string DisplayName { get; set; }

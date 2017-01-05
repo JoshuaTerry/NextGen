@@ -8,12 +8,12 @@ namespace DDI.WebApi.Controllers
 {
     public class CustomFieldsController : ApiController
     {
-        GenericServiceBase<CustomFields> _service;
+        GenericServiceBase<CustomField> _service;
 
         #region Constructors
 
-        public CustomFieldsController() : this(new GenericServiceBase<CustomFields>()) { }
-        internal CustomFieldsController(GenericServiceBase<CustomFields> service)
+        public CustomFieldsController() : this(new GenericServiceBase<CustomField>()) { }
+        internal CustomFieldsController(GenericServiceBase<CustomField> service)
         {
             _service = service;
         }
@@ -41,7 +41,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/customfields")]
-        public IHttpActionResult Post([FromBody] CustomFields item)
+        public IHttpActionResult Post([FromBody] CustomField item)
         {
             if (!ModelState.IsValid)
             {
