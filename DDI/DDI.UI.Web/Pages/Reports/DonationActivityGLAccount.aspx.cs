@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace DDI.UI.Web
 {
-    public partial class DonationActivityGLAccount : System.Web.UI.Page
+    public partial class DonationActivityGLAccount : BasePage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
