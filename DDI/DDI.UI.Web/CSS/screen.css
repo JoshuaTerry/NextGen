@@ -25,9 +25,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; margin: 20px 0 0 35px; }
 
 .globalnav { position: absolute; top: 15px; right: 30px; border: solid 1px #0f75b4; box-shadow: -1px 1px 10px #999999; border-top: none; padding: 8px 15px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-.globalnav ul { list-style: none; margin: 0px; padding: 0px; }
-.globalnav ul li { display: inline-block; }
-.globalnav ul li a {  }
+.globalnav ul { list-style: none; margin: 0px; padding: 0px; width: 100%; }
+.globalnav ul li { display: inline-block; border-right: solid 1px #0f75b4; }
+.globalnav ul li:last-child { border-right: none; }
+.globalnav ul li a { display: block; padding: 0 7px 0 3px; }
 
 .topnav { display: inline-block; width: 80%; margin-left: 30px; clear: both; }
 .topnav ul { list-style: none; margin: 0px; padding: 0px; }
@@ -153,4 +154,14 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
 
 /* END SYSTEM SETTINGS */
+
+
+
+/* REGISTRATION CONFIRMATION */
+
+.registrationconfirmation { width: 600px; background-color: white; margin: 250px auto 0 auto; padding: 20px; border: solid 2px #0f75b4; border-radius: 10px; }
+.registrationconfirmation h1 { color: #0f75b4; }
+.registrationconfirmation .timer { font-weight: bold; display: inline-block; width: 13px; text-align: right; }
+
+/* END REGISTRATION CONFIRMATION */
 

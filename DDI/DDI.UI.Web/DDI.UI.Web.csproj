@@ -111,10 +111,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <Content Include="Pages\Reports\Reports.aspx" />
+    <Content Include="RegistrationConfirmation.aspx" />
     <Content Include="Scripts\data.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\registrationconfirmation.js" />
     <Content Include="Scripts\systemsettings.js" />
     <Content Include="Pages\Admin\Security.aspx" />
     <Content Include="Pages\Admin\SystemSettings.aspx" />
@@ -535,6 +537,13 @@
     <Compile Include="Pages\Reports\TrialBalanceReport.aspx.designer.cs">
       <DependentUpon>TrialBalanceReport.aspx</DependentUpon>
     </Compile>
+    <Compile Include="RegistrationConfirmation.aspx.cs">
+      <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RegistrationConfirmation.aspx.designer.cs">
+      <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -560,7 +569,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>33603</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:33603/</IISUrl>
+          <IISUrl>http://localhost:12345/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:12345/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
