@@ -58,6 +58,7 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
+    <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
     <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
@@ -73,6 +74,10 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.Designer.cs">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
@@ -224,6 +229,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
     </EmbeddedResource>
