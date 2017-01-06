@@ -74,6 +74,10 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.Designer.cs">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
@@ -225,6 +229,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
     </EmbeddedResource>

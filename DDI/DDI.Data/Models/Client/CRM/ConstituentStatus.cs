@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Data.Enums.CRM;
 
 namespace DDI.Data.Models.Client.CRM
 {
@@ -22,6 +23,10 @@ namespace DDI.Data.Models.Client.CRM
 
         [MaxLength(128)]
         public string Name { get; set; }
+
+        public ConstituentBaseStatus BaseStatus { get; set; }
+
+        public bool IsRequired { get; set; }
 
         #endregion Public Properties
 

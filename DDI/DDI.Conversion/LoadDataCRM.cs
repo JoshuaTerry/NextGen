@@ -119,23 +119,6 @@ namespace DDI.Conversion
                                p => p.Code,
                                new ClergyType { Code = code, Name = description, IsActive = active });
                             break;
-                        case CONSTITUENT_TYPE:
-                            if (code == "I" || code == "F")
-                            {
-                                baseType = "I";
-                            }
-                            else
-                            {
-                                baseType = "O";
-                            }
-                            if (code == "I" || code == "O")
-                            {
-                                required = true;
-                            }
-                            context.ConstituentTypes.AddOrUpdate(
-                                p => p.Code,
-                                new ConstituentType { BaseType = baseType, Code = code, Name = description, IsActive = active, IsRequired = required });
-                            break;
                         case CONTACT_TYPE:
                             context.ContactTypes.AddOrUpdate(
                                 p => p.Code,
