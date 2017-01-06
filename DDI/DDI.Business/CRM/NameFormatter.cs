@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
+using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.CRM;
 using DDI.Shared.Helpers;
 
@@ -24,9 +25,7 @@ namespace DDI.Business.CRM
                 :
                 char.ToUpper(s[0]) + "."
                 );
-        }
-
-        public enum LabelRecipient { Both, Primary, Spouse, Husband, Wife }
+        }       
 
         private const int TOKEN_CACHE_LIMIT = 5000;
         private static Dictionary<Tuple<string,bool>, IList<Token>> _tokenCache = new Dictionary<Tuple<string, bool>, IList<Token>>();
@@ -38,6 +37,8 @@ namespace DDI.Business.CRM
         public NameFormatter(IUnitOfWork uow)
         {
             UnitOfWork = uow;
+            uow.AddBusinessLogic(this);
+
             var indivType = uow.FirstOrDefault<ConstituentType>(p => p.Code == "I");
 
             _defaultIndividualNameFormat = StringHelper.FirstNonBlank(indivType?.NameFormat, DEFAULT_NAME_FORMAT);
@@ -520,7 +521,7 @@ namespace DDI.Business.CRM
                     SimpleName tempName = name1;
                     name1 = name2;
                     name2 = tempName;
-                    
+
                     int priort = prior1;
                     prior1 = prior2;
                     prior2 = priort;
@@ -544,7 +545,7 @@ namespace DDI.Business.CRM
                     tempBool = useDefaultPrefix;
                     useDefaultPrefix = spouseUseDefaultPrefix;
                     spouseUseDefaultPrefix = tempBool;
-                    
+
                     swapped = true;
                 }
             }
@@ -590,13 +591,13 @@ namespace DDI.Business.CRM
             if (!combined && !separate &&
                 prior1 > 2 && prior2 > 2 &&
                 (keepPosition || ((!swapped && gender1 == "M") || (swapped && gender2 == "M"))) &&
-                string.Compare(name1.LastName, name2.LastName, true) == 0 && 
+                string.Compare(name1.LastName, name2.LastName, true) == 0 &&
                 !IsTokenListEmpty(patternTokens) && // Primary prefix pattern is non-empty
                 patternTokens.Last().NamePart == MacroNamePart.All  // Primary prefix must end with {NAME} or {FULL}
                 )
             {
                 // Call logic to combine prefix patterns.
-                CombinePrefixes(patternTokens, spousePatternTokens, formatTokens, spouseFormatTokens, omitPrefix, omitSpousePrefix, addFirstNames, 
+                CombinePrefixes(patternTokens, spousePatternTokens, formatTokens, spouseFormatTokens, omitPrefix, omitSpousePrefix, addFirstNames,
                     out patternTokens, out spousePatternTokens);
 
                 CombinePrefixes(shortPatternTokens, spouseShortPatternTokens, formatTokens, spouseFormatTokens, omitPrefix, omitSpousePrefix, addFirstNames,
@@ -617,7 +618,7 @@ namespace DDI.Business.CRM
             {
                 line2 = FormatIndividualName(name2, spouseFormatTokens, spousePatternTokens, spouseShortPatternTokens, maxChars);
             }
-            
+
             if (string.IsNullOrWhiteSpace(line1))
             {
                 line1 = line2;
@@ -641,6 +642,108 @@ namespace DDI.Business.CRM
                 }
             }
 
+        } // BuildIndividualNameLines
+
+        public void BuildNameLines(Constituent name1, Constituent name2, LabelFormattingOptions options, out string line1, out string line2)
+        {
+            if (options == null)
+            {
+                options = new LabelFormattingOptions();
+            }
+
+            Constituent spouse = null;
+            LabelRecipient recipient = options.Recipient;
+
+            var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
+
+            line1 = line2 = string.Empty;
+
+            // For organizations, just return the constituent name.
+            ConstituentType ctype = UnitOfWork.GetReference(name1, p => p.ConstituentType);
+            if (ctype == null || ctype.BaseType == "Organization")
+            {
+                line1 = name1.Name;
+                line2 = name1.Name2;
+                return;
+            }
+
+            bool omitInactiveSpouse = !options.IncludeInactive; // TODO:  Need to include base CRM setting for this.
+
+            // Keep spouse separate based on salutation format.
+            bool keepSeparate = (name1.SalutationType == SalutationType.FormalSeparate || name1.SalutationType == SalutationType.InformalSeparate || options.KeepSeparate);
+
+            if (options.IsSpouse)
+            {
+                spouse = name2;
+            }
+            else
+            {
+                spouse = constituentLogic.GetSpouse(name1);
+            }
+
+            if (spouse != null)
+            {
+                if (omitInactiveSpouse && constituentLogic.IsConstituentActive(spouse) == false)
+                {
+                    // Spouse is inactive and should be omitted.
+                    if (name2 != null & spouse.Id == name2.Id)
+                    {
+                        // Since name2 is the spouse, set it to null.
+                        name2 = null;
+                    }
+                    spouse = null;
+                }
+                // If primary & spouse have different last names...
+                else if (options.IsSpouse && string.Compare(name1.LastName, spouse.LastName, true) != 0)
+                {
+                    // ... treat const2 as a separate constituent and not a spouse.
+                    recipient = LabelRecipient.Primary;
+                    spouse = null;
+                }
+                else
+                {
+                    // Keep spouse separate based on salultation format.
+                    keepSeparate = keepSeparate ||
+                        (spouse.SalutationType == SalutationType.FormalSeparate || spouse.SalutationType == SalutationType.InformalSeparate);
+                }
+            }
+
+            // If spouse is name2, ignore name2 and change recipient to "Both".
+            if (spouse != null && name2 != null && spouse.Id == name2.Id)
+            {
+                name2 = null;
+                if (recipient == LabelRecipient.Primary)
+                {
+                    recipient = LabelRecipient.Both;
+                }
+            }
+
+            bool addFirstNames = options.AddFirstNames;  // TODO:  Need to include base CRM setting for this.
+
+            // Use BuildIndividualNames to get the name lines for teh individual and spouse (which may be null)
+            BuildIndividualNameLines(name1, spouse, recipient, keepSeparate, options.OmitPrefix, addFirstNames, options.MaxChars, out line1, out line2);
+
+            // Try to add the second name line if we can
+            if (string.IsNullOrWhiteSpace(line2))
+            {
+                if (name2 != null)
+                {
+                    ConstituentType ctype2 = UnitOfWork.GetReference(name1, p => p.ConstituentType);
+                    if (ctype2 == null || ctype.BaseType == "Organization")
+                    {
+                        line2 = name2.Name;
+                    }
+                    else
+                    {
+                        string temp;
+                        BuildIndividualNameLines(name2, null, LabelRecipient.Primary, false, options.OmitPrefix, addFirstNames, options.MaxChars, out line2, out temp);
+                    }
+                }
+                else
+                {
+                    line2 = name1.Name2;
+                }
+            }
         }
 
         private bool IsTokenListEmpty(IList<Token> tokens)

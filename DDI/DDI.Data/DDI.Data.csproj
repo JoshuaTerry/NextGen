@@ -58,6 +58,7 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
+    <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
     <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
