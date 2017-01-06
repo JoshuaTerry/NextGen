@@ -66,6 +66,8 @@ namespace DDI.Data
 
         public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
 
+        public virtual DbSet<ModuleSetting> ModuleSettings { get; set; }
+
         public virtual DbSet<PaymentPreference> PaymentPreferences { get; set; }
 
         public virtual DbSet<Prefix> Prefixes { get; set; }

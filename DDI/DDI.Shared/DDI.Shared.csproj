@@ -55,6 +55,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,14 +65,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="HATEOASLink.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\ModuleHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="ModuleInfo\Accounting.cs" />
+    <Compile Include="ModuleInfo\AccountsPayable.cs" />
+    <Compile Include="ModuleInfo\AccountsReceivable.cs" />
+    <Compile Include="ModuleInfo\Campaigns.cs" />
+    <Compile Include="ModuleInfo\CashDisbursements.cs" />
+    <Compile Include="ModuleInfo\CashProcessing.cs" />
+    <Compile Include="ModuleInfo\CashReceipting.cs" />
+    <Compile Include="ModuleInfo\CRM.cs" />
+    <Compile Include="ModuleInfo\CropEvents.cs" />
+    <Compile Include="ModuleInfo\Donations.cs" />
+    <Compile Include="ModuleInfo\ExtensionFund.cs" />
+    <Compile Include="ModuleInfo\FixedAssets.cs" />
+    <Compile Include="ModuleInfo\FundRaising.cs" />
+    <Compile Include="ModuleInfo\GeneralLedger.cs" />
+    <Compile Include="ModuleInfo\HealthPolicy.cs" />
+    <Compile Include="ModuleInfo\Inventory.cs" />
+    <Compile Include="ModuleInfo\Investments.cs" />
+    <Compile Include="ModuleInfo\JobProcessing.cs" />
+    <Compile Include="ModuleInfo\Base\ModuleInfoBase.cs" />
+    <Compile Include="ModuleInfo\Base\ModuleTypeAttribute.cs" />
+    <Compile Include="ModuleInfo\LineOfCredit.cs" />
+    <Compile Include="ModuleInfo\Loans.cs" />
+    <Compile Include="ModuleInfo\NamedFunds.cs" />
+    <Compile Include="ModuleInfo\PlannedGiving.cs" />
+    <Compile Include="ModuleInfo\Pools.cs" />
+    <Compile Include="ModuleInfo\Portfolio.cs" />
+    <Compile Include="ModuleInfo\ProcessManagement.cs" />
+    <Compile Include="ModuleInfo\Projects.cs" />
+    <Compile Include="ModuleInfo\SystemAdministration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

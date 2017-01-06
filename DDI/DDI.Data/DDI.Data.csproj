@@ -170,6 +170,7 @@
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
     <Compile Include="Models\BaseLinkedEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\Client\Core\ModuleSetting.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />
     <Compile Include="Models\Client\CRM\AlternateId.cs" />
     <Compile Include="Models\Client\CRM\Degree.cs" />
