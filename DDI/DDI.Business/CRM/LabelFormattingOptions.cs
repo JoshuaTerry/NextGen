@@ -20,12 +20,12 @@ namespace DDI.Business.CRM
         public bool ExpandName { get; set; }
         public bool ExpandAddress { get; set; }
         public bool allowVacationAddress { get; set; }
-        public AddressCategory AddressMode { get; set; }
+        public AddressCategory AddressCategory { get; set; }
         public Guid AddressOid { get; set; }
 
         public LabelFormattingOptions() : base()
         {
-            AddressMode = AddressCategory.Mailing;
+            AddressCategory = AddressCategory.Mailing;
         }
     }
 }

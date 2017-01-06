@@ -111,7 +111,7 @@ namespace DDI.Business.CRM
         public Constituent GetSpouse(Constituent name)
         {
             ConstituentType ctype = UnitOfWork.GetReference(name, p => p.ConstituentType);
-            if (ctype != null && ctype.BaseType == "Individual")
+            if (ctype != null && ctype.Category == ConstituentCategory.Individual)
             {
                 Relationship rel = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
                 if (rel != null)
@@ -189,6 +189,19 @@ namespace DDI.Business.CRM
                 query = query.Where(p => p.RelationshipType.RelationshipCategory.IsShownInQuickView == showInQuickView);
             return query;
         }
+        #endregion
+
+        #region Inner Classes
+
+        /// <summary>
+        /// Class used to sort addresses in GetAddress method.
+        /// </summary>
+        private class WeightedAddress
+        {
+            public int weight;
+            public ConstituentAddress cAddress;
+        }
+
         #endregion
 
     }

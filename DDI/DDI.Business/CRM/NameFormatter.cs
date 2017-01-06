@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Common;
 using DDI.Data;
 using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.CRM;
@@ -474,7 +475,7 @@ namespace DDI.Business.CRM
                     spouseFormatTokens = null;
                     spousePatternTokens = null;
                     break;
-                case LabelRecipient.Spouse:
+                case LabelRecipient.Secondary:
                     formatTokens = null;
                     patternTokens = null;
                     break;
@@ -660,7 +661,7 @@ namespace DDI.Business.CRM
 
             // For organizations, just return the constituent name.
             ConstituentType ctype = UnitOfWork.GetReference(name1, p => p.ConstituentType);
-            if (ctype == null || ctype.BaseType == "Organization")
+            if (ctype == null || ctype.Category == ConstituentCategory.Organization)
             {
                 line1 = name1.Name;
                 line2 = name1.Name2;
@@ -676,7 +677,7 @@ namespace DDI.Business.CRM
             {
                 spouse = name2;
             }
-            else
+            else if (name2 != null || recipient != LabelRecipient.Primary)
             {
                 spouse = constituentLogic.GetSpouse(name1);
             }
@@ -729,7 +730,7 @@ namespace DDI.Business.CRM
                 if (name2 != null)
                 {
                     ConstituentType ctype2 = UnitOfWork.GetReference(name1, p => p.ConstituentType);
-                    if (ctype2 == null || ctype.BaseType == "Organization")
+                    if (ctype2 == null || ctype.Category == ConstituentCategory.Organization)
                     {
                         line2 = name2.Name;
                     }
@@ -744,6 +745,82 @@ namespace DDI.Business.CRM
                     line2 = name1.Name2;
                 }
             }
+        }
+
+        public List<string> BuildAddressLabel(Constituent name1, Constituent name2, Address address, LabelFormattingOptions opts)
+        {
+            List<string> label = new List<string>();
+            string line1, line2;
+
+            if (opts == null)
+                opts = new LabelFormattingOptions();
+            
+            // Get options
+            AddressCategory addrMode = opts.AddressCategory;
+            string contactName = opts.ContactName;
+
+
+            string nameLine2 = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(opts.AddressType))
+            {
+                addrMode = AddressCategory.None;
+            }
+
+            if (name1 != null)
+            {
+                BuildNameLines(name1, name2, opts, out line1, out line2);
+
+                // Remove name2 from the result if it's in Line2.
+                if (!string.IsNullOrWhiteSpace(name1.Name2) && string.Compare(line2, name1.Name2, true) == 0)
+                {
+                    line2 = string.Empty;
+                }
+
+                nameLine2 = name1.Name2 ?? string.Empty;
+
+                if (opts.Caps)
+                {
+                    line1 = line1.ToUpper();
+                    line2 = line2.ToUpper();
+                    nameLine2 = nameLine2.ToUpper();
+                }
+                if (opts.ExpandName)
+                {
+                    if (!string.IsNullOrWhiteSpace(line1))
+                    {
+                        line1 = AbbreviationHelper.ExpandNameLine(line1, true);
+                    }
+                    if (!string.IsNullOrWhiteSpace(line2))
+                    {
+                        line2 = AbbreviationHelper.ExpandNameLine(line2, true);
+                    }
+                    if (!string.IsNullOrWhiteSpace(nameLine2))
+                    {
+                        nameLine2 = AbbreviationHelper.ExpandNameLine(nameLine2, true);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(line1))
+                {
+                    label.Add(line1);
+                }
+
+                if (!string.IsNullOrWhiteSpace(line2))
+                {
+                    label.Add(line2);
+                }
+
+                if (!string.IsNullOrWhiteSpace(contactName) && opts.Caps)
+                {
+                    contactName = contactName.ToUpper();
+                }
+
+                // TODO: More logic needed, pending other BL to be added.
+            }
+
+            return label;
+
         }
 
         private bool IsTokenListEmpty(IList<Token> tokens)

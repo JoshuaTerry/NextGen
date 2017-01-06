@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace DDI.Business.CRM
 {
-    public enum LabelRecipient { Both, Primary, Spouse, Husband, Wife }
+    public enum LabelRecipient { Primary, Secondary, Both, Husband, Wife }
 }

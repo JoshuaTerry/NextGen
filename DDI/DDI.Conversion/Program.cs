@@ -36,28 +36,7 @@ namespace DDI.Conversion
                 maxCount = 999999;
             }
 
-
-
 			log4net.Config.XmlConfigurator.Configure();
-
-            var bl = new Business.CRM.NameFormatter();
-            var name1 = bl.UnitOfWork.FirstOrDefault<Data.Models.Client.CRM.Constituent>(p => p.ConstituentNumber == 1509818);
-            var name2 = bl.UnitOfWork.FirstOrDefault<Data.Models.Client.CRM.Constituent>(p => p.LastName.StartsWith("Byers"));
-
-            name1.MiddleName = "Henry";
-            name1.Prefix = bl.UnitOfWork.FirstOrDefault<Data.Models.Client.CRM.Prefix>(p => p.Code == "Law");
-
-            name2.MiddleName = "Elizabeth";
-            name2.Prefix = bl.UnitOfWork.FirstOrDefault<Data.Models.Client.CRM.Prefix>(p => p.Code == "Dr");
-
-            string line1, line2;
-
-            bl.BuildNameLines(name1, name2, new Business.CRM.LabelFormattingOptions() { Recipient = Business.CRM.LabelRecipient.Both }, out line1, out line2);
-
-            Console.WriteLine(line1);
-            Console.WriteLine(line2);
-            Console.ReadLine();
-            return;
 
             using (DomainContext context = new DomainContext())
             { 
