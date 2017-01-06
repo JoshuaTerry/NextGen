@@ -207,7 +207,7 @@ namespace DDI.WebApi.Controllers
         // POST api/Account/ConfirmEmail
         [HttpPost]
         [Route("api/v1/ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
             {
