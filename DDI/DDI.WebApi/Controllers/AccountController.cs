@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
+using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -19,7 +24,6 @@ using Microsoft.Owin.Security.OAuth;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -51,7 +55,7 @@ namespace DDI.WebApi.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // POST api/Account/Logout
-        [Route("Logout")]
+        [Route("api/v1/Logout")]
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
@@ -59,7 +63,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
+        [Route("api/v1/ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
             IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -98,7 +102,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [Route("api/v1/ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -118,7 +122,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // POST api/Account/SetPassword
-        [Route("SetPassword")]
+        [Route("api/v1/SetPassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -138,7 +142,7 @@ namespace DDI.WebApi.Controllers
 
 
         // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
+        [Route("api/v1/RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -169,7 +173,7 @@ namespace DDI.WebApi.Controllers
 
         // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Register")]
+        [Route("api/v1/Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -181,6 +185,47 @@ namespace DDI.WebApi.Controllers
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
+
+            var service = new EmailService();
+            var from = new MailAddress("no-reply@ddi.org");
+            var to = new MailAddress(model.Email);
+            var body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>.";
+            var message = service.CreateMailMessage(from, to, "Confirm your email", body);
+
+            service.SendMailMessage(message);
+            
+            return Ok();
+        }
+
+        // POST api/Account/ConfirmEmail
+        [HttpPost]
+        [Route("api/v1/ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
+            {
+                ModelState.AddModelError("", "User Id and Code are required");
+                return BadRequest(ModelState);
+            }
+
+            var user = UserManager.Users.Where(u => u.Email == model.Email).ToList();
+            if (user.Count != 1)
+            {
+                return BadRequest();
+            }
+            if (user[0].Id == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user[0].Id, model.Code);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);

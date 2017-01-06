@@ -2,6 +2,8 @@
 // var WEB_API_ADDRESS = 'http://devapi.ddi.org';   // TEST
 // var WEB_API_ADDRESS = '';   // PROD
 
+var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
+var auth_token = null;
 var editing = false;
 var currentEntity = null;
 var modal = null;
@@ -50,6 +52,16 @@ $(document).ready(function () {
 
     });
 
+    $('.logout').click(function (e) {
+
+        e.preventDefault();
+
+        sessionStorage.removeItem(AUTH_TOKEN_KEY);
+        auth_token = null;
+
+        location.href = "/Login.aspx";
+    });
+
 });
 
 function LoadNewConstituentModalDropDowns() {
@@ -68,6 +80,33 @@ function LoadNewConstituentModalDropDowns() {
 
 }
 
+function GetApiHeaders() {
+
+    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    var headers = {};
+
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+    return headers;
+
+}
+
+function GetQueryString() {
+
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+
+    return vars;
+}
+
 function SaveNewConstituent() {
 
     // Get the fields
@@ -77,6 +116,7 @@ function SaveNewConstituent() {
     $.ajax({
         url: WEB_API_ADDRESS + 'constituents',
         method: 'POST',
+        headers: GetApiHeaders(),
         data: fields,
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -330,6 +370,7 @@ function SaveEdit(editcontainer) {
     $.ajax({
         url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
         method: 'PATCH',
+        headers: GetApiHeaders(),
         data: fields,
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
