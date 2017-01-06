@@ -22,33 +22,34 @@ namespace DDI.Conversion
         {
             // At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
             //Hard coding for quick demo purposes.
+            string organization;
             int minCount;
             int maxCount;
+            if (args.Length == 3)
+            {
+                organization = args[0];
+                int.TryParse(args[1], out minCount);
+                int.TryParse(args[2], out maxCount);
+            }
             if (args.Length == 2)
             {
+                organization = "NG";
                 int.TryParse(args[0], out minCount);
                 int.TryParse(args[1], out maxCount);
             }
             else
             {
+                organization = "NG";
                 minCount = 0;
                 maxCount = 999999;
             }
-
-
-
+            
 			log4net.Config.XmlConfigurator.Configure();
-
-            using (DomainContext context = new DomainContext())
-            {
-                var common = new CommonContext();
-                string organization = "NG";
-                string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
-											
-                LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath, minCount, maxCount);
-                context.SaveChanges();
-            }
-
+            
+            string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
+            
+            LoadDataCRM.ExecuteCRMLoad(organization, filePath, minCount, maxCount);
+            
         }
 
     }

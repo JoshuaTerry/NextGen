@@ -28,7 +28,8 @@ namespace DDI.Conversion
         private const string EDUCATION_FILE = "EducationInfo.csv";
         private const string ALTERNATE_ID_FILE = "AlternateID.csv";
         private const string CONSTITUENT_ADDRESS_FILE = "ConstituentAddress.csv";
-        private const string CONTACT_INFO_FILE = "ContactInfo";
+        private const string CONTACT_INFO_FILE = "ContactInfo.csv";
+        private const string REGIONS_FILE = "Region.csv";
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
         private const int DENOMINATION_SET = 5;
@@ -51,26 +52,28 @@ namespace DDI.Conversion
 
 
 
-        public static void ExecuteCRMLoad(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        public static void ExecuteCRMLoad(string organization, string filePath, int minCount, int maxCount)
         {
-            //filePath = filePath + "\\" + organization + "\\CRM\\";
             filePath = Path.Combine(filePath, organization, "CRM");
 
-            //LoadLegacyCodes(context, common, organization, filePath, minCount, maxCount);
-            //LoadAddresses(context, common, organization, filePath, minCount, maxCount);
-            LoadPrefixes(context, common, organization, filePath, minCount, maxCount);
-            //LoadConstituents(context, common, organization, filePath, minCount, maxCount);
-            //LoadDoingBusinessAs(context, common, organization, filePath, minCount, maxCount);
-            //LoadEducation(context, common, organization, filePath, minCount, maxCount);
-            //LoadPaymentPreferences(context, common, organization, filePath, minCount, maxCount);
-            //LoadAleternateIDs(context, common, organization, filePath, minCount, maxCount);
-            //LoadConstituentAddress(context, common, organization, filePath, minCount, maxCount);
-            //LoadContactInfo(context, common, organization, filePath, minCount, maxCount);
+            //LoadLegacyCodes(organization, filePath, minCount, maxCount);
+            //LoadRegions(organization, filePath, minCount, maxCount);
+            //LadAddresses(organization, filePath, minCount, maxCount);
+            //LoadPrefixes(organization, filePath, minCount, maxCount);
+            LoadConstituents(organization, filePath, minCount, maxCount);
+            //LoadDoingBusinessAs(organization, filePath, minCount, maxCount);
+            //LoadEducation(organization, filePath, minCount, maxCount);
+            //LoadPaymentPreferences(organization, filePath, minCount, maxCount);
+            //LoadAleternateIDs(organization, filePath, minCount, maxCount);
+            //LoadConstituentAddress(organization, filePath, minCount, maxCount);
+            //LoadContactInfo(organization, filePath, minCount, maxCount);
 
         }
 
-        private static void LoadLegacyCodes(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        private static void LoadLegacyCodes(string organization, string filePath, int minCount, int maxCount)
         {
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
             string dataFile = "";
             
             // - 5 denominations
@@ -82,6 +85,8 @@ namespace DDI.Conversion
             // - 34 clergy types 
             // - 35 clergy status
             // - 38 genders
+//TODO: import income levels
+//TODO: import marital statuses and correct spelling of marital status table
 
             //dataFile = filePath + NACODES_FILE;
             dataFile = Path.Combine(filePath, NACODES_FILE);
@@ -192,20 +197,108 @@ namespace DDI.Conversion
                     }
                 }
             }
+            context.SaveChanges();
         }
 
-        private static void LoadAddresses(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        private static void LoadRegions(string organization, string filePath, int minCount, int maxCount)
         {
-
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
+            List<int> uniqueNum = new List<int>();
+            List<int> level = new List<int>();
+            List<string> code = new List<string>();
+            List<string> description = new List<string>();
+            List<int> parentRegion = new List<int>();
+            
             string dataFile = "";
-            // Load Addresses
-            //dataFile = filePath + ADDRESSES_FILE;
+            // Load Regions
+            dataFile = Path.Combine(filePath, REGIONS_FILE);
+            using (var importer = new FileImport(dataFile, "Region"))
+            {
+                int count = 1;
+
+                while (count <= maxCount && importer.GetNextRow())
+                {
+                    uniqueNum.Add(importer.GetInt(0));
+                    level.Add(importer.GetInt(1));
+                    code.Add(importer.GetString(2));
+                    description.Add(importer.GetString(3));
+                    parentRegion.Add(importer.GetInt(4));
+
+                    Console.WriteLine("Region {0}: {1}", count, code[count - 1]);
+                    count++;
+                    
+                }
+
+            }
+
+            int levelCount = 1;
+            while( levelCount <= 4 )
+            {
+                int count = 0;
+                int parentPosition;
+                int parentLevel;
+                string parentCode;
+                Region parent;
+
+                while ( count < level.Count() )
+                {
+                    parent = null;
+                    parentPosition = 0;
+                    parentLevel = 0;
+                    parentCode = "";
+                    if ( level[count] == levelCount )
+                    {
+                        if (levelCount != 1)
+                        {
+
+                            if (parentRegion[count] != 0) //parent?
+                            {
+                                try
+                                {
+                                    parentPosition = uniqueNum.IndexOf(parentRegion.Single());
+                                    parentCode = code[parentPosition];
+                                    parentLevel = level[parentPosition];
+                                    parent = context.Regions.Local.First(i => (i.Level == parentLevel) && (i.Code == parentCode)); //lookup parent
+                                }
+                                catch (Exception e)
+                                { }
+                            }
+                        }
+
+                        context.Regions.AddOrUpdate(
+                        p => p.Code,
+                        new Region
+                        {
+                            Level = level[count],
+                            Code = code[count],
+                            Name = description[count],
+                            ParentRegion = parent
+                        });
+
+                    }
+
+
+
+                    count++;  //last line of while statement
+                }
+
+                levelCount++; //last line of while statement
+            }
+            context.SaveChanges();
+        }
+
+        private static void LoadAddresses(string organization, string filePath, int minCount, int maxCount)
+        {
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
+            string dataFile = "";
             dataFile = Path.Combine(filePath, ADDRESSES_FILE);
             using (var importer = new FileImport(dataFile, "Address"))
             {
                 int count = 0;
 
-                while (count <= minCount && importer.GetNextRow())
+                while (minCount > 0 && count <= minCount && importer.GetNextRow())
                 {
                     Console.WriteLine(count);
                     count++;
@@ -213,22 +306,23 @@ namespace DDI.Conversion
                 while (count <= maxCount && importer.GetNextRow())
                 {
                     int legacyId = importer.GetInt(0);
-                    string streetAddress = importer.GetString(1);
-                    string countryCode = importer.GetString(2);
-                    string stateCode = importer.GetString(3);
-                    int countyFips = importer.GetInt(4);
-                    string postalCode = importer.GetString(5);
-                    string city = importer.GetString(6);
-                    //string region1 = importer.GetString(7);
-                    //string region2 = importer.GetString(8);
-                    //string region3 = importer.GetString(9);
-                    //string region4 = importer.GetString(10);
-                    string line2 = "";
+                    string streetAddress1 = importer.GetString(1);
+                    string streetAddress2 = importer.GetString(2);
+                    string countryCode = importer.GetString(3);
+                    string stateCode = importer.GetString(4);
+                    int countyFips = importer.GetInt(5);
+                    string postalCode = importer.GetString(6);
+                    string city = importer.GetString(7);
+                    string region1 = importer.GetString(8);
+                    string region2 = importer.GetString(9);
+                    string region3 = importer.GetString(10);
+                    string region4 = importer.GetString(11);
+                    
                     count++;
                     Console.WriteLine("{0}: {1}", count, legacyId);
 
                     State state = null;
-                    if (stateCode != null && stateCode != "")
+                    if (!string.IsNullOrWhiteSpace(stateCode))
                     {
                         //g1 = context.Genders.FirstOrDefault(p => p.Code == gender);
                         try
@@ -236,11 +330,11 @@ namespace DDI.Conversion
                             state = common.States.First(p => p.StateCode == stateCode);
                         }
                         catch (Exception e)
-                        { }
+                        {}
                     }
 
                     Country country = null;
-                    if (countryCode == null || countryCode == "")
+                    if (string.IsNullOrWhiteSpace(countryCode))
                     {
                         countryCode = "US";
                     }
@@ -267,132 +361,93 @@ namespace DDI.Conversion
                         { }
                     }
 
-                    if (state != null && country != null && county != null)
+                    Region regionOne = null;
+                    if (!string.IsNullOrWhiteSpace(region1))
                     {
-                        context.Addresses.AddOrUpdate(
-                        p => p.LegacyKey,
-                        new Address
+                        try
                         {
-                            LegacyKey = legacyId,
-                            AddressLine1 = streetAddress,
-                            AddressLine2 = line2,
-                            City = city,
-                            PostalCode = postalCode,
-                            StateId = state.Id,
-                            CountryId = country.Id,
-                            CountyId = county.Id
-                        });
+                            regionOne = context.Regions.First(p => p.Level == 1 && p.Code == region1);
+
+                        }
+                        catch (Exception e)
+                        { }
                     }
-                    else if (state != null && county != null)
+
+                    Region regionTwo = null;
+                    if (!string.IsNullOrWhiteSpace(region2))
                     {
-                        context.Addresses.AddOrUpdate(
-                        p => p.LegacyKey,
-                        new Address
+                        try
                         {
-                            LegacyKey = legacyId,
-                            AddressLine1 = streetAddress,
-                            AddressLine2 = line2,
-                            City = city,
-                            PostalCode = postalCode,
-                            StateId = state.Id,
-                            CountyId = county.Id
-                        });
+                            regionTwo = context.Regions.First(p => p.Level == 2 && p.Code == region2);
+
+                        }
+                        catch (Exception e)
+                        { }
                     }
-                    else if (state != null && country != null)
+
+                    Region regionThree = null;
+                    if (!string.IsNullOrWhiteSpace(region3))
+                    {
+                        try
+                        {
+                            regionThree = context.Regions.First(p => p.Level == 3 && p.Code == region3);
+
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    Region regionFour = null;
+                    if (!string.IsNullOrWhiteSpace(region4))
+                    {
+                        try
+                        {
+                            regionFour = context.Regions.First(p => p.Level == 4 && p.Code == region4);
+
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (state != null && county != null && !string.IsNullOrWhiteSpace(streetAddress1))
                     {
                         context.Addresses.AddOrUpdate(
                             p => p.LegacyKey,
                             new Address
                             {
                                 LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
+                                AddressLine1 = streetAddress1,
+                                AddressLine2 = streetAddress2,
                                 City = city,
                                 PostalCode = postalCode,
-                                StateId = state.Id,
-                                CountryId = country.Id
+                                State = state,
+                                Country = country,
+                                County = county,
+                                Region1 = regionOne,
+                                Region2 = regionTwo,
+                                Region3 = regionThree,
+                                Region4 = regionFour
                             });
                     }
-                    else if (county != null && country != null)
+
+                    if (count % 1000 == 0)
                     {
-                        context.Addresses.AddOrUpdate(
-                            p => p.LegacyKey,
-                            new Address
-                            {
-                                LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
-                                City = city,
-                                PostalCode = postalCode,
-                                CountyId = county.Id,
-                                CountryId = country.Id
-                            });
+                        context.SaveChanges();
+                        context.Dispose();
+                        context = new DomainContext();
                     }
-                    else if (state != null)
-                    {
-                        context.Addresses.AddOrUpdate(
-                            p => p.LegacyKey,
-                            new Address
-                            {
-                                LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
-                                City = city,
-                                PostalCode = postalCode,
-                                StateId = state.Id,
-                            });
-                    }
-                    else if (country != null)
-                    {
-                        context.Addresses.AddOrUpdate(
-                            p => p.LegacyKey,
-                            new Address
-                            {
-                                LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
-                                City = city,
-                                PostalCode = postalCode,
-                                CountryId = country.Id
-                            });
-                    }
-                    else if (county != null)
-                    {
-                        context.Addresses.AddOrUpdate(
-                            p => p.LegacyKey,
-                            new Address
-                            {
-                                LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
-                                City = city,
-                                PostalCode = postalCode,
-                                CountyId = county.Id
-                            });
-                    }
-                    else
-                    {
-                        context.Addresses.AddOrUpdate(
-                            p => p.LegacyKey,
-                            new Address
-                            {
-                                LegacyKey = legacyId,
-                                AddressLine1 = streetAddress,
-                                AddressLine2 = line2,
-                                City = city,
-                                PostalCode = postalCode
-                            });
-                    }
-                    
                 }
             }
+
+            context.SaveChanges();
+            
         }
 
-        private static void LoadPrefixes(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        private static void LoadPrefixes(string organization, string filePath, int minCount, int maxCount)
         {
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
             string dataFile = "";
-            // Load prefixes
-            //dataFile = filePath + PREFIX_FILE;
             dataFile = Path.Combine(filePath, PREFIX_FILE);
 
             // Force loading of genders
@@ -403,11 +458,11 @@ namespace DDI.Conversion
                 while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
-                    string salutation = importer.GetString(4);
                     string name = importer.GetString(1);
                     string label = importer.GetString(2);
-                    string gender = importer.GetString(5);
                     string labelAbbreviation = importer.GetString(3);
+                    string salutation = importer.GetString(4);
+                    string gender = importer.GetString(5);
                     bool showOnline = importer.GetBool(6);
                     Gender g1 = null;
 
@@ -432,12 +487,16 @@ namespace DDI.Conversion
                         prefix);
                 }
 
-                context.SaveChanges();
             }
+
+            context.SaveChanges();
+
         }
 
-        private static void LoadConstituents(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        private static void LoadConstituents(string organization, string filePath, int minCount, int maxCount)
         {
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
             string dataFile = "";
             // Load constituents and constituent denomination cross reference and constituent ethnicity - was 1 to 1 in legacy app
             //dataFile = filePath + INDIVIDUAL_CONSTITUENT_FILE;
@@ -446,7 +505,7 @@ namespace DDI.Conversion
             {
                 int count = 0;
 
-                while (count <= minCount && importer.GetNextRow())
+                while (minCount > 0 && count <= minCount && importer.GetNextRow())
                 {
                     count++;
                     Console.WriteLine(count);
@@ -478,136 +537,26 @@ namespace DDI.Conversion
                     string educationLevel = importer.GetString(20);
                     string employer = importer.GetString(21);
                     string position = importer.GetString(22);
-                    string empStartDate = importer.GetString(23);
-                    //DateTime employmentStartDate;
-                    //if (empStartDate != "?")
-                    //{
-                    //    DateTime.TryParse(empStartDate, out employmentStartDate);
-                    //}
-                    string empEndDate = importer.GetString(24);
-                    //DateTime employmentEndDate;
-                    //if (empEndDate != "?")
-                    //{
-                    //    DateTime.TryParse(empEndDate, out employmentEndDate);
-                    //}
-                    string firstEmpDate = importer.GetString(25);
-                    //DateTime firstEmploymentDate;
-                    //if (firstEmpDate != "?")
-                    //{
-                    //    DateTime.TryParse(firstEmpDate, out firstEmploymentDate);
-                    //}
+                    string employmentStartDate = importer.GetString(23);
+                    string employmentEndDate = importer.GetString(24);
+                    string firstEmploymentDate = importer.GetString(25);
                     bool isClientEmployee = (importer.GetString(26) == "yes");
                     string profession = importer.GetString(27);
                     string clergyType = importer.GetString(28);
                     string clergyStatus = importer.GetString(29);
-                    string ordDate = importer.GetString(30);
-                    //DateTime ordinationDate;
-                    //if (ordDate != "?")
-                    //{
-                    //    DateTime.TryParse(ordDate, out ordinationDate);
-                    //}
+                    string ordinationDate = importer.GetString(30);
                     string ordinationPlace = importer.GetString(31);
-                    string prosDate = importer.GetString(32);
-                    //DateTime prospectDate;
-                    //if (prosDate != "?")
-                    //{
-                    //    DateTime.TryParse(prosDate, out prospectDate);
-                    //}
+                    string prospectDate = importer.GetString(32);
                     int maritalStatus = importer.GetInt(33);
-                    string marDate = importer.GetString(34);
-                    //DateTime marriageDate;
-                    //if (marDate != "?")
-                    //{
-                    //    DateTime.TryParse(marDate, out marriageDate);
-                    //}
-                    string divDate = importer.GetString(35);
-                    //DateTime divorceDate;
-                    //if (divDate != "?")
-                    //{
-                    //    DateTime.TryParse(divDate, out divorceDate);
-                    //}
-                    string decDate = importer.GetString(36);
-                    //DateTime deceasedDate;
-                    //if (decDate != "?")
-                    //{
-                    //    DateTime.TryParse(decDate, out deceasedDate);
-                    //}
+                    string marriageDate = importer.GetString(34);
+                    string divorceDate = importer.GetString(35);
+                    string deceasedDate = importer.GetString(36);
                     int birthMonth = importer.GetInt(37);
                     int birthDay = importer.GetInt(38);
                     int birthYear1 = importer.GetInt(39);
                     int birthYear2 = importer.GetInt(40);
                     string deletionCode = importer.GetString(41);
-                    string delDate = importer.GetString(42);
-                    //DateTime deletionDate;
-                    //if (delDate != "?")
-                    //{
-                    //    DateTime.TryParse(importer.GetString(42), out deletionDate);
-                    //}
-
-                    //Gender g1;
-                    //if (gender != null && gender != "")
-                    //{
-                    //    try
-                    //    {
-                    //        g1 = context.Genders.FirstOrDefault(p => p.Code == gender);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //ClergyStatus cs1 = null;
-                    //if (clergyStatus != null)
-                    //{
-                    //    try
-                    //    {
-                    //        cs1 = context.ClergyStatuses.First(p => p.Code == clergyStatus);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //ClergyType ct1;
-                    //if (clergyType != null)
-                    //{
-                    //    try
-                    //    {
-                    //        ct1 = context.ClergyTypes.First(p => p.Code == clergyType);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //ConstituentStatus cs2;
-                    //if (deletionDate == null)
-                    //{
-                    //    cs2 = context.ConstituentStatuses.First(p => p.Code == "AC");
-                    //}
-                    //else
-                    //{
-                    //    cs2 = context.ConstituentStatuses.First(p => p.Code == "IN");
-                    //}
-
-                    //ConstituentType ct2;
-                    //if (constituentType != null)
-                    //{
-                    //    try
-                    //    {
-                    //        ct2 = context.ConstituentTypes.First(p => p.Code == constituentType);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //EducationLevel e1;
-                    //if (educationLevel != null)
-                    //{
-                    //    try
-                    //    {
-                    //        e1 = context.EducationLevels.First(p => p.Code == educationLevel);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
+                    string deleteDate = importer.GetString(42);
 
                     string formattedName = firstName;
                     if (middleName != null)
@@ -619,214 +568,279 @@ namespace DDI.Conversion
                         formattedName = formattedName + " " + lastName;
                     }
 
-                    //DateTime birthDate;
-                    //if (birthMonth != 0 && birthDay != 0 && birthYear1 != 0)
-                    //{
-                    //    birthDate = new DateTime(birthYear1, birthMonth, birthDay);
-                    //}
-                    //else
-                    //{
-                    //    birthDate = new DateTime(1000, 1, 1);
-                    //}
-
-                    //IncomeLevel il1;
-                    //if (earnings != null)
-                    //{
-                    //    try
-                    //    {
-                    //        il1 = context.IncomeLevels.First(p => p.Code == earnings);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //Prefix p1;
-                    //if (prefix != null)
-                    //{
-                    //    try
-                    //    {
-                    //        p1 = context.Prefixes.First(p => p.Abbreviation == prefix);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //Profession p2;
-                    //if (profession != null)
-                    //{
-                    //    try
-                    //    {
-                    //        p2 = context.Professions.First(p => p.Code == profession);
-                    //    }
-                    //    catch (Exception e)
-                    //    { }
-                    //}
-
-                    //TODO: run salutation through the salutation logic when it gets there if salutation text is not filled in.
-                    //Console.WriteLine(birthYear1);
-                    //Console.WriteLine(birthYear2);
-                    //Console.WriteLine(cs2.Id);
                     Console.WriteLine("{0}: {1}", count, constituentId);
-                    //Console.WriteLine(ct2.Id);
-                    //Console.WriteLine(deceasedDate);
-                    //Console.WriteLine(divorceDate);
-                    //Console.WriteLine(employer);
-                    //Console.WriteLine(employmentStartDate);
-                    //Console.WriteLine(employmentEndDate);
-                    //Console.WriteLine(firstEmploymentDate);
-                    //Console.WriteLine(firstName);
-                    //Console.WriteLine(formattedName);
-                    //Console.WriteLine(isClientEmployee);
-                    //Console.WriteLine(lastName);
-                    //Console.WriteLine(marriageDate);
-                    //Console.WriteLine(middleName);
-                    //Console.WriteLine(name2);
-                    //Console.WriteLine(nickname);
-                    //Console.WriteLine(ordinationDate);
-                    //Console.WriteLine(ordinationPlace);
-                    //Console.WriteLine(position);
-                    //Console.WriteLine(prospectDate);
-                    //Console.WriteLine(salutationText);
-                    //Console.WriteLine(sourceCode);
-                    //Console.WriteLine(suffix);
-                    //Console.WriteLine(taxId);
 
-                    ////TODO: create constituent
-                    //Constituent constituent = null;
-                    //try
-                    //{
-                    //    constituent = context.Constituents.First<Constituent>(p => p.ConstituentNumber == constituentId);
-                    //} catch (Exception)
-                    //{ }
-                    //if (constituent == null)
-                    //{
-                    //    //constituent = context.Constituents.Create<Constituent>();
-                    //    constituent = context.Constituents.Create();
-                    //    constituent.ConstituentNumber = constituentId;
-                    //}
-                    //constituent.BirthDay = birthDay;
-                    //constituent.BirthMonth = birthMonth;
-                    //constituent.BirthYearFrom = birthYear1;
-                    //constituent.BirthYearTo = birthYear2;
-                    ////constituent.BirthDateType = ?;
-                    //if (cs1 != null)
-                    //{
-                    //    //constituent.ClergyStatus = cs1;
-                    //    constituent.ClergyStatusId = cs1.Id;
-                    //}
-                    ////constituent.ClergyType = ;
-                    ////constituent.ClergyTypeId = ;
-                    ////constituent.ConstituentType = ;
-                    ////constituent.ConstituentTypeId = ;
-                    ////constituent.CorrespondencePreference = ;
-                    ////constituent.DeceasedDate = ;
-                    ////constituent.Denominations = ;
-                    ////constituent.DivorceDate = ;
-                    ////constituent.EducationLevel = ;
-                    ////constituent.EducationLevelId = ;
-                    ////constituent.Employer = ;
-                    ////constituent.EmploymentEndDate = ;
-                    ////constituent.EmploymentStartDate = ;
-                    ////constituent.FirstEmploymentDate = ;
-                    ////constituent.FirstName = ;
-                    ////constituent.FormattedName = ;
-                    ////constituent.Gender = ;
-                    ////constituent.GenderId = ;
-                    ////constituent.IncomeLevel = ;
-                    ////constituent.IncomeLevelId = ;
-                    ////constituent.IsEmployee = ;
-                    ////constituent.IsIRSLetterReceived =;
-                    ////constituent.IsTaxExempt = ;
-                    ////constituent.Language = ;
-                    ////constituent.LanguageId = ;
-                    ////constituent.LastName = ;
-                    ////constituent.MaritalStatus = ;
-                    ////constituent.MarriageDate = ;
-                    ////constituent.MembershipCount = ;
-                    ////constituent.MiddleName = ;
-                    ////constituent.Name = ;
-                    ////constituent.Name2 = ;
-                    ////constituent.NameFormat = ;
-                    ////constituent.Nickname = ;
-                    ////constituent.OrdinationDate = ;
-                    ////constituent.PlaceOfOrdination = ;
-                    ////constituent.Position = ;
-                    ////constituent.Prefix = ;
-                    ////constituent.PrefixId = ;
-                    ////constituent.Profession = ;
-                    ////constituent.ProfessionId = ;
-                    ////constituent.ProspectDate = ;
-                    ////constituent.Salutation = ;
-                    ////constituent.SalutationType = ;
-                    ////constituent.Source = ;
-                    ////constituent.Suffix = ;
-                    ////constituent.TaxExemptVerifyDate = ;
-                    ////constituent.TaxId = ;
-                    ////constituent.YearEstablished = ;
-                    ////context.SaveChanges();
-                    //context.SaveChangesAsync();
+                    Constituent constituent = new Constituent();
+
+                    if (birthDay != 0 && birthMonth != 0 && birthYear1 != 0)
+                    {
+                        constituent.BirthDateType = BirthDateType.FullDate;
+                    }
+                    else if (birthDay != 0 && birthMonth != 0)
+                    {
+                        constituent.BirthDateType = BirthDateType.MonthDay;
+                    }
+                    else if (birthYear1 != 0 && birthYear2 != 0)
+                    {
+                        constituent.BirthDateType = BirthDateType.AgeRange;
+                    }
+                    else
+                    {
+                        constituent.BirthDateType = BirthDateType.None;
+                    }
+                    constituent.BirthDay = birthDay;
+                    constituent.BirthMonth = birthMonth;
+                    constituent.BirthYearFrom = birthYear1;
+                    constituent.BirthYearTo = birthYear2;
+                    constituent.Business = profession;
+                    if (!string.IsNullOrWhiteSpace(clergyStatus))
+                    {
+                        try
+                        {
+                            constituent.ClergyStatus = context.ClergyStatuses.First(p => p.Code == clergyStatus);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    if (!string.IsNullOrWhiteSpace(clergyType))
+                    {
+                        try
+                        {
+                            constituent.ClergyType = context.ClergyTypes.First(p => p.Code == clergyType);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    constituent.ConstituentNumber = constituentId;
+                    if (((constituentType == "F" || constituentType == "I") && deceasedDate != "?")
+                        || deleteDate != "?" 
+                        || !string.IsNullOrWhiteSpace(deletionCode) )
+                    {
+                        constituent.ConstituentStatus = context.ConstituentStatuses.First(p => p.Code == "IN");
+                    }
+                    else
+                    {
+                        constituent.ConstituentStatus = context.ConstituentStatuses.First(p => p.Code == "AC");
+                    }
+                    if (!string.IsNullOrWhiteSpace(constituentType))
+                    {
+                        try
+                        {
+                            constituent.ConstituentType = context.ConstituentTypes.First(p => p.Code == constituentType);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    switch (correspondencePreference)
+                    {
+                        case "P":
+                            constituent.CorrespondencePreference = CorrespondencePreference.Paper;
+                            break;
+                        case "E":
+                            constituent.CorrespondencePreference = CorrespondencePreference.Email;
+                            break;
+                        case "EP":
+                            constituent.CorrespondencePreference = CorrespondencePreference.Both;
+                            break;
+                        default:
+                            constituent.CorrespondencePreference = CorrespondencePreference.None;
+                            break;
+                    }
+                    if (deceasedDate != "?")
+                    {
+                        try
+                        {
+                            DateTime decDate;
+                            DateTime.TryParse(deceasedDate, out decDate);
+                            constituent.DeceasedDate = decDate;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+//TODO:                    constituent.DisplayName = 
+
+                    if (divorceDate != "?")
+                    {
+                        try
+                        {
+                            DateTime divDate;
+                            DateTime.TryParse(divorceDate, out divDate);
+                            constituent.DivorceDate = divDate;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(educationLevel))
+                    {
+                        try
+                        {
+                            constituent.EducationLevel = context.EducationLevels.First(p => p.Code == educationLevel);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    constituent.Employer = employer;
+
+                    if (employmentStartDate != "?")
+                    {
+                        try
+                        {
+                            DateTime empStDt;
+                            DateTime.TryParse(employmentStartDate, out empStDt);
+                            constituent.EmploymentStartDate = empStDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (employmentEndDate != "?")
+                    {
+                        try
+                        {
+                            DateTime empEndDt;
+                            DateTime.TryParse(employmentEndDate, out empEndDt);
+                            constituent.EmploymentEndDate = empEndDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (firstEmploymentDate != "?")
+                    {
+                        try
+                        {
+                            DateTime firstEmpDt;
+                            DateTime.TryParse(firstEmploymentDate, out firstEmpDt);
+                            constituent.FirstEmploymentDate = firstEmpDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    constituent.FirstName = firstName;
+                    //TODO:                    constituent.FormattedName = formattedName;
+                    //TODO: constituent.IncomeLevel = 
+                    constituent.IsEmployee = isClientEmployee;
+                    constituent.LastName = lastName;
+                    // TODO: constituent.MaritalStatus = 
+
+                    if (marriageDate != "?")
+                    {
+                        try
+                        {
+                            DateTime marrDt;
+                            DateTime.TryParse(marriageDate, out marrDt);
+                            constituent.MarriageDate = marrDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    constituent.MiddleName = middleName;
+                    constituent.Name2= name2;
+                    constituent.NameFormat = nameFormat;
+                    constituent.Nickname = nickname;
+                    
+                    if (ordinationDate != "?")
+                    {
+                        try
+                        {
+                            DateTime ordDt;
+                            DateTime.TryParse(ordinationDate, out ordDt);
+                            constituent.OrdinationDate = ordDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+                    constituent.PlaceOfOrdination = ordinationPlace;
+                    constituent.Position = position;
+                    if (!string.IsNullOrWhiteSpace(prefix))
+                    {
+                        try
+                        {
+                            constituent.Prefix = context.Prefixes.First(p => p.Code == prefix);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(profession))
+                    {
+                        try
+                        {
+                            constituent.Profession = context.Professions.First(p => p.Code == profession);
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (prospectDate != "?")
+                    {
+                        try
+                        {
+                            DateTime prosDt;
+                            DateTime.TryParse(prospectDate, out prosDt);
+                            constituent.ProspectDate = prosDt;
+                        }
+                        catch (Exception e)
+                        { }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(salutationText))
+                    {
+                        constituent.Salutation = salutationText;
+                    }
+                    else
+                    {
+                        //TODO: get formatted salutation to save in constituent.Salutation
+                    }
+
+                    switch (salutationFormat)
+                    {
+                        case 0:
+                            constituent.SalutationType = SalutationType.Default;
+                            break;
+                        case 1:
+                            constituent.SalutationType = SalutationType.Formal;
+                            break;
+                        case 2:
+                            constituent.SalutationType = SalutationType.Informal;
+                            break;
+                        case 3:
+                            constituent.SalutationType = SalutationType.FormalSeparate;
+                            break;
+                        case 4:
+                            constituent.SalutationType = SalutationType.InformalSeparate;
+                            break;
+                        default:
+                            constituent.SalutationType = SalutationType.Custom;
+                            break;
+                    }
+
+                    constituent.Source = sourceCode;
+                    constituent.Suffix = suffix;
+                    constituent.TaxId = taxId;
 
                     context.Constituents.AddOrUpdate(
                         p => p.ConstituentNumber,
-                        new Constituent
-                        {
-                            //BirthDate = birthDate,
-                            BirthDay = birthDay,
-                            BirthMonth = birthMonth,
-                            BirthYearFrom = birthYear1,
-                            BirthYearTo = birthYear2,
-                            Business = profession,
-                            //ClergyStatus = cs1,
-                            //ClergyStatusId = cs1.Id,
-                            //ClergyType = ct1,
-                            //ClergyTypeId = ct1.Id,
-                            //ConstituentStatus = cs2,
-                            //ConstituentStatusId = cs2.Id,
-                            ConstituentNumber = constituentId,
-                            //ConstituentType = ct2,
-                            //ConstituentTypeId = ct2.Id,
-                            //DeceasedDate = deceasedDate,
-                            //DivorceDate = divorceDate,
-                            //EducationLevel = e1,
-                            Employer = employer,
-                            //EmploymentStartDate = employmentStartDate,
-                            //EmploymentEndDate = employmentEndDate,
-                            //FirstEmploymentDate = firstEmploymentDate,
-                            FirstName = firstName,
-                            FormattedName = formattedName,
-                            //IncomeLevel = il1,
-                            //IncomeLevelId = il1.Id,
-                            IsEmployee = isClientEmployee,
-                            LastName = lastName,
-                            MaritalStatus = maritalStatus,
-                            //MarriageDate = marriageDate,
-                            MiddleName = middleName,
-                            Name2 = name2,
-                            Nickname = nickname,
-                            //OrdinationDate = ordinationDate,
-                            PlaceOfOrdination = ordinationPlace,
-                            Position = position,
-                            //Prefix = p1,
-                            //PrefixId = p1.Id,
-                            //Profession = p2,
-                            //ProfessionId = p2.Id,
-                            //ProspectDate = prospectDate,
-                            Salutation = salutationText,
-                            Source = sourceCode,
-                            Suffix = suffix,
-                            TaxId = taxId
-                        });
+                        constituent);
 
-                    //Constituent constituent =  context.Constituents.First<Constituent>(p => p.ConstituentNumber == constituentId);
-
-
+                    if (count % 1000 == 0)
+                    {
+                        context.SaveChanges();
+                        context.Dispose();
+                        context = new DomainContext();
+                    }
                 }
             }
+
+            context.SaveChanges();
         }
 
-        private static void LoadConstituentAddress(DomainContext context, CommonContext common, string organization, string filePath, int minCount, int maxCount)
+        private static void LoadConstituentAddress(string organization, string filePath, int minCount, int maxCount)
         {
-
+            DomainContext context = new DomainContext();
+            var common = new CommonContext();
             string dataFile = "";
             dataFile = Path.Combine(filePath, CONSTITUENT_ADDRESS_FILE);
 
@@ -847,6 +861,7 @@ namespace DDI.Conversion
                     int legacyAddressId = importer.GetInt(0);
                     int constituentNum = importer.GetInt(1);
 
+                    //TODO: clean this up and make it functional. model in constituent and prefix seem to work better
                     //string addressTypeCode = importer.GetString(2);
                     //string comment = importer.GetString(3);
                     //DateTime startDate;
@@ -892,36 +907,18 @@ namespace DDI.Conversion
                             p => p.Id,
                             new ConstituentAddress { Address = a1, AddressId = a1.Id, Constituent = c1, ConstituentId = c1.Id, IsPrimary = isPrimary });
                     }
+
+                    if (count % 1000 == 0)
+                    {
+                        context.SaveChanges();
+                        context.Dispose();
+                        context = new DomainContext();
+                    }
                 }
             }
+            context.SaveChanges();
         }
 
-        //public static string[) ParseLine(string line)
-        //{
-        //    string[) parts = line.Split(',');
-
-        //    int i = 0;
-        //    while (i < parts.Length - 1)
-        //    {
-        //        if (importer.GetString(i) != null && importer.GetString(i) != "")
-        //        {
-        //            if (importer.GetString(i).First() == '"' && importer.GetString(i).Last() != '"')
-        //            {
-        //                importer.GetString(i) = importer.GetString(i) + "," + importer.GetString(i + 1);
-
-        //                int j = i+1;
-        //                while (j < parts.Length - 1)
-        //                {
-        //                    importer.GetString(j) = importer.GetString(j+1);
-        //                    j++;
-        //                }
-        //            }
-        //        }
-        //        i++;
-
-        //    }
-
-        //    return parts;
-        //}
+        
     }
 }
