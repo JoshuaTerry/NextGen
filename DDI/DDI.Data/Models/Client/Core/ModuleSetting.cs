@@ -16,6 +16,8 @@ namespace DDI.Data.Models.Client.Core
 
         public ModuleType ModuleType { get; set; }
 
+        // TODO: Add property for Company (Entity) to allow for company-specific settings.
+
         [MaxLength(128)]
         public string Name { get; set; }
 
