@@ -24,7 +24,6 @@ using Microsoft.Owin.Security.OAuth;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -56,7 +55,7 @@ namespace DDI.WebApi.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // POST api/Account/Logout
-        [Route("Logout")]
+        [Route("api/v1/Logout")]
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
@@ -64,7 +63,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
+        [Route("api/v1/ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
             IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -103,7 +102,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [Route("api/v1/ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -123,7 +122,7 @@ namespace DDI.WebApi.Controllers
         }
 
         // POST api/Account/SetPassword
-        [Route("SetPassword")]
+        [Route("api/v1/SetPassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -143,7 +142,7 @@ namespace DDI.WebApi.Controllers
 
 
         // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
+        [Route("api/v1/RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -174,7 +173,7 @@ namespace DDI.WebApi.Controllers
 
         // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Register")]
+        [Route("api/v1/Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -207,8 +206,8 @@ namespace DDI.WebApi.Controllers
 
         // POST api/Account/ConfirmEmail
         [HttpPost]
-        [Route("ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
+        [Route("api/v1/ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmEmailBindingModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
             {
