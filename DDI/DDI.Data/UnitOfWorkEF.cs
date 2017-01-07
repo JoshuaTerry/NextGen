@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Data.Models;
 
 namespace DDI.Data
 {
@@ -144,6 +146,11 @@ namespace DDI.Data
         public void Delete<T>(T entity) where T : class
         {
             GetRepository<T>().Delete(entity);
+        }
+
+        public T GetById <T>(object id) where T : class
+        {
+            return GetRepository<T>().GetById(id);
         }
 
         public IRepository<T> GetRepository<T>() where T : class

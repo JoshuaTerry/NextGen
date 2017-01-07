@@ -8,11 +8,11 @@ using DDI.Shared.Enums;
 namespace DDI.Data.Models.Client.Core
 {
     [Table("Configuration")]
-    public class Configuration : IEntity
+    public class Configuration : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         public ModuleType ModuleType { get; set; }
 
@@ -24,6 +24,6 @@ namespace DDI.Data.Models.Client.Core
         [MaxLength(4096)]
         public string Value { get; set; }
 
-        public string DisplayName => $"{ModuleType}.{Name}";
+        public override string DisplayName => $"{ModuleType}.{Name}";
     }
 }
