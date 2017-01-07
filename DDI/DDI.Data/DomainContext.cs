@@ -30,6 +30,8 @@ namespace DDI.Data
 
         public virtual DbSet<ClergyType> ClergyTypes { get; set; }
 
+        public virtual DbSet<Configuration> Configurations { get; set; }
+
         public virtual DbSet<Constituent> Constituents { get; set; }
 
         public virtual DbSet<ConstituentAddress> ConstituentAddresses { get; set; }
@@ -107,7 +109,7 @@ namespace DDI.Data
 
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
-        {
+        {            
             BaseEntity entity = entityEntry.Entity as BaseEntity;
             if (entity != null)
             {

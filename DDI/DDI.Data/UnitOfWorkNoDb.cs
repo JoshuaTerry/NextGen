@@ -182,6 +182,11 @@ namespace DDI.Data
             }
 
             return blObj;
+		}
+		
+        public T GetById<T>(object id) where T : class
+        {
+            return GetRepository<T>().GetById(id);
         }
 
         #endregion Protected Methods

@@ -44,6 +44,8 @@ namespace DDI.Data
 
         T GetBusinessLogic<T>() where T : class;
 
+        T GetById<T>(object id) where T : class;
+
         #endregion Public Methods
     }
 }
