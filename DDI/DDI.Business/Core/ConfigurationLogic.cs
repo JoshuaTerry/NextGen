@@ -12,7 +12,7 @@ using DDI.Shared.ModuleInfo;
 
 namespace DDI.Business.Core
 {
-    public class ConfigurationLogic : BaseEntityLogic<ModuleSetting>
+    public class ConfigurationLogic : BaseEntityLogic<Configuration>
     {
         #region Private Fields
 
@@ -55,7 +55,7 @@ namespace DDI.Business.Core
             ModuleType modType = attr.ModuleType;
 
             // Load the entire set of config rows
-            var configRows = UnitOfWork.Where<ModuleSetting>(p => p.ModuleType == modType).ToList();
+            var configRows = UnitOfWork.Where<Configuration>(p => p.ModuleType == modType).ToList();
 
             // Iterate through each property
             foreach (var prop in configType.GetProperties())
@@ -100,10 +100,10 @@ namespace DDI.Business.Core
 
                 if (!failed)
                 {
-                    ModuleSetting setting = configRows.FirstOrDefault(p => p.Name == prop.Name);
+                    Configuration setting = configRows.FirstOrDefault(p => p.Name == prop.Name);
                     if (setting == null)
                     {
-                        setting = UnitOfWork.Create<ModuleSetting>();
+                        setting = UnitOfWork.Create<Configuration>();
                         setting.ModuleType = modType;
                         setting.Name = prop.Name;
                     }
@@ -137,7 +137,7 @@ namespace DDI.Business.Core
             var config = (BaseConfiguration)Activator.CreateInstance(type);            
 
             // Iterate through each ModuleSetting and populate the config object.
-            foreach (var row in UnitOfWork.Where<ModuleSetting>(p => p.ModuleType == modType))
+            foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == modType))
             {
                 string valString = row.Value;
                 bool failed = false;

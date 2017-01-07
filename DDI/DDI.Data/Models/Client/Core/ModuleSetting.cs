@@ -7,8 +7,8 @@ using DDI.Shared.Enums;
 
 namespace DDI.Data.Models.Client.Core
 {
-    [Table("ModuleSetting")]
-    public class ModuleSetting : IEntity
+    [Table("Configuration")]
+    public class Configuration : IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
