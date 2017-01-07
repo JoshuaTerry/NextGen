@@ -797,19 +797,19 @@ namespace DDI.Conversion
 
                     switch (salutationFormat)
                     {
-                        case 0:
+                        case "0":
                             constituent.SalutationType = SalutationType.Default;
                             break;
-                        case 1:
+                        case "1":
                             constituent.SalutationType = SalutationType.Formal;
                             break;
-                        case 2:
+                        case "2":
                             constituent.SalutationType = SalutationType.Informal;
                             break;
-                        case 3:
+                        case "3":
                             constituent.SalutationType = SalutationType.FormalSeparate;
                             break;
-                        case 4:
+                        case "4":
                             constituent.SalutationType = SalutationType.InformalSeparate;
                             break;
                         default:
