@@ -44,32 +44,7 @@ namespace DDI.Data.Migrations.Client
             //    );
             //
 
-            //Additional Setup of CRM data will be required
-            //CRM initial Data
 
-            //ConstituentStatuses
-            context.ConstituentStatuses.AddOrUpdate(
-                p => p.Code,
-                new ConstituentStatus { Code = "AC", Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
-                new ConstituentStatus { Code = "IN", Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
-                new ConstituentStatus { Code = "BL", Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true }
-                );
-
-            //Constituent Types
-            context.ConstituentTypes.AddOrUpdate(
-                p => p.Code, 
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{P}{F}{MI}{L}{S}", SalutationFormal = "Dear {P}{L}", SalutationInformal = "Dear {N}" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {F}{MI}{L} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
-            );
-
-            //Genders
-            context.Genders.AddOrUpdate(
-                p => p.Code,
-                new Gender { Code = "M", IsMasculine = true, Name = "Male"},
-                new Gender { Code = "F", IsMasculine = false, Name = "Female"}
-            );
         }
 
 		#endregion Protected Methods

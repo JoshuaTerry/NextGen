@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using DDI.Conversion;
 using DDI.Data;
-using DDI.Data.Models;
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Client.Core;
-using DDI.Data.Models.Common;
-using DDI.Data.Enums;
-using System.Data.Entity.Migrations;
 using DDI.Data.Enums.CRM;
+using DDI.Data.Models.Client.Core;
+using DDI.Data.Models.Client.CRM;
+using DDI.Data.Models.Common;
 
-namespace DDI.Conversion
+namespace DDI.Conversion.CRM
 {
     class LoadDataCRM : DbMigrationsConfiguration<DomainContext>
     {
@@ -37,30 +36,30 @@ namespace DDI.Conversion
         private const int CONSTITUENT_TYPE = 7;
         private const int EDUCATION_LEVEL_SET = 8;
         private const int STATE_SET = 10;
-        //private const int PROFESSION_SET = 11;
-        //private const int EARNINGS_SET = 14;
+        private const int PROFESSION_SET = 11;
+        private const int EARNINGS_SET = 14;
+        private const int DELETION_SET = 15;
         private const int LANGUAGE_SET = 26;
         private const int ETHNICITY_SET = 33;
         private const int CLERGY_TYPE_SET = 34;
         private const int CLERGY_STATUS_SET = 35;
         private const int GENDER_SET = 38;
-        //private const int MARITAL_STATUS_SET = 39;
-        //private const int SCHOOL_SET = 41;
-        //private const int DEGREE_SET = 42;
-        private const int CONTACT_TYPE = 71;
-
-
-
+        private const int MARITAL_STATUS_SET = 39;
+        private const int SCHOOL_SET = 41;
+        private const int DEGREE_SET = 42;
+        private const int CONTACT_CATEGORY = 75;
 
         public static void ExecuteCRMLoad(string organization, string filePath, int minCount, int maxCount)
         {
             filePath = Path.Combine(filePath, organization, "CRM");
 
-            //LoadLegacyCodes(organization, filePath, minCount, maxCount);
+            InitialLoad();
+            LoadLegacyCodes(organization, filePath, minCount, maxCount);
+
             //LoadRegions(organization, filePath, minCount, maxCount);
             //LadAddresses(organization, filePath, minCount, maxCount);
             //LoadPrefixes(organization, filePath, minCount, maxCount);
-            LoadConstituents(organization, filePath, minCount, maxCount);
+            //LoadConstituents(organization, filePath, minCount, maxCount);
             //LoadDoingBusinessAs(organization, filePath, minCount, maxCount);
             //LoadEducation(organization, filePath, minCount, maxCount);
             //LoadPaymentPreferences(organization, filePath, minCount, maxCount);
@@ -69,27 +68,12 @@ namespace DDI.Conversion
             //LoadContactInfo(organization, filePath, minCount, maxCount);
 
         }
+        
 
         private static void LoadLegacyCodes(string organization, string filePath, int minCount, int maxCount)
         {
-            DomainContext context = new DomainContext();
-            var common = new CommonContext();
-            string dataFile = "";
-            
-            // - 5 denominations
-            // - 7 constituent types
-            // - 8 education levels
-            // - 10 states -> part of the common database, not being converted
-            // - 26 language
-            // - 33 ethnicities
-            // - 34 clergy types 
-            // - 35 clergy status
-            // - 38 genders
-//TODO: import income levels
-//TODO: import marital statuses and correct spelling of marital status table
-
-            //dataFile = filePath + NACODES_FILE;
-            dataFile = Path.Combine(filePath, NACODES_FILE);
+            DomainContext context = new DomainContext();            
+            string dataFile = Path.Combine(filePath, NACODES_FILE);
             using (var importer = new FileImport(dataFile, "NACodes"))
             {
                 while (importer.GetNextRow())
@@ -103,10 +87,9 @@ namespace DDI.Conversion
                     string text2 = importer.GetString(6);
                     string security = importer.GetString(7);
                     bool active = importer.GetBool(8);
-                    string baseType = importer.GetString(9);
-                    bool required = false;
+                    string baseType = importer.GetString(9);                    
                     bool masculine = true;
-                    
+
                     switch (codeSet)
                     {
                         case ADDRESS_TYPE_SET:
@@ -124,16 +107,11 @@ namespace DDI.Conversion
                                p => p.Code,
                                new ClergyType { Code = code, Name = description, IsActive = active });
                             break;
-                        case CONTACT_TYPE:
-                            context.ContactTypes.AddOrUpdate(
-                                p => p.Code,
-                                new ContactType { Code = code, Name = description, IsActive = active });
-                            break;
                         case DENOMINATION_SET:
                             Affiliation affiliation;
                             Religion religion;
 
-                            switch(text1.ToUpper())
+                            switch (text1.ToUpper())
                             {
                                 case "PROT": religion = Religion.Protestant; break;
                                 case "ORTH": religion = Religion.Orthodox; break;
@@ -145,7 +123,7 @@ namespace DDI.Conversion
                                 default: religion = Religion.None; break;
                             }
 
-                            switch(text2.ToUpper())
+                            switch (text2.ToUpper())
                             {
                                 case "AC":
                                 case "A":
@@ -178,12 +156,10 @@ namespace DDI.Conversion
                             if (code == "M")
                             {
                                 masculine = true;
-                                required = true;
                             }
                             else if (code == "F")
                             {
                                 masculine = false;
-                                required = true;
                             }
                             context.Genders.AddOrUpdate(
                                p => p.Code,
@@ -194,9 +170,87 @@ namespace DDI.Conversion
                                p => p.Code,
                                new Language { Code = code, Name = description, IsActive = active });
                             break;
+                        case DELETION_SET:
+                            if (code == "AC" || code == "BL" || code == "HO" || code == "DEL")
+                            {
+                                continue;
+                            }
+                            context.ConstituentStatuses.AddOrUpdate(
+                                p => p.Code,
+                                new ConstituentStatus() { Code = code, Name = description, BaseStatus = ConstituentBaseStatus.Inactive, IsActive = active, IsRequired = false });
+                            break;
+                        case PROFESSION_SET:
+                            context.Professions.AddOrUpdate(
+                               p => p.Code,
+                               new Profession { Code = code, Name = description, IsActive = active });
+                            break;
+                        case EARNINGS_SET:
+                            context.IncomeLevels.AddOrUpdate(
+                               p => p.Code,
+                               new IncomeLevel { Code = code, Name = description, IsActive = active });
+                            break;
+                        case MARITAL_STATUS_SET:
+                            context.MaritalStatuses.AddOrUpdate(
+                               p => p.Code,
+                               new MaritalStatus { Code = code, Name = description, IsActive = active });
+                            break;
+                        case SCHOOL_SET:
+                            context.Schools.AddOrUpdate(
+                               p => p.Code,
+                               new School { Code = code, Name = description, IsActive = active });
+                            break;
+                        case DEGREE_SET:
+                            context.Degrees.AddOrUpdate(
+                               p => p.Code,
+                               new Degree { Code = code, Name = description, IsActive = active });
+                            break;
+
                     }
                 }
             }
+            context.SaveChanges();
+        }
+
+        private static void InitialLoad()
+        {
+            DomainContext context = new DomainContext();
+
+            //Additional Setup of CRM data will be required
+            //CRM initial Data
+
+            //ConstituentStatuses
+            context.ConstituentStatuses.AddOrUpdate(
+                p => p.Code,
+                new ConstituentStatus { Code = "AC", Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
+                new ConstituentStatus { Code = "IN", Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
+                new ConstituentStatus { Code = "BL", Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
+                new ConstituentStatus { Code = "DEL", Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
+                );
+
+            //Constituent Types
+            context.ConstituentTypes.AddOrUpdate(
+                p => p.Code,
+                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{P}{F}{MI}{L}{S}", SalutationFormal = "Dear {P}{L}", SalutationInformal = "Dear {N}" },
+                new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
+                new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
+                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {F}{MI}{L} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
+            );
+
+            //Genders
+            context.Genders.AddOrUpdate(
+                p => p.Code,
+                new Gender { Code = "M", IsMasculine = true, Name = "Male" },
+                new Gender { Code = "F", IsMasculine = false, Name = "Female" }
+            );
+
+            // Contact categories
+            AddContactCategory(context, ContactCategory.EMAIL, "Email", "Emails", "Email");
+            AddContactCategory(context, ContactCategory.PERSON, "Person", "Point of Contact", "Name");
+            AddContactCategory(context, ContactCategory.PHONE, "Phone", "Phone Numbers", "Phone");
+            AddContactCategory(context, ContactCategory.WEB, "Web", "Web sites", "URL");
+            AddContactCategory(context, ContactCategory.SOCIAL, "Social", "Social Media", "URL");
+            AddContactCategory(context, ContactCategory.OTHER, "Other", "Other Contacts", "Info");
+
             context.SaveChanges();
         }
 
@@ -919,6 +973,18 @@ namespace DDI.Conversion
             context.SaveChanges();
         }
 
-        
+        private static void AddContactCategory(DomainContext context, string code, string description, string title, string infoLabel)
+        {
+            context.ContactCategories.AddOrUpdate(p => p.Code == code,
+                new ContactCategory()
+                {
+                    Code = code,
+                    Name = description,
+                    SectionTitle = title,
+                    TextBoxLabel = infoLabel
+                });
+        }
+
+
     }
 }

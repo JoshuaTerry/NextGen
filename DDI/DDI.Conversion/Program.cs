@@ -10,6 +10,7 @@ using DDI.Conversion;
 using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
+using DDI.Conversion.CRM;
 
 namespace DDI.Conversion
 {

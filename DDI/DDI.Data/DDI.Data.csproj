@@ -74,6 +74,10 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701071608076_Configuration_v1.cs" />
     <Compile Include="Migrations\Client\201701071608076_Configuration_v1.Designer.cs">
       <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
@@ -234,6 +238,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701071608076_Configuration_v1.resx">
       <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
     </EmbeddedResource>
