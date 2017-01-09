@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Data
+namespace DDI.Shared
 {
     /// <summary>
     /// Defines the required functionality for a class to act as a "Repository" by accessing and
@@ -17,7 +16,7 @@ namespace DDI.Data
 
         IQueryable<T> Entities { get; }
 
-        SQLUtilities Utilities { get; }
+        ISQLUtilities Utilities { get; }
 
         #endregion Public Properties
 
@@ -27,11 +26,11 @@ namespace DDI.Data
 
         T GetById(object id);
 
-        T Find(params object[] keyValues); 
+        T Find(params object[] keyValues);
 
-		T Insert(T entity);
+        T Insert(T entity);
 
-		T Update(T entity);
+        T Update(T entity);
 
         int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null);
 

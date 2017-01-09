@@ -1,10 +1,9 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Models.Client.CRM;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -92,11 +91,11 @@ namespace DDI.Business.CRM
             }
 
             int nextNum = 0;
-            while (true)
+            bool isUnique = false;
+            while (!isUnique)
             {
                 nextNum = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
-                if (_constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0)
-                    break;
+                isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0;
             }
 
             return nextNum;

@@ -1,9 +1,7 @@
 using System;
 using System.Data.Entity.Migrations;
-using System.Linq;
-
 using DDI.Data.Enums.CRM;
-using DDI.Data.Models.Client.CRM;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Data.Migrations.Client
 {

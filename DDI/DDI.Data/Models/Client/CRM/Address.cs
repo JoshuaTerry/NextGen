@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 using DDI.Data.Models.Common;
+using DDI.Shared.Models.Client;
 
 namespace DDI.Data.Models.Client.CRM
 {

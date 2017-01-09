@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -34,7 +35,7 @@ namespace DDI.Data
 
         public virtual IQueryable<T> Entities => EntitySet;
 
-        public SQLUtilities Utilities
+        public ISQLUtilities Utilities
         {
             get
             {
@@ -74,18 +75,13 @@ namespace DDI.Data
             _isUOW = false;
         }
 
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
         public Repository(DbContext context)
         {
             _context = context;
             _isUOW = (context != null);
         }
-
-        #endregion Internal Constructors
-
+        #endregion Public Constructors
+         
         #region Public Methods
 
         public virtual void Delete(T entity)

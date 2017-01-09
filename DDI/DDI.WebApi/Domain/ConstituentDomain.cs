@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DDI.Data;
-using DDI.Data.Models.Client.CRM;
+using DDI.Data; 
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.WebApi.Domain
 {
@@ -71,11 +72,11 @@ namespace DDI.WebApi.Domain
         public int GetNextConstituentNumber()
         {
             int nextNum = 0;
-            while (true)
+            bool isUnique = false;
+            while (!isUnique)
             {
                 nextNum = Repository.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
-                if (Repository.Entities.Count(p => p.ConstituentNumber == nextNum) == 0)
-                    break;
+                isUnique = Repository.Entities.Count(p => p.ConstituentNumber == nextNum) == 0;                   
             }
             return nextNum;
         }

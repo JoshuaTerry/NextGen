@@ -4,7 +4,7 @@ using DDI.Data;
 using DDI.Data.Models.Common;
 using DDI.Shared;
 using DDI.WebApi.Helpers;
-using DDI.WebApi.Services.Search;
+using Services.Search;
 
 namespace DDI.WebApi.Services
 {

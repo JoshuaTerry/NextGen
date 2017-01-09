@@ -4,7 +4,7 @@ using System.Linq;
 using DDI.Data;
 using DDI.Data.Models;
 using DDI.Shared;
-using DDI.WebApi.Services.Search;
+
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Services

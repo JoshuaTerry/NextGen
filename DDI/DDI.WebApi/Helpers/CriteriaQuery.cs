@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DDI.Shared;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using DDI.WebApi.Extensions;
 
 namespace DDI.WebApi.Helpers
 {

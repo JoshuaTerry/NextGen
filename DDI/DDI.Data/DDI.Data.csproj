@@ -65,8 +65,6 @@
     <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
     <Compile Include="Enums\CRM\PaymentMethod.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
@@ -141,55 +139,7 @@
     </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
-    <Compile Include="Models\BaseEntity.cs" />
-    <Compile Include="Models\Client\CRM\Address.cs" />
-    <Compile Include="Models\Client\CRM\AlternateId.cs" />
-    <Compile Include="Models\Client\CRM\Degree.cs" />
-    <Compile Include="Models\Client\CRM\Tag.cs" />
-    <Compile Include="Models\Client\CRM\TagGroup.cs" />
-    <Compile Include="Models\Client\CRM\Relationship.cs" />
-    <Compile Include="Models\Client\CRM\RegionArea.cs" />
-    <Compile Include="Models\Client\CRM\RelationshipType.cs" />
-    <Compile Include="Models\Client\CRM\RelationshipCategory.cs" />
-    <Compile Include="Models\Client\CRM\School.cs" />
-    <Compile Include="Models\Client\CRM\ClergyStatus.cs" />
-    <Compile Include="Models\Client\CRM\ClergyType.cs" />
-    <Compile Include="Models\Client\CRM\Constituent.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentAddress.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentStatus.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentType.cs" />
-    <Compile Include="Models\Client\CRM\ContactInfo.cs" />
-    <Compile Include="Models\Client\CRM\AddressType.cs" />
-    <Compile Include="Models\Client\CRM\ContactCategory.cs" />
-    <Compile Include="Models\Client\CRM\ContactType.cs" />
-    <Compile Include="Models\Client\CRM\Denomination.cs" />
-    <Compile Include="Models\Client\CRM\DoingBusinessAs.cs" />
-    <Compile Include="Models\Client\CRM\Education.cs" />
-    <Compile Include="Models\Client\CRM\EducationLevel.cs" />
-    <Compile Include="Models\Client\CRM\Ethnicity.cs" />
-    <Compile Include="Models\Client\CRM\Gender.cs" />
-    <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
-    <Compile Include="Models\Client\Core\Language.cs" />
-    <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
-    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
-    <Compile Include="Models\Client\CRM\Prefix.cs" />
-    <Compile Include="Models\Client\CRM\Profession.cs" />
-    <Compile Include="Models\Client\CRM\Region.cs" />
-    <Compile Include="Models\Client\CRM\RegionLevel.cs" />
-    <Compile Include="Models\Client\Core\SectionPreference.cs" />
-    <Compile Include="Models\Common\Abbreviation.cs" />
-    <Compile Include="Models\Common\City.cs" />
-    <Compile Include="Models\Common\CityName.cs" />
-    <Compile Include="Models\Common\Country.cs" />
-    <Compile Include="Models\Common\County.cs" />
-    <Compile Include="Models\Common\State.cs" />
-    <Compile Include="Models\Common\Thesaurus.cs" />
-    <Compile Include="Models\Common\Zip.cs" />
-    <Compile Include="Models\Common\ZipBranch.cs" />
-    <Compile Include="Models\Common\ZipPlus4.cs" />
-    <Compile Include="Models\Common\ZipStreet.cs" />
-    <Compile Include="Models\Client\Core\LogEntry.cs" />
-    <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
@@ -247,6 +197,12 @@
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

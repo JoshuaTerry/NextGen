@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DDI.Data;
-using DDI.Data.Models.Client.Core;
+using DDI.Data; 
 using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi.Services
 {

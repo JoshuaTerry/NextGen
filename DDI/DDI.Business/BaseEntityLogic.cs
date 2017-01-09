@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Data.Models;
+﻿using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Business
 {

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
-using DDI.WebApi.Services.Search;
+using DDI.Services;
 using Newtonsoft.Json.Linq;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {

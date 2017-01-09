@@ -1,5 +1,6 @@
-﻿using DDI.Data;
-using DDI.Data.Models;
+﻿ 
+using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.WebApi.Domain
 {

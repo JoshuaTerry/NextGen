@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Client.Core;
-using DDI.Data.Models.Common;
+﻿using System.Data.Entity;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Data
 {

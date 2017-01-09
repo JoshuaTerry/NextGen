@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDI.Shared.Models.Common;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DDI.Data.Models.Common;
 
 namespace DDI.Data
 {
-	public class CommonContext : DbContext
+    public class CommonContext : DbContext
 	{
         #region Public Properties
 

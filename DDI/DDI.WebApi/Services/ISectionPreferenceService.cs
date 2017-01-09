@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DDI.Data.Models.Client.Core;
 using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi.Services
 {

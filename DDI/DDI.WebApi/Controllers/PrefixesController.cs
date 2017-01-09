@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class PrefixesController : ApiController
     {
-        GenericServiceBase<Prefix> _service;
+        ServiceBase<Prefix> _service;
 
-        public PrefixesController() : this(new GenericServiceBase<Prefix>()) { }
-        internal PrefixesController(GenericServiceBase<Prefix> service)
+        public PrefixesController() : this(new ServiceBase<Prefix>()) { }
+        internal PrefixesController(ServiceBase<Prefix> service)
         {
             _service = service;
         }

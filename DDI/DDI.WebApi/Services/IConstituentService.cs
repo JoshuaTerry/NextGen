@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using DDI.Data.Models.Client.CRM;
 using DDI.Shared;
-using DDI.WebApi.Services.Search;
+
 using Newtonsoft.Json.Linq;
+using Services.Search;
 
 namespace DDI.WebApi.Services
 {
