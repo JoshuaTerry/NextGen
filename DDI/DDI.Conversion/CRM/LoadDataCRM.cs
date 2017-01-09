@@ -29,6 +29,7 @@ namespace DDI.Conversion.CRM
         private const string CONSTITUENT_ADDRESS_FILE = "ConstituentAddress.csv";
         private const string CONTACT_INFO_FILE = "ContactInfo.csv";
         private const string REGIONS_FILE = "Region.csv";
+        private const string CONTACT_TYPES_FILE = "ContactType.csv";
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
         private const int DENOMINATION_SET = 5;
@@ -53,8 +54,9 @@ namespace DDI.Conversion.CRM
         {
             filePath = Path.Combine(filePath, organization, "CRM");
 
-            InitialLoad();
-            LoadLegacyCodes(organization, filePath, minCount, maxCount);
+            //InitialLoad();
+            //LoadLegacyCodes(organization, filePath, minCount, maxCount);
+            LoadConactTypes(organization, filePath, minCount, maxCount);
 
             //LoadRegions(organization, filePath, minCount, maxCount);
             //LadAddresses(organization, filePath, minCount, maxCount);
@@ -254,6 +256,55 @@ namespace DDI.Conversion.CRM
             context.SaveChanges();
         }
 
+        private static void LoadConactTypes(string organization, string filePath, int minCount, int maxCount)
+        {
+            DomainContext context = new DomainContext();
+            string dataFile = Path.Combine(filePath, CONTACT_TYPES_FILE);
+
+            using (var importer = new FileImport(dataFile, "ContactType"))
+            {
+                int count = 1;
+
+                while (count <= maxCount && importer.GetNextRow())
+                {
+                    string categoryCode = importer.GetString(0);
+                    string typeCode = importer.GetString(1);
+
+                    if (string.IsNullOrWhiteSpace(typeCode))
+                    {
+                        continue;
+                    }
+
+                    ContactCategory category = context.ContactCategories.FirstOrDefault(p => p.Code == categoryCode);
+
+                    bool isDefault = (categoryCode == ContactCategory.EMAIL && typeCode == "H") ||
+                                (categoryCode == ContactCategory.WEB && typeCode == "H") ||
+                                (categoryCode == ContactCategory.PHONE && typeCode == "H") ||
+                                (categoryCode == ContactCategory.PERSON && typeCode == "C") ||
+                                (categoryCode == ContactCategory.SOCIAL && typeCode == "F");
+
+                    var contactType = new ContactType()
+                    {
+                        ContactCategory = category,
+                        Code = typeCode,
+                        Name = importer.GetString(2),
+                        IsAlwaysShown = importer.GetBool(4),
+                        CanDelete = importer.GetBool(6),
+                        IsActive = importer.GetBool(5)
+                    };
+
+                    context.ContactTypes.AddOrUpdate(p => p.Code, contactType);
+
+                    if (isDefault)
+                    {
+                        category.DefaultContactType = contactType;
+                    }
+
+                    count++;
+                }
+                context.SaveChanges();
+            }
+        }
         private static void LoadRegions(string organization, string filePath, int minCount, int maxCount)
         {
             DomainContext context = new DomainContext();
@@ -975,7 +1026,7 @@ namespace DDI.Conversion.CRM
 
         private static void AddContactCategory(DomainContext context, string code, string description, string title, string infoLabel)
         {
-            context.ContactCategories.AddOrUpdate(p => p.Code == code,
+            context.ContactCategories.AddOrUpdate(p => p.Code,
                 new ContactCategory()
                 {
                     Code = code,
