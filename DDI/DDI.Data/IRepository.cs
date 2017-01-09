@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,9 +28,13 @@ namespace DDI.Data
 
         T GetById(Guid id);
 
-        T Find(params object[] keyValues); 
+        T GetById(Guid id, params Expression<Func<T, object>>[] includes);
 
-		T Insert(T entity);
+        T Find(params object[] keyValues);
+
+        T Create();
+
+        T Insert(T entity);
 
 		T Update(T entity);
 
@@ -38,6 +43,20 @@ namespace DDI.Data
         int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null);
 
         List<string> GetModifiedProperties(T entity);
+
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
+
+        TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
+
+        ICollection<T> GetLocal();
+
+        void Attach(T entity);
+
+        IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes);
 
         #endregion Public Methods
     }

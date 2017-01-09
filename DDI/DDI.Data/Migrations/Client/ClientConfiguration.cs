@@ -2,9 +2,8 @@ using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
-using DDI.Data.Enums;
-using DDI.Data.Models;
-using DDI.Data.Models.Client;
+using DDI.Data.Enums.CRM;
+using DDI.Data.Models.Client.CRM;
 
 namespace DDI.Data.Migrations.Client
 {
@@ -45,28 +44,7 @@ namespace DDI.Data.Migrations.Client
             //    );
             //
 
-            //Additional Setup of CRM data will be required
-            //CRM initial Data
 
-            //ConstituentStatuses
-            context.ConstituentStatuses.AddOrUpdate(
-                p => p.Code,
-                new ConstituentStatus { Code = "AC", Name = "Active", IsActive = true },
-                new ConstituentStatus { Code = "IN", Name = "Inactive", IsActive = true });
-
-            //Constituent Types
-            context.ConstituentTypes.AddOrUpdate(
-                p => p.Code, 
-                new ConstituentType { BaseType = ConstituentCategory.Individual.ToString(), Code = "I", Name = "Individual", IsActive = true, IsRequired = true },
-                new ConstituentType { BaseType = ConstituentCategory.Organization.ToString(), Code = "O", Name = "Organization", IsActive = true, IsRequired = true }
-            );
-
-            //Genders
-            context.Genders.AddOrUpdate(
-                p => p.Code,
-                new Gender { Code = "M", IsMasculine = true, Name = "Male"},
-                new Gender { Code = "F", IsMasculine = false, Name = "Female"}
-            );
         }
 
 		#endregion Protected Methods

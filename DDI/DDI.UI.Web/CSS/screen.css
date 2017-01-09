@@ -11,6 +11,8 @@ a:hover { text-decoration: underline; }
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
 
+label.error { color: red; font-size: 10px; font-style: italic; font-weight: lighter !important; width: 100% !important; margin-left: 31%; text-align: left !important; }
+
 input:disabled,
 select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }
 select:disabled::-ms-expand { display: none; }
@@ -23,9 +25,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .logo a { display: block; background-image: url('../Images/DDI-logo.png'); width: 150px; height: 35px; margin: 20px 0 0 35px; }
 
 .globalnav { position: absolute; top: 15px; right: 30px; border: solid 1px #0f75b4; box-shadow: -1px 1px 10px #999999; border-top: none; padding: 8px 15px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-.globalnav ul { list-style: none; margin: 0px; padding: 0px; }
-.globalnav ul li { display: inline-block; }
-.globalnav ul li a {  }
+.globalnav ul { list-style: none; margin: 0px; padding: 0px; width: 100%; }
+.globalnav ul li { display: inline-block; border-right: solid 1px #0f75b4; }
+.globalnav ul li:last-child { border-right: none; }
+.globalnav ul li a { display: block; padding: 0 7px 0 3px; }
 
 .topnav { display: inline-block; width: 80%; margin-left: 30px; clear: both; }
 .topnav ul { list-style: none; margin: 0px; padding: 0px; }
@@ -38,18 +41,24 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .topnav ul li ul li { margin: 0px; }
 #mainmenu a.static { padding: 0 15px !important; }
 
-.login { width: 300px; height: 125px; margin: 10% auto 0 auto; background-color: white; padding: 45px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 0px 3px 10px #999999; }
+.login { width: 300px; margin: 10% auto 0 auto; background-color: white; padding: 45px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 0px 3px 10px #999999; }
 .login div.buttons { width: 82%; text-align: right; }
 .login div.buttons input {  }
 .login div.fieldblock { margin-bottom: 25px; }
 .login div.fieldblock label { width: 29%; text-align: right; margin-right: 3px; font-weight: bold; font-size: 14px; }
 .login div.fieldblock input,
 .login div.fieldblock select { width: 55%; }
+.login div.forgotpassword { text-align: center; margin: 20px 0 0 0; }
+.forgotpasswordmodal div.modalcontent { padding: 20px; }
+.forgotpasswordmodal div.modalcontent div.fieldblock input { display: inline-block; width: 70%; }
+.forgotpasswordmodal div.modalcontent div.fieldblock label.inline { display: inline-block; width: 14%; text-align: right; margin-right: 5px; font-weight: bold; }
 
 .maincontainer { width: 100%; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
 div.threecolumn>div { width: 33%; display: inline-block; vertical-align: top; }
+div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; }
+div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; }
 
 div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
@@ -145,4 +154,14 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
 
 /* END SYSTEM SETTINGS */
+
+
+
+/* REGISTRATION CONFIRMATION */
+
+.registrationconfirmation { width: 600px; background-color: white; margin: 250px auto 0 auto; padding: 20px; border: solid 2px #0f75b4; border-radius: 10px; }
+.registrationconfirmation h1 { color: #0f75b4; }
+.registrationconfirmation .timer { font-weight: bold; display: inline-block; width: 13px; text-align: right; }
+
+/* END REGISTRATION CONFIRMATION */
 

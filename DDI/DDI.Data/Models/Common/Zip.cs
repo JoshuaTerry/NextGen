@@ -14,9 +14,10 @@ namespace DDI.Data.Models.Common
         #region Public Properties
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index]
         [MaxLength(5)]
         public string ZipCode { get; set; }
 

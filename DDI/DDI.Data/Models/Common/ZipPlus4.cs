@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using DDI.Data.Enums;
+using DDI.Data.Enums.Common;
 
 namespace DDI.Data.Models.Common
 {
@@ -14,9 +14,10 @@ namespace DDI.Data.Models.Common
     public class ZipPlus4 : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index]
         [MaxLength(16)]
         public string UpdateKey { get; set; }
 

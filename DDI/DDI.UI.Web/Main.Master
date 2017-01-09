@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     
+    <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\screen.css" />
@@ -35,6 +36,7 @@
             <div class="globalnav">
                 <ul>
                     <li><a href="#" class="addconstituent">Add Constituent</a></li>
+                    <li><a href="#" class="logout">Logout</a></li>
                 </ul>
             </div>
             <div class="logo">
@@ -74,7 +76,7 @@
                     <input type="text" class="nc-ConstituentNumber" maxlength="9" />
                 </div>
 
-                <div class="inline">
+                <div class="fivecolumn">
                     <div class="fieldblock">
                         <label>Prefix</label>
                         <select class="nc-PrefixId"></select>
@@ -138,19 +140,21 @@
                 <fieldset>
                     <legend>Primary Address</legend>
 
-                    <div class="fieldblock">
-                        <label>Address Type</label>
-                        <select class="nc-AddressType"></select>
-                    </div>
+                    <div>
+                        <div class="fieldblock">
+                            <label>Address Type</label>
+                            <select class="nc-AddressType"></select>
+                        </div>
 
-                    <div class="fieldblock">
-                        <label>Address Line 1</label>
-                        <input type="text" class="nc-AddressLine1" />
-                    </div>
+                        <div class="fieldblock">
+                            <label>Address Line 1</label>
+                            <input type="text" class="nc-AddressLine1" />
+                        </div>
 
-                    <div class="fieldblock">
-                        <label>Address Line 2</label>
-                        <input type="text" class="nc-AddressLine2" />
+                        <div class="fieldblock">
+                            <label>Address Line 2</label>
+                            <input type="text" class="nc-AddressLine2" />
+                        </div>
                     </div>
 
                     <div class="inline">
@@ -179,6 +183,7 @@
                             <label>County</label>
                             <select class="nc-County" style="width: 150px;"></select>
                         </div>
+
                     </div>
 
                 </fieldset>

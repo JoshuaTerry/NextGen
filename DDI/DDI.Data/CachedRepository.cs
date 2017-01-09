@@ -22,7 +22,7 @@ namespace DDI.Data
         public CachedRepository(DbContext context) : base(context)
         {
             var type = typeof(T);
-            string _cacheKey = $"{type.Name}_Key";
+            _cacheKey = $"{type.Name}_Key";
         }
         public override IQueryable<T> Entities
         {

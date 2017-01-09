@@ -12,7 +12,7 @@ namespace DDI.Data.Models.Common
     public class ZipStreet : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(8)]
@@ -29,6 +29,7 @@ namespace DDI.Data.Models.Common
         [MaxLength(8)]
         public string UrbanizationKey { get; set; }
 
+        [Index]
         [MaxLength(8)]
         public string CityKey { get; set; }    
 

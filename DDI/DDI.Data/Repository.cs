@@ -9,7 +9,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
 using DDI.Data.Models;
 
 namespace DDI.Data
@@ -24,13 +23,14 @@ namespace DDI.Data
     /// class provides.
     /// </remarks>
     public class Repository<T> : IRepository<T>
-        where T : class, IEntity
+        where T : class
     {
         #region Private Fields
 
         private readonly DbContext _context = null;
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
+        private bool _isUOW = false;
 
         #endregion Private Fields
 
@@ -42,14 +42,14 @@ namespace DDI.Data
         {
             get
             {
-                if (_utilities == null)
+                if (_utilities == null && _context != null)
                 {
                     _utilities = new SQLUtilities(_context);
                 }
 
                 return _utilities;
             }
-        }
+        }                       
 
         #endregion Public Properties
 
@@ -75,11 +75,17 @@ namespace DDI.Data
         public Repository() :
             this(new DomainContext())
         {
+            _isUOW = false;
         }
+
+        #endregion Public Constructors
+
+        #region Internal Constructors
 
         public Repository(DbContext context)
         {
             _context = context;
+            _isUOW = (context != null);
         }
 
         #endregion Public Constructors
@@ -125,7 +131,10 @@ namespace DDI.Data
                 }
 
                 EntitySet.Remove(entity);
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }                
             }
             catch (DbEntityValidationException e)
             {
@@ -133,38 +142,137 @@ namespace DDI.Data
             }
         }
 
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            GetReference<TElement>(entity, collection);
+        }
+        
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity.
+        /// </summary>
+        public void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            GetReference<TElement>(entity, property);
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
+        {
+            var entryCollection = _context.Entry(entity).Collection(collection);
+            if (!entryCollection.IsLoaded)
+                entryCollection.Load();
+            return entryCollection.CurrentValue;
+        }
+
+        /// <summary>
+        /// Explicitly load a reference property or collection for an entity and return the value.
+        /// </summary>
+        public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
+        {
+            try
+            {
+                // Anything that's not an EF mapped property will throw an exception.
+
+                var reference = _context.Entry(entity).Reference(property);
+
+                if (!reference.IsLoaded)
+                    reference.Load();
+                return reference.CurrentValue;
+            }
+            catch(Exception e)
+            {
+                // Logic to handle BaseLinkedEntity and LinkedEntityCollection:
+
+                // Consult the lambda expression to get the property info.
+                if (property.Body is MemberExpression)
+                {
+                    PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
+                    if (propInfo != null)
+                    {
+                        if (entity is BaseLinkedEntity)
+                        {
+                            // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
+                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
+                            {
+                                // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
+                                var linkedEntity = entity as BaseLinkedEntity;
+                                linkedEntity.LoadParentEntity(_context);
+                                return linkedEntity.ParentEntity as TElement;
+                            }
+                            
+                            throw e;  // Wrong property name...
+                        }
+
+                        else if (typeof(TElement).GetInterfaces().Contains(typeof(ILinkedEntityCollection)))
+                        {
+                            // Trying to load a LinkedEntityCollection property.
+                            // Get the property value.
+                            object memberValue = propInfo.GetValue(entity);
+
+                            if (memberValue == null)
+                            {
+                                // If null, the LinkedEntityCollection needs to be created.
+                                memberValue = (TElement)Activator.CreateInstance(typeof(TElement), entity);
+                                propInfo.SetValue(entity, memberValue);
+                            }
+
+                            if (memberValue is TElement)
+                            {
+                                // Ensure the collection is loaded.
+                                ((ILinkedEntityCollection)memberValue).LoadCollection(_context);
+
+                                return (TElement)memberValue;
+                            }
+                        }
+                    }
+                }
+
+                throw e; // Couldn't determine the reference, so rethrow the exception.
+            }
+        }
+
+        /// <summary>
+        /// Return a collection of entities that have already been loaded or added to the repository.
+        /// </summary>
+        public ICollection<T> GetLocal()
+        {
+            return EntitySet.Local;
+        }
+
+        /// <summary>
+        /// Attach an entity (which may belong to another context) to the repository.
+        /// </summary>
+        public void Attach(T entity)
+        {
+            if (entity != null)
+            {
+                EntitySet.Attach(entity);
+            }
+        }
+        
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes)
+        public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
         {
-            Type entityType = typeof(T);
-            DbQuery<T> query = _context.Set<T>();
+            if (includes == null || includes.Length == 0)
+            {
+                return Entities;
+            }
+
+            var query = _context.Set<T>().AsQueryable();
 
             foreach(Expression<Func<T, object>> include in includes)
             {
-                query.Include(t => entityType.GetProperty(NameFor(include, true)));
-            }
-
-            return query.AsQueryable();
-        }
-
-        public IQueryable<T> Query(params Type[] includeTypes)
-        {
-            var properties = new List<PropertyInfo>();
-
-            foreach (Type type in includeTypes)
-            {
-                PropertyInfo[] allProps = typeof(T).GetProperties();
-                properties.AddRange(allProps.Where(p => p.PropertyType == type));
-
-                IEnumerable<PropertyInfo> generic = allProps.Where(p => p.PropertyType.IsGenericType);
-                properties.AddRange(allProps.Where(p => p.PropertyType.GenericTypeArguments.Contains(type)));
-            }
-
-            var query = _context.Set<T>();
-            foreach (PropertyInfo info in properties)
-            {
-                query.Include(info.Name);
+                string name = NameFor(include, true);
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Include(name);
+                }
             }
 
             return query;
@@ -174,33 +282,15 @@ namespace DDI.Data
 
         public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
         {
-            Type entityType = typeof(T);
-            T entity = EntitySet.Find(id);
-            DbEntityEntry<T> dbEntry = _context.Entry(entity);
-            
-            foreach (Expression<Func<T, object>> include in includes)
+            if (typeof(IEntity).IsAssignableFrom(typeof(T)))
             {
-                try
-                {
-                    string property = NameFor(include, true);
-                    PropertyInfo prop = entityType.GetProperty(property);
-
-                    if (prop.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
-                    {
-                        dbEntry.Collection(property).Load();
-                    }
-                    else if (!prop.PropertyType.IsValueType)
-                    {
-                        dbEntry.Reference(property).Load();
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
+                var query = (IQueryable<IEntity>)GetEntities(includes);
+                return query.FirstOrDefault(p => p.Id == id) as T;
             }
-
-            return dbEntry.Entity;
+            else
+            {
+                return GetById(id);
+            }
         }
 
         public List<string> GetModifiedProperties(T entity)
@@ -219,6 +309,15 @@ namespace DDI.Data
             return list;
         }
 
+        public virtual T Create()
+        {
+            T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
+            (entity as BaseEntity)?.AssignPrimaryKey();
+            EntitySet.Add(entity);
+
+            return entity;
+        }
+
         public virtual T Insert(T entity)
         {
             try
@@ -228,8 +327,16 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                EntitySet.Add(entity);
-                _context.SaveChanges();
+                if (_context.Entry(entity).State != EntityState.Added)
+                {
+                    // Add it only if not already added.
+                    EntitySet.Add(entity);
+                }
+
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -250,7 +357,10 @@ namespace DDI.Data
 
                 EntitySet.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
-                _context.SaveChanges();
+                if (!_isUOW)
+                {
+                    _context.SaveChanges();
+                }
 
                 return entity;
             }
@@ -277,7 +387,7 @@ namespace DDI.Data
 
             action?.Invoke(entity);
 
-            return _context.SaveChanges();
+            return _isUOW ? 0 : _context.SaveChanges();
         }
 
         #endregion Public Methods
