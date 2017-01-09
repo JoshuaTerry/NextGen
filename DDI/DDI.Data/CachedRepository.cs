@@ -10,7 +10,7 @@ using DDI.Data.Models;
 
 namespace DDI.Data
 {
-    public class CachedRepository<T> : Repository<T> where T : class, IEntity
+    public class CachedRepository<T> : Repository<T> where T : class
     {
         private readonly string _cacheKey;
         private static readonly object _cacheItemLock = new object();
