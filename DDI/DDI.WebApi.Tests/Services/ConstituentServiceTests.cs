@@ -7,8 +7,7 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using DDI.Shared;
-using DDI.Services;
+using DDI.Shared; 
 
 namespace DDI.WebApi.Tests.Services
 {

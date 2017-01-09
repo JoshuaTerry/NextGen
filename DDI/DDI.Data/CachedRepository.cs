@@ -11,7 +11,7 @@ namespace DDI.Data
 {
     public class CachedRepository<T> : Repository<T> where T : class
     {
-        private readonly string _cacheKey;
+        private readonly string _cacheKey = null;
         private static readonly object _cacheItemLock = new object();
         public CachedRepository() :
             this(new DomainContext())

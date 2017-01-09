@@ -10,8 +10,7 @@ namespace DDI.Shared
             if (string.IsNullOrWhiteSpace(text))
                 return string.Empty;
 
-            StringBuilder sb = new StringBuilder(text.Length);
-            bool uc = true;
+            StringBuilder sb = new StringBuilder(text.Length); 
             bool priorCharacterWasUpperCase = true;
             foreach (char c in text)
             {

@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using DDI.Services;
-using DDI.Shared.Models.Client.Core;
-using DDI.Services;
+using DDI.Shared.Models.Client.Core; 
 
 namespace DDI.WebApi.Controllers
 {

@@ -243,9 +243,6 @@
     <Compile Include="Controllers\PrefixesController.cs" />
     <Compile Include="Controllers\ProfessionsController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
-    <Compile Include="Domain\BaseEntityDomain.cs" />
-    <Compile Include="Domain\ConstituentDomain.cs" />
-    <Compile Include="Domain\IEntityDomain.cs" />
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -332,9 +329,7 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
