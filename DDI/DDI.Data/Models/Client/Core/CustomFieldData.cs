@@ -15,7 +15,7 @@ namespace DDI.Data.Models.Client.Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid CustomFieldId { get; set; }
-        public string EntityType { get; set; }
+        public DDI.Data.Enums.Common.CustomFieldEntity EntityType { get; set; }
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
         public CustomField CustomField { get; set; }
