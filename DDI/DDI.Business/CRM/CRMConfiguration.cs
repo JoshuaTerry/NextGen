@@ -13,7 +13,7 @@ using DDI.Shared.ModuleInfo;
 namespace DDI.Business.CRM
 {
     [ModuleTypeAttribute(ModuleType.CRM)]
-    public class CRMConfiguration : BaseConfiguration
+    public class CRMConfiguration : ConfigurationBase
     {
         #region Properties
 
