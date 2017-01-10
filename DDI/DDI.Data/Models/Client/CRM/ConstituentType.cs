@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Data.Enums.CRM;
 
 namespace DDI.Data.Models.Client.CRM
 {
@@ -17,9 +18,8 @@ namespace DDI.Data.Models.Client.CRM
         public bool IsActive { get; set; }
 
         public bool IsRequired { get; set; }
-
-        [MaxLength(16)]
-        public string BaseType { get; set; }
+       
+        public ConstituentCategory Category { get; set; }
 
         [MaxLength(4)]
         public string Code { get; set; }

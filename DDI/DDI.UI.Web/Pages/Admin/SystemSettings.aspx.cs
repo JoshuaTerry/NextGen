@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace DDI.UI.Web
 {
-    public partial class SystemSettings : System.Web.UI.Page
+    public partial class SystemSettings : BasePage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

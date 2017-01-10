@@ -163,6 +163,11 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
+        public T GetById<T>(object id) where T : class
+        {
+            return GetRepository<T>().GetById(id);
+        }
+
         #endregion Protected Methods
     }
 
