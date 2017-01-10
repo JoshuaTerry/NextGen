@@ -112,8 +112,9 @@
     </None>
     <Content Include="Pages\Reports\Reports.aspx" />
     <Content Include="RegistrationConfirmation.aspx" />
-	<Content Include="Scripts\customfields.js" />
+    <Content Include="Scripts\customfields.js" />
     <Content Include="Scripts\data.js" />
+    <Content Include="Scripts\jquery.datepair.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />

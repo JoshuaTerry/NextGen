@@ -14,6 +14,8 @@ $(document).ready(function () {
 
     LoadDatePickers();
 
+    LoadDatePair();
+
     LoadTabs();
 
     LoadAccordions();
@@ -236,16 +238,64 @@ function LoadDatePickers() {
 
 }
 
+function LoadDatePair() {
+
+    if ($.timpicker) {
+
+        $('.datepair .time').timepicker({
+            'showDuration': true,
+            'timeFormat': 'g:ia'
+        });
+
+        $('datepair .date').datepicker({
+            'format': 'm/d/yyyy',
+            'autoclose': true
+        });
+
+        $('.datepair').datepair();
+
+    }
+}
+
 function FormatJSONDate(jsonDate) {
 
     var date = '';
 
     if (jsonDate) {
         date = new Date(parseInt(jsonDate.substr(6)));
-        date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+        date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
     }
     
     return date;
+}
+
+function FormatJSONTime(jsonTime) {
+
+    var time = '';
+
+    if (jsonTime) {
+
+        var date = new Date(parseInt(jsonDate.substr(6)));
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = ' AM';
+
+        if (hours > 12) {
+            hours -= 12;
+            ampm = ' PM';
+        }
+        else if (hours == 12) {
+            ampm = ' PM';
+        }
+        else if (hours === 0) {
+            hours = 12;
+        }
+
+        time = hours + ':' + ('0' + minutes).slice(-2) + ampm;
+    }
+
+    return time;
+
 }
 
 function ExecuteFunction(functionName, context) {

@@ -14,7 +14,7 @@ $(document).ready(function () {
 
 });
 
-function CustomFieldsGrid(container, entity) {
+function DisplayCustomFieldsGrid(container, entity) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -22,6 +22,7 @@ function CustomFieldsGrid(container, entity) {
     var datagrid = $('<div>').addClass('customfieldgrid');
 
     var columns = [
+        { dataField: 'Id', visible: false },
         { dataField: 'FieldType', caption: 'Field Type' },
         { dataField: 'LabelText', caption: 'Label Text' },
         { dataField: 'MinValue', caption: 'Min Value' },
@@ -57,6 +58,9 @@ function CustomFieldsGrid(container, entity) {
                 filterRow: {
                     visible: true,
                     showOperationChooser: false
+                },
+                onRowClick: function (info) {
+                    EditCustomControl(info.values[0]);
                 }
             });
 
@@ -67,6 +71,12 @@ function CustomFieldsGrid(container, entity) {
             DisplayErrorMessage('Error', 'An error loading Custom Fields.');
         }
     });
+
+}
+
+function EditCustomControl(id) {
+
+
 
 }
 
@@ -110,28 +120,28 @@ function CreateCustomField(item) {
 
     switch (item.FieldType) {
         case customfieldtype.Number:
-            CreateNumberField();
+            CreateNumberField(item);
             break;
         case customfieldtype.TextBox:
-            CreateTextField();
+            CreateTextField(item);
             break;
         case customfieldtype.TextArea:
-            CreateTextAreaField();
+            CreateTextAreaField(item);
             break;
         case customfieldtype.DropDown:
-            CreateDropDownField();
+            CreateDropDownField(item);
             break;
         case customfieldtype.Radio:
-            CreateRadioField();
+            CreateRadioField(item);
             break;
         case customfieldtype.CheckBox:
-            CreateCheckBoxField();
+            CreateCheckBoxField(item);
             break;
         case customfieldtype.Date:
-            CreateDateField();
+            CreateDateField(item);
             break;
         case customfieldtype.DateTime:
-            CreateDateTimeField();
+            CreateDateTimeField(item);
             break;
     }
 
@@ -140,51 +150,119 @@ function CreateCustomField(item) {
 
 }
 
-function CreateNumberField() {
+function CreateNumberField(item) {
 
+    var number = $('<input>').addClass('number');
 
+    if (item.Answer) {
+        $(number).val(item.Answer.Value);
+    }
 
-}
-
-function CreateTextField() {
-
-
-
-}
-
-function CreateTextAreaField() {
-
-
+    return number;
 
 }
 
-function CreateDropDownField() {
+function CreateTextField(item) {
 
+    var text = $('<input>').attr('type', 'text');
 
+    if (item.Answer) {
+        $(text).val(item.Answer.Value);
+    }
 
-}
-
-function CreateRadioField() {
-
-
-
-}
-
-function CreateCheckBoxField() {
-
-
+    return text;
 
 }
 
-function CreateDateField() {
+function CreateTextAreaField(item) {
 
+    var textarea = $('<textarea>');
 
+    if (item.Answer) {
+        $(textarea).val(item.Answer.Value);
+    }
+
+    return textarea;
 
 }
 
-function CreateDateTimeField() {
+function CreateDropDownField(item) {
 
+    var dropdown = $('<select>');
+    
+    if (item.Options) {
+        $.map(item.Options, function (o) {
+            $('<option>').val(o.Id).text(o.DisplayName).appendTo($(dropdown));
+        });
+    }
 
+    if (item.Answer) {
+        $(dropdown).val(item.Answer.Value);
+    }
+
+    return dropdown;
+
+}
+
+function CreateRadioField(item) {
+
+    var radio = $('<div>').addClass('radiobuttons');
+
+    if (item.Options) {
+        $.map(item.Options, function (o) {
+            var rd = $('<div>').addClass('radiobutton');
+
+            $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
+            var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
+
+            if (item.Answer && item.Answer.Value == $(i).val()) {
+                $(i).attr('checked', 'checked');
+            }
+
+            $(rd).appendTo($(radio));
+        });
+    }
+
+    return radio;
+
+}
+
+function CreateCheckBoxField(item) {
+
+    var checkbox = $('<input>').attr('type', 'checkbox');
+
+    if (item.Answer && item.Answer.Value == '1') {
+        $(checkbox).attr('checked', 'checked');
+    }
+
+    return checkbox;
+
+}
+
+function CreateDateField(item) {
+
+    var date = $('<input>').attr('type', 'text').addClass('datepicker');
+
+    if (item.Answer) {
+        $(date).text(FormatJSONDate(item.Answer.Value));
+    }
+
+    return date;
+
+}
+
+function CreateDateTimeField(item) {
+
+    var dt = $('<div>').addClass('datepair');
+    var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
+    var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
+
+    if (item.Answer) {
+        $(date).text(FormatJSONDate(item.Answer.Value));
+        $(time).text(FormatJOSNTime(item.Answer.Value));
+    }
+
+    return dt;
 
 }
 

@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
 
 </asp:Content>
 
@@ -109,6 +110,50 @@
             <div class="gridcontainer"></div>
         </div>
         
+        <div class="newcustomfieldmodal" title="New Custom Field" style="display: none;">
+
+            <div class="modalcontent">
+
+                <input type="hidden" class="cfid" />
+
+                <div class="fieldblock">
+                    <label>Label Text</label>
+                    <input type="text" class="cflabel" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Type</label>
+                    <select class="cftype"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Display Order</label>
+                    <select class="cforder"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Is Required</label>
+                    <input type="checkbox" class="cfisrequired" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Min Value</label>
+                    <input type="text" class="cfminvalue" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Max Value</label>
+                    <input type="text" class="cfmaxvalue" />
+                </div>
+
+                <div class="modalbuttons">
+                    <input type="button" class="submitcf" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 

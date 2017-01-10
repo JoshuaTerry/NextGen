@@ -422,19 +422,81 @@ function LoadReportHeaders() {
 /* CUSTOM FIELDS */
 function LoadCRMClientCustomFields() {
 
-    
+    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.CRM); // CRM = 19
 
 }
 
 function LoadDonationClientCustomFields() {
 
-
+    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.Gifts); // Gifts = 9
 
 }
 
 function LoadGLClientCustomFields() {
 
+    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
 
+}
+
+function CreateNewCustomFieldModal(entity, title) {
+
+    modal = $('.addconstituentmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 800,
+        height: 640,
+        resizable: false
+    });
+
+    var type = $(modal).find('.cftype');
+    var save = $(modal).find('.submitcf');
+
+    $.each(customfieldtype, function (key, value) {
+
+        $('<option>').text(key).val(value).appendTo($(type));
+
+    });
+
+    $(type).change(function () {
+
+        CustomFieldTypeSelected();
+
+    });
+
+    $(save).click(function () {
+
+        SaveCustomField();
+
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+}
+
+function CustomFieldTypeSelected() {
+
+
+
+}
+
+function SaveCustomField() {
+
+    var id = $('.cfid').val();
+
+    if (id) {
+        // Update
+
+    }
+    else {
+        // Insert
+
+    }
 
 }
 /* END CUSTOM FIELDS */
