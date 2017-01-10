@@ -15,7 +15,7 @@ namespace DDI.Shared.Helpers
     {
         #region Fields
 
-        private static Dictionary<ModuleType, ModuleInfoBase> _moduleDict;
+        private static Dictionary<ModuleType, ModuleInfoBase> _moduleDictionary;
         private static List<ModuleInfoBase> _modules;
 
         #endregion
@@ -25,31 +25,31 @@ namespace DDI.Shared.Helpers
         static ModuleHelper()
         {
             _modules = new List<ModuleInfoBase>();
-            _moduleDict = new Dictionary<ModuleType, ModuleInfoBase>();
+            _moduleDictionary = new Dictionary<ModuleType, ModuleInfoBase>();
 
             // Populate the list of modules and the module dictionary.
-            foreach (Type moduleType in ReflectionHelper.GetDerivedTypes<ModuleInfoBase>(typeof(ModuleHelper).Assembly))
+            foreach (Type type in ReflectionHelper.GetDerivedTypes<ModuleInfoBase>(typeof(ModuleHelper).Assembly))
             {
-                ModuleInfoBase mod = (ModuleInfoBase)Activator.CreateInstance(moduleType);
-                _modules.Add(mod);
-                ModuleType modType = mod.ModuleType;
-                if (modType != ModuleType.None)
+                ModuleInfoBase moduleInfo = (ModuleInfoBase)Activator.CreateInstance(type);
+                _modules.Add(moduleInfo);
+                ModuleType moduleType = moduleInfo.ModuleType;
+                if (moduleType != ModuleType.None)
                 {
-                    _moduleDict[modType] = mod;
+                    _moduleDictionary[moduleType] = moduleInfo;
                 }
             }            
 
             // Link up modules
-            foreach (var mod in _modules)
+            foreach (var module in _modules)
             {
-                ModuleType parent = mod.ParentModuleType;
+                ModuleType parent = module.ParentModuleType;
                 if (parent != ModuleType.None)
                 {
-                    ModuleInfoBase parentMod = _modules.FirstOrDefault(p => p.ModuleType == parent);
-                    if (parentMod != null)
+                    ModuleInfoBase parentModule = _modules.FirstOrDefault(p => p.ModuleType == parent);
+                    if (parentModule != null)
                     {
-                        mod.ParentModule = parentMod;
-                        parentMod.ChildModules.Add(mod);
+                        module.ParentModule = parentModule;
+                        parentModule.ChildModules.Add(module);
                     }
                 }
             }
@@ -78,12 +78,12 @@ namespace DDI.Shared.Helpers
         /// <summary>
         /// Get the ModuleInfo object for a specified ModuleType value.
         /// </summary>
-        public static ModuleInfoBase GetModuleInfo (ModuleType modType)
+        public static ModuleInfoBase GetModuleInfo (ModuleType moduleType)
         {
-            ModuleInfoBase mod = null;
-            _moduleDict.TryGetValue(modType, out mod);
+            ModuleInfoBase moduleInfo = null;
+            _moduleDictionary.TryGetValue(moduleType, out moduleInfo);
 
-            return mod;
+            return moduleInfo;
         }
 
         /// <summary>
