@@ -17,7 +17,7 @@ namespace DDI.WebApi.Services
         {
             _repository = repository;
         }
-        public IDataResponse<List<T>> GetAll(IPageable search = null)
+        public IDataResponse<dynamic> GetAll(IPageable search = null)
         {
             var result = _repository.Entities.ToList().OrderBy(a => a.DisplayName).ToList();
             return GetIDataResponse(() => result);
@@ -39,7 +39,7 @@ namespace DDI.WebApi.Services
             return response;
         }
 
-        public IDataResponse<T> Update(Guid id, JObject changes)
+        public IDataResponse<dynamic> Update(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 

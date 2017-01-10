@@ -67,6 +67,7 @@
     <Compile Include="Enums\CRM\SalutationType.cs" />
     <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
     <Compile Include="Enums\CRM\PaymentMethod.cs" />
+    <Compile Include="Extensions\BaseEntityExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
     <Compile Include="ILinkedEntityCollection.cs" />

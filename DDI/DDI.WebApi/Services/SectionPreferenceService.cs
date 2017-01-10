@@ -17,7 +17,7 @@ namespace DDI.WebApi.Services
         {
             _repository = repo;
         }
-        public IDataResponse<List<SectionPreference>> GetPreferencesBySectionName(string sectionName)
+        public IDataResponse<dynamic> GetPreferencesBySectionName(string sectionName)
         {
             var results = _repository.Entities.Where(p => p.SectionName == sectionName).ToList();
             return GetIDataResponse(() => results);

@@ -19,7 +19,7 @@ namespace DDI.WebApi.Services
         }
         #region Public Methods
 
-        public IDataResponse<List<State>> GetAll(StateSearch search= null)
+        public IDataResponse<dynamic> GetAll(StateSearch search= null)
         {
             var result = Repository.Entities;
             var query = new CriteriaQuery<State, StateSearch>(result, search)

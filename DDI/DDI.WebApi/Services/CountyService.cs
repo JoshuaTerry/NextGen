@@ -11,7 +11,7 @@ namespace DDI.WebApi.Services
     {
         #region Public Methods
 
-        public IDataResponse<List<County>> GetAll(CountySearch search = null)
+        public IDataResponse<dynamic> GetAll(CountySearch search = null)
         {
             var result = Repository.Entities;
             var query = new CriteriaQuery<County, CountySearch>(result, search)

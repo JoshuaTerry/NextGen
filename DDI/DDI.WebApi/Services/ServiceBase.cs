@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Data.Extensions;
+using DDI.Data.Models;
 using DDI.Shared;
 using DDI.Shared.Logger;
 
@@ -10,26 +12,27 @@ namespace DDI.WebApi.Services
     {
         private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
 
-        public IDataResponse<T> GetIDataResponse<T>(Func<T> funcToExecute)
+        public IDataResponse<dynamic> GetIDataResponse<T>(Func<T> funcToExecute)
         {
             return GetDataResponse(funcToExecute);
         }
 
-        public DataResponse<T> GetDataResponse<T>(Func<T> funcToExecute)
+        public DataResponse<dynamic> GetDataResponse<T>(Func<T> funcToExecute)
         {
             try
             {
                 var result = funcToExecute();
-                return new DataResponse<T>
+                var resultWithLinks = result.AddLinks();
+                return new DataResponse<dynamic>
                 {
-                    Data = result,
+                    Data = resultWithLinks,
                     IsSuccessful = true
                 };
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message, e);
-                var response = new DataResponse<T> { IsSuccessful = false };
+                var response = new DataResponse<dynamic> { IsSuccessful = false };
                 response.ErrorMessages.Add(e.Message);
                 response.VerboseErrorMessages.Add(e.ToString());
                 return response;
