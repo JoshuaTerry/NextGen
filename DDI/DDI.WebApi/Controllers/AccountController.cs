@@ -190,7 +190,7 @@ namespace DDI.WebApi.Controllers
             var service = new EmailService();
             var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var to = new MailAddress(model.Email);
-            var body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>.";
+            var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
             var message = service.CreateMailMessage(from, to, "Confirm your email", body);
 
             service.SendMailMessage(message);
