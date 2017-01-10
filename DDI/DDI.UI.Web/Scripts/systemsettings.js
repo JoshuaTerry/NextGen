@@ -17,6 +17,8 @@ $(document).ready(function () {
 
     });
 
+    CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+
 });
 
 function LoadGrid(grid, container, columns, route) {
@@ -459,13 +461,20 @@ function CreateNewCustomFieldModalLink(entity, title) {
 
 }
 
+var modalLeft = 0;
+
 function CreateNewCustomFieldModal(entity, title) {
 
     modal = $('.newcustomfieldmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        resizable: false
+        resizable: false,
+        beforeClose: function (event, ui) {
+            ClearModal();
+        }
     });
+
+    modalLeft = $('.ui-dialog').css('left').replace('px', '');
 
     var type = $(modal).find('.cftype');
     var save = $(modal).find('.submitcf');
@@ -493,24 +502,71 @@ function CreateNewCustomFieldModal(entity, title) {
 
         e.preventDefault();
 
-        CloseModal();
+        ClearModal();
+        
+        $(modal).dialog('close');
 
+    });
+
+}
+
+function ClearModal() {
+
+    $(modal).find('div.fieldblock input').each(function () {
+        $(this).val('');
+    });
+
+    $(modal).find('select').each(function () {
+        $(this).html('');
     });
 
 }
 
 function CustomFieldTypeSelected(selectedvalue) {
 
-    if (selectedvalue &&
-        (selectedvalue == customfieldtype.Number ||
+    if (selectedvalue)
+    {
+        if (selectedvalue == customfieldtype.Number ||
         selectedvalue == customfieldtype.Date ||
-        selectedvalue == customfieldtype.DateTime)) {
+        selectedvalue == customfieldtype.DateTime) {
+            $('.minmaxvalues').show()
+        }
+        else {
+            $('.minmaxvalues').hide()
+        }
 
-        $('.minmaxvalues').show()
+        if (selectedvalue && selectedvalue == customfieldtype.Number) {
+            $('.decimalplacecontainer').show();
+        }
+        else {
+            $('.decimalplacecontainer').hide();
+        }
+    
+        if (selectedvalue == customfieldtype.Radio) {
+            $('.fieldproperties').attr('style', '');
+            $('.options').show();
 
-    }
-    else {
-        $('.minmaxvalues').hide()
+            var left = parseFloat($('.ui-dialog').css('left').replace('px', ''));
+
+            if ((left) >= modalLeft)
+                left -= 150;
+
+            $('.ui-dialog').width('600px').css('left', left);
+            
+            
+        }
+        else {
+            $('.fieldproperties').attr('style', 'width: 100%');
+            $('.options').hide();
+
+            var left = parseFloat($('.ui-dialog').css('left').replace('px', ''));
+            alert(left + ' - ' + modalLeft);
+
+            if (left <= modalLeft)
+                left += 150;
+
+            $('.ui-dialog').width('300px').css('left', left);
+        }
     }
 
 }
@@ -521,12 +577,42 @@ function SaveCustomField() {
 
     if (id) {
         // Update
+        var data = {
+            Id: id
+        };
 
+        DoSomething('customfields', 'PATCH', data);
     }
     else {
         // Insert
 
+        var data = {
+
+        };
+
+        DoSomething('customfields', 'POST', data);
     }
+
+}
+
+function DoSomething(route, action, data) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: action,
+        data: data,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (response) {
+
+            
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error saving custom field.');
+        }
+    });
 
 }
 /* END CUSTOM FIELDS */

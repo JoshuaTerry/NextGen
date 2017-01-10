@@ -473,7 +473,6 @@ function GetEditedFields(editcontainer) {
                 else {
                     p.push('"' + property + '": "' + value + '"');
                 }
-                
             }
         }
 
