@@ -269,7 +269,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/ForgotPasswordConfirm")]
         public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
         {
-            if (model.Email == null || model.Code == null || model.NewPassword == null || model.ConfirmPassword == null)
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code) || string.IsNullOrWhiteSpace(model.NewPassword) || string.IsNullOrWhiteSpace(model.ConfirmPassword))
             {
                 ModelState.AddModelError("", "User Email, Code, NewPassword, and ConfirmPassword are required");
                 return BadRequest(ModelState);
