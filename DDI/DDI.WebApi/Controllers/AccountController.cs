@@ -236,7 +236,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("ForgotPassword")]
+        [Route("api/v1/ForgotPassword")]
         public async Task<IHttpActionResult> ForgotPassword(string email)
         {
             if (!ModelState.IsValid)
@@ -266,7 +266,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("ForgotPasswordConfirm")]
+        [Route("api/v1/ForgotPasswordConfirm")]
         public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
         {
             if (model.Email == null || model.Code == null || model.NewPassword == null || model.ConfirmPassword == null)
