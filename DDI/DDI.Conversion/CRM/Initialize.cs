@@ -21,6 +21,11 @@ namespace DDI.Conversion.CRM
     {
         private ConversionArgs _args;
 
+        public const string CONSTITUENT_STATUS_ACTIVE = "AC";
+        public const string CONSTITUENT_STATUS_INACTIVE = "IN";
+        public const string CONSTITUENT_STATUS_BLOCKED = "BL";
+        public const string CONSTITUENT_STATUS_DELETED = "DEL";
+
         public void Execute(ConversionArgs args)
         {
             _args = args;
@@ -34,10 +39,10 @@ namespace DDI.Conversion.CRM
             //ConstituentStatuses
             context.ConstituentStatuses.AddOrUpdate(
                 p => p.Code,
-                new ConstituentStatus { Code = "AC", Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
-                new ConstituentStatus { Code = "IN", Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
-                new ConstituentStatus { Code = "BL", Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
-                new ConstituentStatus { Code = "DEL", Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
+                new ConstituentStatus { Code = CONSTITUENT_STATUS_ACTIVE, Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
+                new ConstituentStatus { Code = CONSTITUENT_STATUS_INACTIVE, Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
+                new ConstituentStatus { Code = CONSTITUENT_STATUS_BLOCKED, Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
+                new ConstituentStatus { Code = CONSTITUENT_STATUS_DELETED, Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
                 );
 
             //Constituent Types

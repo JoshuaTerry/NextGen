@@ -51,7 +51,7 @@ namespace DDI.Conversion
 
             //new Core.Initialize().Execute(conversionArgs);
             //new CRM.Initialize().Execute(conversionArgs);
-            new CRM.LoadDataCRM().Execute(conversionArgs);
+            new CRM.SettingsLoader().Execute(conversionArgs);
 
         }
 
