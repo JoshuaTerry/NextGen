@@ -80,7 +80,13 @@ namespace DDI.Data
 
         #region Public Methods
 
-
+        /// <summary>
+        /// Clear all entities in the repository.
+        /// </summary>
+        public void Clear()
+        {
+            _entities.Clear();
+        }
 
         public virtual void Delete(T entity)
         {
