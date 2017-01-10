@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
 using DDI.WebApi.Models;
+using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
 using DDI.WebApi.Services;
@@ -244,10 +245,15 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
-            if (user == null)
+            ApplicationUser user;
+            try
             {
-                return NotFound();
+                user = GetUserByEmail(email);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
             }
 
             var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -271,7 +277,7 @@ namespace DDI.WebApi.Controllers
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code) || string.IsNullOrWhiteSpace(model.NewPassword) || string.IsNullOrWhiteSpace(model.ConfirmPassword))
             {
-                ModelState.AddModelError("", "User Email, Code, NewPassword, and ConfirmPassword are required");
+                ModelState.AddModelError("", "User Email, Code, New Password, and Confirm Password are required");
                 return BadRequest(ModelState);
             }
 

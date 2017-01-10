@@ -34,13 +34,13 @@ namespace DDI.WebApi.Services
             _smtpClient = smtpClient;
         }
 
-        public MailMessage CreateMailMessage(MailAddress from, MailAddress to, string subject, string body)
+        public MailMessage CreateMailMessage(MailAddress from, MailAddress to, string subject, string body, bool IsHtml = true)
         {
             var mailMessage = new MailMessage(from, to)
             {
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = true
+                IsBodyHtml = IsHtml
             };
 
             return mailMessage;

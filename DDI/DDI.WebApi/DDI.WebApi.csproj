@@ -255,8 +255,15 @@
     </Compile>
     <Compile Include="Helpers\CriteriaQuery.cs" />
     <Compile Include="Helpers\LinqQuery.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ConfirmRegistrationBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ForgotPasswordConfirmBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RegisterBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RegisterExternalBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RemoveLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -352,6 +359,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
