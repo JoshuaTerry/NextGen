@@ -8,7 +8,7 @@ using System.Text;
 namespace DDI.Shared.Models.Common
 {
     [Table("ZipStreet")]
-    public class ZipStreet : BaseEntity
+    public class ZipStreet : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

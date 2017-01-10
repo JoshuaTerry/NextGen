@@ -3,12 +3,12 @@ using DDI.Shared.Models;
 
 namespace DDI.Business
 {
-    public class BaseEntityLogic<T>  where T : class, IEntity
+    public class EntityLogicBase<T>  where T : class, IEntity
     {
 
         #region Constructors 
 
-        public BaseEntityLogic(IUnitOfWork uow)
+        public EntityLogicBase(IUnitOfWork uow)
         {
             this.UnitOfWork = uow;
         }

@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Shared.Models.Common
 {
     [Table("ZipBranch")]
-    public class ZipBranch : BaseEntity
+    public class ZipBranch : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

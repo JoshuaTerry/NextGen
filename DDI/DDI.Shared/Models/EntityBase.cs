@@ -5,7 +5,7 @@ namespace DDI.Shared.Models
     /// <summary>
     /// Base class for all entity model classes.
     /// </summary>
-    public abstract class BaseEntity : IEntity
+    public abstract class EntityBase : IEntity
     {
         public abstract Guid Id { get; set; }
 

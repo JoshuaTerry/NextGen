@@ -10,7 +10,7 @@ namespace DDI.Shared.Models.Common
 {
 
     [Table("ZipPlus4")]
-    public class ZipPlus4 : BaseEntity
+    public class ZipPlus4 : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

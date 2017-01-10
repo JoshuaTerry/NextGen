@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Shared.Models.Common
 {
     [Table("Country")]
-    public class Country : BaseEntity
+    public class Country : EntityBase
     {
         #region Public Properties
 

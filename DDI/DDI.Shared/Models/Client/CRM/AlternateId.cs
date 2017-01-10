@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("AlternateId")]
-    public class AlternateId : BaseEntity
+    public class AlternateId : EntityBase
     {
         #region Public Properties      
         [Key]

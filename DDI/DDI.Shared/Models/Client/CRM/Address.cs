@@ -10,7 +10,7 @@ using DDI.Shared.Models.Common;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Address")]
-    public class Address : BaseEntity
+    public class Address : EntityBase
     {
         #region Public Properties
         [Key]

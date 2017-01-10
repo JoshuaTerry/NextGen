@@ -8,7 +8,7 @@ namespace DDI.Shared.Models.Client.CRM
 {
     
 	[Table("Region")]
-	public class Region : BaseEntity
+	public class Region : EntityBase
     {
         #region Public Properties 
         [Key]

@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Shared.Models.Common
 {
     [Table("Zip")]
-    public class Zip : BaseEntity
+    public class Zip : EntityBase
     {
         #region Public Properties
 

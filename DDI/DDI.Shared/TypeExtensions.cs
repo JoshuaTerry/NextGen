@@ -15,4 +15,13 @@ namespace DDI.Shared
             return null;
         }
     }
+
+    public class Foo
+    {
+        public void Test()
+        {
+            
+
+        }
+    }
 }

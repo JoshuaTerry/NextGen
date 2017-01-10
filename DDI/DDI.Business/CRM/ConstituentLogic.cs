@@ -7,7 +7,7 @@ using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {
-    public class ConstituentLogic : BaseEntityLogic<Constituent>
+    public class ConstituentLogic : EntityLogicBase<Constituent>
     {
         #region Private Fields
 

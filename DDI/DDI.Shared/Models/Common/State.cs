@@ -9,7 +9,7 @@ using System.Text;
 namespace DDI.Shared.Models.Common
 {
     [Table("State")]
-    public class State : BaseEntity
+    public class State : EntityBase
     {
         #region Public Properties
 

@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Gender")]
-    public class Gender : BaseEntity
+    public class Gender : EntityBase
     {
         #region Public Properties
         [Key]

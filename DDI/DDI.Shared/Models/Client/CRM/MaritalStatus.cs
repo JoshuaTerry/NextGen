@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("MaritialStatus")]
-    public class MaritalStatus : BaseEntity
+    public class MaritalStatus : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -8,7 +8,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("AddressType")]
-    public class AddressType : BaseEntity
+    public class AddressType : EntityBase
     {
         #region Public Properties
         [Key]

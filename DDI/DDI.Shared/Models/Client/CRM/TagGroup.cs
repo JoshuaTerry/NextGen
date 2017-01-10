@@ -8,7 +8,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("TagGroup")]
-    public class TagGroup : BaseEntity
+    public class TagGroup : EntityBase
     {
         #region Public Properties
         [Key]
