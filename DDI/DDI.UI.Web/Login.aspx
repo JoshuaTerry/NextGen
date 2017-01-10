@@ -4,6 +4,7 @@
     
     <script type="text/javascript" src="Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="Scripts\login.js"></script>
+    <link rel="stylesheet" href="CSS/login.css" />
 
 </asp:Content>
 
