@@ -256,7 +256,7 @@ namespace DDI.WebApi.Controllers
             var service = new EmailService();
             var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var to = new MailAddress(user.Email);
-            var body = "Click <a href=\"" + callbackUrl + "\">here</a> to reset your password.";
+            var body = "Reset your <a href=\"" + callbackUrl + "\">password</a>.";
             var message = service.CreateMailMessage(from, to, "Forgotten Password", body);
 
             service.SendMailMessage(message);
