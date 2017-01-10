@@ -5,7 +5,7 @@ using DDI.Shared.ModuleInfo;
 using DDI.Shared.ModuleInfo.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DDI.Shared.Test
+namespace DDI.Shared.Test.Helpers
 {
     [TestClass]
     public class ModuleHelperTests
