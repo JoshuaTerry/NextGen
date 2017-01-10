@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
@@ -15,21 +17,13 @@ using DDI.Data.Models.Common;
 
 namespace DDI.Conversion.CRM
 {
-    class LoadDataCRM : DbMigrationsConfiguration<DomainContext>
+    internal class LoadDataCRM : IDataConversion
     {
-
-        private const string NACODES_FILE = "NACodes.csv";
-        private const string ADDRESSES_FILE = "address.csv";
-        private const string PREFIX_FILE = "NamePrefix.csv";
-        private const string INDIVIDUAL_CONSTITUENT_FILE = "individual.csv";
         private const string ORGANIZATION_CONSTITUENT_FILE = "organization.csv";
         private const string DOING_BUSINESS_AS_FILE = "constituentDBA.csv";
         private const string EDUCATION_FILE = "EducationInfo.csv";
         private const string ALTERNATE_ID_FILE = "AlternateID.csv";
-        private const string CONSTITUENT_ADDRESS_FILE = "ConstituentAddress.csv";
         private const string CONTACT_INFO_FILE = "ContactInfo.csv";
-        private const string REGIONS_FILE = "Region.csv";
-        private const string CONTACT_TYPES_FILE = "ContactType.csv";
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
         private const int DENOMINATION_SET = 5;
@@ -50,32 +44,39 @@ namespace DDI.Conversion.CRM
         private const int DEGREE_SET = 42;
         private const int CONTACT_CATEGORY = 75;
 
-        public static void ExecuteCRMLoad(string organization, string filePath, int minCount, int maxCount)
+        private ConversionArgs _args;
+        private string _crmDirectory;
+
+        public void Execute(ConversionArgs args)
         {
-            filePath = Path.Combine(filePath, organization, "CRM");
+            _args = args;
+            _crmDirectory = Path.Combine(_args.BaseDirectory, "CRM");
 
-            //InitialLoad();
-            //LoadLegacyCodes(organization, filePath, minCount, maxCount);
-            LoadConactTypes(organization, filePath, minCount, maxCount);
+            //LoadLegacyCodes("NACodes.csv");
+            //LoadContactTypes("ContactType.csv");
+            //LoadPrefixes("NamePrefix.csv");
+            //LoadRegionLevels("RegionLevel.csv");
+            //LoadRegions("Region.csv");
+            LoadRegionAreas("RegionAreas.csv");
 
-            //LoadRegions(organization, filePath, minCount, maxCount);
-            //LadAddresses(organization, filePath, minCount, maxCount);
-            //LoadPrefixes(organization, filePath, minCount, maxCount);
-            //LoadConstituents(organization, filePath, minCount, maxCount);
-            //LoadDoingBusinessAs(organization, filePath, minCount, maxCount);
-            //LoadEducation(organization, filePath, minCount, maxCount);
-            //LoadPaymentPreferences(organization, filePath, minCount, maxCount);
-            //LoadAleternateIDs(organization, filePath, minCount, maxCount);
-            //LoadConstituentAddress(organization, filePath, minCount, maxCount);
-            //LoadContactInfo(organization, filePath, minCount, maxCount);
+            //LoadAddresses("Address.csv");
+            //LoadConstituents("Individual.csv");
+            //LoadConstituentAddress("ConstituentAddress.csv");
+
+            ///LoadDoingBusinessAs();
+            //LoadEducation();
+            //LoadPaymentPreferences();
+            //LoadAleternateIDs();
+            //LoadContactInfo();
 
         }
-        
 
-        private static void LoadLegacyCodes(string organization, string filePath, int minCount, int maxCount)
+
+        private void LoadLegacyCodes(string filename)
         {
-            DomainContext context = new DomainContext();            
-            string dataFile = Path.Combine(filePath, NACODES_FILE);
+            DomainContext context = new DomainContext();
+            string dataFile = Path.Combine(_crmDirectory, filename);
+
             using (var importer = new FileImport(dataFile, "NACodes"))
             {
                 while (importer.GetNextRow())
@@ -89,7 +90,7 @@ namespace DDI.Conversion.CRM
                     string text2 = importer.GetString(6);
                     string security = importer.GetString(7);
                     bool active = importer.GetBool(8);
-                    string baseType = importer.GetString(9);                    
+                    string baseType = importer.GetString(9);
                     bool masculine = true;
 
                     switch (codeSet)
@@ -213,59 +214,16 @@ namespace DDI.Conversion.CRM
             context.SaveChanges();
         }
 
-        private static void InitialLoad()
+        private void LoadContactTypes(string filename)
         {
             DomainContext context = new DomainContext();
-
-            //Additional Setup of CRM data will be required
-            //CRM initial Data
-
-            //ConstituentStatuses
-            context.ConstituentStatuses.AddOrUpdate(
-                p => p.Code,
-                new ConstituentStatus { Code = "AC", Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
-                new ConstituentStatus { Code = "IN", Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
-                new ConstituentStatus { Code = "BL", Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
-                new ConstituentStatus { Code = "DEL", Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
-                );
-
-            //Constituent Types
-            context.ConstituentTypes.AddOrUpdate(
-                p => p.Code,
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{P}{F}{MI}{L}{S}", SalutationFormal = "Dear {P}{L}", SalutationInformal = "Dear {N}" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {F}{MI}{L} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
-            );
-
-            //Genders
-            context.Genders.AddOrUpdate(
-                p => p.Code,
-                new Gender { Code = "M", IsMasculine = true, Name = "Male" },
-                new Gender { Code = "F", IsMasculine = false, Name = "Female" }
-            );
-
-            // Contact categories
-            AddContactCategory(context, ContactCategory.EMAIL, "Email", "Emails", "Email");
-            AddContactCategory(context, ContactCategory.PERSON, "Person", "Point of Contact", "Name");
-            AddContactCategory(context, ContactCategory.PHONE, "Phone", "Phone Numbers", "Phone");
-            AddContactCategory(context, ContactCategory.WEB, "Web", "Web sites", "URL");
-            AddContactCategory(context, ContactCategory.SOCIAL, "Social", "Social Media", "URL");
-            AddContactCategory(context, ContactCategory.OTHER, "Other", "Other Contacts", "Info");
-
-            context.SaveChanges();
-        }
-
-        private static void LoadConactTypes(string organization, string filePath, int minCount, int maxCount)
-        {
-            DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(filePath, CONTACT_TYPES_FILE);
+            string dataFile = Path.Combine(_crmDirectory, filename);
 
             using (var importer = new FileImport(dataFile, "ContactType"))
             {
                 int count = 1;
 
-                while (count <= maxCount && importer.GetNextRow())
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
                     string categoryCode = importer.GetString(0);
                     string typeCode = importer.GetString(1);
@@ -305,110 +263,235 @@ namespace DDI.Conversion.CRM
                 context.SaveChanges();
             }
         }
-        private static void LoadRegions(string organization, string filePath, int minCount, int maxCount)
+
+        private void LoadRegionLevels(string filename)
         {
             DomainContext context = new DomainContext();
-            var common = new CommonContext();
-            List<int> uniqueNum = new List<int>();
-            List<int> level = new List<int>();
-            List<string> code = new List<string>();
-            List<string> description = new List<string>();
-            List<int> parentRegion = new List<int>();
+            string dataFile = Path.Combine(_crmDirectory, filename);
+            using (var importer = new FileImport(dataFile, "RegionLevel"))
+            {
+                int count = 1;
+
+                while (count <= _args.MaxCount && importer.GetNextRow())
+                {
+                    string levelText = importer.GetString(0);
+                    string regionLabel = importer.GetString(1);
+                    string regionAbbreviation = importer.GetString(2);
+                    bool isRequired = importer.GetBool(3);
+                    bool isChildLevel = importer.GetBool(4);
+
+                    int level;
+                    if (string.IsNullOrWhiteSpace(levelText) || !int.TryParse(levelText, out level) || level < 1)
+                    {
+                        continue;
+                    }
+
+                    context.RegionLevels.AddOrUpdate(p => p.Level,
+                        new RegionLevel()
+                        {
+                            Level = level,
+                            Label = regionLabel,
+                            Abbreviation = regionAbbreviation,
+                            IsRequired = isRequired,
+                            IsChildLevel = isChildLevel
+                        });
+                    count++;
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        private void LoadRegions(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            Dictionary<int, Region> regionDict = new Dictionary<int, Region>();
             
-            string dataFile = "";
-            // Load Regions
-            dataFile = Path.Combine(filePath, REGIONS_FILE);
+            string dataFile = Path.Combine(_crmDirectory, filename);
             using (var importer = new FileImport(dataFile, "Region"))
             {
                 int count = 1;
 
-                while (count <= maxCount && importer.GetNextRow())
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
-                    uniqueNum.Add(importer.GetInt(0));
-                    level.Add(importer.GetInt(1));
-                    code.Add(importer.GetString(2));
-                    description.Add(importer.GetString(3));
-                    parentRegion.Add(importer.GetInt(4));
+                    string uniqueId = importer.GetString(0);
+                    int uniqueNum;
+                    if (string.IsNullOrWhiteSpace(uniqueId) || !int.TryParse(uniqueId, out uniqueNum) || uniqueNum < 1)
+                    {
+                        continue;
+                    }
 
-                    Console.WriteLine("Region {0}: {1}", count, code[count - 1]);
-                    count++;
-                    
+                    int level = importer.GetInt(1);
+                    string code = importer.GetString(2);
+                    string name = importer.GetString(3);
+                    int parentNum = importer.GetInt(4);
+
+                    Region reg = context.Regions.Include(p => p.ParentRegion).FirstOrDefault(p => p.Level == level && p.Code == code);
+                    if (reg == null)
+                    {
+                        reg = context.Regions.Create();
+                        reg.Level = level;
+                        reg.Code = code;
+                        context.Regions.Add(reg);
+                    }
+                    reg.Name = name;
+                    Region parentRegion = null;
+
+                    if (parentNum > 0 && regionDict.TryGetValue(parentNum, out parentRegion))
+                    {
+                        reg.ParentRegion = parentRegion;
+                    }
+                    else
+                    {
+                        reg.ParentRegion = null;
+                    }
+
+                    regionDict.Add(uniqueNum, reg);
+                    count++;                    
                 }
 
+                context.SaveChanges();
             }
 
-            int levelCount = 1;
-            while( levelCount <= 4 )
+        }
+        
+        private void LoadRegionAreas(string filename)
+        {
+            DomainContext context = new DomainContext();
+            CommonContext commonContext = new CommonContext();
+
+            // Need to delete all region areas first...
+            context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<RegionArea>()}");
+            
+            string dataFile = Path.Combine(_crmDirectory, filename);
+            using (var importer = new FileImport(dataFile, "RegionAreas"))
             {
-                int count = 0;
-                int parentPosition;
-                int parentLevel;
-                string parentCode;
-                Region parent;
+                int count = 1;
 
-                while ( count < level.Count() )
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
-                    parent = null;
-                    parentPosition = 0;
-                    parentLevel = 0;
-                    parentCode = "";
-                    if ( level[count] == levelCount )
+                    string levelText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(levelText))
                     {
-                        if (levelCount != 1)
-                        {
+                        continue;
+                    }
 
-                            if (parentRegion[count] != 0) //parent?
-                            {
-                                try
-                                {
-                                    parentPosition = uniqueNum.IndexOf(parentRegion.Single());
-                                    parentCode = code[parentPosition];
-                                    parentLevel = level[parentPosition];
-                                    parent = context.Regions.Local.First(i => (i.Level == parentLevel) && (i.Code == parentCode)); //lookup parent
-                                }
-                                catch (Exception e)
-                                { }
-                            }
+                    int level;
+                    if (!int.TryParse(levelText, out level) || level == 0)
+                    {
+                        continue;
+                    }
+
+                    string parentCode = importer.GetString(1);
+                    string regionCode = importer.GetString(2);
+                    string countryCode = importer.GetString(4);
+                    string stateCode = importer.GetString(5);
+                    string countyCode = importer.GetString(6);
+                    string city = importer.GetString(7);
+                    string ziplow = importer.GetString(8);
+                    string ziphigh = importer.GetString(9);
+                    int priority = importer.GetInt(10);
+                    Region region = null, parent = null;
+                    Country country = null;
+                    State state = null;
+                    County county = null;
+
+                    if (level == 1)
+                    {
+                        region = context.Regions.FirstOrDefault(p => p.Level == 1 && p.Code == regionCode);
+                    }
+                    else if (level == 2)
+                    {
+                        parent = context.Regions.FirstOrDefault(p => p.Level == 1 && p.Code == parentCode);
+                        if (parent == null)
+                        {
+                            importer.LogError($"Parent code \"{parentCode}\" not defined.");
+                            continue;
+                        }
+                        region = context.Regions.FirstOrDefault(p => p.Level == 2 && p.ParentRegionId == parent.Id && p.Code == regionCode);
+                    }
+
+                    if (region == null)
+                    {
+                        importer.LogError($"Region code \"{regionCode}\" parent \"{parentCode}\" not defined.");
+                        continue;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(countryCode))
+                    {
+                        country = commonContext.Countries.Local.FirstOrDefault(p => p.CountryCode == countryCode) ??
+                                  commonContext.Countries.FirstOrDefault(p => p.CountryCode == countryCode);
+                        if (country == null)
+                        {
+                            importer.LogError($"Invalid country code \"{countryCode}\".");
+                            continue;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(stateCode) && country != null)
+                    {
+                        var states = commonContext.Entry(country).Collection(p => p.States);
+                        if (!states.IsLoaded)
+                        {
+                            states.Load();
                         }
 
-                        context.Regions.AddOrUpdate(
-                        p => p.Code,
-                        new Region
+                        state = country.States.FirstOrDefault(p => p.StateCode == stateCode);
+                        if (state == null)
                         {
-                            Level = level[count],
-                            Code = code[count],
-                            Name = description[count],
-                            ParentRegion = parent
-                        });
+                            importer.LogError($"Invalid state code \"{stateCode}\".");
+                            continue;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(countyCode) && state != null)
+                    {
+                        var counties = commonContext.Entry(state).Collection(p => p.Counties);
+                        if (!counties.IsLoaded)
+                        {
+                            counties.Load();
+                        }
+
+                        county = state.Counties.FirstOrDefault(p => p.FIPSCode == countyCode);
+                        if (county == null)
+                        {
+                            importer.LogError($"Invalid county code \"{countyCode}\".");
+                            continue;
+                        }
 
                     }
 
+                    RegionArea reg = new RegionArea();
+                    reg.Region = region;
+                    reg.Level = level;
+                    reg.Country = country;
+                    reg.State = state;
+                    reg.County = county;
+                    reg.City = city;
+                    reg.PostalCodeHigh = ziphigh;
+                    reg.PostalCodeLow = ziplow;
+                    reg.Priority = priority;
+                    context.RegionAreas.Add(reg);
 
-
-                    count++;  //last line of while statement
+                    count++;
                 }
 
-                levelCount++; //last line of while statement
+                context.SaveChanges();
             }
-            context.SaveChanges();
         }
 
-        private static void LoadAddresses(string organization, string filePath, int minCount, int maxCount)
+        private void LoadAddresses(string filename)
         {
             DomainContext context = new DomainContext();
             var common = new CommonContext();
             string dataFile = "";
-            dataFile = Path.Combine(filePath, ADDRESSES_FILE);
+            dataFile = Path.Combine(_crmDirectory, filename);
             using (var importer = new FileImport(dataFile, "Address"))
             {
                 int count = 0;
 
-                while (minCount > 0 && count <= minCount && importer.GetNextRow())
-                {
-                    Console.WriteLine(count);
-                    count++;
-                }
-                while (count <= maxCount && importer.GetNextRow())
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
                     int legacyId = importer.GetInt(0);
                     string streetAddress1 = importer.GetString(1);
@@ -548,12 +631,10 @@ namespace DDI.Conversion.CRM
             
         }
 
-        private static void LoadPrefixes(string organization, string filePath, int minCount, int maxCount)
+        private void LoadPrefixes(string filename)
         {
             DomainContext context = new DomainContext();
-            var common = new CommonContext();
-            string dataFile = "";
-            dataFile = Path.Combine(filePath, PREFIX_FILE);
+            string dataFile = Path.Combine(_crmDirectory, filename);
 
             // Force loading of genders
             context.Genders.ToList();        
@@ -575,8 +656,7 @@ namespace DDI.Conversion.CRM
                     {
                         g1 = context.Genders.Local.FirstOrDefault(p => p.Code == gender);
                     }
-
-                    
+                                        
                     Prefix prefix = new Prefix();
 
                     prefix.Code = code;
@@ -598,25 +678,17 @@ namespace DDI.Conversion.CRM
 
         }
 
-        private static void LoadConstituents(string organization, string filePath, int minCount, int maxCount)
+        private void LoadConstituents(string filename)
         {
             DomainContext context = new DomainContext();
-            var common = new CommonContext();
+
             string dataFile = "";
-            // Load constituents and constituent denomination cross reference and constituent ethnicity - was 1 to 1 in legacy app
-            //dataFile = filePath + INDIVIDUAL_CONSTITUENT_FILE;
-            dataFile = Path.Combine(filePath, INDIVIDUAL_CONSTITUENT_FILE);
+            dataFile = Path.Combine(_crmDirectory, filename);
             using (var importer = new FileImport(dataFile, "Individual"))
             {
                 int count = 0;
 
-                while (minCount > 0 && count <= minCount && importer.GetNextRow())
-                {
-                    count++;
-                    Console.WriteLine(count);
-                }
-
-                while (count <= maxCount && importer.GetNextRow())
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
                     count++;
                     int constituentId = importer.GetInt(0);
@@ -942,24 +1014,17 @@ namespace DDI.Conversion.CRM
             context.SaveChanges();
         }
 
-        private static void LoadConstituentAddress(string organization, string filePath, int minCount, int maxCount)
+        private void LoadConstituentAddress(string filename)
         {
             DomainContext context = new DomainContext();
-            var common = new CommonContext();
             string dataFile = "";
-            dataFile = Path.Combine(filePath, CONSTITUENT_ADDRESS_FILE);
+            dataFile = Path.Combine(_crmDirectory, filename);
 
             using (var importer = new FileImport(dataFile, "ConstituentAddress"))
             {
                 int count = 0;
 
-                while (count <= minCount && importer.GetNextRow())
-                {
-                    count++;
-                    Console.WriteLine(count);
-                }
-
-                while (count <= maxCount && importer.GetNextRow())
+                while (count <= _args.MaxCount && importer.GetNextRow())
                 {
                     count++;
 
@@ -1022,18 +1087,6 @@ namespace DDI.Conversion.CRM
                 }
             }
             context.SaveChanges();
-        }
-
-        private static void AddContactCategory(DomainContext context, string code, string description, string title, string infoLabel)
-        {
-            context.ContactCategories.AddOrUpdate(p => p.Code,
-                new ContactCategory()
-                {
-                    Code = code,
-                    Name = description,
-                    SectionTitle = title,
-                    TextBoxLabel = infoLabel
-                });
         }
 
 

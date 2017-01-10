@@ -10,7 +10,6 @@ using DDI.Conversion;
 using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
-using DDI.Conversion.CRM;
 
 namespace DDI.Conversion
 {
@@ -46,11 +45,14 @@ namespace DDI.Conversion
             }
             
 			log4net.Config.XmlConfigurator.Configure();
-            
-            string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
-            
-            LoadDataCRM.ExecuteCRMLoad(organization, filePath, minCount, maxCount);
-            
+                        
+            string filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
+            ConversionArgs conversionArgs = new ConversionArgs(organization, filePath, minCount, maxCount);
+
+            //new Core.Initialize().Execute(conversionArgs);
+            //new CRM.Initialize().Execute(conversionArgs);
+            new CRM.LoadDataCRM().Execute(conversionArgs);
+
         }
 
     }
