@@ -1,5 +1,10 @@
-﻿using DDI.Shared.Models.Common;
+using DDI.Shared.Models.Common;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System;
+using System.Data.Entity.Validation; 
+using System.Collections.Generic;
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -28,6 +33,25 @@ namespace DDI.Data
 		{
 		}
 
-		#endregion Public Constructors
-	}
+        #endregion Public Constructors
+    
+        #region Method Overrides 
+        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
+        {
+            EntityBase entity = entityEntry.Entity as EntityBase;
+            if (entity != null)
+            {
+                //Ensure new entities have an ID
+                if (entityEntry.State == EntityState.Added && entity.Id == default(Guid))
+                {
+                    entity.AssignPrimaryKey();
+                }
+            }
+
+            return base.ValidateEntity(entityEntry, items);
+        }
+        #endregion
+    }
+
+
 }

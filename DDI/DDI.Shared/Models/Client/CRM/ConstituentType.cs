@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.Linq; 
+using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -11,17 +12,16 @@ namespace DDI.Shared.Models.Client.CRM
     {
         #region Public Properties 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public bool IsActive { get; set; }
 
         public bool IsRequired { get; set; }
+       
+        public ConstituentCategory Category { get; set; }
 
-        [MaxLength(128)]
-        public string BaseType { get; set; }
-
-        [MaxLength(128)]
+        [MaxLength(4)]
         public string Code { get; set; }
 
         [MaxLength(128)]

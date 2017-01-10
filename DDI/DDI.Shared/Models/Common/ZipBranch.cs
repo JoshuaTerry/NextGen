@@ -12,7 +12,7 @@ namespace DDI.Shared.Models.Common
     public class ZipBranch : EntityBase
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public string Description { get; set; }

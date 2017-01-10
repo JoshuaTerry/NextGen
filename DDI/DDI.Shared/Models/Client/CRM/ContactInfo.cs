@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("ContactInfo")]
+    [Table("ContactInfo"), EntityType("CRM_ContactInfo")]
     public class ContactInfo : EntityBase
     {
         #region Public Properties
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public string Info { get; set; }

@@ -16,5 +16,6 @@ namespace DDI.Shared
         IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId);
         IDataResponse AddConstituent(Constituent constituent);
         IDataResponse<int> GetNextConstituentNumber();
+        object NewConstituent(Guid id);
     }
 }

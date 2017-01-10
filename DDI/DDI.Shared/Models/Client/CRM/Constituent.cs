@@ -1,4 +1,5 @@
-﻿using DDI.Shared.Enums.CRM;
+using DDI.Shared.Attributes;
+using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent")]
+    [Table("Constituent"), EntityType("CRM_Constituent")]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         public BirthDateType BirthDateType { get; set; }

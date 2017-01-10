@@ -13,7 +13,7 @@ namespace DDI.Shared.Models.Common
     public class ZipPlus4 : EntityBase
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [Index]

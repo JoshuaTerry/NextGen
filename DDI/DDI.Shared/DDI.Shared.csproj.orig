@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{997B56F7-612D-43D5-90BD-89F264D4C58D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DDI.Shared</RootNamespace>
+    <AssemblyName>DDI.Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+<<<<<<< HEAD
+    <Compile Include="DataResponse.cs" />
+    <Compile Include="Enums\Common\EvenOddType.cs" />
+    <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CRM\BirthDateType.cs" />
+    <Compile Include="Enums\CRM\ConstituentCategory.cs" />
+    <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
+    <Compile Include="Enums\CRM\PaymentMethod.cs" />
+    <Compile Include="Enums\CRM\ResidentType.cs" />
+    <Compile Include="Enums\CRM\SalutationType.cs" />
+    <Compile Include="Enums\CRM\TagSelectionType.cs" />
+=======
+    <Compile Include="Enums\ModuleType.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\MemberInfoExtensions.cs" />
+>>>>>>> develop
+    <Compile Include="HATEOASLink.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\ModuleHelper.cs" />
+    <Compile Include="Helpers\NumericHelper.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="IDataResponse.cs" />
+    <Compile Include="IPageable.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="ISQLUtilities.cs" />
+    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Logger\Logger.cs" />
+<<<<<<< HEAD
+    <Compile Include="Models\EntityBase.cs" />
+    <Compile Include="Models\Client\Core\Language.cs" />
+    <Compile Include="Models\Client\Core\LogEntry.cs" />
+    <Compile Include="Models\Client\Core\SectionPreference.cs" />
+    <Compile Include="Models\Client\CRM\Address.cs" />
+    <Compile Include="Models\Client\CRM\AddressType.cs" />
+    <Compile Include="Models\Client\CRM\AlternateId.cs" />
+    <Compile Include="Models\Client\CRM\ClergyStatus.cs" />
+    <Compile Include="Models\Client\CRM\ClergyType.cs" />
+    <Compile Include="Models\Client\CRM\Constituent.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentAddress.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentStatus.cs" />
+    <Compile Include="Models\Client\CRM\ConstituentType.cs" />
+    <Compile Include="Models\Client\CRM\ContactCategory.cs" />
+    <Compile Include="Models\Client\CRM\ContactInfo.cs" />
+    <Compile Include="Models\Client\CRM\ContactType.cs" />
+    <Compile Include="Models\Client\CRM\Degree.cs" />
+    <Compile Include="Models\Client\CRM\Denomination.cs" />
+    <Compile Include="Models\Client\CRM\DoingBusinessAs.cs" />
+    <Compile Include="Models\Client\CRM\Education.cs" />
+    <Compile Include="Models\Client\CRM\EducationLevel.cs" />
+    <Compile Include="Models\Client\CRM\Ethnicity.cs" />
+    <Compile Include="Models\Client\CRM\Gender.cs" />
+    <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
+    <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
+    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
+    <Compile Include="Models\Client\CRM\Prefix.cs" />
+    <Compile Include="Models\Client\CRM\Profession.cs" />
+    <Compile Include="Models\Client\CRM\Region.cs" />
+    <Compile Include="Models\Client\CRM\RegionArea.cs" />
+    <Compile Include="Models\Client\CRM\RegionLevel.cs" />
+    <Compile Include="Models\Client\CRM\Relationship.cs" />
+    <Compile Include="Models\Client\CRM\RelationshipCategory.cs" />
+    <Compile Include="Models\Client\CRM\RelationshipType.cs" />
+    <Compile Include="Models\Client\CRM\School.cs" />
+    <Compile Include="Models\Client\CRM\Tag.cs" />
+    <Compile Include="Models\Client\CRM\TagGroup.cs" />
+    <Compile Include="Models\Common\Abbreviation.cs" />
+    <Compile Include="Models\Common\City.cs" />
+    <Compile Include="Models\Common\CityName.cs" />
+    <Compile Include="Models\Common\Country.cs" />
+    <Compile Include="Models\Common\County.cs" />
+    <Compile Include="Models\Common\State.cs" />
+    <Compile Include="Models\Common\Thesaurus.cs" />
+    <Compile Include="Models\Common\Zip.cs" />
+    <Compile Include="Models\Common\ZipBranch.cs" />
+    <Compile Include="Models\Common\ZipPlus4.cs" />
+    <Compile Include="Models\Common\ZipStreet.cs" />
+    <Compile Include="Models\IEntity.cs" />
+=======
+    <Compile Include="ModuleInfo\Accounting.cs" />
+    <Compile Include="ModuleInfo\AccountsPayable.cs" />
+    <Compile Include="ModuleInfo\AccountsReceivable.cs" />
+    <Compile Include="ModuleInfo\Campaigns.cs" />
+    <Compile Include="ModuleInfo\CashDisbursements.cs" />
+    <Compile Include="ModuleInfo\CashProcessing.cs" />
+    <Compile Include="ModuleInfo\CashReceipting.cs" />
+    <Compile Include="ModuleInfo\CRM.cs" />
+    <Compile Include="ModuleInfo\CropEvents.cs" />
+    <Compile Include="ModuleInfo\Donations.cs" />
+    <Compile Include="ModuleInfo\ExtensionFund.cs" />
+    <Compile Include="ModuleInfo\FixedAssets.cs" />
+    <Compile Include="ModuleInfo\FundRaising.cs" />
+    <Compile Include="ModuleInfo\GeneralLedger.cs" />
+    <Compile Include="ModuleInfo\HealthPolicy.cs" />
+    <Compile Include="ModuleInfo\Inventory.cs" />
+    <Compile Include="ModuleInfo\Investments.cs" />
+    <Compile Include="ModuleInfo\JobProcessing.cs" />
+    <Compile Include="ModuleInfo\Base\ModuleInfoBase.cs" />
+    <Compile Include="ModuleInfo\Base\ModuleTypeAttribute.cs" />
+    <Compile Include="ModuleInfo\LineOfCredit.cs" />
+    <Compile Include="ModuleInfo\Loans.cs" />
+    <Compile Include="ModuleInfo\NamedFunds.cs" />
+    <Compile Include="ModuleInfo\PlannedGiving.cs" />
+    <Compile Include="ModuleInfo\Pools.cs" />
+    <Compile Include="ModuleInfo\Portfolio.cs" />
+    <Compile Include="ModuleInfo\ProcessManagement.cs" />
+    <Compile Include="ModuleInfo\Projects.cs" />
+    <Compile Include="ModuleInfo\SystemAdministration.cs" />
+>>>>>>> develop
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryableExtensions.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

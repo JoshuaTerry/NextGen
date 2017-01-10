@@ -1,20 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-
-using DDI.Shared.Models.Client;
 using DDI.Shared.Models.Common;
+using DDI.Shared.Attributes;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Address")]
+    [Table("Address"), EntityType("CRM_Address")]
     public class Address : EntityBase
     {
         #region Public Properties
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(255)]

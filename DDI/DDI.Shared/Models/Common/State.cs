@@ -14,7 +14,7 @@ namespace DDI.Shared.Models.Common
         #region Public Properties
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(4)]

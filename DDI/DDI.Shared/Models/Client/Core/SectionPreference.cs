@@ -10,7 +10,7 @@ namespace DDI.Shared.Models.Client.Core
     public class SectionPreference : IEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
         [MaxLength(128)]
         public string SectionName { get; set; }

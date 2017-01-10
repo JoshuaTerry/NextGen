@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -266,9 +266,22 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<int> GetNextConstituentNumber()
-        {
-            return new DataResponse<int>() { Data = _constituentlogic.GetNextConstituentNumber() };
+        public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
+        {            
+            var constituentType = _unitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
+            if (constituentType == null)
+            {
+                throw new ArgumentException("Constituent type ID is not valid.");               
+            }
+
+            var constituent = new Constituent();
+            constituent.ConstituentNumber = _constituentlogic.GetNextConstituentNumber();
+            constituent.ConstituentType = constituentType;
+
+            // ToDo:  Other new constituent tasks, such as initial tags, status code.
+
+            return new DataResponse<Constituent>() { Data = constituent };
+
         }
 
         private Type ConvertToType<T>(string property)
@@ -280,6 +293,14 @@ namespace DDI.Services
             return propertyType;
         }
 
-        
+        public IDataResponse<int> GetNextConstituentNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+        object IConstituentService.NewConstituent(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

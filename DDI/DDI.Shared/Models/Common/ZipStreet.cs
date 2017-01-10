@@ -11,7 +11,7 @@ namespace DDI.Shared.Models.Common
     public class ZipStreet : EntityBase
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(8)]

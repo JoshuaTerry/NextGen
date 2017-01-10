@@ -11,7 +11,7 @@ namespace DDI.Shared.Models.Client.CRM
     {
         #region Public Properties
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
         [MaxLength(1)]
@@ -32,8 +32,18 @@ namespace DDI.Shared.Models.Client.CRM
 
         public ICollection<ContactType> ContactTypes { get; set; }
 
-
         #endregion Public Properties
+
+        #region Constants
+
+        public const string EMAIL = "E";
+        public const string PHONE = "P";
+        public const string WEB = "W";
+        public const string SOCIAL = "S";
+        public const string PERSON = "N";
+        public const string OTHER = "O";
+
+        #endregion
 
         #region Public Methods
 
