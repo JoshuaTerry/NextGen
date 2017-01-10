@@ -12,16 +12,18 @@ namespace DDI.WebApi.Tests.Controllers
     [TestClass]
     public class GendersControllerTests
     {
-        //[TestMethod]
-        //public void GetAllGenders_ReturnsGenderCollection()
-        //{
-        //    var repo = new Mock<IRepository<Gender>>(); ;
-        //    repo.Setup(r => r.Entities).Returns(SetupRepo());
-        //    var service = new ServiceBase<Gender>(repo.Object);
-        //    var result = service.GetAll();
+        [TestMethod]
+        public void GetAllGenders_ReturnsGenderCollection()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            var repo = new Mock<IRepository<Gender>>();  
+            repo.Setup(r => r.Entities).Returns(SetupRepo());
+            uow.Setup(m => m.GetRepository<Gender>()).Returns(repo.Object);
+            var service = new ServiceBase<Gender>(uow.Object);
+            var result = service.GetAll();
 
-        //    Assert.IsTrue(result.Data.Count == 3);
-        //}
+            Assert.IsTrue(result.Data.Count == 3);
+        }
         private IQueryable<Gender> SetupRepo()
         {
             var list = new List<Gender>();
