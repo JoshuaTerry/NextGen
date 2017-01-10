@@ -4,13 +4,14 @@ using System.Linq;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
+using System;
 
 namespace DDI.Business.CRM
 {
     public class ConstituentLogic : EntityLogicBase<Constituent>
     {
         #region Private Fields
-
+        private readonly int _maxTries = 5;
         private IRepository<Constituent> _constituentRepo = null;
 
         #endregion
@@ -92,10 +93,15 @@ namespace DDI.Business.CRM
 
             int nextNum = 0;
             bool isUnique = false;
+            int tries = 0;
             while (!isUnique)
             {
+                tries++;
                 nextNum = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
                 isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0;
+
+                if (tries >= _maxTries)
+                    throw new Exception("Exceeded maximum number of tries to retreive NextSequenceValue");
             }
 
             return nextNum;
