@@ -103,6 +103,8 @@
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Models\ILinkedEntityCollection.cs" />
+    <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Client\Core\Language.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\LinkedEntityCollection.cs" />
     <Compile Include="ModuleInfo\Accounting.cs" />
     <Compile Include="ModuleInfo\AccountsPayable.cs" />
     <Compile Include="ModuleInfo\AccountsReceivable.cs" />

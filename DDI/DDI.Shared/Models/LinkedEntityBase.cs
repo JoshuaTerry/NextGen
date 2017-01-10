@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks; 
 using DDI.Shared.Models;
 
-namespace DDI.Data.Models
+namespace DDI.Shared.Models
 {
     /// <summary>
     /// Base class for entities like notes or custom data that can be linked to many other entity types.
     /// </summary>
-    public abstract class BaseLinkedEntity : EntityBase
+    public abstract class LinkedEntityBase : EntityBase
     {
 
         #region Fields
@@ -84,7 +84,7 @@ namespace DDI.Data.Models
         /// Set the value of the ParentEntity property to the specified entity.
         /// </summary>
         /// <param name="newValue"></param>
-        internal void SetParentEntityValue(EntityBase newValue, bool updateParentCollection)
+        public void SetParentEntityValue(EntityBase newValue, bool updateParentCollection)
         {
             // Avoid recursion
             if (_ignoreChanges)

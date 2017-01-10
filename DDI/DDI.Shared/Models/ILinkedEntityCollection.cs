@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Data
+namespace DDI.Shared.Models
 {
     public interface ILinkedEntityCollection
     {

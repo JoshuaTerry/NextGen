@@ -5,17 +5,16 @@ using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
 using DDI.Shared.Models;
 
-namespace DDI.Data
+namespace DDI.Shared.Models
 {
     /// <summary>
     /// A managed collection of linked entities.
     /// </summary>
     /// <typeparam name="T">A subclass of BaseLinkedEntity</typeparam>
-    public class LinkedEntityCollection<T> : ObservableCollection<T> where T : BaseLinkedEntity
+    public class LinkedEntityCollection<T> : ObservableCollection<T> where T : LinkedEntityBase
     {
         private EntityBase _entity = null;
         private bool _isLoading = false;
@@ -33,7 +32,7 @@ namespace DDI.Data
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                foreach (BaseLinkedEntity item in e.NewItems)
+                foreach (LinkedEntityBase item in e.NewItems)
                 {
                     item.ParentEntityId = _entity.Id;
                     item.EntityType = _entity.GetEntityType();
@@ -41,7 +40,7 @@ namespace DDI.Data
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
-                foreach (BaseLinkedEntity item in e.OldItems)
+                foreach (LinkedEntityBase item in e.OldItems)
                 {
                     item.ParentEntityId = null;
                     item.EntityType = null;

@@ -8,8 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
 using DDI.Shared.Models;
 
 namespace DDI.Data
@@ -168,13 +167,13 @@ namespace DDI.Data
                     PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
                     if (propInfo != null)
                     {
-                        if (entity is BaseLinkedEntity)
+                        if (entity is LinkedEntityBase)
                         {
                             // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
-                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
+                            if (propInfo.Name == nameof(LinkedEntityBase.ParentEntity))
                             {
                                 // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
-                                var linkedEntity = entity as BaseLinkedEntity;
+                                var linkedEntity = entity as LinkedEntityBase;
                                 linkedEntity.LoadParentEntity(_context);
                                 return linkedEntity.ParentEntity as TElement;
                             }

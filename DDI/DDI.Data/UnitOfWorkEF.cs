@@ -5,8 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
 
 namespace DDI.Data
 {
