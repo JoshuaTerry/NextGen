@@ -54,7 +54,6 @@ namespace DDI.WebApi.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        // POST api/Account/Logout
         [Route("api/v1/Logout")]
         public IHttpActionResult Logout()
         {
@@ -62,7 +61,6 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
         [Route("api/v1/ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
@@ -101,7 +99,6 @@ namespace DDI.WebApi.Controllers
             };
         }
 
-        // POST api/Account/ChangePassword
         [Route("api/v1/ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
@@ -121,7 +118,6 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        // POST api/Account/SetPassword
         [Route("api/v1/SetPassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
@@ -141,7 +137,6 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        // POST api/Account/RemoveLogin
         [Route("api/v1/RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
@@ -171,7 +166,6 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        // POST api/Account/Register
         [AllowAnonymous]
         [Route("api/v1/Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
@@ -204,7 +198,6 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        // POST api/Account/ConfirmEmail
         [HttpPost]
         [Route("api/v1/ConfirmEmail")]
         public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
@@ -265,7 +258,6 @@ namespace DDI.WebApi.Controllers
 
         }
 
-        // POST api/Account/ForgotPassword
         [HttpPost]
         [Route("ForgotPasswordConfirm")]
         public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
