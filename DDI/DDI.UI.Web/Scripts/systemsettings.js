@@ -542,7 +542,8 @@ function CustomFieldTypeSelected(selectedvalue) {
             $('.decimalplacecontainer').hide();
         }
     
-        if (selectedvalue == customfieldtype.Radio) {
+        if (selectedvalue == customfieldtype.Radio ||
+            selectedvalue == customfieldtype.DropDown) {
             $('.fieldproperties').attr('style', '');
             $('.options').show();
 
@@ -551,11 +552,10 @@ function CustomFieldTypeSelected(selectedvalue) {
             if (left >= modalLeft)
                 left -= 150;
 
-            // $('.ui-dialog').width('600px').css('left', left);
-            $('.ui-dialog').animate({
+            $('.ui-dialog').stop().animate({
                 width: '600px',
                 left: left
-            }, 1000);
+            }, 500);
             
             
         }
@@ -568,11 +568,10 @@ function CustomFieldTypeSelected(selectedvalue) {
             if (left < modalLeft)
                 left += 150;
 
-            //$('.ui-dialog').width('300px').css('left', left);
-            $('.ui-dialog').animate({
+            $('.ui-dialog').stop().animate({
                 width: '300px',
                 left: left
-            }, 1000);
+            }, 500);
         }
     }
     else {
