@@ -422,6 +422,8 @@ function LoadReportHeaders() {
 
 
 /* CUSTOM FIELDS */
+var modalLeft = 0;
+
 function LoadCRMClientCustomFields() {
 
     DisplayCustomFieldsGrid('gridcontainer', customfieldentity.CRM); // CRM = 19
@@ -461,8 +463,6 @@ function CreateNewCustomFieldModalLink(entity, title) {
 
 }
 
-var modalLeft = 0;
-
 function CreateNewCustomFieldModal(entity, title) {
 
     modal = $('.newcustomfieldmodal').dialog({
@@ -474,7 +474,7 @@ function CreateNewCustomFieldModal(entity, title) {
         }
     });
 
-    modalLeft = $('.ui-dialog').css('left').replace('px', '');
+    modalLeft = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
     var type = $(modal).find('.cftype');
     var save = $(modal).find('.submitcf');
@@ -546,27 +546,40 @@ function CustomFieldTypeSelected(selectedvalue) {
             $('.fieldproperties').attr('style', '');
             $('.options').show();
 
-            var left = parseFloat($('.ui-dialog').css('left').replace('px', ''));
+            var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
-            if ((left) >= modalLeft)
+            if (left >= modalLeft)
                 left -= 150;
 
-            $('.ui-dialog').width('600px').css('left', left);
+            // $('.ui-dialog').width('600px').css('left', left);
+            $('.ui-dialog').animate({
+                width: '600px',
+                left: left
+            }, 1000);
             
             
         }
         else {
             $('.fieldproperties').attr('style', 'width: 100%');
             $('.options').hide();
+            
+            var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
-            var left = parseFloat($('.ui-dialog').css('left').replace('px', ''));
-            alert(left + ' - ' + modalLeft);
-
-            if (left <= modalLeft)
+            if (left < modalLeft)
                 left += 150;
 
-            $('.ui-dialog').width('300px').css('left', left);
+            //$('.ui-dialog').width('300px').css('left', left);
+            $('.ui-dialog').animate({
+                width: '300px',
+                left: left
+            }, 1000);
         }
+    }
+    else {
+
+        $('.minmaxvalues').hide()
+        $('.decimalplacecontainer').hide();
+
     }
 
 }
