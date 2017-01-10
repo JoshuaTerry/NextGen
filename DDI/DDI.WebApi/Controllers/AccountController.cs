@@ -188,7 +188,7 @@ namespace DDI.WebApi.Controllers
             var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
 
             var service = new EmailService();
-            var from = new MailAddress("no-reply@ddi.org");
+            var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var to = new MailAddress(model.Email);
             var body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>.";
             var message = service.CreateMailMessage(from, to, "Confirm your email", body);
@@ -254,7 +254,7 @@ namespace DDI.WebApi.Controllers
             var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/forgotPassword.aspx?email={new HtmlString(user.Email)}&code={code}");
 
             var service = new EmailService();
-            var from = new MailAddress("no-reply@ddi.org");
+            var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var to = new MailAddress(user.Email);
             var body = "Click <a href=\"" + callbackUrl + "\">here</a> to reset your password.";
             var message = service.CreateMailMessage(from, to, "Forgotten Password", body);
