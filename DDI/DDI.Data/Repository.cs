@@ -226,7 +226,10 @@ namespace DDI.Data
         /// </summary>
         public void Attach(T entity)
         {
-            EntitySet.Attach(entity);
+            if (entity != null)
+            {
+                EntitySet.Attach(entity);
+            }
         }
         
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);

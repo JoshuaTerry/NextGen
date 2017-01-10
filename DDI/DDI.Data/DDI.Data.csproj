@@ -60,6 +60,7 @@
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
+    <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
     <Compile Include="Enums\CRM\Religion.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\CRM\ConstituentCategory.cs" />
@@ -75,6 +76,18 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.cs" />
+    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.Designer.cs">
+      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.Designer.cs">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
@@ -168,7 +181,7 @@
     <Compile Include="Models\BaseLinkedEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
-    <Compile Include="Models\Client\Core\CustomFieldOptions.cs" />
+    <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\Client\Core\CustomFields.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />
     <Compile Include="Models\Client\CRM\AlternateId.cs" />
@@ -229,6 +242,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701071608076_Configuration_v1.resx">
+      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
     </EmbeddedResource>
