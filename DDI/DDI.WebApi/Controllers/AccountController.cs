@@ -213,11 +213,18 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-            if (user == null)
+            ApplicationUser user;
+            try
             {
-                return NotFound();
+                user = GetUserByEmail(model.Email);
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
+            }
+
+
 
             IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
             if (!result.Succeeded)
@@ -273,10 +280,15 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-            if (user == null)
+            ApplicationUser user;
+            try
             {
-                return NotFound();
+                user = GetUserByEmail(model.Email);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
             }
 
             IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.NewPassword);
@@ -333,6 +345,24 @@ namespace DDI.WebApi.Controllers
             }
 
             return null;
+        }
+
+        private ApplicationUser GetUserByEmail(string email)
+        {
+            ApplicationUser user = null;
+            var users = UserManager.Users.Where(u => u.Email == email);
+            if (users.Count() == 1)
+            {
+                return users.First();
+            }
+            else if (users.Count() > 1)
+            {
+                throw new Exception("Multiple users exist with this email address.");
+            }
+            else
+            {
+                throw new Exception("User not found.");
+            }
         }
 
         #endregion
