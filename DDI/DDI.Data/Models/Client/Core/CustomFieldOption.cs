@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client.Core
 {
-    [Table("CustomFieldOptions")]
-    public class CustomFieldOptions : IEntity
+    [Table("CustomFieldOption")]
+    public class CustomFieldOption : IEntity
     {
         #region Properties
 
@@ -20,7 +20,13 @@ namespace DDI.Data.Models.Client.Core
         public int SortOrder { get; set; }
 
         [NotMapped]
-        public string DisplayName { get; set; }
+        public string DisplayName
+        {
+            get
+            {
+                return string.Format("{0}: {1}", Code, Description);
+            }
+        }
 
         #endregion
     }

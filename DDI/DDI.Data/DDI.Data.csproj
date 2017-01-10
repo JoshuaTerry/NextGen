@@ -181,6 +181,7 @@
     <Compile Include="Models\BaseLinkedEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
+    <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\Client\Core\CustomFields.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />

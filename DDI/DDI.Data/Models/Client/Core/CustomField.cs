@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace DDI.Data.Models.Client.Core
 {
-    [Table("CustomFields")]
-    public class CustomFields : IEntity
+    [Table("CustomField")]
+    public class CustomField : IEntity
     {
         #region Properties
 
@@ -24,7 +24,7 @@ namespace DDI.Data.Models.Client.Core
         public DDI.Data.Enums.Common.CustomFieldEntity Entity { get; set; }
         public DDI.Data.Enums.Common.CustomFieldType FieldType { get; set; }
 
-        public ICollection<CustomFieldOptions> Options { get; set; }
+        public ICollection<CustomFieldOption> Options { get; set; }
 
         public CustomFieldData Answer { get; set; }
 
