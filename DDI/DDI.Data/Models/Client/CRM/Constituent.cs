@@ -6,6 +6,7 @@ using System.Linq;
 using DDI.Data.Attributes;
 using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.Core;
+using DDI.Shared;
 
 namespace DDI.Data.Models.Client.CRM
 {
@@ -184,5 +185,22 @@ namespace DDI.Data.Models.Client.CRM
         //private IUser UserId { get; set; }
 
         #endregion Private Properties
+
+        internal override dynamic AddHATEAOSLinks(IDictionary<string, object> entity)
+        {
+            var links = new List<HATEOASLink>
+            {
+                new HATEOASLink()
+                {
+                    Href = $"api/v1/constituents/{Id}",
+                    Relationship = "self",
+                    Method = "GET"
+                }
+            };
+            entity.Add("Links", links);
+
+
+            return entity;
+        }
     }
 }

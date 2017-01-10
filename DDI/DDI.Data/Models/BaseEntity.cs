@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data.Attributes;
+using DDI.Data.Extensions;
 
 namespace DDI.Data.Models
 {
@@ -97,7 +98,25 @@ namespace DDI.Data.Models
 
         #endregion
 
+        public dynamic ToPartialObject(string fields, bool shouldAddLinks)
+        {
+            if (string.IsNullOrWhiteSpace(fields) || !shouldAddLinks)
+            {
+                return this;
+            }
+            var listOfFields = fields?.Split(',').ToList() ?? new List<string>();
+            var result = this.ToDynamic(listOfFields);
+            if (shouldAddLinks)
+            {
+                result = AddHATEAOSLinks(result);
+            }
+            return result;
+        }
 
+        internal virtual dynamic AddHATEAOSLinks(IDictionary<string, object> entity)
+        {
+            return this.ToDynamic(null);
+        }
     }
 
 
