@@ -424,11 +424,15 @@ function LoadCRMClientCustomFields() {
 
     DisplayCustomFieldsGrid('gridcontainer', customfieldentity.CRM); // CRM = 19
 
+    CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+
 }
 
 function LoadDonationClientCustomFields() {
 
     DisplayCustomFieldsGrid('gridcontainer', customfieldentity.Gifts); // Gifts = 9
+
+    CreateNewCustomFieldModalLink(customfieldentity.Gifts, 'New Donations Custom Field');
 
 }
 
@@ -436,21 +440,37 @@ function LoadGLClientCustomFields() {
 
     DisplayCustomFieldsGrid('gridcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
 
+    CreateNewCustomFieldModalLink(customfieldentity.GeneralLedger, 'New General Ledger Custom Field');
+    
+}
+
+function CreateNewCustomFieldModalLink(entity, title) {
+
+    var modallink = $('<a>').attr('href', '#').text('New Custom Field').appendTo($('.contentcontainer'));
+    $('.gridcontainer').before($(modallink));
+
+    $(modallink).click(function (e) {
+
+        e.preventDefault();
+
+        CreateNewCustomFieldModal(entity, title);
+
+    });
+
 }
 
 function CreateNewCustomFieldModal(entity, title) {
 
-    modal = $('.addconstituentmodal').dialog({
+    modal = $('.newcustomfieldmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 800,
-        height: 640,
         resizable: false
     });
 
     var type = $(modal).find('.cftype');
     var save = $(modal).find('.submitcf');
 
+    $('<option>').text('').val('').appendTo($(type));
     $.each(customfieldtype, function (key, value) {
 
         $('<option>').text(key).val(value).appendTo($(type));
@@ -459,7 +479,7 @@ function CreateNewCustomFieldModal(entity, title) {
 
     $(type).change(function () {
 
-        CustomFieldTypeSelected();
+        CustomFieldTypeSelected($(this).val());
 
     });
 
@@ -479,9 +499,19 @@ function CreateNewCustomFieldModal(entity, title) {
 
 }
 
-function CustomFieldTypeSelected() {
+function CustomFieldTypeSelected(selectedvalue) {
 
+    if (selectedvalue &&
+        (selectedvalue == customfieldtype.Number ||
+        selectedvalue == customfieldtype.Date ||
+        selectedvalue == customfieldtype.DateTime)) {
 
+        $('.minmaxvalues').show()
+
+    }
+    else {
+        $('.minmaxvalues').hide()
+    }
 
 }
 

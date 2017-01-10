@@ -116,34 +116,48 @@
 
                 <input type="hidden" class="cfid" />
 
-                <div class="fieldblock">
-                    <label>Label Text</label>
-                    <input type="text" class="cflabel" />
-                </div>
+                <div class="twocolumn">
 
-                <div class="fieldblock">
-                    <label>Type</label>
-                    <select class="cftype"></select>
-                </div>
+                    <div class="fieldproperties" style="width: 100%;">
+                        <div class="fieldblock">
+                            <label>Label Text</label>
+                            <input type="text" class="cflabel" />
+                        </div>
 
-                <div class="fieldblock">
-                    <label>Display Order</label>
-                    <select class="cforder"></select>
-                </div>
+                        <div class="fieldblock">
+                            <label>Type</label>
+                            <select class="cftype"></select>
+                        </div>
 
-                <div class="fieldblock">
-                    <label>Is Required</label>
-                    <input type="checkbox" class="cfisrequired" />
-                </div>
+                        <div class="fieldblock">
+                            <label>Display Order</label>
+                            <select class="cforder"></select>
+                        </div>
 
-                <div class="fieldblock">
-                    <label>Min Value</label>
-                    <input type="text" class="cfminvalue" />
-                </div>
+                        <div class="fieldblock">
+                            <label class="inline">Is Required</label>
+                            <input type="checkbox" class="cfisrequired" />
+                        </div>
 
-                <div class="fieldblock">
-                    <label>Max Value</label>
-                    <input type="text" class="cfmaxvalue" />
+                        <div class="minmaxvalues" style="display: none;">
+
+                            <div class="fieldblock">
+                                <label>Min Value</label>
+                                <input type="text" class="cfminvalue" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Max Value</label>
+                                <input type="text" class="cfmaxvalue" />
+                            </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="options">
+
+                    </div>
+
                 </div>
 
                 <div class="modalbuttons">
