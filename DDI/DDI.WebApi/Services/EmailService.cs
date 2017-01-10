@@ -27,8 +27,8 @@ namespace DDI.WebApi.Services
         {
             if (string.IsNullOrWhiteSpace(smtpClient.Host))
             {
-                smtpClient.Host = WebConfigurationManager.AppSettings["SmtpHost"];
-                smtpClient.Port = int.Parse(WebConfigurationManager.AppSettings["SmtpPort"]);
+                smtpClient.Host = WebConfigurationManager.AppSettings["SmtpHost"] ?? "coloex1.ddi.org";
+                smtpClient.Port = int.Parse(WebConfigurationManager.AppSettings["SmtpPort"] ?? "25");
             }
 
             _smtpClient = smtpClient;
