@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\ZipLookupTest.cs" />
+    <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

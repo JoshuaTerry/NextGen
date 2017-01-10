@@ -60,7 +60,7 @@ namespace DDI.Business.Tests.Common
             return list.AsQueryable();
         }
 
-        private const string TESTDESCR = "Common | Business";
+        private const string TESTDESCR = "Business | Common";
 
         [TestMethod,TestCategory(TESTDESCR)]
         public void ZipLookup_AbbreviateWords()
