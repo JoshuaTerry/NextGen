@@ -38,7 +38,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/Add")]
+        [Route("api/v1/UserRoles/AddSingle")]
         public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleBindingModel model)
         {
             var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -60,8 +60,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/Add")]
-        public async Task<IHttpActionResult> AddUserToRolea([FromBody] UserRolesBindingModel model)
+        [Route("api/v1/UserRoles/AddMultiple")]
+        public async Task<IHttpActionResult> AddUserToRoles([FromBody] UserRolesBindingModel model)
         {
             var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user == null)
@@ -82,7 +82,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/Remove")]
+        [Route("api/v1/UserRoles/RemoveSingle")]
         public async Task<IHttpActionResult> RemoveUserFromRole([FromBody] UserRoleBindingModel model)
         {
             var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -104,7 +104,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/Remove")]
+        [Route("api/v1/UserRoles/RemoveMultiple")]
         public async Task<IHttpActionResult> RemoveUserFromRoles([FromBody] UserRolesBindingModel model)
         {
             var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);

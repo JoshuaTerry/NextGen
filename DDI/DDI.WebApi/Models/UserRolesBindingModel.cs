@@ -13,7 +13,7 @@ namespace DDI.WebApi.Models
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Rolea")]
+        [Display(Name = "Roles")]
         public string[] Roles { get; set; }
 
     }
