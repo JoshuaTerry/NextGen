@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DDI.WebApi.Models;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace DDI.WebApi.Controllers
@@ -38,9 +39,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/Add")]
-        public async Task<IHttpActionResult> AddUserToRole(string email, string role)
+        public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleBindingModel model)
         {
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
                 return NotFound();
@@ -48,9 +49,9 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                await UserManager.AddToRoleAsync(user.Id, role);
+                await UserManager.AddToRoleAsync(user.Id, model.Role);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return InternalServerError();
             }
@@ -60,9 +61,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/Add")]
-        public async Task<IHttpActionResult> AddUserToRolea(string email, string[] roles)
+        public async Task<IHttpActionResult> AddUserToRolea([FromBody] UserRolesBindingModel model)
         {
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
                 return NotFound();
@@ -70,7 +71,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                await UserManager.AddToRolesAsync(user.Id, roles);
+                await UserManager.AddToRolesAsync(user.Id, model.Roles);
             }
             catch (Exception)
             {
@@ -82,9 +83,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/Remove")]
-        public async Task<IHttpActionResult> RemoveUserFromRole(string email, string role)
+        public async Task<IHttpActionResult> RemoveUserFromRole([FromBody] UserRoleBindingModel model)
         {
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
                 return NotFound();
@@ -92,7 +93,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                await UserManager.RemoveFromRoleAsync(user.Id, role);
+                await UserManager.RemoveFromRoleAsync(user.Id, model.Role);
             }
             catch (Exception)
             {
@@ -104,9 +105,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/Remove")]
-        public async Task<IHttpActionResult> RemoveUserFromRoles(string email, string[] roles)
+        public async Task<IHttpActionResult> RemoveUserFromRoles([FromBody] UserRolesBindingModel model)
         {
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
                 return NotFound();
@@ -114,7 +115,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                await UserManager.RemoveFromRolesAsync(user.Id, roles);
+                await UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
             }
             catch (Exception)
             {
