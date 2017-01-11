@@ -37,6 +37,29 @@ namespace DDI.WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/UserRoles")]
+        public async Task<IHttpActionResult> GetRolesForUser(string email)
+        {
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IList<string> roles;
+            try
+            {
+                roles = await UserManager.GetRolesAsync(user.Id);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(roles);
+        }
+
         [HttpPost]
         [Route("api/v1/UserRoles/AddSingle")]
         public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleBindingModel model)
@@ -51,7 +74,7 @@ namespace DDI.WebApi.Controllers
             {
                 await UserManager.AddToRoleAsync(user.Id, model.Role);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return InternalServerError();
             }
