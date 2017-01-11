@@ -10,7 +10,7 @@ using DDI.Shared.Models;
 
 namespace DDI.Business.Core
 {
-    public abstract class BaseConfiguration
+    public abstract class ConfigurationBase
     {
         /// <summary>
         /// Load a property by converting it from a string.
