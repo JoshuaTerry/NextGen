@@ -16,6 +16,7 @@ namespace DDI.Business
         public BaseEntityLogic(IUnitOfWork uow)
         {
             this.UnitOfWork = uow;
+            uow.AddBusinessLogic(this);
         }
 
         #endregion

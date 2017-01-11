@@ -40,6 +40,10 @@ namespace DDI.Data
 
         void Delete<T>(T entity) where T : class;
 
+        void AddBusinessLogic(object blObj);
+
+        T GetBusinessLogic<T>() where T : class;
+
         T GetById<T>(object id) where T : class;
 
         #endregion Public Methods

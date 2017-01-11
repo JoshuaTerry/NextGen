@@ -18,19 +18,6 @@ namespace DDI.Data
         private static Dictionary<Guid, State> _stateDict = null;
         private static Dictionary<Guid, County> _countyDict = null;
 
-        private static CommonContext _context = null;
-        private static CommonContext CommonContext
-        {
-            get
-            {
-                if (_context == null)
-                {
-                    _context = new CommonContext();
-                }
-                return _context;
-            }
-        }
-
         #endregion
 
         #region Private Methods
@@ -50,27 +37,72 @@ namespace DDI.Data
         private static void LoadCountries()
         {
             _countryDict = new Dictionary<Guid, Country>();
-            foreach (var row in CommonContext.Countries)
+            using (var context = new CommonContext())
             {
-                _countryDict.Add(row.Id, row);
+                foreach (var row in context.Countries)
+                {
+                    Country country = new Models.Common.Country()
+                    {
+                        AddressFormat = row.AddressFormat,
+                        CallingCode = row.CallingCode,
+                        CountryCode = row.CountryCode,
+                        Description = row.Description,
+                        Id = row.Id,
+                        InternationalPrefix = row.InternationalPrefix,
+                        ISOCode = row.ISOCode,
+                        PhoneFormat = row.PhoneFormat,
+                        PostalCodeFormat = row.PostalCodeFormat,
+                        StateAbbreviation = row.StateAbbreviation,
+                        StateName = row.StateName,
+                        TrunkPrefix = row.TrunkPrefix
+                    };
+                    _countryDict.Add(row.Id, country);
+                }
             }
         }
 
         private static void LoadStates()
         {
             _stateDict = new Dictionary<Guid, State>();
-            foreach (var row in CommonContext.States)
+
+            using (var context = new CommonContext())
             {
-                _stateDict.Add(row.Id, row);
+                foreach (var row in context.States)
+                {
+                    State state = new Models.Common.State()
+                    {
+                        CountryId = row.CountryId,
+                        Description = row.Description,
+                        FIPSCode = row.FIPSCode,
+                        Id = row.Id,
+                        StateCode = row.StateCode
+                    };
+                    _stateDict.Add(row.Id, state);
+                }
             }
         }
 
         private static void LoadCounties()
         {
             _countyDict = new Dictionary<Guid, County>();
-            foreach (var row in CommonContext.Counties)
+
+            using (var context = new CommonContext())
             {
-                _countyDict.Add(row.Id, row);
+                foreach (var row in context.Counties)
+                {
+                    County county = new County()
+                    {
+                        Description = row.Description,
+                        FIPSCode = row.FIPSCode,
+                        Id = row.Id,
+                        Population = row.Population,
+                        PopulationPercentageChange = row.PopulationPercentageChange,
+                        PopulationPerSqaureMile = row.PopulationPerSqaureMile,
+                        StateId = row.StateId
+                    };
+
+                    _countyDict.Add(row.Id, county);
+                }
             }
         }
 

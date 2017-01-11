@@ -19,6 +19,7 @@ namespace DDI.Data
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
         private string _commonNamespace;
+        private List<object> _businessLogic;
 
         #endregion Private Fields
 
@@ -42,6 +43,7 @@ namespace DDI.Data
 
             _repositories = new Dictionary<Type, object>();
             _commonNamespace = typeof(Models.Common.Country).Namespace;
+            _businessLogic = new List<object>();
         }
 
         #endregion Public Constructors
@@ -202,6 +204,25 @@ namespace DDI.Data
         {
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
+        }
+
+        public void AddBusinessLogic(object blObj)
+        {
+            if (!_businessLogic.Contains(blObj))
+                _businessLogic.Add(blObj);
+        }
+
+        public T GetBusinessLogic<T>() where T : class
+        {
+            Type blType = typeof(T);
+            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
+            if (blObj == null)
+            {
+                blObj = (T)Activator.CreateInstance(blType, this);
+                AddBusinessLogic(blObj);
+            }
+
+            return blObj;
         }
 
         #endregion Public Methods

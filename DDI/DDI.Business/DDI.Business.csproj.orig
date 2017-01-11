@@ -45,8 +45,13 @@
     <Compile Include="Common\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
+<<<<<<< HEAD
+    <Compile Include="Core\ConfigurationBase.cs" />
+    <Compile Include="Core\ConfigurationLogic.cs" />
+=======
     <Compile Include="CRM\AddressCategory.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />
+>>>>>>> feature/DC-193_Name_formatting_logic
     <Compile Include="CRM\ConstituentLogic.cs" />
     <Compile Include="CRM\LabelFormattingOptions.cs" />
     <Compile Include="CRM\LabelRecipient.cs" />

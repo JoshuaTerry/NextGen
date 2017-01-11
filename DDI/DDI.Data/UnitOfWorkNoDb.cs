@@ -17,6 +17,7 @@ namespace DDI.Data
 
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private List<object> _businessLogic;
 
         #endregion Private Fields
 
@@ -25,6 +26,7 @@ namespace DDI.Data
         public UnitOfWorkNoDb()
         {
             _repositories = new Dictionary<Type, object>();
+            _businessLogic = new List<object>();
         }
 
         #endregion Public Constructors
@@ -178,6 +180,25 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
+        public void AddBusinessLogic(object blObj)
+        {
+            if (!_businessLogic.Contains(blObj))
+                _businessLogic.Add(blObj);
+        }
+
+        public T GetBusinessLogic<T>() where T : class
+        {
+            Type blType = typeof(T);
+            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
+            if (blObj == null)
+            {
+                blObj = (T)Activator.CreateInstance(blType, this);
+                AddBusinessLogic(blObj);
+            }
+
+            return blObj;
+		}
+		
         public T GetById<T>(object id) where T : class
         {
             return GetRepository<T>().GetById(id);
