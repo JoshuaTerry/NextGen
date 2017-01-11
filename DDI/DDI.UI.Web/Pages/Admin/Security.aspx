@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="../../Scripts/security.js"></script>
+    <link rel="stylesheet" href="../../CSS/security.css" />
 
 </asp:Content>
 
@@ -14,13 +15,15 @@
 
             <ul>
                 <li><a href="#tab-groups">Groups</a></li>
-                <li><a href="#tab-Users">Users</a></li>
+                <li><a href="#tab-users">Users</a></li>
             </ul>
 
             <!-- Groups Tab -->
             <div id="tab-groups">
-
-                <a href="#" class="addnewgroup">New Group</a>
+                
+                <div class="newlinkcontainer">
+                    <a href="#" class="newlink addnewgroup">New Group</a>
+                </div>
 
                 <div class="groupsgridcontainer"></div>
 
@@ -33,33 +36,48 @@
             <!-- Users Tab -->
             <div id="tab-users">
 
-                <a href="#" class="addnewuser">New User</a>
+                <div class="newlinkcontainer">
+                    <a href="#" class="newlink addnewuser">New User</a>
+                </div>
 
                 <div class="usersgridcontainer"></div>
 
-                <div class="userinfocontainer">
+                <fieldset>
+                    <legend>User Information</legend>
 
-                    <div class="fieldblock">
-                        <label>User ID</label>
-                        <input type="text" class="userid" />
+                    <div class="userinfocontainer">
+
+                        <div class="twocolumn">
+
+                            <div class="fieldblock">
+                                <label>User ID</label>
+                                <input type="text" class="userid" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Name</label>
+                                <input type="text" class="username" />
+                            </div>
+
+                        </div>
+                        
+                        <div class="twocolumn">
+
+                            <div class="fieldblock">
+                                <label>Email</label>
+                                <input type="text" class="useremail" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Status</label>
+                                <input type="checkbox" class="userstatus" />
+                            </div>
+
+                        </div>
+                        
                     </div>
-
-                    <div class="fieldblock">
-                        <label>Name</label>
-                        <input type="text" class="username" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Email</label>
-                        <input type="text" class="useremail" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Status</label>
-                        <input type="checkbox" class="userstatus" />
-                    </div>
-
-                </div>
+                    
+                </fieldset>
 
                 <div class="usergroupsgridcontainer"></div>
 
@@ -83,7 +101,24 @@
 
         <div class="modalcontent">
 
+            <div class="fieldblock">
+                <label>Email</label>
+                <input type="email" name="email" class="newusername" />
+            </div>
 
+            <div class="fieldblock">
+                <label>Password</label>
+                <input type="password" name="password" class="newpassword" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Confirm Password</label>
+                <input type="password" name="confirmpassword" class="newconfirmpassword" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnewuser" value="Submit" />
+            </div>
 
         </div>
 
