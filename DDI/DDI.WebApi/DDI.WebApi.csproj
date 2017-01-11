@@ -247,6 +247,7 @@
     <Compile Include="Controllers\ProfessionsController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
+    <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
