@@ -30,16 +30,16 @@ namespace DDI.Shared.Test.Helpers
             var types = ReflectionHelper.GetDecoratedWith<ModuleTypeAttribute>();
             Assert.IsNotNull(types, "GetDecoratedWith returned non-null value.");
             Assert.IsTrue(types.Count > 10, "GetDecoratedWith returned multiple results.");
-            CollectionAssert.Contains(types, typeof(ModuleInfo.Accounting), "GetDecoratedWith contains Accounting module.");
+            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDecoratedWith contains Accounting module.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ReflectionHelper_GetDerivedTypes()
         {
-            var types = ReflectionHelper.GetDerivedTypes<ModuleInfo.Base.ModuleInfoBase>();
+            var types = ReflectionHelper.GetDerivedTypes<DDI.Shared.ModuleInfo.Base.ModuleInfoBase>();
             Assert.IsNotNull(types, "GetDerivedTypes returned non-null value.");
             Assert.IsTrue(types.Count > 10, "GetDerivedTypes returned multiple results.");
-            CollectionAssert.Contains(types, typeof(ModuleInfo.Accounting), "GetDerivedTypes contains Accounting module.");
+            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDerivedTypes contains Accounting module.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
