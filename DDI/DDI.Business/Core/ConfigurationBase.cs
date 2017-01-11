@@ -9,7 +9,7 @@ using DDI.Data.Models;
 
 namespace DDI.Business.Core
 {
-    public abstract class BaseConfiguration
+    public abstract class ConfigurationBase
     {
         /// <summary>
         /// Load a property by converting it from a string.
@@ -49,11 +49,17 @@ namespace DDI.Business.Core
         /// </summary>
         public T GetEntity<T>(string guidString, IUnitOfWork uow) where T : BaseEntity
         {
+            if (string.IsNullOrWhiteSpace(guidString))
+            {
+                return null;
+            }
+
             Guid id;
             if (Guid.TryParse(guidString, out id))
             {
                 return uow.GetById<T>(id);
             }
+            
             return null;
         }
 
@@ -63,6 +69,11 @@ namespace DDI.Business.Core
         public IList<T> GetEntityList<T>(string guids, IUnitOfWork uow) where T : BaseEntity
         {
             List<T> list = new List<T>();
+
+            if (string.IsNullOrWhiteSpace(guids))
+            {
+                return list;
+            }
 
             // Convert comma delimited list to Guids.
             IEnumerable<Guid> ids = guids.Split(',').Select(p =>

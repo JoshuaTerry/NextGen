@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DDI.Data
 {
     /// <summary>
-    /// Unit of Work for tests - Manages a set of entity repositories added via SetRepository&lt;T&gt;(IRepository&lt;T&gt; repo)
+    /// Unit of Work for tests - Manages a set of mocked repositories or RepositoryNoDb instances.
     /// </summary>
     public class UnitOfWorkNoDb : IUnitOfWork, IDisposable
     {
@@ -39,9 +39,24 @@ namespace DDI.Data
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Assign a mocked repository.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repository"></param>
         public void SetRepository<T>(IRepository<T> repository) where T : class
         {
             _repositories[typeof(T)] = repository;
+        }
+
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class
+        {
+            IRepository<T> repository = new RepositoryNoDb<T>(dataSource);
+            _repositories[typeof(T)] = repository;
+            return repository;
         }
 
         public IRepository<T> GetRepository<T>() where T : class
