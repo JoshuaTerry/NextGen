@@ -26,7 +26,7 @@
 
                 <div class="groupmembersgridcontainer"></div>
 
-                <div class="securitysettingsgridcontianer"></div>
+                <div class="securitysettingsgridcontainer"></div>
 
             </div>
             
@@ -39,13 +39,51 @@
 
                 <div class="userinfocontainer">
 
+                    <div class="fieldblock">
+                        <label>User ID</label>
+                        <input type="text" class="userid" />
+                    </div>
 
+                    <div class="fieldblock">
+                        <label>Name</label>
+                        <input type="text" class="username" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Email</label>
+                        <input type="text" class="useremail" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Status</label>
+                        <input type="checkbox" class="userstatus" />
+                    </div>
 
                 </div>
 
                 <div class="usergroupsgridcontainer"></div>
 
             </div>
+
+        </div>
+
+    </div>
+
+    <div class="newgroupmodal" title="New Group" style="display: none;">
+
+        <div class="modalcontent">
+
+
+
+        </div>
+
+    </div>
+
+    <div class="newusermodal" title="New User" style="display: none;">
+
+        <div class="modalcontent">
+
+
 
         </div>
 

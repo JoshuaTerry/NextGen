@@ -5,11 +5,144 @@ $(document).ready(function () {
 
 });
 
+/* GROUPS TAB */
 function LoadGroupsGrid() {
 
-    var colunns = {
+    var columns = [
+        { dataField: 'GroupName', caption: 'Group Name' },
+        { dataField: 'Description', caption: 'Description' }
+    ];
 
-    };
+    LoadGrid('groupsgrkid', 'groupsgridcontainer', columns, 'groups');
+
+}
+
+function LoadGroupMembersGrid() {
+
+    var columns = [
+        { dataField: 'UserId', caption: 'User ID' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('groupmembersgrid', 'groupmembersgridcontainer', columns, 'groupmembers');
+
+}
+
+function LoadSecuritySettingsGrid() {
+
+    var columns = [
+        { dataField: 'UserId', caption: 'User ID' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
+
+}
+/* END GROUPS TAB */
+
+
+
+/* USERS TAB */
+function LoadUsersGrid() {
+
+    var columns = [
+        { dataField: 'UserId', caption: 'User ID' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('usersgrid', 'usersgridcontainer', columns, 'users');
+
+}
+
+function LoadUsersGroupsGrid() {
+
+    var columns = [
+        { dataField: 'UserId', caption: 'User ID' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('usersgroupsgrid', 'usergroupsgridcontainer', columns, 'usergroups');
+
+}
+
+function DisplayUserInfo(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'users/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (IsSuccessful) {
+
+                $('.userid').val(data.Data.UserId);
+                $('.username').val(data.Data.Name);
+                $('.useremail').val(data.Data.Email);
+
+                if (data.Data.IsActive && data.Data.IsActive == 1) {
+                    $('.userstatus').prop('checked', true);
+                }
+                else {
+                    $('.userstatus').prop('checked', false);
+                }
+                
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading user info.');
+        }
+    })
+
+}
+/* END USERS TAB */
+
+function LoadGrid(grid, container, columns, route) {
+
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
+    var datagrid = $('<div>').addClass(grid);
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $(datagrid).dxDataGrid({
+                dataSource: data.Data,
+                columns: columns,
+                paging: {
+                    pageSize: 25
+                },
+                pager: {
+                    showNavigationButtons: true,
+                    showPageSizeSelector: true,
+                    showInfo: true,
+                    allowedPageSizes: [15, 25, 50, 100]
+                },
+                groupPanel: {
+                    visible: true,
+                    allowColumnDragging: true
+                },
+                filterRow: {
+                    visible: true,
+                    showOperationChooser: false
+                }
+            });
+
+            $(datagrid).appendTo($(container));
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading grid.');
+        }
+    });
 
 }
 
