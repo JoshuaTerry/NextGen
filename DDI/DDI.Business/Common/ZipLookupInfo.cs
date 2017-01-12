@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models.Common;
+using System.Threading.Tasks; 
+using DDI.Shared.Models.Common;
 
 namespace DDI.Business.Common
 {

@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.Core;
-using DDI.WebApi.Services;
+using DDI.Services;
+using DDI.Shared.Models.Client.Core; 
 
 namespace DDI.WebApi.Controllers
 {
     public class LanguagesController : ApiController
     {
-        GenericServiceBase<Language> _service;
+        ServiceBase<Language> _service;
 
-        public LanguagesController() : this(new GenericServiceBase<Language>()) { }
-        internal LanguagesController(GenericServiceBase<Language> service)
+        public LanguagesController() : this(new ServiceBase<Language>()) { }
+        internal LanguagesController(ServiceBase<Language> service)
         {
             _service = service;
         }

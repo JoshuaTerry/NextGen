@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class AddressTypesController : ApiController
     {
-        GenericServiceBase<AddressType> _service;
+        ServiceBase<AddressType> _service;
 
-        public AddressTypesController() : this(new GenericServiceBase<AddressType>()) { }
-        internal AddressTypesController(GenericServiceBase<AddressType> service)
+        public AddressTypesController() : this(new ServiceBase<AddressType>()) { }
+        internal AddressTypesController(ServiceBase<AddressType> service)
         {
             _service = service;
         }
