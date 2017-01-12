@@ -24,7 +24,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
        
-        public Region Religion { get; set; }
+        public Religion Religion { get; set; }
 
         public  Affiliation Affiliation { get; set; }
 
