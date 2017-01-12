@@ -14,35 +14,44 @@ using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Client.CRM;
 using DDI.Data.Models.Common;
+using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    internal class ConstituentLoader : IDataConversion
+    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    internal class ConstituentLoader : ConversionBase
     {
 
-
-        private ConversionArgs _args;
-        private string _crmDirectory;
-
-        public void Execute(ConversionArgs args)
+        public enum ConversionMethod
         {
-            _args = args;
-            _crmDirectory = Path.Combine(_args.BaseDirectory, "CRM");
-
-            LoadIndividuals("Individual.csv");
-            //LoadIndividuals("IndividualFW.csv");
-            //LoadAddresses("Address.csv");
-
-            //LoadConstituentAddress("ConstituentAddress.csv");
-
-            ///LoadDoingBusinessAs();
-            //LoadEducation();
-            //LoadPaymentPreferences();
-            //LoadAleternateIDs();
-            //LoadContactInfo();
-
+            Individuals = 200100,
+            Organizations,
+            Addresses,
+            ConstituentAddresses,
+            DoingBusinessAs,
+            Education,
+            AlternateIDs,
+            ContactInformation,
+            PaymentPreferences,
+            Relationships
         }
 
+
+        private string _crmDirectory;
+
+        public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
+        {
+            MethodsToRun = conversionMethods;
+            _crmDirectory = Path.Combine(baseDirectory, "CRM");
+
+            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv"));
+            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("IndividualFW.csv"));
+            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv"));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv"));
+
+            //RunConversion(ConversionMethod.DoingBusinessAs, () => LoadDoingBusinessAs("");
+        }
+        
         private void LoadAddresses(string filename)
         {
             DomainContext context = CreateContextForAddresses();
@@ -59,7 +68,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 0;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     int legacyId = importer.GetInt(0);
                     string streetAddress1 = importer.GetString(1);
@@ -148,7 +157,7 @@ namespace DDI.Conversion.CRM
                     }
 
                     Address address = null;
-                    if (!_args.AddOnly)
+                    if (!MethodArgs.AddOnly)
                     {
                         address = context.Addresses.FirstOrDefault(p => p.LegacyKey == legacyId);
                     }
@@ -234,10 +243,10 @@ namespace DDI.Conversion.CRM
             {
                 int count = 0;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     count++;
-                    if (count < _args.MinCount)
+                    if (count < MethodArgs.MinCount)
                     {
                         continue;
                     }
@@ -302,7 +311,7 @@ namespace DDI.Conversion.CRM
                     
                     Constituent constituent = null;
 
-                    if (!_args.AddOnly)
+                    if (!MethodArgs.AddOnly)
                     {
                         constituent = context.Constituents
                                                          .Include(p => p.Ethnicities)
@@ -664,7 +673,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 0;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     count++;
 

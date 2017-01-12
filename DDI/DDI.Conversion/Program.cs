@@ -16,7 +16,8 @@ namespace DDI.Conversion
     class Program
     {
 
-
+        private static string _filePath;
+        private static List<ConversionMethodArgs> _methodsToRun;
 
         static void Main(string[] args)
         {
@@ -40,23 +41,42 @@ namespace DDI.Conversion
             else
             {
                 organization = "NG";
-                minCount = 71700;
+                minCount = 79000;
                 maxCount = int.MaxValue;
             }
             
 			log4net.Config.XmlConfigurator.Configure();
 
-            string filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
-            ConversionArgs conversionArgs = new ConversionArgs(organization, filePath, minCount, maxCount, false);
+            _filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
+            _methodsToRun = new List<ConversionMethodArgs>()
+            {
+                new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0)
+            };
 
-            //new Core.Initialize().Execute(conversionArgs);
-            //new CRM.Initialize().Execute(conversionArgs);
-            //new CRM.SettingsLoader().Execute(conversionArgs);
-            new CRM.ConstituentLoader().Execute(conversionArgs);
+            //Run<Core.Initialize>();
 
+            //Run<CRM.Initialize>();
+            //Run<CRM.SettingsLoader>();
+
+            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0));
+        }
+
+        private static void Run<T>() where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, _methodsToRun);
+        }
+
+        private static void Run<T>(IEnumerable<ConversionMethodArgs> methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, methodsToRun);
+        }
+
+        private static void Run<T>(ConversionMethodArgs methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodsToRun });
         }
 
     }
-    
+
 
 }

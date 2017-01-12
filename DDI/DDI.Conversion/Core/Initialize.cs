@@ -9,19 +9,22 @@ using System.Threading.Tasks;
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Data.Models.Client.Core;
-
+using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.Core
 {
-    internal class Initialize : IDataConversion
+    [ModuleType(Shared.Enums.ModuleType.SystemAdministration)]
+    internal class Initialize : ConversionBase
     {
-
-        private ConversionArgs _args;
-
-        public void Execute(ConversionArgs args)
+        public enum ConversionMethod
         {
-            _args = args;
-            LoadInitialData();
+            Initialize = 990000,
+        }
+
+        public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
+        {
+            MethodsToRun = conversionMethods;
+            RunConversion(ConversionMethod.Initialize, () => LoadInitialData());
         }
 
         private void LoadInitialData()

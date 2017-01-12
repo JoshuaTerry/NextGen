@@ -14,11 +14,25 @@ using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Client.CRM;
 using DDI.Data.Models.Common;
+using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    internal class SettingsLoader : IDataConversion
+    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    internal class SettingsLoader :  ConversionBase
     {
+        public enum ConversionMethod
+        {
+            Codes = 200001,
+            ContactTypes,
+            Prefixes,
+            RegionLevels,
+            Regions,
+            RegionAreas,
+            RelationshipTypes,
+            Tags,
+        }
+
         // nacodes.record-cd sets - these are the ones that are being imported here.
         private const int DENOMINATION_SET = 5;
         private const int ADDRESS_TYPE_SET = 6;
@@ -38,23 +52,21 @@ namespace DDI.Conversion.CRM
         private const int DEGREE_SET = 42;
         private const int CONTACT_CATEGORY = 75;
 
-        private ConversionArgs _args;
         private string _crmDirectory;
 
-        public void Execute(ConversionArgs args)
+        public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
-            _args = args;
-            _crmDirectory = Path.Combine(_args.BaseDirectory, "CRM");
+            MethodsToRun = conversionMethods;
+            _crmDirectory = Path.Combine(baseDirectory, "CRM");
 
-            //LoadLegacyCodes("NACodes.csv");
-            //LoadContactTypes("ContactType.csv");
-            //LoadPrefixes("NamePrefix.csv");
-            //LoadRegionLevels("RegionLevel.csv");
-            //LoadRegions("Region.csv");
-            //LoadRegionAreas("RegionAreas.csv");
-            //LoadRelationshipTypes("RelationshipType.csv");
-            LoadTags("TagGroup.csv", "TagCode.csv");
-
+            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes("NACodes.csv"));
+            RunConversion(ConversionMethod.ContactTypes, () => LoadContactTypes("ContactType.csv"));
+            RunConversion(ConversionMethod.Prefixes, () => LoadPrefixes("NamePrefix.csv"));
+            RunConversion(ConversionMethod.RegionLevels, () => LoadRegionLevels("RegionLevel.csv"));
+            RunConversion(ConversionMethod.Regions, () => LoadRegions("Region.csv"));
+            RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas("RegionAreas.csv"));
+            RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes("RelationshipType.csv"));
+            RunConversion(ConversionMethod.Tags, () => LoadTags("TagGroup.csv", "TagCode.csv"));
         }
 
 
@@ -209,7 +221,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string categoryCode = importer.GetString(0);
                     string typeCode = importer.GetString(1);
@@ -258,7 +270,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     string regionLabel = importer.GetString(1);
@@ -299,7 +311,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string uniqueId = importer.GetString(0);
                     int uniqueNum;
@@ -355,7 +367,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(levelText))
@@ -479,7 +491,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(code) || code == "Code")
@@ -575,7 +587,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
 
@@ -607,7 +619,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= _args.MaxCount && importer.GetNextRow())
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     string name = importer.GetString(1);

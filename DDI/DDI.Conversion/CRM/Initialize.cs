@@ -12,24 +12,27 @@ using DDI.Data.Enums.CRM;
 using DDI.Data.Models.Client.Core;
 using DDI.Data.Models.Client.CRM;
 using DDI.Data.Models.Common;
-
-
+using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    internal class Initialize : IDataConversion
+    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    internal class Initialize : ConversionBase
     {
-        private ConversionArgs _args;
+        public enum ConversionMethod
+        {
+            Initialize = 200000,
+        }
 
         public const string CONSTITUENT_STATUS_ACTIVE = "AC";
         public const string CONSTITUENT_STATUS_INACTIVE = "IN";
         public const string CONSTITUENT_STATUS_BLOCKED = "BL";
         public const string CONSTITUENT_STATUS_DELETED = "DEL";
 
-        public void Execute(ConversionArgs args)
+        public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
-            _args = args;
-            LoadInitialData();
+            MethodsToRun = conversionMethods;
+            RunConversion(ConversionMethod.Initialize, () => LoadInitialData());
         }
 
         private void LoadInitialData()
