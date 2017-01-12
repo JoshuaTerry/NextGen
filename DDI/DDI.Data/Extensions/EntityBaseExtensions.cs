@@ -15,9 +15,10 @@ using RelationshipType = System.Data.Entity.Core.Metadata.Edm.RelationshipType;
 
 namespace DDI.Data.Extensions
 {
-    public static class BaseEntityExtensions
+    public static class EntityBaseExtensions
     {
-        public static dynamic ToPartialObject<T>(this IEnumerable<T> entities, string listOfFields = null, bool shouldAddLinks = false) where T: BaseEntity
+        public static dynamic ToPartialObject<T>(this IEnumerable<T> entities, string listOfFields = null, bool shouldAddLinks = false) 
+            where T: BaseEntity
         {
             var list = new List<ExpandoObject>();
             foreach (var item in entities)
@@ -28,7 +29,8 @@ namespace DDI.Data.Extensions
             return list;
         }
 
-        public static dynamic ToDynamic<T>(this T value, List<string> fieldsToInclude = null ) where T: BaseEntity
+        public static dynamic ToDynamic<T>(this T value, List<string> fieldsToInclude = null ) 
+            where T: BaseEntity
         {
             //This works, but it would be quicker if we just loop through the list of fields sent in. The only complucated piece is the sub-fields group together in one object
             dynamic returnObject = new ExpandoObject();

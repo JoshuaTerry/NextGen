@@ -58,7 +58,7 @@ namespace DDI.WebApi.Services
                          .SetOffset(search.Offset);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            var response = GetIDataResponse(() => query.GetQueryable().ToList(), search.Fields, true);
             response.TotalResults = totalCount;
             response.PageSize = search.Limit;
             response.PageNumber = search.Offset + 1;
@@ -183,18 +183,18 @@ namespace DDI.WebApi.Services
             }
         }
 
-        public IDataResponse<dynamic> GetConstituentById(Guid id)
+        public IDataResponse<dynamic> GetConstituentById(Guid id, string fields = null)
         {
             Constituent constituent = _repository.GetById(id);
-            var response = GetIDataResponse(() => constituent);
+            var response = GetIDataResponse(() => constituent, fields, true);
 
             return response;
         }
 
-        public IDataResponse<dynamic> GetConstituentByConstituentNum(int constituentNum)
+        public IDataResponse<dynamic> GetConstituentByConstituentNum(int constituentNum, string fields = null)
         {
             var constituent = _repository.Entities.Include("ConstituentAddresses.Address").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            var response = GetIDataResponse(() => constituent);
+            var response = GetIDataResponse(() => constituent, fields, true);
             return response;
         }
 

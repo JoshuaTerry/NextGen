@@ -34,6 +34,7 @@ namespace DDI.WebApi.Controllers
                                                  string zipTo = null,
                                                  string alternateId = null,
                                                  Guid? constituentTypeId = null,
+                                                 string fields = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
                                                  string orderby = null)
@@ -52,6 +53,7 @@ namespace DDI.WebApi.Controllers
                 AlternateId = alternateId,
                 ZipFrom =  zipFrom,
                 ZipTo = zipTo,
+                Fields = fields,
                 ConstituentTypeId = constituentTypeId
             };
 
@@ -71,9 +73,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult GetConstituentById(Guid id)
+        public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            var constituent = _service.GetConstituentById(id);
+            var constituent = _service.GetConstituentById(id, fields);
 
             if (constituent == null)
             {
@@ -89,10 +91,10 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/number/{num}")]
-        public IHttpActionResult GetConstituentByConstituentNum(int num)
+        public IHttpActionResult GetConstituentByConstituentNum(int num, string fields = null)
         {
             {
-                var constituent = _service.GetConstituentByConstituentNum(num);
+                var constituent = _service.GetConstituentByConstituentNum(num, fields);
 
                 if (constituent == null)
                 {

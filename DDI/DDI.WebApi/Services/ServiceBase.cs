@@ -14,7 +14,7 @@ namespace DDI.WebApi.Services
 
         public IDataResponse<dynamic> GetIDataResponse<T>(Func<T> funcToExecute, string fieldList = null, bool shouldAddLinks = false) 
         {
-            return GetDataResponse(funcToExecute);
+            return GetDataResponse(funcToExecute, fieldList, shouldAddLinks);
         }
 
         public DataResponse<dynamic> GetDataResponse<T>(Func<T> funcToExecute, string fieldList = null, bool shouldAddLinks = false) 

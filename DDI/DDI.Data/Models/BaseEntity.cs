@@ -119,7 +119,7 @@ namespace DDI.Data.Models
 
         internal virtual dynamic AddHATEAOSLinks(IDictionary<string, object> entity)
         {
-            return this.ToDynamic(null);
+            return entity;
         }
     }
 

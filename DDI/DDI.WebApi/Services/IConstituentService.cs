@@ -10,8 +10,8 @@ namespace DDI.WebApi.Services
     public interface IConstituentService
     {
         IDataResponse<dynamic> GetConstituents(ConstituentSearch search);
-        IDataResponse<dynamic> GetConstituentById(Guid id);
-        IDataResponse<dynamic> GetConstituentByConstituentNum(int constituentNum);
+        IDataResponse<dynamic> GetConstituentById(Guid id, string fields = null);
+        IDataResponse<dynamic> GetConstituentByConstituentNum(int constituentNum, string fields = null);
         IDataResponse<dynamic> UpdateConstituent(Guid id, JObject constituentChanges);
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId);
