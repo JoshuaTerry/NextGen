@@ -2,6 +2,7 @@
 var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
 var auth_token = null;
 var editing = false;
+var lastEditedSection = null;
 var currentEntity = null;
 var modal = null;
 
@@ -275,7 +276,6 @@ function SetupEditControls() {
     $('.editable').prop('disabled', true);
 
     $('.editbutton').click(function (e) {
-
         e.preventDefault();
 
         if (!editing) { // No other Edit in progress, good to go
@@ -320,7 +320,7 @@ function SetupEditControls() {
 
         StopEdit($(this).closest('.editcontainer'));
 
-        CancelEdit();
+        CancelEdit($(this).closest('.editcontainer'));
 
     });
 
@@ -329,7 +329,7 @@ function SetupEditControls() {
 function StartEdit(editcontainer) {
 
     editing = true;
-
+    
     $(editcontainer).find('.editmode-active').show();
     $(editcontainer).find('.editmode-inactive').hide();
     $(editcontainer).addClass('active');
@@ -433,11 +433,27 @@ function GetEditedFields(editcontainer) {
 
 }
 
-function CancelEdit() {
+function CancelEdit(editcontainer) {
 
+    $(editcontainer).find('.editable').each(function () {
+        $(this).val("");
+    });
+
+    $('.accordions').accordion({
+        active: false
+    });
+
+    $(".ui-accordion-content").hide('fast');
+    $('.ui-accordion-header').removeclass('ui-state-active');
+
+    if (editing) {
+        ReturnToMostRecentEdit();
+    }
+    
     RefreshEntity();
-
 }
+
+    
 //
 // END EDITING
 
