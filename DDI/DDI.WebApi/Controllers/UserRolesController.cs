@@ -76,9 +76,13 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                await _roleManager.DeleteAsync(new IdentityRole(role));
+                var roleToDelete = RoleManager.FindByNameAsync(role).Result;
+                if (roleToDelete != null)
+                {
+                    await RoleManager.DeleteAsync(roleToDelete);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return InternalServerError();
             }
