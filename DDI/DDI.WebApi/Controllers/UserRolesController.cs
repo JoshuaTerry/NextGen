@@ -58,6 +58,12 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/UserRoles/AddRole")]
         public async Task<IHttpActionResult> AddRole(string role)
         {
+            if (CanRoleBeAdded(role) != null)
+            {
+                ModelState.AddModelError("", CanRoleBeAdded(role).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 await RoleManager.CreateAsync(new IdentityRole(role));
@@ -74,6 +80,12 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/UserRoles/RemoveRole")]
         public async Task<IHttpActionResult> RemoveRole(string role)
         {
+            if (CanRoleBeRemoved(role) != null)
+            {
+                ModelState.AddModelError("", CanRoleBeRemoved(role).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var roleToDelete = RoleManager.FindByNameAsync(role).Result;
@@ -116,8 +128,14 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/AddSingle")]
-        public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleBindingModel model)
+        public async Task<IHttpActionResult> AddRoleToUser([FromBody] UserRoleBindingModel model)
         {
+            if (CanRoleBeAddedToUser(model.Email, model.Role) != null)
+            {
+                ModelState.AddModelError("", CanRoleBeAddedToUser(model.Email, model.Role).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -138,8 +156,14 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/AddMultiple")]
-        public async Task<IHttpActionResult> AddUserToRoles([FromBody] UserRolesBindingModel model)
+        public async Task<IHttpActionResult> AddRolesToUser([FromBody] UserRolesBindingModel model)
         {
+            if (CanRolesBeAddedToUser(model.Email, model.Roles) != null)
+            {
+                ModelState.AddModelError("", CanRolesBeAddedToUser(model.Email, model.Roles).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -160,8 +184,14 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/RemoveSingle")]
-        public async Task<IHttpActionResult> RemoveUserFromRole([FromBody] UserRoleBindingModel model)
+        public async Task<IHttpActionResult> RemoveRoleFromUser([FromBody] UserRoleBindingModel model)
         {
+            if (CanRoleBeRemovedFromUser(model.Email, model.Role) != null)
+            {
+                ModelState.AddModelError("", CanRoleBeRemovedFromUser(model.Email, model.Role).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -182,8 +212,14 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/UserRoles/RemoveMultiple")]
-        public async Task<IHttpActionResult> RemoveUserFromRoles([FromBody] UserRolesBindingModel model)
+        public async Task<IHttpActionResult> RemoveRolesFromUser([FromBody] UserRolesBindingModel model)
         {
+            if (CanRolesBeRemovedFromUser(model.Email, model.Roles) != null)
+            {
+                ModelState.AddModelError("", CanRolesBeRemovedFromUser(model.Email, model.Roles).Item2);
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
@@ -202,5 +238,101 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
+        private Tuple<bool, string> CanRoleBeAdded(string role)
+        {
+            Tuple<bool, string> canRoleBeAdded = null;
+
+            if (RoleManager.Roles.Any(r => r.Name == role))
+            {
+                canRoleBeAdded = new Tuple<bool, string>(false, $"Role {role} has already been created.");
+            }
+
+            return canRoleBeAdded;
+        }
+
+        private Tuple<bool, string> CanRoleBeRemoved(string role)
+        {
+            Tuple<bool, string> canRoleBeRemoved = null;
+
+            if (!RoleManager.Roles.Any(r => r.Name == role))
+            {
+                canRoleBeRemoved = new Tuple<bool, string>(false, $"Role {role} does not exist.");
+            }
+
+            return canRoleBeRemoved;
+        }
+
+        private Tuple<bool, string> CanRoleBeAddedToUser(string email, string role)
+        {
+            Tuple<bool, string> canRoleBeAddedToUser = null;
+
+            if (CanRoleBeAdded(role) != null)
+            {
+                canRoleBeAddedToUser = CanRoleBeAdded(role);
+            }
+
+            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+            if (userAlreadyHasRole)
+            {
+                canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
+            }
+
+            return canRoleBeAddedToUser;
+        }
+
+        private Tuple<bool, string> CanRolesBeAddedToUser(string email, string[] roles)
+        {
+            Tuple<bool, string> canRolesBeAddedToUser = null;
+            string errorMessage = string.Empty;
+
+            foreach (var role in roles)
+            {
+                if (CanRoleBeAddedToUser(email, role) != null)
+                {
+                    errorMessage += $"{CanRoleBeAddedToUser(email, role).Item2}\n";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                canRolesBeAddedToUser = new Tuple<bool, string>(false, errorMessage);
+            }
+
+            return canRolesBeAddedToUser;
+        }
+
+        private Tuple<bool, string> CanRoleBeRemovedFromUser(string email, string role)
+        {
+            Tuple<bool, string> canRoleBeRemovedFromUser = null;
+
+            var userDoesNotHaveRole = !UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+            if (userDoesNotHaveRole)
+            {
+                canRoleBeRemovedFromUser = new Tuple<bool, string>(false, $"User {email} is not currently in role {role}");
+            }
+
+            return canRoleBeRemovedFromUser;
+        }
+
+        private Tuple<bool, string> CanRolesBeRemovedFromUser(string email, string[] roles)
+        {
+            Tuple<bool, string> canRolesBeRemovedFromUser = null;
+            string errorMessage = string.Empty;
+
+            foreach (var role in roles)
+            {
+                if (CanRoleBeRemovedFromUser(email, role) != null)
+                {
+                    errorMessage += $"{CanRoleBeRemovedFromUser(email, role).Item2}\n";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                canRolesBeRemovedFromUser = new Tuple<bool, string>(false, errorMessage);
+            }
+
+            return canRolesBeRemovedFromUser;
+        }
     }
 }
