@@ -259,6 +259,7 @@
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\RolesController.cs" />
     <Compile Include="Models\UserRoleBindingModel.cs" />
     <Compile Include="Models\UserRolesBindingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
