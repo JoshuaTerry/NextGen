@@ -54,58 +54,9 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/v1/UserRoles/AddRole")]
-        public async Task<IHttpActionResult> AddRole(string role)
-        {
-            if (CanRoleBeAdded(role) != null)
-            {
-                ModelState.AddModelError("", CanRoleBeAdded(role).Item2);
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                await RoleManager.CreateAsync(new IdentityRole(role));
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError();
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("api/v1/UserRoles/RemoveRole")]
-        public async Task<IHttpActionResult> RemoveRole(string role)
-        {
-            if (CanRoleBeRemoved(role) != null)
-            {
-                ModelState.AddModelError("", CanRoleBeRemoved(role).Item2);
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var roleToDelete = RoleManager.FindByNameAsync(role).Result;
-                if (roleToDelete != null)
-                {
-                    await RoleManager.DeleteAsync(roleToDelete);
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError();
-            }
-
-            return Ok();
-        }
-
-
         [HttpGet]
-        [Route("api/v1/UserRoles")]
-        public async Task<IHttpActionResult> GetRolesForUser(string email)
+        [Route("api/v1/userroles")]
+        public async Task<IHttpActionResult> Get(string email)
         {
             var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
             if (user == null)
@@ -127,36 +78,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/AddSingle")]
-        public async Task<IHttpActionResult> AddRoleToUser([FromBody] UserRoleBindingModel model)
-        {
-            if (CanRoleBeAddedToUser(model.Email, model.Role) != null)
-            {
-                ModelState.AddModelError("", CanRoleBeAddedToUser(model.Email, model.Role).Item2);
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                await UserManager.AddToRoleAsync(user.Id, model.Role);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("api/v1/UserRoles/AddMultiple")]
-        public async Task<IHttpActionResult> AddRolesToUser([FromBody] UserRolesBindingModel model)
+        [Route("api/v1/userroles/add")]
+        public async Task<IHttpActionResult> Add([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeAddedToUser(model.Email, model.Roles) != null)
             {
@@ -183,36 +106,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/UserRoles/RemoveSingle")]
-        public async Task<IHttpActionResult> RemoveRoleFromUser([FromBody] UserRoleBindingModel model)
-        {
-            if (CanRoleBeRemovedFromUser(model.Email, model.Role) != null)
-            {
-                ModelState.AddModelError("", CanRoleBeRemovedFromUser(model.Email, model.Role).Item2);
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                await UserManager.RemoveFromRoleAsync(user.Id, model.Role);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("api/v1/UserRoles/RemoveMultiple")]
-        public async Task<IHttpActionResult> RemoveRolesFromUser([FromBody] UserRolesBindingModel model)
+        [Route("api/v1/userroles/remove")]
+        public async Task<IHttpActionResult> Delete([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeRemovedFromUser(model.Email, model.Roles) != null)
             {
@@ -238,38 +133,9 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        private Tuple<bool, string> CanRoleBeAdded(string role)
-        {
-            Tuple<bool, string> canRoleBeAdded = null;
-
-            if (RoleManager.Roles.Any(r => r.Name == role))
-            {
-                canRoleBeAdded = new Tuple<bool, string>(false, $"Role {role} has already been created.");
-            }
-
-            return canRoleBeAdded;
-        }
-
-        private Tuple<bool, string> CanRoleBeRemoved(string role)
-        {
-            Tuple<bool, string> canRoleBeRemoved = null;
-
-            if (!RoleManager.Roles.Any(r => r.Name == role))
-            {
-                canRoleBeRemoved = new Tuple<bool, string>(false, $"Role {role} does not exist.");
-            }
-
-            return canRoleBeRemoved;
-        }
-
         private Tuple<bool, string> CanRoleBeAddedToUser(string email, string role)
         {
             Tuple<bool, string> canRoleBeAddedToUser = null;
-
-            if (CanRoleBeAdded(role) != null)
-            {
-                canRoleBeAddedToUser = CanRoleBeAdded(role);
-            }
 
             var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
             if (userAlreadyHasRole)
