@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Models.Client.CRM;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {
-    public class RelationshipLogic : BaseEntityLogic<Constituent>
+    public class RelationshipLogic : EntityLogicBase<Constituent>
     {
         #region Private Fields
 

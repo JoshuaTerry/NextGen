@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using DDI.Data;
 using DDI.Conversion;
-using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
 
@@ -44,13 +43,13 @@ namespace DDI.Conversion
                 minCount = 79000;
                 maxCount = int.MaxValue;
             }
-            
-			log4net.Config.XmlConfigurator.Configure();
+
+            log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
             _methodsToRun = new List<ConversionMethodArgs>()
             {
-                new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0)
+               
             };
 
             //Run<Core.Initialize>();

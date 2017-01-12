@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEntityLogic.cs" />
     <Compile Include="Common\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
@@ -54,6 +53,7 @@
     <Compile Include="CRM\NameFormattingOptions.cs" />
     <Compile Include="Core\ConfigurationBase.cs" />
     <Compile Include="Core\ConfigurationLogic.cs" />
+    <Compile Include="EntityLogicBase.cs" />
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

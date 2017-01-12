@@ -34,6 +34,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework.MappingAPI, Version=6.1.0.9, Culture=neutral, PublicKeyToken=7ee2e825d201459e, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.MappingAPI.6.1.0.9\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
@@ -51,31 +55,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\EntityTypeAttribute.cs" />
     <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
-    <Compile Include="Enums\Core\DateType.cs" />
-    <Compile Include="Enums\CRM\TagSelectionType.cs" />
-    <Compile Include="Enums\CRM\ConstituentCategory.cs" />
-    <Compile Include="Enums\CRM\BirthDateType.cs" />
-    <Compile Include="Enums\Common\EvenOddType.cs" />
-    <Compile Include="Enums\CRM\ResidentType.cs" />
-    <Compile Include="Enums\CRM\SalutationType.cs" />
-    <Compile Include="Enums\CRM\CorrespondencePreference.cs" />
-    <Compile Include="Enums\CRM\PaymentMethod.cs" />
+    <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="ILinkedEntityCollection.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
-<<<<<<< HEAD
-    <Compile Include="Migrations\Client\201701031810235_StringLengths.cs" />
-    <Compile Include="Migrations\Client\201701031810235_StringLengths.Designer.cs">
-      <DependentUpon>201701031810235_StringLengths.cs</DependentUpon>
-=======
-    <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
+    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.cs" />
+    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.Designer.cs">
+      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
+    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.Designer.cs">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
+    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701032042214_StringLength.cs" />
+    <Compile Include="Migrations\Client\201701032042214_StringLength.Designer.cs">
+      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
@@ -83,7 +89,6 @@
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
->>>>>>> develop
     </Compile>
     <Compile Include="Migrations\Common\201612280326437_Indexes.cs" />
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
@@ -159,57 +164,8 @@
     </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
-    <Compile Include="Models\BaseLinkedEntity.cs" />
-    <Compile Include="Models\BaseEntity.cs" />
-    <Compile Include="Models\Client\CRM\Address.cs" />
-    <Compile Include="Models\Client\CRM\AlternateId.cs" />
-    <Compile Include="Models\Client\CRM\Degree.cs" />
-    <Compile Include="Models\Client\CRM\Tag.cs" />
-    <Compile Include="Models\Client\CRM\TagGroup.cs" />
-    <Compile Include="Models\Client\CRM\Relationship.cs" />
-    <Compile Include="Models\Client\CRM\RegionArea.cs" />
-    <Compile Include="Models\Client\CRM\RelationshipType.cs" />
-    <Compile Include="Models\Client\CRM\RelationshipCategory.cs" />
-    <Compile Include="Models\Client\CRM\School.cs" />
-    <Compile Include="Models\Client\CRM\ClergyStatus.cs" />
-    <Compile Include="Models\Client\CRM\ClergyType.cs" />
-    <Compile Include="Models\Client\CRM\Constituent.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentAddress.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentStatus.cs" />
-    <Compile Include="Models\Client\CRM\ConstituentType.cs" />
-    <Compile Include="Models\Client\CRM\ContactInfo.cs" />
-    <Compile Include="Models\Client\CRM\AddressType.cs" />
-    <Compile Include="Models\Client\CRM\ContactCategory.cs" />
-    <Compile Include="Models\Client\CRM\ContactType.cs" />
-    <Compile Include="Models\Client\CRM\Denomination.cs" />
-    <Compile Include="Models\Client\CRM\DoingBusinessAs.cs" />
-    <Compile Include="Models\Client\CRM\Education.cs" />
-    <Compile Include="Models\Client\CRM\EducationLevel.cs" />
-    <Compile Include="Models\Client\CRM\Ethnicity.cs" />
-    <Compile Include="Models\Client\CRM\Gender.cs" />
-    <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
-    <Compile Include="Models\Client\Core\Language.cs" />
-    <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
-    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
-    <Compile Include="Models\Client\CRM\Prefix.cs" />
-    <Compile Include="Models\Client\CRM\Profession.cs" />
-    <Compile Include="Models\Client\CRM\Region.cs" />
-    <Compile Include="Models\Client\CRM\RegionLevel.cs" />
-    <Compile Include="Models\Client\Core\SectionPreference.cs" />
-    <Compile Include="Models\Common\Abbreviation.cs" />
-    <Compile Include="Models\Common\City.cs" />
-    <Compile Include="Models\Common\CityName.cs" />
-    <Compile Include="Models\Common\Country.cs" />
-    <Compile Include="Models\Common\County.cs" />
-    <Compile Include="Models\Common\State.cs" />
-    <Compile Include="Models\Common\Thesaurus.cs" />
-    <Compile Include="Models\Common\Zip.cs" />
-    <Compile Include="Models\Common\ZipBranch.cs" />
-    <Compile Include="Models\Common\ZipPlus4.cs" />
-    <Compile Include="Models\Common\ZipStreet.cs" />
-    <Compile Include="Models\Client\Core\LogEntry.cs" />
-    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryNoDb.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
     <Compile Include="UnitOfWorkNoDb.cs" />
@@ -220,16 +176,26 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <EmbeddedResource Include="Migrations\Client\201701031810235_StringLengths.resx">
-      <DependentUpon>201701031810235_StringLengths.cs</DependentUpon>
-=======
+    <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
+      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701071608076_Configuration_v1.resx">
+      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
+      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
+      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701032042214_StringLength.resx">
+      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
->>>>>>> develop
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612280326437_Indexes.resx">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
@@ -278,6 +244,14 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

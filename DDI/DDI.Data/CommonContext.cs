@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+using DDI.Shared.Models.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
-using DDI.Data.Models.Common;
+using System;
+using System.Data.Entity.Validation; 
+using System.Collections.Generic;
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
-	public class CommonContext : DbContext
+    public class CommonContext : DbContext
 	{
         #region Public Properties
 
@@ -43,7 +40,7 @@ namespace DDI.Data
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            BaseEntity entity = entityEntry.Entity as BaseEntity;
+            EntityBase entity = entityEntry.Entity as EntityBase;
             if (entity != null)
             {
                 //Ensure new entities have an ID

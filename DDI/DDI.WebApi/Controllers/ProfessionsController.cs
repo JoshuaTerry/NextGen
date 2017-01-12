@@ -1,15 +1,15 @@
-﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+﻿using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
     public class ProfessionsController : ApiController
     {
-        GenericServiceBase<Profession> _service;
+        ServiceBase<Profession> _service;
 
-        public ProfessionsController() : this(new GenericServiceBase<Profession>()) { }
-        internal ProfessionsController(GenericServiceBase<Profession> service)
+        public ProfessionsController() : this(new ServiceBase<Profession>()) { }
+        internal ProfessionsController(ServiceBase<Profession> service)
         {
             _service = service;
         }

@@ -1,18 +1,20 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Enums.CRM;
-using DDI.Data.Models.Client.CRM;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
+using System;
+using DDI.Shared.Enums.CRM;
 
 namespace DDI.Business.CRM
 {
-    public class ConstituentLogic : BaseEntityLogic<Constituent>
+    public class ConstituentLogic : EntityLogicBase<Constituent>
     {
         #region Private Fields
-
+        private readonly int _maxTries = 5;
         private IRepository<Constituent> _constituentRepo = null;
 
         #endregion
@@ -93,11 +95,16 @@ namespace DDI.Business.CRM
             }
 
             int nextNum = 0;
-            while (true)
+            bool isUnique = false;
+            int tries = 0;
+            while (!isUnique)
             {
+                tries++;
                 nextNum = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
-                if (_constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0)
-                    break;
+                isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0;
+
+                if (tries >= _maxTries)
+                    throw new Exception("Exceeded maximum number of tries to retreive NextSequenceValue");
             }
 
             return nextNum;

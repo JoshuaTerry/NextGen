@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using DDI.Business.Common;
 using DDI.Business.Core;
 using DDI.Data;
-using DDI.Data.Enums.Common;
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Common;
+
+using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+
 
 namespace DDI.Business.Tests.Core
 {

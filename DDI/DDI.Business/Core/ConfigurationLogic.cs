@@ -7,15 +7,16 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Models;
-using DDI.Data.Models.Client.Core;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
 using DDI.Shared.ModuleInfo;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Business.Core
 {
-    public class ConfigurationLogic : BaseEntityLogic<Configuration>
+    public class ConfigurationLogic : EntityLogicBase<Configuration>
     {
         #region Private Fields
 
@@ -110,7 +111,7 @@ namespace DDI.Business.Core
         private void SaveConfigurationToDb(ConfigurationBase config)
         {
             Type configType = config.GetType();
-            Type baseEntityType = typeof(BaseEntity);
+            Type EntityBaseType = typeof(EntityBase);
 
             ModuleTypeAttribute attr = configType.GetAttribute<ModuleTypeAttribute>();
             if (attr == null)
@@ -153,10 +154,10 @@ namespace DDI.Business.Core
                         failed = true;
                     }
                 }
-                else if (propType.IsSubclassOf(baseEntityType))
+                else if (propType.IsSubclassOf(EntityBaseType))
                 {
                     // Entity properties
-                    var entity = prop.GetValue(config) as BaseEntity;
+                    var entity = prop.GetValue(config) as EntityBase;
                     if (entity != null)
                     {
                         // Convert id to string
@@ -214,7 +215,7 @@ namespace DDI.Business.Core
             }
 
             ModuleType modType = attr.ModuleType;
-            Type baseEntityType = typeof(BaseEntity);
+            Type EntityBaseType = typeof(EntityBase);
 
             // Create an instance of the config class.
             var config = (ConfigurationBase)Activator.CreateInstance(type);            
@@ -273,7 +274,7 @@ namespace DDI.Business.Core
                             failed = true;
                         }
                     }
-                    else if (propType.IsSubclassOf(baseEntityType))
+                    else if (propType.IsSubclassOf(EntityBaseType))
                     {
                         // Entity properties - Use reflection to call BaseConfiguration.GetEntity<T>
                         try

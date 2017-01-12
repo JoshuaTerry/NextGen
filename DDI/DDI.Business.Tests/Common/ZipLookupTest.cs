@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Common;
 using DDI.Data;
-using DDI.Data.Enums.Common;
-using DDI.Data.Models.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using DDI.Shared.Models.Common;
+using DDI.Shared;
+using DDI.Shared.Enums.Common;
 
 namespace DDI.Business.Tests.Common
 {

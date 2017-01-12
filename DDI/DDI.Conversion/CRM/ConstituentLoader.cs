@@ -10,10 +10,9 @@ using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Conversion;
 using DDI.Data;
-using DDI.Data.Enums.CRM;
-using DDI.Data.Models.Client.Core;
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Common;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Common;
 using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM

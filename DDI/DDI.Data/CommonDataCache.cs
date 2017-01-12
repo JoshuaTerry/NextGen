@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models.Common;
+using DDI.Shared.Models.Common;
 
 namespace DDI.Data
 {
@@ -23,7 +20,7 @@ namespace DDI.Data
 
         #region Private Methods
 
-        private static T GetEntry<T> (Dictionary<Guid, T> dict, Guid id) where T : class
+        private static T GetEntry<T>(Dictionary<Guid, T> dict, Guid id) where T : class
         {
             T obj;
             if (dict.TryGetValue(id, out obj))
@@ -42,7 +39,7 @@ namespace DDI.Data
             {
                 foreach (var row in context.Countries)
                 {
-                    Country country = new Models.Common.Country()
+                    Country country = new Shared.Models.Common.Country()
                     {
                         AddressFormat = row.AddressFormat,
                         CallingCode = row.CallingCode,
@@ -71,7 +68,7 @@ namespace DDI.Data
             {
                 foreach (var row in context.States)
                 {
-                    State state = new Models.Common.State()
+                    State state = new Shared.Models.Common.State()
                     {
                         CountryId = row.CountryId,
                         Description = row.Description,
@@ -111,7 +108,7 @@ namespace DDI.Data
         #endregion
 
         #region Public Methods
-        
+
         public static Country GetCountry(Guid? id)
         {
             if (id == null)
@@ -137,7 +134,7 @@ namespace DDI.Data
             return _countryDict.Select(p => p.Value).FirstOrDefault(predicate);
         }
 
-        public static State GetState (Guid? id)
+        public static State GetState(Guid? id)
         {
             if (id == null)
             {
@@ -161,7 +158,7 @@ namespace DDI.Data
             return _stateDict.Select(p => p.Value).FirstOrDefault(predicate);
         }
 
-        public static County GetCounty (Guid? id)
+        public static County GetCounty(Guid? id)
         {
             if (id == null)
             {

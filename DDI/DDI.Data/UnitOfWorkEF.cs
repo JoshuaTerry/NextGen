@@ -1,9 +1,11 @@
-﻿using System;
+using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace DDI.Data
 {
@@ -42,7 +44,7 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Models.Common.Country).Namespace;
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
             _businessLogic = new List<object>();
         }
 
@@ -72,9 +74,9 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
         }
 
         /// <summary>
@@ -148,11 +150,16 @@ namespace DDI.Data
             GetRepository<T>().Delete(entity);
         }
 
-        public T GetById <T>(object id) where T : class
+        public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);
         }
 
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
+        }
+        
         public IRepository<T> GetRepository<T>() where T : class
         {
             IRepository<T> repository = null;
@@ -182,6 +189,7 @@ namespace DDI.Data
                     }
                     context = _clientContext;
                 }
+
 
                 // Create a repository, then add it to the dictionary.
                 repository = new Repository<T>(context);

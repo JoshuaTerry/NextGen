@@ -5,7 +5,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data.Models;
+using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -63,6 +64,14 @@ namespace DDI.Data
             get
             {
                 return null;
+            }
+        }
+
+        ISQLUtilities IRepository<T>.Utilities
+        {
+            get
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -153,22 +162,19 @@ namespace DDI.Data
 
         public T Find(params object[] keyValues)
         {
-            return GetById(keyValues[0]);
+            return GetById(keyValues[0] as Guid? ?? Guid.Empty);
         }
 
-        public T GetById(object id)
+        public T GetById(Guid id)
         {
-            if (id is Guid)
-            {
-                return _typedEntities.FirstOrDefault(p => p.Id == (Guid)id) as T;
-            }
-            return null;
+            return _typedEntities.FirstOrDefault(p => p.Id == (Guid)id) as T;
         }
+        
 
         public virtual T Create()
         {
             T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
-            (entity as BaseEntity)?.AssignPrimaryKey();
+            (entity as EntityBase)?.AssignPrimaryKey();
             _entities.Add(entity);
 
             return entity;
@@ -221,7 +227,19 @@ namespace DDI.Data
         public List<string> GetModifiedProperties(T entity) 
         {
             return new List<string>();
-        }        
+        }
+
+
+
+        public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            return GetById(id);
+        }
+
+        public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
+        {
+            return Entities;
+        }
 
         #endregion Public Methods
     }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data.Models.Common;
 using System.Runtime.Caching;
 using DDI.Data;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models.Common;
+using DDI.Shared;
 
 namespace DDI.Business.Common
 {

@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Common;
 using DDI.Data;
-using DDI.Data.Enums.CRM;
-using DDI.Data.Models.Client.CRM;
+using DDI.Shared;
+using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {

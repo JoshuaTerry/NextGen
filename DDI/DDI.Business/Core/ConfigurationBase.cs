@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Data.Models;
+using DDI.Data; 
+using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Business.Core
 {
@@ -39,7 +40,7 @@ namespace DDI.Business.Core
         /// <summary>
         /// Convert a set of entities into a comma delimited list of Guid strings.
         /// </summary>
-        public string GetGuidStrings(IEnumerable<BaseEntity> entityList)
+        public string GetGuidStrings(IEnumerable<EntityBase> entityList)
         {
             return string.Join(",", entityList.Where(p => p != null).Select(p => p.Id.ToString()));
         }
@@ -47,7 +48,7 @@ namespace DDI.Business.Core
         /// <summary>
         /// Retrieve an entity from the database using a Guid string value.
         /// </summary>
-        public T GetEntity<T>(string guidString, IUnitOfWork uow) where T : BaseEntity
+        public T GetEntity<T>(string guidString, IUnitOfWork uow) where T : EntityBase
         {
             if (string.IsNullOrWhiteSpace(guidString))
             {
@@ -66,7 +67,7 @@ namespace DDI.Business.Core
         /// <summary>
         /// Retrieve a list of entities from the database using a comma delimited list of Guid string values.
         /// </summary>
-        public IList<T> GetEntityList<T>(string guids, IUnitOfWork uow) where T : BaseEntity
+        public IList<T> GetEntityList<T>(string guids, IUnitOfWork uow) where T : EntityBase
         {
             List<T> list = new List<T>();
 
