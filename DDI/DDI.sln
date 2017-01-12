@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Business", "DDI.Busines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Business.Tests", "DDI.Business.Tests\DDI.Business.Tests.csproj", "{0F346E1C-7AA5-4C4E-8181-3BF2534CDC0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Conversion", "DDI.Conversion\DDI.Conversion.csproj", "{F08E542B-5CB5-478F-8247-B01C42A84E24}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Services", "Services\DDI.Services.csproj", "{23BFE6F8-F3EA-4BE6-A193-CA70F9452943}"
 EndProject
 Global
