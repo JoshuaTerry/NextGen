@@ -40,7 +40,7 @@ namespace DDI.Conversion
             else
             {
                 organization = "NG";
-                minCount = 79000;
+                minCount = 0;
                 maxCount = int.MaxValue;
             }
 
@@ -57,7 +57,7 @@ namespace DDI.Conversion
             //Run<CRM.Initialize>();
             //Run<CRM.SettingsLoader>();
 
-            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0));
+            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 90000, 0));
         }
 
         private static void Run<T>() where T : ConversionBase, new()
