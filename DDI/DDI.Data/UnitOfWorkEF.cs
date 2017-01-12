@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,9 +73,9 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
         }
 
         /// <summary>
@@ -148,11 +149,16 @@ namespace DDI.Data
             GetRepository<T>().Delete(entity);
         }
 
-        public T GetById <T>(object id) where T : class
+        public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);
         }
 
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
+        }
+        
         public IRepository<T> GetRepository<T>() where T : class
         {
             IRepository<T> repository = null;
