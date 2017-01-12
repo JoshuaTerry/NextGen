@@ -1,8 +1,5 @@
 ﻿
-/*.dx-datagrid-table { width: 100%; border-collapse: collapse; }
-.dx-header-row td:hover { cursor: pointer; }
-.dx-data-row { margin: 0px; padding: 0px 3px; }
-.dx-data-row { padding: 3px 0px; }*/
+
 .dx-data-row:hover { background-color: #cccccc; cursor: pointer; }
 
 .searchcriteria { width: 15%; display: inline-block; margin: 10px 0 0 1%; vertical-align: top; }
