@@ -98,13 +98,17 @@ namespace DDI.Data.Models
 
         #endregion
 
-        public dynamic ToPartialObject(string fields, bool shouldAddLinks)
+        public dynamic ToPartialObject(string fields = null, bool shouldAddLinks = false)
         {
-            if (string.IsNullOrWhiteSpace(fields) || !shouldAddLinks)
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = null;
+            }
+            if (fields==null && !shouldAddLinks)
             {
                 return this;
             }
-            var listOfFields = fields?.Split(',').ToList() ?? new List<string>();
+            var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
             var result = this.ToDynamic(listOfFields);
             if (shouldAddLinks)
             {

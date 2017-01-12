@@ -12,22 +12,29 @@ namespace DDI.WebApi.Services
     {
         private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase));
 
-        public IDataResponse<dynamic> GetIDataResponse<T>(Func<T> funcToExecute)
+        public IDataResponse<dynamic> GetIDataResponse<T>(Func<T> funcToExecute, string fieldList = null, bool shouldAddLinks = false) 
         {
             return GetDataResponse(funcToExecute);
         }
 
-        public DataResponse<dynamic> GetDataResponse<T>(Func<T> funcToExecute)
+        public DataResponse<dynamic> GetDataResponse<T>(Func<T> funcToExecute, string fieldList = null, bool shouldAddLinks = false) 
         {
             try
             {
                 var result = funcToExecute();
-                var resultWithLinks = result.AddLinks();
-                return new DataResponse<dynamic>
+                var dataResponse =  new DataResponse<dynamic>
                 {
-                    Data = resultWithLinks,
                     IsSuccessful = true
                 };
+                if (result is IEnumerable<BaseEntity>)
+                {
+                    dataResponse.Data = (result as IEnumerable<BaseEntity>).ToPartialObject(fieldList, shouldAddLinks);
+                }
+                else if (result is BaseEntity)
+                {
+                    dataResponse.Data = (result as BaseEntity).ToPartialObject(fieldList, shouldAddLinks);
+                }
+                return dataResponse;
             }
             catch (Exception e)
             {
