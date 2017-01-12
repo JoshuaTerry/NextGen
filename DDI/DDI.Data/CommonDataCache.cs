@@ -49,7 +49,7 @@ namespace DDI.Data
             _countryDict = new Dictionary<Guid, Country>();
             foreach (var row in CommonContext.Countries)
             {
-                Country country = new Models.Common.Country()
+                Country country = new Shared.Models.Common.Country()
                 {
                     AddressFormat = row.AddressFormat,
                     CallingCode = row.CallingCode,
@@ -73,7 +73,7 @@ namespace DDI.Data
             _stateDict = new Dictionary<Guid, State>();
             foreach (var row in CommonContext.States)
             {
-                State state = new Models.Common.State()
+                State state = new Shared.Models.Common.State()
                 {
                     CountryId = row.CountryId,
                     Description = row.Description,
