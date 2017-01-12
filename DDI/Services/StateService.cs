@@ -18,11 +18,11 @@ namespace DDI.Services
         }
         #region Public Methods
 
-        public IDataResponse<dynamic> GetAll(StateSearch search= null)
+        public IDataResponse<dynamic> GetAll(ForeignKeySearch search= null)
         {
             var result = UnitOfWork.GetRepository<State>().Entities;
-            var query = new CriteriaQuery<State, StateSearch>(result, search)
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.CountryId, d => d.CountryId);
+            var query = new CriteriaQuery<State, ForeignKeySearch>(result, search)
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.Id, d => d.CountryId);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             return GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(a => a.DisplayName).ToList());
