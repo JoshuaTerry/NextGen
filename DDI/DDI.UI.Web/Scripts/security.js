@@ -29,13 +29,9 @@ $(document).ready(function () {
                 crossDomain: true,
                 success: function () {
 
-                    if (IsSuccessful) {
+                    AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
 
-                        AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
-
-                        location.href = "/Login.aspx";
-                    }
-                    
+                    location.href = "/Login.aspx";
 
                 },
                 error: function (xhr, status, err) {
@@ -145,13 +141,13 @@ function DisplayUserInfo(id) {
 function AddUsersToRoles(user, roles) {
 
     var data = {
-        user: user,
-        roles: roles
+        Email: user,
+        Roles: roles
     }
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'UserRoles',
+        url: WEB_API_ADDRESS + 'UserRoles/AddMultiple',
         data: data,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
