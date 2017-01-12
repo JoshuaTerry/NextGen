@@ -7,15 +7,16 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
-using DDI.Data.Models;
-using DDI.Data.Models.Client.Core;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
 using DDI.Shared.ModuleInfo;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Business.Core
 {
-    public class ConfigurationLogic : BaseEntityLogic<Configuration>
+    public class ConfigurationLogic : EntityLogicBase<Configuration>
     {
         #region Private Fields
 
@@ -23,7 +24,7 @@ namespace DDI.Business.Core
         private const int CONFIGURATION_TIMEOUT_MINS = 5;
         private const string CONFIGURATION_KEY = "CONFIG";
 
-        private List<BaseConfiguration> _attachedConfigurations;
+        private List<ConfigurationBase> _attachedConfigurations;
 
         #endregion
 
@@ -33,14 +34,14 @@ namespace DDI.Business.Core
 
         public ConfigurationLogic(IUnitOfWork uow) : base(uow)
         {
-            _attachedConfigurations = new List<BaseConfiguration>();
+            _attachedConfigurations = new List<ConfigurationBase>();
         }
 
         #endregion
 
         #region Public Methods
 
-        public T GetConfiguration<T> (bool reload = false) where T : BaseConfiguration
+        public T GetConfiguration<T> (bool reload = false) where T : ConfigurationBase
         {
             T config = null;
             ObjectCache cache = MemoryCache.Default;
@@ -72,7 +73,7 @@ namespace DDI.Business.Core
             return config;
         }
 
-        public void SaveConfiguration<T>(T config, bool saveChanges = true) where T : BaseConfiguration
+        public void SaveConfiguration<T>(T config, bool saveChanges = true) where T : ConfigurationBase
         {
             if (config == null)
             {
@@ -102,15 +103,15 @@ namespace DDI.Business.Core
 
         #region Private Methods
 
-        private string GetCacheKey<T>() where T : BaseConfiguration
+        private string GetCacheKey<T>() where T : ConfigurationBase
         {
             return CONFIGURATION_KEY + typeof(T).Name;
         }
 
-        private void SaveConfigurationToDb(BaseConfiguration config)
+        private void SaveConfigurationToDb(ConfigurationBase config)
         {
             Type configType = config.GetType();
-            Type baseEntityType = typeof(BaseEntity);
+            Type EntityBaseType = typeof(EntityBase);
 
             ModuleTypeAttribute attr = configType.GetAttribute<ModuleTypeAttribute>();
             if (attr == null)
@@ -153,10 +154,10 @@ namespace DDI.Business.Core
                         failed = true;
                     }
                 }
-                else if (propType.IsSubclassOf(baseEntityType))
+                else if (propType.IsSubclassOf(EntityBaseType))
                 {
                     // Entity properties
-                    var entity = prop.GetValue(config) as BaseEntity;
+                    var entity = prop.GetValue(config) as EntityBase;
                     if (entity != null)
                     {
                         // Convert id to string
@@ -205,7 +206,7 @@ namespace DDI.Business.Core
             UnitOfWork.SaveChanges();
         }
 
-        private BaseConfiguration LoadConfiguration(Type type)
+        private ConfigurationBase LoadConfiguration(Type type)
         {
             ModuleTypeAttribute attr = type.GetAttribute<ModuleTypeAttribute>();
             if (attr == null)
@@ -214,10 +215,10 @@ namespace DDI.Business.Core
             }
 
             ModuleType modType = attr.ModuleType;
-            Type baseEntityType = typeof(BaseEntity);
+            Type EntityBaseType = typeof(EntityBase);
 
             // Create an instance of the config class.
-            var config = (BaseConfiguration)Activator.CreateInstance(type);            
+            var config = (ConfigurationBase)Activator.CreateInstance(type);            
 
             // Iterate through each ModuleSetting and populate the config object.
             foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == modType))
@@ -273,12 +274,12 @@ namespace DDI.Business.Core
                             failed = true;
                         }
                     }
-                    else if (propType.IsSubclassOf(baseEntityType))
+                    else if (propType.IsSubclassOf(EntityBaseType))
                     {
                         // Entity properties - Use reflection to call BaseConfiguration.GetEntity<T>
                         try
                         {
-                            MethodInfo generic = typeof(BaseConfiguration).GetMethod(nameof(BaseConfiguration.GetEntity)).MakeGenericMethod(propType);
+                            MethodInfo generic = typeof(ConfigurationBase).GetMethod(nameof(ConfigurationBase.GetEntity)).MakeGenericMethod(propType);
                             prop.SetValue(config, generic.Invoke(config, new object[] { valString, UnitOfWork }));
                         }
                         catch
@@ -317,7 +318,7 @@ namespace DDI.Business.Core
         /// <param name="arguments"></param>
         private void CacheItemRemoved(CacheEntryRemovedArguments arguments)
         {
-            BaseConfiguration config = arguments.CacheItem.Value as BaseConfiguration;
+            ConfigurationBase config = arguments.CacheItem.Value as ConfigurationBase;
             if (config != null)
             {
                 _attachedConfigurations.Remove(config);

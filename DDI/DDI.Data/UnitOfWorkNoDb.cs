@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -90,9 +91,9 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
         }
 
         /// <summary>
@@ -163,9 +164,14 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
-        public T GetById<T>(object id) where T : class
+        public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);
+        }
+
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
         }
 
         #endregion Protected Methods

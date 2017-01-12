@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DDI.Data;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using DDI.Shared;
 
 namespace DDI.WebApi.Tests.Controllers
 {
@@ -14,9 +15,11 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod]
         public void GetAllGenders_ReturnsGenderCollection()
         {
-            var repo = new Mock<IRepository<Gender>>(); ;
+            var uow = new Mock<IUnitOfWork>();
+            var repo = new Mock<IRepository<Gender>>();  
             repo.Setup(r => r.Entities).Returns(SetupRepo());
-            var service = new GenericServiceBase<Gender>(repo.Object);
+            uow.Setup(m => m.GetRepository<Gender>()).Returns(repo.Object);
+            var service = new ServiceBase<Gender>(uow.Object);
             var result = service.GetAll();
 
             Assert.IsTrue(result.Data.Count == 3);

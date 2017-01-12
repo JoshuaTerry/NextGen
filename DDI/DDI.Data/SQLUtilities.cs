@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDI.Shared; 
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq; 
 
 namespace DDI.Data
 {
     /// <summary>
     /// SQL Utilities
     /// </summary>
-    public class SQLUtilities
+    public class SQLUtilities : ISQLUtilities
     {
         private DbContext _context = null;
 

@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class EducationLevelsController : ApiController
     {
-        GenericServiceBase<EducationLevel> _service;
+        ServiceBase<EducationLevel> _service;
 
-        public EducationLevelsController() : this(new GenericServiceBase<EducationLevel>()) { }
-        internal EducationLevelsController(GenericServiceBase<EducationLevel> service)
+        public EducationLevelsController() : this(new ServiceBase<EducationLevel>()) { }
+        internal EducationLevelsController(ServiceBase<EducationLevel> service)
         {
             _service = service;
         }
