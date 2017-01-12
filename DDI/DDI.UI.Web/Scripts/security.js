@@ -1,6 +1,16 @@
 ﻿
 $(document).ready(function () {
 
+    SetupNewUserModal();
+
+    LoadGroupsGrid();
+
+    // LoadUsersGrid();
+
+});
+
+function SetupNewUserModal() {
+
     $('.addnewuser').click(function (e) {
 
         e.preventDefault();
@@ -43,17 +53,21 @@ $(document).ready(function () {
 
     });
 
-});
+}
 
 /* GROUPS TAB */
 function LoadGroupsGrid() {
 
     var columns = [
-        { dataField: 'GroupName', caption: 'Group Name' },
-        { dataField: 'Description', caption: 'Description' }
+        { dataField: 'Id', visible: false },
+        { dataField: 'Name', caption: 'Group Name' }
     ];
 
-    LoadGrid('groupsgrkid', 'groupsgridcontainer', columns, 'groups');
+    LoadGrid('groupsgrid', 'groupsgridcontainer', columns, 'roles', function () {
+
+        LoadGroupMembersGrid();
+
+    });
 
 }
 
@@ -64,7 +78,52 @@ function LoadGroupMembersGrid() {
         { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('groupmembersgrid', 'groupmembersgridcontainer', columns, 'groupmembers');
+    var datagrid = $('<div>').addClass(grid);
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $(datagrid).dxDataGrid({
+                dataSource: data,
+                columns: columns,
+                paging: {
+                    pageSize: 25
+                },
+                pager: {
+                    showNavigationButtons: true,
+                    showPageSizeSelector: true,
+                    showInfo: true,
+                    allowedPageSizes: [15, 25, 50, 100]
+                },
+                groupPanel: {
+                    visible: false,
+                    allowColumnDragging: true
+                },
+                filterRow: {
+                    visible: true,
+                    showOperationChooser: false
+                },
+                onRowClick: function (info) {
+
+                    if (selected) {
+                        selected();
+                    }
+
+                }
+            });
+
+            $(datagrid).appendTo($(container));
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading grid.');
+        }
+    });
 
 }
 
@@ -162,7 +221,7 @@ function AddUsersToRoles(user, roles) {
 }
 /* END USERS TAB */
 
-function LoadGrid(grid, container, columns, route) {
+function LoadGrid(grid, container, columns, route, selected) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -178,7 +237,7 @@ function LoadGrid(grid, container, columns, route) {
         success: function (data) {
 
             $(datagrid).dxDataGrid({
-                dataSource: data.Data,
+                dataSource: data,
                 columns: columns,
                 paging: {
                     pageSize: 25
@@ -190,12 +249,19 @@ function LoadGrid(grid, container, columns, route) {
                     allowedPageSizes: [15, 25, 50, 100]
                 },
                 groupPanel: {
-                    visible: true,
+                    visible: false,
                     allowColumnDragging: true
                 },
                 filterRow: {
                     visible: true,
                     showOperationChooser: false
+                },
+                onRowClick: function (info) {
+
+                    if (selected) {
+                        selected();
+                    }
+
                 }
             });
 
@@ -208,5 +274,6 @@ function LoadGrid(grid, container, columns, route) {
     });
 
 }
+
 
 
