@@ -44,16 +44,16 @@ namespace DDI.Conversion
                 minCount = 0;
                 maxCount = 999999;
             }
-            
-			log4net.Config.XmlConfigurator.Configure();
-            
+
+            log4net.Config.XmlConfigurator.Configure();
+
             string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
-            
+
             LoadDataCRM.ExecuteCRMLoad(organization, filePath, minCount, maxCount);
-            
+
         }
 
     }
-    
+
 
 }

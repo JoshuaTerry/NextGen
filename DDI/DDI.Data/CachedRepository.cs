@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
+using DDI.Data.Models;
 
 namespace DDI.Data
 {

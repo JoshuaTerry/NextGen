@@ -6,7 +6,8 @@
 <head runat="server">
 
     <title>DDI Connect</title>
-
+    
+    <script type="text/javascript" src="..\..\Scripts\configuration.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-ui.min.js"></script>

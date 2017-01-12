@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +25,9 @@ namespace DDI.Shared
 
         void Delete(T entity);
 
-        T GetById(object id);
+        T GetById(Guid id);
+
+        T GetById(Guid id, params Expression<Func<T, object>>[] includes);
 
         T Find(params object[] keyValues);
 
@@ -51,6 +54,8 @@ namespace DDI.Shared
         ICollection<T> GetLocal();
 
         void Attach(T entity);
+
+        IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes);
 
         #endregion Public Methods
     }

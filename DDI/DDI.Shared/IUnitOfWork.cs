@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace DDI.Shared
 
         IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class;
 
-        IQueryable<T> GetEntities<T>() where T : class;
+        IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class;
 
         T FirstOrDefault<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class;
 
@@ -40,7 +41,9 @@ namespace DDI.Shared
 
         void Delete<T>(T entity) where T : class;
 
-        T GetById<T>(object id) where T : class;
+        T GetById<T>(Guid id) where T : class;
+
+        T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class;
 
         #endregion Public Methods
     }
