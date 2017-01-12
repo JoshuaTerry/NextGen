@@ -27,67 +27,10 @@ namespace DDI.Data.Extensions
             
             return list;
         }
-//
-//        public static dynamic AddLinks(this object entity)
-//        {
-//            dynamic entityWithLinks = entity;
-//            Debug.WriteLine(entity.GetType());
-//            if (entity is IEnumerable)
-//            {
-//                var list = new List<ExpandoObject>();
-//                IEnumerable enumerable = entity as IEnumerable;
-//                foreach (var item in enumerable)
-//                {
-//                    list.Add(item.AddLinks());
-//                }
-//
-//                return list;
-//            }
-//            else if (entity is Constituent)
-//            {
-//                entityWithLinks = ((Constituent) entity).AddLinks();
-//            }
-//            return entityWithLinks;
-//        }
+
         public static dynamic ToDynamic<T>(this T value, List<string> fieldsToInclude = null ) where T: BaseEntity
         {
-
-            //            IDictionary<string, object> expando = new ExpandoObject();
-            //
-            //            if (!fieldsToInclude.Any())
-            //            {
-            //                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
-            //                {
-            //                    expando.Add(property.Name, property.GetValue(value));
-            //                }
-            //            }
-            //            else
-            //            {
-            //                foreach (var field in fieldsToInclude)
-            //                {
-            //                    if (field.Contains("."))
-            //                    {
-            //                        var property = field.Substring(0, field.IndexOf("."));
-            //                        var subProperty = field.Substring(field.IndexOf(".")+1,field.Length - field.IndexOf(".")-1);
-            //                        var actualField = value.GetType().GetProperty(property, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-            //                        var fieldValue = actualField.GetValue(value, null);
-            //                        if (fieldValue is IEnumerable<BaseEntity>)
-            //                        {
-            //                            expando.Add(actualField.Name, (fieldValue as IEnumerable<BaseEntity>).ToPartialObject(subProperty));
-            //                        }
-            //                        else if (fieldValue is BaseEntity)
-            //                        {
-            //                            expando.Add(actualField.Name, (fieldValue as BaseEntity).ToPartialObject(subProperty));
-            //                        }
-            //                    }
-            //                    else
-            //                    {
-            //                        var actualField = value.GetType().GetProperty(field, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-            //                        var fieldValue = actualField.GetValue(value, null);
-            //                        expando.Add(actualField.Name, fieldValue);
-            //                    }
-            //                }
-            //            }
+            //This works, but it would be quicker if we just loop through the list of fields sent in. The only complucated piece is the sub-fields group together in one object
             dynamic returnObject = new ExpandoObject();
             Type type = value.GetType();
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
@@ -106,7 +49,6 @@ namespace DDI.Data.Extensions
                     var newFieldList = String.Join(",", fieldArrayList);
                     var strippedFieldList = newFieldList.Replace(currentProperty, "");
                     var fieldValue = property.GetValue(value, null);
-                    //((IDictionary<string, object>) returnObject)[property.Name] = property.GetValue(value, null).ToPartialObject(strippedFieldList);
                     if (fieldValue is IEnumerable<BaseEntity>)
                     {
                         ((IDictionary<string, object>) returnObject)[property.Name] = (fieldValue as IEnumerable<BaseEntity>).ToPartialObject(strippedFieldList);
