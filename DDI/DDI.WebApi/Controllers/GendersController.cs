@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class GendersController : ApiController
     {
-        GenericServiceBase<Gender> _service;
+        ServiceBase<Gender> _service;
 
-        public GendersController() : this(new GenericServiceBase<Gender>()) { }
-        internal GendersController(GenericServiceBase<Gender> service)
+        public GendersController() : this(new ServiceBase<Gender>()) { }
+        internal GendersController(ServiceBase<Gender> service)
         {
             _service = service;
         }

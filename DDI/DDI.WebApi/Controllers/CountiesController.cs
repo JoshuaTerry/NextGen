@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DDI.Services;
+using DDI.Services.Search;
+using System;
 using System.Web.Http;
-using DDI.WebApi.Services;
-using DDI.WebApi.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {

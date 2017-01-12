@@ -6,13 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
-using DDI.Data.Models;
 
 namespace DDI.Data
 {
     public class CachedRepository<T> : Repository<T> where T : class
     {
-        private readonly string _cacheKey;
+        private readonly string _cacheKey = string.Empty;
         private static readonly object _cacheItemLock = new object();
         public CachedRepository() :
             this(new DomainContext())

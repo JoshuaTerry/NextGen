@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using DDI.Shared;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,8 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -38,7 +39,7 @@ namespace DDI.Data
 
         public virtual IQueryable<T> Entities => EntitySet;
 
-        public SQLUtilities Utilities
+        public ISQLUtilities Utilities
         {
             get
             {
@@ -78,18 +79,13 @@ namespace DDI.Data
             _isUOW = false;
         }
 
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
         public Repository(DbContext context)
         {
             _context = context;
             _isUOW = (context != null);
         }
-
         #endregion Public Constructors
-
+         
         #region Public Methods
 
         public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
@@ -194,13 +190,13 @@ namespace DDI.Data
                     PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
                     if (propInfo != null)
                     {
-                        if (entity is BaseLinkedEntity)
+                        if (entity is LinkedEntityBase)
                         {
                             // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
-                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
+                            if (propInfo.Name == nameof(LinkedEntityBase.ParentEntity))
                             {
                                 // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
-                                var linkedEntity = entity as BaseLinkedEntity;
+                                var linkedEntity = entity as LinkedEntityBase;
                                 linkedEntity.LoadParentEntity(_context);
                                 return linkedEntity.ParentEntity as TElement;
                             }
@@ -312,7 +308,7 @@ namespace DDI.Data
         public virtual T Create()
         {
             T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
-            (entity as BaseEntity)?.AssignPrimaryKey();
+            (entity as EntityBase)?.AssignPrimaryKey();
             EntitySet.Add(entity);
 
             return entity;

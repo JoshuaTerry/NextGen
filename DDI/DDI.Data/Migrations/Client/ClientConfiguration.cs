@@ -1,17 +1,14 @@
 using System;
-using System.Data.Entity.Migrations;
-using System.Linq;
-
-using DDI.Data.Enums.CRM;
-using DDI.Data.Models.Client.CRM;
+using System.Data.Entity.Migrations; 
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Data.Migrations.Client
 {
     /// <summary>
     /// Migration configuration class for client databases
     /// </summary>
-	internal sealed class ClientConfiguration : DbMigrationsConfiguration<DomainContext>
-	{
+    internal sealed class ClientConfiguration : DbMigrationsConfiguration<DomainContext>
+    {
          /*
           * Commands
           * add-migration <Name> -ConfigurationTypeName ClientConfiguration
@@ -21,16 +18,16 @@ namespace DDI.Data.Migrations.Client
         #region Public Constructors
 
         public ClientConfiguration()
-		{
-			AutomaticMigrationsEnabled = false;
-		}
+        {
+            AutomaticMigrationsEnabled = false;
+        }
 
-		#endregion Public Constructors
+        #endregion Public Constructors
 
-		#region Protected Methods
+        #region Protected Methods
 
-		protected override void Seed(DomainContext context)
-		{
+        protected override void Seed(DomainContext context)
+        {
             // This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
@@ -47,6 +44,6 @@ namespace DDI.Data.Migrations.Client
 
         }
 
-		#endregion Protected Methods
-	}
+        #endregion Protected Methods
+    }
 }

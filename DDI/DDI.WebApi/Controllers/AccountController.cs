@@ -14,13 +14,13 @@ using DDI.WebApi.Models;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
-using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using DDI.WebApi.Services;
 
 namespace DDI.WebApi.Controllers
 {

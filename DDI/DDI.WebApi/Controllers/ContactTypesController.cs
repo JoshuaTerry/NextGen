@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class ContactTypesController : ApiController
     {
-        GenericServiceBase<ContactType> _service;
+        ServiceBase<ContactType> _service;
 
-        public ContactTypesController() : this(new GenericServiceBase<ContactType>()) { }
-        internal ContactTypesController(GenericServiceBase<ContactType> service)
+        public ContactTypesController() : this(new ServiceBase<ContactType>()) { }
+        internal ContactTypesController(ServiceBase<ContactType> service)
         {
             _service = service;
         }

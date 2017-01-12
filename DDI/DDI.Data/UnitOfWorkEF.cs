@@ -1,12 +1,12 @@
-﻿using System;
+using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
 
 namespace DDI.Data
 {
@@ -44,7 +44,7 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Models.Common.Country).Namespace;
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
         }
 
         #endregion Public Constructors

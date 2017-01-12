@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
     public class ConstituentStatusesController : ApiController
     {
-        GenericServiceBase<ConstituentStatus> _service;
+        ServiceBase<ConstituentStatus> _service;
 
-        public ConstituentStatusesController() : this(new GenericServiceBase<ConstituentStatus>()) { }
-        internal ConstituentStatusesController(GenericServiceBase<ConstituentStatus> service)
+        public ConstituentStatusesController() : this(new ServiceBase<ConstituentStatus>()) { }
+        internal ConstituentStatusesController(ServiceBase<ConstituentStatus> service)
         {
             _service = service;
         }
