@@ -83,7 +83,7 @@
                     <h1>Name</h1>
                     <div class="editcontainer">
 
-                        <div class="inline">
+                        <div class="fivecolumn">
                             <div class="fieldblock">
                                 <label>Prefix</label>
                                 <select class="editable PrefixId"></select>
@@ -110,22 +110,24 @@
                             </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Name 2</label>
-                            <input type="text" class="editable Name2" />
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Name 2</label>
+                                <input type="text" class="editable Name2" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Nickname</label>
+                                <input type="text" class="editable NickName" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Salutation</label>
+                                <input type="text" class="editable Salutation" />
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Nickname</label>
-                            <input type="text" class="editable NickName" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Salutation</label>
-                            <input type="text" class="editable Salutation" />
-                        </div>
-
-                        <div class="inline">
+                        <div class="threecolumn">
                             <div class="fieldblock">
                                 <label>Tax ID</label>
                                 <input type="text" class="editable TaxId" />
@@ -165,24 +167,26 @@
                     <h1>Clergy Section</h1>
                     <div class="editcontainer">
                         
-                        <div class="fieldblock">
-                            <label>Clergy Type</label>
-                            <select class="editable ClergyTypeId"></select>
-                        </div>
+                        <div class="fourcolumn">
+                            <div class="fieldblock">
+                                <label>Clergy Type</label>
+                                <select class="editable ClergyTypeId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Clergy Status</label>
-                            <select class="editable ClergyStatusId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Clergy Status</label>
+                                <select class="editable ClergyStatusId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Ordination Date</label>
-                            <input type="text" class="editable OrdinationDate datepicker" />
-                        </div>
+                            <div class="fieldblock">
+                                <label>Ordination Date</label>
+                                <input type="text" class="editable OrdinationDate datepicker" />
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Place of Ordination</label>
-                            <input type="text" class="editable PlaceOfOrdination" />
+                            <div class="fieldblock">
+                                <label>Place of Ordination</label>
+                                <input type="text" class="editable PlaceOfOrdination" />
+                            </div>
                         </div>
 
                     </div>
@@ -190,21 +194,22 @@
                     <h1>Demographics</h1>
                     <div class="editcontainer">
 
-                        <div class="fieldblock">
-                            <label>Denomination</label>
-                            <select class="editable DenominationId"></select>
-                        </div>
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Denomination</label>
+                                <select class="editable DenominationId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Ethnicity</label>
-                            <select class="editable EthnicityId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Ethnicity</label>
+                                <select class="editable EthnicityId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Language</label>
-                            <select class="editable LanguageId"></select>
+                            <div class="fieldblock">
+                                <label>Language</label>
+                                <select class="editable LanguageId"></select>
+                            </div>
                         </div>
-
                     </div>
 
                     <h1>Doing Business As (Not Implemented Yet)</h1>
@@ -288,31 +293,35 @@
                     <h1>Professional</h1>
                     <div class="editcontainer">
 
-                        <div class="fieldblock">
-                            <label>Profession</label>
-                            <select class="editable ProfessionId"></select>
-                        </div>
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Profession</label>
+                                <select class="editable ProfessionId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Income Level</label>
-                            <select class="editable IncomeLevelId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Income Level</label>
+                                <select class="editable IncomeLevelId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>First Employed</label>
-                            <input type="text" class="editable FirstEmploymentDate datepicker" />
+                            <div class="fieldblock">
+                                <label>First Employed</label>
+                                <input type="text" class="editable FirstEmploymentDate datepicker" />
+                            </div>
                         </div>
+                        
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Employer</label>
+                                <input type="text" class="editable Employer" />
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Employer</label>
-                            <input type="text" class="editable Employer" />
+                            <div class="fieldblock">
+                                <label>Position</label>
+                                <input type="text" class="editable Position" />
+                            </div>
                         </div>
-
-                        <div class="fieldblock">
-                            <label>Position</label>
-                            <input type="text" class="editable Position" />
-                        </div>
-
+                            
                         <div class="twocolumn">
                             <div class="fieldblock">
                                 <label>Start</label>

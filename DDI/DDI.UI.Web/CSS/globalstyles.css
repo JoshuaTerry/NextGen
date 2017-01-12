@@ -43,10 +43,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 
 .maincontainer { width: 100%; }
 
-div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
-div.threecolumn>div { width: 33%; display: inline-block; vertical-align: top; }
-div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; }
-div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; }
+div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; margin-right: .8%; }
+div.threecolumn>div { width: 32.8%; display: inline-block; vertical-align: top; }
+div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; margin-right: .7%; }
+div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; margin-right: .7%; }
 
 div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
@@ -56,6 +56,8 @@ div.fieldblock label { display: block; }
 div.fieldblock label.inline { display: inline-block; }
 div.fieldblock input,
 div.fieldblock select { width: 99%; }
+div.fieldblock input { height: 15px; }
+div.fieldblock select { height: 21px; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
@@ -87,6 +89,12 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .modalcontent {  }
 .modalcontent fieldset { margin-bottom: 10px; }
 .modalcontent div.inline { margin-bottom: 5px; }
+.modalcontent div.twocolumn>div { margin-right: .5%; }
+.modalcontent div.threecolumn>div {  }
+.modalcontent div.fourcolumn>div { margin-right: .5%; }
+.modalcontent div.fivecolumn>div { margin-right: .5%; }
+
+.modalcontent fieldset { background-color: #eeeeee; }
 
 .modalbuttons { text-align: right; padding-top: 15px; }
 .modalbuttons input[type="button"] { margin-right: 10px; }
