@@ -35,7 +35,7 @@ namespace DDI.Data
 
         #region Private Methods
 
-        private static T GetEntry<T> (Dictionary<Guid, T> dict, Guid id) where T : class
+        private static T GetEntry<T>(Dictionary<Guid, T> dict, Guid id) where T : class
         {
             T obj;
             if (dict.TryGetValue(id, out obj))
@@ -52,7 +52,22 @@ namespace DDI.Data
             _countryDict = new Dictionary<Guid, Country>();
             foreach (var row in CommonContext.Countries)
             {
-                _countryDict.Add(row.Id, row);
+                Country country = new Models.Common.Country()
+                {
+                    AddressFormat = row.AddressFormat,
+                    CallingCode = row.CallingCode,
+                    CountryCode = row.CountryCode,
+                    Description = row.Description,
+                    Id = row.Id,
+                    InternationalPrefix = row.InternationalPrefix,
+                    ISOCode = row.ISOCode,
+                    PhoneFormat = row.PhoneFormat,
+                    PostalCodeFormat = row.PostalCodeFormat,
+                    StateAbbreviation = row.StateAbbreviation,
+                    StateName = row.StateName,
+                    TrunkPrefix = row.TrunkPrefix
+                };
+                _countryDict.Add(row.Id, country);
             }
         }
 
@@ -61,7 +76,15 @@ namespace DDI.Data
             _stateDict = new Dictionary<Guid, State>();
             foreach (var row in CommonContext.States)
             {
-                _stateDict.Add(row.Id, row);
+                State state = new Models.Common.State()
+                {
+                    CountryId = row.CountryId,
+                    Description = row.Description,
+                    FIPSCode = row.FIPSCode,
+                    Id = row.Id,
+                    StateCode = row.StateCode
+                };
+                _stateDict.Add(row.Id, state);
             }
         }
 
@@ -70,14 +93,25 @@ namespace DDI.Data
             _countyDict = new Dictionary<Guid, County>();
             foreach (var row in CommonContext.Counties)
             {
-                _countyDict.Add(row.Id, row);
+                County county = new County()
+                {
+                    Description = row.Description,
+                    FIPSCode = row.FIPSCode,
+                    Id = row.Id,
+                    Population = row.Population,
+                    PopulationPercentageChange = row.PopulationPercentageChange,
+                    PopulationPerSqaureMile = row.PopulationPerSqaureMile,
+                    StateId = row.StateId
+                };
+
+                _countyDict.Add(row.Id, county);
             }
         }
 
         #endregion
 
         #region Public Methods
-        
+
         public static Country GetCountry(Guid? id)
         {
             if (id == null)
@@ -93,7 +127,7 @@ namespace DDI.Data
             return GetEntry(_countryDict, id.Value);
         }
 
-        public static State GetState (Guid? id)
+        public static State GetState(Guid? id)
         {
             if (id == null)
             {
@@ -107,7 +141,7 @@ namespace DDI.Data
             return GetEntry(_stateDict, id.Value);
         }
 
-        public static County GetCounty (Guid? id)
+        public static County GetCounty(Guid? id)
         {
             if (id == null)
             {

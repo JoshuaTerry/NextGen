@@ -255,8 +255,15 @@
     </Compile>
     <Compile Include="Helpers\CriteriaQuery.cs" />
     <Compile Include="Helpers\LinqQuery.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ConfirmRegistrationBindingModel.cs" />
+    <Compile Include="Models\BindingModels\ForgotPasswordConfirmBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RegisterBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RegisterExternalBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RemoveLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -307,6 +314,8 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <None Include="Properties\PublishProfiles\DevEnv-API.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalEnv-API.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -351,6 +360,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -365,7 +375,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49490</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
