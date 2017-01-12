@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data.Models.Common;
@@ -50,6 +51,7 @@ namespace DDI.Data
                         Id = row.Id,
                         InternationalPrefix = row.InternationalPrefix,
                         ISOCode = row.ISOCode,
+                        LegacyCode = row.LegacyCode,
                         PhoneFormat = row.PhoneFormat,
                         PostalCodeFormat = row.PostalCodeFormat,
                         StateAbbreviation = row.StateAbbreviation,
@@ -125,6 +127,16 @@ namespace DDI.Data
             return GetEntry(_countryDict, id.Value);
         }
 
+        public static Country GetCountry(Func<Country, bool> predicate)
+        {
+            if (_countryDict == null)
+            {
+                LoadCountries();
+            }
+
+            return _countryDict.Select(p => p.Value).FirstOrDefault(predicate);
+        }
+
         public static State GetState (Guid? id)
         {
             if (id == null)
@@ -139,6 +151,16 @@ namespace DDI.Data
             return GetEntry(_stateDict, id.Value);
         }
 
+        public static State GetState(Func<State, bool> predicate)
+        {
+            if (_stateDict == null)
+            {
+                LoadCountries();
+            }
+
+            return _stateDict.Select(p => p.Value).FirstOrDefault(predicate);
+        }
+
         public static County GetCounty (Guid? id)
         {
             if (id == null)
@@ -151,6 +173,16 @@ namespace DDI.Data
                 LoadCounties();
             }
             return GetEntry(_countyDict, id.Value);
+        }
+
+        public static County GetCounty(Func<County, bool> predicate)
+        {
+            if (_countyDict == null)
+            {
+                LoadCounties();
+            }
+
+            return _countyDict.Select(p => p.Value).FirstOrDefault(predicate);
         }
 
         #endregion

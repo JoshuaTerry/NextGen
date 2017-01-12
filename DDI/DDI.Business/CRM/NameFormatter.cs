@@ -112,13 +112,10 @@ namespace DDI.Business.CRM
             }
 
             IList<Token> mergeResult = new List<Token>();
-            bool omitSpace = true;
 
             // Merge the macros for the name format into the pattern format.
             foreach (var token in patternTokens)
             {
-                omitSpace |= token.OmitLeadingSpace;
-
                 switch (token.Macro)
                 {
                     case Macro.Name:
@@ -129,9 +126,8 @@ namespace DDI.Business.CRM
                             {
                                 if (first)
                                 {
-                                    mergeResult.Add(new Token(other, omitSpace));
+                                    mergeResult.Add(new Token(other));
                                     first = false;
-                                    omitSpace = false;
                                 }
                                 else
                                 {
@@ -146,8 +142,7 @@ namespace DDI.Business.CRM
                             Token other = formatTokens.FirstOrDefault(p => p.NamePart == MacroNamePart.First);
                             if (other != null)
                             {
-                                mergeResult.Add(new Token(other, omitSpace));
-                                omitSpace = false;
+                                mergeResult.Add(new Token(other));
                             }
                         }
                         break;
@@ -157,8 +152,7 @@ namespace DDI.Business.CRM
                             Token other = formatTokens.FirstOrDefault(p => p.NamePart == MacroNamePart.Middle);
                             if (other != null)
                             {
-                                mergeResult.Add(new Token(other, omitSpace));
-                                omitSpace = false;
+                                mergeResult.Add(new Token(other));
                             }
                         }
                         break;
@@ -168,8 +162,7 @@ namespace DDI.Business.CRM
                             Token other = formatTokens.FirstOrDefault(p => p.NamePart == MacroNamePart.Last);
                             if (other != null)
                             {
-                                mergeResult.Add(new Token(other, omitSpace));
-                                omitSpace = false;
+                                mergeResult.Add(new Token(other));
                             }
                         }
                         break;
@@ -178,8 +171,7 @@ namespace DDI.Business.CRM
                             Token other = formatTokens.FirstOrDefault(p => p.NamePart == MacroNamePart.Suffix);
                             if (other != null)
                             {
-                                mergeResult.Add(new Token(other, omitSpace));
-                                omitSpace = false;
+                                mergeResult.Add(new Token(other));
                             }
                         }
                         break;
@@ -187,14 +179,12 @@ namespace DDI.Business.CRM
                         {
                             if (formatTokens.Any(p => p.NamePart == MacroNamePart.First))
                             {
-                                mergeResult.Add(new Token(token, omitSpace));
-                                omitSpace = false;
+                                mergeResult.Add(new Token(token));
                             }
                         }
                         break;
                     default:
-                        mergeResult.Add(new Token(token, omitSpace));
-                        omitSpace = false;
+                        mergeResult.Add(new Token(token));
                         break;
                 }
             }
@@ -219,12 +209,9 @@ namespace DDI.Business.CRM
                 return string.Empty;
             }
 
-            bool omitSpace = true;
             foreach (Token token in formatTokens)
             {
                 string namePart = string.Empty;
-
-                omitSpace |= token.OmitLeadingSpace;
 
                 switch (token.Macro)
                 {
@@ -289,14 +276,16 @@ namespace DDI.Business.CRM
                         break;
                 }
 
+                namePart = namePart.Trim();
+
                 if (!string.IsNullOrEmpty(namePart))
                 {
-                    if (!omitSpace && namePart[0] != ' ')
+                    if (rslt.Length > 0 && !char.IsPunctuation(namePart[0]))
                     {
+                        // Append a space betweeen tokens unless this token starts with punctuation.
                         rslt.Append(' ');
                     }
                     rslt.Append(namePart);
-                    omitSpace = false;
                 }
 
             } // Each token
@@ -660,7 +649,7 @@ namespace DDI.Business.CRM
             line1 = line2 = string.Empty;
 
             // For organizations, just return the constituent name.
-            ConstituentType ctype = UnitOfWork.GetReference(name1, p => p.ConstituentType);
+            ConstituentType ctype = name1.ConstituentType ?? UnitOfWork.GetReference(name1, p => p.ConstituentType);
             if (ctype == null || ctype.Category == ConstituentCategory.Organization)
             {
                 line1 = name1.Name;
@@ -729,7 +718,7 @@ namespace DDI.Business.CRM
             {
                 if (name2 != null)
                 {
-                    ConstituentType ctype2 = UnitOfWork.GetReference(name1, p => p.ConstituentType);
+                    ConstituentType ctype2 = name2.ConstituentType ?? UnitOfWork.GetReference(name2, p => p.ConstituentType);
                     if (ctype2 == null || ctype.Category == ConstituentCategory.Organization)
                     {
                         line2 = name2.Name;
@@ -1042,14 +1031,6 @@ namespace DDI.Business.CRM
         private void AddTextToken(IList<Token> list, string text)
         {
             Token token = new Token(text);
-
-            if (list.Count == 0 ||
-                (text.Length > 0 &&
-                   (text.StartsWith(" ") || char.IsPunctuation(text[0]))))
-            {
-                token.OmitLeadingSpace = true;
-            }
-
             list.Add(token);
         }
 
@@ -1145,20 +1126,6 @@ namespace DDI.Business.CRM
                     break;
             }
 
-            if (list.Count == 0)
-            {
-                token.OmitLeadingSpace = true;
-            }
-            else
-            {
-                Token lastToken = list.Last();
-
-                // If last token ends with a space, omit leading space.
-                if (lastToken.Macro == Macro.None && lastToken.Text.Length > 0 && lastToken.Text.EndsWith(" "))
-                {
-                    token.OmitLeadingSpace = true;
-                }
-            }
             list.Add(token);
         }
 
@@ -1186,16 +1153,15 @@ namespace DDI.Business.CRM
             SimpleName simpleName = new SimpleName();
             if (name != null)
             {
-                simpleName.Prefix = UnitOfWork.GetReference(name, p => p.Prefix);
+                simpleName.Prefix = name.Prefix ?? UnitOfWork.GetReference(name, p => p.Prefix);
                 simpleName.FirstName = name.FirstName ?? string.Empty;
                 simpleName.MiddleName = name.MiddleName ?? string.Empty;
                 simpleName.LastName = name.LastName ?? string.Empty;
                 simpleName.Suffix = name.Suffix ?? string.Empty;
                 simpleName.Nickname = name.Nickname ?? string.Empty;
                 simpleName.NameFormat = name.NameFormat ?? string.Empty;
-
-                simpleName.Gender = UnitOfWork.GetReference(name, p => p.Gender);
-                ConstituentType ctype = UnitOfWork.GetReference(name, p => p.ConstituentType);
+                simpleName.Gender = name.Gender ?? UnitOfWork.GetReference(name, p => p.Gender);
+                ConstituentType ctype = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
 
                 simpleName.DefaultNameFormat = StringHelper.FirstNonBlank(ctype?.NameFormat, _defaultIndividualNameFormat);
             }
@@ -1217,22 +1183,12 @@ namespace DDI.Business.CRM
             public Macro Macro { get; set; }
             public MacroNamePart NamePart { get; set; }
             public string Text { get; set; }
-            public bool OmitLeadingSpace { get; set; }
 
             public Token (Token other)
             {
                 Macro = other.Macro;
                 NamePart = other.NamePart;
                 Text = other.Text;
-                OmitLeadingSpace = other.OmitLeadingSpace;
-            }
-
-            public Token (Token other, bool omitLeadingSpace)
-            {
-                Macro = other.Macro;
-                NamePart = other.NamePart;
-                Text = other.Text;
-                OmitLeadingSpace = omitLeadingSpace;
             }
 
             public Token (string text)

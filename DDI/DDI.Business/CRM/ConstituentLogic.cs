@@ -110,7 +110,7 @@ namespace DDI.Business.CRM
 
         public Constituent GetSpouse(Constituent name)
         {
-            ConstituentType ctype = UnitOfWork.GetReference(name, p => p.ConstituentType);
+            ConstituentType ctype = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
             if (ctype != null && ctype.Category == ConstituentCategory.Individual)
             {
                 Relationship rel = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
@@ -126,7 +126,7 @@ namespace DDI.Business.CRM
 
         public bool IsConstituentActive(Constituent name)
         {
-            var status = UnitOfWork.GetReference(name, p => p.ConstituentStatus);
+            var status = name.ConstituentStatus ?? UnitOfWork.GetReference(name, p => p.ConstituentStatus);
             //return (status == null && status.BaseStatus != ConstituentBaseStatus.Inactive);
             return true;
         }

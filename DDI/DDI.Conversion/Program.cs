@@ -40,18 +40,19 @@ namespace DDI.Conversion
             else
             {
                 organization = "NG";
-                minCount = 0;
-                maxCount = 999999;
+                minCount = 71700;
+                maxCount = int.MaxValue;
             }
             
 			log4net.Config.XmlConfigurator.Configure();
-                        
+
             string filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
-            ConversionArgs conversionArgs = new ConversionArgs(organization, filePath, minCount, maxCount);
+            ConversionArgs conversionArgs = new ConversionArgs(organization, filePath, minCount, maxCount, false);
 
             //new Core.Initialize().Execute(conversionArgs);
             //new CRM.Initialize().Execute(conversionArgs);
-            new CRM.SettingsLoader().Execute(conversionArgs);
+            //new CRM.SettingsLoader().Execute(conversionArgs);
+            new CRM.ConstituentLoader().Execute(conversionArgs);
 
         }
 
