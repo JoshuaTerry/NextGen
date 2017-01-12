@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class EthnicityController : ApiController
     {
-        GenericServiceBase<Ethnicity> _service;
+        ServiceBase<Ethnicity> _service;
 
-        public EthnicityController() : this(new GenericServiceBase<Ethnicity>()) { }
-        internal EthnicityController(GenericServiceBase<Ethnicity> service)
+        public EthnicityController() : this(new ServiceBase<Ethnicity>()) { }
+        internal EthnicityController(ServiceBase<Ethnicity> service)
         {
             _service = service;
         }

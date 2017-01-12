@@ -1,8 +1,8 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using DDI.Data;
-using DDI.Data.Models.Client.Core;
-using DDI.WebApi.Services;
+using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi.Controllers
 {

@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using DDI.Shared;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -7,8 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -37,7 +39,7 @@ namespace DDI.Data
 
         public virtual IQueryable<T> Entities => EntitySet;
 
-        public SQLUtilities Utilities
+        public ISQLUtilities Utilities
         {
             get
             {
@@ -77,21 +79,38 @@ namespace DDI.Data
             _isUOW = false;
         }
 
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
         public Repository(DbContext context)
         {
             _context = context;
             _isUOW = (context != null);
         }
-
-        #endregion Internal Constructors
-
+        #endregion Public Constructors
+         
         #region Public Methods
 
-
+        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        {
+            var member = property.Body as MemberExpression;
+            if (member == null)
+            {
+                var unary = property.Body as UnaryExpression;
+                if (unary != null)
+                {
+                    member = unary.Operand as MemberExpression;
+                }
+            }
+            if (shouldContainObjectPath && member != null)
+            {
+                var path = member.Expression.ToString();
+                var objectPath = member.Expression.ToString().Split('.');
+                if (objectPath.Length >= 2)
+                {
+                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
+                    return $"{path}.{member.Member.Name}";
+                }
+            }
+            return member?.Member.Name ?? String.Empty;
+        }
 
         public virtual void Delete(T entity)
         {
@@ -171,13 +190,13 @@ namespace DDI.Data
                     PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
                     if (propInfo != null)
                     {
-                        if (entity is BaseLinkedEntity)
+                        if (entity is LinkedEntityBase)
                         {
                             // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
-                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
+                            if (propInfo.Name == nameof(LinkedEntityBase.ParentEntity))
                             {
                                 // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
-                                var linkedEntity = entity as BaseLinkedEntity;
+                                var linkedEntity = entity as LinkedEntityBase;
                                 linkedEntity.LoadParentEntity(_context);
                                 return linkedEntity.ParentEntity as TElement;
                             }
@@ -234,12 +253,62 @@ namespace DDI.Data
         
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public T GetById(object id) => EntitySet.Find(id);
+        public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
+        {
+            if (includes == null || includes.Length == 0)
+            {
+                return Entities;
+            }
+
+            var query = _context.Set<T>().AsQueryable();
+
+            foreach(Expression<Func<T, object>> include in includes)
+            {
+                string name = NameFor(include, true);
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Include(name);
+                }
+            }
+
+            return query;
+        }
+
+        public T GetById(Guid id) => EntitySet.Find(id);
+
+        public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            if (typeof(IEntity).IsAssignableFrom(typeof(T)))
+            {
+                var query = (IQueryable<IEntity>)GetEntities(includes);
+                return query.FirstOrDefault(p => p.Id == id) as T;
+            }
+            else
+            {
+                return GetById(id);
+            }
+        }
+
+        public List<string> GetModifiedProperties(T entity)
+        {
+            var list = new List<string>();
+            DbEntityEntry<T> entry = _context.Entry(entity);
+
+            foreach (string property in entry.OriginalValues.PropertyNames)
+            {
+                if (entry.Property(property).IsModified)
+                {
+                    list.Add(property);
+                }
+            }
+
+            return list;
+        }
 
         public virtual T Create()
         {
             T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
-            (entity as BaseEntity)?.AssignPrimaryKey();
+            (entity as EntityBase)?.AssignPrimaryKey();
             EntitySet.Add(entity);
 
             return entity;
@@ -316,22 +385,6 @@ namespace DDI.Data
 
             return _isUOW ? 0 : _context.SaveChanges();
         }
-
-        public List<string> GetModifiedProperties(T entity) 
-        {
-            var list = new List<string>();
-
-            var entry = _context.Entry(entity);
-            foreach (var property in entry.OriginalValues.PropertyNames)
-            {
-                if (entry.Property(property).IsModified)
-                {
-                    list.Add(property);
-                }
-            }
-
-            return list;
-        }        
 
         #endregion Public Methods
     }

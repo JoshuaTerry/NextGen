@@ -6,8 +6,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using System.Web.Http.Cors;
-using Microsoft.Owin.Cors;
+using System.Web.Http.Cors; 
 
 namespace DDI.WebApi
 {
