@@ -29,7 +29,13 @@ $(document).ready(function () {
                 crossDomain: true,
                 success: function () {
 
-                    location.href = "/Login.aspx";
+                    if (IsSuccessful) {
+
+                        AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
+
+                        location.href = "/Login.aspx";
+                    }
+                    
 
                 },
                 error: function (xhr, status, err) {
@@ -133,6 +139,29 @@ function DisplayUserInfo(id) {
             DisplayErrorMessage('Error', 'An error loading user info.');
         }
     })
+
+}
+
+function AddUsersToRoles(user, roles) {
+
+    var data = {
+        user: user,
+        roles: roles
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: WEB_API_ADDRESS + 'UserRoles',
+        data: data,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during user creation.');
+        }
+    });
 
 }
 /* END USERS TAB */
