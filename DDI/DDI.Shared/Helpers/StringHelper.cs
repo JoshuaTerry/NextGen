@@ -80,6 +80,19 @@ namespace DDI.Shared.Helpers
         }
 
         /// <summary>
+        /// Capitalize the first letter of a word with all remaining letters in lowercase.
+        /// </summary>
+        public static string FormalCase(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+            if (text.Length == 1)
+                return text.ToUpper();
+            else
+                return text.Substring(0, 1).ToUpper() + text.Substring(1).ToLower();
+        }
+
+        /// <summary>
         /// Similar to SQL LIKE function: _ matches a single character, and % matches any number of
         /// characters.
         /// </summary>
@@ -371,56 +384,7 @@ namespace DDI.Shared.Helpers
             return new String(maskCharacter, 5);
         }
 
-        /// <summary>
-        /// Convert a format string into a list of tokens.  Each token will be plain text or a 
-        /// macro in form of {...}
-        /// </summary>
-        public static List<string> TokenizeFormatString(string format)
-        {
-            bool escape = false;
-            bool macro = false;
-
-            var tokenList = new List<string>();
-            StringBuilder token = new StringBuilder();
-
-            foreach (char c in format)
-            {
-                if (c == '\\')
-                {
-                    escape = true;
-                }
-                else if (c == '{' && !escape && !macro)
-                {
-                    if (token.Length > 0)
-                    {
-                        tokenList.Add(token.ToString());
-                    }
-                    macro = true;
-                    token.Clear();
-                    token.Append(c);
-                }
-                else if (c == '}' && !escape && macro)
-                {
-                    token.Append(c);
-                    tokenList.Add(token.ToString());
-                    token.Clear();
-                    macro = false;
-                }
-                else
-                {
-                    token.Append(c);
-                    escape = false;
-                }
-            }
-
-            if (token.Length > 0)
-            {
-                tokenList.Add(token.ToString());
-            }
-
-            return tokenList;
-
-        }
+       
 
         /// <summary>
         /// Remove all macros like {...} from a string.  

@@ -57,8 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversionBase.cs" />
+    <Compile Include="ConversionMethodArgs.cs" />
+    <Compile Include="Core\Initialize.cs" />
+    <Compile Include="CRM\Initialize.cs" />
+    <Compile Include="CRM\ConstituentLoader.cs" />
     <Compile Include="FileImport.cs" />
-    <Compile Include="CRM\LoadDataCRM.cs" />
+    <Compile Include="CRM\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
