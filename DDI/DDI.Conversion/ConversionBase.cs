@@ -34,6 +34,12 @@ namespace DDI.Conversion
             }
         }
 
+
+        protected string GetConversionMethodName<T>() where T : struct
+        {
+            return Enum.GetName(typeof(T), Enum.ToObject(typeof(T), MethodArgs.MethodNum));
+        }
+
         public static void StartAllConversions(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             foreach (var type in ReflectionHelper.GetDerivedTypes<ConversionBase>(typeof(ConversionBase).Assembly))

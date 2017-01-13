@@ -49,6 +49,8 @@ namespace DDI.Conversion.CRM
 
             RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv"));
             RunConversion(ConversionMethod.Individuals_FW, () => LoadIndividuals("IndividualFW.csv"));
+            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("Organization.csv"));
+            RunConversion(ConversionMethod.Organizations_FW, () => LoadOrganizations("OrganizationFW.csv"));
             RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv"));
             RunConversion(ConversionMethod.Addresses_FW, () => LoadAddresses("AddressFW.csv"));
             RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv"));
@@ -68,7 +70,7 @@ namespace DDI.Conversion.CRM
 
             string dataFile = "";
             dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "Address"))
+            using (var importer = new FileImport(dataFile, GetConversionMethodName<ConversionMethod>()))
             {
                 int count = 0;
 
@@ -211,6 +213,13 @@ namespace DDI.Conversion.CRM
             return context;
         }
 
+        private DomainContext CreateContextForConstituentAddresses()
+        {
+            DomainContext context = new DomainContext();
+            context.AddressTypes.Load();
+            return context;
+        }
+
         private DomainContext CreateContextForConstituents(out NameFormatter nameFormatter)
         {
             DomainContext context = new DomainContext();
@@ -243,7 +252,7 @@ namespace DDI.Conversion.CRM
          
             string dataFile = "";
             dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "Individual"))
+            using (var importer = new FileImport(dataFile, GetConversionMethodName<ConversionMethod>()))
             {
                 int count = 0;
 
@@ -667,13 +676,237 @@ namespace DDI.Conversion.CRM
             context.SaveChanges();
         }
 
+        private void LoadOrganizations(string filename)
+        {
+            NameFormatter nameFormatter;
+            DomainContext context = CreateContextForConstituents(out nameFormatter);
+            char[] commaDelimiter = { ',' };
+
+            string dataFile = "";
+            dataFile = Path.Combine(_crmDirectory, filename);
+            using (var importer = new FileImport(dataFile, GetConversionMethodName<ConversionMethod>()))
+            {
+                int count = 0;
+
+                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                {
+                    count++;
+                    if (count < MethodArgs.MinCount)
+                    {
+                        continue;
+                    }
+
+                    int constituentNum = importer.GetInt(0);
+
+                    if (constituentNum == 0)
+                    {
+                        continue;
+                    }
+
+                    string constituentTypeCode = importer.GetString(1);
+                    string name = importer.GetString(2);
+                    string name2 = importer.GetString(3);
+                    string sourceCode = importer.GetString(4);
+                    string taxId = importer.GetString(5);
+                    string ethnicity = importer.GetString(6);
+                    string denomination = importer.GetString(7);
+                    string correspondencePreference = importer.GetString(8);
+                    string salutationFormat = importer.GetString(9);
+                    string salutationText = importer.GetString(10);
+                    string business = importer.GetString(11);
+                    bool isTaxExempt = importer.GetBool(12);
+                    bool isLetterReceived = importer.GetBool(13);
+                    DateTime? taxExemptDate = importer.GetDateTime(14);
+                    int membership = importer.GetInt(15);
+                    int yearEstablished = importer.GetInt(16);
+                    string deletionCode = importer.GetString(17);
+                    DateTime? deleteDate = importer.GetDateTime(18);
+                    if (deletionCode == "YBD") deletionCode = "DEL";
+
+                    ConstituentType constituentType = context.ConstituentTypes.Local.FirstOrDefault(p => p.Code == constituentTypeCode);
+                    if (constituentType == null)
+                    {
+                        importer.LogError($"PIN {constituentNum} has invalid constituent type \"{constituentType}\".");
+                        continue;
+                    }
+
+
+                    Constituent constituent = null;
+
+                    if (!MethodArgs.AddOnly)
+                    {
+                        constituent = context.Constituents
+                                                         .Include(p => p.Ethnicities)
+                                                         .Include(p => p.Denominations)
+                                                         .FirstOrDefault(p => p.ConstituentNumber == constituentNum);
+                    }
+
+                    if (constituent == null)
+                    {
+                        constituent = new Constituent();
+                        constituent.ConstituentNumber = constituentNum;
+                        context.Constituents.Add(constituent);
+                    }
+
+                    constituent.ConstituentTypeId = constituentType.Id;
+                    constituent.Name = name;
+                    constituent.Name2 = name2;
+                    constituent.Source = sourceCode;
+                    constituent.TaxId = taxId;
+                    constituent.Salutation = salutationText;
+                    constituent.Business = business;
+                    constituent.IsTaxExempt = isTaxExempt;
+                    constituent.IsIRSLetterReceived = isLetterReceived;
+                    constituent.TaxExemptVerifyDate = taxExemptDate;
+                    constituent.MembershipCount = membership;
+                    constituent.YearEstablished = yearEstablished;
+
+                    // Ethnicity
+                    string[] codelist = ethnicity.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                    if (constituent.Ethnicities == null)
+                    {
+                        constituent.Ethnicities = new List<Ethnicity>();
+                    }
+                    foreach (Ethnicity ethnicityToRemove in constituent.Ethnicities.ToList())
+                    {
+                        if (!codelist.Any(p => p == ethnicityToRemove.Code))
+                        {
+                            constituent.Ethnicities.Remove(ethnicityToRemove);
+                        }
+                    }
+                    foreach (string code in codelist)
+                    {
+                        Ethnicity ethnicityToAdd = context.Ethnicities.Local.FirstOrDefault(p => p.Code == code);
+                        if (ethnicityToAdd == null)
+                        {
+                            importer.LogError($"Invalid ethnicity code \"{code}\" for PIN {constituentNum}.");
+                        }
+                        else
+                        {
+                            constituent.Ethnicities.Add(ethnicityToAdd);
+                        }
+                    }
+
+                    // Denominations
+                    codelist = denomination.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                    if (constituent.Denominations == null)
+                    {
+                        constituent.Denominations = new List<Denomination>();
+                    }
+                    foreach (Denomination denominationToRemove in constituent.Denominations.ToList())
+                    {
+                        if (!codelist.Any(p => p == denominationToRemove.Code))
+                        {
+                            constituent.Denominations.Remove(denominationToRemove);
+                        }
+                    }
+                    foreach (string code in codelist)
+                    {
+                        Denomination denominationToAdd = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        if (denominationToAdd == null)
+                        {
+                            importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
+                        }
+                        else
+                        {
+                            constituent.Denominations.Add(denominationToAdd);
+                        }
+                    }
+
+                    // Correspondence preference
+                    switch (correspondencePreference)
+                    {
+                        case "E": constituent.CorrespondencePreference = CorrespondencePreference.Email; break;
+                        case "EP": constituent.CorrespondencePreference = CorrespondencePreference.Both; break;
+                        case "P": constituent.CorrespondencePreference = CorrespondencePreference.Paper; break;
+                        default: constituent.CorrespondencePreference = CorrespondencePreference.None; break;
+                    }
+
+                    // Salutation format
+                    switch (salutationFormat)
+                    {
+                        case "0": constituent.SalutationType = SalutationType.Default; break;
+                        case "1": constituent.SalutationType = SalutationType.Formal; break;
+                        case "2": constituent.SalutationType = SalutationType.Informal; break;
+                        case "3": constituent.SalutationType = SalutationType.FormalSeparate; break;
+                        case "4": constituent.SalutationType = SalutationType.InformalSeparate; break;
+                        default: constituent.SalutationType = SalutationType.Custom; break;
+                    }
+
+
+
+                    // Constituent Status
+
+                    if (string.IsNullOrWhiteSpace(deletionCode))
+                    {
+                        constituent.ConstituentStatusId = null;
+                        constituent.ConstituentStatus = null;
+                    }
+                    else
+                    {
+                        ConstituentStatus constituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == deletionCode);
+                        if (constituentStatus == null)
+                        {
+                            importer.LogError($"Invalid constituent status code {deletionCode} for PIN {constituentNum}.");
+                            constituent.ConstituentStatusId = null;
+                            constituent.ConstituentStatus = null;
+                        }
+                        else
+                        {
+                            constituent.ConstituentStatus = constituentStatus;
+                        }
+                    }
+
+                    // Anything coming over with a deletion date should be set to status deleted.
+                    if (deleteDate.HasValue)
+                    {
+                        if (constituent.ConstituentStatus == null)
+                        {
+                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);
+                        }
+                    }
+                    else
+                    {
+                        if (constituent.ConstituentStatus == null)
+                        {
+                            // If no status, set to active.
+                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_ACTIVE);
+                        }
+                        else
+                        {
+                            // TODO: Set constituent status date to 1/1/1990.  (DC-266)
+                        }
+                    }
+                    // TODO: Constituent status date missing (DC-266).
+
+                    constituent.FormattedName = constituent.Name; 
+
+                    if (count % 100 == 0)
+                    {
+                        context.SaveChanges();
+                        importer.LogMessage($"{count} Loaded {constituentNum}: {constituent.Name}");
+                    }
+
+                    if (count % 1000 == 0)
+                    {
+                        context.SaveChanges();
+                        context.Dispose();
+                        context = CreateContextForConstituents(out nameFormatter);
+                    }
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+
         private void LoadConstituentAddress(string filename)
         {
-            DomainContext context = new DomainContext();
+            DomainContext context = CreateContextForConstituentAddresses();
             string dataFile = "";
             dataFile = Path.Combine(_crmDirectory, filename);
 
-            using (var importer = new FileImport(dataFile, "ConstituentAddress"))
+            using (var importer = new FileImport(dataFile, GetConversionMethodName<ConversionMethod>()))
             {
                 int count = 0;
 
@@ -681,61 +914,84 @@ namespace DDI.Conversion.CRM
                 {
                     count++;
 
-                    int legacyAddressId = importer.GetInt(0);
+                    int legacyAddressId;
+                    string legacyAddressText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(legacyAddressText) || !int.TryParse(legacyAddressText, out legacyAddressId) || legacyAddressId <= 0)
+                    {
+                        continue;
+                    }
+                   
                     int constituentNum = importer.GetInt(1);
+                    string addressTypeCode = importer.GetString(2);
 
-                    //TODO: clean this up and make it functional. model in constituent and prefix seem to work better
-                    //string addressTypeCode = importer.GetString(2);
-                    //string comment = importer.GetString(3);
-                    //DateTime startDate;
-                    //DateTime.TryParse(importer.GetString(4), out startDate);
-                    //DateTime endDate;
-                    //DateTime.TryParse(importer.GetString(5), out endDate);
-                    //int startDay;
-                    //int.TryParse(importer.GetString(6), out startDay);
-                    //int endDay;
-                    //int.TryParse(importer.GetString(7), out endDay);
-                    bool isPrimary = importer.GetBool(8);
-
-                    //string residentType = importer.GetString(9);
-                    importer.LogMessage($"{count}: {legacyAddressId} {constituentNum}");
-
-                    Address a1 = null;
-                    Constituent c1 = null;
-                    if (legacyAddressId != 0)
+                    Address address = context.Addresses.FirstOrDefault(p => p.LegacyKey == legacyAddressId);
+                    if (address == null)
                     {
-                        try
-                        {
-                            a1 = context.Addresses.First(p => p.LegacyKey == legacyAddressId);
-                        }
-                        catch (Exception e)
-                        { }
-                    }
-                    if (constituentNum != 0)
-                    {
-                        try
-                        {
-                            c1 = context.Constituents?.First(p => p.ConstituentNumber == constituentNum);
-                        }
-                        catch (Exception e)
-                        {
-                            //don't do anything, just keep going
-                        }
+                        importer.LogError($"Invalid address legacy ID {legacyAddressId}.");
+                        continue;
                     }
 
-                    if (a1 != null && c1 != null)
+                    Constituent constituent = context.Constituents.FirstOrDefault(p => p.ConstituentNumber == constituentNum);
+                    if (constituent == null)
                     {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
 
-                        context.ConstituentAddresses.AddOrUpdate(
-                            p => p.Id,
-                            new ConstituentAddress { Address = a1, AddressId = a1.Id, Constituent = c1, ConstituentId = c1.Id, IsPrimary = isPrimary });
+                    AddressType addressType = context.AddressTypes.Local.FirstOrDefault(p => p.Code == addressTypeCode);
+                    if (addressType == null)
+                    {
+                        importer.LogError($"Invalid address type \"{addressTypeCode}\".");
+                        continue;
+                    }
+
+                    ConstituentAddress constituentAddress = null;
+                    if (!MethodArgs.AddOnly)
+                    {
+                        constituentAddress = context.ConstituentAddresses.Include(p => p.Constituent)
+                                                                         .Include(p => p.Address)
+                                                                         .Include(p => p.AddressType)
+                                                                         .FirstOrDefault(p => p.Constituent == constituent && p.Address == address);
+                    }
+                    if (constituentAddress == null)
+                    {
+                        constituentAddress = new ConstituentAddress();
+                        context.ConstituentAddresses.Add(constituentAddress);
+                        constituentAddress.Constituent = constituent;
+                        constituentAddress.Address = address;
+                    }
+
+
+                    constituentAddress.AddressType = addressType;
+                    constituentAddress.Comment = importer.GetString(3);
+                    constituentAddress.StartDate = importer.GetDateTime(4);
+                    constituentAddress.EndDate = importer.GetDateTime(5);
+                    constituentAddress.StartDay = importer.GetInt(6);
+                    constituentAddress.EndDay = importer.GetInt(7);
+                    constituentAddress.IsPrimary = importer.GetBool(8);
+
+                    string residentType = importer.GetString(9);
+                    switch (residentType)
+                    {
+                        case "Y": constituentAddress.ResidentType = ResidentType.Primary; break;
+                        case "N": constituentAddress.ResidentType = ResidentType.Secondary; break;
+                        case "S": constituentAddress.ResidentType = ResidentType.Separate; break;
+                        default:
+                            importer.LogError($"Invalid resident type {residentType} for address ID {legacyAddressId} constituent ID {constituentNum}.");
+                            break;
+                    }
+
+                    if (count % 100 == 0)
+                    {
+                        context.SaveChanges();
+                        importer.LogMessage($"{count} Loaded {constituentNum}: {constituent.Name}");
                     }
 
                     if (count % 1000 == 0)
                     {
                         context.SaveChanges();
                         context.Dispose();
-                        context = new DomainContext();
+                        context = CreateContextForConstituentAddresses();
                     }
                 }
             }
