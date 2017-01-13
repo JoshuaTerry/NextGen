@@ -6,6 +6,6 @@ namespace DDI.Services
 {
     public interface ISectionPreferenceService
     {
-        IDataResponse<dynamic> GetPreferencesBySectionName(string sectionName); 
+        IDataResponse<List<SectionPreference>> GetPreferencesBySectionName(string sectionName); 
     }
 }

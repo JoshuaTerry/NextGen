@@ -18,7 +18,7 @@ namespace DDI.Services
         }
         #region Public Methods
 
-        public IDataResponse<dynamic> GetAll(ForeignKeySearch search= null)
+        public IDataResponse<List<State>> GetAll(ForeignKeySearch search= null)
         {
             var result = UnitOfWork.GetRepository<State>().Entities;
             var query = new CriteriaQuery<State, ForeignKeySearch>(result, search)

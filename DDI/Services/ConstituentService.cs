@@ -38,7 +38,7 @@ namespace DDI.Services
             _repository = _unitOfWork.GetRepository<Constituent>();
         }
         
-        public IDataResponse<dynamic> GetConstituents(ConstituentSearch search)
+        public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
         {
             IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
@@ -58,7 +58,7 @@ namespace DDI.Services
                          .SetOffset(search.Offset);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            var response = GetIDataResponse(() => query.GetQueryable().ToList(), search.Fields, true);
+            var response = GetIDataResponse(() => query.GetQueryable().ToList());
             
             response.TotalResults = totalCount;
 
@@ -98,22 +98,22 @@ namespace DDI.Services
             }
         }
 
-        public IDataResponse<dynamic> GetConstituentById(Guid id, string fields = null)
+        public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
             Constituent constituent = _repository.GetById(id);
-            var response = GetIDataResponse(() => constituent, fields, true);
+            var response = GetIDataResponse(() => constituent);
 
             return response;
         }
 
-        public IDataResponse<dynamic> GetConstituentByConstituentNum(int constituentNum, string fields = null)
+        public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.Include("ConstituentAddresses.Address").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            var response = GetIDataResponse(() => constituent, fields, true);
+            var response = GetIDataResponse(() => constituent);
             return response;
         }
 
-        public IDataResponse<dynamic> UpdateConstituent(Guid id, JObject changes)
+        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 

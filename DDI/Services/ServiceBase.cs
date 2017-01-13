@@ -1,6 +1,5 @@
 ﻿using DDI.Data;
 using DDI.Shared;
-using DDI.Shared.Extensions;
 using DDI.Shared.Logger;
 using DDI.Shared.Models;
 using Newtonsoft.Json.Linq;
@@ -27,9 +26,9 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<dynamic> GetAll(IPageable search = null)
+        public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList();
+            var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList(); //TODO Can we remove the first ToList or will that mess up the data?
             return GetIDataResponse(() => result);
         }
 
@@ -49,7 +48,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<dynamic> Update(Guid id, JObject changes)
+        public IDataResponse<T> Update(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 
@@ -106,34 +105,27 @@ namespace DDI.Services
         }
 
 
-        public IDataResponse<dynamic> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
+        public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
             return GetDataResponse(funcToExecute, fieldList, shouldAddLinks);
         }
 
-        public DataResponse<dynamic> GetDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
+        public DataResponse<T1> GetDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
             try
             {
                 var result = funcToExecute();
-                var dataResponse = new DataResponse<dynamic>
+                var dataResponse = new DataResponse<T1>
                 {
+                    Data = result,
                     IsSuccessful = true
                 };
-                if (result is IEnumerable<EntityBase>)
-                {
-                    dataResponse.Data = (result as IEnumerable<EntityBase>).ToPartialObject(fieldList, shouldAddLinks);
-                }
-                else if (result is EntityBase)
-                {
-                    dataResponse.Data = (result as EntityBase).ToPartialObject(fieldList, shouldAddLinks);
-                }
                 return dataResponse;
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message, e);
-                var response = new DataResponse<dynamic> { IsSuccessful = false };
+                var response = new DataResponse<T1> { IsSuccessful = false };
                 response.ErrorMessages.Add(e.Message);
                 response.VerboseErrorMessages.Add(e.ToString());
                 return response;

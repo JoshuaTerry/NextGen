@@ -17,15 +17,19 @@ namespace DDI.WebApi.Controllers
     public class ConstituentsController : ApiController
     {
         private IConstituentService _service;
+        private IPagination _pagination;
+        private DynamicTransmogrifier _dynamicTransmogrifier;
 
         public ConstituentsController()
-            :this(new ConstituentService())
+            :this(new ConstituentService(), new Pagination(), new DynamicTransmogrifier())
         {
         }
 
-        internal ConstituentsController(IConstituentService service)
+        internal ConstituentsController(IConstituentService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
         {
             _service = service;
+            _pagination = pagination;
+            _dynamicTransmogrifier = dynamicTransmogrifier;
         }
 
         [HttpGet]
@@ -75,19 +79,19 @@ namespace DDI.WebApi.Controllers
             }
 
             var totalCount = constituents.TotalResults;
-            var totalPages = (int) Math.Ceiling((double) totalCount / limit.Value);
             var urlHelper = new UrlHelper(Request);
 
-            PaginationHelper.AddPaginationHeaderToResponse(urlHelper, search, totalPages, totalCount, RouteNames.Constituents);
+            _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituents);
 
-            return Ok(constituents);
+            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents);
+            return Ok(dynamicConstituents);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            var constituent = _service.GetConstituentById(id, fields);
+            var constituent = _service.GetConstituentById(id);
 
             if (constituent == null)
             {
@@ -106,7 +110,7 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetConstituentByConstituentNum(int num, string fields = null)
         {
             {
-                var constituent = _service.GetConstituentByConstituentNum(num, fields);
+                var constituent = _service.GetConstituentByConstituentNum(num);
 
                 if (constituent == null)
                 {

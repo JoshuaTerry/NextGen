@@ -91,7 +91,6 @@
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\EntityBaseExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="HATEOASLink.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />

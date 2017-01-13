@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DDI.Shared.Extensions;
 
 namespace DDI.Shared.Models
 {
@@ -95,30 +94,6 @@ namespace DDI.Shared.Models
         }
 
         #endregion
-
-        public dynamic ToPartialObject(string fields = null, bool shouldAddLinks = false)
-        {
-            if (string.IsNullOrWhiteSpace(fields))
-            {
-                fields = null;
-            }
-            if (fields==null && !shouldAddLinks)
-            {
-                return this;
-            }
-            var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
-            var result = this.ToDynamic(listOfFields);
-            if (shouldAddLinks)
-            {
-                result = AddHATEAOSLinks(result);
-            }
-            return result;
-        }
-
-        internal virtual dynamic AddHATEAOSLinks(IDictionary<string, object> entity)
-        {
-            return entity;
-        }
     }
 
 
