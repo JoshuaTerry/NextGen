@@ -162,27 +162,27 @@
 
                         <div class="fieldblock">
                             <label>Postal Code</label>
-                            <input type="text" class="nc-PostalCode" style="width: 75px;" />
+                            <input type="text" class="nc-PostalCode autozip" style="width: 75px;" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Country</label>
-                            <select class="nc-Country" style="width: 150px;"></select>
+                            <select class="nc-Country autocountry" style="width: 150px;"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>State</label>
-                            <select class="nc-State" style="width: 150px;"></select>
+                            <select class="nc-State autostate" style="width: 150px;"></select>
                         </div>
 
                         <div class="fieldblock">
                             <label>City</label>
-                            <input type="text" class="nc-City" style="width: 150px;" />
+                            <input type="text" class="nc-City autocity" style="width: 150px;" />
                         </div>
 
                         <div class="fieldblock">
                             <label>County</label>
-                            <select class="nc-County" style="width: 150px;"></select>
+                            <select class="nc-County autocounty" style="width: 150px;"></select>
                         </div>
 
                     </div>

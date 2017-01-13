@@ -140,21 +140,21 @@ function GetNewFields() {
     var p = [];
 
     $(modal).find('.modalcontent div.fieldblock input').each(function () {
-        var property = $(this).attr('class');
-        property = property.replace('nc-', '');
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
         var value = $(this).val();
 
         if (value && value.length > 0)
-            p.push('"' + property + '": "' + value + '"');
+            p.push('"' + propertyName + '": "' + value + '"');
     });
 
     $(modal).find('.modalcontent div.fieldblock select').each(function () {
-        var property = $(this).attr('class');
-        property = property.replace('nc-', '');
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
         var value = $(this).val();
 
         if (value && value.length > 0)
-            p.push('"' + property + '": "' + value + '"');
+            p.push('"' + propertyName + '": "' + value + '"');
     });
 
     p = '{' + p + '}';
@@ -245,6 +245,90 @@ function FormatJSONDate(jsonDate) {
     return date;
 }
 
+function AutoZip() {
+
+    $('.autozip').blur(function () {
+
+        var zip = $('.autozip').val();
+
+        if (zip.length > 0) {
+
+            var data = {
+                ZipCode: zip
+            }
+
+            GetAutoZipData(data);
+
+        }
+
+    });
+
+}
+
+function AutoCityState() {
+
+    $('.autocity').blur(function () {
+
+        var city = $('.autocity').val();
+        var state = $('.autostate').val();
+        
+        if (city.length > 0 && state.length > 0) {
+
+            var data = {
+                City: city,
+                State: state
+            }
+
+            GetAutoZipData(data);
+
+        }
+
+    });
+
+    $('.autostate').blur(function () {
+
+        var city = $('.autocity').val();
+        var state = $('.autostate').val();
+
+        if (city.length > 0 && state.length > 0) {
+
+            var data = {
+                City: city,
+                State: state
+            }
+
+            GetAutoZipData(data);
+
+        }
+
+    });
+
+}
+
+function GetAutoZipData(data) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'zipcodesomethingawesome',
+        method: 'POST',
+        data: data,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $('.autozip').val(data.PostalCode);
+            $('.autocountry').val(data.Country);
+            $('.autostate').val(data.State);
+            $('.autocity').val(data.City);
+            $('.autocounty').val(data.County);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+        }
+    });
+
+}
 
 // EDITING
 //
