@@ -275,12 +275,17 @@ function SetupEditControls() {
 
     $('.editable').prop('disabled', true);
 
+
+
     $('.editbutton').click(function (e) {
         e.preventDefault();
 
+        var editcontainer = $(this).closest('.editcontainer');
+
+
         if (!editing) { // No other Edit in progress, good to go
 
-            StartEdit($(this).closest('.editcontainer'));
+            StartEdit(editcontainer);
         }
         else { // Another Edit already in progress
 
@@ -291,7 +296,7 @@ function SetupEditControls() {
                 StopEdit($('.editcontainer.active'));
 
                 // Start new edit
-                StartEdit($(this).closest('.editcontainer'));
+                StartEdit(editcontainer);
             }
             else {
                 // Cancel
@@ -311,9 +316,9 @@ function SetupEditControls() {
 
         var editcontainer = $(this).closest('.editcontainer');
 
-        StopEdit($(editcontainer));
+        StopEdit(editcontainer);
 
-        SaveEdit($(editcontainer));
+        SaveEdit(editcontainer);
 
     });
 
@@ -321,9 +326,11 @@ function SetupEditControls() {
 
         e.preventDefault();
 
-        StopEdit($(this).closest('.editcontainer'));
+        var editcontainer = $(this).closest('.editcontainer');
 
-        CancelEdit($(this).closest('.editcontainer'));
+        StopEdit(editcontainer);
+
+        CancelEdit();
 
     });
 
@@ -438,7 +445,7 @@ function GetEditedFields(editcontainer) {
 
 }
 
-function CancelEdit(editcontainer) {
+function CancelEdit() {
 
     RefreshEntity();
 }
