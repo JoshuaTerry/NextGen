@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Client.Core;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.Core;
+using DDI.Services;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
     public class CustomFieldsController : ApiController
     {
-        GenericServiceBase<CustomField> _service;
+        ServiceBase<CustomField> _service;
 
         #region Constructors
 
-        public CustomFieldsController() : this(new GenericServiceBase<CustomField>()) { }
-        internal CustomFieldsController(GenericServiceBase<CustomField> service)
+        public CustomFieldsController() : this(new ServiceBase<CustomField>()) { }
+        internal CustomFieldsController(ServiceBase<CustomField> service)
         {
             _service = service;
         }

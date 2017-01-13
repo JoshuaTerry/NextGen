@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DDI.Data.Models.Client.Core
+namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldOption")]
     public class CustomFieldOption : IEntity

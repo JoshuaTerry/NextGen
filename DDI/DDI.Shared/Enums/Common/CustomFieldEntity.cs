@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Data.Enums.Common
+namespace DDI.Shared.Enums.Common
 {
     public enum CustomFieldEntity
     {

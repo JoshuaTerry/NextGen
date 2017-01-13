@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DDI.Data.Models.Client.Core
+namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomField")]
     public class CustomField : IEntity
@@ -21,8 +21,8 @@ namespace DDI.Data.Models.Client.Core
         public bool IsActive { get; set; }
         public bool IsRequired { get; set; }
         public int? DisplayOrder { get; set; }
-        public DDI.Data.Enums.Common.CustomFieldEntity Entity { get; set; }
-        public DDI.Data.Enums.Common.CustomFieldType FieldType { get; set; }
+        public DDI.Shared.Enums.Common.CustomFieldEntity Entity { get; set; }
+        public DDI.Shared.Enums.Common.CustomFieldType FieldType { get; set; }
 
         public ICollection<CustomFieldOption> Options { get; set; }
 
