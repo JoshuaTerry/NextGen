@@ -24,9 +24,13 @@ namespace DDI.Conversion.CRM
         public enum ConversionMethod
         {
             Individuals = 200100,
+            Individuals_FW,
             Organizations,
+            Organizations_FW,
             Addresses,
+            Addresses_FW,
             ConstituentAddresses,
+            ConstituentAddresses_FW,
             DoingBusinessAs,
             Education,
             AlternateIDs,
@@ -44,8 +48,9 @@ namespace DDI.Conversion.CRM
             _crmDirectory = Path.Combine(baseDirectory, "CRM");
 
             RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv"));
-            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("IndividualFW.csv"));
+            RunConversion(ConversionMethod.Individuals_FW, () => LoadIndividuals("IndividualFW.csv"));
             RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv"));
+            RunConversion(ConversionMethod.Addresses_FW, () => LoadAddresses("AddressFW.csv"));
             RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv"));
 
             //RunConversion(ConversionMethod.DoingBusinessAs, () => LoadDoingBusinessAs("");

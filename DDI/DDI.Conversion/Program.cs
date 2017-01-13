@@ -57,7 +57,7 @@ namespace DDI.Conversion
             //Run<CRM.Initialize>();
             //Run<CRM.SettingsLoader>();
 
-            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 90000, 0));
+            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Addresses, 0, 0));
         }
 
         private static void Run<T>() where T : ConversionBase, new()
