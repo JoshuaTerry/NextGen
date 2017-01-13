@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
 using DDI.WebApi.Models;
+using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;

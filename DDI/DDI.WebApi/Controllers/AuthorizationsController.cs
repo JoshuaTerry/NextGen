@@ -25,16 +25,16 @@ using DDI.WebApi.Services;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class AccountController : ApiController
+    public class AuthorizationsController : ApiController
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
-        public AccountController()
+        public AuthorizationsController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager,
+        public AuthorizationsController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
@@ -61,6 +61,30 @@ namespace DDI.WebApi.Controllers
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("api/v1/userroles")]
+        public async Task<IHttpActionResult> Get(string email)
+        {
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IList<string> roles;
+            try
+            {
+                roles = await UserManager.GetRolesAsync(user.Id);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(roles);
+        }
+
 
         [Route("api/v1/ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)

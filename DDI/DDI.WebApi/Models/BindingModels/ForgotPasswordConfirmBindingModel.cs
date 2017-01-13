@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DDI.WebApi.Models.BindingModels
 {
-    // Models used as parameters to AccountController actions.
+    // Models used as parameters to AuthorizationsController actions.
 
     public class ForgotPasswordConfirmBindingModel
     {
