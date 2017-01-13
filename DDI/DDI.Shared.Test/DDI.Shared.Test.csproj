@@ -50,8 +50,20 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Extensions\DictionaryExtensionsTests.cs" />
+    <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
+    <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
+    <Compile Include="Helpers\ReflectionHelperTests.cs" />
+    <Compile Include="Helpers\ModuleHelperTests.cs" />
+    <Compile Include="ModuleInfo\ModuleInfoBaseTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

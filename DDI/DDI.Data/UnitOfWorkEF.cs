@@ -1,9 +1,11 @@
-﻿using System;
+using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace DDI.Data
 {
@@ -19,6 +21,7 @@ namespace DDI.Data
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
         private string _commonNamespace;
+        private List<object> _businessLogic;
 
         #endregion Private Fields
 
@@ -41,7 +44,8 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Models.Common.Country).Namespace;
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
+            _businessLogic = new List<object>();
         }
 
         #endregion Public Constructors
@@ -70,9 +74,9 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
         }
 
         /// <summary>
@@ -146,6 +150,16 @@ namespace DDI.Data
             GetRepository<T>().Delete(entity);
         }
 
+        public T GetById<T>(Guid id) where T : class
+        {
+            return GetRepository<T>().GetById(id);
+        }
+
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
+        }
+        
         public IRepository<T> GetRepository<T>() where T : class
         {
             IRepository<T> repository = null;
@@ -176,6 +190,7 @@ namespace DDI.Data
                     context = _clientContext;
                 }
 
+
                 // Create a repository, then add it to the dictionary.
                 repository = new Repository<T>(context);
 
@@ -197,6 +212,25 @@ namespace DDI.Data
         {
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
+        }
+
+        public void AddBusinessLogic(object blObj)
+        {
+            if (!_businessLogic.Contains(blObj))
+                _businessLogic.Add(blObj);
+        }
+
+        public T GetBusinessLogic<T>() where T : class
+        {
+            Type blType = typeof(T);
+            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
+            if (blObj == null)
+            {
+                blObj = (T)Activator.CreateInstance(blType, this);
+                AddBusinessLogic(blObj);
+            }
+
+            return blObj;
         }
 
         #endregion Public Methods

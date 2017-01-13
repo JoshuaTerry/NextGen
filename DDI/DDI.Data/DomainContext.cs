@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Client.Core;
-using DDI.Data.Models.Common;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Core;
 using System.Data.Entity.Validation;
-using DDI.Data.Models;
 using System.Data.Entity.Infrastructure;
+using System.Collections.Generic;
+using System;
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -29,6 +24,8 @@ namespace DDI.Data
         public virtual DbSet<ClergyStatus> ClergyStatuses { get; set; }
 
         public virtual DbSet<ClergyType> ClergyTypes { get; set; }
+
+        public virtual DbSet<Configuration> Configurations { get; set; }
 
         public virtual DbSet<Constituent> Constituents { get; set; }
 
@@ -105,6 +102,8 @@ namespace DDI.Data
         public DomainContext()
             : base("name=DomainContext")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         #endregion Public Constructors
@@ -112,7 +111,7 @@ namespace DDI.Data
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            BaseEntity entity = entityEntry.Entity as BaseEntity;
+            EntityBase entity = entityEntry.Entity as EntityBase;
             if (entity != null)
             {
                 //Ensure new entities have an ID

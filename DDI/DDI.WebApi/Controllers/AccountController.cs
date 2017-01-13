@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 using DDI.WebApi.Models;
+using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Providers;
 using DDI.WebApi.Results;
 using Microsoft.AspNet.Identity;
@@ -15,11 +20,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using DDI.WebApi.Services;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -50,16 +55,14 @@ namespace DDI.WebApi.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        // POST api/Account/Logout
-        [Route("Logout")]
+        [Route("api/v1/Logout")]
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
 
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
+        [Route("api/v1/ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
             IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -97,8 +100,7 @@ namespace DDI.WebApi.Controllers
             };
         }
 
-        // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [Route("api/v1/ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -117,8 +119,7 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        // POST api/Account/SetPassword
-        [Route("SetPassword")]
+        [Route("api/v1/SetPassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -137,8 +138,7 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
+        [Route("api/v1/RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -167,9 +167,8 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Register")]
+        [Route("api/v1/Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -181,6 +180,124 @@ namespace DDI.WebApi.Controllers
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
+
+            var service = new EmailService();
+            var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            var to = new MailAddress(model.Email);
+            var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
+            var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
+
+            service.SendMailMessage(message);
+            
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("api/v1/ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
+            {
+                ModelState.AddModelError("", "User Email and Code are required");
+                return BadRequest(ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ApplicationUser user;
+            try
+            {
+                user = GetUserByEmail(model.Email);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
+            }
+
+
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("api/v1/ForgotPassword")]
+        public async Task<IHttpActionResult> ForgotPassword(string email)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ApplicationUser user;
+            try
+            {
+                user = GetUserByEmail(email);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
+            }
+
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/forgotPassword.aspx?email={new HtmlString(user.Email)}&code={code}");
+
+            var service = new EmailService();
+            var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            var to = new MailAddress(user.Email);
+            var body = "Reset your <a href=\"" + callbackUrl + "\">password</a>.";
+            var message = service.CreateMailMessage(from, to, "Forgotten Password", body);
+
+            service.SendMailMessage(message);
+
+            return Ok();
+
+        }
+
+        [HttpPost]
+        [Route("api/v1/ForgotPasswordConfirm")]
+        public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code) || string.IsNullOrWhiteSpace(model.NewPassword) || string.IsNullOrWhiteSpace(model.ConfirmPassword))
+            {
+                ModelState.AddModelError("", "User Email, Code, New Password, and Confirm Password are required");
+                return BadRequest(ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ApplicationUser user;
+            try
+            {
+                user = GetUserByEmail(model.Email);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.NewPassword);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -234,6 +351,24 @@ namespace DDI.WebApi.Controllers
             }
 
             return null;
+        }
+
+        private ApplicationUser GetUserByEmail(string email)
+        {
+            ApplicationUser user = null;
+            var users = UserManager.Users.Where(u => u.Email == email);
+            if (users.Count() == 1)
+            {
+                return users.First();
+            }
+            else if (users.Count() > 1)
+            {
+                throw new Exception("Multiple users exist with this email address.");
+            }
+            else
+            {
+                throw new Exception("User not found.");
+            }
         }
 
         #endregion

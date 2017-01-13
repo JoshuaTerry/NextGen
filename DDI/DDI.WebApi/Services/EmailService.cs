@@ -27,19 +27,20 @@ namespace DDI.WebApi.Services
         {
             if (string.IsNullOrWhiteSpace(smtpClient.Host))
             {
-                smtpClient.Host = ConfigurationManager.AppSettings["SmtpHost"];
-                smtpClient.Port = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+                smtpClient.Host = WebConfigurationManager.AppSettings["SmtpHost"] ?? "coloex1.ddi.org";
+                smtpClient.Port = int.Parse(WebConfigurationManager.AppSettings["SmtpPort"] ?? "25");
             }
 
             _smtpClient = smtpClient;
         }
 
-        public MailMessage CreateMailMessage(MailAddress to, MailAddress from, string subject, string body)
+        public MailMessage CreateMailMessage(MailAddress from, MailAddress to, string subject, string body, bool IsHtml = true)
         {
             var mailMessage = new MailMessage(from, to)
             {
                 Subject = subject,
-                Body = body
+                Body = body,
+                IsBodyHtml = IsHtml
             };
 
             return mailMessage;

@@ -6,7 +6,8 @@
 <head runat="server">
 
     <title>DDI Connect</title>
-
+    
+    <script type="text/javascript" src="..\..\Scripts\configuration.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-ui.min.js"></script>
@@ -21,6 +22,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     
+    <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\screen.css" />
@@ -35,6 +37,7 @@
             <div class="globalnav">
                 <ul>
                     <li><a href="#" class="addconstituent">Add Constituent</a></li>
+                    <li><a href="#" class="logout">Logout</a></li>
                 </ul>
             </div>
             <div class="logo">

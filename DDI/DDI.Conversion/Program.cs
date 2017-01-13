@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using DDI.Data;
 using DDI.Conversion;
-using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
 
@@ -16,42 +15,67 @@ namespace DDI.Conversion
     class Program
     {
 
-
+        private static string _filePath;
+        private static List<ConversionMethodArgs> _methodsToRun;
 
         static void Main(string[] args)
         {
             // At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
             //Hard coding for quick demo purposes.
+            string organization;
             int minCount;
             int maxCount;
+            if (args.Length == 3)
+            {
+                organization = args[0];
+                int.TryParse(args[1], out minCount);
+                int.TryParse(args[2], out maxCount);
+            }
             if (args.Length == 2)
             {
+                organization = "NG";
                 int.TryParse(args[0], out minCount);
                 int.TryParse(args[1], out maxCount);
             }
             else
             {
-                minCount = 0;
-                maxCount = 999999;
+                organization = "NG";
+                minCount = 79000;
+                maxCount = int.MaxValue;
             }
 
+            log4net.Config.XmlConfigurator.Configure();
 
-
-			log4net.Config.XmlConfigurator.Configure();
-
-            using (DomainContext context = new DomainContext())
+            _filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
+            _methodsToRun = new List<ConversionMethodArgs>()
             {
-                var common = new CommonContext();
-                string organization = "NG";
-                string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
-											
-                LoadDataCRM.ExecuteCRMLoad(context, common, organization, filePath, minCount, maxCount);
-                context.SaveChanges();
-            }
+               
+            };
 
+            //Run<Core.Initialize>();
+
+            //Run<CRM.Initialize>();
+            //Run<CRM.SettingsLoader>();
+
+            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0));
+        }
+
+        private static void Run<T>() where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, _methodsToRun);
+        }
+
+        private static void Run<T>(IEnumerable<ConversionMethodArgs> methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, methodsToRun);
+        }
+
+        private static void Run<T>(ConversionMethodArgs methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodsToRun });
         }
 
     }
-    
+
 
 }

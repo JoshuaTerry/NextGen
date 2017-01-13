@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class MaritalStatusesController : ApiController
     {
-        GenericServiceBase<MaritalStatus> _service;
+        ServiceBase<MaritalStatus> _service;
 
-        public MaritalStatusesController() : this(new GenericServiceBase<MaritalStatus>()) { }
-        internal MaritalStatusesController(GenericServiceBase<MaritalStatus> service)
+        public MaritalStatusesController() : this(new ServiceBase<MaritalStatus>()) { }
+        internal MaritalStatusesController(ServiceBase<MaritalStatus> service)
         {
             _service = service;
         }
