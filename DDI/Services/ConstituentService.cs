@@ -40,8 +40,7 @@ namespace DDI.Services
         
         public IDataResponse<dynamic> GetConstituents(ConstituentSearch search)
         {
-            IQueryable<Constituent> constituents = _unitOfWork.GetEntities<Constituent>().IncludePath(c => c.ConstituentAddresses);
-//            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
+            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
