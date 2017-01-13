@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using DDI.Shared.Models.Common;
-using DDI.Shared.Attributes;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Address"), EntityType("CRM_Address")]
+    [Table("Address")]
     public class Address : EntityBase
     {
         #region Public Properties
