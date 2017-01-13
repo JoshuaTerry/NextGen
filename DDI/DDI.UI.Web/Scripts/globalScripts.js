@@ -332,7 +332,8 @@ function SetupEditControls() {
 function StartEdit(editcontainer) {
    
     editing = true;
-    lastActiveSection = $('.accordions').accordion('option', 'active');
+    // Get the index of the section that was previously edited
+    lastActiveSection = $('.accordions').accordion('option', 'active'); 
 
     $(editcontainer).find('.editmode-active').show();
     $(editcontainer).find('.editmode-inactive').hide();
