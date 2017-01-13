@@ -75,6 +75,10 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="LinkedEntityCollection.cs" />
+    <Compile Include="Migrations\201701131622214_AddingCustomFields.cs" />
+    <Compile Include="Migrations\201701131622214_AddingCustomFields.Designer.cs">
+      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
@@ -165,6 +169,7 @@
     </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BaseLinkedEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
@@ -229,6 +234,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701131622214_AddingCustomFields.resx">
+      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
     </EmbeddedResource>

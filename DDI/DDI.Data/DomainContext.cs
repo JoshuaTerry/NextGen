@@ -44,6 +44,12 @@ namespace DDI.Data
 
         public virtual DbSet<ContactType> ContactTypes { get; set; }
 
+        public virtual DbSet<CustomField> CustomField { get; set; }
+        
+        public virtual DbSet<CustomFieldData> CustomFieldData { get; set; }
+
+        public virtual DbSet<CustomFieldOption> CustomFieldOption { get; set; }
+
         public virtual DbSet<Degree> Degrees { get; set; }
 
         public virtual DbSet<Denomination> Denominations { get; set; }
