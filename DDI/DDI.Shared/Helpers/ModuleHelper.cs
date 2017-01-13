@@ -15,50 +15,12 @@ namespace DDI.Shared.Helpers
     {
         #region Fields
 
-        private static Dictionary<ModuleType, ModuleInfoBase> _moduleDict;
+        private static Dictionary<ModuleType, ModuleInfoBase> _moduleDictionary;
         private static List<ModuleInfoBase> _modules;
 
         #endregion
 
-        #region Constructors
-
-        static ModuleHelper()
-        {
-            _modules = new List<ModuleInfoBase>();
-            _moduleDict = new Dictionary<ModuleType, ModuleInfoBase>();
-
-            // Populate the list of modules and the module dictionary.
-            foreach (Type moduleType in ReflectionHelper.GetDerivedTypes<ModuleInfoBase>(typeof(ModuleHelper).Assembly))
-            {
-                ModuleInfoBase mod = (ModuleInfoBase)Activator.CreateInstance(moduleType);
-                _modules.Add(mod);
-                ModuleType modType = mod.ModuleType;
-                if (modType != ModuleType.None)
-                {
-                    _moduleDict[modType] = mod;
-                }
-            }            
-
-            // Link up modules
-            foreach (var mod in _modules)
-            {
-                ModuleType parent = mod.ParentModuleType;
-                if (parent != ModuleType.None)
-                {
-                    ModuleInfoBase parentMod = _modules.FirstOrDefault(p => p.ModuleType == parent);
-                    if (parentMod != null)
-                    {
-                        mod.ParentModule = parentMod;
-                        parentMod.ChildModules.Add(mod);
-                    }
-                }
-            }
-
-        }
-
-        #endregion
-
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Collection of module information objects
@@ -67,23 +29,25 @@ namespace DDI.Shared.Helpers
         {
             get
             {
+                Initialize();
                 return _modules;
             }
         }
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Get the ModuleInfo object for a specified ModuleType value.
         /// </summary>
-        public static ModuleInfoBase GetModuleInfo (ModuleType modType)
+        public static ModuleInfoBase GetModuleInfo (ModuleType moduleType)
         {
-            ModuleInfoBase mod = null;
-            _moduleDict.TryGetValue(modType, out mod);
+            Initialize();
+            ModuleInfoBase moduleInfo = null;
+            _moduleDictionary.TryGetValue(moduleType, out moduleInfo);
 
-            return mod;
+            return moduleInfo;
         }
 
         /// <summary>
@@ -92,10 +56,56 @@ namespace DDI.Shared.Helpers
         /// <typeparam name="T">ModuleInfo type</typeparam>
         public static T GetModuleInfo<T>() where T : ModuleInfoBase
         {
+            Initialize();
             return _modules.FirstOrDefault(p => p.GetType() == typeof(T)) as T;
         }
 
         #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Build list of modules via reflection only once, and only when first requested.
+        /// </summary>
+        private static void Initialize()
+        {
+            if (_modules == null)
+            {
+                _modules = new List<ModuleInfoBase>();
+                _moduleDictionary = new Dictionary<ModuleType, ModuleInfoBase>();
+
+                // Populate the list of modules and the module dictionary.
+                foreach (Type type in ReflectionHelper.GetDerivedTypes<ModuleInfoBase>(typeof(ModuleHelper).Assembly))
+                {
+                    ModuleInfoBase moduleInfo = (ModuleInfoBase)Activator.CreateInstance(type);
+                    _modules.Add(moduleInfo);
+                    ModuleType moduleType = moduleInfo.ModuleType;
+                    if (moduleType != ModuleType.None)
+                    {
+                        _moduleDictionary[moduleType] = moduleInfo;
+                    }
+                }
+
+                // Link up modules
+                foreach (var module in _modules)
+                {
+                    ModuleType parent = module.ParentModuleType;
+                    if (parent != ModuleType.None)
+                    {
+                        ModuleInfoBase parentModule = _modules.FirstOrDefault(p => p.ModuleType == parent);
+                        if (parentModule != null)
+                        {
+                            module.ParentModule = parentModule;
+                            parentModule.ChildModules.Add(module);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
 
 
     }

@@ -16,12 +16,12 @@ namespace DDI.Shared.ModuleInfo
     {
         #region Constructors
 
-        public ModuleTypeAttribute(ModuleType modType)
+        public ModuleTypeAttribute(ModuleType moduleType)
         {
-            ModuleType = modType;
+            ModuleType = moduleType;
         }
 
-        public ModuleTypeAttribute(ModuleType modType, ModuleType parentType) : this(modType)
+        public ModuleTypeAttribute(ModuleType moduleType, ModuleType parentType) : this(moduleType)
         {
             ParentModuleType = parentType;
         }

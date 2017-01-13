@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
     public class ClergyStatusesController : ApiController
     {
-        GenericServiceBase<ClergyStatus> _service;
+        ServiceBase<ClergyStatus> _service;
 
-        public ClergyStatusesController() : this(new GenericServiceBase<ClergyStatus>()) { }
-        internal ClergyStatusesController(GenericServiceBase<ClergyStatus> service)
+        public ClergyStatusesController() : this(new ServiceBase<ClergyStatus>()) { }
+        internal ClergyStatusesController(ServiceBase<ClergyStatus> service)
         {
             _service = service;
         }

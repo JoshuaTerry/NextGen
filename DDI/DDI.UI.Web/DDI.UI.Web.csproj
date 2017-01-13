@@ -66,6 +66,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\constituents.css" />
+    <Content Include="CSS\login.css" />
+    <Content Include="CSS\search.css" />
+    <Content Include="CSS\systemsettings.css" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
@@ -104,6 +108,8 @@
     <Content Include="CSS\icons\dxiconsios.ttf" />
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
+    <None Include="Properties\PublishProfiles\DevEnv-WebApp.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalEnv-WebApp.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -112,6 +118,7 @@
     </None>
     <Content Include="Pages\Reports\Reports.aspx" />
     <Content Include="RegistrationConfirmation.aspx" />
+    <Content Include="Scripts\configuration.js" />
     <Content Include="Scripts\data.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -129,7 +136,7 @@
     <Content Include="Pages\CRM\Constituents.aspx" />
     <Content Include="CSS\dx.common.css" />
     <Content Include="CSS\generic.light.custom.css" />
-    <Content Include="CSS\screen.css" />
+    <Content Include="CSS\globalstyles.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Images\AccountMerge_64.png" />

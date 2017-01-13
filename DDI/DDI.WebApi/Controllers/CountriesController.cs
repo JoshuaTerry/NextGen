@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Data.Models.Common;
-using DDI.WebApi.Services;
-using Newtonsoft.Json.Linq;
+using DDI.Shared.Models.Common;
+using DDI.Services;
+using Newtonsoft.Json.Linq; 
 
 namespace DDI.WebApi.Controllers
 {
@@ -10,14 +10,14 @@ namespace DDI.WebApi.Controllers
     {
         #region Private Fields
 
-        private GenericServiceCommonBase<Country> _service;
+        private ServiceBase<Country> _service;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public CountriesController()
-            : this(new GenericServiceCommonBase<Country>())
+            : this(new ServiceBase<Country>())
         {
         }
 
@@ -25,7 +25,7 @@ namespace DDI.WebApi.Controllers
 
         #region Internal Constructors
 
-        internal CountriesController(GenericServiceCommonBase<Country> service)
+        internal CountriesController(ServiceBase<Country> service)
         {
             _service = service;
         }
