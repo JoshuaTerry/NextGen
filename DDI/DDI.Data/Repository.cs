@@ -121,10 +121,7 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                if (_context.Entry(entity).State == EntityState.Detached)
-                {
-                    EntitySet.Attach(entity);
-                }
+                Attach(entity);
 
                 EntitySet.Remove(entity);
                 if (!_isUOW)
@@ -245,10 +242,7 @@ namespace DDI.Data
         /// </summary>
         public void Attach(T entity)
         {
-            if (entity != null)
-            {
-                EntitySet.Attach(entity);
-            }
+            Attach(entity, EntityState.Unchanged);
         }
         
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
@@ -287,22 +281,6 @@ namespace DDI.Data
             {
                 return GetById(id);
             }
-        }
-
-        public List<string> GetModifiedProperties(T entity)
-        {
-            var list = new List<string>();
-            DbEntityEntry<T> entry = _context.Entry(entity);
-
-            foreach (string property in entry.OriginalValues.PropertyNames)
-            {
-                if (entry.Property(property).IsModified)
-                {
-                    list.Add(property);
-                }
-            }
-
-            return list;
         }
 
         public virtual T Create()
@@ -351,7 +329,7 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                EntitySet.Attach(entity);
+                Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
                 if (!_isUOW)
                 {
@@ -386,6 +364,37 @@ namespace DDI.Data
             return _isUOW ? 0 : _context.SaveChanges();
         }
 
+        public List<string> GetModifiedProperties(T entity)
+        {
+            var list = new List<string>();
+            DbEntityEntry<T> entry = _context.Entry(entity);
+
+            foreach (string property in entry.OriginalValues.PropertyNames)
+            {
+                if (entry.Property(property).IsModified)
+                {
+                    list.Add(property);
+                }
+            }
+
+            return list;
+        }
+
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void Attach(T entity, EntityState entityState)
+        {
+            if (entity != null && _context.Entry(entity).State == EntityState.Detached)
+            {
+                // Attach throws exceptions if parts of the entity graph are already in the context.  Instead, use Add and adjust the entity state.
+                EntitySet.Add(entity);
+                _context.Entry(entity).State = entityState;
+            }
+        }
+
+        #endregion
+
     }
 }

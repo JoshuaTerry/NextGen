@@ -75,6 +75,8 @@
   <ItemGroup>
     <Compile Include="Attributes\EntityTypeAttribute.cs" />
     <Compile Include="DataResponse.cs" />
+    <Compile Include="Enums\Common\CustomFieldEntity.cs" />
+    <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
@@ -104,6 +106,9 @@
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Models\Client\Core\CustomField.cs" />
+    <Compile Include="Models\Client\Core\CustomFieldData.cs" />
+    <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
     <Compile Include="Models\ILinkedEntityCollection.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
