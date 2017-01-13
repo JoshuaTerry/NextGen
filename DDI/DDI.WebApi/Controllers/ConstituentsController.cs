@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using DDI.Services;
+using DDI.Services.Extensions;
 using Newtonsoft.Json.Linq;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
+using DDI.WebApi.Helpers;
 
 namespace DDI.WebApi.Controllers
 {
@@ -24,7 +29,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents")]
+        [Route("api/v1/constituents", Name = RouteNames.Constituents)]
         public IHttpActionResult GetConstituents(string quickSearch = null, 
                                                  string name = null, 
                                                  int? constituentNumber = null, 
@@ -68,6 +73,12 @@ namespace DDI.WebApi.Controllers
             {
                 return InternalServerError();
             }
+
+            var totalCount = constituents.TotalResults;
+            var totalPages = (int) Math.Ceiling((double) totalCount / limit.Value);
+            var urlHelper = new UrlHelper(Request);
+
+            PaginationHelper.AddPaginationHeaderToResponse(urlHelper, search, totalPages, totalCount, RouteNames.Constituents);
 
             return Ok(constituents);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using DDI.Data;
 using DDI.Shared;
 using Newtonsoft.Json.Linq; 
@@ -39,7 +40,8 @@ namespace DDI.Services
         
         public IDataResponse<dynamic> GetConstituents(ConstituentSearch search)
         {
-            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
+            IQueryable<Constituent> constituents = _unitOfWork.GetEntities<Constituent>().IncludePath(c => c.ConstituentAddresses);
+//            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
@@ -58,95 +60,10 @@ namespace DDI.Services
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList(), search.Fields, true);
+            
             response.TotalResults = totalCount;
-            response.PageSize = search.Limit;
-            response.PageNumber = search.Offset + 1;
-            response.Links = new List<HATEOASLink>()
-            {
-                new HATEOASLink()
-                {
-                    Href = search.ToQueryString(),
-                    Relationship = "self",
-                    Method = "GET"
-                }
-            };
-            if (response.TotalResults > 1)
-            {
-                response.Links.AddRange(AddPagingLinks(search, response));
-            }
 
             return response;
-        }
-
-        private List<HATEOASLink> AddPagingLinks(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            var pagingLinks = new List<HATEOASLink>();
-
-            pagingLinks.Add(CreateFirstPageLink(originalSearch, response));
-            pagingLinks.Add(CreatePreviousPageLink(originalSearch, response));
-            pagingLinks.Add(CreateNextPageLink(originalSearch, response));
-            pagingLinks.Add(CreateLastPageLink(originalSearch, response));
-
-            return pagingLinks;
-        }
-
-        private HATEOASLink CreateFirstPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink firstPageLink = null;
-            firstPageLink = new HATEOASLink()
-            {
-                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset=0&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                Relationship = "first-page",
-                Method = "GET"
-            };
-            
-            return firstPageLink;
-        }
-
-        private HATEOASLink CreatePreviousPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink previousPageLink = null;
-            if (originalSearch.Offset > 0)
-            {
-                previousPageLink = new HATEOASLink()
-                {
-                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={--originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                    Relationship = "previous-page",
-                    Method = "GET"
-                };
-            }
-
-            return previousPageLink;
-        }
-
-        private HATEOASLink CreateNextPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink nextPageLink = null;
-            if (originalSearch.Offset < response.TotalResults/originalSearch.Limit)
-            {
-                nextPageLink = new HATEOASLink()
-                {
-                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={++originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                    Relationship = "next-page",
-                    Method = "GET"
-                };
-            }
-
-            return nextPageLink;
-        }
-
-        private HATEOASLink CreateLastPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink lastPageLink = null;
-            lastPageLink = new HATEOASLink()
-            {
-                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={response.TotalResults / originalSearch.Limit}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                Relationship = "last-page",
-                Method = "GET"
-            };
-
-
-            return lastPageLink;
         }
 
         private void ApplyQuickFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
