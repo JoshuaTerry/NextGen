@@ -62,6 +62,14 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.cs" />
+    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.Designer.cs">
+      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.cs" />
+    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.Designer.cs">
+      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
     <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
       <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
@@ -71,8 +79,8 @@
       <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
-    <Compile Include="Migrations\201701131622214_AddingCustomFields.cs" />
-    <Compile Include="Migrations\201701131622214_AddingCustomFields.Designer.cs">
+    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.cs" />
+    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.Designer.cs">
       <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
@@ -178,6 +186,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701141745544_MaritalStatus2.resx">
+      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701131918535_Update SectionPreferences.resx">
+      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
       <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
     </EmbeddedResource>
@@ -187,7 +201,7 @@
     <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
       <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701131622214_AddingCustomFields.resx">
+    <EmbeddedResource Include="Migrations\Client\201701131622214_AddingCustomFields.resx">
       <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
