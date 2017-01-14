@@ -27,7 +27,7 @@ namespace DDI.WebApi.Tests.Services
         {
             var preferences = new List<SectionPreference>();
             preferences.Add(new SectionPreference { SectionName = "Constituent", Name = "Color", Value = "Red" });
-            preferences.Add(new SectionPreference { SectionName = "Constituent", Name = "FunFactor", Value = 4 });
+            preferences.Add(new SectionPreference { SectionName = "Constituent", Name = "FunFactor", Value = "4" });
             preferences.Add(new SectionPreference { SectionName = "Loans", Name = "Color", Value = "Blue" });
 
             var response = preferences.AsQueryable<SectionPreference>();
