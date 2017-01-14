@@ -211,38 +211,6 @@ namespace DDI.Conversion.CRM
             legacyIdFile.Dispose();
         }
 
-
-        private DomainContext CreateContextForConstituentAddresses()
-        {
-            DomainContext context = new DomainContext();
-            context.AddressTypes.Load();
-            return context;
-        }
-
-        private DomainContext CreateContextForConstituents(out NameFormatter nameFormatter)
-        {
-            DomainContext context = new DomainContext();
-
-            UnitOfWorkEF uow = new UnitOfWorkEF(context);
-            nameFormatter = uow.GetBusinessLogic<NameFormatter>();                
-
-            // Load entity sets that will be queried often...
-            context.ConstituentTypes.Load();
-            context.Ethnicities.Load();
-            context.Denominations.Load();
-            context.Prefixes.Load();
-            context.Genders.Load();
-            context.IncomeLevels.Load();
-            context.EducationLevels.Load();
-            context.Professions.Load();
-            context.ClergyTypes.Load();
-            context.ClergyStatuses.Load();
-            context.MaritalStatuses.Load();
-            context.ConstituentStatuses.Load();
-
-            return context;
-        }
-
         private ObservableCollection<T> LoadEntities<T>(DbSet<T> entities, params string[] paths) where T : class
         {
             IQueryable<T> query = entities;
@@ -567,6 +535,8 @@ namespace DDI.Conversion.CRM
                     // Anything coming over with a deletion date should be set to status deleted.
                     if (deleteDate.HasValue)
                     {
+                        constituent.ConstituentStatusDate = deleteDate;
+
                         if (constituent.ConstituentStatus == null)
                         {
                             constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);                            
@@ -581,15 +551,25 @@ namespace DDI.Conversion.CRM
                         }
                         else
                         {
-                            // TODO: Set constituent status date to 1/1/1990.  (DC-266)
+                            constituent.ConstituentStatusDate = DateTime.Parse("1/1/1990");
                         }
                     }
 
                     constituent.ConstituentStatusId = constituent.ConstituentStatus?.Id;
 
-                    // TODO: Constituent status date missing (DC-266).
-
-                    // Marital Status - Cannot be done yet because model is incorrect. (DC-173)
+                    // Marital Status
+                    if (!string.IsNullOrWhiteSpace(maritalStatusCode))
+                    {
+                        MaritalStatus maritalStatus = maritalStatuses.FirstOrDefault(p => p.Code == maritalStatusCode);
+                        if (maritalStatus == null)
+                        {
+                            importer.LogError($"Invalid marital status code {maritalStatusCode} for PIN {constituentNum}.");
+                        }
+                        else
+                        {
+                            constituent.MaritalStatusId = maritalStatus.Id;
+                        }
+                    }
 
 
                     if (birthDay > 0 && birthMonth > 0 && birthYear1> 0)
@@ -792,6 +772,8 @@ namespace DDI.Conversion.CRM
                     // Anything coming over with a deletion date should be set to status deleted.
                     if (deleteDate.HasValue)
                     {
+                        constituent.ConstituentStatusDate = deleteDate;
+
                         if (constituent.ConstituentStatus == null)
                         {
                             constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);
@@ -806,13 +788,11 @@ namespace DDI.Conversion.CRM
                         }
                         else
                         {
-                            // TODO: Set constituent status date to 1/1/1990.  (DC-266)
+                            constituent.ConstituentStatusDate = DateTime.Parse("1/1/1990");
                         }
                     }
 
                     constituent.ConstituentStatusId = constituent.ConstituentStatus?.Id;
-
-                    // TODO: Constituent status date missing (DC-266).
 
                     constituent.FormattedName = constituent.Name;
 
