@@ -7,9 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using DDI.Business.Core;
+using DDI.Business.CRM;
 using DDI.Conversion;
 using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
@@ -31,6 +33,7 @@ namespace DDI.Conversion.CRM
             RegionAreas,
             RelationshipTypes,
             Tags,
+            Configuration,
         }
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
@@ -67,15 +70,14 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas("RegionAreas.csv"));
             RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes("RelationshipType.csv"));
             RunConversion(ConversionMethod.Tags, () => LoadTags("TagGroup.csv", "TagCode.csv"));
+            RunConversion(ConversionMethod.Configuration, () => LoadConfiguration("NASetup.csv"));
         }
 
 
         private void LoadLegacyCodes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-
-            using (var importer = new FileImport(dataFile, "NACodes"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
                 {
@@ -212,12 +214,174 @@ namespace DDI.Conversion.CRM
             context.SaveChanges();
         }
 
+        private void LoadConfiguration(string filename)
+        {
+            var bl = new ConfigurationLogic();
+            IUnitOfWork uow = bl.UnitOfWork;
+            
+            using (var ifile = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                while (ifile.GetNextRow())
+                {
+                    CRMConfiguration config = bl.GetConfiguration<CRMConfiguration>();
+
+                    // Salutations and formatting
+
+                    ApplySalutationSettings(uow, "O", ifile.GetString(0), ifile.GetString(1));
+                    ApplySalutationSettings(uow, "C", ifile.GetString(2), ifile.GetString(3));
+                    ApplySalutationSettings(uow, "F", ifile.GetString(4), ifile.GetString(5));
+
+                    string defaultSalutationFormat = ifile.GetString(6);
+                    if (defaultSalutationFormat == "1")
+                    {
+                        defaultSalutationFormat = "Dear {FULL}";
+                    }
+                    else
+                    {
+                        defaultSalutationFormat = "Dear {P}{L}";
+                    }
+
+                    SalutationType defaultSalType = SalutationType.Formal;
+
+                    switch (ifile.GetInt(7))
+                    {
+                        case 1: defaultSalType = SalutationType.Formal; break;
+                        case 2: defaultSalType = SalutationType.Informal; break;
+                        case 3: defaultSalType = SalutationType.FormalSeparate; break;
+                        case 4: defaultSalType = SalutationType.InformalSeparate; break;
+                    }
+
+                    foreach (ConstituentType ct in uow.Where<ConstituentType>(p => p.Code == "I"))
+                    {
+                        ct.SalutationFormal = defaultSalutationFormat;
+                    }
+
+                    config.OmitInactiveSpouse = ifile.GetBool(8);
+                    config.AddFirstNamesToSpouses = ifile.GetBool(9);
+                    config.DefaultSalutationType = defaultSalType;
+
+                    // Address types
+                    config.HomeAddressTypes = GetAddressTypes(uow, ifile.GetString(10));
+                    config.MailAddressTypes = GetAddressTypes(uow, ifile.GetString(11));
+
+                    string defaultAddressType = ifile.GetCode(12);
+                    config.DefaultAddressType = uow.FirstOrDefault<AddressType>(p => p.Code == defaultAddressType);
+
+                    // Deceased status code and tag
+                    string deceasedCode = ifile.GetCode(18);
+                    string deceasedTag = ifile.GetCode(19);
+
+                    if (string.IsNullOrWhiteSpace(deceasedCode))
+                    {
+                        config.DeceasedStatus = null;
+                    }
+                    else
+                    {
+                        config.DeceasedStatus = uow.FirstOrDefault<ConstituentStatus>(p => p.Code == deceasedCode);
+                    }
+
+                    config.DeceasedTags = new List<Tag>();
+
+                    if (!string.IsNullOrWhiteSpace(deceasedTag))
+                    {
+                        var tag = uow.FirstOrDefault<Tag>(p => p.Code == deceasedTag);
+                        if (tag != null)
+                        {
+                            config.DeceasedTags.Add(tag);
+                        }
+                    }
+
+                    // Name format
+                    string nameFormat = ifile.GetString(20);
+                    if (!string.IsNullOrWhiteSpace(nameFormat))
+                    {
+                        var ct = uow.FirstOrDefault<ConstituentType>(p => p.Code == "I");
+                        if (ct != null)
+                        {
+                            ct.NameFormat = ConvertNameFormat(nameFormat);
+                        }
+
+                    }
+
+                    // Misc. flags
+                    config.UseRegionSecurity = ifile.GetBool(21);
+                    config.ApplyDeceasedTag = ifile.GetBool(22);
+
+                    // Spouse relationships
+                    string spouseCodes = ifile.GetString(23);
+                    if (string.IsNullOrWhiteSpace(spouseCodes))
+                    {
+                        spouseCodes = "SPOU";
+                    }
+
+                    foreach (string entry in spouseCodes.Split(','))
+                    {
+                        string relationshipCode = entry.ToUpper().Trim();
+                        RelationshipType relationshipType = uow.FirstOrDefault<RelationshipType>(p => p.Code == relationshipCode);
+                        if (relationshipType != null)
+                        {
+                            relationshipType.IsSpouse = true;
+                        }
+                    }
+                    
+                    bl.SaveConfiguration(config);
+                    break;
+                }
+            }
+        }
+
+        private void ApplySalutationSettings(IUnitOfWork uow, string code, string formal, string informal)
+        {
+            ConstituentType ct = uow.FirstOrDefault<ConstituentType>(p => p.Code == code);
+            if (ct != null)
+            {
+                if (!string.IsNullOrWhiteSpace(formal))
+                {
+                    ct.SalutationFormal = formal.TrimEnd(',', ':');
+                }
+                if (!string.IsNullOrWhiteSpace(informal))
+                {
+                    ct.SalutationInformal = informal.TrimEnd(',', ':');
+                }
+            }
+        }
+
+        private IList<AddressType> GetAddressTypes(IUnitOfWork uow, string text)
+        {
+            List<AddressType> list = new List<AddressType>();
+
+            foreach (var entry in text.Split(','))
+            {
+                if (!string.IsNullOrWhiteSpace(entry))
+                {
+                    string trimmedEntry = entry.Trim().ToUpper();
+                    AddressType type = uow.FirstOrDefault<AddressType>(p => p.Code == trimmedEntry);
+                    if (type != null)
+                    {
+                        list.Add(type);
+                    }
+                }
+            }
+            return list;
+        }
+
+        private string ConvertNameFormat(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in text)
+            {
+                if (char.IsLetter(c))
+                    sb.Append('{').Append(Char.ToUpper(c)).Append('}');
+                else if (c == '.')
+                    sb.Insert(sb.Length - 1, 'I');
+            }
+            return sb.ToString();
+        }
+
         private void LoadContactTypes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-
-            using (var importer = new FileImport(dataFile, "ContactType"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -265,8 +429,8 @@ namespace DDI.Conversion.CRM
         private void LoadRegionLevels(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RegionLevel"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -305,9 +469,8 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
 
             Dictionary<int, Region> regionDict = new Dictionary<int, Region>();
-            
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "Region"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -361,9 +524,8 @@ namespace DDI.Conversion.CRM
 
             // Need to delete all region areas first...
             context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<RegionArea>()}");
-            
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RegionAreas"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -486,8 +648,7 @@ namespace DDI.Conversion.CRM
             List<Tuple<string,string,bool>> fixups = new List<Tuple<string, string, bool>>(); // 0:code, 1:reciprocal-code, 2:isMale
             RelationshipType rtype;
 
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RelType"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -582,8 +743,7 @@ namespace DDI.Conversion.CRM
             Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
 
             // Load tag groups.
-            string dataFile = Path.Combine(_crmDirectory, groupFilename);
-            using (var importer = new FileImport(dataFile, "TagGroup"))
+            using (var importer = CreateFileImporter(_crmDirectory, groupFilename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -614,8 +774,7 @@ namespace DDI.Conversion.CRM
 
 
             // Load Tags.
-            dataFile = Path.Combine(_crmDirectory, tagFilename);
-            using (var importer = new FileImport(dataFile, "Tag"))
+            using (var importer = CreateFileImporter(_crmDirectory, tagFilename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -648,12 +807,11 @@ namespace DDI.Conversion.CRM
         private void LoadPrefixes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
 
             // Force loading of genders
-            context.Genders.ToList();        
+            var genders = context.Genders.ToList();
 
-            using (var importer = new FileImport(dataFile, "Prefix"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
                 {
@@ -668,7 +826,7 @@ namespace DDI.Conversion.CRM
 
                     if (!string.IsNullOrWhiteSpace(gender))
                     {
-                        g1 = context.Genders.Local.FirstOrDefault(p => p.Code == gender);
+                        g1 = genders.FirstOrDefault(p => p.Code == gender);
                     }
                                         
                     Prefix prefix = new Prefix();
@@ -679,6 +837,7 @@ namespace DDI.Conversion.CRM
                     prefix.LabelAbbreviation = labelAbbreviation;
                     prefix.Salutation = salutation;
                     prefix.Gender = g1;
+                    prefix.GenderId = g1?.Id;
                     prefix.ShowOnline = showOnline;
 
                     context.Prefixes.AddOrUpdate(

@@ -56,8 +56,9 @@ namespace DDI.Conversion
 
             //Run<CRM.Initialize>();
             //Run<CRM.SettingsLoader>();
+            //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Prefixes));
 
-            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Organizations_FW, 0, 0, true));
+            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.ConstituentAddresses, "", 0, 0, true));
         }
 
         private static void Run<T>() where T : ConversionBase, new()
@@ -70,9 +71,9 @@ namespace DDI.Conversion
             new T().Execute(_filePath, methodsToRun);
         }
 
-        private static void Run<T>(ConversionMethodArgs methodsToRun) where T : ConversionBase, new()
+        private static void Run<T>(ConversionMethodArgs methodToRun) where T : ConversionBase, new()
         {
-            new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodsToRun });
+            new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodToRun });
         }
 
     }

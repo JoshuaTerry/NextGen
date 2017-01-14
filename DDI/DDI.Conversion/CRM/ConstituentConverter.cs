@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
-using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
@@ -18,19 +16,15 @@ using DDI.Shared.ModuleInfo;
 namespace DDI.Conversion.CRM
 {
     [ModuleType(Shared.Enums.ModuleType.CRM)]
-    internal class ConstituentLoader : ConversionBase
+    internal class ConstituentConverter : ConversionBase
     {
 
         public enum ConversionMethod
         {
-            Individuals = 200100,
-            Individuals_FW,
+            Individuals = 200100,            
             Organizations,
-            Organizations_FW,
             Addresses,
-            Addresses_FW,
             ConstituentAddresses,
-            ConstituentAddresses_FW,
             DoingBusinessAs,
             Education,
             AlternateIDs,
@@ -39,41 +33,65 @@ namespace DDI.Conversion.CRM
             Relationships
         }
 
+        private const string CONSTITUENT_ID_FILE = "ConstituentId.csv";
+        private const string ADDRESS_ID_FILE = "AddressId.csv";
 
         private string _crmDirectory;
+        private string _outputDirectory;
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
             _crmDirectory = Path.Combine(baseDirectory, "CRM");
+            _outputDirectory = Path.Combine(_crmDirectory, "Output");
+            Directory.CreateDirectory(_outputDirectory);
 
-            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv"));
-            RunConversion(ConversionMethod.Individuals_FW, () => LoadIndividuals("IndividualFW.csv"));
-            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("Organization.csv"));
-            RunConversion(ConversionMethod.Organizations_FW, () => LoadOrganizations("OrganizationFW.csv"));
-            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv"));
-            RunConversion(ConversionMethod.Addresses_FW, () => LoadAddresses("AddressFW.csv"));
-            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv"));
-            RunConversion(ConversionMethod.ConstituentAddresses_FW, () => LoadConstituentAddress("ConstituentAddressFW.csv"));
+            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv", false));
+            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("IndividualFW.csv", true));
+            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("Organization.csv", true));
+            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("OrganizationFW.csv", true));
+            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv", false));
+            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("AddressFW.csv", true));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv", false));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddressFW.csv", true));
 
             //RunConversion(ConversionMethod.DoingBusinessAs, () => LoadDoingBusinessAs("");
         }
 
-        private void LoadAddresses(string filename)
+
+
+        private void LoadAddresses(string filename, bool append)
         {
-            DomainContext context = CreateContextForAddresses();
+            DomainContext context = new DomainContext();
             CommonContext commonContext = new CommonContext();
 
-            RegionLevel regionLevel1 = context.RegionLevels.FirstOrDefault(p => p.Level == 1);
-            RegionLevel regionLevel2 = context.RegionLevels.FirstOrDefault(p => p.Level == 2);
-            RegionLevel regionLevel3 = context.RegionLevels.FirstOrDefault(p => p.Level == 3);
-            RegionLevel regionLevel4 = context.RegionLevels.FirstOrDefault(p => p.Level == 4);
+            context.RegionLevels.Load();
+            context.Regions.Load();
+
+            var countries = commonContext.Countries.Local;
+            var states = commonContext.States.Local;
+            var counties = commonContext.Counties.Local;
+            var regionLevels = context.RegionLevels.Local;
+            var regions = context.Regions.Local;
+
+            RegionLevel regionLevel1 = regionLevels.FirstOrDefault(p => p.Level == 1);
+            RegionLevel regionLevel2 = regionLevels.FirstOrDefault(p => p.Level == 2);
+            RegionLevel regionLevel3 = regionLevels.FirstOrDefault(p => p.Level == 3);
+            RegionLevel regionLevel4 = regionLevels.FirstOrDefault(p => p.Level == 4);
+
+            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, ADDRESS_ID_FILE), append, true);
+            FileExport<Address> addressFile = new FileExport<Address>(Path.Combine(_outputDirectory, "Address.csv"), append);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 0;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                if (!append)
+                {
+                    addressFile.AddHeaderRow();
+                }
+
+                while (importer.GetNextRow())
                 {
                     int legacyId = importer.GetInt(0);
                     string streetAddress1 = importer.GetString(1);
@@ -96,30 +114,29 @@ namespace DDI.Conversion.CRM
                         countryCode = "USA";
                     }
 
-                    country = commonContext.Countries.Local.FirstOrDefault(p => p.LegacyCode == countryCode) ??
-                        commonContext.Countries.Include(p => p.States).FirstOrDefault(p => p.LegacyCode == countryCode);
+                    country = country = countries.FirstOrDefault(p => p.LegacyCode == countryCode) ??
+                        commonContext.Countries.Include(p => p.States).FirstOrDefault(p => p.LegacyCode == countryCode);                
 
                     State state = null;
                     if (!string.IsNullOrWhiteSpace(stateCode) && country != null)
                     {
                         state = country.States.FirstOrDefault(p => p.StateCode == stateCode);
+                        if (state != null && state.Counties == null)
+                        {
+                            commonContext.Entry(state).Collection(p => p.Counties).Load();
+                        }
                     }
 
                     County county = null;
                     if (countryCode == "USA" && !string.IsNullOrWhiteSpace(countyFips) && state != null)
-                    {
-                        var counties = commonContext.Entry(state).Collection(p => p.Counties);
-                        if (!counties.IsLoaded)
-                        {
-                            counties.Load();
-                        }
+                    {                        
                         county = state.Counties.FirstOrDefault(p => p.FIPSCode == countyFips);
                     }
 
                     Region regionOne = null;
                     if (!string.IsNullOrWhiteSpace(region1))
                     {
-                        regionOne = context.Regions.Local.FirstOrDefault(p => p.Level == 1 && p.Code == region1);
+                        regionOne = regions.FirstOrDefault(p => p.Level == 1 && p.Code == region1);
                     }
 
                     Region regionTwo = null;
@@ -131,7 +148,7 @@ namespace DDI.Conversion.CRM
                         }
                         else
                         {
-                            regionTwo = context.Regions.Local.FirstOrDefault(p => p.Level == 2 && p.Code == region2);
+                            regionTwo = regions.FirstOrDefault(p => p.Level == 2 && p.Code == region2);
                         }
                     }
 
@@ -140,11 +157,11 @@ namespace DDI.Conversion.CRM
                     {
                         if (regionLevel3.IsChildLevel)
                         {
-                            regionThree = regionTwo?.ChildRegions.FirstOrDefault(p => p.Code == region3);
+                            regionThree = regionTwo.ChildRegions.FirstOrDefault(p => p.Code == region3);
                         }
                         else
                         {
-                            regionThree = context.Regions.Local.FirstOrDefault(p => p.Level == 3 && p.Code == region3);
+                            regionThree = regions.FirstOrDefault(p => p.Level == 3 &&  p.Code == region3);
                         }                        
                     }
 
@@ -153,26 +170,17 @@ namespace DDI.Conversion.CRM
                     {
                         if (regionLevel4.IsChildLevel)
                         {
-                            regionFour = regionThree?.ChildRegions.FirstOrDefault(p => p.Code == region4);
+                            regionFour = regionThree.ChildRegions.FirstOrDefault(p => p.Code == region4);
                         }
                         else
                         {
-                            regionFour = context.Regions.Local.FirstOrDefault(p => p.Level == 4 && p.Code == region4);
+                            regionFour = regions.FirstOrDefault(p => p.Level == 4 && p.Code == region4);
                         }
                     }
 
-                    Address address = null;
-                    if (!MethodArgs.AddOnly)
-                    {
-                        address = context.Addresses.FirstOrDefault(p => p.LegacyKey == legacyId);
-                    }
-                    if (address == null)
-                    {
-                        address = new Address();
-                        address.LegacyKey = legacyId;
-                        context.Addresses.Add(address);
-                    }
-
+                    Address address = new Address();
+                    address.AssignPrimaryKey();
+                    address.LegacyKey = legacyId;
                     address.AddressLine1 = streetAddress1;
                     address.AddressLine2 = streetAddress2;
                     address.City = city;
@@ -180,37 +188,29 @@ namespace DDI.Conversion.CRM
                     address.StateId = state?.Id;
                     address.CountyId = county?.Id;
                     address.PostalCode = postalCode;
-                    address.Region1 = regionOne;
-                    address.Region2 = regionTwo;
-                    address.Region3 = regionThree;
-                    address.Region4 = regionFour;                    
+                    address.Region1Id = regionOne?.Id;
+                    address.Region2Id = regionTwo?.Id;
+                    address.Region3Id = regionThree?.Id;
+                    address.Region4Id = regionFour?.Id;
 
-                    if (count % 100 == 0)
-                    {
-                        context.SaveChanges();
-                        importer.LogMessage($"{count} loaded");
-                    }
+                    addressFile.AddRow(address);
+
+                    legacyIdFile.AddRow(new LegacyToID(legacyId, address.Id));
+
                     if (count % 1000 == 0)
                     {
-                        context.SaveChanges();
-                        context.Dispose();
-                        context = CreateContextForAddresses();
+                        importer.LogMessage($"{count} Loaded");
+                        addressFile.Flush();
+                        legacyIdFile.Flush();
                     }
+
                 }
             }
 
-            context.SaveChanges();
-            
+            addressFile.Dispose();
+            legacyIdFile.Dispose();
         }
 
-        private DomainContext CreateContextForAddresses()
-        {
-            DomainContext context = new DomainContext();
-            context.Regions.Load();
-            context.RegionLevels.Load();
-
-            return context;
-        }
 
         private DomainContext CreateContextForConstituentAddresses()
         {
@@ -243,23 +243,62 @@ namespace DDI.Conversion.CRM
             return context;
         }
 
-        private void LoadIndividuals(string filename)
+        private ObservableCollection<T> LoadEntities<T>(DbSet<T> entities, params string[] paths) where T : class
         {
-            NameFormatter nameFormatter;
-            DomainContext context = CreateContextForConstituents(out nameFormatter);
+            IQueryable<T> query = entities;
+            foreach (string path in paths)
+            {
+                query = query.Include(path);
+            }
+            query.Load();            
+            return entities.Local;
+        }
+
+        private void LoadIndividuals(string filename, bool append)
+        {
             char[] commaDelimiter = { ',' };
+            NameFormatter nameFormatter;
+
+            DomainContext context = new DomainContext();
+
+            UnitOfWorkEF uow = new UnitOfWorkEF(context);
+            nameFormatter = uow.GetBusinessLogic<NameFormatter>();
+
+            // Load entity sets that will be queried often...
+            var constituentTypes = LoadEntities(context.ConstituentTypes);
+            var ethnicities = LoadEntities(context.Ethnicities);
+            var denominations = LoadEntities(context.Denominations);
+            var genders = LoadEntities(context.Genders);
+            var prefixes = LoadEntities(context.Prefixes, "Gender");
+            var incomelevels = LoadEntities(context.IncomeLevels);
+            var educationLevels = LoadEntities(context.EducationLevels);
+            var professions = LoadEntities(context.Professions);
+            var clergyTypes = LoadEntities(context.ClergyTypes);
+            var clergyStatuses = LoadEntities(context.ClergyStatuses);
+            var maritalStatuses = LoadEntities(context.MaritalStatuses);
+            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                int count = 0;
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
+                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append);
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append);
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
+                denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
+
+                int count = 0;
+                if (!append)
+                {
+                    constituentFile.AddHeaderRow();
+                    ethnicityFile.AddHeaderRow();
+                    denominationFile.AddHeaderRow();
+                }
+
+                while (importer.GetNextRow())
                 {
                     count++;
-                    if (count < MethodArgs.MinCount)
-                    {
-                        continue;
-                    }
 
                     int constituentNum = importer.GetInt(0);
 
@@ -273,8 +312,8 @@ namespace DDI.Conversion.CRM
                     string name2 = importer.GetString(3);
                     string sourceCode = importer.GetString(4);
                     string taxId = importer.GetString(5);
-                    string ethnicity = importer.GetString(6);
-                    string denomination = importer.GetString(7);
+                    string ethnicityCode = importer.GetString(6);
+                    string denominationCode = importer.GetString(7);
                     string correspondencePreference = importer.GetString(8);
                     string salutationFormat = importer.GetString(9);
                     string salutationText = importer.GetString(10);
@@ -311,31 +350,19 @@ namespace DDI.Conversion.CRM
                     string deletionCode = importer.GetString(41);
                     DateTime? deleteDate = importer.GetDateTime(42);
 
-                    ConstituentType constituentType = context.ConstituentTypes.Local.FirstOrDefault(p => p.Code == constituentTypeCode);
+                    ConstituentType constituentType = constituentTypes.FirstOrDefault(p => p.Code == constituentTypeCode);
                     if (constituentType == null)
                     {
                         importer.LogError($"PIN {constituentNum} has invalid constituent type \"{constituentType}\".");
                         continue;
                     }
-
                     
                     Constituent constituent = null;
+                    constituent = new Constituent();
+                    constituent.AssignPrimaryKey();
 
-                    if (!MethodArgs.AddOnly)
-                    {
-                        constituent = context.Constituents
-                                                         .Include(p => p.Ethnicities)
-                                                         .Include(p => p.Denominations)
-                                                         .FirstOrDefault(p => p.ConstituentNumber == constituentNum);
-                    }
-
-                    if (constituent == null)
-                    {
-                        constituent = new Constituent();
-                        constituent.ConstituentNumber = constituentNum;
-                        context.Constituents.Add(constituent);
-                    }
-
+                    constituent.ConstituentNumber = constituentNum;
+                    constituent.ConstituentType = constituentType;
                     constituent.ConstituentTypeId = constituentType.Id;
                     constituent.Name = name;
                     constituent.Name2 = name2;
@@ -366,54 +393,32 @@ namespace DDI.Conversion.CRM
                     constituent.BirthYearTo = birthYear2;
 
                     // Ethnicity
-                    string[] codelist = ethnicity.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                    if (constituent.Ethnicities == null)
-                    {
-                        constituent.Ethnicities = new List<Ethnicity>();
-                    }
-                    foreach (Ethnicity ethnicityToRemove in constituent.Ethnicities.ToList())
-                    {
-                        if (!codelist.Any(p => p == ethnicityToRemove.Code))
-                        {
-                            constituent.Ethnicities.Remove(ethnicityToRemove);
-                        }
-                    }
+                    string[] codelist = ethnicityCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Ethnicity ethnicityToAdd = context.Ethnicities.Local.FirstOrDefault(p => p.Code == code);
-                        if (ethnicityToAdd == null)
+                        Ethnicity ethnicity = ethnicities.FirstOrDefault(p => p.Code == code);
+                        if (ethnicity == null)
                         {
                             importer.LogError($"Invalid ethnicity code \"{code}\" for PIN {constituentNum}.");
                         }
                         else
                         {
-                            constituent.Ethnicities.Add(ethnicityToAdd);
+                            ethnicityFile.AddRow(new JoinRow(ethnicity.Id, constituent.Id));
                         }
                     }
 
                     // Denominations
-                    codelist = denomination.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                    if (constituent.Denominations == null)
-                    {
-                        constituent.Denominations = new List<Denomination>();
-                    }
-                    foreach (Denomination denominationToRemove in constituent.Denominations.ToList())
-                    {
-                        if (!codelist.Any(p => p == denominationToRemove.Code))
-                        {
-                            constituent.Denominations.Remove(denominationToRemove);
-                        }
-                    }
+                    codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denominationToAdd = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
-                        if (denominationToAdd == null)
+                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
                         }
                         else
                         {
-                            constituent.Denominations.Add(denominationToAdd);
+                            denominationFile.AddRow(new JoinRow(denomination.Id, constituent.Id));
                         }
                     }
 
@@ -438,167 +443,120 @@ namespace DDI.Conversion.CRM
                     }
 
                     // Prefix
-                    if (string.IsNullOrWhiteSpace(prefixCode))
+                    if (!string.IsNullOrWhiteSpace(prefixCode))
                     {
-                        constituent.PrefixId = null;
-                        constituent.Prefix = null;
-                    }
-                    else
-                    {
-                        Prefix prefix = context.Prefixes.Local.FirstOrDefault(p => p.Code == prefixCode);
+                        Prefix prefix = prefixes.FirstOrDefault(p => p.Code == prefixCode);
                         if (prefix == null)
                         {
                             importer.LogError($"Invalid prefix code {prefixCode} for PIN {constituentNum}.");
-                            constituent.PrefixId = null;
-                            constituent.Prefix = null;
                         }
                         else
                         {
+                            constituent.PrefixId = prefix.Id;
                             constituent.Prefix = prefix;
                         }
                     }
 
                     // Gender
-                    if (string.IsNullOrWhiteSpace(genderCode))
+                    if (!string.IsNullOrWhiteSpace(genderCode))
                     {
-                        constituent.GenderId = null;
-                        constituent.Gender = null;
-                    }
-                    else
-                    {
-                        Gender gender = context.Genders.Local.FirstOrDefault(p => p.Code == genderCode);
+                        Gender gender = genders.FirstOrDefault(p => p.Code == genderCode);
                         if (gender == null)
                         {
                             importer.LogError($"Invalid gender code {genderCode} for PIN {constituentNum}.");
-                            constituent.GenderId = null;
-                            constituent.Gender = null;
                         }
                         else
                         {
+                            constituent.GenderId = gender.Id;
                             constituent.Gender = gender;
                         }
                     }
 
-                    // Earnings
-                    if (string.IsNullOrWhiteSpace(earningsCode))
+                    // Try to assign gender based on prefix.
+                    if (constituent.Gender == null && constituent.Prefix != null)
                     {
-                        constituent.IncomeLevelId = null;
-                        constituent.IncomeLevel = null;
+                        constituent.Gender = constituent.Prefix.Gender;
+                        constituent.GenderId = constituent.Gender?.Id;
                     }
-                    else
+
+                    // Earnings
+                    if (!string.IsNullOrWhiteSpace(earningsCode))
                     {
-                        IncomeLevel incomeLevel = context.IncomeLevels.Local.FirstOrDefault(p => p.Code == earningsCode);
+                        IncomeLevel incomeLevel = incomelevels.FirstOrDefault(p => p.Code == earningsCode);
                         if (incomeLevel == null)
                         {
                             importer.LogError($"Invalid earnings code {earningsCode} for PIN {constituentNum}.");
-                            constituent.IncomeLevelId = null;
-                            constituent.IncomeLevel = null;
                         }
                         else
                         {
-                            constituent.IncomeLevel = incomeLevel;
+                            constituent.IncomeLevelId = incomeLevel.Id;
                         }
                     }
 
                     // Education Level
-                    if (string.IsNullOrWhiteSpace(educationLevelCode))
+                    if (!string.IsNullOrWhiteSpace(educationLevelCode))
                     {
-                        constituent.EducationLevelId = null;
-                        constituent.EducationLevel = null;
-                    }
-                    else
-                    {
-                        EducationLevel educationLevel = context.EducationLevels.Local.FirstOrDefault(p => p.Code == educationLevelCode);
+                        EducationLevel educationLevel = educationLevels.FirstOrDefault(p => p.Code == educationLevelCode);
                         if (educationLevel == null)
                         {
                             importer.LogError($"Invalid education level code {educationLevelCode} for PIN {constituentNum}.");
-                            constituent.EducationLevelId = null;
-                            constituent.EducationLevel = null;
                         }
                         else
                         {
-                            constituent.EducationLevel = educationLevel;
+                            constituent.EducationLevelId = educationLevel.Id;
                         }
                     }
 
                     // Profession
-                    if (string.IsNullOrWhiteSpace(professionCode))
+                    if (!string.IsNullOrWhiteSpace(professionCode))
                     {
-                        constituent.ProfessionId = null;
-                        constituent.Profession = null;
-                    }
-                    else
-                    {
-                        Profession profession = context.Professions.Local.FirstOrDefault(p => p.Code == professionCode);
+                        Profession profession = professions.FirstOrDefault(p => p.Code == professionCode);
                         if (profession == null)
                         {
                             importer.LogError($"Invalid profession code {professionCode} for PIN {constituentNum}.");
-                            constituent.ProfessionId = null;
-                            constituent.Profession = null;
                         }
                         else
                         {
-                            constituent.Profession = profession;
+                            constituent.ProfessionId = profession.Id;
                         }
                     }
 
                     // Clergy Type
-                    if (string.IsNullOrWhiteSpace(clergyTypeCode))
+                    if (!string.IsNullOrWhiteSpace(clergyTypeCode))
                     {
-                        constituent.ClergyTypeId = null;
-                        constituent.ClergyType = null;
-                    }
-                    else
-                    {
-                        ClergyType clergyType = context.ClergyTypes.Local.FirstOrDefault(p => p.Code == clergyTypeCode);
+                        ClergyType clergyType = clergyTypes.FirstOrDefault(p => p.Code == clergyTypeCode);
                         if (clergyType == null)
                         {
                             importer.LogError($"Invalid clergy type code {clergyTypeCode} for PIN {constituentNum}.");
-                            constituent.ClergyTypeId = null;
-                            constituent.ClergyType = null;
                         }
                         else
                         {
-                            constituent.ClergyType = clergyType;
+                            constituent.ClergyTypeId = clergyType.Id;
                         }
                     }
 
                     // Clergy Status
-                    if (string.IsNullOrWhiteSpace(clergyStatusCode))
-                    {
-                        constituent.ClergyStatusId = null;
-                        constituent.ClergyStatus = null;
-                    }
-                    else
-                    {
-                        ClergyStatus clergyStatus = context.ClergyStatuses.Local.FirstOrDefault(p => p.Code == clergyStatusCode);
+                    if (!string.IsNullOrWhiteSpace(clergyStatusCode))
+                    { 
+                        ClergyStatus clergyStatus = clergyStatuses.FirstOrDefault(p => p.Code == clergyStatusCode);
                         if (clergyStatus == null)
                         {
                             importer.LogError($"Invalid clergy status code {clergyStatusCode} for PIN {constituentNum}.");
-                            constituent.ClergyStatusId = null;
-                            constituent.ClergyStatus = null;
                         }
                         else
                         {
-                            constituent.ClergyStatus = clergyStatus;
+                            constituent.ClergyStatusId = clergyStatus.Id;
                         }
                     }
 
                     // Constituent Status
 
-                    if (string.IsNullOrWhiteSpace(deletionCode))
+                    if (!string.IsNullOrWhiteSpace(deletionCode))
                     {
-                        constituent.ConstituentStatusId = null;
-                        constituent.ConstituentStatus = null;
-                    }
-                    else
-                    {
-                        ConstituentStatus constituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == deletionCode);
+                        ConstituentStatus constituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == deletionCode);
                         if (constituentStatus == null)
                         {
                             importer.LogError($"Invalid constituent status code {deletionCode} for PIN {constituentNum}.");
-                            constituent.ConstituentStatusId = null;
-                            constituent.ConstituentStatus = null;
                         }
                         else
                         {
@@ -611,7 +569,7 @@ namespace DDI.Conversion.CRM
                     {
                         if (constituent.ConstituentStatus == null)
                         {
-                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);
+                            constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);                            
                         }
                     }
                     else
@@ -619,18 +577,21 @@ namespace DDI.Conversion.CRM
                         if (constituent.ConstituentStatus == null)
                         {
                             // If no status, set to active.
-                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_ACTIVE);
+                            constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_ACTIVE);
                         }
                         else
                         {
                             // TODO: Set constituent status date to 1/1/1990.  (DC-266)
                         }
                     }
+
+                    constituent.ConstituentStatusId = constituent.ConstituentStatus?.Id;
+
                     // TODO: Constituent status date missing (DC-266).
 
                     // Marital Status - Cannot be done yet because model is incorrect. (DC-173)
 
-                    
+
                     if (birthDay > 0 && birthMonth > 0 && birthYear1> 0)
                     {
                         constituent.BirthDateType = BirthDateType.FullDate;
@@ -651,45 +612,63 @@ namespace DDI.Conversion.CRM
                     LabelFormattingOptions options = new LabelFormattingOptions() { OmitPrefix = true, Recipient = LabelRecipient.Primary };
                     string nameLine1, nameLine2;
 
-                    //nameFormatter.UnitOfWork.Attach(constituent);
                     nameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
                     constituent.FormattedName = nameLine1;
 
-                    if (count % 100 == 0)
-                    {
-                        context.SaveChanges();
-                        importer.LogMessage($"{count} Loaded {constituentNum}: {nameLine1}");
-                    }
+                    constituentFile.AddRow(constituent);
+                    legacyIdFile.AddRow(new LegacyToID(constituent.ConstituentNumber, constituent.Id));
 
                     if (count % 1000 == 0)
                     {
-                        context.SaveChanges();
-                        context.Dispose();
-                        context = CreateContextForConstituents(out nameFormatter);
-                    }
-                }
-            }
+                        importer.LogMessage($"{count} Loaded {constituentNum}: {nameLine1}");
 
-            context.SaveChanges();
+                        constituentFile.Flush();
+                        denominationFile.Flush();
+                        ethnicityFile.Flush();
+                        legacyIdFile.Flush();
+                    }
+
+                }
+                constituentFile.Dispose();
+                denominationFile.Dispose();
+                ethnicityFile.Dispose();
+                legacyIdFile.Dispose();
+            }
+           
         }
 
-        private void LoadOrganizations(string filename)
+        private void LoadOrganizations(string filename, bool append)
         {
-            NameFormatter nameFormatter;
-            DomainContext context = CreateContextForConstituents(out nameFormatter);
             char[] commaDelimiter = { ',' };
+            DomainContext context = new DomainContext();
+
+            // Load entity sets that will be queried often...
+            var constituentTypes = LoadEntities(context.ConstituentTypes);
+            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
+            var ethnicities = LoadEntities(context.Ethnicities);
+            var denominations = LoadEntities(context.Denominations);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                int count = 0;
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
+                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append);
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append);
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
+                denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
+
+                int count = 0;
+                if (!append)
+                {
+                    constituentFile.AddHeaderRow();
+                    ethnicityFile.AddHeaderRow();
+                    denominationFile.AddHeaderRow();
+                }
+
+                while (importer.GetNextRow())
                 {
                     count++;
-                    if (count < MethodArgs.MinCount)
-                    {
-                        continue;
-                    }
 
                     int constituentNum = importer.GetInt(0);
 
@@ -703,8 +682,8 @@ namespace DDI.Conversion.CRM
                     string name2 = importer.GetString(3);
                     string sourceCode = importer.GetString(4);
                     string taxId = importer.GetString(5);
-                    string ethnicity = importer.GetString(6);
-                    string denomination = importer.GetString(7);
+                    string ethnicityCode = importer.GetString(6);
+                    string denominationCode = importer.GetString(7);
                     string correspondencePreference = importer.GetString(8);
                     string salutationFormat = importer.GetString(9);
                     string salutationText = importer.GetString(10);
@@ -718,31 +697,19 @@ namespace DDI.Conversion.CRM
                     DateTime? deleteDate = importer.GetDateTime(18);
                     if (deletionCode == "YBD") deletionCode = "DEL";
 
-                    ConstituentType constituentType = context.ConstituentTypes.Local.FirstOrDefault(p => p.Code == constituentTypeCode);
+                    ConstituentType constituentType = constituentTypes.FirstOrDefault(p => p.Code == constituentTypeCode);
                     if (constituentType == null)
                     {
                         importer.LogError($"PIN {constituentNum} has invalid constituent type \"{constituentType}\".");
                         continue;
                     }
 
-
                     Constituent constituent = null;
+                    constituent = new Constituent();
+                    constituent.AssignPrimaryKey();
 
-                    if (!MethodArgs.AddOnly)
-                    {
-                        constituent = context.Constituents
-                                                         .Include(p => p.Ethnicities)
-                                                         .Include(p => p.Denominations)
-                                                         .FirstOrDefault(p => p.ConstituentNumber == constituentNum);
-                    }
-
-                    if (constituent == null)
-                    {
-                        constituent = new Constituent();
-                        constituent.ConstituentNumber = constituentNum;
-                        context.Constituents.Add(constituent);
-                    }
-
+                    constituent.ConstituentNumber = constituentNum;
+                    constituent.ConstituentType = constituentType;
                     constituent.ConstituentTypeId = constituentType.Id;
                     constituent.Name = name;
                     constituent.Name2 = name2;
@@ -757,54 +724,32 @@ namespace DDI.Conversion.CRM
                     constituent.YearEstablished = yearEstablished;
 
                     // Ethnicity
-                    string[] codelist = ethnicity.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                    if (constituent.Ethnicities == null)
-                    {
-                        constituent.Ethnicities = new List<Ethnicity>();
-                    }
-                    foreach (Ethnicity ethnicityToRemove in constituent.Ethnicities.ToList())
-                    {
-                        if (!codelist.Any(p => p == ethnicityToRemove.Code))
-                        {
-                            constituent.Ethnicities.Remove(ethnicityToRemove);
-                        }
-                    }
+                    string[] codelist = ethnicityCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Ethnicity ethnicityToAdd = context.Ethnicities.Local.FirstOrDefault(p => p.Code == code);
-                        if (ethnicityToAdd == null)
+                        Ethnicity ethnicity = ethnicities.FirstOrDefault(p => p.Code == code);
+                        if (ethnicity == null)
                         {
                             importer.LogError($"Invalid ethnicity code \"{code}\" for PIN {constituentNum}.");
                         }
                         else
                         {
-                            constituent.Ethnicities.Add(ethnicityToAdd);
+                            ethnicityFile.AddRow(new JoinRow(ethnicity.Id, constituent.Id));
                         }
                     }
 
                     // Denominations
-                    codelist = denomination.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                    if (constituent.Denominations == null)
-                    {
-                        constituent.Denominations = new List<Denomination>();
-                    }
-                    foreach (Denomination denominationToRemove in constituent.Denominations.ToList())
-                    {
-                        if (!codelist.Any(p => p == denominationToRemove.Code))
-                        {
-                            constituent.Denominations.Remove(denominationToRemove);
-                        }
-                    }
+                    codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denominationToAdd = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
-                        if (denominationToAdd == null)
+                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
                         }
                         else
                         {
-                            constituent.Denominations.Add(denominationToAdd);
+                            denominationFile.AddRow(new JoinRow(denomination.Id, constituent.Id));
                         }
                     }
 
@@ -829,22 +774,14 @@ namespace DDI.Conversion.CRM
                     }
 
 
-
                     // Constituent Status
 
-                    if (string.IsNullOrWhiteSpace(deletionCode))
+                    if (!string.IsNullOrWhiteSpace(deletionCode))
                     {
-                        constituent.ConstituentStatusId = null;
-                        constituent.ConstituentStatus = null;
-                    }
-                    else
-                    {
-                        ConstituentStatus constituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == deletionCode);
+                        ConstituentStatus constituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == deletionCode);
                         if (constituentStatus == null)
                         {
                             importer.LogError($"Invalid constituent status code {deletionCode} for PIN {constituentNum}.");
-                            constituent.ConstituentStatusId = null;
-                            constituent.ConstituentStatus = null;
                         }
                         else
                         {
@@ -857,7 +794,7 @@ namespace DDI.Conversion.CRM
                     {
                         if (constituent.ConstituentStatus == null)
                         {
-                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);
+                            constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_DELETED);
                         }
                     }
                     else
@@ -865,45 +802,64 @@ namespace DDI.Conversion.CRM
                         if (constituent.ConstituentStatus == null)
                         {
                             // If no status, set to active.
-                            constituent.ConstituentStatus = context.ConstituentStatuses.Local.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_ACTIVE);
+                            constituent.ConstituentStatus = constituentStatuses.FirstOrDefault(p => p.Code == Initialize.CONSTITUENT_STATUS_ACTIVE);
                         }
                         else
                         {
                             // TODO: Set constituent status date to 1/1/1990.  (DC-266)
                         }
                     }
+
+                    constituent.ConstituentStatusId = constituent.ConstituentStatus?.Id;
+
                     // TODO: Constituent status date missing (DC-266).
 
-                    constituent.FormattedName = constituent.Name; 
+                    constituent.FormattedName = constituent.Name;
 
-                    if (count % 100 == 0)
-                    {
-                        context.SaveChanges();
-                        importer.LogMessage($"{count} Loaded {constituentNum}: {constituent.Name}");
-                    }
+                    constituentFile.AddRow(constituent);
+                    legacyIdFile.AddRow(new LegacyToID(constituent.ConstituentNumber, constituent.Id));
 
                     if (count % 1000 == 0)
                     {
-                        context.SaveChanges();
-                        context.Dispose();
-                        context = CreateContextForConstituents(out nameFormatter);
+                        importer.LogMessage($"{count} Loaded {constituentNum}: {name}");
+
+                        constituentFile.Flush();
+                        denominationFile.Flush();
+                        ethnicityFile.Flush();
+                        legacyIdFile.Flush();
                     }
                 }
+
+                constituentFile.Dispose();
+                denominationFile.Dispose();
+                ethnicityFile.Dispose();
+                legacyIdFile.Dispose();
             }
 
-            context.SaveChanges();
         }
 
 
-        private void LoadConstituentAddress(string filename)
+        private void LoadConstituentAddress(string filename, bool append)
         {
-            DomainContext context = CreateContextForConstituentAddresses();
+            DomainContext context = new DomainContext();
+
+            var addressTypes = LoadEntities<AddressType>(context.AddressTypes);
+
+            // Load the constituent Ids
+            Dictionary<string, Guid> constituentIds = LoadLegacyIds(_outputDirectory, CONSTITUENT_ID_FILE);
+            Dictionary<string, Guid> addresIds = LoadLegacyIds(_outputDirectory, ADDRESS_ID_FILE);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
+                var outputFile = new FileExport<ConstituentAddress>(Path.Combine(_outputDirectory, "ConstituentAddress.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
                 int count = 0;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     count++;
 
@@ -914,48 +870,35 @@ namespace DDI.Conversion.CRM
                         continue;
                     }
 
-                    int constituentNum = importer.GetInt(1);
+                    string constituentNum = importer.GetString(1);
                     string addressTypeCode = importer.GetString(2);
 
-                    Address address = context.Addresses.FirstOrDefault(p => p.LegacyKey == legacyAddressId);
-                    if (address == null)
+                    Guid addressId = addresIds.GetValueOrDefault(legacyAddressText);
+                    if (addressId == default(Guid))
                     {
-                        importer.LogError($"Invalid address legacy ID {legacyAddressId}.");
+                        importer.LogError($"Invalid address legacy ID {legacyAddressText}.");
                         continue;
                     }
 
-                    Constituent constituent = context.Constituents.FirstOrDefault(p => p.ConstituentNumber == constituentNum);
-                    if (constituent == null)
+                    Guid constituentId = constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
                     {
                         importer.LogError($"Invalid constituent number {constituentNum}.");
                         continue;
                     }
 
-                    AddressType addressType = context.AddressTypes.Local.FirstOrDefault(p => p.Code == addressTypeCode);
+                    AddressType addressType = addressTypes.FirstOrDefault(p => p.Code == addressTypeCode);
                     if (addressType == null)
                     {
                         importer.LogError($"Invalid address type \"{addressTypeCode}\".");
                         continue;
                     }
 
-                    ConstituentAddress constituentAddress = null;
-                    if (!MethodArgs.AddOnly)
-                    {
-                        constituentAddress = context.ConstituentAddresses.Include(p => p.Constituent)
-                                                                         .Include(p => p.Address)
-                                                                         .Include(p => p.AddressType)
-                                                                         .FirstOrDefault(p => p.Constituent == constituent && p.Address == address);
-                    }
-                    if (constituentAddress == null)
-                    {
-                        constituentAddress = new ConstituentAddress();
-                        context.ConstituentAddresses.Add(constituentAddress);
-                        constituentAddress.Constituent = constituent;
-                        constituentAddress.Address = address;
-                    }
-
-
-                    constituentAddress.AddressType = addressType;
+                    ConstituentAddress constituentAddress = new ConstituentAddress();
+                    constituentAddress.AssignPrimaryKey();
+                    constituentAddress.ConstituentId = constituentId;
+                    constituentAddress.AddressId = addressId;                   
+                    constituentAddress.AddressTypeId = addressType.Id;
                     constituentAddress.Comment = importer.GetString(3);
                     constituentAddress.StartDate = importer.GetDateTime(4);
                     constituentAddress.EndDate = importer.GetDateTime(5);
@@ -974,21 +917,17 @@ namespace DDI.Conversion.CRM
                             break;
                     }
 
-                    if (count % 100 == 0)
-                    {
-                        context.SaveChanges();
-                        importer.LogMessage($"{count} Loaded {constituentNum}: {constituent.Name}");
-                    }
+                    outputFile.AddRow(constituentAddress);
 
                     if (count % 1000 == 0)
                     {
-                        context.SaveChanges();
-                        context.Dispose();
-                        context = CreateContextForConstituentAddresses();
+                        outputFile.Flush();
+                        importer.LogMessage($"{count} Loaded");
                     }
                 }
+
+                outputFile.Dispose();
             }
-            context.SaveChanges();
         }
 
 

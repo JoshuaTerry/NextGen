@@ -228,7 +228,7 @@ namespace DDI.Conversion
 		//   GetBool (index)
 
 		/// <summary>
-		/// Get a string value from the current import row at specified index (zero-based)
+		/// Get a string value from the current import row at specified column (zero-based)
 		/// </summary>
 		public string GetString(int fieldNum)
         {
@@ -241,7 +241,7 @@ namespace DDI.Conversion
         }
 
 		/// <summary>
-		/// Get a string value from the current import row at specified index (zero-based)
+		/// Get a string value from the current import row at specified column (zero-based)
 		/// </summary>
 		public string GetString(int fieldNum, int maxLength)
 		{
@@ -249,7 +249,7 @@ namespace DDI.Conversion
 		}
 
         /// <summary>
-        /// Get a string value from the current import row at specified index (zero-based).  
+        /// Get a string value from the current import row at specified column (zero-based).  
         /// Replace line breaks with \n.
         /// </summary>
         public string GetMultilineString(int fieldNum)
@@ -257,8 +257,19 @@ namespace DDI.Conversion
             return GetString(fieldNum).Replace("\r\n", "\n");
         }
 
+        /// <summary>
+        /// Get a string value for a code from the current import row at a specified column (zero-based).
+        /// Code is trimmed and converted to upper case, limited to 20 characters.
+        /// </summary>
+        /// <param name="fieldNum"></param>
+        /// <returns></returns>
+        public string GetCode(int fieldNum)
+        {
+            return GetString(fieldNum, 20).Trim().ToUpper();
+        }
+
 		/// <summary>
-		/// Get a string value from the current import row at specified index (zero-based).  
+		/// Get a string value from the current import row at specified column (zero-based).  
 		/// Replace line breaks with \n.
 		/// </summary>
 		public string GetMultilineString(int fieldNum, int maxLength)
@@ -267,7 +278,7 @@ namespace DDI.Conversion
 		}
 
         /// <summary>
-        /// Get a nullable DateTime value from the current import row at specified index (zero-based)
+        /// Get a nullable DateTime value from the current import row at specified column (zero-based)
         /// </summary>
         public DateTime? GetDateTime(int fieldNum)
         {
@@ -291,7 +302,7 @@ namespace DDI.Conversion
         }
 
         /// <summary>
-        /// Get a nullable int value from the current import row at specified index (zero-based)
+        /// Get a nullable int value from the current import row at specified column (zero-based)
         /// </summary>
         public int? GetIntNullable(int fieldNum)
         {
@@ -324,7 +335,7 @@ namespace DDI.Conversion
         }
 
 		/// <summary>
-		/// Get an int value from the current import row at specified index (zero-based)
+		/// Get an int value from the current import row at specified column (zero-based)
 		/// </summary>
 		public int GetInt(int fieldNum)
 		{
@@ -332,7 +343,7 @@ namespace DDI.Conversion
         }
 
         /// <summary>
-        /// Get a nullable Int64 value from the current import row at specified index (zero-based)
+        /// Get a nullable Int64 value from the current import row at specified column (zero-based)
         /// </summary>
         public Int64? GetInt64Nullable(int fieldNum)
         {
@@ -365,7 +376,7 @@ namespace DDI.Conversion
         }
 
         /// <summary>
-        /// Get an Int64 value from the current import row at specified index (zero-based)
+        /// Get an Int64 value from the current import row at specified column (zero-based)
         /// </summary>
         public Int64 GetInt64(int fieldNum)
         {
@@ -414,7 +425,7 @@ namespace DDI.Conversion
 
 
 		/// <summary>
-		/// Get a nullable decimal value from the current import row at specified index (zero-based)
+		/// Get a nullable decimal value from the current import row at specified column (zero-based)
 		/// </summary>
 		public decimal? GetDecimalNullable(int idx)
         {
@@ -448,7 +459,7 @@ namespace DDI.Conversion
 
 
 		/// <summary>
-		/// Get a nullable decimal value from the current import row at specified index (zero-based)
+		/// Get a nullable decimal value from the current import row at specified column (zero-based)
 		/// </summary>
 		public decimal GetDecimal(int idx)
 		{
@@ -456,7 +467,7 @@ namespace DDI.Conversion
 		}
 
         /// <summary>
-        /// Get a nullable boolean value from the current import row at specified index (zero-based)
+        /// Get a nullable boolean value from the current import row at specified column (zero-based)
         /// </summary>
         public bool? GetBoolNullable(int idx)
         {
@@ -482,13 +493,42 @@ namespace DDI.Conversion
         }
 
         /// <summary>
-        /// Get a boolean value from the current import row at specified index (zero-based)
+        /// Get a boolean value from the current import row at specified column (zero-based)
         /// </summary>
         public bool GetBool(int idx)
         {
 			return GetBoolNullable(idx) ?? false;
         }
 
+        /// <summary>
+        /// Get a nullable Guid value from the current import row at specified column (zero-based)
+        /// </summary>
+        public Guid? GetGuidNullable(int idx)
+        {
+            string guidStr = (_data == null || _data.Length <= idx ? null : _data[idx]);
+
+            if (string.IsNullOrWhiteSpace(guidStr) || guidStr[0] == '?')
+            {
+                return null;
+            }
+
+            Guid guid;
+            if (!Guid.TryParse(guidStr, out guid))
+            {
+                return null;
+            }
+
+            return guid;
+
+        }
+
+        /// <summary>
+        /// Get a Guid value from the current import row at specified column (zero-based)
+        /// </summary>
+        public Guid GetGuid(int idx)
+        {
+            return GetGuidNullable(idx) ?? Guid.Empty;
+        }
 
 		/// <summary>
 		/// Get an Enum value from the import file.

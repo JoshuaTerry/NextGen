@@ -116,7 +116,14 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class where T : class
         {
-            return GetRepository<T>().GetReference<TElement>(entity, property);
+            try
+            {
+                return GetRepository<T>().GetReference<TElement>(entity, property);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
