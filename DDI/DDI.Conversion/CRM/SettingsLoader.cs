@@ -385,7 +385,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string categoryCode = importer.GetString(0);
                     string typeCode = importer.GetString(1);
@@ -434,7 +434,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     string regionLabel = importer.GetString(1);
@@ -474,7 +474,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string uniqueId = importer.GetString(0);
                     int uniqueNum;
@@ -529,7 +529,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(levelText))
@@ -652,7 +652,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(code) || code == "Code")
@@ -747,7 +747,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
 
@@ -778,7 +778,7 @@ namespace DDI.Conversion.CRM
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     string name = importer.GetString(1);

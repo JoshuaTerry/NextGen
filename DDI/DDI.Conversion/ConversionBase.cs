@@ -62,18 +62,34 @@ namespace DDI.Conversion
             return new FileImport(filename, logName, delimiter);
         }
 
-        protected Dictionary<string,Guid> LoadLegacyIds(string baseDirectory, string filename)
+        protected Dictionary<string,Guid> LoadLegacyIds(string baseDirectory, string filename) 
         {
             Dictionary<string, Guid> legacyIds = new Dictionary<string, Guid>();
+
             using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
             {
                 while (importer.GetNextRow())
                 {
-                    string legacyKey = importer.GetString(0);
+                    string legacyKey = importer.GetString(0);                    
                     if (!string.IsNullOrWhiteSpace(legacyKey))
                     {
                         legacyIds[legacyKey] = importer.GetGuid(1);
                     }
+                }
+            }
+            return legacyIds;
+        }
+
+        protected Dictionary<int, Guid> LoadIntLegacyIds(string baseDirectory, string filename) 
+        {
+            Dictionary<int, Guid> legacyIds = new Dictionary<int, Guid>();
+
+            using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
+            {
+                while (importer.GetNextRow())
+                {
+                    int legacyKey = importer.GetInt(0);
+                    legacyIds[legacyKey] = importer.GetGuid(1);
                 }
             }
             return legacyIds;

@@ -62,7 +62,6 @@
     <Compile Include="Core\Initialize.cs" />
     <Compile Include="CRM\ConstituentConverter.cs" />
     <Compile Include="CRM\Initialize.cs" />
-    <Compile Include="CRM\ConstituentLoader.cs" />
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
     <Compile Include="CRM\SettingsLoader.cs" />

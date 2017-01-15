@@ -30,7 +30,8 @@ namespace DDI.Conversion.CRM
             AlternateIDs,
             ContactInformation,
             PaymentPreferences,
-            Relationships
+            Relationships,
+            Tags
         }
 
         private const string CONSTITUENT_ID_FILE = "ConstituentId.csv";
@@ -39,29 +40,60 @@ namespace DDI.Conversion.CRM
         private string _crmDirectory;
         private string _outputDirectory;
 
+        private Dictionary<int, Guid> _constituentIds, _addressIds;
+
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
             _crmDirectory = Path.Combine(baseDirectory, "CRM");
             _outputDirectory = Path.Combine(ConversionOutputDirectory, "CRM");
-            
+            _constituentIds = new Dictionary<int, Guid>();
+            _addressIds = new Dictionary<int, Guid>();
+
+            // Make sure the IS Payload directory exists.
             Directory.CreateDirectory(_outputDirectory);
+            
+            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals("Individual.csv", false));
+            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals("IndividualFW.csv", true));
+            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations("Organization.csv", true));
+            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations("OrganizationFW.csv", true));
+            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses("Address.csv", false));
+            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses("AddressFW.csv", true));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress("ConstituentAddress.csv", false));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress("ConstituentAddressFW.csv", true));
 
-            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv", false));
-            RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("IndividualFW.csv", true));
-            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("Organization.csv", true));
-            RunConversion(ConversionMethod.Organizations, () => LoadOrganizations("OrganizationFW.csv", true));
-            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("Address.csv", false));
-            RunConversion(ConversionMethod.Addresses, () => LoadAddresses("AddressFW.csv", true));
-            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddress.csv", false));
-            RunConversion(ConversionMethod.ConstituentAddresses, () => LoadConstituentAddress("ConstituentAddressFW.csv", true));
+            RunConversion(ConversionMethod.DoingBusinessAs, () => ConvertDoingBusinessAs("ConstituentDBA.csv", false));
+            RunConversion(ConversionMethod.Education, () => ConvertEducation("EducationInfo.csv", false));
+            RunConversion(ConversionMethod.AlternateIDs, () => ConvertAlternateIds("AlternateID.csv", false));
+            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfo.csv", false));
+            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfoFW.csv", true));
 
-            //RunConversion(ConversionMethod.DoingBusinessAs, () => LoadDoingBusinessAs("");
+
         }
 
+        /// <summary>
+        /// If necessary, load legacy constituent IDs into dictionary.
+        /// </summary>
+        private void LoadConstituentIds()
+        {
+            if (_constituentIds.Count == 0)
+            {
+                _constituentIds = LoadIntLegacyIds(_outputDirectory, CONSTITUENT_ID_FILE);
+            }
+        }
 
+        /// <summary>
+        /// If necessary, load legacy address numbers IDs into dictionary.
+        /// </summary>
+        private void LoadAddressIds()
+        {
+            if (_addressIds.Count == 0)
+            {
+                _addressIds = LoadIntLegacyIds(_outputDirectory, ADDRESS_ID_FILE);
+            }
+        }
 
-        private void LoadAddresses(string filename, bool append)
+        private void ConvertAddresses(string filename, bool append)
         {
             DomainContext context = new DomainContext();
             CommonContext commonContext = new CommonContext();
@@ -95,13 +127,13 @@ namespace DDI.Conversion.CRM
                 while (importer.GetNextRow())
                 {
                     int legacyId = importer.GetInt(0);
-                    string streetAddress1 = importer.GetString(1);
-                    string streetAddress2 = importer.GetString(2);
+                    string streetAddress1 = importer.GetString(1, 255);
+                    string streetAddress2 = importer.GetString(2, 255);
                     string countryCode = importer.GetString(3);
                     string stateCode = importer.GetString(4);
                     string countyFips = importer.GetString(5);
                     string postalCode = importer.GetString(6);
-                    string city = importer.GetString(7);
+                    string city = importer.GetString(7, 128);
                     string region1 = importer.GetString(8);
                     string region2 = importer.GetString(9);
                     string region3 = importer.GetString(10);
@@ -197,6 +229,7 @@ namespace DDI.Conversion.CRM
                     addressFile.AddRow(address);
 
                     legacyIdFile.AddRow(new LegacyToID(legacyId, address.Id));
+                    _addressIds[legacyId] = address.Id;
 
                     if (count % 1000 == 0)
                     {
@@ -223,7 +256,7 @@ namespace DDI.Conversion.CRM
             return entities.Local;
         }
 
-        private void LoadIndividuals(string filename, bool append)
+        private void ConvertIndividuals(string filename, bool append)
         {
             char[] commaDelimiter = { ',' };
             NameFormatter nameFormatter;
@@ -238,7 +271,7 @@ namespace DDI.Conversion.CRM
             var ethnicities = LoadEntities(context.Ethnicities);
             var denominations = LoadEntities(context.Denominations);
             var genders = LoadEntities(context.Genders);
-            var prefixes = LoadEntities(context.Prefixes, "Gender");
+            var prefixes = LoadEntities(context.Prefixes, nameof(Prefix.Gender));
             var incomelevels = LoadEntities(context.IncomeLevels);
             var educationLevels = LoadEntities(context.EducationLevels);
             var professions = LoadEntities(context.Professions);
@@ -277,27 +310,27 @@ namespace DDI.Conversion.CRM
                     }
 
                     string constituentTypeCode = importer.GetString(1);
-                    string name = importer.GetString(2);
-                    string name2 = importer.GetString(3);
+                    string name = importer.GetString(2, 255);
+                    string name2 = importer.GetString(3, 128);
                     string sourceCode = importer.GetString(4);
                     string taxId = importer.GetString(5);
                     string ethnicityCode = importer.GetString(6);
                     string denominationCode = importer.GetString(7);
                     string correspondencePreference = importer.GetString(8);
                     string salutationFormat = importer.GetString(9);
-                    string salutationText = importer.GetString(10);
+                    string salutationText = importer.GetString(10, 255);
                     string prefixCode = importer.GetString(11);
-                    string firstName = importer.GetString(12);
-                    string middleName = importer.GetString(13);
-                    string lastName = importer.GetString(14);
-                    string suffix = importer.GetString(15);
-                    string nickname = importer.GetString(16);
-                    string nameFormat = importer.GetString(17);
+                    string firstName = importer.GetString(12, 128);
+                    string middleName = importer.GetString(13, 128);
+                    string lastName = importer.GetString(14, 128);
+                    string suffix = importer.GetString(15, 128);
+                    string nickname = importer.GetString(16, 128);
+                    string nameFormat = importer.GetString(17, 128);
                     string genderCode = importer.GetString(18);
                     string earningsCode = importer.GetString(19);
                     string educationLevelCode = importer.GetString(20);
-                    string employer = importer.GetString(21);
-                    string position = importer.GetString(22);
+                    string employer = importer.GetString(21, 128);
+                    string position = importer.GetString(22, 128);
                     DateTime? employmentStartDate = importer.GetDateTime(23);
                     DateTime? employmentEndDate = importer.GetDateTime (24);
                     DateTime? firstEmploymentDate = importer.GetDateTime(25);
@@ -306,7 +339,7 @@ namespace DDI.Conversion.CRM
                     string clergyTypeCode = importer.GetString(28);
                     string clergyStatusCode = importer.GetString(29);
                     DateTime? ordinationDate = importer.GetDateTime(30);
-                    string ordinationPlace = importer.GetString(31);
+                    string ordinationPlace = importer.GetString(31, 128);
                     DateTime? prospectDate = importer.GetDateTime(32);
                     string maritalStatusCode = importer.GetString(33);
                     DateTime? marriageDate = importer.GetDateTime(34);
@@ -598,6 +631,7 @@ namespace DDI.Conversion.CRM
 
                     constituentFile.AddRow(constituent);
                     legacyIdFile.AddRow(new LegacyToID(constituent.ConstituentNumber, constituent.Id));
+                    _constituentIds[constituent.ConstituentNumber] = constituent.Id;
 
                     if (count % 1000 == 0)
                     {
@@ -618,7 +652,7 @@ namespace DDI.Conversion.CRM
            
         }
 
-        private void LoadOrganizations(string filename, bool append)
+        private void ConvertOrganizations(string filename, bool append)
         {
             char[] commaDelimiter = { ',' };
             DomainContext context = new DomainContext();
@@ -659,16 +693,16 @@ namespace DDI.Conversion.CRM
                     }
 
                     string constituentTypeCode = importer.GetString(1);
-                    string name = importer.GetString(2);
-                    string name2 = importer.GetString(3);
+                    string name = importer.GetString(2, 255);
+                    string name2 = importer.GetString(3, 128);
                     string sourceCode = importer.GetString(4);
                     string taxId = importer.GetString(5);
                     string ethnicityCode = importer.GetString(6);
                     string denominationCode = importer.GetString(7);
                     string correspondencePreference = importer.GetString(8);
                     string salutationFormat = importer.GetString(9);
-                    string salutationText = importer.GetString(10);
-                    string business = importer.GetString(11);
+                    string salutationText = importer.GetString(10, 255);
+                    string business = importer.GetString(11, 128);
                     bool isTaxExempt = importer.GetBool(12);
                     bool isLetterReceived = importer.GetBool(13);
                     DateTime? taxExemptDate = importer.GetDateTime(14);
@@ -799,6 +833,7 @@ namespace DDI.Conversion.CRM
 
                     constituentFile.AddRow(constituent);
                     legacyIdFile.AddRow(new LegacyToID(constituent.ConstituentNumber, constituent.Id));
+                    _constituentIds[constituent.ConstituentNumber] = constituent.Id;
 
                     if (count % 1000 == 0)
                     {
@@ -819,16 +854,15 @@ namespace DDI.Conversion.CRM
 
         }
 
-
-        private void LoadConstituentAddress(string filename, bool append)
+        private void ConvertConstituentAddress(string filename, bool append)
         {
             DomainContext context = new DomainContext();
 
             var addressTypes = LoadEntities<AddressType>(context.AddressTypes);
 
             // Load the constituent Ids
-            Dictionary<string, Guid> constituentIds = LoadLegacyIds(_outputDirectory, CONSTITUENT_ID_FILE);
-            Dictionary<string, Guid> addresIds = LoadLegacyIds(_outputDirectory, ADDRESS_ID_FILE);
+            LoadConstituentIds();
+            LoadAddressIds();
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -845,23 +879,23 @@ namespace DDI.Conversion.CRM
                     count++;
 
                     int legacyAddressId;
-                    string legacyAddressText = importer.GetString(0);
+                    string legacyAddressText = importer.GetString(0).Trim();
                     if (string.IsNullOrWhiteSpace(legacyAddressText) || !int.TryParse(legacyAddressText, out legacyAddressId) || legacyAddressId <= 0)
                     {
                         continue;
                     }
 
-                    string constituentNum = importer.GetString(1);
+                    int constituentNum = importer.GetInt(1);
                     string addressTypeCode = importer.GetString(2);
 
-                    Guid addressId = addresIds.GetValueOrDefault(legacyAddressText);
+                    Guid addressId = _addressIds.GetValueOrDefault(legacyAddressId);
                     if (addressId == default(Guid))
                     {
                         importer.LogError($"Invalid address legacy ID {legacyAddressText}.");
                         continue;
                     }
 
-                    Guid constituentId = constituentIds.GetValueOrDefault(constituentNum);
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
                     if (constituentId == default(Guid))
                     {
                         importer.LogError($"Invalid constituent number {constituentNum}.");
@@ -899,6 +933,325 @@ namespace DDI.Conversion.CRM
                     }
 
                     outputFile.AddRow(constituentAddress);
+
+                    if (count % 1000 == 0)
+                    {
+                        outputFile.Flush();
+                        importer.LogMessage($"{count} Loaded");
+                    }
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertDoingBusinessAs(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+            
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<DoingBusinessAs>(Path.Combine(_outputDirectory, "DoingBusinessAs.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum) || constituentNum <= 0)
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    DoingBusinessAs doingBusinessAs = new DoingBusinessAs();
+                    doingBusinessAs.AssignPrimaryKey();
+                    doingBusinessAs.ConstituentId = constituentId;
+                    doingBusinessAs.Name = importer.GetString(1, 128);
+                    doingBusinessAs.StartDate = importer.GetDateTime(2);
+                    doingBusinessAs.EndDate = importer.GetDateTime(3);
+
+                    outputFile.AddRow(doingBusinessAs);
+
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertEducation(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+            var schools = LoadEntities(context.Schools);
+            var degrees = LoadEntities(context.Degrees);
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<Education>(Path.Combine(_outputDirectory, "Education.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum) || constituentNum <= 0)
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    string schoolCode = importer.GetString(5);
+                    string degreeCode = importer.GetString(7);
+
+                    School school = null;
+                    Degree degree = null;
+
+                    if (!string.IsNullOrWhiteSpace(schoolCode))
+                    {
+                        school = schools.FirstOrDefault(p => p.Code == schoolCode);
+                        if (school == null)
+                        {
+                            importer.LogError($"Invalid school code \"{schoolCode}\".");
+                            continue;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(degreeCode))
+                    {
+                        degree = degrees.FirstOrDefault(p => p.Code == degreeCode);
+                        if (degree == null)
+                        {
+                            importer.LogError($"Invalid degree code \"{degreeCode}\".");
+                            continue;
+                        }
+                    }
+
+
+                    Education education = new Education();
+                    education.AssignPrimaryKey();
+                    education.ConstituentId = constituentId;
+                    education.Name = string.Empty;
+                    education.Major = string.Empty;
+                    education.StartDate = importer.GetDateTime(2);
+                    education.EndDate = importer.GetDateTime(4);
+                    education.SchoolId = school?.Id;
+                    education.SchoolOther = importer.GetString(6, 128);
+                    education.DegreeId = degree?.Id;
+                    education.DegreeOther = importer.GetString(8, 128);
+
+                    outputFile.AddRow(education);
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertAlternateIds(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<AlternateId>(Path.Combine(_outputDirectory, "AlternateId.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum) || constituentNum <= 0)
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    string altText = importer.GetString(1, 20).Trim();
+                    string altType = importer.GetString(2, 20).Trim();
+
+                    // If the type code is non-blank and doesn't equal (None), prefix the alternate ID with the code.
+                    if (!string.IsNullOrWhiteSpace(altType) && altType != "(None)")
+                    {
+                        altText = altType + altText;
+                    }
+
+                    AlternateId alternateId = new AlternateId();
+                    alternateId.AssignPrimaryKey();
+                    alternateId.ConstituentId = constituentId;
+                    alternateId.Name = altText;
+
+                    outputFile.AddRow(alternateId);
+
+                    if (count % 1000 == 0)
+                    {
+                        outputFile.Flush();
+                        importer.LogMessage($"{count} Loaded");
+                    }
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertContactInfo(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+            
+            // Load contact types
+            var contactTypes = LoadEntities(context.ContactTypes, nameof(ContactType.ContactCategory));
+
+            // Because contact info self-relates, conversion requires two passes.  The first pass builds a dictionary of Guids for the parents.
+            var parentDict = new Dictionary<int, Guid>();
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                while (importer.GetNextRow())
+                {
+                    int legacyId = importer.GetInt(0);
+                    if (legacyId == 0)
+                    {
+                        continue;
+                    }
+
+                    // Determine whether this is a parent contact info row.
+                    bool isParent = importer.GetBool(9);
+                    if (!isParent)
+                    {
+                        continue;
+                    }
+
+                    // Create a guid for this row.
+                    Guid id = Guid.NewGuid();
+
+                    // Create a dictionary entry.
+                    parentDict[legacyId] = id;
+                }
+            }
+
+            // Second pass performs the actual conversion.
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<ContactInfo>(Path.Combine(_outputDirectory, "ContactInfo.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int legacyId = importer.GetInt(0);
+                    if (legacyId == 0)
+                    {
+                        continue;
+                    }
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(1);
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum) || constituentNum <= 0)
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    string categoryCode = importer.GetString(2);
+                    string typeCode = importer.GetString(3);
+
+                    ContactType contactType = contactTypes.FirstOrDefault(p => p.ContactCategory.Code == categoryCode && p.Code == TypeCode);
+                    if (contactType == null)
+                    {
+                        importer.LogError($"Invalid contact type for category \"{categoryCode}\", type \"{typeCode}.\"");
+                        continue;
+                    }
+
+                    string infoText = importer.GetString(4, 128);
+                    string comment = importer.GetString(5, 128);
+                    bool isPreferred = importer.GetBool(6);
+                    int parentLegacyId = importer.GetInt(8);
+                    bool isParent = importer.GetBool(9);
+
+                    ContactInfo contactInfo = new ContactInfo();
+                    if (isParent)
+                    {
+                        // If this is a parent row, an ID has already been generated.
+                        contactInfo.Id = parentDict[legacyId];
+                    }
+                    else
+                    {
+                        contactInfo.AssignPrimaryKey();
+                    }
+
+                    contactInfo.ConstituentId = constituentId;
+                    contactInfo.Comment = comment;
+                    contactInfo.ContactTypeId = contactType.Id;
+                    contactInfo.Info = infoText;
+                    contactInfo.IsPreferred = isPreferred;
+
+                    if (parentLegacyId != 0)
+                    {
+                        // Here's where we need to setup the self-relation, but it's missing!
+                    }
+                                        
+                    outputFile.AddRow(contactInfo);
 
                     if (count % 1000 == 0)
                     {
