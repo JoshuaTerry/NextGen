@@ -17,6 +17,7 @@ namespace DDI.Conversion
         private StringBuilder _line;
         private int _lineNumber;
         private bool _isOpen;
+        private bool _isRowDirty;
 
         public int LineNumber { get { return _lineNumber; } }
 
@@ -26,6 +27,7 @@ namespace DDI.Conversion
             _objectType = typeof(T);
             _lineNumber = 1;
             _isOpen = true;
+            _isRowDirty = false;
             _line = new StringBuilder();
 
             Initialize();
@@ -49,7 +51,7 @@ namespace DDI.Conversion
 
                 if (propType == typeof(string))
                 {
-                    converter = p => (p?.ToString() ?? string.Empty);
+                    converter = p => p?.ToString() ?? string.Empty;
                 }
                 else if (propType == typeof(DateTime))
                 {
@@ -85,7 +87,7 @@ namespace DDI.Conversion
                 }
                 else if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
-                    converter = p => (p?.ToString() ?? string.Empty);
+                    converter = p => p?.ToString();
                 }
 
                 if (converter != null)
@@ -131,9 +133,16 @@ namespace DDI.Conversion
 
         public void AddTextColumn(string text)
         {
-            if (_line.Length > 0)
+            if (_isRowDirty)
             {
                 _line.Append(',');
+            }
+
+            _isRowDirty = true;
+
+            if (text == null)
+            {
+                return;
             }
 
             _line.Append('"');
@@ -153,6 +162,7 @@ namespace DDI.Conversion
                 _line.Clear();
                 _lineNumber++;
             }
+            _isRowDirty = false;
         }
 
         public void Flush()
@@ -171,13 +181,13 @@ namespace DDI.Conversion
         // Various conversion functions
 
         private string DateTimeToString(DateTime dt)
-        {
-            return dt.ToString("O");
+        {            
+            return dt.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         private string DateTimeNullableToString(DateTime? dt)
         {
-            return dt.HasValue ? dt.Value.ToString("O") : string.Empty;
+            return dt.HasValue ? DateTimeToString(dt.Value) : null;
         }
 
         private string GuidToString(Guid guid)
@@ -187,7 +197,7 @@ namespace DDI.Conversion
 
         private string GuidNullableToString(Guid? guid)
         {
-            return guid.HasValue ? guid.Value.ToString("b") : string.Empty;
+            return guid.HasValue ? guid.Value.ToString("b") : null;
         }
 
         private string BoolToString(bool b)
@@ -200,7 +210,7 @@ namespace DDI.Conversion
             return b.HasValue ?
                     (b.Value ? "1" : "0")
                     :
-                    string.Empty;
+                    null;
         }
 
         #region IDisposable Support

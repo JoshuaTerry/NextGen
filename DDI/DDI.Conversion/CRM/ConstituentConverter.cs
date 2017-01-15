@@ -43,7 +43,8 @@ namespace DDI.Conversion.CRM
         {
             MethodsToRun = conversionMethods;
             _crmDirectory = Path.Combine(baseDirectory, "CRM");
-            _outputDirectory = Path.Combine(_crmDirectory, "Output");
+            _outputDirectory = Path.Combine(ConversionOutputDirectory, "CRM");
+            
             Directory.CreateDirectory(_outputDirectory);
 
             RunConversion(ConversionMethod.Individuals, () => LoadIndividuals("Individual.csv", false));

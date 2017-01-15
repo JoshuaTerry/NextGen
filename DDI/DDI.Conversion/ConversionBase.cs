@@ -13,6 +13,8 @@ namespace DDI.Conversion
         protected IEnumerable<ConversionMethodArgs> MethodsToRun { get; set; }
         protected ConversionMethodArgs MethodArgs { get; set; }
 
+        public string ConversionOutputDirectory = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\IS_Conversion_Payload";
+
         public abstract void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods);
 
         protected void RunConversion(object method, Action action)
