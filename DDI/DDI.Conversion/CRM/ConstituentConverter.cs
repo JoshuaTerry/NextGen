@@ -67,6 +67,8 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.AlternateIDs, () => ConvertAlternateIds("AlternateID.csv", false));
             RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfo.csv", false));
             RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfoFW.csv", true));
+            RunConversion(ConversionMethod.Relationships, () => ConvertRelationships("Relationship.csv", false));
+            RunConversion(ConversionMethod.Tags, () => ConvertTags("ConstituentTag.csv", false));
 
 
         }
@@ -284,8 +286,8 @@ namespace DDI.Conversion.CRM
             {
                 FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
-                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append);
-                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append); // Join table created by EF
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append); // Join table created by EF
 
                 ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
                 denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
@@ -667,8 +669,8 @@ namespace DDI.Conversion.CRM
             {
                 FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
-                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append);
-                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append); // Join table created by EF
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append); // Join table created by EF
 
                 ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
                 denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
@@ -1199,14 +1201,18 @@ namespace DDI.Conversion.CRM
                         continue;
                     }
 
-                    int constituentNum;
+                    int constituentNum = 0;
                     string constituentNumText = importer.GetString(1);
-                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum) || constituentNum <= 0)
-                    {
+
+                    // Skip only if constituent number column is non-blank and it can't be converted to int.  Zero pins will be flagged as an error below.
+                    if (!string.IsNullOrWhiteSpace(constituentNumText) && !int.TryParse(constituentNumText, out constituentNum))
+                    {                       
                         continue;
                     }
 
-                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    Guid constituentId;
+
+                    constituentId = _constituentIds.GetValueOrDefault(constituentNum);
                     if (constituentId == default(Guid))
                     {
                         importer.LogError($"Invalid constituent number {constituentNum}.");
@@ -1216,7 +1222,7 @@ namespace DDI.Conversion.CRM
                     string categoryCode = importer.GetString(2);
                     string typeCode = importer.GetString(3);
 
-                    ContactType contactType = contactTypes.FirstOrDefault(p => p.ContactCategory.Code == categoryCode && p.Code == TypeCode);
+                    ContactType contactType = contactTypes.FirstOrDefault(p => p.ContactCategory.Code == categoryCode && p.Code == typeCode);
                     if (contactType == null)
                     {
                         importer.LogError($"Invalid contact type for category \"{categoryCode}\", type \"{typeCode}.\"");
@@ -1226,6 +1232,7 @@ namespace DDI.Conversion.CRM
                     string infoText = importer.GetString(4, 128);
                     string comment = importer.GetString(5, 128);
                     bool isPreferred = importer.GetBool(6);
+                    // column 7 is address number, which is no longer needed.
                     int parentLegacyId = importer.GetInt(8);
                     bool isParent = importer.GetBool(9);
 
@@ -1248,10 +1255,165 @@ namespace DDI.Conversion.CRM
 
                     if (parentLegacyId != 0)
                     {
-                        // Here's where we need to setup the self-relation, but it's missing!
+                        contactInfo.ParentContactId = parentDict.GetValueOrDefault(parentLegacyId);
+                        if (contactInfo.ParentContactId == default(Guid))
+                        {
+                            contactInfo.ParentContactId = null;
+                        }
                     }
-                                        
+                    
                     outputFile.AddRow(contactInfo);
+
+                    if (count % 1000 == 0)
+                    {
+                        outputFile.Flush();
+                        importer.LogMessage($"{count} Loaded");
+                    }
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertRelationships(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+
+            // Load the relationship types
+            var types = LoadEntities<RelationshipType>(context.RelationshipTypes);
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<Relationship>(Path.Combine(_outputDirectory, "Relationship.csv"), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum1, constituentNum2;
+                    string constituentNum1Text = importer.GetString(0);
+                    string constituentNum2Text = importer.GetString(1);
+                    string typeCode = importer.GetString(2);
+
+                    if (string.IsNullOrWhiteSpace(constituentNum1Text) || !int.TryParse(constituentNum1Text, out constituentNum1))
+                    {
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(constituentNum2Text) || !int.TryParse(constituentNum2Text, out constituentNum2))
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId1 = _constituentIds.GetValueOrDefault(constituentNum1);
+                    if (constituentId1 == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum1}.");
+                        continue;
+                    }
+
+                    Guid constituentId2 = _constituentIds.GetValueOrDefault(constituentNum2);
+                    if (constituentId2 == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum2}.");
+                        continue;
+                    }
+
+                    RelationshipType type = types.FirstOrDefault(p => p.Code == typeCode);
+                    if (type == null)
+                    {
+                        importer.LogError($"Invalid relationship type code \"{typeCode}\".");
+                        continue;
+                    }
+
+                    Relationship relationship = new Relationship();
+                    relationship.AssignPrimaryKey();
+                    relationship.Constituent1Id = constituentId1;
+                    relationship.Constituent2Id = constituentId2;
+                    relationship.RelationshipTypeId = type.Id;
+
+                    outputFile.AddRow(relationship);
+
+                    if (count % 1000 == 0)
+                    {
+                        outputFile.Flush();
+                        importer.LogMessage($"{count} Loaded");
+                    }
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+
+        private void ConvertTags(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+            char[] commaDelimiter = { ',' };
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+
+            // Load the tags
+            var tags = LoadEntities(context.Tags);
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                // This is a join table created by EF.
+                var outputFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "TagConstituents.csv"), append);
+                outputFile.SetColumnNames("Tag_Id", "Constituent_Id");
+
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(0);
+                    string tagCodeList = importer.GetString(1);
+
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum))
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    // The tags are comma delimited set of codes.  Output a row to the join table for each tag.
+                    foreach (string code in tagCodeList.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        string codeUpper = code.ToUpper();
+                        Tag tag = tags.FirstOrDefault(p => p.Code == codeUpper);
+                        if (tag == null)
+                        {
+                            importer.LogError($"Invalid tag code \"{code}\" for PIN {constituentNum}.");
+                        }
+                        else
+                        {
+                            outputFile.AddRow(new JoinRow(tag.Id, constituentId));
+                        }
+                    }
+
 
                     if (count % 1000 == 0)
                     {

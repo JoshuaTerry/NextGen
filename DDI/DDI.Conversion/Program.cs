@@ -23,25 +23,13 @@ namespace DDI.Conversion
             // At some point, we will want to pass in an org as the database that we load data into will be dependent upon organization. 
             //Hard coding for quick demo purposes.
             string organization;
-            int minCount;
-            int maxCount;
-            if (args.Length == 3)
+            if (args.Length == 1)
             {
                 organization = args[0];
-                int.TryParse(args[1], out minCount);
-                int.TryParse(args[2], out maxCount);
-            }
-            if (args.Length == 2)
-            {
-                organization = "NG";
-                int.TryParse(args[0], out minCount);
-                int.TryParse(args[1], out maxCount);
             }
             else
             {
                 organization = "NG";
-                minCount = 0;
-                maxCount = int.MaxValue;
             }
 
             log4net.Config.XmlConfigurator.Configure();
@@ -64,7 +52,10 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.ConstituentAddresses));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.DoingBusinessAs));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Education));
-            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.AlternateIDs));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.AlternateIDs));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.ContactInformation));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
+            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
 
         }
 
