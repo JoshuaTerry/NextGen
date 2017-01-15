@@ -1400,7 +1400,7 @@ namespace DDI.Conversion.CRM
                     }
 
                     // The tags are comma delimited set of codes.  Output a row to the join table for each tag.
-                    foreach (string code in tagCodeList.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string code in tagCodeList.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries).Distinct())
                     {
                         string codeUpper = code.ToUpper();
                         Tag tag = tags.FirstOrDefault(p => p.Code == codeUpper);
