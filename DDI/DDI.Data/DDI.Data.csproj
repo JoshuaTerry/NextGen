@@ -62,6 +62,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201701152046175_ContactInfo.cs" />
+    <Compile Include="Migrations\Client\201701152046175_ContactInfo.Designer.cs">
+      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.cs" />
     <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.Designer.cs">
       <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
@@ -186,6 +190,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701152046175_ContactInfo.resx">
+      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701141745544_MaritalStatus2.resx">
       <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
     </EmbeddedResource>
