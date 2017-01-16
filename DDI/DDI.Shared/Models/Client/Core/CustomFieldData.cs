@@ -20,7 +20,7 @@ namespace DDI.Shared.Models.Client.Core
         public string Value { get; set; }
 
         [NotMapped]
-        public string DisplayName { get; set; }
+        public override string DisplayName { get; }
 
         #endregion
     }

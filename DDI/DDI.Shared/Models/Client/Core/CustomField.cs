@@ -29,7 +29,7 @@ namespace DDI.Shared.Models.Client.Core
         public CustomFieldData Answer { get; set; }
 
         [NotMapped]
-        public string DisplayName { get; set; }
+        public override string DisplayName { get;  }
 
         #endregion
     }

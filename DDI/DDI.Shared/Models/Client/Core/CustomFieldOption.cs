@@ -20,7 +20,7 @@ namespace DDI.Shared.Models.Client.Core
         public int SortOrder { get; set; }
 
         [NotMapped]
-        public string DisplayName
+        public override string DisplayName
         {
             get
             {
