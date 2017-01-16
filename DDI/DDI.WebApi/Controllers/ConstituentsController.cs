@@ -83,7 +83,7 @@ namespace DDI.WebApi.Controllers
 
             _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituents);
 
-            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents);
+            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper);
             return Ok(dynamicConstituents);
         }
 

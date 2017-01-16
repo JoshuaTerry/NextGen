@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Http.Routing;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DDI.WebApi.Tests.Helpers
 {
@@ -11,8 +14,10 @@ namespace DDI.WebApi.Tests.Helpers
     public class DynamicTransmogrifierTests
     {
         [TestMethod]
-        public void Should_ReturnFieldsOtherThanDataTheSame()
+        public void Should_ReturnIdenticalDataResponseFieldsOtherThanData()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             var peytonIsTheGreatest = "Peyton is the greatest!!!";
             var totalResults = 18;
             var theGreatest = "The Greatest";
@@ -37,7 +42,7 @@ namespace DDI.WebApi.Tests.Helpers
                 VerboseErrorMessages = verboseErrorMessages
             };
             var target = new DynamicTransmogrifier();
-            var results = target.ToDynamicResponse(initialResponse);
+            var results = target.ToDynamicResponse(initialResponse, urlHelperMock.Object);
             Assert.AreEqual(errorMessages, results.ErrorMessages);
             Assert.AreEqual(true, results.IsSuccessful);
             Assert.AreEqual(totalResults, results.TotalResults);
@@ -47,13 +52,15 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsNoFields_Should_ReturnFullObject()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
                 LastName = "Bob",
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent,"", false);
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "", false);
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(result.LastName == "Bob");
             Assert.IsTrue(result.MiddleName == null);
@@ -62,13 +69,15 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsNoFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
                 LastName = "Bob",
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, "", true);
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "", true);
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(DoesFieldExist(result, "FirstName"));
             Assert.IsTrue(DoesFieldExist(result, "LastName"));
@@ -78,13 +87,15 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsNullFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
                 LastName = "Bob",
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, null, true);
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, null, true);
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(DoesFieldExist(result, "FirstName"));
             Assert.IsTrue(DoesFieldExist(result, "LastName"));
@@ -94,6 +105,8 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsOneConstituent_Should_AddLinksToIt()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -101,7 +114,7 @@ namespace DDI.WebApi.Tests.Helpers
                 MiddleName = "Jane"
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, "FirstName", true);
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName", true);
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(DoesFieldExist(result, "FirstName"));
             Assert.IsFalse(DoesFieldExist(result, "LastName"));
@@ -112,6 +125,8 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsAListOfConstituents_Should_AddLinksToIt()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             List<Constituent> constituents = new List<Constituent> {
                 new Constituent
                 {
@@ -127,7 +142,7 @@ namespace DDI.WebApi.Tests.Helpers
                 }
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicList(constituents, "FirstName,LastName", true);
+            var result = target.ToDynamicList(constituents, urlHelperMock.Object, "FirstName,LastName", true);
             Assert.IsTrue(DoesFieldExist(result[1], "FirstName"));
             Assert.IsTrue(DoesFieldExist(result[1], "LastName"));
             Assert.IsFalse(DoesFieldExist(result[1], "MiddleName"));
@@ -137,6 +152,8 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod]
         public void When_ThereIsASubProperty_Should_ReturnIt()
         {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -154,12 +171,75 @@ namespace DDI.WebApi.Tests.Helpers
                 }
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", false);
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", false);
             Assert.IsTrue(result.ConstituentAddresses[0].Address.City == "Bham");
             Assert.IsTrue(result.ConstituentAddresses[0].Address.PostalCode == "12345");
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(DoesFieldExist(result, "FirstName"));
             Assert.IsFalse(DoesFieldExist(result, "LastName"));
+        }
+
+        [TestMethod]
+        public void When_ThereIsAreSubPropertiesAndLinksRequested_Should_ReturnLinksForEveryObject()
+        {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
+            Constituent constituent = new Constituent
+            {
+                FirstName = "Jim",
+                LastName = "Bob",
+                Id = new Guid("06C72D87-0561-4E11-9F0E-794565D4A1F8"),
+                ConstituentAddresses = new List<ConstituentAddress>
+                {
+                    new ConstituentAddress
+                    {
+                        Address = new Address
+                        {
+                            City = "Bham",
+                            PostalCode = "12345"
+                        }
+                    }
+                }
+            };
+            var target = new DynamicTransmogrifier();
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
+            Assert.IsNotNull(result.Links);
+            Assert.IsNotNull(result.ConstituentAddresses[0].Links);
+            Assert.IsNotNull(result.ConstituentAddresses[0].Address.Links);
+        }
+
+        [TestMethod]
+        public void Should_ReturnLinksWithHATEOASActionsForEveryObjectWithAnAttribute()
+        {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
+            Constituent constituent = new Constituent
+            {
+                FirstName = "Jim",
+                LastName = "Bob",
+                Id = new Guid("06C72D87-0561-4E11-9F0E-794565D4A1F8"),
+                ConstituentAddresses = new List<ConstituentAddress>
+                {
+                    new ConstituentAddress
+                    {
+                        Address = new Address
+                        {
+                            City = "Bham",
+                            PostalCode = "12345"
+                        }
+                    }
+                }
+            };
+            var target = new DynamicTransmogrifier();
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
+            Assert.IsNotNull((result.Links[0] as HATEOASLink).Relationship = RouteRelationships.Self);
+            Assert.IsNotNull((result.Links[0] as HATEOASLink).Method = RouteVerbs.Get);
+            Assert.IsNotNull((result.Links[1] as HATEOASLink).Relationship = RouteRelationships.Update);
+            Assert.IsNotNull((result.Links[1] as HATEOASLink).Method = RouteVerbs.Patch);
+            Assert.IsNotNull((result.Links[2] as HATEOASLink).Relationship = RouteRelationships.Delete);
+            Assert.IsNotNull((result.Links[2] as HATEOASLink).Method = RouteVerbs.Delete);
+            Assert.IsTrue(result.ConstituentAddresses[0].Links.Count == 3);
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.Links.Count == 3);
         }
 
         private bool DoesFieldExist(object objectToCheck, string fieldname)

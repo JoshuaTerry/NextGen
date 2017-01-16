@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="Extensions\DictionaryExtensionsTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
-    <Compile Include="Extensions\EntityBaseExtensionsTests.cs" />
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
     <Compile Include="Helpers\ReflectionHelperTests.cs" />
     <Compile Include="Helpers\ModuleHelperTests.cs" />

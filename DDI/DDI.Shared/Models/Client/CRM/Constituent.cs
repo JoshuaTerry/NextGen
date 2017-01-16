@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("CRM_Constituent")]
+    [Table("Constituent"), EntityType("CRM_Constituent"), HATEAOS(RouteNames.Constituents)]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties
@@ -152,6 +153,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
+        [HATEAOSPostLink(RouteNames.ConstituentAddresses)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         public ICollection<AlternateId> AlternateIds { get; set; }
         public ICollection<ContactInfo> ContactInfo { get; set; }
