@@ -7,13 +7,13 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldOption")]
-    public class CustomFieldOption : IEntity
+    public class CustomFieldOption : EntityBase
     {
         #region Properties
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
         public Guid CustomFieldId { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
