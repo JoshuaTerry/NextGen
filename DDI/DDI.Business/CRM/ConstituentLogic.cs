@@ -11,6 +11,9 @@ using DDI.Shared.Enums.CRM;
 
 namespace DDI.Business.CRM
 {
+    /// <summary>
+    /// Constituent business logic.
+    /// </summary>
     public class ConstituentLogic : EntityLogicBase<Constituent>
     {
         #region Private Fields
@@ -32,34 +35,43 @@ namespace DDI.Business.CRM
 
         #region Public Methods
 
+        private NameFormatter _nameFormatter = null;
+
         /// <summary>
         /// Get the formatted name for a constituent.
         /// </summary>
-        /// <param name="constituent"></param>
-        /// <returns></returns>
         public string GetFormattedName(Constituent constituent)
         {
-            return string.Join(" ", (new string[]
+            LabelFormattingOptions options = new LabelFormattingOptions() { OmitPrefix = true, Recipient = LabelRecipient.Primary };
+            string nameLine1, nameLine2;
+
+            if (_nameFormatter == null)
             {
-                constituent.FirstName,
-                constituent.MiddleName,
-                constituent.LastName
-            }).Where(p => !string.IsNullOrWhiteSpace(p)));
+                _nameFormatter = UnitOfWork.GetBusinessLogic<NameFormatter>();
+            }
+            _nameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
+            return nameLine1;
         }
+
 
         /// <summary>
         /// Get the sort name for a constituent (e.g. Last First Middle)
         /// </summary>
-        /// <param name="constituent"></param>
-        /// <returns></returns>
+        /// <param name="constituent"></param>        
         public string GetSortName(Constituent constituent)
         {
-            return string.Join(" ", (new string[]
+            ConstituentType ctype = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
+
+            if (ctype.Category == ConstituentCategory.Organization)
             {
-                constituent.LastName,
-                constituent.FirstName,
-                constituent.MiddleName
-            }).Where(p => !string.IsNullOrWhiteSpace(p)));
+                return constituent.Name;
+            }
+
+            if (_nameFormatter == null)
+            {
+                _nameFormatter = UnitOfWork.GetBusinessLogic<NameFormatter>();
+            }
+            return _nameFormatter.FormatIndividualSortName(constituent);
         }
 
         public override void Validate(Constituent constituent)
@@ -94,20 +106,20 @@ namespace DDI.Business.CRM
                 return 1 + (_constituentRepo.Entities.OrderByDescending(p => p.ConstituentNumber).FirstOrDefault()?.ConstituentNumber ?? 0);
             }
 
-            int nextNum = 0;
+            int nextNumber = 0;
             bool isUnique = false;
             int tries = 0;
             while (!isUnique)
             {
                 tries++;
-                nextNum = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
-                isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNum) == 0;
+                nextNumber = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+                isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNumber) == 0;
 
                 if (tries >= _maxTries)
                     throw new Exception("Exceeded maximum number of tries to retreive NextSequenceValue");
             }
 
-            return nextNum;
+            return nextNumber;
         }
 
         public void SetNextConstituentNumber(int newValue)
@@ -117,14 +129,14 @@ namespace DDI.Business.CRM
 
         public Constituent GetSpouse(Constituent name)
         {
-            ConstituentType ctype = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
-            if (ctype != null && ctype.Category == ConstituentCategory.Individual)
+            ConstituentType type = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
+            if (type != null && type.Category == ConstituentCategory.Individual)
             {
-                Relationship rel = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
-                if (rel != null)
+                Relationship relationship = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
+                if (relationship != null)
                 {
                     var relationshipLogic = UnitOfWork.GetBusinessLogic<RelationshipLogic>();
-                    return relationshipLogic.GetLeftSideConstituent(rel, name);
+                    return relationshipLogic.GetLeftSideConstituent(relationship, name);
                 }
             }
 
@@ -167,19 +179,19 @@ namespace DDI.Business.CRM
             UnitOfWork.LoadReference(name, p => p.Relationship2s);
 
             // The Relationship2 collection is the starting point:  All these have Constituent2 = (this)            
-            List<Relationship> relSet = GetRelationshipQuery(name.Relationship2s, category, showInQuickView).ToList();
+            List<Relationship> list = GetRelationshipQuery(name.Relationship2s, category, showInQuickView).ToList();
 
             // Add in Relationship1 rows:  All these have Constituent1 = (this)
             foreach (Relationship row in GetRelationshipQuery(name.Relationship1s, category, showInQuickView))
             {
                 // Omit any duplicates
-                if (relSet.Any(p => p.Constituent1 == row.Constituent2))
+                if (list.Any(p => p.Constituent1 == row.Constituent2))
                     continue;
 
-                relSet.Add(row);
+                list.Add(row);
             }
 
-            return relSet;
+            return list;
         }
 
         /// <summary>

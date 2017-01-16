@@ -12,6 +12,9 @@ using DDI.Shared.Models.Common;
 
 namespace DDI.Business.CRM
 {
+    /// <summary>
+    /// Address business logic
+    /// </summary>
     public class AddressLogic : EntityLogicBase<Address>
     {
         #region Private Fields
