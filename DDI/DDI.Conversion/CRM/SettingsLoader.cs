@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.CRM;
-using DDI.Conversion;
+using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
@@ -17,11 +17,9 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
-{
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+{    
     internal class SettingsLoader : ConversionBase
     {
         public enum ConversionMethod
@@ -70,17 +68,17 @@ namespace DDI.Conversion.CRM
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
-            _crmDirectory = Path.Combine(baseDirectory, "CRM");
+            _crmDirectory = Path.Combine(baseDirectory, DirectoryName.CRM);
 
-            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes("NACodes.csv"));
-            RunConversion(ConversionMethod.ContactTypes, () => LoadContactTypes("ContactType.csv"));
-            RunConversion(ConversionMethod.Prefixes, () => LoadPrefixes("NamePrefix.csv"));
-            RunConversion(ConversionMethod.RegionLevels, () => LoadRegionLevels("RegionLevel.csv"));
-            RunConversion(ConversionMethod.Regions, () => LoadRegions("Region.csv"));
-            RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas("RegionAreas.csv"));
-            RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes("RelationshipType.csv"));
-            RunConversion(ConversionMethod.Tags, () => LoadTags("TagGroup.csv", "TagCode.csv"));
-            RunConversion(ConversionMethod.Configuration, () => LoadConfiguration("NASetup.csv"));
+            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.CRM_NACodes));
+            RunConversion(ConversionMethod.ContactTypes, () => LoadContactTypes(InputFile.CRM_ContactType));
+            RunConversion(ConversionMethod.Prefixes, () => LoadPrefixes(InputFile.CRM_NamePrefix));
+            RunConversion(ConversionMethod.RegionLevels, () => LoadRegionLevels(InputFile.CRM_RegionLevel));
+            RunConversion(ConversionMethod.Regions, () => LoadRegions(InputFile.CRM_Region));
+            RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas(InputFile.CRM_RegionAreas));
+            RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes(InputFile.CRM_RelationshipType));
+            RunConversion(ConversionMethod.Tags, () => LoadTags(InputFile.CRM_TagGroup, InputFile.CRM_TagCode));
+            RunConversion(ConversionMethod.Configuration, () => LoadConfiguration(InputFile.CRM_NASetup));
         }
 
 
@@ -217,7 +215,7 @@ namespace DDI.Conversion.CRM
                                p => p.Code,
                                new Degree { Code = code, Name = description, IsActive = active });
                             break;
-                        /*
+                        
                         case CUSTOM_FIELD_SET:
                             LoadCustomField(context, code, description, int1, int2, active);
                             break;
@@ -245,9 +243,7 @@ namespace DDI.Conversion.CRM
                         case CUSTOM_FIELD_VALUE_SET8:
                             LoadCustomFieldOption(context, 8, code, description);
                             break;
-                        */
-
-
+                        
                     }
                 }
             }
@@ -339,12 +335,12 @@ namespace DDI.Conversion.CRM
                 return;
             }
 
-            var option = context.CustomFieldOption.FirstOrDefault(p => p.CustomFieldId == customField.Id && p.Code == code);
+            var option = context.CustomFieldOption.Include(p => p.CustomField).FirstOrDefault(p => p.CustomField.Id == customField.Id && p.Code == code);
             if (option == null)
             {
                 option = new CustomFieldOption();
                 context.CustomFieldOption.Add(option);
-                option.CustomFieldId = customField.Id;
+                option.CustomField = customField;
                 option.Code = code;
             }
             option.Description = description;
@@ -915,8 +911,6 @@ namespace DDI.Conversion.CRM
             // Load Tags.
             using (var importer = CreateFileImporter(_crmDirectory, tagFilename, typeof(ConversionMethod)))
             {
-                int count = 1;
-
                 while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);

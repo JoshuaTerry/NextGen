@@ -41,8 +41,10 @@ namespace DDI.Conversion
 			_eof = false;
 			_isABLData = (delimiter == ' ');
 
-			if (string.IsNullOrWhiteSpace(logName))
-				logName = "FileImport";
+            if (string.IsNullOrWhiteSpace(logName))
+            {
+                logName = "FileImport";
+            }
 			_logger = LogManager.GetLogger(logName);
 		}
 
@@ -101,12 +103,10 @@ namespace DDI.Conversion
 		}
 
 
-		/// <summary>
-		/// Indexer - provides 
-		/// </summary>
-		/// <param name="idx"></param>
-		/// <returns></returns>
-		public string this[int idx]
+        /// <summary>
+        /// Get a string value from the current import row at specified column (zero-based)
+        /// </summary>
+        public string this[int idx]
 		{
 			get
 			{
@@ -167,12 +167,22 @@ namespace DDI.Conversion
 			
 		}
 
-		/// <summary>
-		/// Log an error message.
-		/// </summary>
-		/// <param name="text">Message</param>
-		/// <param name="includeContext">True to include current line number and current line data.</param>
-		public void LogError(string text, bool includeContext = true)
+
+        /// <summary>
+        /// Log a debug message 
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void LogDebug(string text)
+        {
+            _logger.Debug(text);
+        }
+
+        /// <summary>
+        /// Log an error message.
+        /// </summary>
+        /// <param name="text">Message</param>
+        /// <param name="includeContext">True to include current line number and current line data.</param>
+        public void LogError(string text, bool includeContext = true)
 		{
 			_logger.Error(text);
 

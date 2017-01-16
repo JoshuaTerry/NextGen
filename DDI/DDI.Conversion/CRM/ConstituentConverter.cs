@@ -7,15 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
+using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using DDI.Shared.ModuleInfo;
+
 
 namespace DDI.Conversion.CRM
-{
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+{    
+ 
+    /// <summary>
+    /// OpenEdge to SSIS Data Conversion for the CRM module.
+    /// </summary>
     internal class ConstituentConverter : ConversionBase
     {
 
@@ -31,11 +36,9 @@ namespace DDI.Conversion.CRM
             ContactInformation,
             PaymentPreferences,
             Relationships,
-            Tags
+            Tags,
+            CustomFieldData
         }
-
-        private const string CONSTITUENT_ID_FILE = "ConstituentId.csv";
-        private const string ADDRESS_ID_FILE = "AddressId.csv";
 
         private string _crmDirectory;
         private string _outputDirectory;
@@ -45,32 +48,31 @@ namespace DDI.Conversion.CRM
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
-            _crmDirectory = Path.Combine(baseDirectory, "CRM");
-            _outputDirectory = Path.Combine(ConversionOutputDirectory, "CRM");
+            _crmDirectory = Path.Combine(baseDirectory, DirectoryName.CRM);
+            _outputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.CRM);
             _constituentIds = new Dictionary<int, Guid>();
             _addressIds = new Dictionary<int, Guid>();
 
             // Make sure the IS Payload directory exists.
             Directory.CreateDirectory(_outputDirectory);
             
-            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals("Individual.csv", false));
-            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals("IndividualFW.csv", true));
-            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations("Organization.csv", true));
-            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations("OrganizationFW.csv", true));
-            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses("Address.csv", false));
-            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses("AddressFW.csv", true));
-            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress("ConstituentAddress.csv", false));
-            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress("ConstituentAddressFW.csv", true));
+            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals(InputFile.CRM_Individual, false));
+            RunConversion(ConversionMethod.Individuals, () => ConvertIndividuals(InputFile.CRM_IndividualFW, true));
+            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations(InputFile.CRM_Organization, true));
+            RunConversion(ConversionMethod.Organizations, () => ConvertOrganizations(InputFile.CRM_OrganizationFW, true));
+            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses(InputFile.CRM_Address, false));
+            RunConversion(ConversionMethod.Addresses, () => ConvertAddresses(InputFile.CRM_AddressFW, true));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress(InputFile.CRM_ConstituentAddress, false));
+            RunConversion(ConversionMethod.ConstituentAddresses, () => ConvertConstituentAddress(InputFile.CRM_ConstituentAddressFW, true));
 
-            RunConversion(ConversionMethod.DoingBusinessAs, () => ConvertDoingBusinessAs("ConstituentDBA.csv", false));
-            RunConversion(ConversionMethod.Education, () => ConvertEducation("EducationInfo.csv", false));
-            RunConversion(ConversionMethod.AlternateIDs, () => ConvertAlternateIds("AlternateID.csv", false));
-            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfo.csv", false));
-            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo("ContactInfoFW.csv", true));
-            RunConversion(ConversionMethod.Relationships, () => ConvertRelationships("Relationship.csv", false));
-            RunConversion(ConversionMethod.Tags, () => ConvertTags("ConstituentTag.csv", false));
-
-
+            RunConversion(ConversionMethod.DoingBusinessAs, () => ConvertDoingBusinessAs(InputFile.CRM_ConstituentDBA, false));
+            RunConversion(ConversionMethod.Education, () => ConvertEducation(InputFile.CRM_EducationInfo, false));
+            RunConversion(ConversionMethod.AlternateIDs, () => ConvertAlternateIds(InputFile.CRM_AlternateID, false));
+            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo(InputFile.CRM_ContactInfo, false));
+            RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo(InputFile.CRM_ContactInfoFW, true));
+            RunConversion(ConversionMethod.Relationships, () => ConvertRelationships(InputFile.CRM_Relationship, false));
+            RunConversion(ConversionMethod.Tags, () => ConvertTags(InputFile.CRM_ConstituentTag, false));
+            RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));            
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace DDI.Conversion.CRM
         {
             if (_constituentIds.Count == 0)
             {
-                _constituentIds = LoadIntLegacyIds(_outputDirectory, CONSTITUENT_ID_FILE);
+                _constituentIds = LoadIntLegacyIds(_outputDirectory, OutputFile.ConstituentIdMappingFile);
             }
         }
 
@@ -91,7 +93,7 @@ namespace DDI.Conversion.CRM
         {
             if (_addressIds.Count == 0)
             {
-                _addressIds = LoadIntLegacyIds(_outputDirectory, ADDRESS_ID_FILE);
+                _addressIds = LoadIntLegacyIds(_outputDirectory, OutputFile.AddressIdMappingFile);
             }
         }
 
@@ -114,8 +116,8 @@ namespace DDI.Conversion.CRM
             RegionLevel regionLevel3 = regionLevels.FirstOrDefault(p => p.Level == 3);
             RegionLevel regionLevel4 = regionLevels.FirstOrDefault(p => p.Level == 4);
 
-            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, ADDRESS_ID_FILE), append, true);
-            FileExport<Address> addressFile = new FileExport<Address>(Path.Combine(_outputDirectory, "Address.csv"), append);
+            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.AddressIdMappingFile), append, true);
+            FileExport<Address> addressFile = new FileExport<Address>(Path.Combine(_outputDirectory, OutputFile.CRM_AddressFile), append);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -235,7 +237,7 @@ namespace DDI.Conversion.CRM
 
                     if (count % 1000 == 0)
                     {
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
                         addressFile.Flush();
                         legacyIdFile.Flush();
                     }
@@ -284,10 +286,10 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
-                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
-                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append); // Join table created by EF
-                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append); // Join table created by EF
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF
 
                 ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
                 denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
@@ -637,7 +639,7 @@ namespace DDI.Conversion.CRM
 
                     if (count % 1000 == 0)
                     {
-                        importer.LogMessage($"{count} Loaded {constituentNum}: {nameLine1}");
+                        importer.LogDebug($"{count} Loaded {constituentNum}: {nameLine1}");
 
                         constituentFile.Flush();
                         denominationFile.Flush();
@@ -667,10 +669,10 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, CONSTITUENT_ID_FILE), append, true);
-                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, "Constituent.csv"), append);
-                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "EthnicityConstituents.csv"), append); // Join table created by EF
-                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "DenominationConstituents.csv"), append); // Join table created by EF
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
+                FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
+                FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF
 
                 ethnicityFile.SetColumnNames("Ethnicity_Id", "Constituent_Id");
                 denominationFile.SetColumnNames("Denomination_Id", "Constituent_Id");
@@ -839,7 +841,7 @@ namespace DDI.Conversion.CRM
 
                     if (count % 1000 == 0)
                     {
-                        importer.LogMessage($"{count} Loaded {constituentNum}: {name}");
+                        importer.LogDebug($"{count} Loaded {constituentNum}: {name}");
 
                         constituentFile.Flush();
                         denominationFile.Flush();
@@ -868,7 +870,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<ConstituentAddress>(Path.Combine(_outputDirectory, "ConstituentAddress.csv"), append);
+                var outputFile = new FileExport<ConstituentAddress>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentAddresFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -939,7 +941,7 @@ namespace DDI.Conversion.CRM
                     if (count % 1000 == 0)
                     {
                         outputFile.Flush();
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
                     }
                 }
 
@@ -956,7 +958,7 @@ namespace DDI.Conversion.CRM
             
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<DoingBusinessAs>(Path.Combine(_outputDirectory, "DoingBusinessAs.csv"), append);
+                var outputFile = new FileExport<DoingBusinessAs>(Path.Combine(_outputDirectory, OutputFile.CRM_DoingBusinessAsFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -1008,7 +1010,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<Education>(Path.Combine(_outputDirectory, "Education.csv"), append);
+                var outputFile = new FileExport<Education>(Path.Combine(_outputDirectory, OutputFile.CRM_EducationFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -1089,7 +1091,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<AlternateId>(Path.Combine(_outputDirectory, "AlternateId.csv"), append);
+                var outputFile = new FileExport<AlternateId>(Path.Combine(_outputDirectory, OutputFile.CRM_AlternateIdFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -1134,7 +1136,7 @@ namespace DDI.Conversion.CRM
                     if (count % 1000 == 0)
                     {
                         outputFile.Flush();
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
                     }
                 }
 
@@ -1183,7 +1185,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<ContactInfo>(Path.Combine(_outputDirectory, "ContactInfo.csv"), append);
+                var outputFile = new FileExport<ContactInfo>(Path.Combine(_outputDirectory, OutputFile.CRM_ContactInfoFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -1267,7 +1269,7 @@ namespace DDI.Conversion.CRM
                     if (count % 1000 == 0)
                     {
                         outputFile.Flush();
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
                     }
                 }
 
@@ -1287,7 +1289,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                var outputFile = new FileExport<Relationship>(Path.Combine(_outputDirectory, "Relationship.csv"), append);
+                var outputFile = new FileExport<Relationship>(Path.Combine(_outputDirectory, OutputFile.CRM_RelationshipFile), append);
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -1346,7 +1348,7 @@ namespace DDI.Conversion.CRM
                     if (count % 1000 == 0)
                     {
                         outputFile.Flush();
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
                     }
                 }
 
@@ -1369,7 +1371,7 @@ namespace DDI.Conversion.CRM
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 // This is a join table created by EF.
-                var outputFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, "TagConstituents.csv"), append);
+                var outputFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_TagFile), append);
                 outputFile.SetColumnNames("Tag_Id", "Constituent_Id");
 
                 if (!append)
@@ -1418,7 +1420,87 @@ namespace DDI.Conversion.CRM
                     if (count % 1000 == 0)
                     {
                         outputFile.Flush();
-                        importer.LogMessage($"{count} Loaded");
+                        importer.LogDebug($"{count} Loaded");
+                    }
+                }
+
+                outputFile.Dispose();
+            }
+        }
+
+        private void ConvertCustomData(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            var customFields = LoadEntities(context.CustomField);
+
+            // Load the constituent Ids
+            LoadConstituentIds();
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<CustomFieldData>(Path.Combine(_outputDirectory, OutputFile.CRM_CustomDataFile), append);
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    int constituentNum;
+                    string constituentNumText = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum))
+                    {
+                        continue;
+                    }
+
+                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
+                    if (constituentId == default(Guid))
+                    {
+                        importer.LogError($"Invalid constituent number {constituentNum}.");
+                        continue;
+                    }
+
+                    // Iterate thru display positions 1 thru 12.
+                    for (int position = 1; position <= 12; position++)
+                    {
+                        string valueText = importer.GetString(position, 255);
+                        if (string.IsNullOrWhiteSpace(valueText))
+                        {
+                            continue;
+                        }
+
+                        // For numeric positions (11, 12) ignore zeros.
+                        if (position >= 11 && position <= 12 && valueText == "0")
+                        {
+                            continue;
+                        }
+
+                        CustomField field = customFields.FirstOrDefault(p => p.DisplayOrder == position);
+                        if (field == null)
+                        {
+                            importer.LogError($"No custom field defined for display order {position}.");
+                            continue;
+                        }
+                        CustomFieldData data = new CustomFieldData();
+                        data.AssignPrimaryKey();
+                        data.CustomFieldId = field.Id;
+                        data.ParentEntityId = constituentId;
+                        data.EntityType = Shared.Enums.Common.CustomFieldEntity.CRM;
+                        data.Value = valueText;
+
+                        outputFile.AddRow(data);
+                    }
+
+
+                    if (count % 1000 == 0)
+                    {
+                        outputFile.Flush();
+                        importer.LogDebug($"{count} Loaded");
                     }
                 }
 

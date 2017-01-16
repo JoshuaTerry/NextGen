@@ -9,6 +9,7 @@ using DDI.Data;
 using DDI.Conversion;
 using System.Data.Entity.Migrations;
 using log4net;
+using DDI.Conversion.Statics;
 
 namespace DDI.Conversion
 {
@@ -32,19 +33,17 @@ namespace DDI.Conversion
                 organization = "NG";
             }
 
-            log4net.Config.XmlConfigurator.Configure();
+            log4net.Config.XmlConfigurator.Configure();            
 
-            _filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
-            _methodsToRun = new List<ConversionMethodArgs>()
-            {
-               
-            };
+            _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
+            
+            // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
-
             //Run<CRM.Initialize>();
-            //Run<CRM.SettingsLoader>();
-            Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes));
+
+            //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
+            //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
 
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Individuals));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Organizations));
@@ -56,19 +55,29 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.ContactInformation));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
 
         }
 
+        /// <summary>
+        /// Run all converion methods in a conversion class.
+        /// </summary>
         private static void Run<T>() where T : ConversionBase, new()
         {
             new T().Execute(_filePath, _methodsToRun);
         }
 
+        /// <summary>
+        /// Run a list of conversion methods in a conversion class.
+        /// </summary>
         private static void Run<T>(IEnumerable<ConversionMethodArgs> methodsToRun) where T : ConversionBase, new()
         {
             new T().Execute(_filePath, methodsToRun);
         }
 
+        /// <summary>
+        /// Run a specific conversion method in a conversion class.
+        /// </summary>
         private static void Run<T>(ConversionMethodArgs methodToRun) where T : ConversionBase, new()
         {
             new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodToRun });
