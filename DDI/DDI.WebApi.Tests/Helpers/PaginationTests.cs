@@ -19,7 +19,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void Should_CreatePaginationHeaderInfo()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents,It.IsAny<IPageable>())).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent,It.IsAny<IPageable>())).Returns("TEST").Verifiable();
             var search = new ConstituentSearch
             {
                 Name = "Danger",
@@ -27,7 +27,7 @@ namespace DDI.WebApi.Tests.Helpers
                 Offset = 3
             };
             var target = new Pagination();
-            var result = target.CreatePaginationHeader(urlHelperMock.Object, search, 100, RouteNames.Constituents);
+            var result = target.CreatePaginationHeader(urlHelperMock.Object, search, 100, RouteNames.Constituent);
             urlHelperMock.Verify();
             Assert.AreEqual(15, result.PageSize);
             Assert.AreEqual(4, result.CurrentPage);

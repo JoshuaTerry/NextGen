@@ -10,7 +10,7 @@ using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("CRM_Constituent"), HATEAOS(RouteNames.Constituents)]
+    [Table("Constituent"), EntityType("CRM_Constituent"), HATEAOS(RouteNames.Constituent)]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties        
@@ -156,7 +156,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
-        [HATEAOSPostLink(RouteNames.ConstituentAddresses)]
+        [HATEAOSPostLink(RouteNames.ConstituentAddress)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         public ICollection<AlternateId> AlternateIds { get; set; }
         public ICollection<ContactInfo> ContactInfo { get; set; }

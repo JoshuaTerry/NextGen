@@ -147,11 +147,21 @@ namespace DDI.WebApi.Helpers
                 {
                     hateaosLinks = new List<HATEOASLink>();
                 }
-                hateaosLinks.Add(new HATEOASLink
-                {
-                    Href = urlHelper.Link(routePath, new { id = data.Id }),  //TODO Add ConstituentAddresses
-                    Relationship = $"{RouteRelationships.New}{propertyInfo.GetAttribute<HATEAOSPostLinkAttribute>().RouteName}",
-                    Method = RouteVerbs.Post
+                string propertyRoute = propertyInfo.GetAttribute<HATEAOSPostLinkAttribute>().RouteName;
+                hateaosLinks.AddRange(new List<HATEOASLink>
+                { 
+                    new HATEOASLink
+                    {
+                        Href = urlHelper.Link($"Post{propertyRoute}", null),
+                        Relationship = $"{RouteRelationships.New}{propertyRoute}",
+                        Method = RouteVerbs.Post
+                    },
+                    new HATEOASLink
+                    {
+                        Href = urlHelper.Link($"{routePath}{propertyRoute}", new {id = data.Id}),
+                        Relationship = $"{RouteRelationships.Get}{propertyRoute}",
+                        Method = RouteVerbs.Get
+                    }
                 });
             }
             return hateaosLinks;
@@ -164,19 +174,19 @@ namespace DDI.WebApi.Helpers
             {
                 new HATEOASLink()
                 {
-                    Href = urlHelper.Link(routePath, new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Get}", new {id = data.Id}), 
                     Relationship = RouteRelationships.Self,
                     Method = RouteVerbs.Get
                 },
                 new HATEOASLink()
                 {
-                    Href = urlHelper.Link(routePath, new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Patch}", new {id = data.Id}), 
                     Relationship = $"{RouteRelationships.Update}{data.GetType().Name}",
                     Method = RouteVerbs.Patch
                 },
                 new HATEOASLink()
                 {
-                    Href = urlHelper.Link(routePath, new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Delete}", new {id = data.Id}), 
                     Relationship = $"{RouteRelationships.Delete}{data.GetType().Name}",
                     Method = RouteVerbs.Delete
                 },

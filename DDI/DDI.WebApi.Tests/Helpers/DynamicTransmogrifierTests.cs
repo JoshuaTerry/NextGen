@@ -17,7 +17,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void Should_ReturnIdenticalDataResponseFieldsOtherThanData()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             var peytonIsTheGreatest = "Peyton is the greatest!!!";
             var totalResults = 18;
             var theGreatest = "The Greatest";
@@ -53,7 +53,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsNoFields_Should_ReturnFullObject()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -70,7 +70,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsNoFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -88,7 +88,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsNullFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -106,7 +106,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsOneConstituent_Should_AddLinksToIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -126,7 +126,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsAListOfConstituents_Should_AddLinksToIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             List<Constituent> constituents = new List<Constituent> {
                 new Constituent
                 {
@@ -153,7 +153,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsASubProperty_Should_ReturnIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, null)).Returns("TEST").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -183,7 +183,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void When_ThereIsAreSubPropertiesAndLinksRequested_Should_ReturnLinksForEveryObject()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -212,7 +212,7 @@ namespace DDI.WebApi.Tests.Helpers
         public void Should_ReturnLinksWithHATEOASActionsForEveryObjectWithAnAttribute()
         {
             var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituents, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",

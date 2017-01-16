@@ -9,7 +9,7 @@ using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Address"), EntityType("CRM_Address"), HATEAOS(RouteNames.Addresses)]
+    [Table("Address"), EntityType("CRM_Address"), HATEAOS(RouteNames.Address)]
     public class Address : EntityBase
     {
         #region Public Properties

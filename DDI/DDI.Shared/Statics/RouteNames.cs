@@ -8,8 +8,8 @@ namespace DDI.Shared.Statics
 {
     public static class RouteNames
     {
-        public const string Addresses = "Addresses";
-        public const string Constituents = "Constituents";
-        public const string ConstituentAddresses = "ConstituentAddresses";
+        public const string Address = "Address";
+        public const string Constituent = "Constituent";
+        public const string ConstituentAddress = "ConstituentAddress";
     }
 }

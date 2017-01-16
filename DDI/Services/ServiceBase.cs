@@ -26,9 +26,15 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll(IPageable search = null)
+        public IDataResponse<List<T>> GetAll()
         {
             var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList(); //TODO Can we remove the first ToList or will that mess up the data?
+            return GetIDataResponse(() => result);
+        }
+
+        public IDataResponse<T> GetById(Guid id)
+        {
+            var result = _unitOfWork.GetRepository<T>().GetById(id); 
             return GetIDataResponse(() => result);
         }
 

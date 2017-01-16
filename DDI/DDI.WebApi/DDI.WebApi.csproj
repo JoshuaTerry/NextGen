@@ -226,6 +226,8 @@
     <Compile Include="Controllers\AddressTypesController.cs" />
     <Compile Include="Controllers\ClergyStatusesController.cs" />
     <Compile Include="Controllers\ClergyTypesController.cs" />
+    <Compile Include="Controllers\AddressesController.cs" />
+    <Compile Include="Controllers\ConstituentAddressesController.cs" />
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
     <Compile Include="Controllers\ConstituentTypesController.cs" />

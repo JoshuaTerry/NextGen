@@ -33,7 +33,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents", Name = RouteNames.Constituents)]
+        [Route("api/v1/constituents", Name = RouteNames.Constituent)]
         public IHttpActionResult GetConstituents(string quickSearch = null, 
                                                  string name = null, 
                                                  int? constituentNumber = null, 
@@ -81,14 +81,14 @@ namespace DDI.WebApi.Controllers
             var totalCount = constituents.TotalResults;
             var urlHelper = new UrlHelper(Request);
 
-            _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituents);
+            _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
 
-            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper);
+            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields, true);
             return Ok(dynamicConstituents);
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}")]
+        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Get)]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
             var constituent = _service.GetConstituentById(id);
@@ -102,7 +102,9 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
 
-            return Ok(constituent);
+            var urlHelper = new UrlHelper(Request);
+            var dynamicConstituent = _dynamicTransmogrifier.ToDynamicResponse(constituent, urlHelper, fields, true);
+            return Ok(dynamicConstituent);
         }
 
         [HttpGet]
@@ -127,7 +129,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/constituents")]
+        [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Constituent constituent)
         {
             if (!ModelState.IsValid)
@@ -183,7 +185,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/constituents/{id}")]
+        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
             try
@@ -205,10 +207,28 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/v1/constituents/{id}")]
+        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Delete)]
         public IHttpActionResult Delete(Guid id)
         {
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
+        public IHttpActionResult GetConstituentConstituentAddresses(Guid constituentId)
+        {
+            var result = _service.GetConstituentDBAs(constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
         }
 
         [HttpGet]
