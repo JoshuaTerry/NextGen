@@ -12,6 +12,7 @@ using DDI.Business.CRM;
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Enums.Common;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
@@ -21,7 +22,7 @@ using DDI.Shared.ModuleInfo;
 namespace DDI.Conversion.CRM
 {
     [ModuleType(Shared.Enums.ModuleType.CRM)]
-    internal class SettingsLoader :  ConversionBase
+    internal class SettingsLoader : ConversionBase
     {
         public enum ConversionMethod
         {
@@ -54,6 +55,15 @@ namespace DDI.Conversion.CRM
         private const int SCHOOL_SET = 41;
         private const int DEGREE_SET = 42;
         private const int CONTACT_CATEGORY = 75;
+        private const int CUSTOM_FIELD_SET = 1900;
+        private const int CUSTOM_FIELD_VALUE_SET1 = 1901;
+        private const int CUSTOM_FIELD_VALUE_SET2 = 1902;
+        private const int CUSTOM_FIELD_VALUE_SET3 = 1903;
+        private const int CUSTOM_FIELD_VALUE_SET4 = 1904;
+        private const int CUSTOM_FIELD_VALUE_SET5 = 1905;
+        private const int CUSTOM_FIELD_VALUE_SET6 = 1906;
+        private const int CUSTOM_FIELD_VALUE_SET7 = 1907;
+        private const int CUSTOM_FIELD_VALUE_SET8 = 1908;
 
         private string _crmDirectory;
 
@@ -207,11 +217,140 @@ namespace DDI.Conversion.CRM
                                p => p.Code,
                                new Degree { Code = code, Name = description, IsActive = active });
                             break;
+                        /*
+                        case CUSTOM_FIELD_SET:
+                            LoadCustomField(context, code, description, int1, int2, active);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET1:
+                            LoadCustomFieldOption(context, 1, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET2:
+                            LoadCustomFieldOption(context, 2, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET3:
+                            LoadCustomFieldOption(context, 3, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET4:
+                            LoadCustomFieldOption(context, 4, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET5:
+                            LoadCustomFieldOption(context, 5, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET6:
+                            LoadCustomFieldOption(context, 6, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET7:
+                            LoadCustomFieldOption(context, 7, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET8:
+                            LoadCustomFieldOption(context, 8, code, description);
+                            break;
+                        */
+
 
                     }
                 }
             }
             context.SaveChanges();
+        }
+
+        private void LoadCustomField(DomainContext context, string code, string description, int minValue, int maxValue, bool isActive)
+        {
+            // If there's no description, ignore the code.
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return;
+            }
+
+            int displayOrder = 0;
+            string displayOrderText;
+            int displayOffset = 0;
+            CustomFieldType customFieldType = CustomFieldType.TextBox;
+
+            // Convert code (like CHAR01) to data type and display order.
+            if (code.StartsWith("CHAR"))
+            {
+                customFieldType = CustomFieldType.TextBox;
+                displayOrderText = code.Substring(4, 2);
+            }
+            else if (code.StartsWith("DATE"))
+            {
+                customFieldType = CustomFieldType.Date;
+                displayOrderText = code.Substring(4, 2);
+                displayOffset = 8;
+            }
+            else if (code.StartsWith("DEC"))
+            {
+                customFieldType = CustomFieldType.Number;
+                displayOrderText = code.Substring(3, 2);
+                displayOffset = 10;
+            }
+            else
+            {
+                return;
+            }
+
+            if (!int.TryParse(displayOrderText, out displayOrder))
+            {
+                return;
+            }
+
+            displayOrder += displayOffset;
+
+            var customField = context.CustomField.FirstOrDefault(p => p.FieldType == customFieldType && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM);
+            if (customField == null)
+            {
+                customField = new CustomField();
+                context.CustomField.Add(customField);
+                customField.FieldType = customFieldType;
+                customField.DisplayOrder = displayOrder;
+                customField.Entity = CustomFieldEntity.CRM;
+            }
+
+            customField.IsActive = isActive;
+            customField.LabelText = description;
+            if (customFieldType == CustomFieldType.Number)
+            {
+                customField.MinValue = minValue.ToString();
+                customField.MaxValue = maxValue.ToString();
+                customField.DecimalPlaces = 2;
+            }
+            else
+            {
+                customField.MinValue = string.Empty;
+                customField.MaxValue = string.Empty;
+                customField.DecimalPlaces = 0;
+            }
+        }
+
+        private void LoadCustomFieldOption(DomainContext context, int displayOrder, string code, string description)
+        {
+            var customFields = context.CustomField.Local;
+
+            var customField = customFields.FirstOrDefault(p => p.FieldType == CustomFieldType.TextBox && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              customFields.FirstOrDefault(p => p.FieldType == CustomFieldType.DropDown && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              context.CustomField.FirstOrDefault(p => p.FieldType == CustomFieldType.TextBox && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              context.CustomField.FirstOrDefault(p => p.FieldType == CustomFieldType.DropDown && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM);
+            if (customField == null)
+            {
+                return;
+            }
+
+            var option = context.CustomFieldOption.FirstOrDefault(p => p.CustomFieldId == customField.Id && p.Code == code);
+            if (option == null)
+            {
+                option = new CustomFieldOption();
+                context.CustomFieldOption.Add(option);
+                option.CustomFieldId = customField.Id;
+                option.Code = code;
+            }
+            option.Description = description;
+
+            // Force custom field to "DropDown".
+            customField.FieldType = CustomFieldType.DropDown;
         }
 
         private void LoadConfiguration(string filename)
