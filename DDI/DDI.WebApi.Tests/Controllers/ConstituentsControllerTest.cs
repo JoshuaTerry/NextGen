@@ -8,33 +8,35 @@ namespace DDI.WebApi.Tests.Controllers
     [TestClass]
     public class ConstituentsControllerTest
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Controllers";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Get()
         {
             // Arrange
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IHttpActionResult result = controller.GetConstituents();
+            //IHttpActionResult result = controller.GetConstituents();
 
             // Assert
             
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void GetById()
         {
             // Arrange
             ConstituentsController controller = new ConstituentsController();
 
             // Act
-            IHttpActionResult result = controller.GetConstituentById(new Guid());
+            //IHttpActionResult result = controller.GetConstituentById(new Guid());
 
             // Assert
             
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Post()
         {
             // Arrange
@@ -46,7 +48,7 @@ namespace DDI.WebApi.Tests.Controllers
             // Assert
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Put()
         {
             // Arrange
@@ -58,7 +60,7 @@ namespace DDI.WebApi.Tests.Controllers
             // Assert
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Delete()
         {
             // Arrange

@@ -45,8 +45,6 @@ namespace DDI.Shared.Models
         }
 
         #endregion
-
-
     }
 
 

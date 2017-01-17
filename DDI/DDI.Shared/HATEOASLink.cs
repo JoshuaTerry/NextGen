@@ -1,6 +1,6 @@
 ﻿namespace DDI.Shared
 {
-    public class HATEOASLink
+    public class HateoasLink
     {
         public string Href { get; set; }
         public string Relationship { get; set; }
