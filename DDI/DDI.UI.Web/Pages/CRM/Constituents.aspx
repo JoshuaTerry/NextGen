@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="..\..\Scripts/constituents.js"></script>
+    <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
 

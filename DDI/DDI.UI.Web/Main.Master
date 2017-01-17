@@ -25,7 +25,7 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
-    <link rel="stylesheet" href="CSS\screen.css" />
+    <link rel="stylesheet" href="CSS\globalstyles.css" />
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
