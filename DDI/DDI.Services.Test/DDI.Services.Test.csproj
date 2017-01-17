@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FACC3600-680B-4D29-89A4-58915BCDFEB2}</ProjectGuid>
+    <ProjectGuid>{27671E1D-CD33-4DD8-8201-D64592DAC560}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDI.Shared.Test</RootNamespace>
-    <AssemblyName>DDI.Shared.Test</AssemblyName>
+    <RootNamespace>DDI.Services.Test</RootNamespace>
+    <AssemblyName>DDI.Services.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -51,19 +50,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Extensions\DictionaryExtensionsTests.cs" />
-    <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
-    <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
-    <Compile Include="Helpers\ReflectionHelperTests.cs" />
-    <Compile Include="Helpers\ModuleHelperTests.cs" />
-    <Compile Include="ModuleInfo\ModuleInfoBaseTests.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Extensions\PageableSearchExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
-      <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\DDI.Services.csproj">
+      <Project>{23bfe6f8-f3ea-4be6-a193-ca70f9452943}</Project>
+      <Name>DDI.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

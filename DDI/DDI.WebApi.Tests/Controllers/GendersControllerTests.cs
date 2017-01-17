@@ -12,7 +12,9 @@ namespace DDI.WebApi.Tests.Controllers
     [TestClass]
     public class GendersControllerTests
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Controllers";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void GetAllGenders_ReturnsGenderCollection()
         {
             var uow = new Mock<IUnitOfWork>();

@@ -12,7 +12,9 @@ namespace DDI.WebApi.Tests.Services
     [TestClass]
     public class SectionPreferenceServiceTest
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Services";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void GetPreferencesBySectionName_ReturnsConstituentPreferences()
         { 
             var repo = new Mock<IRepository<SectionPreference>>();
