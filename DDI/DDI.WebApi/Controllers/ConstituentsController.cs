@@ -198,9 +198,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetConstituentConstituentAddresses(Guid constituentId, string fields = null)
+        public IHttpActionResult GetConstituentConstituentAddresses(Guid id, string fields = null)
         {
-            var result = _service.GetConstituentAddresses(constituentId);
+            var result = _service.GetConstituentAddresses(id);
 
             if (result == null)
             {
@@ -217,9 +217,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/dbas")]
-        public IHttpActionResult GetConstituentDBAs(Guid constituentId, string fields = null)
+        public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null)
         {
-            var result = _service.GetConstituentDBAs(constituentId);
+            var result = _service.GetConstituentDBAs(id);
 
             if (result == null)
             {
@@ -236,9 +236,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/educationlevel")]
-        public IHttpActionResult GetEducationLevel(Guid constituentId, string fields = null)
+        public IHttpActionResult GetEducationLevel(Guid id, string fields = null)
         {
-            var result = _service.GetEducationLevel(constituentId);
+            var result = _service.GetEducationLevel(id);
 
             if (result == null)
             {
