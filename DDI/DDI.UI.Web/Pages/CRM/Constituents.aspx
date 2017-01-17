@@ -39,14 +39,14 @@
         <div class="tabscontainer">
 
             <ul>
-                <li><a href="#tab-individual">Main</a></li>
+                <li><a href="#tab-main" id="tab-main-link">Main</a></li>
                 <li><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
             </ul>
 
             <!-- Individual Tab -->
-            <div id="tab-individual" class="scrollable">
+            <div id="tab-main" class="scrollable">
 
                 <div class="constituenttopinfo editcontainer">
 
@@ -222,8 +222,8 @@
                         <div class="educationleveltable"></div>
                     </div>
 
-                    <h1>Organization</h1>
-                    <div class="editcontainer">
+                    <h1 class="organization">Organization</h1>
+                    <div class="editcontainer organization">
 
                         <div class="inline">
                             <div class="fieldblock">
