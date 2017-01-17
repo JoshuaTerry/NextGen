@@ -94,7 +94,7 @@ namespace DDI.WebApi.Helpers
                     ((IDictionary<string, object>) returnObject)[property.Name] = fieldValue;
                 }
             }
-            if (data is EntityBase && shouldAddHateoasLinks)
+            if (shouldAddHateoasLinks)
             {
                 returnObject = AddHateoasLinks(returnObject, data as EntityBase, urlHelper);
             }
@@ -140,14 +140,14 @@ namespace DDI.WebApi.Helpers
         private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : EntityBase
         {
             List<HateoasLink> hateoasLinks = null;
-            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasPostLinkAttribute)));
+            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
             foreach (var propertyInfo in properties)
             {
                 if (hateoasLinks == null)
                 {
                     hateoasLinks = new List<HateoasLink>();
                 }
-                string propertyRoute = propertyInfo.GetAttribute<HateoasPostLinkAttribute>().RouteName;
+                string propertyRoute = propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
                 hateoasLinks.AddRange(new List<HateoasLink>
                 { 
                     new HateoasLink

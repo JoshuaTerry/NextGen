@@ -3,12 +3,14 @@ using DDI.Services.Extensions;
 using DDI.Services.Search;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DDI.Services.Test
+namespace DDI.Services.Extensions.Test
 {
     [TestClass]
     public class PageableSearchExtensionsTest
     {
-        [TestMethod]
+        private const string TESTDESCR = "Services | Extensions";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnPreviousPageLink()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -22,7 +24,7 @@ namespace DDI.Services.Test
             Assert.AreEqual("Trick", result.Name);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_GettingPreviousPageOnFirstPage_Should_ReturnNull()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -35,7 +37,7 @@ namespace DDI.Services.Test
             Assert.IsNull(result);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnNextPageLink()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -49,7 +51,7 @@ namespace DDI.Services.Test
             Assert.AreEqual("Trick", result.Name);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_GettingNextPageOnLastPage_Should_ReturnNull()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -62,7 +64,7 @@ namespace DDI.Services.Test
             Assert.IsNull(result);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_GettingNextPagePastLastPage_Should_ReturnNull()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -75,7 +77,7 @@ namespace DDI.Services.Test
             Assert.IsNull(result);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnFirstPageLink()
         {
             ConstituentSearch search = new ConstituentSearch
@@ -89,7 +91,7 @@ namespace DDI.Services.Test
             Assert.AreEqual("Trick", result.Name);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnLastPageLink()
         {
             ConstituentSearch search = new ConstituentSearch

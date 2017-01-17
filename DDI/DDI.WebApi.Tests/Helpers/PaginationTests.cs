@@ -15,7 +15,9 @@ namespace DDI.WebApi.Tests.Helpers
     [TestClass]
     public class PaginationTests
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Helpers";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_CreatePaginationHeaderInfo()
         {
             var urlHelperMock = new Mock<UrlHelper>();

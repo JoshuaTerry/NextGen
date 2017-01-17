@@ -156,7 +156,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
-        [HateoasPostLink(RouteNames.ConstituentAddress)]
+        [HateoasCollectionLink(RouteNames.ConstituentAddress)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         public ICollection<AlternateId> AlternateIds { get; set; }
         public ICollection<ContactInfo> ContactInfo { get; set; }

@@ -143,7 +143,16 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId)
+        public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
+        {
+            Repository<ConstituentAddress> dbaRepo = new Repository<ConstituentAddress>();
+            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
+
+            IDataResponse<List<ConstituentAddress>> response = new DataResponse<List<ConstituentAddress>> { Data = data.ToList() };
+            return response;
+        }
+
+        public IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId)
         {
             Repository<Constituent> repo = new Repository<Constituent>();
             var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;

@@ -15,7 +15,9 @@ namespace DDI.WebApi.Tests.Helpers
     [TestClass]
     public class DynamicTransmogrifierTests
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Helpers";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnIdenticalDataResponseFieldsOtherThanData()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -51,7 +53,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.AreEqual(verboseErrorMessages, results.VerboseErrorMessages);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsNoFields_Should_ReturnFullObject()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -68,7 +70,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsTrue(result.MiddleName == null);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsNoFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -86,7 +88,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsTrue(DoesFieldExist(result, "Links"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsNullFieldsButLinks_Should_ReturnFullObjectWithLinks()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -104,7 +106,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsTrue(DoesFieldExist(result, "Links"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsOneConstituent_Should_AddLinksToIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -124,7 +126,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsTrue(DoesFieldExist(result, "Links"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsAListOfConstituents_Should_AddLinksToIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -151,7 +153,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsTrue(DoesFieldExist(result[1], "Links"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsASubProperty_Should_ReturnIt()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -181,7 +183,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsFalse(DoesFieldExist(result, "LastName"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsAreSubPropertiesAndLinksRequested_Should_ReturnLinksForEveryObject()
         {
             var urlHelperMock = new Mock<UrlHelper>();
@@ -210,7 +212,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsNotNull(result.ConstituentAddresses[0].Address.Links);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnLinksWithHateoasActionsForEveryObjectWithAnAttribute()
         {
             var urlHelperMock = new Mock<UrlHelper>();
