@@ -1,29 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Authentication.ExtendedProtection.Configuration;
 using System.Web.Http;
-using DDI.Shared.Models.Client.Core;
 using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CustomFieldsController : ApiController
+    public class CustomFieldOptionsController : ApiController
     {
-        ServiceBase<CustomField> _service;
+        ServiceBase<CustomFieldOption> _service;
 
-        #region Constructors
+        public CustomFieldOptionsController()
+            :this(new ServiceBase<CustomFieldOption>())
+        {
+        }
 
-        public CustomFieldsController() : this(new ServiceBase<CustomField>()) { }
-        internal CustomFieldsController(ServiceBase<CustomField> service)
+        internal CustomFieldOptionsController(ServiceBase<CustomFieldOption> service)
         {
             _service = service;
         }
 
-        #endregion
-
-        #region Methods
-
         [HttpGet]
-        [Route("api/v1/customfields")]
+        [Route("api/v1/customfieldoptions")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
@@ -40,7 +43,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/{id}")]
+        [Route("api/v1/customfieldoptions/{id}")]
         public IHttpActionResult GetById(string id)
         {
             var result = _service.GetById(id);
@@ -56,8 +59,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/customfields")]
-        public IHttpActionResult Post([FromBody] CustomField item)
+        [Route("api/v1/customfieldoptions")]
+        public IHttpActionResult Post([FromBody] CustomFieldOption item)
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +72,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/customfields/{id}")]
+        [Route("api/v1/customfieldoptions/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
@@ -91,8 +94,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/v1/customfields")]
-        public IHttpActionResult Delete([FromBody] CustomField entity)
+        [Route("api/v1/customfieldoptions")]
+        public IHttpActionResult Delete([FromBody] CustomFieldOption entity)
         {
             try
             {
@@ -111,6 +114,6 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        #endregion
+
     }
 }
