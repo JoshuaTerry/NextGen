@@ -23,11 +23,19 @@ namespace DDI.Shared.Models.Client.CRM
         public string Comment { get; set; }
 
         public Guid? ConstituentId { get; set; }
-        public Guid? ContactTypeId { get; set; }        
+        public Guid? ContactTypeId { get; set; }
+        public Guid? ParentContactId { get; set; }
 
-        // Navigation Properties
+        #region Navigation Properties
+
         public Constituent Constituent { get; set; }
         public ContactType ContactType { get; set; }
+        public ContactInfo ParentContact { get; set; }
+
+        [InverseProperty(nameof(ParentContact))]
+        public ICollection<ContactInfo> ChildContacts { get; set; }
+
+        #endregion
 
         #endregion Public Properties
     }
