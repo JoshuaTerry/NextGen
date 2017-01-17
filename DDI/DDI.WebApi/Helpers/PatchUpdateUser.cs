@@ -16,8 +16,7 @@ namespace DDI.WebApi.Helpers
         where T : class
     {
         private DbContext _context;
-
-
+        
         public PatchUpdateUser()
             : this(new ApplicationDbContext())
         {

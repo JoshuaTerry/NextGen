@@ -253,7 +253,7 @@
     </Compile>
     <Compile Include="Helpers\CriteriaQuery.cs" />
     <Compile Include="Helpers\LinqQuery.cs" />
-    <Compile Include="Helpers\PatchUpdateObject.cs" />
+    <Compile Include="Helpers\PatchUpdateUser.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
