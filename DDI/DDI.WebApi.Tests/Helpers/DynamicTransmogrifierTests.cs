@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http.Routing;
 using DDI.Shared;
+using DDI.Shared.Attributes;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -232,12 +234,12 @@ namespace DDI.WebApi.Tests.Helpers
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
-            Assert.IsNotNull((result.Links[0] as HATEOASLink).Relationship = RouteRelationships.Self);
-            Assert.IsNotNull((result.Links[0] as HATEOASLink).Method = RouteVerbs.Get);
-            Assert.IsNotNull((result.Links[1] as HATEOASLink).Relationship = RouteRelationships.Update);
-            Assert.IsNotNull((result.Links[1] as HATEOASLink).Method = RouteVerbs.Patch);
-            Assert.IsNotNull((result.Links[2] as HATEOASLink).Relationship = RouteRelationships.Delete);
-            Assert.IsNotNull((result.Links[2] as HATEOASLink).Method = RouteVerbs.Delete);
+            List<HATEOASLink> links = result.Links as List<HATEOASLink>;
+            Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Get && a.Relationship == RouteRelationships.Self));
+            Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Get && a.Relationship == (RouteRelationships.Get + RouteNames.ConstituentAddress)));
+            Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Patch).Relationship == RouteRelationships.Update + RouteNames.Constituent);
+            Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Delete).Relationship == RouteRelationships.Delete + RouteNames.Constituent);
+            Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Post).Relationship == RouteRelationships.New + RouteNames.ConstituentAddress);
             Assert.IsTrue(result.ConstituentAddresses[0].Links.Count == 3);
             Assert.IsTrue(result.ConstituentAddresses[0].Address.Links.Count == 3);
         }
