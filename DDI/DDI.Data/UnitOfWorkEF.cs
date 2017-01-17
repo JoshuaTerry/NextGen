@@ -78,6 +78,14 @@ namespace DDI.Data
         {
             return GetRepository<T>().GetEntities(includes);
         }
+        
+        /// <summary>
+        /// Return a queryable collection of entities.
+        /// </summary>
+        public IQueryable GetEntities(Type type)
+        {
+            return GetContext(type).Set(type);
+        }
 
         /// <summary>
         /// Returns the first entity that satisfies a condition or null if no such entity is found.
@@ -168,28 +176,7 @@ namespace DDI.Data
 
             if (!_repositories.ContainsKey(type))
             {
-                DbContext context = null;
-
-                // Get or create the appropriate context for the type.
-                if (type.Namespace == _commonNamespace)
-                {
-                    // Common context
-                    if (_commonContext == null)
-                    {
-                        _commonContext = new CommonContext();
-                    }
-                    context = _commonContext;
-                }
-                else
-                {
-                    // Client context
-                    if (_clientContext == null)
-                    {
-                        _clientContext = new DomainContext();
-                    }
-                    context = _clientContext;
-                }
-
+                DbContext context = GetContext(type);
 
                 // Create a repository, then add it to the dictionary.
                 repository = new Repository<T>(context);
@@ -203,6 +190,36 @@ namespace DDI.Data
             }
 
             return repository;
+        }
+
+
+        /// <summary>
+        /// Get (create if necessary) the correct DbContext for a given entity type.
+        /// </summary>
+        private DbContext GetContext(Type type)
+        {
+            DbContext context = null;
+
+            // Get or create the appropriate context for the type.
+            if (type.Namespace == _commonNamespace)
+            {
+                // Common context
+                if (_commonContext == null)
+                {
+                    _commonContext = new CommonContext();
+                }
+                context = _commonContext;
+            }
+            else
+            {
+                // Client context
+                if (_clientContext == null)
+                {
+                    _clientContext = new DomainContext();
+                }
+                context = _clientContext;
+            }
+            return context;
         }
 
         /// <summary>

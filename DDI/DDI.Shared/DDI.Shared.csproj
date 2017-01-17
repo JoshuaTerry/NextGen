@@ -75,7 +75,6 @@
   <ItemGroup>
     <Compile Include="Attributes\HATEAOSPostLinkAttribute.cs" />
     <Compile Include="Attributes\HATEAOSAttribute.cs" />
-    <Compile Include="Attributes\EntityTypeAttribute.cs" />
     <Compile Include="DataResponse.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
@@ -111,7 +110,6 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
-    <Compile Include="Models\ILinkedEntityCollection.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -163,7 +161,6 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\IEntity.cs" />
-    <Compile Include="Models\LinkedEntityCollection.cs" />
     <Compile Include="ModuleInfo\Accounting.cs" />
     <Compile Include="ModuleInfo\AccountsPayable.cs" />
     <Compile Include="ModuleInfo\AccountsReceivable.cs" />
