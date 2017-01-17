@@ -8,21 +8,68 @@ using DDI.Business.CRM.ModuleInfo.Base;
 
 namespace DDI.Business.CRM
 {
+    /// <summary>
+    /// Methods for accessing module information.
+    /// </summary>
     public static class ModuleInfoCreator
     {
+
+        #region Fields
 
         private static Dictionary<ModuleType, ModuleInfoConcrete> _moduleDictionary;
         private static List<ModuleInfoConcrete> _modules;
 
+        #endregion
 
+        #region Public Properties 
+
+        /// <summary>
+        /// Collection of module information objects
+        /// </summary>
+        public static ICollection<ModuleInfoConcrete> ModuleInfoCollection
+        {
+            get
+            {
+                Initialize();
+                return _modules;
+            }
+        }
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Get the ModuleInfo object for a specified ModuleType value.
+        /// </summary>
         public static ModuleInfoConcrete GetModuleInfo(ModuleType moduleType)
         {
             Initialize();
-
+            ModuleInfoConcrete moduleInfo = null;
+            _moduleDictionary.TryGetValue(moduleType, out moduleInfo);
+            return moduleInfo;
         }
 
+        /// <summary>
+        /// Get the ModuleInfo object for a specified type.
+        /// </summary>
+        /// <typeparam name="T">ModuleInfo type</typeparam>
+        public static T GetModuleInfo<T>() where T : ModuleInfoConcrete
+        {
+            Initialize();
+            return _modules.FirstOrDefault(p => p.GetType() == typeof(T)) as T;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Build list of modules via reflection only once, and only when first requested.
+        /// </summary>
         private static void Initialize()
         {
+
+            // Populate the list of modules and the module dictionary.
             _moduleDictionary = new Dictionary<ModuleType, ModuleInfoConcrete>();
             _modules = new List<ModuleInfoConcrete>();
 
@@ -32,7 +79,7 @@ namespace DDI.Business.CRM
                 Name = "Connect-Accounting",
                 IsRequired = true,
                 ModuleType = ModuleType.Accounting,
-                ParentModuleType = ModuleType.None
+                ParentModuleType = ModuleType.None,
             };
             _moduleDictionary.Add(ModuleType.Accounting, accounting);
             _modules.Add(accounting);
@@ -141,6 +188,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.Gifts, donations);
+            _modules.Add(donations);
 
             var extensionFund = new ModuleInfoConcrete
             {
@@ -151,6 +199,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.ExtensionFund, extensionFund);
+            _modules.Add(extensionFund);
 
             var fixedAssets = new ModuleInfoConcrete
             {
@@ -161,6 +210,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.FixedAssets, fixedAssets);
+            _modules.Add(fixedAssets);
 
             var fundRaising = new ModuleInfoConcrete
             {
@@ -171,6 +221,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.FundRaising, fundRaising);
+            _modules.Add(fundRaising);
 
             var generalLedger = new ModuleInfoConcrete
             {
@@ -182,6 +233,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.Accounting
             };
             _moduleDictionary.Add(ModuleType.GeneralLedger, generalLedger);
+            _modules.Add(generalLedger);
 
             var healthPolicy = new ModuleInfoConcrete
             {
@@ -193,6 +245,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.None
             };
             _moduleDictionary.Add(ModuleType.HealthPolicy, healthPolicy);
+            _modules.Add(healthPolicy);
 
             var inventory = new ModuleInfoConcrete
             {
@@ -203,6 +256,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.Inventory, inventory);
+            _modules.Add(inventory);
 
             var investments = new ModuleInfoConcrete
             {
@@ -213,6 +267,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.Investments, investments);
+            _modules.Add(investments);
 
             var jobProcessing = new ModuleInfoConcrete
             {
@@ -223,6 +278,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.JobProcessing, jobProcessing);
+            _modules.Add(jobProcessing);
 
             var lineOfCredit = new ModuleInfoConcrete
             {
@@ -235,6 +291,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.LineOfCredit, lineOfCredit);
+            _modules.Add(lineOfCredit);
 
             var loans = new ModuleInfoConcrete
             {
@@ -246,6 +303,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.ExtensionFund
             };
             _moduleDictionary.Add(ModuleType.Loans, loans);
+            _modules.Add(loans);
 
             var namedFunds = new ModuleInfoConcrete
             {
@@ -256,6 +314,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.NamedFunds, namedFunds);
+            _modules.Add(namedFunds);
 
             var plannedGiving = new ModuleInfoConcrete
             {
@@ -266,6 +325,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.PlannedGiving, plannedGiving);
+            _modules.Add(plannedGiving);
 
             var pools = new ModuleInfoConcrete
             {
@@ -275,6 +335,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.ExtensionFund
             };
             _moduleDictionary.Add(ModuleType.Pools, pools);
+            _modules.Add(pools);
 
             var portfolio = new ModuleInfoConcrete
             {
@@ -286,6 +347,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.ExtensionFund
             };
             _moduleDictionary.Add(ModuleType.Portfolio, portfolio);
+            _modules.Add(portfolio);
 
             var processManagement = new ModuleInfoConcrete
             {
@@ -296,6 +358,7 @@ namespace DDI.Business.CRM
 
             };
             _moduleDictionary.Add(ModuleType.ProcessManagement, processManagement);
+            _modules.Add(processManagement);
 
             var projects = new ModuleInfoConcrete
             {
@@ -305,6 +368,7 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.None
             };
             _moduleDictionary.Add(ModuleType.ProjectManagement, projects);
+            _modules.Add(projects);
 
             var systemAdministration = new ModuleInfoConcrete
             {
@@ -315,7 +379,31 @@ namespace DDI.Business.CRM
                 ParentModuleType = ModuleType.None
             };
             _moduleDictionary.Add(ModuleType.SystemAdministration, systemAdministration);
+            _modules.Add(systemAdministration);
 
+            // Link up modules
+            accounting.ChildModules.Add(accountsPayable);
+            accounting.ChildModules.Add(accountsReceivable);
+            accounting.ChildModules.Add(fixedAssets);
+            accounting.ChildModules.Add(generalLedger);
+            accounting.ChildModules.Add(inventory);
+
+            cashProcessing.ChildModules.Add(cashDisbursements);
+            cashProcessing.ChildModules.Add(cashReceipting);
+
+            extensionFund.ChildModules.Add(investments);
+            extensionFund.ChildModules.Add(lineOfCredit);
+            extensionFund.ChildModules.Add(loans);
+            extensionFund.ChildModules.Add(pools);
+            extensionFund.ChildModules.Add(portfolio);
+
+            fundRaising.ChildModules.Add(campaigns);
+            fundRaising.ChildModules.Add(cropEvents);
+            fundRaising.ChildModules.Add(donations);
+            fundRaising.ChildModules.Add(namedFunds);
+            fundRaising.ChildModules.Add(plannedGiving);
         }
     }
+
+    #endregion
 }
