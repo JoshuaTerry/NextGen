@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using DDI.Data;
 using DDI.Conversion;
-using DDI.Data.Models.Client;
+using DDI.Shared.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
 using DDI.Conversion.CRM;

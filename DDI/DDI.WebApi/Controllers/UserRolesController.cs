@@ -56,18 +56,17 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/userroles")]
-        public async Task<IHttpActionResult> Get(string email)
+        [Route("api/v1/users/{id}/roles")]
+        public async Task<IHttpActionResult> Get(string id)
         {
-            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             IList<string> roles;
             try
             {
+                var user = await UserManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
                 roles = await UserManager.GetRolesAsync(user.Id);
             }
             catch (Exception)
@@ -79,7 +78,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/userroles/add")]
+        [Route("api/v1/users/roles/add")]
         public async Task<IHttpActionResult> Add([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeAddedToUser(model.Email, model.Roles) != null)
@@ -107,7 +106,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/userroles/remove")]
+        [Route("api/v1/users/roles/remove")]
         public async Task<IHttpActionResult> Delete([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeRemovedFromUser(model.Email, model.Roles) != null)

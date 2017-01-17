@@ -246,11 +246,13 @@
     <Compile Include="Controllers\SectionPreferencesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CriteriaQuery.cs" />
     <Compile Include="Helpers\LinqQuery.cs" />
+    <Compile Include="Helpers\PatchUpdateObject.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -84,14 +85,34 @@ namespace DDI.WebApi.Controllers
             return Ok(RoleManager.Roles.ToList());
         }
 
-        [HttpPost]
-        [Route("api/v1/roles/update")]
-        public async Task<IHttpActionResult> Update(string role, string newRoleName)
+        [HttpGet]
+        [Route("api/v1/roles/{roleId}/users")]
+        public async Task<IHttpActionResult> GetUsersInRole(Guid roleId)
         {
-            var roleToUpdate = RoleManager.FindByIdAsync(role).Result;
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            try
+            {
+                var role = await RoleManager.FindByIdAsync(roleId.ToString());
+                var userIds = role.Users.ToList().Select(u => u.UserId);
+                var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(id.ToString()).Result);
+                users.AddRange(usersToAdd);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(users);
+        }
+
+        [HttpPost]
+        [Route("api/v1/roles/{id}/update")]
+        public async Task<IHttpActionResult> Update(string id, string newRoleName)
+        {
+            var roleToUpdate = RoleManager.FindByIdAsync(id).Result;
             if (roleToUpdate == null)
             {
-                ModelState.AddModelError("", $"Role {roleToUpdate.Name} not found.");
+                ModelState.AddModelError("", $"Role not found.");
                 return BadRequest(ModelState);
             }
 
