@@ -7,20 +7,20 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldData")]
-    public class CustomFieldData : IEntity
+    public class CustomFieldData : EntityBase
     {
         #region Properties
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
         public Guid CustomFieldId { get; set; }
         public DDI.Shared.Enums.Common.CustomFieldEntity EntityType { get; set; }
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
 
         [NotMapped]
-        public string DisplayName { get; set; }
+        public override string DisplayName { get; }
 
         #endregion
     }

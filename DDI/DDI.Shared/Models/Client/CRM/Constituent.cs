@@ -1,18 +1,17 @@
-using DDI.Shared.Attributes;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("CRM_Constituent")]
+    [Table("Constituent")]
     public class Constituent : EntityBase, IEntity
     {
-        #region Public Properties
+        #region Public Properties        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
@@ -37,6 +36,8 @@ namespace DDI.Shared.Models.Client.CRM
         public int ConstituentNumber { get; set; }
 
         public Guid? ConstituentStatusId { get; set; }
+
+        public DateTime? ConstituentStatusDate { get; set; }
 
         public Guid? ConstituentTypeId { get; set; }
 
@@ -82,7 +83,7 @@ namespace DDI.Shared.Models.Client.CRM
         [MaxLength(128)]
         public string LastName { get; set; }
 
-        public int? MaritalStatus { get; set; }
+        public Guid? MaritalStatusId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? MarriageDate { get; set; }
@@ -139,7 +140,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         public int? YearEstablished { get; set; }
 
-        // Navigation Properties
+        #region Navigation Properties
 
         public ClergyStatus ClergyStatus { get; set; }
         public ClergyType ClergyType { get; set; }
@@ -149,6 +150,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Gender Gender { get; set; }
         public IncomeLevel IncomeLevel { get; set; }
         public Language Language { get; set; }
+        public MaritalStatus MaritalStatus { get; set; }
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
@@ -167,6 +169,9 @@ namespace DDI.Shared.Models.Client.CRM
 
         [InverseProperty(nameof(Relationship.Constituent2))]
         public ICollection<Relationship> Relationship2s { get; set; }
+        #endregion
+
+        #region NotMapped Properties
 
         [NotMapped]
         public override string DisplayName
@@ -176,6 +181,7 @@ namespace DDI.Shared.Models.Client.CRM
                 return FormattedName;
             }
         }
+        #endregion
 
         #endregion Public Properties
 

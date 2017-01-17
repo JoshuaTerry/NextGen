@@ -73,7 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\EntityTypeAttribute.cs" />
     <Compile Include="DataResponse.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
@@ -108,7 +107,6 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
-    <Compile Include="Models\ILinkedEntityCollection.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -160,7 +158,6 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\IEntity.cs" />
-    <Compile Include="Models\LinkedEntityCollection.cs" />
     <Compile Include="ModuleInfo\Accounting.cs" />
     <Compile Include="ModuleInfo\AccountsPayable.cs" />
     <Compile Include="ModuleInfo\AccountsReceivable.cs" />
@@ -199,7 +196,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

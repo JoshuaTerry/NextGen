@@ -7,13 +7,13 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomField")]
-    public class CustomField : IEntity
+    public class CustomField : EntityBase
     {
         #region Properties
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
         public string LabelText { get; set; }
         public string MinValue { get; set; }
         public string MaxValue { get; set; }
@@ -29,7 +29,7 @@ namespace DDI.Shared.Models.Client.Core
         public CustomFieldData Answer { get; set; }
 
         [NotMapped]
-        public string DisplayName { get; set; }
+        public override string DisplayName { get;  }
 
         #endregion
     }

@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("SectionPreference")]
-    public class SectionPreference : IEntity
+    public class SectionPreference : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
         [MaxLength(128)]
         public string SectionName { get; set; }
         [MaxLength(128)]
         public string Name { get; set; }
         [MaxLength(256)]
-        public object Value { get; set; }
-
-        public string DisplayName { get; set; }
+        public string Value { get; set; }
+        public bool IsShown { get; set; }       
     }
 }

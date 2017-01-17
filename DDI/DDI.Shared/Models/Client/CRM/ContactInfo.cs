@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using DDI.Shared.Attributes;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("ContactInfo"), EntityType("CRM_ContactInfo")]
+    [Table("ContactInfo")]
     public class ContactInfo : EntityBase
     {
         #region Public Properties
@@ -23,11 +22,19 @@ namespace DDI.Shared.Models.Client.CRM
         public string Comment { get; set; }
 
         public Guid? ConstituentId { get; set; }
-        public Guid? ContactTypeId { get; set; }        
+        public Guid? ContactTypeId { get; set; }
+        public Guid? ParentContactId { get; set; }
 
-        // Navigation Properties
+        #region Navigation Properties
+
         public Constituent Constituent { get; set; }
         public ContactType ContactType { get; set; }
+        public ContactInfo ParentContact { get; set; }
+
+        [InverseProperty(nameof(ParentContact))]
+        public ICollection<ContactInfo> ChildContacts { get; set; }
+
+        #endregion
 
         #endregion Public Properties
     }

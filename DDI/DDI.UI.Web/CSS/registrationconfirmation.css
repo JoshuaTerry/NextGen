@@ -1,0 +1,4 @@
+﻿
+.registrationconfirmation { width: 600px; background-color: white; margin: 250px auto 0 auto; padding: 20px; border: solid 2px #0f75b4; border-radius: 10px; }
+.registrationconfirmation h1 { color: #0f75b4; }
+.registrationconfirmation .timer { font-weight: bold; display: inline-block; width: 13px; text-align: right; }
