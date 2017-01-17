@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Common;
+using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;

@@ -192,6 +192,29 @@ namespace DDI.Data
             return repository;
         }
 
+        public IRepository<T> GetCachedRepository<T>() where T : class 
+        {
+            IRepository<T> repository = null;
+
+            var type = typeof(T);
+
+            if (!_repositories.ContainsKey(type))
+            {
+                DbContext context = GetContext(type);
+
+                // Create a repository, then add it to the dictionary.
+                repository = new CachedRepository<T>(context);
+
+                _repositories.Add(type, repository);
+            }
+            else
+            {
+                // Repository already exists...
+                repository = _repositories[type] as IRepository<T>;
+            }
+
+            return repository;
+        }
 
         /// <summary>
         /// Get (create if necessary) the correct DbContext for a given entity type.

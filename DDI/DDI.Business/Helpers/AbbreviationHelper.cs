@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Caching;
 using DDI.Data;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
 using DDI.Shared;
+using DDI.Shared.Caching;
 
-namespace DDI.Business.Common
+namespace DDI.Business.Helpers
 {
     /// <summary>
     /// Class for abbreviating and expanding words in strings and providing a cached list of abbreviations.
@@ -19,7 +19,7 @@ namespace DDI.Business.Common
         #region Private Fields
 
         private const string ABBREVIATIONS_KEY = "ABBR";
-        private const int ABBREVIATIONS_TIMEOUT = 60;
+        private const int ABBREVIATIONS_TIMEOUT = 3600;
 
         private static IEnumerable<string> _suffixesWithPeriods, _prefixesWithPeriods, _numericSuffixes, _directionals;
 
@@ -52,25 +52,34 @@ namespace DDI.Business.Common
         /// </summary>
         public static IList<Abbreviation> GetAbbreviations(IUnitOfWork uow)
         {
-            ObjectCache cache = MemoryCache.Default;
-            IList<Abbreviation> list = cache[ABBREVIATIONS_KEY] as IList<Abbreviation>;
-            if (list == null)
-            {
-                if (uow != null)
-                {
-                    list = uow.GetEntities<Abbreviation>().ToList();
-                }
-                else
-                {
-                    using (var context = new UnitOfWorkEF())
-                    {
-                        list = context.GetEntities<Abbreviation>().ToList();
-                    }
-                }
-                cache.Set(ABBREVIATIONS_KEY, list, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(ABBREVIATIONS_TIMEOUT) });
-            }
-
+            // Cannot use CachedRepository because we don't want to create static reference to a cached repository.
+            IList<Abbreviation> list = CacheHelper.GetEntry(ABBREVIATIONS_KEY, ABBREVIATIONS_TIMEOUT, false,
+                () => GetAbbreviationsFromDatabase(uow), null);
             return list;
+        }
+
+        /// <summary>
+        /// Provide a set of abbreviations.  This method is only intended to be called by the unit testing infrastructure.
+        /// </summary>
+        /// <param name="abbreviations"></param>
+        public static void SetAbbreviations(IEnumerable<Abbreviation> abbreviations)
+        {
+            CacheHelper.SetEntry(ABBREVIATIONS_KEY, abbreviations.ToList(), ABBREVIATIONS_TIMEOUT, false, null);
+        }
+
+        private static IList<Abbreviation> GetAbbreviationsFromDatabase(IUnitOfWork uow)
+        {
+            if (uow != null)
+            {
+                return uow.GetEntities<Abbreviation>().ToList();
+            }
+            else
+            {
+                using (var context = new UnitOfWorkEF())
+                {
+                    return context.GetEntities<Abbreviation>().ToList();
+                }
+            }
         }
 
         /// <summary>

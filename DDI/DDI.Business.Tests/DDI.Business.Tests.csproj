@@ -61,6 +61,7 @@
     <Compile Include="Common\ZipLookupTest.cs" />
     <Compile Include="Core\ConfigurationLogicTest.cs" />
     <Compile Include="Core\ConfigurationBaseTest.cs" />
+    <Compile Include="Helpers\AbbreviationHelperTest.cs" />
     <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
