@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +46,10 @@
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
+    <Compile Include="CRM\ModuleInfo\Base\ModuleInfoConcrete.cs" />
+    <Compile Include="CRM\ModuleInfo\Base\ModuleInfoBase.cs" />
+    <Compile Include="CRM\ModuleInfo\Base\ModuleTypeAttribute.cs" />
+    <Compile Include="CRM\ModuleInfo\ModuleInfoCreator.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />
     <Compile Include="CRM\ConstituentLogic.cs" />
     <Compile Include="CRM\LabelFormattingOptions.cs" />
