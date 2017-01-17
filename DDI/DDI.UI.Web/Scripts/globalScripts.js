@@ -331,6 +331,29 @@ function GetAutoZipData(data) {
 
 }
 
+function RegionSelection() {
+
+    $('.region1').change(function () {
+
+        // Load Region 2
+
+    });
+
+    $('.region2').change(function () {
+
+        // Load Region 3
+
+    });
+
+    $('.region3').change(function () {
+
+        // Load Region 4
+
+    });
+
+}
+
+
 // EDITING
 //
 function CreateEditControls() {
@@ -533,8 +556,6 @@ function CancelEdit() {
 
     RefreshEntity();
 }
-
-    
 //
 // END EDITING
 

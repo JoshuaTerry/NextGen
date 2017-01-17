@@ -141,48 +141,76 @@
                 <fieldset>
                     <legend>Primary Address</legend>
 
-                    <div>
-                        <div class="fieldblock">
-                            <label>Address Type</label>
-                            <select class="nc-AddressType"></select>
+                    <div class="threecolumn">
+
+                        <div>
+                            <div class="fieldblock">
+                                <label>Address Type</label>
+                                <select class="nc-AddressType"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Address Line 1</label>
+                                <input type="text" class="nc-AddressLine1" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Address Line 2</label>
+                                <input type="text" class="nc-AddressLine2" />
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Address Line 1</label>
-                            <input type="text" class="nc-AddressLine1" />
+                        <div>
+
+                            <div class="fieldblock">
+                                <label>Postal Code</label>
+                                <input type="text" class="nc-PostalCode autozip" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Country</label>
+                                <select class="nc-Country autocountry"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>State</label>
+                                <select class="nc-State autostate"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>City</label>
+                                <input type="text" class="nc-City autocity" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>County</label>
+                                <select class="nc-County autocounty"></select>
+                            </div>
+
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Address Line 2</label>
-                            <input type="text" class="nc-AddressLine2" />
-                        </div>
-                    </div>
+                        <div>
 
-                    <div class="inline">
+                            <div class="fieldblock">
+                                <label>Region 1</label>
+                                <select class="nc-region1"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Postal Code</label>
-                            <input type="text" class="nc-PostalCode autozip" style="width: 75px;" />
-                        </div>
+                            <div class="fieldblock">
+                                <label>Region 2</label>
+                                <select class="nc-region2"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Country</label>
-                            <select class="nc-Country autocountry" style="width: 150px;"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Region 3</label>
+                                <select class="nc-region3"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>State</label>
-                            <select class="nc-State autostate" style="width: 150px;"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Region 4</label>
+                                <select class="nc-region4"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>City</label>
-                            <input type="text" class="nc-City autocity" style="width: 150px;" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>County</label>
-                            <select class="nc-County autocounty" style="width: 150px;"></select>
                         </div>
 
                     </div>
