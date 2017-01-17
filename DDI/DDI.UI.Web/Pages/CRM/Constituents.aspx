@@ -560,7 +560,7 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Addres Type</label>
+                <label>Address Type</label>
                 <select class="na-AddressType"></select>
             </div>
 
@@ -581,13 +581,13 @@
 
             <div class="inline">
                 <div class="fieldblock">
-                    <label>City</label>
-                    <input type="text" class="na-City" />
+                    <label style="width: 100px;">City</label>
+                    <input type="text" class="na-City" style="width: 85px;" />
                 </div>
 
                 <div class="fieldblock">
-                    <label>St</label>
-                    <select class="na-State"></select>
+                    <label style="width: 25px;">St</label>
+                    <select class="na-State" style="width: 106px;"></select>
                 </div>
             </div>
 
@@ -597,22 +597,22 @@
             </div>
 
             <div class="fieldblock">
-                <label>Region</label>
+                <label>Region 1</label>
                 <select class="na-Region1"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Region</label>
+                <label>Region 2</label>
                 <select class="na-Region2"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Region</label>
+                <label>Region 3</label>
                 <select class="na-Region3"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Region</label>
+                <label>Region 4</label>
                 <select class="na-Region4"></select>
             </div>
 
@@ -625,13 +625,17 @@
                 <legend>Address Options</legend>
 
                 <div class="fieldblock">
+                    <label>Is Preferred</label>
                     <input type="checkbox" class="na-IsPreferred" />
-                    <span>Is Preferred</span>
                 </div>
 
                 <div class="fieldblock">
                     <label>Residency</label>
-                    <select class="na-Residency"></select>
+                    <select class="na-Residency">
+                        <option value="0">Primary</option>
+                        <option value="1">Secondary</option>
+                        <option value="2">Separate</option>
+                    </select>
                 </div>
 
                 <div class="fieldblock">
@@ -642,7 +646,7 @@
                 <div class="fieldblock range">
                     <label>Dates</label>
                     <input type="text" class="na-FromDate datepicker" />
-                    to
+                    <span>to</span>
                     <input type="text" class="na-ToDate datepicker" />
                 </div>
 

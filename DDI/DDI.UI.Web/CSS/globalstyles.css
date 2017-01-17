@@ -84,7 +84,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; border-radius: 5px; }
 .ui-dialog-titlebar { background-color: #0f75b4; color: white; }
 
-.modalcontent {  }
+.modalcontent { margin-top: 10px; }
 .modalcontent fieldset { margin-bottom: 10px; }
 .modalcontent div.inline { margin-bottom: 5px; }
 

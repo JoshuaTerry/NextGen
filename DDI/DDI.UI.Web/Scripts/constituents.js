@@ -12,24 +12,12 @@ $(document).ready(function () {
     });
 
     if (sessionStorage.getItem('constituentnumber')) {
-        GetConstituentData(parseInt(sessionStorage.getItem('constituentnumber')));
+        GetConstituentData(sessionStorage.getItem('constituentnumber'));
 
         sessionStorage.removeItem('constituentnumber');
     }
 
-    $('.newaddressmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        $('.newaddressmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            height: 800,
-            resizable: false
-        });
-
-    });
+    NewAddressModal();
 
 });
 
@@ -59,7 +47,7 @@ function LoadDropDowns() {
 function GetConstituentData(id) {
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituents/number/' + id,
+        url: WEB_API_ADDRESS + 'constituents/' + id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -259,6 +247,51 @@ function LoadPaymentPreferencesTable() {
             DisplayConstituent(info.values[0]);
         }
     });
+
+}
+
+function NewAddressModal() {
+
+    $('.newaddressmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.newaddressmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            height: 600,
+            resizable: false
+        });
+
+    });
+
+    LoadNewAddressModalDropDowns();
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savenewaddress').click(function () {
+
+
+
+    });
+
+}
+
+function LoadNewAddressModalDropDowns() {
+
+    // PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
+    PopulateDropDown('.na-AddressType', 'addresstypes', '', '');
+    PopulateDropDown('.na-Country', 'countries', '', ''); // needs to load states
+    PopulateDropDown('.na-State', 'states', '', ''); // needs to load counties
+    PopulateDropDown('.na-County', 'counties', '', '');
+    PopulateDropDown('.na-Region1', 'regions', '', ''); // needs to load region2
 
 }
 
