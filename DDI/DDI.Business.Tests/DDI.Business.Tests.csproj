@@ -59,6 +59,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\ZipLookupTest.cs" />
+    <Compile Include="Core\ConfigurationLogicTest.cs" />
+    <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +73,7 @@
       <Name>DDI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
-      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
   </ItemGroup>

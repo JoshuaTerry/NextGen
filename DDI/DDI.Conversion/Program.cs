@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 
 using DDI.Data;
 using DDI.Conversion;
-using DDI.Data.Models.Client;
 using System.Data.Entity.Migrations;
 using log4net;
-using DDI.Conversion.CRM;
 
 namespace DDI.Conversion
 {
     class Program
     {
 
-
+        private static string _filePath;
+        private static List<ConversionMethodArgs> _methodsToRun;
 
         static void Main(string[] args)
         {
@@ -41,16 +40,39 @@ namespace DDI.Conversion
             else
             {
                 organization = "NG";
-                minCount = 0;
-                maxCount = 999999;
+                minCount = 79000;
+                maxCount = int.MaxValue;
             }
 
             log4net.Config.XmlConfigurator.Configure();
 
-            string filePath = @"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data";
+            _filePath = Path.Combine(@"\\ddifs2\ddi\DDI\Dept 00 - Common\Projects\NextGen\Conversion\Data", organization);
+            _methodsToRun = new List<ConversionMethodArgs>()
+            {
+               
+            };
 
-            LoadDataCRM.ExecuteCRMLoad(organization, filePath, minCount, maxCount);
+            //Run<Core.Initialize>();
 
+            //Run<CRM.Initialize>();
+            //Run<CRM.SettingsLoader>();
+
+            Run<CRM.ConstituentLoader>(new ConversionMethodArgs(CRM.ConstituentLoader.ConversionMethod.Individuals, 79000, 0));
+        }
+
+        private static void Run<T>() where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, _methodsToRun);
+        }
+
+        private static void Run<T>(IEnumerable<ConversionMethodArgs> methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, methodsToRun);
+        }
+
+        private static void Run<T>(ConversionMethodArgs methodsToRun) where T : ConversionBase, new()
+        {
+            new T().Execute(_filePath, new List<ConversionMethodArgs>() { methodsToRun });
         }
 
     }

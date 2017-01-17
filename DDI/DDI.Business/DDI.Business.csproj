@@ -41,12 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
+    <Compile Include="CRM\AddressCategory.cs" />
+    <Compile Include="CRM\RelationshipLogic.cs" />
+    <Compile Include="CRM\ConstituentLogic.cs" />
+    <Compile Include="CRM\LabelFormattingOptions.cs" />
+    <Compile Include="CRM\LabelRecipient.cs" />
+    <Compile Include="CRM\NameFormatter.cs" />
+    <Compile Include="CRM\NameFormattingOptions.cs" />
     <Compile Include="Core\ConfigurationBase.cs" />
     <Compile Include="Core\ConfigurationLogic.cs" />
     <Compile Include="EntityLogicBase.cs" />
-    <Compile Include="CRM\ConstituentLogic.cs" />
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -140,14 +140,14 @@ namespace DDI.Business.Core
                 {
                     // Enum properties
                     valString = ((int)(prop.GetValue(config))).ToString();
-                }
+                }                
                 else if (propType.IsPrimitive || propType.IsValueType)
                 {
                     // Primitive and value types
-                    var converter = TypeDescriptor.GetConverter(propType);
+                    var converter = TypeDescriptor.GetConverter(propType);                    
                     try
                     {
-                        valString = converter.ConvertToString(prop.GetValue(config));
+                        valString = converter.ConvertToInvariantString(prop.GetValue(config));
                     }
                     catch
                     {
@@ -245,7 +245,7 @@ namespace DDI.Business.Core
                             try
                             {
                                 var converter = new EnumConverter(propType);
-                                prop.SetValue(config, converter.ConvertFrom(valString));                                
+                                prop.SetValue(config, converter.ConvertFromInvariantString(valString));                                
                             }
                             catch
                             {

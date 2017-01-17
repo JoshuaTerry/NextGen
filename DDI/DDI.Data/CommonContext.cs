@@ -31,10 +31,12 @@ namespace DDI.Data
         public CommonContext()
 			: base("name=CommonContext")
 		{
-		}
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
+        }
 
         #endregion Public Constructors
-    
+
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
