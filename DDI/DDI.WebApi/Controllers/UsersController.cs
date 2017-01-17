@@ -141,7 +141,7 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
 
-                var patchObject = new PatchUpdate<ApplicationUser>();
+                var patchObject = new PatchUpdateUser<ApplicationUser>();
                 patchObject.UpdateUser(Guid.Parse(id), userPropertiesChanged);
             }
             catch (Exception)

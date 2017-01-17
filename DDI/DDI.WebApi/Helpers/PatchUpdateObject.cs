@@ -12,18 +12,18 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Helpers
 {
-    public class PatchUpdate<T>
+    public class PatchUpdateUser<T>
         where T : class
     {
         private DbContext _context;
 
 
-        public PatchUpdate()
-            : this(new DomainContext())
+        public PatchUpdateUser()
+            : this(new ApplicationDbContext())
         {
         }
 
-        public PatchUpdate(DbContext context)
+        public PatchUpdateUser(DbContext context)
         {
             _context = context;
         }
@@ -42,19 +42,14 @@ namespace DDI.WebApi.Helpers
             UpdateChangedProperties(item, changedProperties);
         }
 
-        private Type ConvertToType<T>(string property)
+        private Type ConvertToType<TProperty>(string property)
         {
-            Type classType = typeof(T);
+            Type classType = typeof(TProperty);
 
             var propertyType = classType.GetProperty(property).PropertyType;
 
             return propertyType;
         }
-
-        //public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
-        //{
-        //    return UpdateChangedProperties(id, propertyValues, action);
-        //}
 
         public virtual int UpdateChangedProperties(ApplicationUser entity, IDictionary<string, object> propertyValues)
         {
