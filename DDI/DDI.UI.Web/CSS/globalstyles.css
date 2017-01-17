@@ -41,18 +41,6 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .topnav ul li ul li { margin: 0px; }
 #mainmenu a.static { padding: 0 15px !important; }
 
-.login { width: 300px; margin: 10% auto 0 auto; background-color: white; padding: 45px 20px 20px 20px; border: solid 2px #0f75b4; border-radius: 10px; box-shadow: 0px 3px 10px #999999; }
-.login div.buttons { width: 82%; text-align: right; }
-.login div.buttons input {  }
-.login div.fieldblock { margin-bottom: 25px; }
-.login div.fieldblock label { width: 29%; text-align: right; margin-right: 3px; font-weight: bold; font-size: 14px; }
-.login div.fieldblock input,
-.login div.fieldblock select { width: 55%; }
-.login div.forgotpassword { text-align: center; margin: 20px 0 0 0; }
-.forgotpasswordmodal div.modalcontent { padding: 20px; }
-.forgotpasswordmodal div.modalcontent div.fieldblock input { display: inline-block; width: 70%; }
-.forgotpasswordmodal div.modalcontent div.fieldblock label.inline { display: inline-block; width: 14%; text-align: right; margin-right: 5px; font-weight: bold; }
-
 .maincontainer { width: 100%; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; }
@@ -79,6 +67,8 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .accordion-buttons { text-align: right; }
 .accordion-buttons a { display: inline-block; padding: 3px 5px; color: #0f75b4; }
 
+.dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
+
 /* EDIT CONTROLS */
 .editcontainer {  }
 .editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }
@@ -88,42 +78,6 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .editmode-active { display: none; }
 /* END EDIT CONTROLS */
 
-
-/* SEARCH SCREEN */
-/*.dx-datagrid-table { width: 100%; border-collapse: collapse; }
-.dx-header-row td:hover { cursor: pointer; }
-.dx-data-row { margin: 0px; padding: 0px 3px; }
-.dx-data-row { padding: 3px 0px; }*/
-.dx-data-row:hover { background-color: #cccccc; cursor: pointer; }
-
-.searchcriteria { width: 15%; display: inline-block; margin: 10px 0 0 1%; vertical-align: top; }
-.searchcriteria div.fieldblock input,
-.searchcriteria div.fieldblock select { width: 100%; }
-.searchcriteria div.buttons { margin-top: 10px; }
-
-.searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
-.searchresults div.scrollable { width: 100%; }
-/* END SEARCH SCREEN */
-
-
-/* CONSTIUENT SCREEN */
-.constituentcontainer { margin-top: 10px; vertical-align: top; }
-.constituentcontainer h1 { margin: 0px; padding: 5px; color: #333333; background-color: #cccccc; font-size: 14px; }
-
-.constituenttopinfo { padding: 1em 2.2em; }
-.constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
-.constituentpic { height: 150px; }
-.constituentpic img { height: 150px; }
-.constituentinformation { height: 175px; }
-.constituentinformation div { padding: 5px; margin-bottom: 10px; }
-.constituentinformation div label { display: block; text-align: left; }
-
-.constituentrealtionships { height: 175px; }
-.constituentname { font-weight: bold; text-align: center; }
-.constituenttags { width: 100%; }
-
-.dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
-/* END CONSTIUENT SCREEN */
 
 
 /* MODAL CONTENT */
@@ -139,29 +93,4 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .modalbuttons a { color: #0f75b4; }
 /* END MODAL CONTENT */
 
-
-
-
-/* SYSTEM SETTINGS */
-
-.systemsettings {  }
-.systemsettings div.ui-accordion-content { padding: 0px; }
-.systemsettings div.left-accordions { width: 12%; }
-.systemsettings div.left-accordions ul { list-style: none; margin: 0px; padding: 0px; }
-.systemsettings div.left-accordions ul li {  }
-.systemsettings div.left-accordions ul li a { display: block; text-decoration: none; padding: 3px 8px; }
-.systemsettings div.left-accordions ul li a:hover { text-decoration: none; background-color: #999999; color: white; }
-.systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
-
-/* END SYSTEM SETTINGS */
-
-
-
-/* REGISTRATION CONFIRMATION */
-
-.registrationconfirmation { width: 600px; background-color: white; margin: 250px auto 0 auto; padding: 20px; border: solid 2px #0f75b4; border-radius: 10px; }
-.registrationconfirmation h1 { color: #0f75b4; }
-.registrationconfirmation .timer { font-weight: bold; display: inline-block; width: 13px; text-align: right; }
-
-/* END REGISTRATION CONFIRMATION */
 

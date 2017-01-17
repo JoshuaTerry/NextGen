@@ -1,15 +1,14 @@
-using DDI.Shared.Attributes;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("CRM_Constituent")]
+    [Table("Constituent")]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties        
