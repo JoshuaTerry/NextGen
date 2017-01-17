@@ -17,6 +17,20 @@ $(document).ready(function () {
         sessionStorage.removeItem('constituentnumber');
     }
 
+    $('.newaddressmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        $('.newaddressmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            height: 800,
+            resizable: false
+        });
+
+    });
+
 });
 
 function Resize() {

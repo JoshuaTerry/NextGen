@@ -349,7 +349,45 @@
                     <h1>Contact Information (Not Implemented Yet)</h1>
                     <div>
 
+                        <div class="accordions">
 
+                            <h1>Addresses</h1>
+                            <div>
+                                <a href="#" class="newaddressmodallink">New</a>
+                                <div class="constituentaddressgridcontainer"></div>
+                            </div>
+
+                            <h1>Phone Numbers</h1>
+                            <div>
+                                <div class="constituentphonegridcontainer"></div>
+                            </div>
+
+                            <h1>Emails</h1>
+                            <div>
+                                <div class="constituentemailgridcontainer"></div>
+                            </div>
+
+                            <h1>Web Sites</h1>
+                            <div>
+                                <div class="constituentwebsitegridcontainer"></div>
+                            </div>
+
+                            <h1>Point of Contact</h1>
+                            <div>
+                                <div class="constituentpocgridcontainer"></div>
+                            </div>
+
+                            <h1>Social Media</h1>
+                            <div>
+                                <div class="constituentsocmedgridcontainer"></div>
+                            </div>
+
+                            <h1>Other Contacts</h1>
+                            <div>
+                                <div class="constituentothergridcontainer"></div>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -511,6 +549,108 @@
         <div class="dashboard">
 
             <h1>Dashboard</h1>
+
+        </div>
+
+    </div>
+
+    <div class="newaddressmodal" title="New Address" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Addres Type</label>
+                <select class="na-AddressType"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Street</label>
+                <textarea class="na-street"></textarea>
+            </div>
+
+            <div class="fieldblock">
+                <label>Country</label>
+                <select class="na-Country"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Postal code</label>
+                <input type="text" class="na-PostalCode" />
+            </div>
+
+            <div class="inline">
+                <div class="fieldblock">
+                    <label>City</label>
+                    <input type="text" class="na-City" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>St</label>
+                    <select class="na-State"></select>
+                </div>
+            </div>
+
+            <div class="fieldblock">
+                <label>County</label>
+                <select class="na-County"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Region</label>
+                <select class="na-Region1"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Region</label>
+                <select class="na-Region2"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Region</label>
+                <select class="na-Region3"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Region</label>
+                <select class="na-Region4"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Phone</label>
+                <input type="text" class="na-Phone" />
+            </div>
+
+            <fieldset>
+                <legend>Address Options</legend>
+
+                <div class="fieldblock">
+                    <input type="checkbox" class="na-IsPreferred" />
+                    <span>Is Preferred</span>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Residency</label>
+                    <select class="na-Residency"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Comment</label>
+                    <input type="text" class="na-Comment" />
+                </div>
+
+                <div class="fieldblock range">
+                    <label>Dates</label>
+                    <input type="text" class="na-FromDate datepicker" />
+                    to
+                    <input type="text" class="na-ToDate datepicker" />
+                </div>
+
+            </fieldset>
+
+            <div class="modalbuttons">
+                <input type="button" class="savenewaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
 
         </div>
 
