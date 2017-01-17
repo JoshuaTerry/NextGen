@@ -39,7 +39,7 @@
         <div class="tabscontainer">
 
             <ul>
-                <li><a href="#tab-individual">Individual</a></li>
+                <li><a href="#tab-individual">Main</a></li>
                 <li><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
@@ -220,6 +220,45 @@
                         </div>
 
                         <div class="educationleveltable"></div>
+                    </div>
+
+                    <h1>Organization</h1>
+                    <div class="editcontainer">
+
+                        <div class="inline">
+                            <div class="fieldblock">
+                                <label>Membership</label>
+                                <input type="text" class="editable MembershipCount" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Year Established</label>
+                                <input type="text" class="editable YearEstablished" />
+                            </div>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Business</label>
+                            <input type="text" class="editable Business" />
+                        </div>
+
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Tax Exempt</label>
+                                <input type="checkbox" class="editable IsTaxExempt" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Verify Date</label>
+                                <input type="text" class="editable TaxExemptVerifyDate datepicker" />
+                            </div>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>IRS Letter Received</label>
+                            <input type="checkbox" class="editable IsIRSLetterReceived" />
+                        </div>
+
                     </div>
 
                     <h1>Payment Preferences (Not Implemented Yet)</h1>
