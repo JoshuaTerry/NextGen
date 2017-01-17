@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using DDI.Shared.Attributes;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("ContactInfo"), EntityType("CRM_ContactInfo")]
+    [Table("ContactInfo")]
     public class ContactInfo : EntityBase
     {
         #region Public Properties

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Common;
+using DDI.Business.Core;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -17,8 +19,7 @@ namespace DDI.Business.CRM
     /// </summary>
     public class NameFormatter
     {
-        private const string DEFAULT_NAME_FORMAT = "{P}{F}{MI}{L}{S}";
-
+       
         private enum Macro
         {
             None = 0, Prefix, First, Middle, Last, FI, MI, LI, Suffix, Nickname, Name, Full, Mr, Madam, Brother, His, And, Unknown
@@ -56,9 +57,10 @@ namespace DDI.Business.CRM
             UnitOfWork = uow;
             uow.AddBusinessLogic(this);
 
-            var indivType = uow.FirstOrDefault<ConstituentType>(p => p.Code == "I");
+            var individualType = uow.FirstOrDefault<ConstituentType>(p => p.Code == ConstituentTypeCodes.Individual);
 
-            _defaultIndividualNameFormat = StringHelper.FirstNonBlank(indivType?.NameFormat, DEFAULT_NAME_FORMAT);
+            string defaultFormat = $"{{{NameFormatMacros.Prefix}}}{{{NameFormatMacros.FirstName}}}{{{NameFormatMacros.MiddleInitial}}}{{{NameFormatMacros.LastName}}}{{{NameFormatMacros.Suffix}}}";
+            _defaultIndividualNameFormat = StringHelper.FirstNonBlank(individualType?.NameFormat, defaultFormat);
         }
 
         #endregion
@@ -74,32 +76,32 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Format a sortable name for an individual:  Last First Middle
         /// </summary>
-        public string FormatIndividualSortName(Constituent name)
+        public string FormatIndividualSortName(Constituent constituent)
         {
-            return FormatIndividualSortName(ConvertToSimpleName(name));
+            return FormatIndividualSortName(ConvertToSimpleName(constituent));
         }
 
         /// <summary>
         /// Formats an individual name into a single string.
         /// </summary>
-        public string FormatIndividualName(Constituent name, string formatPattern)
+        public string FormatIndividualName(Constituent constituent, string formatPattern)
         {
-            return FormatIndividualName(ConvertToSimpleName(name), formatPattern);
+            return FormatIndividualName(ConvertToSimpleName(constituent), formatPattern);
         }
 
         /// <summary>
         /// Build name lines for one or two individual constituents.
         /// </summary>
-        public void BuildIndividualNameLines(Constituent name1, Constituent name2, LabelRecipient recipient, bool separate, bool omitPrefix, bool addFirstNames, int maxChars, out string line1, out string line2)
+        public void BuildIndividualNameLines(Constituent constituent1, Constituent constituent2, LabelRecipient recipient, bool separate, bool omitPrefix, bool addFirstNames, int maxChars, out string line1, out string line2)
         {
-            BuildIndividualNameLines(ConvertToSimpleName(name1), ConvertToSimpleName(name2), recipient, separate, omitPrefix, addFirstNames, maxChars, out line1, out line2);
+            BuildIndividualNameLines(ConvertToSimpleName(constituent1), ConvertToSimpleName(constituent2), recipient, separate, omitPrefix, addFirstNames, maxChars, out line1, out line2);
         }
 
 
         /// <summary>
         /// Build name lines for one or two constituents.
         /// </summary>
-        public void BuildNameLines(Constituent name1, Constituent name2, LabelFormattingOptions options, out string line1, out string line2)
+        public void BuildNameLines(Constituent constituent1, Constituent constituent2, LabelFormattingOptions options, out string line1, out string line2)
         {
             if (options == null)
             {
@@ -108,32 +110,32 @@ namespace DDI.Business.CRM
 
             Constituent spouse = null;
             LabelRecipient recipient = options.Recipient;
-
+            CRMConfiguration configuration = GetCRMConfiguration();
+            
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
-
             line1 = line2 = string.Empty;
 
             // For organizations, just return the constituent name.
-            ConstituentType ctype = name1.ConstituentType ?? UnitOfWork.GetReference(name1, p => p.ConstituentType);
-            if (ctype == null || ctype.Category == ConstituentCategory.Organization)
+            ConstituentType type = constituent1.ConstituentType ?? UnitOfWork.GetReference(constituent1, p => p.ConstituentType);
+            if (type == null || type.Category == ConstituentCategory.Organization)
             {
-                line1 = name1.Name;
-                line2 = name1.Name2;
+                line1 = constituent1.Name;
+                line2 = constituent1.Name2;
                 return;
             }
 
-            bool omitInactiveSpouse = !options.IncludeInactive; // TODO:  Need to include base CRM setting for this.
+            bool omitInactiveSpouse = configuration.OmitInactiveSpouse && !options.IncludeInactive;
 
             // Keep spouse separate based on salutation format.
-            bool keepSeparate = (name1.SalutationType == SalutationType.FormalSeparate || name1.SalutationType == SalutationType.InformalSeparate || options.KeepSeparate);
+            bool keepSeparate = (constituent1.SalutationType == SalutationType.FormalSeparate || constituent1.SalutationType == SalutationType.InformalSeparate || options.KeepSeparate);
 
             if (options.IsSpouse)
             {
-                spouse = name2;
+                spouse = constituent2;
             }
-            else if (name2 != null || recipient != LabelRecipient.Primary)
+            else if (constituent2 != null || recipient != LabelRecipient.Primary)
             {
-                spouse = constituentLogic.GetSpouse(name1);
+                spouse = constituentLogic.GetSpouse(constituent1);
             }
 
             if (spouse != null)
@@ -141,15 +143,15 @@ namespace DDI.Business.CRM
                 if (omitInactiveSpouse && constituentLogic.IsConstituentActive(spouse) == false)
                 {
                     // Spouse is inactive and should be omitted.
-                    if (name2 != null & spouse.Id == name2.Id)
+                    if (constituent2 != null & spouse.Id == constituent2.Id)
                     {
                         // Since name2 is the spouse, set it to null.
-                        name2 = null;
+                        constituent2 = null;
                     }
                     spouse = null;
                 }
                 // If primary & spouse have different last names...
-                else if (options.IsSpouse && string.Compare(name1.LastName, spouse.LastName, true) != 0)
+                else if (options.IsSpouse && string.Compare(constituent1.LastName, spouse.LastName, true) != 0)
                 {
                     // ... treat const2 as a separate constituent and not a spouse.
                     recipient = LabelRecipient.Primary;
@@ -162,41 +164,41 @@ namespace DDI.Business.CRM
                         (spouse.SalutationType == SalutationType.FormalSeparate || spouse.SalutationType == SalutationType.InformalSeparate);
                 }
             }
-
+            
             // If spouse is name2, ignore name2 and change recipient to "Both".
-            if (spouse != null && name2 != null && spouse.Id == name2.Id)
+            if (spouse != null && constituent2 != null && spouse.Id == constituent2.Id)
             {
-                name2 = null;
+                constituent2 = null;
                 if (recipient == LabelRecipient.Primary)
                 {
                     recipient = LabelRecipient.Both;
                 }
             }
 
-            bool addFirstNames = options.AddFirstNames;  // TODO:  Need to include base CRM setting for this.
+            bool addFirstNames = options.AddFirstNames || configuration.AddFirstNamesToSpouses;
 
             // Use BuildIndividualNames to get the name lines for teh individual and spouse (which may be null)
-            BuildIndividualNameLines(name1, spouse, recipient, keepSeparate, options.OmitPrefix, addFirstNames, options.MaxChars, out line1, out line2);
+            BuildIndividualNameLines(constituent1, spouse, recipient, keepSeparate, options.OmitPrefix, addFirstNames, options.MaxChars, out line1, out line2);
 
             // Try to add the second name line if we can
             if (string.IsNullOrWhiteSpace(line2))
             {
-                if (name2 != null)
+                if (constituent2 != null)
                 {
-                    ConstituentType ctype2 = name2.ConstituentType ?? UnitOfWork.GetReference(name2, p => p.ConstituentType);
-                    if (ctype2 == null || ctype.Category == ConstituentCategory.Organization)
+                    ConstituentType ctype2 = constituent2.ConstituentType ?? UnitOfWork.GetReference(constituent2, p => p.ConstituentType);
+                    if (ctype2 == null || type.Category == ConstituentCategory.Organization)
                     {
-                        line2 = name2.Name;
+                        line2 = constituent2.Name;
                     }
                     else
                     {
                         string temp;
-                        BuildIndividualNameLines(name2, null, LabelRecipient.Primary, false, options.OmitPrefix, addFirstNames, options.MaxChars, out line2, out temp);
+                        BuildIndividualNameLines(constituent2, null, LabelRecipient.Primary, false, options.OmitPrefix, addFirstNames, options.MaxChars, out line2, out temp);
                     }
                 }
                 else
                 {
-                    line2 = name1.Name2;
+                    line2 = constituent1.Name2;
                 }
             }
         }
@@ -204,45 +206,45 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Build an addres label for one or two constituents.
         /// </summary>
-        public List<string> BuildAddressLabel(Constituent name1, Constituent name2, Address address, LabelFormattingOptions opts)
+        public List<string> BuildAddressLabel(Constituent constituent1, Constituent constituent2, Address address, LabelFormattingOptions options)
         {
             List<string> label = new List<string>();
             string line1, line2;
 
-            if (opts == null)
-                opts = new LabelFormattingOptions();
+            if (options == null)
+                options = new LabelFormattingOptions();
 
             // Get options
-            AddressCategory addrMode = opts.AddressCategory;
-            string contactName = opts.ContactName;
+            AddressCategory addressMode = options.AddressCategory;
+            string contactName = options.ContactName;
 
 
             string nameLine2 = string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(opts.AddressType))
+            if (!string.IsNullOrWhiteSpace(options.AddressType))
             {
-                addrMode = AddressCategory.None;
+                addressMode = AddressCategory.None;
             }
 
-            if (name1 != null)
+            if (constituent1 != null)
             {
-                BuildNameLines(name1, name2, opts, out line1, out line2);
+                BuildNameLines(constituent1, constituent2, options, out line1, out line2);
 
                 // Remove name2 from the result if it's in Line2.
-                if (!string.IsNullOrWhiteSpace(name1.Name2) && string.Compare(line2, name1.Name2, true) == 0)
+                if (!string.IsNullOrWhiteSpace(constituent1.Name2) && string.Compare(line2, constituent1.Name2, true) == 0)
                 {
                     line2 = string.Empty;
                 }
 
-                nameLine2 = name1.Name2 ?? string.Empty;
+                nameLine2 = constituent1.Name2 ?? string.Empty;
 
-                if (opts.Caps)
+                if (options.Caps)
                 {
                     line1 = line1.ToUpper();
                     line2 = line2.ToUpper();
                     nameLine2 = nameLine2.ToUpper();
                 }
-                if (opts.ExpandName)
+                if (options.ExpandName)
                 {
                     if (!string.IsNullOrWhiteSpace(line1))
                     {
@@ -268,7 +270,7 @@ namespace DDI.Business.CRM
                     label.Add(line2);
                 }
 
-                if (!string.IsNullOrWhiteSpace(contactName) && opts.Caps)
+                if (!string.IsNullOrWhiteSpace(contactName) && options.Caps)
                 {
                     contactName = contactName.ToUpper();
                 }
@@ -284,6 +286,12 @@ namespace DDI.Business.CRM
         #endregion
 
         #region Private Methods
+
+        private CRMConfiguration GetCRMConfiguration()
+        {
+            var configurationLogic = UnitOfWork.GetBusinessLogic<ConfigurationLogic>();
+            return configurationLogic.GetConfiguration<CRMConfiguration>();
+        }
 
         /// <summary>
         /// Format a sortable name for an individual:  Last First Middle
@@ -434,7 +442,7 @@ namespace DDI.Business.CRM
         /// </summary>
         private string FormatIndividualName(SimpleName name, IList<Token> formatTokens, IList<Token> patternTokens)
         {
-            StringBuilder rslt = new StringBuilder();
+            StringBuilder result = new StringBuilder();
 
             if (!IsTokenListEmpty(patternTokens))
             {
@@ -517,17 +525,17 @@ namespace DDI.Business.CRM
 
                 if (!string.IsNullOrEmpty(namePart))
                 {
-                    if (rslt.Length > 0 && !char.IsPunctuation(namePart[0]))
+                    if (result.Length > 0 && !char.IsPunctuation(namePart[0]))
                     {
                         // Append a space betweeen tokens unless this token starts with punctuation.
-                        rslt.Append(' ');
+                        result.Append(' ');
                     }
-                    rslt.Append(namePart);
+                    result.Append(namePart);
                 }
 
             } // Each token
 
-            return rslt.ToString();
+            return result.ToString();
         }
 
         /// <summary>
@@ -535,14 +543,14 @@ namespace DDI.Business.CRM
         /// </summary>
         private string FormatIndividualName(SimpleName name, IList<Token> formatTokens, IList<Token> patternTokens, IList<Token> shortPatternTokens, int maxChars)
         {
-            string rslt = FormatIndividualName(name, formatTokens, patternTokens);
+            string result = FormatIndividualName(name, formatTokens, patternTokens);
 
-            if (maxChars > 0 && rslt.Length > maxChars && shortPatternTokens != null)
+            if (maxChars > 0 && result.Length > maxChars && shortPatternTokens != null)
             {
-                rslt = FormatIndividualName(name, formatTokens, shortPatternTokens);
+                result = FormatIndividualName(name, formatTokens, shortPatternTokens);
             }
 
-            return rslt;
+            return result;
         }
 
         /// <summary>
@@ -626,15 +634,15 @@ namespace DDI.Business.CRM
             IList<Token> shortPatternTokens = null;
             IList<Token> spouseShortPatternTokens = null;
 
-            int prior1 = 3;
-            int prior2 = 3;
+            int priority1 = 3;
+            int priority2 = 3;
 
             if (!omitPrefix && name1.Prefix != null)
             {
 
                 patternTokens = TokenizeFormatString(name1.Prefix.LabelPrefix, true);
                 shortPatternTokens = TokenizeFormatString(name1.Prefix.LabelAbbreviation, true);
-                prior1 = GetPrefixPriority(name1.Prefix);
+                priority1 = GetPrefixPriority(name1.Prefix);
 
                 if (name1.Gender == null)
                     name1.Gender = UnitOfWork.GetReference(name1.Prefix, p => p.Gender);
@@ -646,7 +654,7 @@ namespace DDI.Business.CRM
                 {
                     spousePatternTokens = TokenizeFormatString(name2.Prefix.LabelPrefix, true);
                     spouseShortPatternTokens = TokenizeFormatString(name2.Prefix.LabelAbbreviation, true);
-                    prior2 = GetPrefixPriority(name2.Prefix);
+                    priority2 = GetPrefixPriority(name2.Prefix);
 
                     if (name2.Gender == null)
                         name2.Gender = UnitOfWork.GetReference(name2.Prefix, p => p.Gender);
@@ -713,7 +721,7 @@ namespace DDI.Business.CRM
                 formatTokens = spouseFormatTokens;
                 patternTokens = spousePatternTokens;
                 shortPatternTokens = spouseShortPatternTokens;
-                prior1 = prior2;
+                priority1 = priority2;
                 spousePatternTokens = null;
                 spouseFormatTokens = null;
                 name1 = new SimpleName(name2);
@@ -739,8 +747,8 @@ namespace DDI.Business.CRM
 
             if (!keepPosition)
             {
-                if (prior2 < prior1 ||
-                    (prior2 == prior1 && gender2 == "M" && gender1 != "M"))
+                if (priority2 < priority1 ||
+                    (priority2 == priority1 && gender2 == "M" && gender1 != "M"))
                 {
                     // Swap primary and secondary.
 
@@ -748,9 +756,9 @@ namespace DDI.Business.CRM
                     name1 = name2;
                     name2 = tempName;
 
-                    int priort = prior1;
-                    prior1 = prior2;
-                    prior2 = priort;
+                    int priort = priority1;
+                    priority1 = priority2;
+                    priority2 = priort;
 
                     var tempList = formatTokens;
                     formatTokens = spouseFormatTokens;
@@ -796,8 +804,8 @@ namespace DDI.Business.CRM
 
                     if (newPatternTokens.Any(p => p.NamePart == MacroNamePart.All))
                     {
-                        patternTokens = FormatDoublePrefix(newPatternTokens, formatTokens, spouseFormatTokens, out spousePatternTokens);
-                        shortPatternTokens = FormatDoublePrefix(newShortPatternTokens, formatTokens, spouseFormatTokens, out spouseShortPatternTokens);
+                        patternTokens = FormatPluralPrefix(newPatternTokens, formatTokens, spouseFormatTokens, out spousePatternTokens);
+                        shortPatternTokens = FormatPluralPrefix(newShortPatternTokens, formatTokens, spouseFormatTokens, out spouseShortPatternTokens);
                         combined = true;
                     }
                 }
@@ -815,7 +823,7 @@ namespace DDI.Business.CRM
 
             // Combine logic for all other cases.
             if (!combined && !separate &&
-                prior1 > 2 && prior2 > 2 &&
+                priority1 > 2 && priority2 > 2 &&
                 (keepPosition || ((!swapped && gender1 == "M") || (swapped && gender2 == "M"))) &&
                 string.Compare(name1.LastName, name2.LastName, true) == 0 &&
                 !IsTokenListEmpty(patternTokens) && // Primary prefix pattern is non-empty
@@ -899,9 +907,9 @@ namespace DDI.Business.CRM
         }
 
         /// <summary>
-        /// Logic for combining two identical prefixes for a constituent and their spouse.
+        /// Create a plural prefix by combining two identical prefixes for a constituent and their spouse.
         /// </summary>
-        private IList<Token> FormatDoublePrefix(IList<Token> patternTokens, IList<Token> formatTokens, IList<Token> spouseTokens, out IList<Token> spousePatternResult)
+        private IList<Token> FormatPluralPrefix(IList<Token> patternTokens, IList<Token> formatTokens, IList<Token> spouseTokens, out IList<Token> spousePatternResult)
         {
             IList<Token> result = new List<Token>();
             spousePatternResult = new List<Token>();
@@ -1122,73 +1130,75 @@ namespace DDI.Business.CRM
             }
         }
 
+
+
         private void AddMacroToken(IList<Token> list, string text)
         {
             Token token = new Token(text);
 
             switch (text.ToUpper().Trim())
             {
-                case "PREFIX":
-                case "P":
+                case NameFormatMacros.Prefix:
+                case "P": // Abbreviation
                     token.Macro = Macro.Prefix;
                     break;
-                case "FIRST":
-                case "F":
+                case NameFormatMacros.FirstName:
+                case "F": // Abbreviation
                     token.Macro = Macro.First;
                     token.NamePart = MacroNamePart.First;
                     break;
-                case "FI":
+                case NameFormatMacros.FirstInitial:
                     token.Macro = Macro.FI;
                     token.NamePart = MacroNamePart.First;
                     break;
-                case "MIDDLE":
-                case "M":
+                case NameFormatMacros.MiddleName:
+                case "M": // Abbreviation
                     token.Macro = Macro.Middle;
                     token.NamePart = MacroNamePart.Middle;
                     break;
-                case "MI":
+                case NameFormatMacros.MiddleInitial:
                     token.Macro = Macro.MI;
                     token.NamePart = MacroNamePart.Middle;
                     break;
-                case "LAST":
-                case "L":
+                case NameFormatMacros.LastName:
+                case "L": // Abbreviation
                     token.Macro = Macro.Last;
                     token.NamePart = MacroNamePart.Last;
                     break;
-                case "LI":
+                case NameFormatMacros.LastInitial:
                     token.Macro = Macro.LI;
                     token.NamePart = MacroNamePart.Last;
                     break;
-                case "SUFFIX":
-                case "S":
+                case NameFormatMacros.Suffix:
+                case "S": // Abbreviation
                     token.Macro = Macro.Suffix;
                     token.NamePart = MacroNamePart.Suffix;
                     break;
-                case "NICKNAME":
+                case NameFormatMacros.Nickname:
                     token.Macro = Macro.Nickname;
                     token.NamePart = MacroNamePart.First;
                     break;
-                case "MR":
+                case NameFormatMacros.Mr:
                     token.Macro = Macro.Mr;
                     break;
-                case "MADAM":
+                case NameFormatMacros.Madam:
                     token.Macro = Macro.Madam;
                     break;
-                case "BROTHER":
+                case NameFormatMacros.Brother:
                     token.Macro = Macro.Brother;
                     break;
-                case "HIS":
+                case NameFormatMacros.His:
                     token.Macro = Macro.His;
                     break;
-                case "NAME":
+                case NameFormatMacros.Name:
                     token.Macro = Macro.Name;
                     token.NamePart = MacroNamePart.All;
                     break;
-                case "FULL":
+                case NameFormatMacros.FullName:
                     token.Macro = Macro.Full;
                     token.NamePart = MacroNamePart.All;
                     break;
-                case "AND":
+                case NameFormatMacros.And:
                     token.Macro = Macro.And;
                     break;
                 default:

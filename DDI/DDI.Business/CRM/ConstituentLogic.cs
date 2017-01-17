@@ -36,6 +36,17 @@ namespace DDI.Business.CRM
         #region Public Methods
 
         private NameFormatter _nameFormatter = null;
+        protected NameFormatter NameFormatter
+        {
+            get
+            {
+                if (_nameFormatter == null)
+                {
+                    _nameFormatter = UnitOfWork.GetBusinessLogic<NameFormatter>();
+                }
+                return _nameFormatter;
+            }
+        }
 
         /// <summary>
         /// Get the formatted name for a constituent.
@@ -45,11 +56,8 @@ namespace DDI.Business.CRM
             LabelFormattingOptions options = new LabelFormattingOptions() { OmitPrefix = true, Recipient = LabelRecipient.Primary };
             string nameLine1, nameLine2;
 
-            if (_nameFormatter == null)
-            {
-                _nameFormatter = UnitOfWork.GetBusinessLogic<NameFormatter>();
-            }
-            _nameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
+
+            NameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
             return nameLine1;
         }
 
@@ -60,18 +68,14 @@ namespace DDI.Business.CRM
         /// <param name="constituent"></param>        
         public string GetSortName(Constituent constituent)
         {
-            ConstituentType ctype = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
+            ConstituentType type = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
 
-            if (ctype.Category == ConstituentCategory.Organization)
+            if (type.Category == ConstituentCategory.Organization)
             {
                 return constituent.Name;
             }
 
-            if (_nameFormatter == null)
-            {
-                _nameFormatter = UnitOfWork.GetBusinessLogic<NameFormatter>();
-            }
-            return _nameFormatter.FormatIndividualSortName(constituent);
+            return NameFormatter.FormatIndividualSortName(constituent);
         }
 
         public override void Validate(Constituent constituent)
@@ -127,25 +131,25 @@ namespace DDI.Business.CRM
             _constituentRepo.Utilities?.SetNextSequenceValue(DomainContext.ConstituentNumberSequence, newValue);
         }
 
-        public Constituent GetSpouse(Constituent name)
+        public Constituent GetSpouse(Constituent constituent)
         {
-            ConstituentType type = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
+            ConstituentType type = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
             if (type != null && type.Category == ConstituentCategory.Individual)
             {
-                Relationship relationship = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
+                Relationship relationship = GetRelationships(constituent).FirstOrDefault(p => p.RelationshipType.IsSpouse);
                 if (relationship != null)
                 {
                     var relationshipLogic = UnitOfWork.GetBusinessLogic<RelationshipLogic>();
-                    return relationshipLogic.GetLeftSideConstituent(relationship, name);
+                    return relationshipLogic.GetLeftSideConstituent(relationship, constituent);
                 }
             }
 
             return null;
         }
 
-        public bool IsConstituentActive(Constituent name)
+        public bool IsConstituentActive(Constituent constituent)
         {
-            var status = name.ConstituentStatus ?? UnitOfWork.GetReference(name, p => p.ConstituentStatus);
+            var status = constituent.ConstituentStatus ?? UnitOfWork.GetReference(constituent, p => p.ConstituentStatus);
             //return (status == null && status.BaseStatus != ConstituentBaseStatus.Inactive);
             return true;
         }
@@ -153,17 +157,17 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Get a collection of relationships for this constituent:  "XXXX is the YYYY of (this)".
         /// </summary>
-        public List<Relationship> GetRelationships(Constituent name)
+        public List<Relationship> GetRelationships(Constituent constituent)
         {
-            return GetRelationships(name, null, null);
+            return GetRelationships(constituent, null, null);
         }
 
         /// <summary>
         /// Get a collection of relationships of a specific category for a constituent.
         /// </summary>
-        public List<Relationship> GetRelationships(Constituent name, RelationshipCategory category)
+        public List<Relationship> GetRelationships(Constituent constituent, RelationshipCategory category)
         {
-            return GetRelationships(name, category, null);
+            return GetRelationships(constituent, category, null);
         }
 
         /// <summary>
@@ -173,16 +177,16 @@ namespace DDI.Business.CRM
         /// <para>true:  Return only MEMB relationships</para>
         /// <para>false:  Return only non-MEMB relationships</para>
         /// </summary>
-        private List<Relationship> GetRelationships(Constituent name, RelationshipCategory category, bool? showInQuickView)
+        private List<Relationship> GetRelationships(Constituent constituent, RelationshipCategory category, bool? showInQuickView)
         {
-            UnitOfWork.LoadReference(name, p => p.Relationship1s);
-            UnitOfWork.LoadReference(name, p => p.Relationship2s);
+            UnitOfWork.LoadReference(constituent, p => p.Relationship1s);
+            UnitOfWork.LoadReference(constituent, p => p.Relationship2s);
 
             // The Relationship2 collection is the starting point:  All these have Constituent2 = (this)            
-            List<Relationship> list = GetRelationshipQuery(name.Relationship2s, category, showInQuickView).ToList();
+            List<Relationship> list = GetRelationshipQuery(constituent.Relationship2s, category, showInQuickView).ToList();
 
             // Add in Relationship1 rows:  All these have Constituent1 = (this)
-            foreach (Relationship row in GetRelationshipQuery(name.Relationship1s, category, showInQuickView))
+            foreach (Relationship row in GetRelationshipQuery(constituent.Relationship1s, category, showInQuickView))
             {
                 // Omit any duplicates
                 if (list.Any(p => p.Constituent1 == row.Constituent2))

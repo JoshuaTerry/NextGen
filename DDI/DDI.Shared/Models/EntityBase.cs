@@ -1,8 +1,6 @@
-using DDI.Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace DDI.Shared.Models
 {
@@ -24,20 +22,6 @@ namespace DDI.Shared.Models
 
         public virtual string DisplayName => string.Empty;
 
-        /// <summary>
-        /// Dictionary relating entity type string values to underlying entity types.
-        /// </summary>
-        protected static Dictionary<string, Type> EntityTypeDict
-        {
-            get
-            {
-                if (_entityTypeDict == null)
-                {
-                    LoadEntityTypeDict();
-                }
-                return _entityTypeDict;
-            }
-        }
         #endregion
 
         #region Constructors 
@@ -52,39 +36,6 @@ namespace DDI.Shared.Models
         }
 
         /// <summary>
-        /// Load the entity type dictionary.
-        /// </summary>
-        private static void LoadEntityTypeDict()
-        {
-            _entityTypeDict = new Dictionary<string, Type>();
-
-            Assembly assm = typeof(EntityBase).Assembly;
-
-            foreach (var type in assm.GetTypes().Where(p => p.IsSubclassOf(typeof(EntityBase))))
-            {
-                string entityType = type.GetCustomAttribute<EntityTypeAttribute>()?.EntityTypeName;
-                if (!string.IsNullOrEmpty(entityType))
-                {
-                    _entityTypeDict.Add(entityType, type);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Return the entity type string value.
-        /// </summary>
-        public string GetEntityType()
-        {
-            if (_entityType == null)
-            {
-                MemberInfo info = this.GetType();
-                _entityType = info.GetCustomAttribute<EntityTypeAttribute>()?.EntityTypeName ?? string.Empty;
-            }
-            return _entityType;
-        }
-
-
-        /// <summary>
         /// Ensure the entity's primary key has been assigned.
         /// </summary>
         public void AssignPrimaryKey()
@@ -94,8 +45,6 @@ namespace DDI.Shared.Models
         }
 
         #endregion
-
-
     }
 
 

@@ -66,6 +66,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\constituents.css" />
+    <Content Include="CSS\login.css" />
+    <Content Include="CSS\search.css" />
+    <Content Include="CSS\systemsettings.css" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
@@ -132,7 +136,7 @@
     <Content Include="Pages\CRM\Constituents.aspx" />
     <Content Include="CSS\dx.common.css" />
     <Content Include="CSS\generic.light.custom.css" />
-    <Content Include="CSS\screen.css" />
+    <Content Include="CSS\globalstyles.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Images\AccountMerge_64.png" />

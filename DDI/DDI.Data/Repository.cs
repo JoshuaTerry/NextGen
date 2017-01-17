@@ -23,7 +23,7 @@ namespace DDI.Data
     /// functionality that is not covered by the basic add, update, delete, list operations that this
     /// class provides.
     /// </remarks>
-    public class Repository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T>, IRepository
         where T : class
     {
         #region Private Fields
@@ -39,6 +39,8 @@ namespace DDI.Data
         #region Public Properties
 
         public virtual IQueryable<T> Entities => EntitySet;
+
+        IQueryable IRepository.Entities => EntitySet;
 
         public ISQLUtilities Utilities
         {
@@ -168,66 +170,11 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
-            try
-            {
-                // Anything that's not an EF mapped property will throw an exception.
+            var reference = _context.Entry(entity).Reference(property);
 
-                var reference = _context.Entry(entity).Reference(property);
-
-                if (!reference.IsLoaded)
-                    reference.Load();
-                return reference.CurrentValue;
-            }
-            catch(Exception e)
-            {
-                // Logic to handle BaseLinkedEntity and LinkedEntityCollection:
-
-                // Consult the lambda expression to get the property info.
-                if (property.Body is MemberExpression)
-                {
-                    PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
-                    if (propInfo != null)
-                    {
-                        if (entity is LinkedEntityBase)
-                        {
-                            // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
-                            if (propInfo.Name == nameof(LinkedEntityBase.ParentEntity))
-                            {
-                                // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
-                                var linkedEntity = entity as LinkedEntityBase;
-                                linkedEntity.LoadParentEntity(_context);
-                                return linkedEntity.ParentEntity as TElement;
-                            }
-                            
-                            throw e;  // Wrong property name...
-                        }
-
-                        else if (typeof(TElement).GetInterfaces().Contains(typeof(ILinkedEntityCollection)))
-                        {
-                            // Trying to load a LinkedEntityCollection property.
-                            // Get the property value.
-                            object memberValue = propInfo.GetValue(entity);
-
-                            if (memberValue == null)
-                            {
-                                // If null, the LinkedEntityCollection needs to be created.
-                                memberValue = (TElement)Activator.CreateInstance(typeof(TElement), entity);
-                                propInfo.SetValue(entity, memberValue);
-                            }
-
-                            if (memberValue is TElement)
-                            {
-                                // Ensure the collection is loaded.
-                                ((ILinkedEntityCollection)memberValue).LoadCollection(_context);
-
-                                return (TElement)memberValue;
-                            }
-                        }
-                    }
-                }
-
-                throw e; // Couldn't determine the reference, so rethrow the exception.
-            }
+            if (!reference.IsLoaded)
+                reference.Load();
+            return reference.CurrentValue;
         }
 
         /// <summary>
