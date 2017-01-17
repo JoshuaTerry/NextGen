@@ -11,9 +11,9 @@ namespace DDI.Shared.Attributes
     /// Attribute for specifying an entity type string value which is used for entity linkage.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class HATEAOSPostLinkAttribute : Attribute
+    public class HateoasPostLinkAttribute : Attribute
     {
-        public HATEAOSPostLinkAttribute(string routeName)
+        public HateoasPostLinkAttribute(string routeName)
         {
             RouteName = routeName;
         }

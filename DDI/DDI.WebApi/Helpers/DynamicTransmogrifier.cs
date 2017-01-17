@@ -15,7 +15,7 @@ namespace DDI.WebApi.Helpers
 {
     public class DynamicTransmogrifier
     {
-        public IDataResponse ToDynamicResponse<T>(IDataResponse<T> response, UrlHelper urlHelper, string fields = null, bool shouldAddHATEAOSLinks = true)
+        public IDataResponse ToDynamicResponse<T>(IDataResponse<T> response, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
         {
             var dynamicResponse = new DataResponse<dynamic>
             {
@@ -26,48 +26,48 @@ namespace DDI.WebApi.Helpers
             };
             if (response.Data is IEnumerable<EntityBase>)
             {
-                dynamicResponse.Data = ToDynamicList((response.Data as IEnumerable<EntityBase>), urlHelper, fields, shouldAddHATEAOSLinks);
+                dynamicResponse.Data = ToDynamicList((response.Data as IEnumerable<EntityBase>), urlHelper, fields, shouldAddHateoasLinks);
             }
             else if (response.Data is EntityBase)
             {
-                dynamicResponse.Data = ToDynamicObject((response.Data as EntityBase), urlHelper, fields, shouldAddHATEAOSLinks);
+                dynamicResponse.Data = ToDynamicObject((response.Data as EntityBase), urlHelper, fields, shouldAddHateoasLinks);
             }
             return dynamicResponse;
         }
 
-        public dynamic ToDynamicList<T>(IEnumerable<T> data, UrlHelper urlHelper, string fields = null, bool shouldAddHATEAOSLinks = true)
+        public dynamic ToDynamicList<T>(IEnumerable<T> data, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
             where T : EntityBase
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
                 fields = null;
             }
-            if (fields == null && !shouldAddHATEAOSLinks)
+            if (fields == null && !shouldAddHateoasLinks)
             {
                 return data;
             }
             var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
-            var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHATEAOSLinks);
+            var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHateoasLinks);
             return result;
         }
 
-        public dynamic ToDynamicObject<T>(T data, UrlHelper urlHelper, string fields = null, bool shouldAddHATEAOSLinks = true)
+        public dynamic ToDynamicObject<T>(T data, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
             where T : EntityBase
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
                 fields = null;
             }
-            if (fields == null && !shouldAddHATEAOSLinks)
+            if (fields == null && !shouldAddHateoasLinks)
             {
                 return data;
             }
             var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
-            var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHATEAOSLinks);
+            var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHateoasLinks);
             return result;
         }
 
-        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHATEAOSLinks = true)
+        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true)
             where T : EntityBase
         {
             dynamic returnObject = new ExpandoObject();
@@ -82,21 +82,21 @@ namespace DDI.WebApi.Helpers
                 if (fieldValue is IEnumerable<EntityBase> && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHATEAOSLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
                 }
                 else if (fieldValue is EntityBase && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHATEAOSLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
                 }
                 else if (includeEverything || fieldsToInclude.Contains(propertyNameUppercased))
                 {
                     ((IDictionary<string, object>) returnObject)[property.Name] = fieldValue;
                 }
             }
-            if (data is EntityBase && shouldAddHATEAOSLinks)
+            if (data is EntityBase && shouldAddHateoasLinks)
             {
-                returnObject = AddHATEAOSLinks(returnObject, data as EntityBase, urlHelper);
+                returnObject = AddHateoasLinks(returnObject, data as EntityBase, urlHelper);
             }
             return returnObject;
         }
@@ -124,39 +124,39 @@ namespace DDI.WebApi.Helpers
         }
         
 
-        private dynamic AddHATEAOSLinks<T>(IDictionary<string, object> entity, T data, UrlHelper urlHelper)
+        private dynamic AddHateoasLinks<T>(IDictionary<string, object> entity, T data, UrlHelper urlHelper)
             where T: EntityBase
         {
-            string routePath = data.GetType().GetCustomAttribute<HATEAOSAttribute>()?.RouteName;
+            string routePath = data.GetType().GetCustomAttribute<HateoasAttribute>()?.RouteName;
             if (!string.IsNullOrWhiteSpace(routePath))
             {
-                var links = AddSelfHATEAOSLinks(data, urlHelper, routePath);
-                links.AddRangeNullSafe(FindAllAddChildHATEAOSLinks(data, urlHelper, routePath));
+                var links = AddSelfHateoasLinks(data, urlHelper, routePath);
+                links.AddRangeNullSafe(FindAllAddChildHateoasLinks(data, urlHelper, routePath));
                 entity.Add("Links", links);
             }
             return entity;
         }
 
-        private IEnumerable<HATEOASLink> FindAllAddChildHATEAOSLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : EntityBase
+        private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : EntityBase
         {
-            List<HATEOASLink> hateaosLinks = null;
-            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HATEAOSPostLinkAttribute)));
+            List<HateoasLink> hateoasLinks = null;
+            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasPostLinkAttribute)));
             foreach (var propertyInfo in properties)
             {
-                if (hateaosLinks == null)
+                if (hateoasLinks == null)
                 {
-                    hateaosLinks = new List<HATEOASLink>();
+                    hateoasLinks = new List<HateoasLink>();
                 }
-                string propertyRoute = propertyInfo.GetAttribute<HATEAOSPostLinkAttribute>().RouteName;
-                hateaosLinks.AddRange(new List<HATEOASLink>
+                string propertyRoute = propertyInfo.GetAttribute<HateoasPostLinkAttribute>().RouteName;
+                hateoasLinks.AddRange(new List<HateoasLink>
                 { 
-                    new HATEOASLink
+                    new HateoasLink
                     {
-                        Href = urlHelper.Link($"Post{propertyRoute}", null),
+                        Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
                         Relationship = $"{RouteRelationships.New}{propertyRoute}",
                         Method = RouteVerbs.Post
                     },
-                    new HATEOASLink
+                    new HateoasLink
                     {
                         Href = urlHelper.Link($"{routePath}{propertyRoute}", new {id = data.Id}),
                         Relationship = $"{RouteRelationships.Get}{propertyRoute}",
@@ -164,27 +164,27 @@ namespace DDI.WebApi.Helpers
                     }
                 });
             }
-            return hateaosLinks;
+            return hateoasLinks;
         }
 
-        private List<HATEOASLink> AddSelfHATEAOSLinks<T>(T data, UrlHelper urlHelper, string routePath) 
+        private List<HateoasLink> AddSelfHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) 
             where T: EntityBase
         {
-            return new List<HATEOASLink>
+            return new List<HateoasLink>
             {
-                new HATEOASLink()
+                new HateoasLink()
                 {
                     Href = urlHelper.Link($"{routePath}{RouteVerbs.Get}", new {id = data.Id}), 
                     Relationship = RouteRelationships.Self,
                     Method = RouteVerbs.Get
                 },
-                new HATEOASLink()
+                new HateoasLink()
                 {
                     Href = urlHelper.Link($"{routePath}{RouteVerbs.Patch}", new {id = data.Id}), 
                     Relationship = $"{RouteRelationships.Update}{data.GetType().Name}",
                     Method = RouteVerbs.Patch
                 },
-                new HATEOASLink()
+                new HateoasLink()
                 {
                     Href = urlHelper.Link($"{routePath}{RouteVerbs.Delete}", new {id = data.Id}), 
                     Relationship = $"{RouteRelationships.Delete}{data.GetType().Name}",

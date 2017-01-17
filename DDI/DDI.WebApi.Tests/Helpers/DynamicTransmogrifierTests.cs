@@ -211,7 +211,7 @@ namespace DDI.WebApi.Tests.Helpers
         }
 
         [TestMethod]
-        public void Should_ReturnLinksWithHATEOASActionsForEveryObjectWithAnAttribute()
+        public void Should_ReturnLinksWithHateoasActionsForEveryObjectWithAnAttribute()
         {
             var urlHelperMock = new Mock<UrlHelper>();
             urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
@@ -234,7 +234,7 @@ namespace DDI.WebApi.Tests.Helpers
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
-            List<HATEOASLink> links = result.Links as List<HATEOASLink>;
+            List<HateoasLink> links = result.Links as List<HateoasLink>;
             Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Get && a.Relationship == RouteRelationships.Self));
             Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Get && a.Relationship == (RouteRelationships.Get + RouteNames.ConstituentAddress)));
             Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Patch).Relationship == RouteRelationships.Update + RouteNames.Constituent);
