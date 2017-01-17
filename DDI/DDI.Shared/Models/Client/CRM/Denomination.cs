@@ -26,7 +26,7 @@ namespace DDI.Shared.Models.Client.CRM
        
         public Religion Religion { get; set; }
 
-        public  Affiliation Affiliation { get; set; }
+        public Affiliation Affiliation { get; set; }
 
         public ICollection<Constituent> Constituents { get; set; }
         #endregion Public Properties

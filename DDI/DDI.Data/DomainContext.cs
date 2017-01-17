@@ -41,6 +41,12 @@ namespace DDI.Data
 
         public virtual DbSet<ContactType> ContactTypes { get; set; }
 
+        public virtual DbSet<CustomField> CustomField { get; set; }
+        
+        public virtual DbSet<CustomFieldData> CustomFieldData { get; set; }
+
+        public virtual DbSet<CustomFieldOption> CustomFieldOption { get; set; }
+
         public virtual DbSet<Degree> Degrees { get; set; }
 
         public virtual DbSet<Denomination> Denominations { get; set; }
@@ -96,6 +102,8 @@ namespace DDI.Data
         public DomainContext()
             : base("name=DomainContext")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         #endregion Public Constructors

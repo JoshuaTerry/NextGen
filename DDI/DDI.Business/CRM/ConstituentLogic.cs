@@ -1,10 +1,13 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using System;
+using DDI.Shared.Enums.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -110,6 +113,100 @@ namespace DDI.Business.CRM
         public void SetNextConstituentNumber(int newValue)
         {
             _constituentRepo.Utilities?.SetNextSequenceValue(DomainContext.ConstituentNumberSequence, newValue);
+        }
+
+        public Constituent GetSpouse(Constituent name)
+        {
+            ConstituentType ctype = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
+            if (ctype != null && ctype.Category == ConstituentCategory.Individual)
+            {
+                Relationship rel = GetRelationships(name).FirstOrDefault(p => p.RelationshipType.IsSpouse);
+                if (rel != null)
+                {
+                    var relationshipLogic = UnitOfWork.GetBusinessLogic<RelationshipLogic>();
+                    return relationshipLogic.GetLeftSideConstituent(rel, name);
+                }
+            }
+
+            return null;
+        }
+
+        public bool IsConstituentActive(Constituent name)
+        {
+            var status = name.ConstituentStatus ?? UnitOfWork.GetReference(name, p => p.ConstituentStatus);
+            //return (status == null && status.BaseStatus != ConstituentBaseStatus.Inactive);
+            return true;
+        }
+
+        /// <summary>
+        /// Get a collection of relationships for this constituent:  "XXXX is the YYYY of (this)".
+        /// </summary>
+        public List<Relationship> GetRelationships(Constituent name)
+        {
+            return GetRelationships(name, null, null);
+        }
+
+        /// <summary>
+        /// Get a collection of relationships of a specific category for a constituent.
+        /// </summary>
+        public List<Relationship> GetRelationships(Constituent name, RelationshipCategory category)
+        {
+            return GetRelationships(name, category, null);
+        }
+
+        /// <summary>
+        /// Get a collection of relationships for this constituent:  "XXXX is the YYYY of (this)".
+        /// <para>memberRelationship is:</para>
+        /// <para>null:  Return all relationships</para>
+        /// <para>true:  Return only MEMB relationships</para>
+        /// <para>false:  Return only non-MEMB relationships</para>
+        /// </summary>
+        private List<Relationship> GetRelationships(Constituent name, RelationshipCategory category, bool? showInQuickView)
+        {
+            UnitOfWork.LoadReference(name, p => p.Relationship1s);
+            UnitOfWork.LoadReference(name, p => p.Relationship2s);
+
+            // The Relationship2 collection is the starting point:  All these have Constituent2 = (this)            
+            List<Relationship> relSet = GetRelationshipQuery(name.Relationship2s, category, showInQuickView).ToList();
+
+            // Add in Relationship1 rows:  All these have Constituent1 = (this)
+            foreach (Relationship row in GetRelationshipQuery(name.Relationship1s, category, showInQuickView))
+            {
+                // Omit any duplicates
+                if (relSet.Any(p => p.Constituent1 == row.Constituent2))
+                    continue;
+
+                relSet.Add(row);
+            }
+
+            return relSet;
+        }
+
+        /// <summary>
+        /// Get a relationship LINQ query given a relationship XPCollection.
+        /// </summary>
+        private IQueryable<Relationship> GetRelationshipQuery(ICollection<Relationship> collection, RelationshipCategory category, bool? showInQuickView)
+        {
+            IQueryable<Relationship> query = collection.AsQueryable().IncludePath(p => p.RelationshipType);
+
+            // Modify the query based on category, showInQuickView parameters.
+            if (category != null)
+                query = query.Where(p => p.RelationshipType.RelationshipCategory.Id == category.Id);
+            if (showInQuickView.HasValue)
+                query = query.Where(p => p.RelationshipType.RelationshipCategory.IsShownInQuickView == showInQuickView);
+            return query;
+        }
+        #endregion
+
+        #region Inner Classes
+
+        /// <summary>
+        /// Class used to sort addresses in GetAddress method.
+        /// </summary>
+        private class WeightedAddress
+        {
+            public int weight;
+            public ConstituentAddress cAddress;
         }
 
         #endregion

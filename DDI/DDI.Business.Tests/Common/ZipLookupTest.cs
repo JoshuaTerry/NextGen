@@ -23,9 +23,7 @@ namespace DDI.Business.Tests.Common
         public void Initialize()
         {
             _uow = new UnitOfWorkNoDb();
-            var abbrRepo = new Mock<IRepository<Abbreviation>>();
-            abbrRepo.Setup(r => r.Entities).Returns(SetupAbbrevationRepo());
-            _uow.SetRepository<Abbreviation>(abbrRepo.Object);
+            _uow.CreateRepositoryForDataSource(SetupAbbrevationRepo());
             
             _zipLookup = new ZipLookup(_uow);
             _zipLookup.Initialize();
@@ -61,7 +59,7 @@ namespace DDI.Business.Tests.Common
             return list.AsQueryable();
         }
 
-        private const string TESTDESCR = "Common | Business";
+        private const string TESTDESCR = "Business | Common";
 
         [TestMethod,TestCategory(TESTDESCR)]
         public void ZipLookup_AbbreviateWords()
