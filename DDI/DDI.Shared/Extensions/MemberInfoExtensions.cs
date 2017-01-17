@@ -42,22 +42,6 @@ public static class MemberInfoExtensions
     }
 
     /// <summary>
-    /// Returns an instance of the given <see cref="Attribute" /> type, if it is defined. Otherwise,
-    /// a default instance of the attribute will be created and returned.
-    /// </summary>
-    /// <remarks>This method will never return <c>null</c>.</remarks>
-    /// <typeparam name="TAttribute"></typeparam>
-    /// <param name="self"></param>
-    /// <param name="inherit"></param>
-    /// <returns></returns>
-    public static TAttribute GetAttributeOrDefault<TAttribute>(this MemberInfo self, bool inherit = false)
-        where TAttribute : Attribute
-    {
-        var attribute = self.GetAttribute<TAttribute>(inherit);
-        return attribute ?? default(TAttribute);
-    }
-
-    /// <summary>
     /// If this <see cref="MemberInfo" /> is annotated with the given <see cref="Attribute" /> type ,
     /// all instances of that attribute type are returned. Otherwise, an empty list.
     /// </summary>
@@ -70,9 +54,9 @@ public static class MemberInfoExtensions
     {
         var attributes = new List<TAttribute>();
 
-        if (self.IsAttributeDefined<TAttribute>())
+        if (self.IsAttributeDefined<TAttribute>(inherit))
         {
-            attributes.AddRange(self.GetCustomAttributes<TAttribute>());
+            attributes.AddRange(self.GetCustomAttributes<TAttribute>(inherit));
         }
 
         return attributes;

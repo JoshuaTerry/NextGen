@@ -163,7 +163,7 @@ namespace DDI.Conversion
 			{
 				_logger.Info(new string('=', text.Length));
 			}
-			_logger.Info(text);
+			_logger.Info(text);            
 			
 		}
 

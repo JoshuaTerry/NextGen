@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Runtime.Remoting;
 using System.Text;
+using System.Web.Configuration;
 using DDI.WebApi.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,7 @@ namespace DDI.WebApi.Tests.Services
             
 
             var To = new MailAddress("RClough@ddi.org");
-            var From = new MailAddress("no-reply@ddi.org");
+            var From = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var body = "This was sent using our new email service.";
             var subject = "Test email service";
 
@@ -53,7 +54,7 @@ namespace DDI.WebApi.Tests.Services
 
             // ***NOTE*** when running this test, PLEASE make sure to change the email to YOUR OWN email address
             var To = new MailAddress("RClough@ddi.org");
-            var From = new MailAddress("no-reply@ddi.org");
+            var From = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
             var body = "This was sent using our new email service.";
             var subject = "Test email service";
 

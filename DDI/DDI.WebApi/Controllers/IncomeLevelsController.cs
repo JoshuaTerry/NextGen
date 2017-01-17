@@ -1,15 +1,15 @@
 ﻿using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class IncomeLevelsController : ApiController
     {
-        GenericServiceBase<IncomeLevel> _service;
+        ServiceBase<IncomeLevel> _service;
 
-        public IncomeLevelsController() : this(new GenericServiceBase<IncomeLevel>()) { }
-        internal IncomeLevelsController(GenericServiceBase<IncomeLevel> service)
+        public IncomeLevelsController() : this(new ServiceBase<IncomeLevel>()) { }
+        internal IncomeLevelsController(ServiceBase<IncomeLevel> service)
         {
             _service = service;
         }

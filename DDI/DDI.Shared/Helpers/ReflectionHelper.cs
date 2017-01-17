@@ -149,9 +149,9 @@ namespace DDI.Shared.Helpers
 
         #region Private Methods
 
-        private static string GetURI(Assembly assm)
+        private static string GetURI(Assembly assembly)
         {
-            string codeBase = assm.CodeBase;
+            string codeBase = assembly.CodeBase;
 
             if (!codeBase.StartsWith("file:"))
             {
