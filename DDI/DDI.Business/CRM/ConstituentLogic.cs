@@ -150,8 +150,7 @@ namespace DDI.Business.CRM
         public bool IsConstituentActive(Constituent constituent)
         {
             var status = constituent.ConstituentStatus ?? UnitOfWork.GetReference(constituent, p => p.ConstituentStatus);
-            //return (status == null && status.BaseStatus != ConstituentBaseStatus.Inactive);
-            return true;
+            return (status == null || status.BaseStatus != ConstituentBaseStatus.Inactive);
         }
 
         /// <summary>
@@ -199,7 +198,7 @@ namespace DDI.Business.CRM
         }
 
         /// <summary>
-        /// Get a relationship LINQ query given a relationship XPCollection.
+        /// Get a relationship LINQ query given a relationship collection.
         /// </summary>
         private IQueryable<Relationship> GetRelationshipQuery(ICollection<Relationship> collection, RelationshipCategory category, bool? showInQuickView)
         {

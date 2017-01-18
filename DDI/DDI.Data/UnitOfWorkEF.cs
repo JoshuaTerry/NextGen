@@ -149,7 +149,10 @@ namespace DDI.Data
         /// </summary>
         public void Attach<T>(T entity) where T : class
         {
-            GetRepository<T>().Attach(entity);
+            if (entity != null)
+            {
+                GetRepository<T>().Attach(entity);
+            }
         }
 
         public T Create<T>() where T : class

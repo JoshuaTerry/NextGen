@@ -27,7 +27,5 @@ namespace DDI.Shared.Statics.CRM
         public const string Name = "NAME";
         public const string FullName = "FULL";
         public const string And = "AND";
-
-        public const string DefaultIndividualNameFormat = "{PREFIX}{FIRST}{MI}{LAST}{SUFFIX}";
     }
 }

@@ -55,9 +55,28 @@ namespace DDI.Data
         /// </summary>
         public IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class
         {
-            IRepository<T> repository = new RepositoryNoDb<T>(dataSource);
-            _repositories[typeof(T)] = repository;
+            RepositoryNoDb<T> repository = null;
+            var type = typeof(T);
+            if (!_repositories.ContainsKey(type))
+            {
+                repository = new RepositoryNoDb<T>(dataSource);
+                _repositories[type] = repository;
+                repository.AssignForeignKeys();
+            }
+            else
+            {
+                repository = _repositories[type] as RepositoryNoDb<T>;
+            }
+
             return repository;
+        }
+
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class
+        {
+            return CreateRepositoryForDataSource(dataSource.AsQueryable());
         }
 
         public IRepository<T> GetRepository<T>() where T : class
@@ -165,10 +184,13 @@ namespace DDI.Data
 
         public void Attach<T>(T entity) where T : class
         {
-            var entities = (ICollection<T>)(GetRepository<T>().Entities);
-            if (!entities.Contains(entity))
+            if (entity != null)
             {
-                entities.Add(entity);
+                var entities = (ICollection<T>)(GetRepository<T>().Entities);
+                if (!entities.Contains(entity))
+                {
+                    entities.Add(entity);
+                }
             }
         }
 

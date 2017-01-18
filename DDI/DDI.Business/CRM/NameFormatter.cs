@@ -19,7 +19,16 @@ namespace DDI.Business.CRM
     /// </summary>
     public class NameFormatter
     {
-       
+        private const string MALE = "M";
+        private const string FEMALE = "F";
+
+        // These macro abbreviations are for backwards compatibility.
+        private const string PREFIX_ABBREVIATION = "P";
+        private const string FIRST_NAME_ABBREVIATION = "F";
+        private const string MIDDLE_NAME_ABBREVIATION = "M";
+        private const string LAST_NAME_ABBREVIATION = "L";
+        private const string SUFFIX_ABBREVIATION = "S";
+
         private enum Macro
         {
             None = 0, Prefix, First, Middle, Last, FI, MI, LI, Suffix, Nickname, Name, Full, Mr, Madam, Brother, His, And, Unknown
@@ -185,8 +194,8 @@ namespace DDI.Business.CRM
             {
                 if (constituent2 != null)
                 {
-                    ConstituentType ctype2 = constituent2.ConstituentType ?? UnitOfWork.GetReference(constituent2, p => p.ConstituentType);
-                    if (ctype2 == null || type.Category == ConstituentCategory.Organization)
+                    ConstituentType type2 = constituent2.ConstituentType ?? UnitOfWork.GetReference(constituent2, p => p.ConstituentType);
+                    if (type2 == null || type.Category == ConstituentCategory.Organization)
                     {
                         line2 = constituent2.Name;
                     }
@@ -335,15 +344,15 @@ namespace DDI.Business.CRM
             {
                 if (tokens.Any(p => p.Macro == Macro.MI))
                 {
-                    sb.Append(name.MiddleName.Substring(0, 1)).Append(". ");
+                    sb.Append(name.MiddleName.Substring(0, 1)).Append(".");
                 }
                 else if (tokens.Any(p => p.Macro == Macro.Middle))
                 {
-                    sb.Append(name.MiddleName).Append(' ');
+                    sb.Append(name.MiddleName);
                 }
             }
 
-            return sb.ToString();
+            return sb.ToString().Trim();
         }
 
         /// <summary>
@@ -666,10 +675,10 @@ namespace DDI.Business.CRM
             string gender2 = string.Empty;
 
             if (name1.Gender != null)
-                gender1 = name1.Gender.IsMasculine == true ? "M" : "F";
+                gender1 = name1.Gender.IsMasculine == true ? MALE : FEMALE;
 
             if (name2.Gender != null)
-                gender2 = name2.Gender.IsMasculine == true ? "M" : "F";
+                gender2 = name2.Gender.IsMasculine == true ? MALE : FEMALE;
 
             // If genders are the same, or if either is blank, force separation.
             if (gender1 == gender2 || string.IsNullOrWhiteSpace(gender1) || string.IsNullOrWhiteSpace(gender2))
@@ -680,12 +689,12 @@ namespace DDI.Business.CRM
             switch (recipient)
             {
                 case LabelRecipient.Husband:
-                    if (gender1 == "M")
+                    if (gender1 == MALE)
                     {
                         spouseFormatTokens = null;
                         spousePatternTokens = null;
                     }
-                    else if (hasSpouse && gender2 == "M")
+                    else if (hasSpouse && gender2 == MALE)
                     {
                         formatTokens = null;
                         patternTokens = null;
@@ -693,12 +702,12 @@ namespace DDI.Business.CRM
                     break;
 
                 case LabelRecipient.Wife:
-                    if (gender1 == "F")
+                    if (gender1 == FEMALE)
                     {
                         spouseFormatTokens = null;
                         spousePatternTokens = null;
                     }
-                    else if (hasSpouse && gender2 == "F")
+                    else if (hasSpouse && gender2 == FEMALE)
                     {
                         formatTokens = null;
                         patternTokens = null;
@@ -748,7 +757,7 @@ namespace DDI.Business.CRM
             if (!keepPosition)
             {
                 if (priority2 < priority1 ||
-                    (priority2 == priority1 && gender2 == "M" && gender1 != "M"))
+                    (priority2 == priority1 && gender2 == MALE && gender1 != MALE))
                 {
                     // Swap primary and secondary.
 
@@ -813,7 +822,7 @@ namespace DDI.Business.CRM
 
             if (!combined)
             {
-                if (hasSpouse && gender1 == "M" && gender2 == "F" && spouseUseDefaultPrefix)
+                if (hasSpouse && gender1 == MALE && gender2 == FEMALE && spouseUseDefaultPrefix)
                 {
                     // Fix for case where spouse prefix is blank, gender is female, and primary is male:  Convert Ms to Mrs
                     ChangeMsToMrs(spousePatternTokens);
@@ -824,7 +833,7 @@ namespace DDI.Business.CRM
             // Combine logic for all other cases.
             if (!combined && !separate &&
                 priority1 > 2 && priority2 > 2 &&
-                (keepPosition || ((!swapped && gender1 == "M") || (swapped && gender2 == "M"))) &&
+                (keepPosition || ((!swapped && gender1 == MALE) || (swapped && gender2 == MALE))) &&
                 string.Compare(name1.LastName, name2.LastName, true) == 0 &&
                 !IsTokenListEmpty(patternTokens) && // Primary prefix pattern is non-empty
                 patternTokens.Last().NamePart == MacroNamePart.All  // Primary prefix must end with {NAME} or {FULL}
@@ -1139,11 +1148,11 @@ namespace DDI.Business.CRM
             switch (text.ToUpper().Trim())
             {
                 case NameFormatMacros.Prefix:
-                case "P": // Abbreviation
+                case PREFIX_ABBREVIATION:
                     token.Macro = Macro.Prefix;
                     break;
                 case NameFormatMacros.FirstName:
-                case "F": // Abbreviation
+                case FIRST_NAME_ABBREVIATION: 
                     token.Macro = Macro.First;
                     token.NamePart = MacroNamePart.First;
                     break;
@@ -1152,7 +1161,7 @@ namespace DDI.Business.CRM
                     token.NamePart = MacroNamePart.First;
                     break;
                 case NameFormatMacros.MiddleName:
-                case "M": // Abbreviation
+                case MIDDLE_NAME_ABBREVIATION:
                     token.Macro = Macro.Middle;
                     token.NamePart = MacroNamePart.Middle;
                     break;
@@ -1161,7 +1170,7 @@ namespace DDI.Business.CRM
                     token.NamePart = MacroNamePart.Middle;
                     break;
                 case NameFormatMacros.LastName:
-                case "L": // Abbreviation
+                case LAST_NAME_ABBREVIATION:
                     token.Macro = Macro.Last;
                     token.NamePart = MacroNamePart.Last;
                     break;
@@ -1170,7 +1179,7 @@ namespace DDI.Business.CRM
                     token.NamePart = MacroNamePart.Last;
                     break;
                 case NameFormatMacros.Suffix:
-                case "S": // Abbreviation
+                case SUFFIX_ABBREVIATION: 
                     token.Macro = Macro.Suffix;
                     token.NamePart = MacroNamePart.Suffix;
                     break;
@@ -1237,9 +1246,9 @@ namespace DDI.Business.CRM
                 simpleName.Nickname = name.Nickname ?? string.Empty;
                 simpleName.NameFormat = name.NameFormat ?? string.Empty;
                 simpleName.Gender = name.Gender ?? UnitOfWork.GetReference(name, p => p.Gender);
-                ConstituentType ctype = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
+                ConstituentType type = name.ConstituentType ?? UnitOfWork.GetReference(name, p => p.ConstituentType);
 
-                simpleName.DefaultNameFormat = StringHelper.FirstNonBlank(ctype?.NameFormat, _defaultIndividualNameFormat);
+                simpleName.DefaultNameFormat = StringHelper.FirstNonBlank(type?.NameFormat, _defaultIndividualNameFormat);
             }
             return simpleName;
         }
