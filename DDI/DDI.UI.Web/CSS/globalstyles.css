@@ -102,3 +102,12 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 /* END MODAL CONTENT */
 
 
+
+/* NEW CONSTITUENT MODAL */
+.addconstituentmodal {  }
+.addconstituentmodal div.fieldblock input { width: 98.7%; }
+.addconstituentmodal div.fieldblock select { width: 100%; }
+/* END NEW CONSTITUENT MODAL */
+
+
+
