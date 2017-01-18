@@ -49,11 +49,6 @@ namespace DDI.Business.CRM
             return moduleInfo;
         }
 
-        /// <summary>
-        /// Get the ModuleInfo object for a specified type.
-        /// </summary>
-        /// <typeparam name="T">ModuleInfo type</typeparam>
-
         #endregion
 
         #region Private Methods
