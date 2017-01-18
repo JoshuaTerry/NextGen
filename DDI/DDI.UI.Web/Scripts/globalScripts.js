@@ -393,17 +393,27 @@ function GetEditedFields(editcontainer) {
 
     var p = [];
 
+    // Fix the datetime / checkbox saving issue
     $(editcontainer).find('input.editable').each(function () {
-        var property = $(this).attr('class').replace('editable ', '');
-        var value = $(this).val();
+
+        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var propertyName = property[0].replace('editable ', '');
+        var value = '';
+
+        if ($(this).is(':checkbox')) {
+            value = $(this).prop('checked');
+        }
+        else {
+            value = $(this).val();
+        }
 
         for (var key in currentEntity) {
             if (key == property && currentEntity[key] != value) {
                 if (value == 'null') {
-                    p.push('"' + property + '": ' + null);
+                    p.push('"' + propertyName + '": ' + null);
                 }
                 else {
-                    p.push('"' + property + '": "' + value + '"');
+                    p.push('"' + propertyName + '": "' + value + '"');
                 }
                 
             }
@@ -412,16 +422,17 @@ function GetEditedFields(editcontainer) {
     });
 
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('editable ', '');
+        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var propertyName = property[0].replace('editable ', '');
         var value = $(this).val();
 
         for (var key in currentEntity) {
             if (key == property && currentEntity[key] != value) {
                 if (value == 'null') {
-                    p.push('"' + property + '": ' + null);
+                    p.push('"' + propertyName + '": ' + null);
                 }
                 else {
-                    p.push('"' + property + '": "' + value + '"');
+                    p.push('"' + propertyName + '": "' + value + '"');
                 }
             }
         }

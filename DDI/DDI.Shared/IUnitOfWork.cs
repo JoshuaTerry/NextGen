@@ -21,6 +21,8 @@ namespace DDI.Shared
 
         IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class;
 
+        IQueryable GetEntities(Type type);
+
         T FirstOrDefault<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class;
 
         void LoadReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class where T : class;

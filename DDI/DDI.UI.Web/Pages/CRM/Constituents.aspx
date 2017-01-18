@@ -208,8 +208,19 @@
                     </div>
 
                     <h1>Doing Business As (Not Implemented Yet)</h1>
-                    <div>
+                    <div class="editcontainer">
                         <div class="doingbusinessastable"></div>
+
+                        <div class="fieldblock">
+                            <label>Test Checkbox</label>
+                            <input type="checkbox" class="editable TestCheckbox" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Test Date</label>
+                            <input type="text" class="editable TestDate datepicker" />
+                        </div>
+
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>

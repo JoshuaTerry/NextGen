@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DDI.Services.Search
 {
-    public class StateSearch : PageableSearch
+    public class ForeignKeySearch : PageableSearch
     {
-        public Guid? CountryId { get; set; }
+        public Guid? Id { get; set; }
     }
 }

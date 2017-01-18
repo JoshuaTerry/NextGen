@@ -11,13 +11,13 @@ namespace DDI.Shared.Attributes
     /// Attribute for specifying an entity type string value which is used for entity linkage.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class EntityTypeAttribute : Attribute
+    public class HateoasAttribute : Attribute
     {
-        public EntityTypeAttribute(string entityTypeName)
+        public HateoasAttribute(string routeName)
         {
-            EntityTypeName = entityTypeName;
+            RouteName = routeName;
         }
         [Required]
-        public string EntityTypeName { get; private set; }
+        public string RouteName { get; private set; }
     }
 }
