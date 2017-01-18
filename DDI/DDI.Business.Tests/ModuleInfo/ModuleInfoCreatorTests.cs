@@ -16,7 +16,6 @@ namespace DDI.Business.Tests.ModuleInfo
 
 
         private const string TESTDESCR = "Business | CRM | ModuleInfo";
-        // I believe this will change to "Business | ModuleInfo"
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ModuleInfoCreator_GetModuleInfo_ModuleType()

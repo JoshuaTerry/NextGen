@@ -20,9 +20,9 @@ namespace DDI.Shared.Test.Helpers
 
             Assert.AreEqual("ACCT", acctModule.Code, "Ensure Accounting module is present and Code property is valid.");
 
-            CollectionAssert.Contains(acctModule.ChildModules, glModule, "Accounting has child module of GL.");
+           CollectionAssert.Contains(acctModule.ChildModules, glModule, "Accounting has child module of GL.");
 
-            Assert.AreEqual(acctModule, glModule.ParentModule, "GL module has parent of Accounting.");
+           Assert.AreEqual(acctModule, glModule.ParentModule, "GL module has parent of Accounting.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]

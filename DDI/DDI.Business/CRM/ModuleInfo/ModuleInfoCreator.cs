@@ -53,12 +53,6 @@ namespace DDI.Business.CRM
         /// Get the ModuleInfo object for a specified type.
         /// </summary>
         /// <typeparam name="T">ModuleInfo type</typeparam>
-        public static T GetModuleInfo<T>() where T : ModuleInfoConcrete
-        {
-            // TODO pretty sure I cantake this out, since we're doing away with the separate classses
-            Initialize();
-            return _modules.FirstOrDefault(p => p.GetType() == typeof(T)) as T;
-        }
 
         #endregion
 
