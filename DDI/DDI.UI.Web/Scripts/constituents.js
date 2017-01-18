@@ -288,6 +288,7 @@ function NewAddressModal() {
     $('.savenewaddress').click(function () {
 
         var item = {
+            ConstituentId: $('.hidconstituentid').val(),
             IsPrimary: $('.na-IsPreferred').prop('checked'),
             Comment: $('.na-Comment').val(),
             StartDate: $('.na-FromDate').val(),
@@ -297,8 +298,8 @@ function NewAddressModal() {
             ResidentType: $('.na-Residency').val(),
             AddressTypeId: $('.na-AddressTypeId').val(),
             Address: {
-                AddressLine1: $('.na-AddressTypeId').val(),
-                AddressLine2: $('.na-AddressTypeId').val(),
+                AddressLine1: $('.na-AddressLine1').val(),
+                AddressLine2: '',
                 City: $('.na-City').val(),
                 CountryId: $('.na-CountryId').val(),
                 CountyId: $('.na-CountyId').val(),
