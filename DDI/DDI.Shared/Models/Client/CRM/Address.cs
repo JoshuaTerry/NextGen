@@ -43,49 +43,49 @@ namespace DDI.Shared.Models.Client.CRM
         public Guid? Region4Id { get; set; }
 
         // Non-mapped properties
+
+        private Country _country = null;
         [NotMapped]
         public Country Country
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetCountry(CountryId);
+                return _country;
             }
             set
             {
                 CountryId = value.Id;
+                _country = value;
             }
         }
 
+        private State _state = null;
         [NotMapped]
         public State State
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetState(StateId);
+                return _state;
             }
             set
             {
                 StateId = value.Id;
+                _state = value;
             }
         }
 
-
+        private County _county = null;
         [NotMapped]
         public County County
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetCounty(CountyId);
+                return _county;
             }
             set
             {
                 CountyId = value.Id;
+                _county = value;
             }
         }
 

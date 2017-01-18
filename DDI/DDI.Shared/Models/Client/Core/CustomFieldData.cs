@@ -19,8 +19,10 @@ namespace DDI.Shared.Models.Client.Core
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
 
+        public CustomField CustomField { get; set; }
+
         [NotMapped]
-        public override string DisplayName { get; }
+        public override string DisplayName => Value;
 
         #endregion
     }

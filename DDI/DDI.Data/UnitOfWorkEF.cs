@@ -5,7 +5,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using DDI.Shared.Logger;
 
 namespace DDI.Data
 {
@@ -124,7 +125,15 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class where T : class
         {
-            return GetRepository<T>().GetReference<TElement>(entity, property);
+            try
+            {
+                return GetRepository<T>().GetReference<TElement>(entity, property);
+            }
+            catch
+            {
+                Logger.Error(typeof(UnitOfWorkEF), $"GetReference on type {typeof(T).Name} failed for {property.Name}.");
+                return null;
+            }
         }
 
         /// <summary>
@@ -140,7 +149,10 @@ namespace DDI.Data
         /// </summary>
         public void Attach<T>(T entity) where T : class
         {
-            GetRepository<T>().Attach(entity);
+            if (entity != null)
+            {
+                GetRepository<T>().Attach(entity);
+            }
         }
 
         public T Create<T>() where T : class
