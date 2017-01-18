@@ -2,14 +2,16 @@ using DDI.Shared.Models.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System;
-using System.Data.Entity.Validation; 
+using System.Data.Entity.Validation;
 using System.Collections.Generic;
 using DDI.Shared.Models;
+using DDI.Shared;
 
 namespace DDI.Data
 {
     public class CommonContext : DbContext
 	{
+        private const string _commonContextConnectionKey = "CommonContext";
         #region Public Properties
 
         public DbSet<Abbreviation> Abbreviations { get; set; }
@@ -29,7 +31,7 @@ namespace DDI.Data
         #region Public Constructors
 
         public CommonContext()
-			: base("name=CommonContext")
+            : base(ConnectionManager.Instance.Connections[_commonContextConnectionKey])			 
 		{
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
@@ -53,7 +55,5 @@ namespace DDI.Data
             return base.ValidateEntity(entityEntry, items);
         }
         #endregion
-    }
-
-
+    } 
 }

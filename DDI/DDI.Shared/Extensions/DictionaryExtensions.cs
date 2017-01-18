@@ -19,19 +19,19 @@ public static class DictionaryExtensions
     /// <param name="dictionary"></param>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
-    {
-        if (dictionary.ContainsKey(key))
-        {
-            dictionary[key] = value;
-        }
-        else
-        {
-            dictionary.Add(key, value);
-        }
+    //public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    //{
+    //    if (dictionary.ContainsKey(key))
+    //    {
+    //        dictionary[key] = value;
+    //    }
+    //    else
+    //    {
+    //        dictionary.Add(key, value);
+    //    }
 
-        return dictionary;
-    }
+    //    return dictionary;
+    //}
 
 
     /// <summary>

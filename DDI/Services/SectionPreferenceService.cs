@@ -11,16 +11,25 @@ namespace DDI.Services
     {
         private IRepository<SectionPreference> _repository;
 
-        public SectionPreferenceService() : this(new CachedRepository<SectionPreference>())
-        { 
-        }
-        public SectionPreferenceService(IRepository<SectionPreference> repo) 
+        private IUnitOfWork _unitOfWork;
+
+        public SectionPreferenceService()
         {
-            _repository = repo;
+            Initialize(new UnitOfWorkEF());
+        }
+        public SectionPreferenceService(IUnitOfWork uow)
+        {
+            Initialize(uow);
+        }
+
+        private void Initialize(IUnitOfWork uow)
+        {
+            _unitOfWork = uow; 
+            _repository = _unitOfWork.GetRepository<SectionPreference>();
         }
         public IDataResponse<List<SectionPreference>> GetPreferencesBySectionName(string sectionName)
         {
-            var results = _repository.Entities.Where(p => p.SectionName == sectionName).ToList();
+            var results = base.UnitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == sectionName).ToList();
             return GetIDataResponse(() => results);
         }
     }

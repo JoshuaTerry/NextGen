@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -75,7 +76,9 @@
   <ItemGroup>
     <Compile Include="Attributes\HATEAOSPostLinkAttribute.cs" />
     <Compile Include="Attributes\HATEAOSAttribute.cs" />
+    <Compile Include="ConnectionManager.cs" />
     <Compile Include="DataResponse.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />

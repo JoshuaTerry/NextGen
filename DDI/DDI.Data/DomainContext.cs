@@ -6,13 +6,15 @@ using System.Data.Entity.Infrastructure;
 using System.Collections.Generic;
 using System;
 using DDI.Shared.Models;
+using DDI.Shared;
 
 namespace DDI.Data
 {
     public class DomainContext : DbContext
     {
+        private const string _domainContextConnectionKey = "DomainContext";
         #region Public Properties
-
+         
         public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
         public virtual DbSet<Address> Addresses { get; set; }
@@ -100,7 +102,7 @@ namespace DDI.Data
         #region Public Constructors
 
         public DomainContext()
-            : base("name=DomainContext")
+            : base(ConnectionManager.Instance.Connections[_domainContextConnectionKey])
         {
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
