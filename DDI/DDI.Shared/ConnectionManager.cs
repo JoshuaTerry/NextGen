@@ -67,14 +67,11 @@ namespace DDI.Shared
                         if (_instance == null)
                         {
                             _instance = new ConnectionManager();
-
-
                         }
                     }
                 }
                 return _instance;
             }
         }
-
     }
 }
