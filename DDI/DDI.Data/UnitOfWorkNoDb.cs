@@ -97,6 +97,11 @@ namespace DDI.Data
             return repository;
         }
 
+        public IRepository<T> GetCachedRepository<T>() where T : class
+        {
+            return GetRepository<T>();
+        }
+
         public int SaveChanges()
         {
             return 0;

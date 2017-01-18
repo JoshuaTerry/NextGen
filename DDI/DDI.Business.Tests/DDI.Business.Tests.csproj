@@ -55,9 +55,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Common\DataSources\StateDataSource.cs" />
+    <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
     <Compile Include="Core\ConfigurationLogicTest.cs" />
     <Compile Include="Core\ConfigurationBaseTest.cs" />
+    <Compile Include="CRM\AddressLogicTest.cs" />
     <Compile Include="CRM\ConstituentLogicTest.cs" />
     <Compile Include="CRM\DataSources\ConstituentTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\CRMConfigurationDataSource.cs" />
@@ -66,6 +69,7 @@
     <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
+    <Compile Include="Helpers\AbbreviationHelperTest.cs" />
     <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
