@@ -9,6 +9,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <input id="hidconstituentid" runat="server" type="hidden" class="hidconstituentid" enableviewstate="true" />
+
     <div class="constituentcontainer">
 
         <div class="constituentinfocontainer">
@@ -572,17 +574,17 @@
 
             <div class="fieldblock">
                 <label>Address Type</label>
-                <select class="na-AddressType"></select>
+                <select class="na-AddressTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Street</label>
-                <textarea class="na-street"></textarea>
+                <textarea class="na-AddressLine1"></textarea>
             </div>
 
             <div class="fieldblock">
                 <label>Country</label>
-                <select class="na-Country"></select>
+                <select class="na-CountryId"></select>
             </div>
 
             <div class="fieldblock">
@@ -598,38 +600,33 @@
 
                 <div class="fieldblock">
                     <label style="width: 25px;">St</label>
-                    <select class="na-State" style="width: 106px;"></select>
+                    <select class="na-StateId" style="width: 106px;"></select>
                 </div>
             </div>
 
             <div class="fieldblock">
                 <label>County</label>
-                <select class="na-County"></select>
+                <select class="na-CountyId"></select>
             </div>
 
-            <div class="fieldblock">
+            <div class="fieldblock region1">
                 <label>Region 1</label>
-                <select class="na-Region1"></select>
+                <select class="na-Region1Id"></select>
             </div>
 
-            <div class="fieldblock">
+            <div class="fieldblock region2">
                 <label>Region 2</label>
-                <select class="na-Region2"></select>
+                <select class="na-Region2Id"></select>
             </div>
 
-            <div class="fieldblock">
+            <div class="fieldblock region3">
                 <label>Region 3</label>
-                <select class="na-Region3"></select>
+                <select class="na-Region3Id"></select>
             </div>
 
-            <div class="fieldblock">
+            <div class="fieldblock region4">
                 <label>Region 4</label>
-                <select class="na-Region4"></select>
-            </div>
-
-            <div class="fieldblock">
-                <label>Phone</label>
-                <input type="text" class="na-Phone" />
+                <select class="na-Region4Id"></select>
             </div>
 
             <fieldset>

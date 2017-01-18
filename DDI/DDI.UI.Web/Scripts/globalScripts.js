@@ -245,6 +245,34 @@ function FormatJSONDate(jsonDate) {
     return date;
 }
 
+function ClearElement(e) {
+
+    if ($(e).is('select')
+        || $(e).is('div')) {
+
+        $(e).html('');
+
+    }
+
+    if ($(e).is('input')) {
+
+        if ($(e).is(':checkbox')) {
+            $(e).prop('checked', false);
+        }
+        else {
+            $(e).val('');
+        }
+
+    }
+    
+    if ($(e).is('textarea')) {
+
+        $(e).text('');
+
+    }
+
+}
+
 
 // EDITING
 //

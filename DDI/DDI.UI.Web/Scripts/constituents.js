@@ -12,10 +12,14 @@ $(document).ready(function () {
     });
 
     if (sessionStorage.getItem('constituentnumber')) {
-        GetConstituentData(sessionStorage.getItem('constituentnumber'));
 
-        sessionStorage.removeItem('constituentnumber');
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentnumber'))
+
+        // sessionStorage.removeItem('constituentnumber');
+
     }
+
+    GetConstituentData($('.hidconstituentid').val());
 
     NewAddressModal();
 
@@ -85,7 +89,12 @@ function DisplayConstituentData() {
                 var classname = '.' + key;
 
                 if ($(classname).is('input')) {
-                    $(classname).val(value);
+                    if ($(classname).is(':checkbox')) {
+                        $(classname).prop('checked', value);
+                    }
+                    else {
+                        $(classname).val(value);
+                    }
                 }
 
                 if ($(classname).is('select')) {
@@ -259,8 +268,8 @@ function NewAddressModal() {
         modal = $('.newaddressmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 400,
-            height: 600,
+            width: 375,
+            height: 560,
             resizable: false
         });
 
@@ -278,7 +287,47 @@ function NewAddressModal() {
 
     $('.savenewaddress').click(function () {
 
+        var item = {
+            IsPrimary: $('.na-IsPreferred').prop('checked'),
+            Comment: $('.na-Comment').val(),
+            StartDate: $('.na-FromDate').val(),
+            EndDate: $('.na-ToDate').val(),
+            StartDay: 0,
+            EndDay: 0,
+            ResidentType: $('.na-Residency').val(),
+            AddressTypeId: $('.na-AddressTypeId').val(),
+            Address: {
+                AddressLine1: $('.na-AddressTypeId').val(),
+                AddressLine2: $('.na-AddressTypeId').val(),
+                City: $('.na-City').val(),
+                CountryId: $('.na-CountryId').val(),
+                CountyId: $('.na-CountyId').val(),
+                PostalCode: $('.na-PostalCode').val(),
+                StateId: $('.na-StateId').val(),
+                Region1Id: $('.na-Region1Id').val(),
+                Region2Id: $('.na-Region2Id').val(),
+                Region3Id: $('.na-Region3Id').val(),
+                Region4Id: $('.na-Region4Id').val()
+            }
+        }
 
+        $.ajax({
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'constituentaddresses',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+                // DisplayContactInfo();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+            }
+        })
 
     });
 
@@ -287,11 +336,72 @@ function NewAddressModal() {
 function LoadNewAddressModalDropDowns() {
 
     // PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
-    PopulateDropDown('.na-AddressType', 'addresstypes', '', '');
-    PopulateDropDown('.na-Country', 'countries', '', ''); // needs to load states
-    PopulateDropDown('.na-State', 'states', '', ''); // needs to load counties
-    PopulateDropDown('.na-County', 'counties', '', '');
+    PopulateDropDown('.na-AddressTypeId', 'addresstypes', '', '');
+
+    PopulateDropDown('.na-CountryId', 'countries', '', '', function () {
+        PopulateStatesInModal();
+    });
+    
+    LoadRegions();
+
+}
+
+function PopulateStatesInModal() {
+
+    ClearElement('.na-StateId');
+    ClearElement('.na-CountyId');
+
+    var countryid = $('.na-CountryId').val();
+
+    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryid, '', '', function () {
+        PopulateCountiesInModal()
+    });
+
+}
+
+function PopulateCountiesInModal() {
+
+    var stateid = $('.na-StateId').val();
+
+    PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '');
+
+}
+
+function LoadRegions() {
+
+    GetRegionLevels();
+
+}
+
+function GetRegionLevels() {
+
+
+
+}
+
+function LoadRegion1() {
+
+    $('.region1').show();
+
     PopulateDropDown('.na-Region1', 'regions', '', ''); // needs to load region2
+
+}
+
+function LoadRegion2() {
+
+    $('.region2').show();
+
+}
+
+function LoadRegion3() {
+
+    $('.region3').show();
+
+}
+
+function LoadRegion4() {
+
+    $('.region4').show();
 
 }
 

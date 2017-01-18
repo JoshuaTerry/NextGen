@@ -1,11 +1,4 @@
 ﻿
-
-function ClearElement(e) {
-
-    $(e).html('');
-
-}
-
 function AddDefaultOption(e, text, val) {
 
     var option = $('<option>').val('null').text('');
