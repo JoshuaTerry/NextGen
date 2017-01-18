@@ -44,7 +44,7 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 .maincontainer { width: 100%; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; margin-right: .8%; }
-div.threecolumn>div { width: 32.8%; display: inline-block; vertical-align: top; }
+div.threecolumn>div { width: 32%; display: inline-block; vertical-align: top; margin-right: 1% }
 div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; margin-right: .7%; }
 div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; margin-right: .7%; }
 
@@ -55,7 +55,7 @@ div.fieldblock.inline { display: inline-block; }
 div.fieldblock label { display: block; }
 div.fieldblock label.inline { display: inline-block; }
 div.fieldblock input,
-div.fieldblock select { width: 99%; }
+div.fieldblock select { width: 100%; }
 div.fieldblock input { height: 15px; }
 div.fieldblock select { height: 21px; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
