@@ -55,6 +55,7 @@ namespace DDI.Business.CRM
         /// <typeparam name="T">ModuleInfo type</typeparam>
         public static T GetModuleInfo<T>() where T : ModuleInfoConcrete
         {
+            // TODO pretty sure I cantake this out, since we're doing away with the separate classses
             Initialize();
             return _modules.FirstOrDefault(p => p.GetType() == typeof(T)) as T;
         }
@@ -402,6 +403,27 @@ namespace DDI.Business.CRM
             fundRaising.ChildModules.Add(donations);
             fundRaising.ChildModules.Add(namedFunds);
             fundRaising.ChildModules.Add(plannedGiving);
+
+            accountsPayable.ParentModule = accounting;
+            accountsReceivable.ParentModule = accounting;
+            fixedAssets.ParentModule = accounting;
+            generalLedger.ParentModule = accounting;
+            inventory.ParentModule = accounting;
+
+            cashDisbursements.ParentModule = cashProcessing;
+            cashReceipting.ParentModule = cashProcessing;
+
+            investments.ParentModule = extensionFund;
+            lineOfCredit.ParentModule = extensionFund;
+            loans.ParentModule = extensionFund;
+            pools.ParentModule = extensionFund;
+            portfolio.ParentModule = extensionFund;
+
+            campaigns.ParentModule = fundRaising;
+            cropEvents.ParentModule = fundRaising;
+            donations.ParentModule = fundRaising;
+            namedFunds.ParentModule = fundRaising;
+            plannedGiving.ParentModule = fundRaising;
         }
     }
 

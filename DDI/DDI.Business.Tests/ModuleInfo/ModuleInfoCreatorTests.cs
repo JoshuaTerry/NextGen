@@ -11,11 +11,9 @@ using System.Threading.Tasks;
 namespace DDI.Business.Tests.ModuleInfo
 {
     [TestClass]
-    class ModuleCreatorTests
+    public class ModuleInfoCreatorTests
     {
-        // TODO: Add tests from ModuleHelperTests
 
-        // TODO: Test functionality that ModuleHelperTests doesn't cover
 
         private const string TESTDESCR = "Business | CRM | ModuleInfo";
         // I believe this will change to "Business | ModuleInfo"
@@ -23,13 +21,17 @@ namespace DDI.Business.Tests.ModuleInfo
         [TestMethod, TestCategory(TESTDESCR)]
         public void ModuleInfoCreator_GetModuleInfo_ModuleType()
         {
-            // This tests a bunch of functionality, split it up
-            ModuleInfoConcrete accountingModule = ModuleInfoCreator.GetModuleInfo(ModuleType.Accounting); // make sure this works properly
-            ModuleInfoConcrete generalLedgerModule = ModuleInfoCreator.GetModuleInfo(ModuleType.GeneralLedger);
+            ModuleInfoConcrete acctModule = ModuleInfoCreator.GetModuleInfo(ModuleType.Accounting); 
+            ModuleInfoConcrete glModule = ModuleInfoCreator.GetModuleInfo(ModuleType.GeneralLedger);
 
-            Assert.AreEqual("ACCT", accountingModule.Code, "Ensure Accounting module is present and Code property is valid.");
+            var generalLedgerParentModule = acctModule.ChildModules[3].ParentModuleType;
+            // general ledger module in acctmodule child modules collection
 
-            Assert.AreEqual(accountingModule, generalLedgerModule.ParentModule, "GL module has parent of Accounting.");
+            Assert.AreEqual(generalLedgerParentModule, glModule.ParentModuleType, "Accounting has child module of GL.");
+
+            Assert.AreEqual("ACCT", acctModule.Code, "Ensure Accounting module is present and Code property is valid.");
+
+            Assert.AreEqual(acctModule.ModuleType, glModule.ParentModule.ModuleType, "GL module has parent of Accounting.");
         }
         
     }
