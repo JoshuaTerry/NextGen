@@ -62,7 +62,7 @@ namespace DDI.Business.Helpers
         /// Provide a set of abbreviations.  This method is only intended to be called by the unit testing infrastructure.
         /// </summary>
         /// <param name="abbreviations"></param>
-        public static void SetAbbreviations(IEnumerable<Abbreviation> abbreviations)
+        internal static void SetAbbreviations(IEnumerable<Abbreviation> abbreviations)
         {
             CacheHelper.SetEntry(ABBREVIATIONS_KEY, abbreviations.ToList(), ABBREVIATIONS_TIMEOUT, false, null);
         }
