@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Caching;
 using DDI.Data;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
 using DDI.Shared;
+using DDI.Shared.Caching;
 
-namespace DDI.Business.Common
+namespace DDI.Business.Helpers
 {
     /// <summary>
-    /// Class for abbreviating and expanding words in strings and providing a cached list of abbreviations.
+    /// Static helper class for abbreviating and expanding words in strings and providing a cached list of abbreviations.
     /// </summary>
     public static class AbbreviationHelper
     {
         #region Private Fields
 
         private const string ABBREVIATIONS_KEY = "ABBR";
-        private const int ABBREVIATIONS_TIMEOUT = 60;
+        private const int ABBREVIATIONS_TIMEOUT = 3600;
 
         private static IEnumerable<string> _suffixesWithPeriods, _prefixesWithPeriods, _numericSuffixes, _directionals;
 
@@ -52,25 +52,34 @@ namespace DDI.Business.Common
         /// </summary>
         public static IList<Abbreviation> GetAbbreviations(IUnitOfWork uow)
         {
-            ObjectCache cache = MemoryCache.Default;
-            IList<Abbreviation> list = cache[ABBREVIATIONS_KEY] as IList<Abbreviation>;
-            if (list == null)
-            {
-                if (uow != null)
-                {
-                    list = uow.GetEntities<Abbreviation>().ToList();
-                }
-                else
-                {
-                    using (var context = new UnitOfWorkEF())
-                    {
-                        list = context.GetEntities<Abbreviation>().ToList();
-                    }
-                }
-                cache.Set(ABBREVIATIONS_KEY, list, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(ABBREVIATIONS_TIMEOUT) });
-            }
-
+            // Cannot use CachedRepository because we don't want to create static reference to a cached repository.
+            IList<Abbreviation> list = CacheHelper.GetEntry(ABBREVIATIONS_KEY, ABBREVIATIONS_TIMEOUT, false,
+                () => GetAbbreviationsFromDatabase(uow), null);
             return list;
+        }
+
+        /// <summary>
+        /// Provide a set of abbreviations.  This method is only intended to be called by the unit testing infrastructure.
+        /// </summary>
+        /// <param name="abbreviations"></param>
+        internal static void SetAbbreviations(IEnumerable<Abbreviation> abbreviations)
+        {
+            CacheHelper.SetEntry(ABBREVIATIONS_KEY, abbreviations.ToList(), ABBREVIATIONS_TIMEOUT, false, null);
+        }
+
+        private static IList<Abbreviation> GetAbbreviationsFromDatabase(IUnitOfWork uow)
+        {
+            if (uow != null)
+            {
+                return uow.GetEntities<Abbreviation>().ToList();
+            }
+            else
+            {
+                using (var context = new UnitOfWorkEF())
+                {
+                    return context.GetEntities<Abbreviation>().ToList();
+                }
+            }
         }
 
         /// <summary>
@@ -123,24 +132,24 @@ namespace DDI.Business.Common
         {
             Token[] tokens = TokenizeNameLine(text, false);
             StringBuilder sb = new StringBuilder();
-            int len = 0;
+            int length = 0;
 
             foreach (var token in tokens)
             {
-                len += token.Word.Length;
+                length += token.Word.Length;
             }
 
-            if (len > targetLength)
+            if (length > targetLength)
             {
                 foreach (var token in tokens.Where(p => p.Priority > 0 && !string.IsNullOrEmpty(p.AbbrevWord)).OrderByDescending(p => p.Priority))
                 {
-                    len -= (token.Word.Length - token.AbbrevWord.Length);
+                    length -= (token.Word.Length - token.AbbrevWord.Length);
                     if (!(allCaps || token.Capitalize))
                     {
                         token.Word = StringHelper.FormalCase(token.AbbrevWord);
                     }
 
-                    if (len <= targetLength)
+                    if (length <= targetLength)
                     {
                         break;
                     }
@@ -148,7 +157,7 @@ namespace DDI.Business.Common
             }
 
             // Final steps if length is still too long
-            if (len > targetLength)
+            if (length > targetLength)
             {
                 foreach (var token in tokens)
                 {
@@ -311,24 +320,24 @@ namespace DDI.Business.Common
         {
             Token[] tokens = TokenizeAddressLine(text, false);
             StringBuilder sb = new StringBuilder();
-            int len = 0;
+            int length = 0;
 
             foreach (var token in tokens)
             {
-                len += token.Word.Length;
+                length += token.Word.Length;
             }
 
-            if (len > targetLength)
+            if (length > targetLength)
             {
                 foreach (var token in tokens.Where(p => p.Priority > 0 && !string.IsNullOrEmpty(p.AbbrevWord)).OrderByDescending(p => p.Priority))
                 {
-                    len -= (token.Word.Length - token.AbbrevWord.Length);
+                    length -= (token.Word.Length - token.AbbrevWord.Length);
                     if (!(allCaps || token.Capitalize))
                     {
                         token.Word = StringHelper.FormalCase(token.AbbrevWord);
                     }
 
-                    if (len <= targetLength)
+                    if (length <= targetLength)
                     {
                         break;
                     }
@@ -336,7 +345,7 @@ namespace DDI.Business.Common
             }
 
             // Final steps if length is still too long
-            if (len > targetLength)
+            if (length > targetLength)
             {
                 foreach (var token in tokens)
                 {
@@ -413,13 +422,13 @@ namespace DDI.Business.Common
         private static Token[] TokenizeNameLine(string text, bool abbreviateAll)
         {
             Token[] tokens = Tokenize(text);
-            int idx;
+            int index;
             bool skipDirectional = false;
 
             // Process the words in reverse order.
-            for (idx = tokens.Length - 1; idx >= 0; idx--)
+            for (index = tokens.Length - 1; index >= 0; index--)
             {
-                string thisword = tokens[idx].Word;
+                string thisword = tokens[index].Word;
 
                 if (!string.IsNullOrWhiteSpace(thisword))
                 {
@@ -436,20 +445,20 @@ namespace DDI.Business.Common
                     if (abbr != null)
                     {
 
-                        tokens[idx].Capitalize = abbr.IsCaps;
-                        tokens[idx].Priority = abbr.Priority + 1;
+                        tokens[index].Capitalize = abbr.IsCaps;
+                        tokens[index].Priority = abbr.Priority + 1;
 
                         // Expansion:
                         if (!string.IsNullOrEmpty(abbr.NameWord) && abbr.NameWord.Length > thisword.Length)
                         {
                             // Don't expand ST to STREET unless it's at the end.  But if it's at the start, expand it to "SAINT"
-                            if (idx == tokens.Length - 1 || thisword.ToUpper() != "ST")
+                            if (index == tokens.Length - 1 || thisword.ToUpper() != "ST")
                             {
-                                tokens[idx].ExpandedWord = abbr.NameWord;
+                                tokens[index].ExpandedWord = abbr.NameWord;
                             }
-                            else if (idx == 0 && thisword.ToUpper() == "ST")
+                            else if (index == 0 && thisword.ToUpper() == "ST")
                             {
-                                tokens[idx].ExpandedWord = "SAINT";
+                                tokens[index].ExpandedWord = "SAINT";
                             }
                         }
 
@@ -464,7 +473,7 @@ namespace DDI.Business.Common
                             skipDirectional = abbr.IsSuffix;
 
                             // Replace this word with the abbreviation.
-                            tokens[idx].AbbrevWord = abbr.USPSAbbreviation;
+                            tokens[index].AbbrevWord = abbr.USPSAbbreviation;
                         }
 
                     }
@@ -481,14 +490,14 @@ namespace DDI.Business.Common
         private static Token[] TokenizeAddressLine(string text, bool abbreviateAll)
         {
             Token[] tokens = Tokenize(text);
-            int idx;
-            bool abbrevFound = false;
+            int index;
+            bool abbreviationFound = false;
             bool skipDirectional = false;
 
             // Process the words in reverse order.
-            for (idx = tokens.Length - 1; idx >= 0; idx--)
+            for (index = tokens.Length - 1; index >= 0; index--)
             {
-                string thisword = tokens[idx].Word;
+                string thisword = tokens[index].Word;
 
                 if (!string.IsNullOrWhiteSpace(thisword))
                 {
@@ -500,45 +509,45 @@ namespace DDI.Business.Common
                     }
 
                     // Is this word an address abbreviation or word?
-                    var abbr = GetAbbreviations().FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && p.AddressWord.Length > 0);
-                    if (abbr != null)
+                    var abbreviation = GetAbbreviations().FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && p.AddressWord.Length > 0);
+                    if (abbreviation != null)
                     {
 
-                        tokens[idx].Capitalize = abbr.IsCaps;
-                        tokens[idx].Priority = abbr.Priority + 1;
+                        tokens[index].Capitalize = abbreviation.IsCaps;
+                        tokens[index].Priority = abbreviation.Priority + 1;
 
                         // Expansion:
-                        if (abbr.AddressWord.Length > thisword.Length)
+                        if (abbreviation.AddressWord.Length > thisword.Length)
                         {
                             // Don't expand ST to STREET unless it's at the end.  But if it's at the start, expand it to "SAINT"
-                            if (idx == tokens.Length - 1 || thisword.ToUpper() != "ST")
+                            if (index == tokens.Length - 1 || thisword.ToUpper() != "ST")
                             {
-                                tokens[idx].ExpandedWord = abbr.AddressWord;
+                                tokens[index].ExpandedWord = abbreviation.AddressWord;
                             }
-                            else if (idx == 0 && thisword.ToUpper() == "ST")
+                            else if (index == 0 && thisword.ToUpper() == "ST")
                             {
-                                tokens[idx].ExpandedWord = "SAINT";
+                                tokens[index].ExpandedWord = "SAINT";
                             }
                         }
 
                         // Abbreviate suffixes only if they are at the end.  Suffixes are usually found at the end of an address line and there should be only one of these.
-                        if (abbreviateAll || !(abbrevFound && abbr.IsSuffix))
+                        if (abbreviateAll || !(abbreviationFound && abbreviation.IsSuffix))
                         {
                             // If this is a directional (east, west, etc.) skip it if we just abbreviated a suffix word.
-                            if (!abbreviateAll && skipDirectional && IsDirectional(abbr.USPSAbbreviation))
+                            if (!abbreviateAll && skipDirectional && IsDirectional(abbreviation.USPSAbbreviation))
                             {
                                 skipDirectional = false;
                             }
                             else
                             {
                                 // Mark that an abbreviation has been found.  Trailing directional doesn't count.
-                                abbrevFound = abbrevFound || !IsDirectional(abbr.USPSAbbreviation);
+                                abbreviationFound = abbreviationFound || !IsDirectional(abbreviation.USPSAbbreviation);
 
                                 // If this is a suffix word, don't abbreviate the directional that might precede it.  (e.g. East St.)
-                                skipDirectional = abbr.IsSuffix;
+                                skipDirectional = abbreviation.IsSuffix;
 
                                 // Replace this word with the abbreviation.
-                                tokens[idx].AbbrevWord = abbr.USPSAbbreviation;
+                                tokens[index].AbbrevWord = abbreviation.USPSAbbreviation;
                             }
 
                         }
@@ -572,30 +581,30 @@ namespace DDI.Business.Common
         /// <returns></returns>
         private static Token[] Tokenize(string text)
         {
-            List<Token> tlist = new List<Token>();
+            List<Token> tokenList = new List<Token>();
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                return tlist.ToArray();
+                return tokenList.ToArray();
             }
 
-            int len = text.Length;
+            int length = text.Length;
             TokenizeState state = TokenizeState.None;
             StringBuilder sb = new StringBuilder();
-            char quotechar = ' ';
+            char quote = ' ';
 
             int idx = 0;
-            while (idx < len)
+            while (idx < length)
             {
                 char c = text[idx++];
-                char cnext = (idx < len ? text[idx] : ' ');
+                char cnext = (idx < length ? text[idx] : ' ');
 
                 switch (state)
                 {
                     case TokenizeState.None:  // Start state
                         if (char.IsWhiteSpace(c))
                         {
-                            tlist.Add(new Token(c));
+                            tokenList.Add(new Token(c));
                             state = TokenizeState.Whitespace;
                         }
                         else if (IsWordChar(c) && c != '\'')
@@ -606,14 +615,14 @@ namespace DDI.Business.Common
                         }
                         else if (c == '"' || c == '\'')
                         {
-                            quotechar = c;
+                            quote = c;
                             sb.Clear();
                             sb.Append(c);
                             state = TokenizeState.QuotedString;
                         }
                         else
                         {
-                            tlist.Add(new Token(c));
+                            tokenList.Add(new Token(c));
                         }
                         break;
 
@@ -625,7 +634,7 @@ namespace DDI.Business.Common
                         }
                         else
                         {
-                            tlist.Add(new Token(c));
+                            tokenList.Add(new Token(c));
                         }
                         break;
 
@@ -638,7 +647,7 @@ namespace DDI.Business.Common
                         else
                         {
                             // Otherwise, restart the SM on the same character
-                            tlist.Add(new Token(sb.ToString()));
+                            tokenList.Add(new Token(sb.ToString()));
                             state = TokenizeState.None;
                             idx--;
                         }
@@ -647,9 +656,9 @@ namespace DDI.Business.Common
                     case TokenizeState.QuotedString: // A quoted string
                         // Otherwise, keep appending chars to the quoted string, restarting the SM on the ending quote
                         sb.Append(c);
-                        if (c == quotechar)
+                        if (c == quote)
                         {
-                            tlist.Add(new Token(sb.ToString()));
+                            tokenList.Add(new Token(sb.ToString()));
                             state = TokenizeState.None;
                         }
                         break;
@@ -660,10 +669,10 @@ namespace DDI.Business.Common
             // Add any remaining text in the string builder
             if (state == TokenizeState.QuotedString || state == TokenizeState.Word)
             {
-                tlist.Add(new Token(sb.ToString()));
+                tokenList.Add(new Token(sb.ToString()));
             }
 
-            return tlist.ToArray();
+            return tokenList.ToArray();
         } // Tokenize
 
         private static bool IsWordChar(char c)

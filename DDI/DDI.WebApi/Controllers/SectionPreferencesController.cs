@@ -12,8 +12,8 @@ namespace DDI.WebApi.Controllers
         private ISectionPreferenceService _service;
 
         public SectionPreferencesController()
-            :this(new SectionPreferenceService(new CachedRepository<SectionPreference>()))
-        {
+            :this(new SectionPreferenceService())
+        {            
         }
 
         internal SectionPreferencesController(ISectionPreferenceService service)

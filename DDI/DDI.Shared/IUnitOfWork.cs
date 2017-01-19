@@ -13,6 +13,8 @@ namespace DDI.Shared
 
         IRepository<T> GetRepository<T>() where T : class;
 
+        IRepository<T> GetCachedRepository<T>() where T : class;
+
         void SetRepository<T>(IRepository<T> repository) where T : class;
 
         int SaveChanges();

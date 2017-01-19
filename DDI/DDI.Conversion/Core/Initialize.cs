@@ -13,7 +13,9 @@ using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.Core
 {
-    [ModuleType(Shared.Enums.ModuleType.SystemAdministration)]
+    /// <summary>
+    /// Seeding of initial data for the Core module.
+    /// </summary>
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod
