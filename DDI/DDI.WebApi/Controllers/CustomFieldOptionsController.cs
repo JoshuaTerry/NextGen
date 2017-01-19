@@ -44,7 +44,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/customfieldoptions/{id}")]
-        public IHttpActionResult GetById(string id)
+        public IHttpActionResult GetById(Guid id)
         {
             var result = _service.GetById(id);
             if (result == null)
@@ -94,8 +94,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/v1/customfieldoptions")]
-        public IHttpActionResult Delete([FromBody] CustomFieldOption entity)
+        [Route("api/v1/customfieldoptions/{id}")]
+        public IHttpActionResult Delete(Guid id)
         {
             try
             {
@@ -104,7 +104,13 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var response = _service.Delete(entity);
+                var entityToDelete = _service.GetById(id);
+                if (entityToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                var response = _service.Delete(entityToDelete.Data);
 
                 return Ok(response);
             }

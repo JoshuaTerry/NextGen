@@ -38,12 +38,6 @@ namespace DDI.Services
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse<T> GetById(string id)
-        {
-            var result = _unitOfWork.GetRepository<T>().Entities.ToList().SingleOrDefault(e => e.Id.ToString() == id);
-            return GetIDataResponse(() => result);
-        } 
-
         public IDataResponse Update(T entity)
         {
             var response = new DataResponse();
