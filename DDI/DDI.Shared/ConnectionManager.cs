@@ -10,7 +10,7 @@ namespace DDI.Shared
 {
     public sealed class ConnectionManager
     {
-        private static volatile ConnectionManager _instance;
+        private static ConnectionManager _instance;
         private static object _syncRoot = new object();
         private ReadOnlyDictionary<string, string> _connections;
         private static IConfigurationManager _configurationManager;
