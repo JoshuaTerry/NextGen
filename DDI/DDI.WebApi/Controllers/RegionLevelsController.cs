@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 
@@ -66,6 +63,49 @@ namespace DDI.WebApi.Controllers
 
             var response = _service.Add(item);
             return Ok();
+        }
+
+        [HttpPatch]
+        [Route("api/v1/regionlevels/{id}")]
+        public IHttpActionResult Patch(Guid id, JObject changes)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Update(id, changes);
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/v1/regionlevels")]
+        public IHttpActionResult Delete(RegionLevel item)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Delete(item);
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
     }
 }
