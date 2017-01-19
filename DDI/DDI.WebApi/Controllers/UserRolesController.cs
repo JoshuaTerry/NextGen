@@ -78,24 +78,28 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/users/roles/add")]
+        [Route("api/v1/users/roles")]
         public async Task<IHttpActionResult> Add([FromBody] UserRolesBindingModel model)
         {
-            if (CanRolesBeAddedToUser(model.Email, model.Roles) != null)
+            if (CanRolesBeAddedToUsers(model.Emails, model.Roles) != null)
             {
-                ModelState.AddModelError("", CanRolesBeAddedToUser(model.Email, model.Roles).Item2);
+                ModelState.AddModelError("", CanRolesBeAddedToUsers(model.Emails, model.Roles).Item2);
                 return BadRequest(ModelState);
             }
 
             try
             {
-                var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                if (user == null)
+                foreach (var email in model.Emails)
                 {
-                    return NotFound();
-                }
+                    var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
 
-                await UserManager.AddToRolesAsync(user.Id, model.Roles);
+                    await UserManager.AddToRolesAsync(user.Id, model.Roles);
+
+                }
             }
             catch (Exception)
             {
@@ -109,21 +113,25 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/users/roles/remove")]
         public async Task<IHttpActionResult> Delete([FromBody] UserRolesBindingModel model)
         {
-            if (CanRolesBeRemovedFromUser(model.Email, model.Roles) != null)
+            if (CanRolesBeRemovedFromUsers(model.Emails, model.Roles) != null)
             {
-                ModelState.AddModelError("", CanRolesBeRemovedFromUser(model.Email, model.Roles).Item2);
+                ModelState.AddModelError("", CanRolesBeRemovedFromUsers(model.Emails, model.Roles).Item2);
                 return BadRequest(ModelState);
             }
 
             try
             {
-                var user = UserManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                if (user == null)
+                foreach (var email in model.Emails)
                 {
-                    return NotFound();
-                }
+                    var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
 
-                await UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
+                    await UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
+
+                }
             }
             catch (Exception)
             {
@@ -146,16 +154,19 @@ namespace DDI.WebApi.Controllers
             return canRoleBeAddedToUser;
         }
 
-        private Tuple<bool, string> CanRolesBeAddedToUser(string email, string[] roles)
+        private Tuple<bool, string> CanRolesBeAddedToUsers(string[] emails, string[] roles)
         {
             Tuple<bool, string> canRolesBeAddedToUser = null;
             string errorMessage = string.Empty;
 
             foreach (var role in roles)
             {
-                if (CanRoleBeAddedToUser(email, role) != null)
+                foreach (var email in emails)
                 {
-                    errorMessage += $"{CanRoleBeAddedToUser(email, role).Item2}\n";
+                    if (CanRoleBeAddedToUser(email, role) != null)
+                    {
+                        errorMessage += $"{CanRoleBeAddedToUser(email, role).Item2}\n";
+                    }
                 }
             }
 
@@ -180,16 +191,19 @@ namespace DDI.WebApi.Controllers
             return canRoleBeRemovedFromUser;
         }
 
-        private Tuple<bool, string> CanRolesBeRemovedFromUser(string email, string[] roles)
+        private Tuple<bool, string> CanRolesBeRemovedFromUsers(string[] emails, string[] roles)
         {
             Tuple<bool, string> canRolesBeRemovedFromUser = null;
             string errorMessage = string.Empty;
 
             foreach (var role in roles)
             {
-                if (CanRoleBeRemovedFromUser(email, role) != null)
+                foreach (var email in emails)
                 {
-                    errorMessage += $"{CanRoleBeRemovedFromUser(email, role).Item2}\n";
+                    if (CanRoleBeRemovedFromUser(email, role) != null)
+                    {
+                        errorMessage += $"{CanRoleBeRemovedFromUser(email, role).Item2}\n";
+                    }
                 }
             }
 

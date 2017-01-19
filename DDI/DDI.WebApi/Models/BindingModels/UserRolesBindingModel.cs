@@ -6,7 +6,7 @@ namespace DDI.WebApi.Models.BindingModels
     {
         [Required]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string[] Emails { get; set; }
 
         [Required]
         [Display(Name = "Roles")]

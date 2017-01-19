@@ -128,7 +128,7 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("api/v1/users/{id}")]
         public async Task<IHttpActionResult> Update(string id, [FromBody] JObject userPropertiesChanged)
         {

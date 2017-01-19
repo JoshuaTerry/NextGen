@@ -105,7 +105,7 @@ namespace DDI.WebApi.Controllers
             return Ok(users);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("api/v1/roles/{id}/update")]
         public async Task<IHttpActionResult> Update(string id, string newRoleName)
         {
