@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.Tests.CRM.DataSources
@@ -13,12 +13,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<Gender> GetDataSource(UnitOfWorkNoDb uow)
         {
-            var genders = new List<Gender>();
-            genders.Add(new Gender() { Code = "M", Name = "Male", IsMasculine = true, Id = GuidHelper.NextGuid() });
-            genders.Add(new Gender() { Code = "F", Name = "Female", IsMasculine = false, Id = GuidHelper.NextGuid() });
+            var _genders = new List<Gender>();
+            _genders.Add(new Gender() { Code = "M", Name = "Male", IsMasculine = true, Id = Guid.NewGuid() });
+            _genders.Add(new Gender() { Code = "F", Name = "Female", IsMasculine = false, Id = Guid.NewGuid() });
 
-            uow.CreateRepositoryForDataSource(genders);
-            return genders;
+            uow.CreateRepositoryForDataSource(_genders);
+            return _genders;
         }    
 
     }

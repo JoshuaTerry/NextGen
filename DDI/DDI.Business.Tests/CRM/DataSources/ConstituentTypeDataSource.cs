@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
@@ -15,8 +14,8 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<ConstituentType> GetDataSource(UnitOfWorkNoDb uow)
         {
-            var constituentTypes = new List<ConstituentType>();
-            constituentTypes.Add(new ConstituentType()
+            var _constituentTypes = new List<ConstituentType>();
+            _constituentTypes.Add(new ConstituentType()
             {
                 Category = ConstituentCategory.Individual,
                 Code = "I",
@@ -27,10 +26,10 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "{P}{F}{MI}{L}{S}",
                 SalutationFormal = "Dear {P}{L}",
                 SalutationInformal = "Dear {F}",
-                Id = GuidHelper.NextGuid()
+                Id = Guid.NewGuid()
             });
 
-            constituentTypes.Add(new ConstituentType()
+            _constituentTypes.Add(new ConstituentType()
             {
                 Category = ConstituentCategory.Organization,
                 Code = "O",
@@ -41,10 +40,10 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "",
                 SalutationFormal = "Dear Friends",
                 SalutationInformal = "Dear Friends",
-                Id = GuidHelper.NextGuid()
+                Id = Guid.NewGuid()
             });
 
-            constituentTypes.Add(new ConstituentType()
+            _constituentTypes.Add(new ConstituentType()
             {
                 Category = ConstituentCategory.Organization,
                 Code = "C",
@@ -55,11 +54,11 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "",
                 SalutationFormal = "Dear Friends",
                 SalutationInformal = "Dear Friends",
-                Id = GuidHelper.NextGuid()
+                Id = Guid.NewGuid()
             });
 
-            uow.CreateRepositoryForDataSource(constituentTypes);
-            return constituentTypes;
+            uow.CreateRepositoryForDataSource(_constituentTypes);
+            return _constituentTypes;
         }    
 
     }
