@@ -59,4 +59,11 @@ namespace DDI.Shared
 
         #endregion Public Methods
     }
+
+    // Defines non-generic versions of properties and methods.  (These are added only if needed.)
+    public interface IRepository
+    {
+        IQueryable Entities { get; }
+    }
+
 }

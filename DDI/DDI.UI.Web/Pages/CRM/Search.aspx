@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="../../Scripts/search.js"></script>
+    <link rel="stylesheet" href="..\..\CSS\search.css" />
 
 </asp:Content>
 
