@@ -9,7 +9,9 @@ using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.CRM
 {
-    public class RelationshipLogic : EntityLogicBase<Constituent>
+
+    // Relationship business logic
+    public class RelationshipLogic : EntityLogicBase<Relationship>
     {
         #region Private Fields
 
@@ -94,26 +96,31 @@ namespace DDI.Business.CRM
                 thisRelation.Constituent2 = leftConstituent;
         }
 
+        /// <summary>
+        /// Get a reciprocal relationship type, e.g. Aunt => Niece or Nephew
+        /// </summary>
+        /// <param name="relationType">Relationship type of person 1</param>
+        /// <param name="gender">Gender of person 2</param>
         public RelationshipType GetReciprocalRelationshipType(RelationshipType relationType, Gender gender)
         {
-            RelationshipType recipType;
+            RelationshipType reciprocalType;
 
             if (gender != null && gender.IsMasculine == false)
             {
-                recipType = UnitOfWork.GetReference(relationType, p => p.ReciprocalTypeFemale);
+                reciprocalType = UnitOfWork.GetReference(relationType, p => p.ReciprocalTypeFemale);
             }
             else
             {
-                recipType = UnitOfWork.GetReference(relationType, p => p.ReciprocalTypeMale);
+                reciprocalType = UnitOfWork.GetReference(relationType, p => p.ReciprocalTypeMale);
             }
 
             // If no reciprocal, return this relationship.
-            if (recipType == null)
+            if (reciprocalType == null)
             {
-                recipType = relationType;
+                reciprocalType = relationType;
             }
 
-            return recipType;
+            return reciprocalType;
         }
 
 

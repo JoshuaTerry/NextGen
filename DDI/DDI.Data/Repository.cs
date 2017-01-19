@@ -32,6 +32,7 @@ namespace DDI.Data
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
         private bool _isUOW = false;
+        private ICollection<T> _local = null;
 
         #endregion Private Fields
 
@@ -181,7 +182,11 @@ namespace DDI.Data
         /// </summary>
         public ICollection<T> GetLocal()
         {
-            return EntitySet.Local;
+            if (_local == null)
+            {
+                _local = EntitySet.Local;
+            }
+            return _local;
         }
 
         /// <summary>

@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,10 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\AbbreviationHelper.cs" />
+    <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
+    <Compile Include="CRM\AddressLogic.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />
     <Compile Include="CRM\ConstituentLogic.cs" />
     <Compile Include="CRM\LabelFormattingOptions.cs" />

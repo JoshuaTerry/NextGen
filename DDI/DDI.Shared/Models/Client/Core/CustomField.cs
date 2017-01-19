@@ -25,11 +25,10 @@ namespace DDI.Shared.Models.Client.Core
         public DDI.Shared.Enums.Common.CustomFieldType FieldType { get; set; }
 
         public ICollection<CustomFieldOption> Options { get; set; }
-
-        public CustomFieldData Answer { get; set; }
+        public ICollection<CustomFieldData> Data { get; set; }
 
         [NotMapped]
-        public override string DisplayName { get;  }
+        public override string DisplayName => LabelText;
 
         #endregion
     }
