@@ -568,7 +568,7 @@
 
     </div>
 
-    <div class="newaddressmodal" title="New Address" style="display: none;">
+    <div class="addressmodal" title="New Address" style="display: none;">
 
         <div class="modalcontent">
 
@@ -639,7 +639,7 @@
 
                 <div class="fieldblock">
                     <label>Residency</label>
-                    <select class="na-Residency">
+                    <select class="na-ResidentType">
                         <option value="0">Primary</option>
                         <option value="1">Secondary</option>
                         <option value="2">Separate</option>
@@ -653,15 +653,15 @@
 
                 <div class="fieldblock range">
                     <label>Dates</label>
-                    <input type="text" class="na-FromDate datepicker" />
+                    <input type="text" class="na-StartDate datepicker" />
                     <span>to</span>
-                    <input type="text" class="na-ToDate datepicker" />
+                    <input type="text" class="na-EndDate datepicker" />
                 </div>
 
             </fieldset>
 
             <div class="modalbuttons">
-                <input type="button" class="savenewaddress" value="Save" />
+                <input type="button" class="saveaddress" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

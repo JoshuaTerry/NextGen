@@ -421,11 +421,10 @@ function GetEditedFields(editcontainer) {
 
     var p = [];
 
-    // Fix the datetime / checkbox saving issue
     $(editcontainer).find('input.editable').each(function () {
 
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = '';
 
         if ($(this).is(':checkbox')) {
@@ -451,7 +450,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('select').each(function () {
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = $(this).val();
 
         for (var key in currentEntity) {

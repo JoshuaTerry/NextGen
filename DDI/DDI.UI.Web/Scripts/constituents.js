@@ -1,5 +1,6 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
+var currentaddress = null;
 
 $(document).ready(function () {
 
@@ -265,7 +266,7 @@ function NewAddressModal() {
 
         e.preventDefault();
 
-        modal = $('.newaddressmodal').dialog({
+        modal = $('.addressmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 375,
@@ -275,7 +276,11 @@ function NewAddressModal() {
 
     });
 
-    LoadNewAddressModalDropDowns();
+    PopulateAddressTypesInModal(null);
+
+    PopulateCountriesInModal(null);
+
+    Loadregions();
 
     $('.cancelmodal').click(function (e) {
 
@@ -285,7 +290,7 @@ function NewAddressModal() {
 
     });
 
-    $('.savenewaddress').click(function () {
+    $('.saveaddress').click(function () {
 
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
@@ -334,37 +339,40 @@ function NewAddressModal() {
 
 }
 
-function LoadNewAddressModalDropDowns() {
+function PopulateAddressTypesInModal(selectedValue) {
 
-    // PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
-    PopulateDropDown('.na-AddressTypeId', 'addresstypes', '', '');
-
-    PopulateDropDown('.na-CountryId', 'countries', '', '', function () {
-        PopulateStatesInModal();
-    });
-    
-    LoadRegions();
+    PopulateDropDown('.na-AddressTypeId', 'addresstypes', '', '', selectedValue);
 
 }
 
-function PopulateStatesInModal() {
+function PopulateCountriesInModal(selectedValue) {
+
+    // PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
+    
+    PopulateDropDown('.na-CountryId', 'countries', '', '', selectedValue, function () {
+        PopulateStatesInModal(null);
+    });
+
+}
+
+function PopulateStatesInModal(selectedValue) {
 
     ClearElement('.na-StateId');
     ClearElement('.na-CountyId');
 
     var countryid = $('.na-CountryId').val();
 
-    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryid, '', '', function () {
-        PopulateCountiesInModal()
+    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryid, '', '', selectedValue, function () {
+        PopulateCountiesInModal(null)
     });
 
 }
 
-function PopulateCountiesInModal() {
+function PopulateCountiesInModal(selectedValue) {
 
     var stateid = $('.na-StateId').val();
 
-    PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '');
+    PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '', selectedValue);
 
 }
 
@@ -380,29 +388,151 @@ function GetRegionLevels() {
 
 }
 
-function LoadRegion1() {
+function LoadRegion1(selectedValue) {
 
     $('.region1').show();
 
-    PopulateDropDown('.na-Region1', 'regions', '', ''); // needs to load region2
+    // if Region2 is a child of region1
+    PopulateDropDown('.na-Region1', 'regions', '', '', selectedValue, function () {
+        LoadRegion2(null);
+    });
 
 }
 
-function LoadRegion2() {
+function LoadRegion2(selectedValue) {
 
     $('.region2').show();
 
 }
 
-function LoadRegion3() {
+function LoadRegion3(selectedValue) {
 
     $('.region3').show();
 
 }
 
-function LoadRegion4() {
+function LoadRegion4(selectedValue) {
 
     $('.region4').show();
+
+}
+
+function EditAddressModal(id) {
+
+    modal = $('.addressmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 375,
+        height: 560,
+        resizable: false
+    });
+
+    LoadAddress(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.saveaddress').click(function () {
+
+        // Get the changed fields from currentaddress and put into new array.
+        var fields = GetEditedAddressFields();
+        
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'constituentaddresses',
+            data: fields,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+            }
+        })
+
+    });
+
+}
+
+function GetEditedAddressFields() {
+
+    var item = {
+        ConstituentId: $('.hidconstituentid').val(),
+        IsPrimary: $('.na-IsPreferred').prop('checked'),
+        Comment: $('.na-Comment').val(),
+        StartDate: $('.na-FromDate').val(),
+        EndDate: $('.na-ToDate').val(),
+        StartDay: 0,
+        EndDay: 0,
+        ResidentType: $('.na-Residency').val(),
+        AddressTypeId: $('.na-AddressTypeId').val(),
+        Address: {
+            AddressLine1: $('.na-AddressLine1').val(),
+            AddressLine2: '',
+            City: $('.na-City').val(),
+            CountryId: $('.na-CountryId').val(),
+            CountyId: $('.na-CountyId').val(),
+            PostalCode: $('.na-PostalCode').val(),
+            StateId: $('.na-StateId').val(),
+            Region1Id: $('.na-Region1Id').val(),
+            Region2Id: $('.na-Region2Id').val(),
+            Region3Id: $('.na-Region3Id').val(),
+            Region4Id: $('.na-Region4Id').val()
+        }
+    }
+
+    return item;
+
+}
+
+function LoadAddress(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentaddress = data;
+
+            $('.hidconstituentid').val(id);
+            $('.na-isIsPreferred').prop('checked', data.Address.IsPreferred);
+            $('.na-Comment').val(data.Address.Comment);
+            $('.na-StartDate').val(data.StartDate);
+            $('.na-EndDate').val(data.EndDate);
+            $('.na-ResidentType').val(data.ResidentType);
+            
+            $('.na-AddressLine1').val(data.Address.AddressLine1);
+            $('.na-City').val(data.Address.City);
+            
+            $('.na-PostalCode').val(data.Address.PostalCode);
+
+            PopulateAddressTypesInModal(data.AddressTypeId);
+            PopulateCountiesInModal(data.address.CountryId);
+            PopulateStatesInModal(data.address.StateId);
+            PopulateCountiesInModal(data.address.CountyId);
+
+            LoadRegions();
+
+            LoadRegion1(data.Address.Region1Id);
+            LoadRegion2(data.Address.Region2Id);
+            LoadRegion3(data.Address.Region3Id);
+            LoadRegion4(data.Address.Region4Id);
+            
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+        }
+    });
 
 }
 

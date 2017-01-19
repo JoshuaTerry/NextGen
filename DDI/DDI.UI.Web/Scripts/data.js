@@ -6,7 +6,7 @@ function AddDefaultOption(e, text, val) {
 
 }
 
-function MakeServiceCall(e, method) {
+function MakeServiceCall(e, method, selectedValue) {
 
     $.ajax({
         url: WEB_API_ADDRESS + method,
@@ -23,6 +23,10 @@ function MakeServiceCall(e, method) {
 
             });
 
+            if (selectedValue) {
+                $(e).val(selectedValue);
+            }
+
         },
         failure: function (response) {
             alert(response);
@@ -31,21 +35,21 @@ function MakeServiceCall(e, method) {
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue) {
+function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue) {
 
     ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
-    MakeServiceCall(e, method);
+    MakeServiceCall(e, method, selectedValue);
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue, callback) {
+function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, callback) {
 
     ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
-    MakeServiceCall(e, method);
+    MakeServiceCall(e, method, selectedValue);
 
     if (callback) {
 
