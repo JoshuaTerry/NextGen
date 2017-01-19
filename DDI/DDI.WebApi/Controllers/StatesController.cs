@@ -37,9 +37,9 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/states")]
         public IHttpActionResult GetAll(Guid? countryId = null)
         {
-            var search = new StateSearch()
+            var search = new ForeignKeySearch()
             {
-                CountryId = countryId
+                Id = countryId
             };
             var result = _service.GetAll(search);
 

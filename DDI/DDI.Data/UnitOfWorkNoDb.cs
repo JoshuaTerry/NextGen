@@ -113,6 +113,12 @@ namespace DDI.Data
             return GetRepository<T>().GetEntities(includes);
         }
 
+        public IQueryable GetEntities(Type type)
+        {
+            IRepository repository = _repositories.GetValueOrDefault(type) as IRepository;
+            return repository?.Entities;
+        }
+
         /// <summary>
         /// Returns the first entity that satisfies a condition or null if no such entity is found.
         /// </summary>

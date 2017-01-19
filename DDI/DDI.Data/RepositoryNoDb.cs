@@ -19,7 +19,7 @@ namespace DDI.Data
     /// functionality that is not covered by the basic add, update, delete, list operations that this
     /// class provides.
     /// </remarks>
-    public class RepositoryNoDb<T> : IRepository<T>
+    public class RepositoryNoDb<T> : IRepository<T>, IRepository
         where T : class
     {
         #region Private Fields
@@ -59,21 +59,9 @@ namespace DDI.Data
             }
         }
 
-        public SQLUtilities Utilities
-        {
-            get
-            {
-                return null;
-            }
-        }
+        IQueryable IRepository.Entities => Entities;
 
-        ISQLUtilities IRepository<T>.Utilities
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ISQLUtilities Utilities => null;
 
         #endregion Public Properties
 

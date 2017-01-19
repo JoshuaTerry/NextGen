@@ -1,0 +1,15 @@
+﻿
+.constituentcontainer { margin-top: 10px; vertical-align: top; }
+.constituentcontainer h1 { margin: 0px; padding: 5px; color: #333333; background-color: #cccccc; font-size: 14px; }
+
+.constituenttopinfo { padding: 1em 2.2em; }
+.constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
+.constituentpic { height: 150px; }
+.constituentpic img { height: 150px; }
+.constituentinformation { height: 175px; }
+.constituentinformation div { padding: 5px; margin-bottom: 10px; }
+.constituentinformation div label { display: block; text-align: left; }
+
+.constituentrealtionships { height: 175px; }
+.constituentname { font-weight: bold; text-align: center; }
+.constituenttags { width: 100%; }
