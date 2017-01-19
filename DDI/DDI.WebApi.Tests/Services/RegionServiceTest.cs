@@ -10,9 +10,9 @@ using DDI.Shared.Models.Client.CRM;
 namespace DDI.WebApi.Tests.Controllers
 {
     [TestClass]
-    public class RegionsControllerTest
+    public class RegionsServiceTest
     {
-        private const string TESTDESCR = "WebApi | Services";
+        private const string TESTDESCR = "WebApi | Service";
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void GetRegions_ReturnsRegionsByLevel()
@@ -34,6 +34,7 @@ namespace DDI.WebApi.Tests.Controllers
             var result = service.GetByLevel(2, new Guid("337E30A4-2162-4500-BD37-83947B22BA89"));
 
             Assert.IsTrue(result.Data.Count > 1);
+            Assert.IsTrue(result.Data.All(a => a.Level == 2 && a.ParentRegionId == new Guid("337E30A4-2162-4500-BD37-83947B22BA89")));
         }
 
         private IQueryable<Region> SetupRepositoryRegions()

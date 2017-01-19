@@ -108,5 +108,26 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpDelete]
+        [Route("api/v1/region")]
+        public IHttpActionResult Delete(Region item)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Delete(item);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }
