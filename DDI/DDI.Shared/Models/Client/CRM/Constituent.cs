@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent")]
+    [Table("Constituent"), Hateoas(RouteNames.Constituent)]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties        
@@ -154,6 +156,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
+        [HateoasCollectionLink(RouteNames.ConstituentAddress)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         public ICollection<AlternateId> AlternateIds { get; set; }
         public ICollection<ContactInfo> ContactInfo { get; set; }
