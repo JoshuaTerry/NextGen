@@ -6,25 +6,19 @@ using System.Text;
 namespace DDI.Shared
 {
     public class Encryption
-    { 
+    {
+        private const string PASS_PHRASE = "DD1SecretPhr@s3";
+        private const string SALT_VALUE = "5@ltV@LU3";
+        private const string HASH_ALGORITHM = "SHA1";
+        private const int ITERATIONS = 1024;
+        private const string INITIAL_VECTOR = "@1B2c3D4e5F6g7H8";
+        private const int KEY_SIZE = 256;
+
         public static string Encrypt(string plainText)
         {
-            string passPhrase = "DD1SecretPhr@s3";
-            string saltValue = "5@ltV@LU3";
-            string hashAlgorithm = "SHA1";
-            int iterations = 1024;
-            string initVector = "@1B2c3D4e5F6g7H8";
-            int keySize = 256;
-
-            return Encryption.Encrypt(plainText, passPhrase, saltValue, hashAlgorithm, iterations, initVector, keySize);
+            return Encryption.Encrypt(plainText, PASS_PHRASE, SALT_VALUE, HASH_ALGORITHM, ITERATIONS, INITIAL_VECTOR, KEY_SIZE);
         }
-        public static string Encrypt(string   plainText,
-            string   passPhrase,
-            string   saltValue,
-            string   hashAlgorithm,
-            int      passwordIterations,
-            string   initVector,
-            int      keySize)
+        public static string Encrypt(string plainText, string passPhrase, string saltValue, string hashAlgorithm, int passwordIterations, string initVector, int keySize)
         { 
             byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
             byte[] saltValueBytes  = Encoding.ASCII.GetBytes(saltValue);         
@@ -54,14 +48,7 @@ namespace DDI.Shared
            
         public static string Decrypt(string encyrptedText)
         {
-            string passPhrase = "DD1SecretPhr@s3";
-            string saltValue = "5@ltV@LU3";
-            string hashAlgorithm = "SHA1";
-            int iterations = 1024;
-            string initVector = "@1B2c3D4e5F6g7H8";
-            int keySize = 256;
-
-            return Encryption.Decrypt(encyrptedText, passPhrase, saltValue, hashAlgorithm, iterations, initVector, keySize);
+            return Encryption.Decrypt(encyrptedText, PASS_PHRASE, SALT_VALUE, HASH_ALGORITHM, ITERATIONS, INITIAL_VECTOR, KEY_SIZE);
         }
         public static string Decrypt(string cipherText, string passPhrase, string saltValue, string hashAlgorithm, int passwordIterations, string initVector, int keySize)
         {
