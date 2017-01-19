@@ -14,7 +14,9 @@ using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    /// <summary>
+    /// Seeding of initial data for the CRM module.
+    /// </summary>       
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod

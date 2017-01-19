@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Caching\CacheHelperTests.cs" />
     <Compile Include="EncryptionTests.cs" />
     <Compile Include="Extensions\DictionaryExtensionsTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />

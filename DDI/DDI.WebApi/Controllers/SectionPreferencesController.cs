@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers
 
         public SectionPreferencesController()
             :this(new SectionPreferenceService(), new Pagination(), new DynamicTransmogrifier())
-        {
+        {            
         }
 
         internal SectionPreferencesController(ISectionPreferenceService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)

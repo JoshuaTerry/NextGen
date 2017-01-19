@@ -66,6 +66,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,6 +77,9 @@
   <ItemGroup>
     <Compile Include="Attributes\HATEAOSPostLinkAttribute.cs" />
     <Compile Include="Attributes\HATEAOSAttribute.cs" />
+    <Compile Include="Caching\CacheHelper.cs" />
+    <Compile Include="Caching\ICacheProvider.cs" />
+    <Compile Include="Caching\MemoryCacheProvider.cs" />
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="DataResponse.cs" />
     <Compile Include="DDIConfigurationManager.cs" />
@@ -197,6 +201,9 @@
     <Compile Include="ModuleInfo\SystemAdministration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
+    <Compile Include="Statics\CRM\ConstituentTypeCodes.cs" />
+    <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
+    <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
