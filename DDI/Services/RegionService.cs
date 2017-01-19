@@ -21,11 +21,11 @@ namespace DDI.Services
 
         public IDataResponse<List<Region>> GetByLevel(int level, Guid? id)
         {
-            var results = _repository.Entities.Where(r => r.Level == level).ToList();
+            var results = _repository.Entities.Where(r => r.Level == level);
             if (id.HasValue)
-                results = results.Where(r => r.ParentRegionId == id.Value).ToList();
+                results = results.Where(r => r.ParentRegionId == id.Value);
 
-            return GetIDataResponse(() => results);
+            return GetIDataResponse(() => results.ToList());
         }
     }
 }
