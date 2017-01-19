@@ -12,10 +12,10 @@ namespace DDI.WebApi.Controllers
 {
     public class RegionsController : ApiController
     {
-        ServiceBase<Region> _service;
+        RegionService _service;
 
-        public RegionsController() : this(new ServiceBase<Region>()) { }
-        internal RegionsController(ServiceBase<Region> service)
+        public RegionsController() : this(new RegionService()) { }
+        internal RegionsController(RegionService service)
         {
             _service = service;
         }
@@ -39,9 +39,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/regions/{level}/{id}")]
-        public IHttpActionResult GetByLevel(int level)
+        public IHttpActionResult GetByLevel(int level, Guid? id)
         {
-            var result = _service.GetAll();
+            var result = _service.GetByLevel(level, id);
 
             if (result == null)
             {

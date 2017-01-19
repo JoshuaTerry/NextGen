@@ -648,23 +648,23 @@
                 <select class="na-CountyId"></select>
             </div>
 
-            <div class="fieldblock region1">
-                <label>Region 1</label>
+            <div class="fieldblock region1" style="display: none;">
+                <label class="region1label">Region 1</label>
                 <select class="na-Region1Id"></select>
             </div>
 
-            <div class="fieldblock region2">
-                <label>Region 2</label>
+            <div class="fieldblock region2" style="display: none;">
+                <label class="region2label">Region 2</label>
                 <select class="na-Region2Id"></select>
             </div>
 
-            <div class="fieldblock region3">
-                <label>Region 3</label>
+            <div class="fieldblock region3" style="display: none;">
+                <label class="region3label">Region 3</label>
                 <select class="na-Region3Id"></select>
             </div>
 
-            <div class="fieldblock region4">
-                <label>Region 4</label>
+            <div class="fieldblock region4" style="display: none;">
+                <label class="region4label">Region 4</label>
                 <select class="na-Region4Id"></select>
             </div>
 

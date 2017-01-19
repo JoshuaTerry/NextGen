@@ -18,7 +18,7 @@ function MakeServiceCall(e, method, selectedValue) {
 
             $.map(data.Data, function (item) {
 
-                option = $('<option>').val(item.Id).text(item.DisplayName); //item.Name || item.Description
+                option = $('<option>').val(item.Id).text(item.DisplayName);
                 $(option).appendTo($(e));
 
             });

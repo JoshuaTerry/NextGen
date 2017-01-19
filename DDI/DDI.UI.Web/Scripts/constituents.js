@@ -279,7 +279,6 @@ function NewAddressModal() {
             closeOnEscape: false,
             modal: true,
             width: 375,
-            height: 560,
             resizable: false
         });
 
@@ -289,7 +288,7 @@ function NewAddressModal() {
 
     PopulateCountriesInModal(null);
 
-    Loadregions();
+    LoadRegions();
 
     $('.cancelmodal').click(function (e) {
 
@@ -336,13 +335,11 @@ function NewAddressModal() {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                // DisplayContactInfo();
-
             },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the address.');
             }
-        })
+        });
 
     });
 
@@ -356,8 +353,6 @@ function PopulateAddressTypesInModal(selectedValue) {
 
 function PopulateCountriesInModal(selectedValue) {
 
-    // PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
-    
     PopulateDropDown('.na-CountryId', 'countries', '', '', selectedValue, function () {
         PopulateStatesInModal(null);
     });
@@ -393,37 +388,76 @@ function LoadRegions() {
 
 function GetRegionLevels() {
 
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'regionlevels',
+        data: item,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
 
+            $.map(data.Data, function (item) {
 
-}
+                $('.region' + item.Level).show();
+                $('.region' + item.Level + 'label').text(item.Label);
+                
+                if (!item.IsChildLevel) {
+                    LoadRegionDropDown(item.Level);
+                } else {
+                    $('.na-Region' + (item.Level - 1) + 'Id').change(function () {
 
-function LoadRegion1(selectedValue) {
+                        ClearElement('.na-Region' + item.Level + 'Id');
 
-    $('.region1').show();
+                        if ($('.na-Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
+                            LoadRegionDropDown((item.Level), $('.na-Region' + item.Level + 'Id').val());
+                        }
 
-    // if Region2 is a child of region1
-    PopulateDropDown('.na-Region1', 'regions', '', '', selectedValue, function () {
-        LoadRegion2(null);
+                    });
+                }
+
+            });
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
+        }
     });
 
 }
 
-function LoadRegion2(selectedValue) {
+function LoadRegionDropDown(level, selectedvalue) {
 
-    $('.region2').show();
+    var route = 'regions/' + level;
 
-}
+    if (selectedvalue)
+        route = route + '/' + selectedvalue;
+    else
+        route = route + '/null';
 
-function LoadRegion3(selectedValue) {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + route,
+        data: item,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
 
-    $('.region3').show();
+            var currentdropdown = $('.na-Region' + level + 'Id');
+            ClearElement('.na-Region' + level + 'Id');
+            AddDefaultOption($(currentdropdown), '', '');
 
-}
+            $.map(data.Data, function (item) {
 
-function LoadRegion4(selectedValue) {
+                option = $('<option>').val(item.Id).text(item.DisplayName);
+                $(option).appendTo($(currentdropdown));
 
-    $('.region4').show();
+            });
 
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
+        }
+    });
 }
 
 function EditAddressModal(id) {
