@@ -5,8 +5,8 @@ using System.Text;
 
 namespace DDI.Shared
 {
-	public class Encryption
-	{ 
+    public class Encryption
+    { 
         public static string Encrypt(string plainText)
         {
             string passPhrase = "DD1SecretPhr@s3";
@@ -18,24 +18,24 @@ namespace DDI.Shared
 
             return Encryption.Encrypt(plainText, passPhrase, saltValue, hashAlgorithm, iterations, initVector, keySize);
         }
-		public static string Encrypt(string   plainText,
-			string   passPhrase,
-			string   saltValue,
-			string   hashAlgorithm,
-			int      passwordIterations,
-			string   initVector,
-			int      keySize)
-		{ 
-			byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
-			byte[] saltValueBytes  = Encoding.ASCII.GetBytes(saltValue);         
-			byte[] plainTextBytes  = Encoding.UTF8.GetBytes(plainText);
-        			
-			PasswordDeriveBytes password = new PasswordDeriveBytes( passPhrase,  saltValueBytes, hashAlgorithm, passwordIterations); 
+        public static string Encrypt(string   plainText,
+            string   passPhrase,
+            string   saltValue,
+            string   hashAlgorithm,
+            int      passwordIterations,
+            string   initVector,
+            int      keySize)
+        { 
+            byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+            byte[] saltValueBytes  = Encoding.ASCII.GetBytes(saltValue);         
+            byte[] plainTextBytes  = Encoding.UTF8.GetBytes(plainText);
+                    
+            PasswordDeriveBytes password = new PasswordDeriveBytes( passPhrase,  saltValueBytes, hashAlgorithm, passwordIterations); 
 
-			byte[] keyBytes = password.GetBytes(keySize / 8);
-			RijndaelManaged symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC };       
-			
-			ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
+            byte[] keyBytes = password.GetBytes(keySize / 8);
+            RijndaelManaged symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC };       
+            
+            ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
             string cipherText = string.Empty;
 
             using (var memoryStream = new MemoryStream())
@@ -49,8 +49,8 @@ namespace DDI.Shared
                 }
             }			
         
-			return cipherText;
-		}
+            return cipherText;
+        }
            
         public static string Decrypt(string encyrptedText)
         {
@@ -74,7 +74,7 @@ namespace DDI.Shared
             byte[] keyBytes = password.GetBytes(keySize / 8);
             RijndaelManaged symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC };
         
-			ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes,	initVectorBytes);
+            ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes,	initVectorBytes);
             string plainText = string.Empty;
 
             using (var memoryStream = new MemoryStream(cipherTextBytes))
@@ -87,7 +87,7 @@ namespace DDI.Shared
                 }
             }		
         
-			return plainText;
-		}
-	}
+            return plainText;
+        }
+    }
 }

@@ -12,7 +12,7 @@ namespace DDI.Data
 {
     public class DomainContext : DbContext
     {
-        private const string _domainContextConnectionKey = "DomainContext";
+        private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         #region Public Properties
          
         public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
@@ -102,7 +102,7 @@ namespace DDI.Data
         #region Public Constructors
 
         public DomainContext()
-            : base(ConnectionManager.Instance.Connections[_domainContextConnectionKey])
+            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;

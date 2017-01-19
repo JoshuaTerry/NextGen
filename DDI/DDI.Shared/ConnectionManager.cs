@@ -13,20 +13,26 @@ namespace DDI.Shared
         private static volatile ConnectionManager _instance;
         private static object _syncRoot = new object();
         private ReadOnlyDictionary<string, string> _connections;
+        private static IConfigurationManager _configurationManager;
 
-        private ConnectionManager()
+        private ConnectionManager(IConfigurationManager configurationManager = null)
         {
+            if (configurationManager == null)
+            {
+                configurationManager = new DDIConfigurationManager();
+            }
+            _configurationManager = configurationManager;
             LoadConnections();
         }
 
         private void LoadConnections()
         {
             var connectionDictionary = new Dictionary<string, string>();
-            var connectionStrings = ConfigurationManager.ConnectionStrings;
+            var connectionStrings = _configurationManager.ConnectionStrings;
 
-            foreach (ConnectionStringSettings kv in connectionStrings)
+            foreach (ConnectionStringSettings connectionStringSetting in connectionStrings)
             {
-                connectionDictionary.Add(kv.Name, GetDecryptedConnectionString(kv.ConnectionString));
+                connectionDictionary.Add(connectionStringSetting.Name, GetDecryptedConnectionString(connectionStringSetting.ConnectionString));
             }
 
             Connections = new ReadOnlyDictionary<string, string>(connectionDictionary);
@@ -34,14 +40,13 @@ namespace DDI.Shared
 
         private string GetDecryptedConnectionString(string connection, string prefix = "Password=", string suffix = ";")
         {
-            string encyrptedPassword = string.Empty;
             string decryptedConnection = string.Empty;
 
             if (!string.IsNullOrEmpty(prefix))
             {
                 string connectionStart = connection.Substring(0, connection.IndexOf(prefix) + prefix.Length);
                 string temp = connection.Replace(connectionStart, string.Empty);
-                encyrptedPassword = string.IsNullOrEmpty(suffix) ? temp.Trim() : temp.Substring(0, temp.IndexOf(suffix)).Trim();
+                string encyrptedPassword = string.IsNullOrEmpty(suffix) ? temp.Trim() : temp.Substring(0, temp.IndexOf(suffix)).Trim();
                 string connectionEnd = temp.Replace(encyrptedPassword, string.Empty);
 
                 string decryptedPassword = Encryption.Decrypt(encyrptedPassword);
@@ -56,22 +61,19 @@ namespace DDI.Shared
             get { return _connections; }
             private set { _connections = value; }
         }
-        public static ConnectionManager Instance
+        public static ConnectionManager Instance(IConfigurationManager configurationManager = null)
         {
-            get
+            if (_instance == null)
             {
-                if (_instance == null)
+                lock (_syncRoot)
                 {
-                    lock (_syncRoot)
+                    if (_instance == null)
                     {
-                        if (_instance == null)
-                        {
-                            _instance = new ConnectionManager();
-                        }
+                        _instance = new ConnectionManager(configurationManager);
                     }
                 }
-                return _instance;
             }
+            return _instance;
         }
     }
 }

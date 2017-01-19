@@ -20,9 +20,9 @@ namespace DDI.WebApi.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        private const string _domainContextConnectionKey = "DomainContext";
+        private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         public ApplicationDbContext()
-            : base(ConnectionManager.Instance.Connections[_domainContextConnectionKey])            
+            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])            
         {
         }
         

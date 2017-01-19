@@ -11,7 +11,7 @@ namespace DDI.Data
 {
     public class CommonContext : DbContext
 	{
-        private const string _commonContextConnectionKey = "CommonContext";
+        private const string COMMON_CONTEXT_CONNECTION_KEY = "CommonContext";
         #region Public Properties
 
         public DbSet<Abbreviation> Abbreviations { get; set; }
@@ -31,7 +31,7 @@ namespace DDI.Data
         #region Public Constructors
 
         public CommonContext()
-            : base(ConnectionManager.Instance.Connections[_commonContextConnectionKey])			 
+            : base(ConnectionManager.Instance().Connections[COMMON_CONTEXT_CONNECTION_KEY])			 
 		{
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
