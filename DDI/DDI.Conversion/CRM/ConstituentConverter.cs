@@ -13,7 +13,7 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-
+using DDI.Shared.Extensions;
 
 namespace DDI.Conversion.CRM
 {    
