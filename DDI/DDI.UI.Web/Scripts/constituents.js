@@ -312,7 +312,7 @@ function NewAddressModal() {
             AddressTypeId: $('.na-AddressTypeId').val(),
             Address: {
                 AddressLine1: $('.na-AddressLine1').val(),
-                AddressLine2: '',
+                AddressLine2: $('.na-AddressLine2').val(),
                 City: $('.na-City').val(),
                 CountryId: $('.na-CountryId').val(),
                 CountyId: $('.na-CountyId').val(),
@@ -519,7 +519,7 @@ function GetEditedAddressFields() {
         AddressTypeId: $('.na-AddressTypeId').val(),
         Address: {
             AddressLine1: $('.na-AddressLine1').val(),
-            AddressLine2: '',
+            AddressLine2: $('.na-AddressLine2').val(),
             City: $('.na-City').val(),
             CountryId: $('.na-CountryId').val(),
             CountyId: $('.na-CountyId').val(),
@@ -553,8 +553,9 @@ function LoadAddress(id) {
             $('.na-StartDate').val(data.StartDate);
             $('.na-EndDate').val(data.EndDate);
             $('.na-ResidentType').val(data.ResidentType);
-            
+
             $('.na-AddressLine1').val(data.Address.AddressLine1);
+            $('.na-AddressLine2').val(data.Address.AddressLine2);
             $('.na-City').val(data.Address.City);
             
             $('.na-PostalCode').val(data.Address.PostalCode);

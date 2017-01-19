@@ -8,6 +8,8 @@ h3 {  }
 a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
 
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
 

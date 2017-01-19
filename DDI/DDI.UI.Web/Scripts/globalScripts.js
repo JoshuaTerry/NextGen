@@ -189,7 +189,12 @@ function LoadAccordions() {
 
     $('.accordions').accordion({
         heightStyle: "content",
-        collapsible: true
+        collapsible: true,
+        beforeActivate: function (event, ui) {
+            var newbutton = $(event.originalEvent.target).is('.ui-accordion-header > .newbutton');
+            if (newbutton)
+                return false;
+        }
     });
 
     $('.accordions').each(function () {

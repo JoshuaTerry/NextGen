@@ -404,9 +404,8 @@
 
                         <div class="accordions">
 
-                            <h1>Addresses</h1>
+                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
                             <div>
-                                <a href="#" class="newaddressmodallink">New</a>
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
 
@@ -617,8 +616,13 @@
             </div>
 
             <div class="fieldblock">
-                <label>Street</label>
+                <label>Address Line 1</label>
                 <textarea class="na-AddressLine1"></textarea>
+            </div>
+
+            <div class="fieldblock">
+                <label>Address Line 2</label>
+                <textarea class="na-AddressLine2"></textarea>
             </div>
 
             <div class="fieldblock">
