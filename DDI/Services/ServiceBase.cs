@@ -44,6 +44,7 @@ namespace DDI.Services
             try
             {
                 _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -64,7 +65,8 @@ namespace DDI.Services
             }
 
             _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
-
+            _unitOfWork.SaveChanges();
+            
             T t = _unitOfWork.GetRepository<T>().GetById(id);
 
             return GetIDataResponse(() => t);
@@ -75,6 +77,7 @@ namespace DDI.Services
             try
             {
                 _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -91,6 +94,7 @@ namespace DDI.Services
             try
             {
                 _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {

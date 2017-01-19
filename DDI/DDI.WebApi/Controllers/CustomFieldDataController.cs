@@ -1,29 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
-using DDI.Shared.Models.Client.Core;
 using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CustomFieldsController : ApiController
+    public class CustomFieldDataController : ApiController
     {
-        ServiceBase<CustomField> _service;
+        ServiceBase<CustomFieldData> _service;
 
         #region Constructors
 
-        public CustomFieldsController() : this(new ServiceBase<CustomField>()) { }
-        internal CustomFieldsController(ServiceBase<CustomField> service)
+        public CustomFieldDataController()
+            :this(new ServiceBase<CustomFieldData>())
+        {
+        }
+
+        internal CustomFieldDataController(ServiceBase<CustomFieldData> service)
         {
             _service = service;
         }
 
-        #endregion
-
-        #region Methods
+        #endregion Constructors
 
         [HttpGet]
-        [Route("api/v1/customfields")]
+        [Route("api/v1/customfielddata")]
         public IHttpActionResult GetAll()
         {
             var result = _service.GetAll();
@@ -40,7 +46,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/{id}")]
+        [Route("api/v1/customfielddata/{id}")]
         public IHttpActionResult GetById(Guid id)
         {
             var result = _service.GetById(id);
@@ -56,8 +62,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/customfields")]
-        public IHttpActionResult Post([FromBody] CustomField item)
+        [Route("api/v1/customfielddata")]
+        public IHttpActionResult Post([FromBody] CustomFieldData item)
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +75,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/customfields/{id}")]
+        [Route("api/v1/customfielddata/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
@@ -91,7 +97,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/v1/customfields")]
+        [Route("api/v1/customfielddata/{id}")]
         public IHttpActionResult Delete(Guid id)
         {
             try
@@ -107,7 +113,6 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
 
-
                 var response = _service.Delete(entityToDelete.Data);
 
                 return Ok(response);
@@ -117,7 +122,5 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
         }
-
-        #endregion
     }
 }
