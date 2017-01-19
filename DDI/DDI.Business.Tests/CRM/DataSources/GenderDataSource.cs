@@ -13,6 +13,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<Gender> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Gender> existing = uow.GetRepositoryOrNull<Gender>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+            
             var genders = new List<Gender>();
             genders.Add(new Gender() { Code = "M", Name = "Male", IsMasculine = true, Id = GuidHelper.NextGuid() });
             genders.Add(new Gender() { Code = "F", Name = "Female", IsMasculine = false, Id = GuidHelper.NextGuid() });

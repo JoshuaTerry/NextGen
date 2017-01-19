@@ -14,6 +14,12 @@ namespace DDI.Business.Tests.Common.DataSources
     {
         public static IList<Abbreviation> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Abbreviation> existing = uow.GetRepositoryOrNull<Abbreviation>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+            
             var list = new List<Abbreviation>();
             list.Add(new Abbreviation { Word = "NORTH", AddressWord = "NORTH", NameWord = "NORTH", USPSAbbreviation = "N", Priority = 2 , Id = GuidHelper.NextGuid()});
             list.Add(new Abbreviation { Word = "N", AddressWord = "NORTH", NameWord = "N.", USPSAbbreviation = "N", Priority = 2, Id = GuidHelper.NextGuid() });

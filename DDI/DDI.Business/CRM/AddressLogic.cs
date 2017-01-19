@@ -40,6 +40,9 @@ namespace DDI.Business.CRM
 
         public static string DefaultCountryCode => "US";
 
+        /// <summary>
+        /// Cached queryable collection of countries
+        /// </summary>
         public IQueryable<Country> Countries
         {
             get
@@ -48,6 +51,9 @@ namespace DDI.Business.CRM
             }
         }
 
+        /// <summary>
+        /// Cached queryable collection of states
+        /// </summary>
         public IQueryable<State> States
         {
             get
@@ -56,6 +62,9 @@ namespace DDI.Business.CRM
             }
         }
 
+        /// <summary>
+        /// Cached queryable collection of counties
+        /// </summary>
         public IQueryable<County> Counties
         {
             get
@@ -112,11 +121,22 @@ namespace DDI.Business.CRM
 
         }
 
+        /// <summary>
+        /// Determine if a country is non-US
+        /// </summary>
         public bool IsForeignCountry(Country country)
         {
             return country.ISOCode != DefaultCountryCode;
         }
 
+        /// <summary>
+        /// Format an address.  Multiple lines are separated by newline characters.
+        /// </summary>
+        /// <param name="address">The address to format</param>
+        /// <param name="caps">TRUE to abbreviate text and convert to uppercase</param>
+        /// <param name="expand">TRUE to expand all abbreviations</param>
+        /// <param name="maxLength">Maximum line length (0 for no maximum)</param>
+        /// <returns></returns>
         public string FormatAddress(Address address, bool caps, bool expand, int maxLength)
         {
             StringBuilder sb = new StringBuilder();
@@ -155,6 +175,9 @@ namespace DDI.Business.CRM
             return sb.ToString().Trim('\n');
         }
 
+        /// <summary>
+        /// Format a city, state, postal code, and country.  Multiple lines are separated by newline characters.
+        /// </summary>
         public string FormatCityStatePostalCode(string city, string stateCode, string postalCode, Country country)
         {
             string rslt;
@@ -214,6 +237,9 @@ namespace DDI.Business.CRM
             return rslt.Replace(AddressFormatMacros.Newline, "\n");
         }
 
+        /// <summary>
+        /// Format a postal code based on country-specific formatting.
+        /// </summary>
         public string FormatPostalCode(string postalCode, Country country)
         {
 
@@ -280,6 +306,14 @@ namespace DDI.Business.CRM
         }
 
 
+        /// <summary>
+        ///  Validate a postal code, based on country-specific formatting.
+        /// </summary>
+        /// <param name="postalCode">Postal code to validate</param>
+        /// <param name="countryId">ID of country</param>
+        /// <param name="rawPostalCode">Postal code with all formatting characters removed.</param>
+        /// <param name="formattedPostalCode">Fully formatted postal code</param>
+        /// <returns>TRUE if postal code formatting is valid.</returns>
         public bool ValidatePostalCode(string postalCode, Guid? countryId, out string rawPostalCode, out string formattedPostalCode)
         {
             Country country = null;
@@ -289,7 +323,15 @@ namespace DDI.Business.CRM
             }
             return ValidatePostalCode(postalCode, country, out rawPostalCode, out formattedPostalCode);
         }
-        
+
+        /// <summary>
+        ///  Validate a postal code, based on country-specific formatting.
+        /// </summary>
+        /// <param name="postalCode">Postal code to validate</param>
+        /// <param name="country">Country</param>
+        /// <param name="rawPostalCode">Postal code with all formatting characters removed.</param>
+        /// <param name="formattedPostalCode">Fully formatted postal code</param>
+        /// <returns>TRUE if postal code formatting is valid.</returns>
         public bool ValidatePostalCode(string postalCode, Country country, out string rawPostalCode, out string formattedPostalCode)
         {
             bool isValid = true;

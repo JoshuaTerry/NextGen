@@ -14,6 +14,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<RelationshipCategory> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<RelationshipCategory> existing = uow.GetRepositoryOrNull<RelationshipCategory>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
             var list = new List<RelationshipCategory>();
             list.Add(new RelationshipCategory() { Code = "M", Name = "Membership", IsActive = true, IsShownInQuickView = false, Id = GuidHelper.NextGuid() });
             list.Add(new RelationshipCategory() { Code = "G", Name = "General", IsActive = true, IsShownInQuickView = true, Id = GuidHelper.NextGuid() });

@@ -51,6 +51,14 @@ namespace DDI.Shared.Models.Client.CRM
 
         public AddressType AddressType { get; set; }
 
+        public override string DisplayName
+        {
+            get
+            {
+                return AddressType?.Code ?? Id.ToString();
+            }
+        }
+
         #endregion Public Properties
     }
 }

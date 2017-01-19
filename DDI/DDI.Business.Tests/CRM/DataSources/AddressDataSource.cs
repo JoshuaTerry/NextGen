@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
+using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
@@ -16,6 +17,15 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<Address> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Address> existing = uow.GetRepositoryOrNull<Address>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            CountryDataSource.GetDataSource(uow);
+            StateDataSource.GetDataSource(uow);
+
             var list = new List<Address>();
             list.Add(BuildAddress(uow, "101 W. Ohio St.", "Suite 1650", "Indianapolis", "US", "IN", "46204"));
             list.Add(BuildAddress(uow, "24 SE 1st Ave", "", "Ocala", "US", "FL", "34471")); 

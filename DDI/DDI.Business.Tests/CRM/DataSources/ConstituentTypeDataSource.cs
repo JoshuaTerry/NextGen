@@ -15,6 +15,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<ConstituentType> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<ConstituentType> existing = uow.GetRepositoryOrNull<ConstituentType>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+            
             var constituentTypes = new List<ConstituentType>();
             constituentTypes.Add(new ConstituentType()
             {

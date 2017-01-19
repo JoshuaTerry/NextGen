@@ -15,6 +15,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<RelationshipType> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<RelationshipType> existing = uow.GetRepositoryOrNull<RelationshipType>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
             var list = new List<RelationshipType>();
             list.Add(AddType(uow, "SPOU", "Spouse", ConstituentCategory.Individual, true));
             list.Add(AddType(uow, "FATH", "Father"));

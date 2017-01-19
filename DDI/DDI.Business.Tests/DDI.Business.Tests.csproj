@@ -62,11 +62,13 @@
     <Compile Include="Core\ConfigurationLogicTest.cs" />
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="CRM\AddressLogicTest.cs" />
+    <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
     <Compile Include="CRM\ConstituentLogicTest.cs" />
     <Compile Include="CRM\DataSources\ConstituentTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\CRMConfigurationDataSource.cs" />
     <Compile Include="CRM\DataSources\ConstituentStatusDataSource.cs" />
     <Compile Include="CRM\DataSources\AddressDataSource.cs" />
+    <Compile Include="CRM\DataSources\AddressTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\RelationshipTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />

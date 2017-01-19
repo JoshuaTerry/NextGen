@@ -14,6 +14,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<ConstituentStatus> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<ConstituentStatus> existing = uow.GetRepositoryOrNull<ConstituentStatus>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
             var list = new List<ConstituentStatus>();
 
             list.Add(new ConstituentStatus() { BaseStatus = Shared.Enums.CRM.ConstituentBaseStatus.Active, Code = "AC", Name = "Active", IsActive = true, IsRequired = true, Id = GuidHelper.NextGuid() });
