@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\GendersControllerTests.cs" />
+    <Compile Include="Controllers\RegionsControllerTest.cs" />
     <Compile Include="Helpers\PaginationTests.cs" />
     <Compile Include="Helpers\DynamicTransmogrifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
