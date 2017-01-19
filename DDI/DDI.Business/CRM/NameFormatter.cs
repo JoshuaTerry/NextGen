@@ -257,15 +257,15 @@ namespace DDI.Business.CRM
                 {
                     if (!string.IsNullOrWhiteSpace(line1))
                     {
-                        line1 = AbbreviationHelper.ExpandNameLine(line1, true);
+                        line1 = AbbreviationHelper.ExpandNameLine(line1, true, UnitOfWork);
                     }
                     if (!string.IsNullOrWhiteSpace(line2))
                     {
-                        line2 = AbbreviationHelper.ExpandNameLine(line2, true);
+                        line2 = AbbreviationHelper.ExpandNameLine(line2, true, UnitOfWork);
                     }
                     if (!string.IsNullOrWhiteSpace(nameLine2))
                     {
-                        nameLine2 = AbbreviationHelper.ExpandNameLine(nameLine2, true);
+                        nameLine2 = AbbreviationHelper.ExpandNameLine(nameLine2, true, UnitOfWork);
                     }
                 }
 

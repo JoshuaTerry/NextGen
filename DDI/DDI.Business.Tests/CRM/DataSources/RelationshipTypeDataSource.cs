@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
@@ -44,7 +45,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 IsSpouse = isSpouse,
                 IsActive = true,
                 ConstituentCategory = category,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
 
             if (!string.IsNullOrWhiteSpace(categoryCode))

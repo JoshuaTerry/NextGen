@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Common;
@@ -112,7 +113,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 StateCode = code,
                 Description = description,
                 FIPSCode = fips,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
         }
 

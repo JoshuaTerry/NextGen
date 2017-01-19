@@ -11,6 +11,7 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Helpers;
 using DDI.Shared.Statics.CRM;
+using DDI.Business.Helpers;
 
 namespace DDI.Business.CRM
 {
@@ -37,7 +38,7 @@ namespace DDI.Business.CRM
 
         #region Public Properties
 
-        public string DefaultCountryCode => "US";
+        public static string DefaultCountryCode => "US";
 
         public IQueryable<Country> Countries
         {
@@ -71,11 +72,14 @@ namespace DDI.Business.CRM
         /// Load the Country, State, and County properties for an address.
         /// </summary>
         /// <param name="address"></param>
-        public void LoadAllProperties(Address address)
+        public void LoadAllProperties(Address address, bool reload = false)
         {
             if (address.CountryId != null)
-            {               
-                address.Country = Countries.FirstOrDefault(p => p.Id == address.CountryId);                
+            {
+                if (reload || address.Country == null)
+                {
+                    address.Country = Countries.FirstOrDefault(p => p.Id == address.CountryId);
+                }
             }
             else
             {
@@ -84,7 +88,10 @@ namespace DDI.Business.CRM
 
             if (address.StateId != null)
             {
-                address.State = States.FirstOrDefault(p => p.Id == address.StateId);
+                if (reload || address.State == null)
+                {
+                    address.State = States.FirstOrDefault(p => p.Id == address.StateId);
+                }
             }
             else
             {
@@ -93,7 +100,10 @@ namespace DDI.Business.CRM
 
             if (address.CountyId != null)
             {
-                address.County = Counties.FirstOrDefault(p => p.Id == address.CountyId);
+                if (reload || address.County == null)
+                {
+                    address.County = Counties.FirstOrDefault(p => p.Id == address.CountyId);
+                }
             }
             else
             {
@@ -107,15 +117,64 @@ namespace DDI.Business.CRM
             return country.ISOCode != DefaultCountryCode;
         }
 
+        public string FormatAddress(Address address, bool caps, bool expand, int maxLength)
+        {
+            StringBuilder sb = new StringBuilder();
+            string text;
+            string[] AddressLines = new string[] { address.AddressLine1, address.AddressLine2 };
+
+            LoadAllProperties(address);
+
+            for (int i = 0; i < AddressLines.Count(); i++)
+            {
+                if (!string.IsNullOrWhiteSpace(AddressLines[i]))
+                {
+                    text = AddressLines[i];
+
+                    if (expand)
+                    {
+                        text = AbbreviationHelper.ExpandAddressLine(text, UnitOfWork);
+                        if (caps)
+                            text = text.ToUpper();
+                    }
+                    else if (maxLength > 0)
+                        text = AbbreviationHelper.AbbreviateAddressLine(text, maxLength, caps, UnitOfWork);
+                    else if (caps)
+                        text = AbbreviationHelper.AbbreviateAddressLine(text, true, false, UnitOfWork);
+
+                    sb.Append(text).Append('\n');
+                }
+            }
+
+            text = FormatCityStatePostalCode(address.City, address.State?.StateCode, address.PostalCode, address.Country);
+            if (caps)
+                sb.Append(text.ToUpper());
+            else
+                sb.Append(text);
+
+            return sb.ToString().Trim('\n');
+        }
+
         public string FormatCityStatePostalCode(string city, string stateCode, string postalCode, Country country)
         {
             string rslt;
             string format;
 
+            if (stateCode == null)
+            {
+                stateCode = string.Empty;
+            }
+
+            if (postalCode == null)
+            {
+                postalCode = string.Empty;
+            }
+
             if (country == null)
             {
                 return string.Format("{0} {1} {2}", city, stateCode, postalCode);
             }
+
 
             if (string.IsNullOrWhiteSpace(country.AddressFormat))
             {

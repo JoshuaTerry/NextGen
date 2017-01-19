@@ -17,13 +17,16 @@ namespace DDI.Business.Tests.CRM.DataSources
         public static CRMConfiguration GetDataSource(UnitOfWorkNoDb uow)
         {
             uow.CreateRepositoryForDataSource(new List<Configuration>());
-            var bl = uow.GetBusinessLogic<ConfigurationLogic>();
-            var config = bl.GetConfiguration<CRMConfiguration>();
-            config.DefaultSalutationType = Shared.Enums.CRM.SalutationType.Formal;
-            config.AddFirstNamesToSpouses = false;
-            config.OmitInactiveSpouse = true;
-            bl.SaveConfiguration(config);
-            return config;
+            var logic = uow.GetBusinessLogic<ConfigurationLogic>();
+
+            var configuration = logic.GetConfiguration<CRMConfiguration>();
+            configuration.DefaultSalutationType = Shared.Enums.CRM.SalutationType.Formal;
+            configuration.AddFirstNamesToSpouses = false;
+            configuration.OmitInactiveSpouse = true;
+
+            logic.SaveConfiguration(configuration);
+
+            return configuration;
         }    
 
     }
