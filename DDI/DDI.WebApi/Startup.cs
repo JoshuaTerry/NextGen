@@ -10,7 +10,10 @@ namespace DDI.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);           
+            ConfigureAuth(app);
+
+            // Set the CacheHelper's cache provider
+            Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
         }
     }
 }
