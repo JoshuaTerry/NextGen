@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DDI.Services;
+using DDI.Services.Search;
+using System;
 using System.Web.Http;
-using DDI.WebApi.Services;
-using DDI.WebApi.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {
@@ -38,9 +38,9 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetAll(Guid? stateId = null,
                                         string orderBy = "Description")
         {
-            var search = new CountySearch()
+            var search = new ForeignKeySearch()
             {
-                StateId = stateId,
+                Id = stateId,
                 OrderBy = orderBy,
             };
             var result = _service.GetAll(search);

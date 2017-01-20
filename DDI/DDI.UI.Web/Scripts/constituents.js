@@ -111,6 +111,8 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
+        DisplayConstituentType();
+
         DisplayConstituentPrimaryAddress();
 
         LoadDBATable();
@@ -118,6 +120,13 @@ function DisplayConstituentData() {
         LoadEducationTable();
 
         LoadPaymentPreferencesTable();
+    }
+}
+
+function DisplayConstituentType() {
+    $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
+    if (currentEntity.ConstituentType.Category === 0) {
+        $('.organization').hide();
     }
 }
 

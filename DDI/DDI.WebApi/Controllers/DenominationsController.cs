@@ -1,15 +1,15 @@
 using System.Web.Http;
-using DDI.Data.Models.Client.CRM;
-using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class DenominationsController : ApiController
     {
-        GenericServiceBase<Denomination> _service;
+        ServiceBase<Denomination> _service;
 
-        public DenominationsController() : this(new GenericServiceBase<Denomination>()) { }
-        internal DenominationsController(GenericServiceBase<Denomination> service)
+        public DenominationsController() : this(new ServiceBase<Denomination>()) { }
+        internal DenominationsController(ServiceBase<Denomination> service)
         {
             _service = service;
         }

@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DDI.Data.Models.Client.CRM;
-using DDI.Data.Models.Client.Core;
-using DDI.Data.Models.Common;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Core;
 using System.Data.Entity.Validation;
-using DDI.Data.Models;
 using System.Data.Entity.Infrastructure;
+using System.Collections.Generic;
+using System;
+using DDI.Shared.Models;
+using DDI.Shared;
 
 namespace DDI.Data
 {
     public class DomainContext : DbContext
     {
+        private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         #region Public Properties
-
+         
         public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
         public virtual DbSet<Address> Addresses { get; set; }
@@ -45,6 +42,12 @@ namespace DDI.Data
         public virtual DbSet<ContactCategory> ContactCategories { get; set; }
 
         public virtual DbSet<ContactType> ContactTypes { get; set; }
+
+        public virtual DbSet<CustomField> CustomField { get; set; }
+        
+        public virtual DbSet<CustomFieldData> CustomFieldData { get; set; }
+
+        public virtual DbSet<CustomFieldOption> CustomFieldOption { get; set; }
 
         public virtual DbSet<Degree> Degrees { get; set; }
 
@@ -99,16 +102,18 @@ namespace DDI.Data
         #region Public Constructors
 
         public DomainContext()
-            : base("name=DomainContext")
+            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         #endregion Public Constructors
 
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
-        {            
-            BaseEntity entity = entityEntry.Entity as BaseEntity;
+        {
+            EntityBase entity = entityEntry.Entity as EntityBase;
             if (entity != null)
             {
                 //Ensure new entities have an ID

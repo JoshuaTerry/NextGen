@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+using DDI.Shared.Models.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System;
 using System.Data.Entity.Validation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
-using DDI.Data.Models.Common;
+using System.Collections.Generic;
+using DDI.Shared.Models;
+using DDI.Shared;
 
 namespace DDI.Data
 {
-	public class CommonContext : DbContext
+    public class CommonContext : DbContext
 	{
+        private const string COMMON_CONTEXT_CONNECTION_KEY = "CommonContext";
         #region Public Properties
 
         public DbSet<Abbreviation> Abbreviations { get; set; }
@@ -32,16 +31,18 @@ namespace DDI.Data
         #region Public Constructors
 
         public CommonContext()
-			: base("name=CommonContext")
+            : base(ConnectionManager.Instance().Connections[COMMON_CONTEXT_CONNECTION_KEY])			 
 		{
-		}
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
+        }
 
         #endregion Public Constructors
-    
+
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            BaseEntity entity = entityEntry.Entity as BaseEntity;
+            EntityBase entity = entityEntry.Entity as EntityBase;
             if (entity != null)
             {
                 //Ensure new entities have an ID
@@ -54,7 +55,5 @@ namespace DDI.Data
             return base.ValidateEntity(entityEntry, items);
         }
         #endregion
-    }
-
-
+    } 
 }

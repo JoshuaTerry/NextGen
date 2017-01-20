@@ -1,11 +1,12 @@
-﻿using System;
+using DDI.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data.Models;
+using DDI.Shared.Logger;
 
 namespace DDI.Data
 {
@@ -21,6 +22,7 @@ namespace DDI.Data
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
         private string _commonNamespace;
+        private List<object> _businessLogic;
 
         #endregion Private Fields
 
@@ -43,7 +45,8 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Models.Common.Country).Namespace;
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
+            _businessLogic = new List<object>();
         }
 
         #endregion Public Constructors
@@ -72,9 +75,17 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
+        }
+        
+        /// <summary>
+        /// Return a queryable collection of entities.
+        /// </summary>
+        public IQueryable GetEntities(Type type)
+        {
+            return GetContext(type).Set(type);
         }
 
         /// <summary>
@@ -114,7 +125,15 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<T, TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class where T : class
         {
-            return GetRepository<T>().GetReference<TElement>(entity, property);
+            try
+            {
+                return GetRepository<T>().GetReference<TElement>(entity, property);
+            }
+            catch
+            {
+                Logger.Error(typeof(UnitOfWorkEF), $"GetReference on type {typeof(T).Name} failed for {property.Name}.");
+                return null;
+            }
         }
 
         /// <summary>
@@ -130,7 +149,10 @@ namespace DDI.Data
         /// </summary>
         public void Attach<T>(T entity) where T : class
         {
-            GetRepository<T>().Attach(entity);
+            if (entity != null)
+            {
+                GetRepository<T>().Attach(entity);
+            }
         }
 
         public T Create<T>() where T : class
@@ -148,11 +170,16 @@ namespace DDI.Data
             GetRepository<T>().Delete(entity);
         }
 
-        public T GetById <T>(object id) where T : class
+        public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);
         }
 
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
+        }
+        
         public IRepository<T> GetRepository<T>() where T : class
         {
             IRepository<T> repository = null;
@@ -161,27 +188,7 @@ namespace DDI.Data
 
             if (!_repositories.ContainsKey(type))
             {
-                DbContext context = null;
-
-                // Get or create the appropriate context for the type.
-                if (type.Namespace == _commonNamespace)
-                {
-                    // Common context
-                    if (_commonContext == null)
-                    {
-                        _commonContext = new CommonContext();
-                    }
-                    context = _commonContext;
-                }
-                else
-                {
-                    // Client context
-                    if (_clientContext == null)
-                    {
-                        _clientContext = new DomainContext();
-                    }
-                    context = _clientContext;
-                }
+                DbContext context = GetContext(type);
 
                 // Create a repository, then add it to the dictionary.
                 repository = new Repository<T>(context);
@@ -197,6 +204,59 @@ namespace DDI.Data
             return repository;
         }
 
+        public IRepository<T> GetCachedRepository<T>() where T : class 
+        {
+            IRepository<T> repository = null;
+
+            var type = typeof(T);
+
+            if (!_repositories.ContainsKey(type))
+            {
+                DbContext context = GetContext(type);
+
+                // Create a repository, then add it to the dictionary.
+                repository = new CachedRepository<T>(context);
+
+                _repositories.Add(type, repository);
+            }
+            else
+            {
+                // Repository already exists...
+                repository = _repositories[type] as IRepository<T>;
+            }
+
+            return repository;
+        }
+
+        /// <summary>
+        /// Get (create if necessary) the correct DbContext for a given entity type.
+        /// </summary>
+        private DbContext GetContext(Type type)
+        {
+            DbContext context = null;
+
+            // Get or create the appropriate context for the type.
+            if (type.Namespace == _commonNamespace)
+            {
+                // Common context
+                if (_commonContext == null)
+                {
+                    _commonContext = new CommonContext();
+                }
+                context = _commonContext;
+            }
+            else
+            {
+                // Client context
+                if (_clientContext == null)
+                {
+                    _clientContext = new DomainContext();
+                }
+                context = _clientContext;
+            }
+            return context;
+        }
+
         /// <summary>
         /// Saves all changes made to the unit of work to the database.
         /// </summary>
@@ -204,6 +264,25 @@ namespace DDI.Data
         {
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
+        }
+
+        public void AddBusinessLogic(object blObj)
+        {
+            if (!_businessLogic.Contains(blObj))
+                _businessLogic.Add(blObj);
+        }
+
+        public T GetBusinessLogic<T>() where T : class
+        {
+            Type blType = typeof(T);
+            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
+            if (blObj == null)
+            {
+                blObj = (T)Activator.CreateInstance(blType, this);
+                AddBusinessLogic(blObj);
+            }
+
+            return blObj;
         }
 
         #endregion Public Methods

@@ -102,8 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\GendersControllerTests.cs" />
+    <Compile Include="Helpers\PaginationTests.cs" />
+    <Compile Include="Helpers\DynamicTransmogrifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ConstituentsControllerTest.cs" />
     <Compile Include="Services\ConstituentServiceTests.cs" />
     <Compile Include="Services\SectionPreferenceServiceTest.cs" />
@@ -131,6 +132,10 @@
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\DDI.Services.csproj">
+      <Project>{23bfe6f8-f3ea-4be6-a193-ca70f9452943}</Project>
+      <Name>DDI.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 namespace DDI.Data
 {
     /// <summary>
-    /// Unit of Work for tests - Manages a set of entity repositories added via SetRepository&lt;T&gt;(IRepository&lt;T&gt; repo)
+    /// Unit of Work for tests - Manages a set of mocked repositories or RepositoryNoDb instances.
     /// </summary>
     public class UnitOfWorkNoDb : IUnitOfWork, IDisposable
     {
@@ -17,6 +19,7 @@ namespace DDI.Data
 
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private List<object> _businessLogic;
 
         #endregion Private Fields
 
@@ -25,6 +28,7 @@ namespace DDI.Data
         public UnitOfWorkNoDb()
         {
             _repositories = new Dictionary<Type, object>();
+            _businessLogic = new List<object>();
         }
 
         #endregion Public Constructors
@@ -37,9 +41,43 @@ namespace DDI.Data
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Assign a mocked repository.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repository"></param>
         public void SetRepository<T>(IRepository<T> repository) where T : class
         {
             _repositories[typeof(T)] = repository;
+        }
+
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class
+        {
+            RepositoryNoDb<T> repository = null;
+            var type = typeof(T);
+            if (!_repositories.ContainsKey(type))
+            {
+                repository = new RepositoryNoDb<T>(dataSource);
+                _repositories[type] = repository;
+                repository.AssignForeignKeys();
+            }
+            else
+            {
+                repository = _repositories[type] as RepositoryNoDb<T>;
+            }
+
+            return repository;
+        }
+
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class
+        {
+            return CreateRepositoryForDataSource(dataSource.AsQueryable());
         }
 
         public IRepository<T> GetRepository<T>() where T : class
@@ -58,6 +96,11 @@ namespace DDI.Data
             }
 
             return repository;
+        }
+
+        public IRepository<T> GetCachedRepository<T>() where T : class
+        {
+            return GetRepository<T>();
         }
 
         public int SaveChanges()
@@ -90,9 +133,15 @@ namespace DDI.Data
         /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
-        public IQueryable<T> GetEntities<T>() where T : class
+        public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
         {
-            return GetRepository<T>().Entities;
+            return GetRepository<T>().GetEntities(includes);
+        }
+
+        public IQueryable GetEntities(Type type)
+        {
+            IRepository repository = _repositories.GetValueOrDefault(type) as IRepository;
+            return repository?.Entities;
         }
 
         /// <summary>
@@ -141,10 +190,13 @@ namespace DDI.Data
 
         public void Attach<T>(T entity) where T : class
         {
-            var entities = (ICollection<T>)(GetRepository<T>().Entities);
-            if (!entities.Contains(entity))
+            if (entity != null)
             {
-                entities.Add(entity);
+                var entities = (ICollection<T>)(GetRepository<T>().Entities);
+                if (!entities.Contains(entity))
+                {
+                    entities.Add(entity);
+                }
             }
         }
 
@@ -163,9 +215,33 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
-        public T GetById<T>(object id) where T : class
+        public void AddBusinessLogic(object blObj)
+        {
+            if (!_businessLogic.Contains(blObj))
+                _businessLogic.Add(blObj);
+        }
+
+        public T GetBusinessLogic<T>() where T : class
+        {
+            Type blType = typeof(T);
+            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
+            if (blObj == null)
+            {
+                blObj = (T)Activator.CreateInstance(blType, this);
+                AddBusinessLogic(blObj);
+            }
+
+            return blObj;
+		}
+		
+        public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);
+        }
+
+        public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            return GetRepository<T>().GetById(id, includes);
         }
 
         #endregion Protected Methods

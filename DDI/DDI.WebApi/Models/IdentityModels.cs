@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using DDI.Shared;
 
 namespace DDI.WebApi.Models
 {
@@ -19,8 +20,9 @@ namespace DDI.WebApi.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         public ApplicationDbContext()
-            : base("DomainContext")
+            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])            
         {
         }
         

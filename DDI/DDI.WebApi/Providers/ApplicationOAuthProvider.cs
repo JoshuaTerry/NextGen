@@ -38,7 +38,7 @@ namespace DDI.WebApi.Providers
 
             if (!user.EmailConfirmed)
             {
-                context.SetError("invalid_grant", "The user did not confirm email.");
+                context.SetError("invalid_grant", "The user has not confirmed the email address.");
                 return;
             }
 

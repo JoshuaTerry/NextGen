@@ -57,10 +57,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversionBase.cs" />
+    <Compile Include="ConversionMethodArgs.cs" />
+    <Compile Include="Core\Initialize.cs" />
+    <Compile Include="CRM\ConstituentConverter.cs" />
+    <Compile Include="CRM\Initialize.cs" />
+    <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
-    <Compile Include="CRM\LoadDataCRM.cs" />
+    <Compile Include="CRM\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statics\InputFile.cs" />
+    <Compile Include="Statics\OutputFile.cs" />
+    <Compile Include="Statics\DirectoryName.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using DDI.Shared;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -7,8 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data.Models;
+using System.Threading.Tasks; 
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -21,7 +23,7 @@ namespace DDI.Data
     /// functionality that is not covered by the basic add, update, delete, list operations that this
     /// class provides.
     /// </remarks>
-    public class Repository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T>, IRepository
         where T : class
     {
         #region Private Fields
@@ -30,6 +32,7 @@ namespace DDI.Data
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
         private bool _isUOW = false;
+        private ICollection<T> _local = null;
 
         #endregion Private Fields
 
@@ -37,7 +40,9 @@ namespace DDI.Data
 
         public virtual IQueryable<T> Entities => EntitySet;
 
-        public SQLUtilities Utilities
+        IQueryable IRepository.Entities => EntitySet;
+
+        public ISQLUtilities Utilities
         {
             get
             {
@@ -77,21 +82,38 @@ namespace DDI.Data
             _isUOW = false;
         }
 
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
         public Repository(DbContext context)
         {
             _context = context;
             _isUOW = (context != null);
         }
-
-        #endregion Internal Constructors
-
+        #endregion Public Constructors
+         
         #region Public Methods
 
-
+        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        {
+            var member = property.Body as MemberExpression;
+            if (member == null)
+            {
+                var unary = property.Body as UnaryExpression;
+                if (unary != null)
+                {
+                    member = unary.Operand as MemberExpression;
+                }
+            }
+            if (shouldContainObjectPath && member != null)
+            {
+                var path = member.Expression.ToString();
+                var objectPath = member.Expression.ToString().Split('.');
+                if (objectPath.Length >= 2)
+                {
+                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
+                    return $"{path}.{member.Member.Name}";
+                }
+            }
+            return member?.Member.Name ?? String.Empty;
+        }
 
         public virtual void Delete(T entity)
         {
@@ -102,10 +124,7 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                if (_context.Entry(entity).State == EntityState.Detached)
-                {
-                    EntitySet.Attach(entity);
-                }
+                Attach(entity);
 
                 EntitySet.Remove(entity);
                 if (!_isUOW)
@@ -151,66 +170,11 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
-            try
-            {
-                // Anything that's not an EF mapped property will throw an exception.
+            var reference = _context.Entry(entity).Reference(property);
 
-                var reference = _context.Entry(entity).Reference(property);
-
-                if (!reference.IsLoaded)
-                    reference.Load();
-                return reference.CurrentValue;
-            }
-            catch(Exception e)
-            {
-                // Logic to handle BaseLinkedEntity and LinkedEntityCollection:
-
-                // Consult the lambda expression to get the property info.
-                if (property.Body is MemberExpression)
-                {
-                    PropertyInfo propInfo = ((MemberExpression)property.Body).Member as PropertyInfo;
-                    if (propInfo != null)
-                    {
-                        if (entity is BaseLinkedEntity)
-                        {
-                            // Trying to load a BaseLinkedEntity property.  It's name should be "ParentEntity".
-                            if (propInfo.Name == nameof(BaseLinkedEntity.ParentEntity))
-                            {
-                                // Call the LoadParentEntity method to make sure it's loaded, then return the ParentEntity value.
-                                var linkedEntity = entity as BaseLinkedEntity;
-                                linkedEntity.LoadParentEntity(_context);
-                                return linkedEntity.ParentEntity as TElement;
-                            }
-                            
-                            throw e;  // Wrong property name...
-                        }
-
-                        else if (typeof(TElement).GetInterfaces().Contains(typeof(ILinkedEntityCollection)))
-                        {
-                            // Trying to load a LinkedEntityCollection property.
-                            // Get the property value.
-                            object memberValue = propInfo.GetValue(entity);
-
-                            if (memberValue == null)
-                            {
-                                // If null, the LinkedEntityCollection needs to be created.
-                                memberValue = (TElement)Activator.CreateInstance(typeof(TElement), entity);
-                                propInfo.SetValue(entity, memberValue);
-                            }
-
-                            if (memberValue is TElement)
-                            {
-                                // Ensure the collection is loaded.
-                                ((ILinkedEntityCollection)memberValue).LoadCollection(_context);
-
-                                return (TElement)memberValue;
-                            }
-                        }
-                    }
-                }
-
-                throw e; // Couldn't determine the reference, so rethrow the exception.
-            }
+            if (!reference.IsLoaded)
+                reference.Load();
+            return reference.CurrentValue;
         }
 
         /// <summary>
@@ -218,7 +182,11 @@ namespace DDI.Data
         /// </summary>
         public ICollection<T> GetLocal()
         {
-            return EntitySet.Local;
+            if (_local == null)
+            {
+                _local = EntitySet.Local;
+            }
+            return _local;
         }
 
         /// <summary>
@@ -226,20 +194,51 @@ namespace DDI.Data
         /// </summary>
         public void Attach(T entity)
         {
-            if (entity != null)
-            {
-                EntitySet.Attach(entity);
-            }
+            Attach(entity, EntityState.Unchanged);
         }
         
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
-        public T GetById(object id) => EntitySet.Find(id);
+        public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
+        {
+            if (includes == null || includes.Length == 0)
+            {
+                return Entities;
+            }
+
+            var query = _context.Set<T>().AsQueryable();
+
+            foreach(Expression<Func<T, object>> include in includes)
+            {
+                string name = NameFor(include, true);
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Include(name);
+                }
+            }
+
+            return query;
+        }
+
+        public T GetById(Guid id) => EntitySet.Find(id);
+
+        public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            if (typeof(IEntity).IsAssignableFrom(typeof(T)))
+            {
+                var query = (IQueryable<IEntity>)GetEntities(includes);
+                return query.FirstOrDefault(p => p.Id == id) as T;
+            }
+            else
+            {
+                return GetById(id);
+            }
+        }
 
         public virtual T Create()
         {
             T entity = Activator.CreateInstance<T>(); // ...to avoid adding the new() generic type restriction.
-            (entity as BaseEntity)?.AssignPrimaryKey();
+            (entity as EntityBase)?.AssignPrimaryKey();
             EntitySet.Add(entity);
 
             return entity;
@@ -282,7 +281,7 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                EntitySet.Attach(entity);
+                Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
                 if (!_isUOW)
                 {
@@ -317,12 +316,12 @@ namespace DDI.Data
             return _isUOW ? 0 : _context.SaveChanges();
         }
 
-        public List<string> GetModifiedProperties(T entity) 
+        public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();
+            DbEntityEntry<T> entry = _context.Entry(entity);
 
-            var entry = _context.Entry(entity);
-            foreach (var property in entry.OriginalValues.PropertyNames)
+            foreach (string property in entry.OriginalValues.PropertyNames)
             {
                 if (entry.Property(property).IsModified)
                 {
@@ -331,8 +330,23 @@ namespace DDI.Data
             }
 
             return list;
-        }        
+        }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void Attach(T entity, EntityState entityState)
+        {
+            if (entity != null && _context.Entry(entity).State == EntityState.Detached)
+            {
+                // Attach throws exceptions if parts of the entity graph are already in the context.  Instead, use Add and adjust the entity state.
+                EntitySet.Add(entity);
+                _context.Entry(entity).State = entityState;
+            }
+        }
+
+        #endregion
+
     }
 }

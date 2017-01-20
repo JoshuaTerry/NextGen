@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.WebApi.Services;
-using DDI.WebApi.Services.Search;
+using DDI.Services;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {
@@ -37,9 +37,9 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/states")]
         public IHttpActionResult GetAll(Guid? countryId = null)
         {
-            var search = new StateSearch()
+            var search = new ForeignKeySearch()
             {
-                CountryId = countryId
+                Id = countryId
             };
             var result = _service.GetAll(search);
 
