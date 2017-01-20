@@ -45,6 +45,7 @@
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
+    <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />
     <Compile Include="CRM\ConstituentLogic.cs" />
     <Compile Include="CRM\LabelFormattingOptions.cs" />

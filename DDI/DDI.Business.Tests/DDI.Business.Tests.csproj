@@ -63,6 +63,7 @@
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegionLogicTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
