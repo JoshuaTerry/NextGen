@@ -25,7 +25,6 @@ namespace DDI.Shared.Statics.CRM
         public const string Brother = "BROTHER";
         public const string His = "HIS";
         public const string Name = "NAME";
-        public const string FullName = "FULL";
         public const string And = "AND";
     }
 }

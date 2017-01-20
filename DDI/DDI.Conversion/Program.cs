@@ -10,6 +10,7 @@ using DDI.Conversion;
 using System.Data.Entity.Migrations;
 using log4net;
 using DDI.Conversion.Statics;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Conversion
 {
@@ -36,7 +37,36 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();            
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            
+
+            Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Prefixes));
+
+            var bl = new Business.CRM.NameFormatter();
+            var name = bl.UnitOfWork.FirstOrDefault<Constituent>(p => p.ConstituentNumber == 1000048);
+            //name.SalutationType = Shared.Enums.CRM.SalutationType.Custom;
+            //name.Salutation = "Dear Mr. Awesome";
+
+            var name2 = bl.UnitOfWork.FirstOrDefault<Constituent>(p => p.ConstituentNumber == 1049925);
+            //name2.SalutationType = Shared.Enums.CRM.SalutationType.Custom;
+            //name2.Salutation = "Dear Mrs. Awesome";
+
+            //name.LastName = "Jones";
+            //name.Prefix = bl.UnitOfWork.FirstOrDefault<Prefix>(p => p.Code == "Rep");
+            string result = bl.BuildSalutation(name, new Business.CRM.SalutationFormattingOptions()
+            {
+                PreferredType = Shared.Enums.CRM.SalutationType.Formal ,
+                ForcePreferredtype = true,
+                KeepSeparate = false,
+                Recipient = Business.CRM.LabelRecipient.Both,
+                AddFirstNames = false
+                , OmitPrefix = false
+                
+               
+
+            });
+            Console.WriteLine(result);
+            Console.ReadLine();
+            return;
+
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
