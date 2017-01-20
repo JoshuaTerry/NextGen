@@ -14,8 +14,8 @@ namespace DDI.Business
 
         #region Fields
 
-        private static Dictionary<ModuleType, ModuleInformation> _moduleDictionary = new Dictionary<ModuleType, ModuleInformation>();
-        private static List<ModuleInformation> _modules = new List<ModuleInformation>();
+        private static Dictionary<ModuleType, ModuleInformation> _moduleDictionary;
+        private static List<ModuleInformation> _modules;
 
         #endregion
 
@@ -52,8 +52,11 @@ namespace DDI.Business
         /// </summary>
         private static void Initialize()
         {
-            if (_modules.Count <= 0)
+            if (_modules == null)
             {
+
+                _moduleDictionary = new Dictionary<ModuleType, ModuleInformation>();
+                _modules = new List<ModuleInformation>();
                 // Populate the list of modules and the module dictionary.
                 var accounting = new ModuleInformation
                 {
