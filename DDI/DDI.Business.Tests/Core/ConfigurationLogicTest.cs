@@ -9,9 +9,9 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.ModuleInfo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using DDI.Shared.Enums;
 
 namespace DDI.Business.Tests.Core
 {
@@ -165,11 +165,10 @@ namespace DDI.Business.Tests.Core
         }
 
 
-        [ModuleType(Shared.Enums.ModuleType.CRM)]
         private class TestConfiguration : ConfigurationBase
         {
             // Some random configuration properties
-
+            public ModuleType moduleType = ModuleType.CRM;
             public string Title { get; set; }
             public bool Enabled { get; set; }
             public int Age { get; set; }
@@ -198,9 +197,9 @@ namespace DDI.Business.Tests.Core
             }
         }
 
-        [ModuleType(Shared.Enums.ModuleType.Accounting)]
         private class AccountingConfiguration : ConfigurationBase
         {
+            public ModuleType moduleType = ModuleType.Accounting;
             public string Title { get; set; }
         }
     }

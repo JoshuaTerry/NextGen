@@ -14,13 +14,16 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using DDI.Shared.ModuleInfo;
+using DDI.Shared.Enums;
+//using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    //[ModuleType(Shared.Enums.ModuleType.CRM)]
     internal class SettingsLoader :  ConversionBase
     {
+
+        ModuleType ModuleType = ModuleType.CRM;
         public enum ConversionMethod
         {
             Codes = 200001,

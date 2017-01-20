@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Helpers;
+using DDI.Shared.Enums;
 
 namespace DDI.Conversion
 {
     internal abstract class ConversionBase
     {
+
+        protected ModuleType ModuleType;
         protected IEnumerable<ConversionMethodArgs> MethodsToRun { get; set; }
         protected ConversionMethodArgs MethodArgs { get; set; }
 
