@@ -5,30 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Business.CRM.ModuleInfo.Base
+namespace DDI.Business.ModuleInfo
 {
-    public class ModuleInfoConcrete 
+    public class ModuleInformation 
     {
-
-        #region Private Fields
-
-        ModuleTypeAttribute _moduleTypeAttribute;
-
-        #endregion
 
         #region Constructors 
 
-        public ModuleInfoConcrete()
+        public ModuleInformation()
         {
-            ChildModules = new List<ModuleInfoConcrete>();
+            ChildModules = new List<ModuleInformation>();
         }
 
         #endregion
 
         #region Properties
 
-        public List<ModuleInfoConcrete> ChildModules { get; set; }
-        public ModuleInfoConcrete ParentModule { get; set; }
+        public List<ModuleInformation> ChildModules { get; set; }
+        public ModuleInformation ParentModule { get; set; }
 
         public string Code { get; set;  }
         public string Name { get; set; }

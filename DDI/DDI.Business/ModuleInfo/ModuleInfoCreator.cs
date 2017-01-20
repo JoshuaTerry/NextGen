@@ -4,29 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Enums;
-using DDI.Business.CRM.ModuleInfo.Base;
+using DDI.Business.ModuleInfo;
 
-namespace DDI.Business.CRM
+namespace DDI.Business
 {
-    /// <summary>
-    /// Methods for accessing module information.
-    /// </summary>
+
     public static class ModuleInfoCreator
     {
 
         #region Fields
 
-        private static Dictionary<ModuleType, ModuleInfoConcrete> _moduleDictionary;
-        private static List<ModuleInfoConcrete> _modules;
+        private static Dictionary<ModuleType, ModuleInformation> _moduleDictionary;
+        private static List<ModuleInformation> _modules;
 
         #endregion
 
         #region Public Properties 
 
-        /// <summary>
-        /// Collection of module information objects
-        /// </summary>
-        public static ICollection<ModuleInfoConcrete> ModuleInfoCollection
+       
+        public static ICollection<ModuleInformation> ModuleInfoCollection
         {
             get
             {
@@ -38,13 +34,11 @@ namespace DDI.Business.CRM
 
         #region Public Methods
 
-        /// <summary>
-        /// Get the ModuleInfo object for a specified ModuleType value.
-        /// </summary>
-        public static ModuleInfoConcrete GetModuleInfo(ModuleType moduleType)
+        
+        public static ModuleInformation GetModuleInfo(ModuleType moduleType)
         {
             Initialize();
-            ModuleInfoConcrete moduleInfo = null;
+            ModuleInformation moduleInfo = null;
             _moduleDictionary.TryGetValue(moduleType, out moduleInfo);
             return moduleInfo;
         }
@@ -54,16 +48,16 @@ namespace DDI.Business.CRM
         #region Private Methods
 
         /// <summary>
-        /// Build list of modules via reflection only once, and only when first requested.
+        /// Populate list of modules only once, and only when first requested
         /// </summary>
         private static void Initialize()
         {
 
             // Populate the list of modules and the module dictionary.
-            _moduleDictionary = new Dictionary<ModuleType, ModuleInfoConcrete>();
-            _modules = new List<ModuleInfoConcrete>();
+            _moduleDictionary = new Dictionary<ModuleType, ModuleInformation>();
+            _modules = new List<ModuleInformation>();
 
-            var accounting = new ModuleInfoConcrete
+            var accounting = new ModuleInformation
             {
                 Code = "ACCT",
                 Name = "Connect-Accounting",
@@ -74,7 +68,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Accounting, accounting);
             _modules.Add(accounting);
 
-            var accountsPayable = new ModuleInfoConcrete
+            var accountsPayable = new ModuleInformation
             {
                 Code = "AP",
                 Name = "Accounts Payable",
@@ -87,7 +81,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.AccountsPayable, accountsPayable);
             _modules.Add(accountsPayable);
 
-            var accountsReceivable = new ModuleInfoConcrete
+            var accountsReceivable = new ModuleInformation
             {
                 Code = "AR",
                 Name = "Accounts Receivable",
@@ -100,7 +94,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.AccountsReceivable, accountsReceivable);
             _modules.Add(accountsReceivable);
 
-            var campaigns = new ModuleInfoConcrete {
+            var campaigns = new ModuleInformation {
                 Code = "FRCM",
                 Name = "Campaigns and Appeals",
                 ModuleType = ModuleType.Campaigns,
@@ -110,7 +104,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Campaigns, campaigns);
             _modules.Add(campaigns);
 
-            var cashDisbursements = new ModuleInfoConcrete
+            var cashDisbursements = new ModuleInformation
             {
                 Code = "CD",
                 Name = "Cash Disbursements",
@@ -120,7 +114,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.CashDisbursements, cashDisbursements);
             _modules.Add(cashDisbursements);
 
-            var cashProcessing = new ModuleInfoConcrete
+            var cashProcessing = new ModuleInformation
             {
                 Code = "CP",
                 Name = "Cash Processing",
@@ -131,7 +125,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.CashProcessing, cashProcessing);
             _modules.Add(cashProcessing);
 
-            var cashReceipting = new ModuleInfoConcrete
+            var cashReceipting = new ModuleInformation
             {
                 Code = "CR",
                 Name = "Cash Receipting",
@@ -144,7 +138,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.CashReceipting, cashReceipting);
             _modules.Add(cashReceipting);
 
-            var crm = new ModuleInfoConcrete
+            var crm = new ModuleInformation
             {
                 Code = "CRM",
                 Name = "Connect-CRM",
@@ -156,7 +150,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.CRM, crm);
             _modules.Add(crm);
 
-            var cropEvents = new ModuleInfoConcrete
+            var cropEvents = new ModuleInformation
             {
                 Code = "FREV",
                 Name = "CROP Events and Programs",
@@ -168,7 +162,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.CropEvents, cropEvents);
             _modules.Add(cropEvents);
 
-            var donations = new ModuleInfoConcrete
+            var donations = new ModuleInformation
             {
                 Code = "FRDG",
                 Name = "Donations",
@@ -180,7 +174,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Gifts, donations);
             _modules.Add(donations);
 
-            var extensionFund = new ModuleInfoConcrete
+            var extensionFund = new ModuleInformation
             {
                 Code = "CEF",
                 Name = "Connect-CEF",
@@ -191,7 +185,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.ExtensionFund, extensionFund);
             _modules.Add(extensionFund);
 
-            var fixedAssets = new ModuleInfoConcrete
+            var fixedAssets = new ModuleInformation
             {
                 Code = "FA",
                 Name = "Fixed Assets",
@@ -202,7 +196,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.FixedAssets, fixedAssets);
             _modules.Add(fixedAssets);
 
-            var fundRaising = new ModuleInfoConcrete
+            var fundRaising = new ModuleInformation
             {
                 Code = "FR",
                 Name = "Fund Raising",
@@ -213,7 +207,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.FundRaising, fundRaising);
             _modules.Add(fundRaising);
 
-            var generalLedger = new ModuleInfoConcrete
+            var generalLedger = new ModuleInformation
             {
                 Code = "GL",
                 Name = "General Ledger",
@@ -225,7 +219,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.GeneralLedger, generalLedger);
             _modules.Add(generalLedger);
 
-            var healthPolicy = new ModuleInfoConcrete
+            var healthPolicy = new ModuleInformation
             {
                 Code = "HP",
                 Name = "Health Policy",
@@ -237,7 +231,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.HealthPolicy, healthPolicy);
             _modules.Add(healthPolicy);
 
-            var inventory = new ModuleInfoConcrete
+            var inventory = new ModuleInformation
             {
                 Code = "IV",
                 Name = "Inventory",
@@ -248,7 +242,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Inventory, inventory);
             _modules.Add(inventory);
 
-            var investments = new ModuleInfoConcrete
+            var investments = new ModuleInformation
             {
                 Code = "EFIN",
                 Name = "Investments",
@@ -259,7 +253,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Investments, investments);
             _modules.Add(investments);
 
-            var jobProcessing = new ModuleInfoConcrete
+            var jobProcessing = new ModuleInformation
             {
                 Code = "JP",
                 Name = "Job Processing",
@@ -270,7 +264,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.JobProcessing, jobProcessing);
             _modules.Add(jobProcessing);
 
-            var lineOfCredit = new ModuleInfoConcrete
+            var lineOfCredit = new ModuleInformation
             {
                 Code = "EFLC",
                 Name = "Line of Credit",
@@ -283,7 +277,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.LineOfCredit, lineOfCredit);
             _modules.Add(lineOfCredit);
 
-            var loans = new ModuleInfoConcrete
+            var loans = new ModuleInformation
             {
                 Code = "EFLN",
                 Name = "Loans",
@@ -295,7 +289,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Loans, loans);
             _modules.Add(loans);
 
-            var namedFunds = new ModuleInfoConcrete
+            var namedFunds = new ModuleInformation
             {
                 Code = "FRNF",
                 Name = "Named Funds",
@@ -306,7 +300,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.NamedFunds, namedFunds);
             _modules.Add(namedFunds);
 
-            var plannedGiving = new ModuleInfoConcrete
+            var plannedGiving = new ModuleInformation
             {
                 Code = "FRPG",
                 Name = "Planned Giving",
@@ -317,7 +311,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.PlannedGiving, plannedGiving);
             _modules.Add(plannedGiving);
 
-            var pools = new ModuleInfoConcrete
+            var pools = new ModuleInformation
             {
                 Code = "EFPO",
                 Name = "Pools",
@@ -327,7 +321,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Pools, pools);
             _modules.Add(pools);
 
-            var portfolio = new ModuleInfoConcrete
+            var portfolio = new ModuleInformation
             {
                 Code = "EFPF",
                 Name = "Portfolio",
@@ -339,7 +333,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.Portfolio, portfolio);
             _modules.Add(portfolio);
 
-            var processManagement = new ModuleInfoConcrete
+            var processManagement = new ModuleInformation
             {
                 Code = "PM",
                 Name = "Process Management",
@@ -350,7 +344,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.ProcessManagement, processManagement);
             _modules.Add(processManagement);
 
-            var projects = new ModuleInfoConcrete
+            var projects = new ModuleInformation
             {
                 Code = "PR",
                 Name = "Project Management",
@@ -360,7 +354,7 @@ namespace DDI.Business.CRM
             _moduleDictionary.Add(ModuleType.ProjectManagement, projects);
             _modules.Add(projects);
 
-            var systemAdministration = new ModuleInfoConcrete
+            var systemAdministration = new ModuleInformation
             {
                 Code = "DDI",
                 Name = "System Administration",

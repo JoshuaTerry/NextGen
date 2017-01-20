@@ -10,11 +10,11 @@ using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.ModuleInfo;
+//using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+   // [ModuleType(Shared.Enums.ModuleType.CRM)]
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod

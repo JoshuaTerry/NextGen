@@ -113,13 +113,7 @@ namespace DDI.Business.Core
             Type configType = config.GetType();
             Type EntityBaseType = typeof(EntityBase);
 
-            ModuleTypeAttribute attr = configType.GetAttribute<ModuleTypeAttribute>();
-            if (attr == null)
-            {
-                return;
-            }
-
-            ModuleType modType = attr.ModuleType;
+            ModuleType modType = config.ModuleType;
 
             // Load the entire set of config rows
             var configRows = UnitOfWork.Where<Configuration>(p => p.ModuleType == modType).ToList();

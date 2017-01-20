@@ -62,6 +62,7 @@
     <Compile Include="Core\ConfigurationLogicTest.cs" />
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
+    <Compile Include="ModuleInfo\ModuleInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

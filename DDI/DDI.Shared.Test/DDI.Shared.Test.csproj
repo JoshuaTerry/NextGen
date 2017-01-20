@@ -54,8 +54,6 @@
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
     <Compile Include="Helpers\ReflectionHelperTests.cs" />
-    <Compile Include="Helpers\ModuleHelperTests.cs" />
-    <Compile Include="ModuleInfo\ModuleInfoBaseTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

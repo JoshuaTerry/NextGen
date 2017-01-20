@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DDI.Shared.Helpers;
-using DDI.Shared.ModuleInfo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Shared.Test.Helpers
@@ -30,7 +29,7 @@ namespace DDI.Shared.Test.Helpers
             var types = ReflectionHelper.GetDecoratedWith<ModuleTypeAttribute>();
             Assert.IsNotNull(types, "GetDecoratedWith returned non-null value.");
             Assert.IsTrue(types.Count > 10, "GetDecoratedWith returned multiple results.");
-            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDecoratedWith contains Accounting module.");
+            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDecoratedWith contains Accounting module."); 
         }
 
         [TestMethod, TestCategory(TESTDESCR)]

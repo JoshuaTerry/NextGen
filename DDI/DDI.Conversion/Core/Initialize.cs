@@ -5,15 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.Core
 {
-    [ModuleType(Shared.Enums.ModuleType.SystemAdministration)]
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod
