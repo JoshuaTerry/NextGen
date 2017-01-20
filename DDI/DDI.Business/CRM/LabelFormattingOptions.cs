@@ -11,8 +11,6 @@ namespace DDI.Business.CRM
     /// </summary>
     public class LabelFormattingOptions : NameFormattingOptions
     {
-        public bool IsSpouse { get; set; }
-        public bool IncludeInactive { get; set; }
         public string AddressType { get; set; }
         public string ContactName { get; set; }
         public int MaxLines { get; set; }

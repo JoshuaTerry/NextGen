@@ -22,6 +22,8 @@ namespace DDI.Business.CRM
         private const string MALE = "M";
         private const string FEMALE = "F";
 
+        private const string OPEN_PAREN_CHARS = "([{";
+
         // These macro abbreviations are for backwards compatibility.
         private const string PREFIX_ABBREVIATION = "P";
         private const string FIRST_NAME_ABBREVIATION = "F";
@@ -111,7 +113,7 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Build name lines for one or two constituents.
         /// </summary>
-        public void BuildNameLines(Constituent constituent1, Constituent constituent2, LabelFormattingOptions options, out string line1, out string line2)
+        public void BuildNameLines(Constituent constituent1, Constituent constituent2, NameFormattingOptions options, out string line1, out string line2)
         {
             if (options == null)
             {
@@ -798,10 +800,14 @@ namespace DDI.Business.CRM
 
                 if (!string.IsNullOrEmpty(namePart))
                 {
-                    if (result.Length > 0 && !char.IsPunctuation(namePart[0]))
+                    if (result.Length > 0 && (OPEN_PAREN_CHARS.IndexOf(namePart[0]) >= 0 || !char.IsPunctuation(namePart[0])))
                     {
-                        // Append a space betweeen tokens unless this token starts with punctuation.
-                        result.Append(' ');
+                        char lastChar = result[result.Length - 1];
+                        if (OPEN_PAREN_CHARS.IndexOf(lastChar) < 0)
+                        {
+                            // Append a space betweeen tokens unless this token starts with punctuation.
+                            result.Append(' ');
+                        }
                     }
                     result.Append(namePart);
                 }

@@ -41,13 +41,9 @@ namespace DDI.Business.Tests.CRM
 
             CRMConfigurationDataSource.GetDataSource(_uow);
 
-            // Constituent types
-
             ConstituentType individualType = _constituentTypes.FirstOrDefault(p => p.Category == ConstituentCategory.Individual);
 
-            // Prefixes
-
-            // Constituents
+            // Set up two constituents with a spouse relationship.
 
             _constituents = new List<Constituent>();
             _constituents.Add(new Constituent()
