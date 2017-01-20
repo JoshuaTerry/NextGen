@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
@@ -79,7 +80,10 @@
     <Compile Include="Caching\CacheHelper.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\MemoryCacheProvider.cs" />
+    <Compile Include="ConnectionManager.cs" />
     <Compile Include="DataResponse.cs" />
+    <Compile Include="DDIConfigurationManager.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
@@ -105,6 +109,7 @@
     <Compile Include="Helpers\NumericHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="IPageable.cs" />
     <Compile Include="IRepository.cs" />

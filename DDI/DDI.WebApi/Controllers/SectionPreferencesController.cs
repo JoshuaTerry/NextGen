@@ -1,8 +1,7 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Cors;
-using DDI.Data;
-using DDI.Services;
-using DDI.Shared.Models.Client.Core;
+using System.Web.Http.Cors; 
+using DDI.Services; 
+using DDI.WebApi.Helpers;
 
 namespace DDI.WebApi.Controllers
 {
@@ -10,15 +9,19 @@ namespace DDI.WebApi.Controllers
     public class SectionPreferencesController : ApiController
     {
         private ISectionPreferenceService _service;
+        private IPagination _pagination;
+        private DynamicTransmogrifier _dynamicTransmogrifier;
 
         public SectionPreferencesController()
-            :this(new SectionPreferenceService())
+            :this(new SectionPreferenceService(), new Pagination(), new DynamicTransmogrifier())
         {            
         }
 
-        internal SectionPreferencesController(ISectionPreferenceService service)
+        internal SectionPreferencesController(ISectionPreferenceService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
         {
             _service = service;
+            _pagination = pagination;
+            _dynamicTransmogrifier = dynamicTransmogrifier;
         }
 
         [HttpGet]
