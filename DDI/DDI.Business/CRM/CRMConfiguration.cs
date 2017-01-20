@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Data;
 using DDI.Shared.Enums;
-//using DDI.Shared.ModuleInfo;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared;
