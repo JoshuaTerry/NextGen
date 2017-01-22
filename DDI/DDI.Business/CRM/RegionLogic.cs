@@ -10,77 +10,137 @@ namespace DDI.Business.CRM
 {
     public class RegionLogic : EntityLogicBase<Region>
     {
-        private IRepository<Region> _repo = null;
         public RegionLogic() : this(new UnitOfWorkEF()) { }
 
         public RegionLogic(IUnitOfWork uow) : base(uow)
         {
-            _repo = UnitOfWork.GetRepository<Region>();
         }
 
         public List<Region> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {
-            var levels = UnitOfWork.GetRepository<RegionLevel>().Entities.Max(rl => rl.Level);
-            var us = this.UnitOfWork.GetRepository<Country>().Entities.FirstOrDefault(c => c.CountryCode == "US");
+            int minLevel = 1;
+            int maxLevel = UnitOfWork.GetEntities<RegionLevel>().Max(rl => rl.Level);
+            Country us = this.UnitOfWork.FirstOrDefault<Country>(c => c.CountryCode == "US"); // TODO: Change to AddressLogic.DefaultCountryCode once address logic is merged in.
 
             var regions = new List<Region>();
-            for (int i = 1; i <= levels; i++)
+
+            for (int level = minLevel; level <= maxLevel; level++)
             {
-                var zip = (countryid == us?.Id && zipcode.Length > 5) ? zipcode.Substring(0, 5) : zipcode;
+                string truncatedZip = (countryid == us?.Id && zipcode.Length > 5) ? zipcode.Substring(0, 5) : zipcode;
+                int priority = int.MinValue;
 
                 Region region = null;
 
+                // TODO:  Queries should be modified to use CachedRepository, but only after recent caching changes to develop have beem merged in.                
+
+                // State
                 if (stateId != null)
                 {
-                     region = UnitOfWork.GetRepository<RegionArea>().Entities.Where(ra => ra.Level == i && 
-                                                                                        ra.CountyId == countyId ||
-                                                                                        ra.City == city ||
-                                                                                        CompareRegionAreaAgainstZipCode(ra, zipcode)).OrderBy(ra => ra.Priority).FirstOrDefault().Region;                    
+                    foreach (var regionArea in UnitOfWork.GetEntities<RegionArea>(p => p.Region).Where(ra => ra.Level == level && ra.StateId == stateId))
+                    {
+                        if (regionArea.Priority > priority && CheckRegionArea(regionArea, countyId, city, truncatedZip))
+                        {
+                            region = regionArea.Region;
+                            priority = regionArea.Priority;
+                        }
+                    }
                 }
 
+                // Country, state ignored
                 if (region == null && countryid != null)
                 {
-                    region = UnitOfWork.GetRepository<RegionArea>().Entities.Where(ra => ra.Level == i &&
-                                                                                ra.StateId == Guid.Empty &&
-                                                                                ra.CountryId == countryid &&
-                                                                                ra.CountyId == countyId ||
-                                                                                ra.City == city ||
-                                                                                CompareRegionAreaAgainstZipCode(ra, zipcode)).OrderBy(ra => ra.Priority).FirstOrDefault().Region;
+                    foreach (var regionArea in UnitOfWork.GetEntities<RegionArea>(p => p.Region).Where(ra => ra.Level == level && ra.StateId == null && ra.CountryId == countryid))
+                    {
+                        if (regionArea.Priority > priority && CheckRegionArea(regionArea, countyId, city, truncatedZip))
+                        {
+                            region = regionArea.Region;
+                            priority = regionArea.Priority;
+                        }
+                    }
                 }
                 
+                // Country ignored, state ignored
                 if (region == null)
                 {
-                    region = UnitOfWork.GetRepository<RegionArea>().Entities.Where(ra => ra.Level == i && 
-                                                                                ra.CountryId == Guid.Empty &&
-                                                                                ra.CountyId == countyId ||
-                                                                                ra.City == city ||
-                                                                                CompareRegionAreaAgainstZipCode(ra, zipcode)).OrderBy(ra => ra.Priority).FirstOrDefault().Region;
+                    foreach (var regionArea in UnitOfWork.GetEntities<RegionArea>(p => p.Region).Where(ra => ra.Level == level && ra.StateId == null && ra.CountryId == null))
+                    {
+                        if (regionArea.Priority > priority && CheckRegionArea(regionArea, countyId, city, truncatedZip))
+                        {
+                            region = regionArea.Region;
+                            priority = regionArea.Priority;
+                        }
+                    }
                 }
+
                 if (region != null)
+                {
                     regions.Add(region);
+                }
             }
 
             return regions;
         }
 
-        public bool CompareRegionAreaAgainstZipCode(RegionArea area, string zipcode)
+        /// <summary>
+        /// Checks to see if a RegionArea matches a county id, city, and postal code.  It's assumed the RegionArea is already been selected
+        /// for a particular country and state.
+        /// </summary>
+        private bool CheckRegionArea(RegionArea area, Guid? countyId, string city, string postalCode)
         {
-            if (string.IsNullOrEmpty(zipcode))
+            // Test for county and city
+            if (area.CountyId != null && area.CountyId != countyId)
+            {
                 return false;
-
-            if (!string.IsNullOrEmpty(area.PostalCodeHigh) && !string.IsNullOrEmpty(area.PostalCodeLow))
-            {
-                if(string.Compare(area.PostalCodeLow, zipcode, true) > 0 || string.Compare(area.PostalCodeHigh, zipcode, true) < 0)
-                    return false;                
             }
-            else if (!string.IsNullOrEmpty(area.PostalCodeLow))
+
+            if (!string.IsNullOrWhiteSpace(area.City) && string.Compare(area.City, city, true) != 0)
             {
-                var zipLow = area.PostalCodeLow.Split(',');
-                if (string.Compare(area.PostalCodeLow, zipcode, true) != 0)
+                return false;
+            }
+
+            // Postal code logic
+            if (!string.IsNullOrWhiteSpace(area.PostalCodeLow))
+            {
+                if (string.IsNullOrWhiteSpace(postalCode))
+                {
                     return false;
+                }
+
+                if (!string.IsNullOrWhiteSpace(area.PostalCodeHigh))
+                {
+                    // Zip code range
+                    if (string.Compare(area.PostalCodeLow, postalCode, true) > 0 ||
+                        string.Compare(area.PostalCodeHigh, postalCode, true) < 0)
+                    {
+                        return false;
+                    }
+                }
+                else if (!area.PostalCodeLow.Contains(','))
+                {
+                    // Single zip
+                    if (string.Compare(area.PostalCodeLow, postalCode, true) != 0)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    // Comma delimited list of zips
+                    foreach (var entry in area.PostalCodeLow.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (string.Compare(entry, postalCode, true) == 0)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
             }
 
             return true;
         }
+
+
     }
 }
