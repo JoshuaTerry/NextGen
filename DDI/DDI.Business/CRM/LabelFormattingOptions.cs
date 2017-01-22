@@ -11,15 +11,14 @@ namespace DDI.Business.CRM
     /// </summary>
     public class LabelFormattingOptions : NameFormattingOptions
     {
-        public string AddressType { get; set; }
+        public string AddressTypeCode { get; set; }
         public string ContactName { get; set; }
         public int MaxLines { get; set; }
         public bool Caps { get; set; }
         public bool ExpandName { get; set; }
         public bool ExpandAddress { get; set; }
-        public bool allowVacationAddress { get; set; }
-        public AddressCategory AddressCategory { get; set; }
-        public Guid AddressOid { get; set; }
+        public bool AllowVacationAddress { get; set; }
+        public AddressCategory AddressCategory { get; set; }        
 
         public LabelFormattingOptions() : base()
         {

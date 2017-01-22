@@ -51,7 +51,7 @@ namespace DDI.Conversion
 
             //name.LastName = "Jones";
             //name.Prefix = bl.UnitOfWork.FirstOrDefault<Prefix>(p => p.Code == "Rep");
-            string result = bl.BuildSalutation(name, new Business.CRM.SalutationFormattingOptions()
+            string result = bl.GetSalutation(name, new Business.CRM.SalutationFormattingOptions()
             {
                 PreferredType = Shared.Enums.CRM.SalutationType.Formal ,
                 ForcePreferredtype = true,

@@ -15,7 +15,6 @@ namespace DDI.Business.CRM
         public SalutationType PreferredType { get; set; }
         public string CustomSalutation { get; set; }
         public bool ForcePreferredtype { get; set; }
-        public bool IncludeInactiveSpouse { get; set; }
         
         public SalutationFormattingOptions()
         {

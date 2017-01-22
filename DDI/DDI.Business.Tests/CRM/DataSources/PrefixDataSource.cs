@@ -31,6 +31,7 @@ namespace DDI.Business.Tests.CRM.DataSources
             prefixes.Add(NewPrefix(uow, "Dr", "Dr.", "Dr.", "Dr.", "", ""));
             prefixes.Add(NewPrefix(uow, "Drs", "Drs.", "Drs.", "Drs.", "", ""));
             prefixes.Add(NewPrefix(uow, "Law", "Lawyer", "{NAME}, Esq.", "{NAME}, Esq.", "Dear {MR} {NAME}", ""));
+            prefixes.Add(NewPrefix(uow, "Abbot", "Abbot", "The Right Reverend", "Rt. Rev.", "Dear Father Abbot", "M"));
             uow.CreateRepositoryForDataSource(prefixes);
             return prefixes;
         }    
