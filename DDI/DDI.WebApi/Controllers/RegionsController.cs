@@ -47,7 +47,7 @@ namespace DDI.WebApi.Controllers
         }
  
         [HttpGet]
-        [Route("api/v1/regions/address", Name = RouteNames.Region + RouteVerbs.Get)]
+        [Route("api/v1/regions/address", Name = RouteNames.Region + RouteNames.Address + RouteVerbs.Get)]
         public IHttpActionResult GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {
             var result = _service.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
