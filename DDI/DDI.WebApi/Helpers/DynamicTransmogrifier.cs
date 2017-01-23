@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Http.Routing;
 using DDI.Shared;
 using DDI.Shared.Attributes;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
-using Microsoft.Ajax.Utilities;
 
 namespace DDI.WebApi.Helpers
 {
