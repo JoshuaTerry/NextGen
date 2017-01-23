@@ -31,7 +31,16 @@ namespace DDI.Services
         }
         public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
         {
-            var result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level && r.ParentRegionId == id);
+            List<Region> result;
+            if (id != null && id != Guid.Empty)
+            {
+                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level && r.ParentRegionId == id).ToList();
+            }
+            else
+            {
+                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level).ToList();
+            }
+             
             return GetIDataResponse(() => result.ToList());
         }
 
