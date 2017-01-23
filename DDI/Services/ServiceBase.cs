@@ -40,10 +40,10 @@ namespace DDI.Services
 
         public IDataResponse Update(T entity)
         {
-            var response = new DataResponse();
+            var response = new DataResponse<T>();
             try
             {
-                _unitOfWork.GetRepository<T>().Update(entity);
+                response.Data = _unitOfWork.GetRepository<T>().Update(entity);
             }
             catch (Exception ex)
             {
@@ -56,25 +56,34 @@ namespace DDI.Services
 
         public IDataResponse<T> Update(Guid id, JObject changes)
         {
+            var response = new DataResponse<T>();
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
-
-            foreach (var pair in changes)
-            {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
-            }
-
-            _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
-
-            T t = _unitOfWork.GetRepository<T>().GetById(id);
-
-            return GetIDataResponse(() => t);
-        }
-        public IDataResponse Add(T entity)
-        {
-            var response = new DataResponse();
             try
             {
-                _unitOfWork.GetRepository<T>().Insert(entity);
+                foreach (var pair in changes)
+                {
+                    changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+                }
+
+                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+
+                response.Data = _unitOfWork.GetRepository<T>().GetById(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        public IDataResponse Add(T entity)
+        {
+            var response = new DataResponse<T>();
+            try
+            {
+                response.Data = _unitOfWork.GetRepository<T>().Insert(entity);
             }
             catch (Exception ex)
             {
