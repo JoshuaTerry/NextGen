@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using DDI.Shared.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
+using DDI.Shared.Models;
 
 namespace DDI.Shared.Test.Helpers
 {
@@ -21,6 +23,34 @@ namespace DDI.Shared.Test.Helpers
                 "FindTypeByName finds type by scanning assemblies.");
             Assert.AreEqual(typeof(DDI.Shared.Logger.Logger), ReflectionHelper.FindTypeByName(typeof(DDI.Shared.Logger.Logger).FullName,
                 typeof(DDI.Shared.Logger.Logger).Assembly), "FindTypeByName finds type by scanning assemblies.");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void Reflectionhelper_GetDecoratedWith_NotNull()
+        {
+            var types = ReflectionHelper.GetDecoratedWith<TestClassAttribute>();
+            Assert.IsNotNull(types, "GetDecoratedWith returned non-null value");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void Reflectionhelper_GetDecoratedWith_MultipleValues()
+        {
+            var types = ReflectionHelper.GetDecoratedWith<TestClassAttribute>();
+            Assert.IsTrue(types.Count > 1, "GetDecoratedWith returned multiple results");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ReflectionHelper_GetDerivedTypes_NotNull()
+        {
+            var types = ReflectionHelper.GetDerivedTypes<EntityBase>();
+            Assert.IsNotNull(types, "GetDerivedTypes returned non-null value");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ReflectionHelper_GetDerivedTypes_MultipleValues()
+        {
+            var types = ReflectionHelper.GetDerivedTypes<EntityBase>();
+            Assert.IsTrue(types.Count > 1, "GetDerivedTypes returned multiple results.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
