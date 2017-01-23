@@ -21,11 +21,6 @@ namespace DDI.Business.CRM
     /// </summary>
     public class ConstituentAddressLogic : EntityLogicBase<Address>
     {
-        #region Private Fields
-
-        private const string BP = "BP";  // Special text that appears in some postal code formats.  (No idea what it means...)
-
-        #endregion
 
         #region Constructors 
 
@@ -86,7 +81,7 @@ namespace DDI.Business.CRM
         /// <param name="currentOnly">TRUE to return only current addresses.</param>
         /// <param name="baseDate">Date to use for determining current addresses.  If null, current date is used.</param>
         /// <param name="ignoreId">ID of an address to ignore.  If not null, this address will not be returned.</param>
-        public ConstituentAddress GetAddress(Constituent constituent, AddressCategory addressCategory, string addressTypeCode, bool allowVacation, bool currentOnly, DateTime? baseDate, Guid? ignoreId)
+        public ConstituentAddress GetAddress(Constituent constituent, AddressCategory addressCategory, string addressTypeCode, bool allowVacation, bool currentOnly, DateTime? baseDate = null, Guid? ignoreId = null)
         {
             ConstituentAddress resultAddress = null;
             List<WeightedAddress> weightList = new List<WeightedAddress>();
@@ -148,20 +143,26 @@ namespace DDI.Business.CRM
             
             foreach (var thisAddress in constituent.ConstituentAddresses)
             {
+                // Get the address type and make sure it's not null.
                 AddressType thisType = UnitOfWork.GetReference(thisAddress, p => p.AddressType);
                 if (thisType == null)
                 {
                     continue;
                 }
+
+                // Filter the constituent address rows:
+                // If not allowing vacation addresses, filter out any vacation addresses.
                 if (thisAddress.AddressType.Code == AddressTypeCodes.Vacation && !allowVacation)
                 {
                     continue;
                 }
+
+                // If wanting current addresses only, filter out those that aren't current.
                 if (currentOnly && !IsCurrentAddress(thisAddress, baseDate.Value))
                 {
                     continue;
                 }
-
+                                
                 // Calculate "weight" based on the order of address types in "types" - higher to lower, 0 if not in list.
                 int weight = typeCodes.IndexOf(thisAddress.AddressType.Code) + 1;
                 if (weight > 0)
