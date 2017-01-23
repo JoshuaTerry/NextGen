@@ -12,9 +12,9 @@ $(document).ready(function () {
         Resize();
     });
 
-    if (sessionStorage.getItem('constituentnumber')) {
+    if (sessionStorage.getItem('constituentid')) {
 
-        $('.hidconstituentid').val(sessionStorage.getItem('constituentnumber'))
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
 
         // sessionStorage.removeItem('constituentnumber');
 

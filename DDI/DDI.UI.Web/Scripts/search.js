@@ -170,7 +170,7 @@ function GetSearchParameters() {
 
 function DisplayConstituent(id) {
 
-    sessionStorage.setItem("constituentnumber", id);
+    sessionStorage.setItem("constituentid", id);
     location.href = "Constituents.aspx";
 
 }
