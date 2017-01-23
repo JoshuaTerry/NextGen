@@ -67,11 +67,15 @@ namespace DDI.WebApi.Helpers
             return result;
         }
 
-        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true)
+        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true, IEnumerable<Type> visited = null)
             where T : EntityBase
         {
             dynamic returnObject = new ExpandoObject();
             Type type = data.GetType();
+            if (visited == null)
+            {
+                visited = new List<Type> {type};
+            }
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             PropertyInfo[] properties = type.GetProperties(flags);
             bool includeEverything = (fieldsToInclude == null || !fieldsToInclude.Any());
@@ -79,15 +83,17 @@ namespace DDI.WebApi.Helpers
             {
                 var fieldValue = property.GetValue(data, null);
                 var propertyNameUppercased = property.Name.ToUpper();
+                //if (fieldValue is IEnumerable<EntityBase> && !visited.Contains(property.PropertyType) && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 if (fieldValue is IEnumerable<EntityBase> && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited.Union(new Type[] { property.PropertyType })); 
                 }
-                else if (fieldValue is EntityBase && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
+                //else if (fieldValue is EntityBase && !visited.Contains(property.PropertyType) && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
+                else if (fieldValue is EntityBase && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited.Union(new Type[] { property.PropertyType })); 
                 }
                 else if (includeEverything || fieldsToInclude.Contains(propertyNameUppercased))
                 {
@@ -112,13 +118,13 @@ namespace DDI.WebApi.Helpers
             return strippedFieldList;
         }
 
-        public dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddLinks = true)
+        public dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddLinks = true, IEnumerable<Type> visited = null)
             where T : EntityBase
         {
             var list = new List<ExpandoObject>();
             foreach (var item in entities)
             {
-                list.Add(RecursivelyTransmogrify(item, urlHelper, fieldsToInclude, shouldAddLinks));
+                list.Add(RecursivelyTransmogrify(item, urlHelper, fieldsToInclude, shouldAddLinks, visited));
             }
         
             return list;

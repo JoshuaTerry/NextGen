@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 
 namespace DDI.WebApi
 {
@@ -28,7 +29,8 @@ namespace DDI.WebApi
 
             // Set data return type to JSON
             var json = config.Formatters.JsonFormatter;
-            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+            json.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }
