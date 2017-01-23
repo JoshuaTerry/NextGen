@@ -65,7 +65,7 @@ namespace DDI.WebApi.Controllers
             }
 
             var response = _service.Add(item);
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPatch]

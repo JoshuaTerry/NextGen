@@ -164,33 +164,37 @@
                 </div>
                 
                 <div class="options">
-                    <p>Custom Field Options</p>
 
-                    <div class="threecolumn">
+                    <fieldset>
+                        <legend>Custom Field Options</legend>
 
-                        <div class="fieldblock">
-                            <label>Code</label>
-                            <input type="text" class="cfoptioncode" maxlength="4" />
+                        <div class="threecolumn">
+
+                            <div class="fieldblock">
+                                <label>Code</label>
+                                <input type="text" class="cfoptioncode" maxlength="4" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Description</label>
+                                <input type="text" class="cfoptiondesc" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Order</label>
+                                <input type="number" class="cfoptionorder" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>&nbsp;</label>
+                                <input type="button" class="addoption noclear" value="Add" />
+                            </div>
+
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Description</label>
-                            <input type="text" class="cfoptiondesc" />
-                        </div>
+                        <table class="tempoptions"></table>
 
-                        <div class="fieldblock">
-                            <label>Order</label>
-                            <input type="number" class="cfoptionorder" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>&nbsp;</label>
-                            <input type="button" class="addoption" value="Add" />
-                        </div>
-
-                    </div>
-
-                    <table class="tempoptions"></table>
+                    </fieldset>
 
                 </div>
 

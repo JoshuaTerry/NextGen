@@ -510,6 +510,9 @@ function CreateNewCustomFieldModal(entity, title) {
         e.preventDefault();
 
         ClearModal();
+
+        $('.ui-dialog').css('width', '300px');
+        $('.fieldproperties').attr('style', 'width: 100%');
         
         $(modal).dialog('close');
 
@@ -523,6 +526,15 @@ function AddOption() {
     var desc = $('.cfoptiondesc').val();
     var order = $('.cfoptionorder').val();
 
+    var option = {
+        CustomFieldId: '',
+        Code: code,
+        Description: desc,
+        SortOrder: order
+    }
+
+    options.push(option);
+
     var tr = $('<tr>');
 
     var tdcode = $('<td>').text(code).css('width', '28px').appendTo($(tr));
@@ -535,12 +547,13 @@ function AddOption() {
 function ClearModal() {
 
     $('.options').hide();
+    $('.tempoptions').html('');
 
-    $(modal).find('div.fieldblock input').each(function () {
+    $(modal).find('div.fieldblock input').not('.noclear').each(function () {
         $(this).val('');
     });
 
-    $(modal).find('select').each(function () {
+    $(modal).find('select').not('.noclear').each(function () {
         $(this).html('');
     });
 
@@ -568,34 +581,51 @@ function CustomFieldTypeSelected(selectedvalue) {
     
         if (selectedvalue == customfieldtype.Radio ||
             selectedvalue == customfieldtype.DropDown) {
-            $('.fieldproperties').attr('style', '');
-            $('.options').show();
 
             var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
             if (left >= modalLeft)
                 left -= 150;
 
-            $('.ui-dialog').stop().animate({
-                width: '600px',
-                left: left
-            }, 500);
+            $('.ui-dialog').stop().animate(
+                {
+                    width: '600px',
+                    left: left
+                },
+                {
+                    start: function () {
+                        $('.fieldproperties').attr('style', '');
+                    },
+                    complete: function () {
+                        $('.options').show();
+                    }
+                }
+            , 500);
             
             
         }
         else {
-            $('.fieldproperties').attr('style', 'width: 100%');
-            $('.options').hide();
             
             var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
             if (left < modalLeft)
                 left += 150;
 
-            $('.ui-dialog').stop().animate({
-                width: '300px',
-                left: left
-            }, 500);
+            $('.ui-dialog').stop().animate(
+                {
+                    width: '300px',
+                    left: left 
+                },
+                {
+                    start: function () {
+                        $('.options').hide();
+                        $('.fieldproperties').attr('style', 'width: 100%');
+                    },
+                    complete: function () {
+                        
+                    }
+                }
+            , 500);
         }
     }
     else {
@@ -614,47 +644,53 @@ function SaveCustomField() {
     if (id) {
         // Update
         var data = {
-            Id: id,
-            Entity: customfieldentity.CRM,
-            LabelText: $('.cflabel').val(),
-            FieldType: $('.cftype').val(),
-            DisplayOrder: $('.cforder').val(),
-            IsRequired: $('.cfisrequired').prop('checked'),
-            DecimalPlacees: $('.cfdecimalplaces').val(),
-            IsActive: true,
-            MinValue: $('.cfminvalue').val(),
-            MaxValue: $('.cfmaxvalue').val()
+            "Id": id,
+            "Entity": customfieldentity.CRM,
+            "LabelText": $('.cflabel').val(),
+            "FieldType": $('.cftype').val(),
+            "DisplayOrder": "1", // $('.cforder').val(),
+            "IsRequired": $('.cfisrequired').prop('checked'),
+            "DecimalPlaces": $('.cfdecimalplaces').val(),
+            "IsActive": true,
+            "MinValue": $('.cfminvalue').val(),
+            "MaxValue": $('.cfmaxvalue').val()
         };
-
-        DoSomething('customfields', 'PATCH', data);
+        
+        CustomFieldDataCall('customfields', 'PATCH', data);
     }
     else {
         // Insert
 
         var data = {
-            Entity: customfieldentity.CRM,
-            LabelText: $('.cflabel').val(),
-            FieldType: $('.cftype').val(),
-            DisplayOrder: $('.cforder').val(),
-            IsRequired: $('.cfisrequired').prop('checked'),
-            DecimalPlacees: $('.cfdecimalplaces').val(),
-            IsActive: true,
-            MinValue: $('.cfminvalue').val(),
-            MaxValue: $('.cfmaxvalue').val()
+            "Entity": customfieldentity.CRM,
+            "LabelText": $('.cflabel').val(),
+            "FieldType": $('.cftype').val(),
+            "DisplayOrder": "1", // $('.cforder').val(),
+            "IsRequired": $('.cfisrequired').prop('checked'),
+            "DecimalPlaces": $('.cfdecimalplaces').val(),
+            "IsActive": true,
+            "MinValue": $('.cfminvalue').val(),
+            "MaxValue": $('.cfmaxvalue').val()
         };
 
-        DoSomething('customfields', 'POST', data);
+        CustomFieldDataCall('customfields', 'POST', data);
     }
 
 }
 
-function SaveOptions() {
+function SaveOptions(id) {
 
+    options.forEach(function (o){
 
+        o.CustomFieldId = id;
+
+        CustomFieldDataCall('customfieldoptions', 'POST', o);
+
+    })
 
 }
 
-function DoSomething(route, action, data) {
+function CustomFieldDataCall(route, action, data) {
 
     $.ajax({
         url: WEB_API_ADDRESS + route,
@@ -665,7 +701,7 @@ function DoSomething(route, action, data) {
         crossDomain: true,
         success: function (data) {
 
-            
+            SaveOptions(data.Id);
 
         },
         error: function (xhr, status, err) {
