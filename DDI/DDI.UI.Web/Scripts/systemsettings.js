@@ -542,6 +542,11 @@ function AddOption() {
     var tdorder = $('<td>').text(order).css('padding-left', '2px').css('width', '30px').appendTo($(tr));
 
     $(tr).appendTo($('.tempoptions'));
+    
+    $('.cfoptioncode').val('');
+    $('.cfoptiondesc').val('');
+    $('.cfoptionorder').val('');
+    
 }
 
 function ClearModal() {
@@ -643,35 +648,39 @@ function SaveCustomField() {
 
     if (id) {
         // Update
-        var data = {
-            "Id": id,
-            "Entity": customfieldentity.CRM,
-            "LabelText": $('.cflabel').val(),
-            "FieldType": $('.cftype').val(),
-            "DisplayOrder": "1", // $('.cforder').val(),
-            "IsRequired": $('.cfisrequired').prop('checked'),
-            "DecimalPlaces": $('.cfdecimalplaces').val(),
-            "IsActive": true,
-            "MinValue": $('.cfminvalue').val(),
-            "MaxValue": $('.cfmaxvalue').val()
-        };
+        var data = [];
+
+        data.push('"Id": "' + id + '"');
+        data.push('"LabelText": "' + $('.cflabel').val() + '"');
+        data.push('"MinValue": "' + $('.cfminvalue').val() + '"');
+        data.push('"MaxValue": "' + $('.cfmaxvalue').val() + '"');
+        data.push('"DecimalPlaces": "' + $('.cfdecimalplaces').val() + '"');
+        data.push('"IsActive": "' + true + '"');
+        data.push('"IsRequired": "' + $('.cfisrequired').prop('checked') + '"');
+        data.push('"DisplayOrder": "' + 1 + '"'); // $('.cforder').val(),
+        data.push('"FieldType": "' + $('.cftype').val() + '"');
+        data.push('"Entity": "' + customfieldentity.CRM + '"');
         
+        data = "{" + data + "}";
+
         CustomFieldDataCall('customfields', 'PATCH', data);
     }
     else {
         // Insert
+        
+        var data = [];
 
-        var data = {
-            "Entity": customfieldentity.CRM,
-            "LabelText": $('.cflabel').val(),
-            "FieldType": $('.cftype').val(),
-            "DisplayOrder": "1", // $('.cforder').val(),
-            "IsRequired": $('.cfisrequired').prop('checked'),
-            "DecimalPlaces": $('.cfdecimalplaces').val(),
-            "IsActive": true,
-            "MinValue": $('.cfminvalue').val(),
-            "MaxValue": $('.cfmaxvalue').val()
-        };
+        data.push('"LabelText": "' + $('.cflabel').val() + '"');
+        data.push('"MinValue": "' + $('.cfminvalue').val() + '"');
+        data.push('"MaxValue": "' + $('.cfmaxvalue').val() + '"');
+        data.push('"DecimalPlaces": "' + $('.cfdecimalplaces').val() + '"');
+        data.push('"IsActive": "' + true + '"');
+        data.push('"IsRequired": "' + $('.cfisrequired').prop('checked') + '"');
+        data.push('"DisplayOrder": "' + 1 + '"'); // $('.cforder').val(),
+        data.push('"FieldType": "' + $('.cftype').val() + '"');
+        data.push('"Entity": "' + customfieldentity.CRM + '"');
+
+        data = '{' + data + '}';
 
         CustomFieldDataCall('customfields', 'POST', data);
     }
