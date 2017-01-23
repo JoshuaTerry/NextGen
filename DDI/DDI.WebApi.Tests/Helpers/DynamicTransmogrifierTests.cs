@@ -184,6 +184,64 @@ namespace DDI.WebApi.Tests.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        public void When_ReturningEverythingAndHateoasLinks_Should_ReturnSubProperties()
+        {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
+            Constituent constituent = new Constituent
+            {
+                FirstName = "Jim",
+                LastName = "Bob",
+                ConstituentAddresses = new List<ConstituentAddress>
+                {
+                    new ConstituentAddress
+                    {
+                        Address = new Address
+                        {
+                            City = "Bham",
+                            PostalCode = "12345"
+                        }
+                    }
+                }
+            };
+            var target = new DynamicTransmogrifier();
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, null, true);
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.City == "Bham");
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.PostalCode == "12345");
+            Assert.IsTrue(result.FirstName == "Jim");
+            Assert.IsTrue(result.LastName == "Bob");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void When_ReturningEverythingAndNoHateoas_Should_ReturnSubProperties()
+        {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
+            Constituent constituent = new Constituent
+            {
+                FirstName = "Jim",
+                LastName = "Bob",
+                ConstituentAddresses = new List<ConstituentAddress>
+                {
+                    new ConstituentAddress
+                    {
+                        Address = new Address
+                        {
+                            City = "Bham",
+                            PostalCode = "12345"
+                        }
+                    }
+                }
+            };
+            var target = new DynamicTransmogrifier();
+            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, null, false);
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.City == "Bham");
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.PostalCode == "12345");
+            Assert.IsTrue(result.FirstName == "Jim");
+            Assert.IsTrue(result.LastName == "Bob");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsAreSubPropertiesAndLinksRequested_Should_ReturnLinksForEveryObject()
         {
             var urlHelperMock = new Mock<UrlHelper>();

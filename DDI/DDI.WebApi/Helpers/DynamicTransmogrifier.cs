@@ -103,11 +103,12 @@ namespace DDI.WebApi.Helpers
 
         private List<string> StripFieldList(List<string> fieldsToInclude, string propertyNameUppercased)
         {
+            if (fieldsToInclude.Count == 0)
+            {
+                return fieldsToInclude;
+            }
             var currentProperty = $"{propertyNameUppercased}.";
-            var fieldArrayList = fieldsToInclude.Where(a => a.StartsWith(currentProperty));
-            var newFieldList = String.Join(",", fieldArrayList);
-            var strippedFields = newFieldList.Replace(currentProperty, ""); //TODO this can cause a problem if you had Address.CurrentAddress.State it would be CurrentState
-            var strippedFieldList = strippedFields.Split(',').ToList();
+            var strippedFieldList = fieldsToInclude.Where(a => a.StartsWith(currentProperty)).Select(a => a.Substring(currentProperty.Length)).ToList();
             return strippedFieldList;
         }
 
