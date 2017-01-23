@@ -102,7 +102,6 @@ namespace DDI.Services
         {
             Constituent constituent = _repository.GetById(id, c => c.ConstituentType);
             var response = GetIDataResponse(() => constituent);
-
             return response;
         }
 
@@ -163,13 +162,18 @@ namespace DDI.Services
 
         public IDataResponse AddConstituent(Constituent constituent)
         {
-            var response = SafeExecute(() => 
+            try
             {
                 _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
                 _unitOfWork.SaveChanges();
-            });
-            return response;
+
+                return GetById(constituent.Id);
+            }
+            catch (Exception ex)
+            {
+                return ProcessIDataResponseException(ex);
+            };
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)

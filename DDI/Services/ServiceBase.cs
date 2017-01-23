@@ -47,8 +47,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -71,8 +70,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -87,8 +85,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -103,8 +100,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -130,20 +126,16 @@ namespace DDI.Services
             try
             {
                 var result = funcToExecute();
-                var dataResponse = new DataResponse<T1>
+                var response = new DataResponse<T1>
                 {
                     Data = result,
                     IsSuccessful = true
                 };
-                return dataResponse;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message, e);
-                var response = new DataResponse<T1> { IsSuccessful = false };
-                response.ErrorMessages.Add(e.Message);
-                response.VerboseErrorMessages.Add(e.ToString());
                 return response;
+            }
+            catch (Exception ex)
+            {
+                return ProcessDataResponseException<T1>(ex);
             }
         }
 
@@ -161,10 +153,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message, ex);
-                response = new DataResponse { IsSuccessful = false };
-                response.ErrorMessages.Add(ex.Message);
-                response.VerboseErrorMessages.Add(ex.ToString());
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -190,36 +179,27 @@ namespace DDI.Services
             };
         }
 
-        public static IDataResponse SafeExecute(Action method)
+        public IDataResponse<T> ProcessIDataResponseException(Exception ex)
         {
-            var response = new DataResponse();
-            try
-            {
-                method.Invoke();
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
-                _logger.Error(ex);
-            }
+            var response = new DataResponse<T>();
+            response.IsSuccessful = false;
+            response.ErrorMessages.Add(ex.Message);
+            response.VerboseErrorMessages.Add(ex.ToString());
+            _logger.Error(ex);
+
             return response;
         }
 
-        public static IDataResponse<T1> SafeExecute<T1>(Func<T1> method)
+        public DataResponse<T1> ProcessDataResponseException<T1>(Exception ex)
         {
             var response = new DataResponse<T1>();
-            try
-            {
-                response.Data = method.Invoke();
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
-                _logger.Error(ex);
-            }
+            response.IsSuccessful = false;
+            response.ErrorMessages.Add(ex.Message);
+            response.VerboseErrorMessages.Add(ex.ToString());
+            _logger.Error(ex);
+
             return response;
+
         }
     }
 }
