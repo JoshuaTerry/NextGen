@@ -406,11 +406,13 @@ namespace DDI.Business.CRM
             char finalChar = ':';
             bool isFormal = true;
 
+            // If informal salutation is requested, use informal formatting.
             if (salutationType == SalutationType.Informal || salutationType == SalutationType.InformalSeparate)
             {
                 isFormal = false;
                 finalChar = ',';
             }
+            // Else if doing a custom salutation, check to see if the system default type is informal.  If so, use informal formatting.
             else if ((salutationType == SalutationType.Custom || salutationType == SalutationType.Default) && 
                      (systemDefaultType == SalutationType.Informal || systemDefaultType == SalutationType.InformalSeparate))
             {
@@ -2170,23 +2172,17 @@ namespace DDI.Business.CRM
         private class Person
         {
             public Prefix Prefix { get; set; }
-            public string FirstName { get; set; }
-            public string MiddleName { get; set; }
-            public string LastName { get; set; }
-            public string Suffix { get; set; }
-            public string Nickname { get; set; }
-            public string NameFormat { get; set; }
-            public Gender Gender { get; set; }
-            public string DefaultNameFormat { get; set; }
-            public string DefaultSalutationFormat { get; set; }
+            public string FirstName { get; set; } = string.Empty;
+            public string MiddleName { get; set; } = string.Empty;
+            public string LastName { get; set; } = string.Empty;
+            public string Suffix { get; set; } = string.Empty;
+            public string Nickname { get; set; } = string.Empty;
+            public string NameFormat { get; set; } = string.Empty;
+            public Gender Gender { get; set; } 
+            public string DefaultNameFormat { get; set; } = string.Empty;
+            public string DefaultSalutationFormat { get; set; } = string.Empty;
 
-            public Person()
-            {
-                FirstName = MiddleName = LastName = Suffix = Nickname = NameFormat = string.Empty;
-                Prefix = null;
-                Gender = null;
-                DefaultNameFormat = string.Empty;                
-            }
+            public Person() { }
 
             public Person(Person other)
             {
@@ -2200,6 +2196,8 @@ namespace DDI.Business.CRM
                 Gender = other.Gender;
                 DefaultNameFormat = other.DefaultNameFormat;
                 DefaultSalutationFormat = other.DefaultSalutationFormat;
+                
+
             }
 
         }
