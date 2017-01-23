@@ -525,13 +525,11 @@ function AddOption() {
     var code = $('.cfoptioncode').val();
     var desc = $('.cfoptiondesc').val();
     var order = $('.cfoptionorder').val();
+    var option = [];
 
-    var option = {
-        CustomFieldId: '',
-        Code: code,
-        Description: desc,
-        SortOrder: order
-    }
+    option.push('"Code": "' + code + '"');
+    option.push('"Description": "' + desc + '"');
+    option.push('"SortOrder": "' + order + '"');
 
     options.push(option);
 
@@ -543,10 +541,9 @@ function AddOption() {
 
     $(tr).appendTo($('.tempoptions'));
     
-    $('.cfoptioncode').val('');
+    $('.cfoptioncode').val('').focus();
     $('.cfoptiondesc').val('');
     $('.cfoptionorder').val('');
-    
 }
 
 function ClearModal() {
@@ -646,6 +643,7 @@ function SaveCustomField() {
 
     var id = $('.cfid').val();
 
+    /*
     if (id) {
         // Update
         var data = [];
@@ -663,7 +661,7 @@ function SaveCustomField() {
         
         data = "{" + data + "}";
 
-        CustomFieldDataCall('customfields', 'PATCH', data);
+        SendCustomField('customfields', 'PATCH', data);
     }
     else {
         // Insert
@@ -682,8 +680,23 @@ function SaveCustomField() {
 
         data = '{' + data + '}';
 
-        CustomFieldDataCall('customfields', 'POST', data);
+        SendCustomField('customfields', 'POST', data);
     }
+    */
+
+    var data = {
+        LabelText: $('.cflabel').val(),
+        MinValue: $('.cfminvalue').val(),
+        MaxValue: $('.cfmaxvalue').val(),
+        DecimalPlaces: $('.cfdecimalplaces').val(),
+        IsActive: true,
+        IsRequired: $('.cfisrequired').prop('checked'),
+        DisplayOrder: 1,
+        FieldType: $('.cftype').val(),
+        Entity: customfieldentity.CRM
+    }
+
+    SendCustomField('customfields', 'POST', data);
 
 }
 
@@ -691,15 +704,18 @@ function SaveOptions(id) {
 
     options.forEach(function (o){
 
-        o.CustomFieldId = id;
+        id = '11E9DB49-0FE5-4A38-9A3F-85C84532F7C8';
+        o.push('"CustomFieldId": "' + id + '"');
 
-        CustomFieldDataCall('customfieldoptions', 'POST', o);
+        o = '{' + o + '}';
+
+        SendCustomFieldOption('customfieldoptions', 'POST', o);
 
     })
 
 }
 
-function CustomFieldDataCall(route, action, data) {
+function SendCustomField(route, action, data) {
 
     $.ajax({
         url: WEB_API_ADDRESS + route,
@@ -710,11 +726,32 @@ function CustomFieldDataCall(route, action, data) {
         crossDomain: true,
         success: function (data) {
 
-            SaveOptions(data.Id);
+            if (options && options.length > 0) {
 
+            }
+
+            DisplaySuccessMessage('Success', 'Custom field saved successfully.');
+            
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error saving custom field.');
+        }
+    });
+
+}
+
+function SendCustomFieldOption(route, action, data) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: action,
+        data: data,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function () {
+
+
         }
     });
 
