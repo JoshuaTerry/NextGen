@@ -14,11 +14,9 @@ using DDI.WebApi.Helpers;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class AddressesController : ApiController
+    public class AddressesController : ControllerBase
     {
         private ServiceBase<Address> _service;
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
 
         public AddressesController()
             :this(new ServiceBase<Address>(), new Pagination(), new DynamicTransmogrifier())
@@ -28,15 +26,19 @@ namespace DDI.WebApi.Controllers
         internal AddressesController(ServiceBase<Address> service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
         {
             _service = service;
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
         }
 
         [HttpGet]
         [Route("api/v1/addresses", Name = RouteNames.Address)]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = "City")
         {
-            var result = _service.GetAll(); //TODO we need to be limiting this return and do proper pagification
+            var search = new PageableSearch()
+            {
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+            var result = _service.GetAll(search); //TODO we need to be limiting this return and do proper pagification
 
             if (result == null)
             {
@@ -46,6 +48,12 @@ namespace DDI.WebApi.Controllers
             {
                 return InternalServerError();
             }
+
+            var urlHelper = GetUrlHelper();
+            var totalCount = result.TotalResults;
+
+            Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Address);
+
             return Ok(result);
         }
 
@@ -77,7 +85,9 @@ namespace DDI.WebApi.Controllers
             }
 
             var response = _service.Add(item);
-            return Ok();
+            var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+            return Ok(dynamicResponse);
         }
 
         [HttpPatch]

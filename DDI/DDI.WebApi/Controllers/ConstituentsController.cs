@@ -14,22 +14,18 @@ using DDI.WebApi.Helpers;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class ConstituentsController : ApiController
+    public class ConstituentsController : ControllerBase
     {
         private IConstituentService _service;
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
 
         public ConstituentsController()
-            :this(new ConstituentService(), new Pagination(), new DynamicTransmogrifier())
+            :this(new ConstituentService())
         {
         }
 
-        internal ConstituentsController(IConstituentService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
+        internal ConstituentsController(IConstituentService service)
         {
             _service = service;
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
         }
 
 
@@ -48,7 +44,7 @@ namespace DDI.WebApi.Controllers
                                                  string fields = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
-                                                 string orderby = null)
+                                                 string orderby = "DisplayName")
         {
             var search = new ConstituentSearch()
             {
@@ -82,15 +78,10 @@ namespace DDI.WebApi.Controllers
             var totalCount = constituents.TotalResults;
             var urlHelper = GetUrlHelper();
 
-            _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
-            var dynamicConstituents = _dynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields);
-            return Ok(dynamicConstituents);
-        }
+            Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
+            var dynamicConstituents = DynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields);
 
-        private UrlHelper GetUrlHelper()
-        {
-            var urlHelper = new UrlHelper(Request);
-            return urlHelper;
+            return Ok(dynamicConstituents);
         }
 
         [HttpGet]
@@ -108,7 +99,7 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
 
-            var dynamicConstituent = _dynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
+            var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
             return Ok(dynamicConstituent);
         }
 
@@ -128,7 +119,8 @@ namespace DDI.WebApi.Controllers
                     return InternalServerError();
                 }
 
-                var dynamicConstituent = _dynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
+                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
+
                 return Ok(dynamicConstituent);
             }
         }
@@ -142,8 +134,8 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var response =_service.AddConstituent(constituent);
-            var dynamicResponse = _dynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+            var response = _service.AddConstituent(constituent);
+            var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
 
             return Ok(dynamicResponse);
         }
@@ -180,10 +172,9 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var constituent = _service.UpdateConstituent(id, constituentChanges);
+                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper());
 
-                var dynamicConstituent = _dynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper());
                 return Ok(dynamicConstituent);
-
             }
             catch (Exception ex)
             {
@@ -213,7 +204,7 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
 
-            var dynamicResult = _dynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
             return Ok(dynamicResult);
         }
 
@@ -232,7 +223,7 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
 
-            var dynamicResult = _dynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
             return Ok(dynamicResult);
         }
 
@@ -251,7 +242,7 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
 
-            var dynamicResult = _dynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
             return Ok(dynamicResult);
         }
     }

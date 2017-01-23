@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Services.Search;
 
 namespace DDI.Services
 {
@@ -26,10 +27,23 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll()
+        public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList();
-            return GetIDataResponse(() => result);
+            IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
+            var query = new CriteriaQuery<T, IPageable>(queryable, search)
+                .SetOrderBy(search?.OrderBy);
+
+            var totalCount = query.GetQueryable().ToList().Count;
+
+            query = query.SetLimit(search.Limit)
+                         .SetOffset(search.Offset);
+
+            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
+            var response = GetIDataResponse(() => query.GetQueryable().ToList());
+
+            response.TotalResults = totalCount;
+
+            return response;
         }
 
         public IDataResponse<T> GetById(Guid id)
@@ -76,7 +90,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse Add(T entity)
+        public IDataResponse<T> Add(T entity)
         {
             var response = new DataResponse<T>();
             try
