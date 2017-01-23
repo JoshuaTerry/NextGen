@@ -169,10 +169,13 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
+                Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", false);
@@ -199,10 +202,13 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
+                Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, null, true);
@@ -228,10 +234,14 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
+                Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
+                
             };
             constituent.ConstituentAddresses.First().Address.ConstituentAddresses = new List<ConstituentAddress> { constituent.ConstituentAddresses.First() };
             constituent.ConstituentAddresses.First().Constituent = constituent;
@@ -259,10 +269,13 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
+                Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, null, false);
@@ -289,10 +302,12 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
@@ -318,10 +333,12 @@ namespace DDI.WebApi.Tests.Helpers
                         Address = new Address
                         {
                             City = "Bham",
-                            PostalCode = "12345"
-                        }
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
                     }
-                }
+                },
             };
             var target = new DynamicTransmogrifier();
             var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode", true);
