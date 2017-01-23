@@ -143,7 +143,9 @@ namespace DDI.WebApi.Controllers
             }
 
             var response =_service.AddConstituent(constituent);
-            return Ok(response);
+            var dynamicResponse = _dynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+            return Ok(dynamicResponse);
         }
 
         [HttpPost]

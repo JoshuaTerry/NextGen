@@ -160,7 +160,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse AddConstituent(Constituent constituent)
+        public IDataResponse<Constituent> AddConstituent(Constituent constituent)
         {
             try
             {
