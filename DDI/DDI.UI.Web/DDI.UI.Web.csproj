@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="CSS\constituents.css" />
     <Content Include="CSS\login.css" />
+    <Content Include="CSS\registrationconfirmation.css" />
     <Content Include="CSS\search.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Pages\GL\Accounting.aspx" />

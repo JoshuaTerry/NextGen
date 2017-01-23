@@ -7,3 +7,10 @@
 .systemsettings div.left-accordions ul li a { display: block; text-decoration: none; padding: 3px 8px; }
 .systemsettings div.left-accordions ul li a:hover { text-decoration: none; background-color: #999999; color: white; }
 .systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
+
+div.options div.threecolumn > div { width: auto; margin-right: 3px; }
+
+div.fieldblock input.cfoptioncode { width: 25px; }
+div.fieldblock input.cfoptiondesc { width: 150px; }
+div.fieldblock input.cfoptionorder { width: 25px; }
+

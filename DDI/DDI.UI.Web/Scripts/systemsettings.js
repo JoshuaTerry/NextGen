@@ -423,6 +423,7 @@ function LoadReportHeaders() {
 
 /* CUSTOM FIELDS */
 var modalLeft = 0;
+var options = [];
 
 function LoadCRMClientCustomFields() {
 
@@ -474,6 +475,8 @@ function CreateNewCustomFieldModal(entity, title) {
         }
     });
 
+    $('.options').hide();
+
     modalLeft = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
     var type = $(modal).find('.cftype');
@@ -484,6 +487,10 @@ function CreateNewCustomFieldModal(entity, title) {
 
         $('<option>').text(key).val(value).appendTo($(type));
 
+    });
+
+    $('.addoption').click(function () {
+        AddOption();
     });
 
     $(type).change(function () {
@@ -510,7 +517,24 @@ function CreateNewCustomFieldModal(entity, title) {
 
 }
 
+function AddOption() {
+
+    var code = $('.cfoptioncode').val();
+    var desc = $('.cfoptiondesc').val();
+    var order = $('.cfoptionorder').val();
+
+    var tr = $('<tr>');
+
+    var tdcode = $('<td>').text(code).css('width', '28px').appendTo($(tr));
+    var tddesc = $('<td>').text(desc).css('padding-left', '5px').css('width', '155px').appendTo($(tr));
+    var tdorder = $('<td>').text(order).css('padding-left', '2px').css('width', '30px').appendTo($(tr));
+
+    $(tr).appendTo($('.tempoptions'));
+}
+
 function ClearModal() {
+
+    $('.options').hide();
 
     $(modal).find('div.fieldblock input').each(function () {
         $(this).val('');
@@ -590,7 +614,16 @@ function SaveCustomField() {
     if (id) {
         // Update
         var data = {
-            Id: id
+            Id: id,
+            Entity: customfieldentity.CRM,
+            LabelText: $('.cflabel').val(),
+            FieldType: $('.cftype').val(),
+            DisplayOrder: $('.cforder').val(),
+            IsRequired: $('.cfisrequired').prop('checked'),
+            DecimalPlacees: $('.cfdecimalplaces').val(),
+            IsActive: true,
+            MinValue: $('.cfminvalue').val(),
+            MaxValue: $('.cfmaxvalue').val()
         };
 
         DoSomething('customfields', 'PATCH', data);
@@ -599,11 +632,25 @@ function SaveCustomField() {
         // Insert
 
         var data = {
-
+            Entity: customfieldentity.CRM,
+            LabelText: $('.cflabel').val(),
+            FieldType: $('.cftype').val(),
+            DisplayOrder: $('.cforder').val(),
+            IsRequired: $('.cfisrequired').prop('checked'),
+            DecimalPlacees: $('.cfdecimalplaces').val(),
+            IsActive: true,
+            MinValue: $('.cfminvalue').val(),
+            MaxValue: $('.cfmaxvalue').val()
         };
 
         DoSomething('customfields', 'POST', data);
     }
+
+}
+
+function SaveOptions() {
+
+
 
 }
 
@@ -616,7 +663,7 @@ function DoSomething(route, action, data) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
-        success: function (response) {
+        success: function (data) {
 
             
 

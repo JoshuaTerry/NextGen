@@ -2,6 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
+    <link rel="stylesheet" href="../../CSS/systemsettings.css" />
+    
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
 
@@ -163,6 +165,33 @@
                 
                 <div class="options">
                     <p>Custom Field Options</p>
+
+                    <div class="threecolumn">
+
+                        <div class="fieldblock">
+                            <label>Code</label>
+                            <input type="text" class="cfoptioncode" maxlength="4" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Description</label>
+                            <input type="text" class="cfoptiondesc" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Order</label>
+                            <input type="number" class="cfoptionorder" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>&nbsp;</label>
+                            <input type="button" class="addoption" value="Add" />
+                        </div>
+
+                    </div>
+
+                    <table class="tempoptions"></table>
+
                 </div>
 
             </div>
