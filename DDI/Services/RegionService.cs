@@ -15,17 +15,18 @@ namespace DDI.Services
         private RegionLogic _logic;
         public RegionService()
         {
-            Initialize(new UnitOfWorkEF());
+            Initialize(new UnitOfWorkEF(), new RegionLogic());
         }
 
-        public RegionService(IUnitOfWork uow)
+        public RegionService(IUnitOfWork uow, RegionLogic logic)
         {
-            Initialize(uow);
+            Initialize(uow, logic);
         }
 
-        private void Initialize(IUnitOfWork uow)
+        private void Initialize(IUnitOfWork uow, RegionLogic logic)
         {
             _unitOfWork = uow;
+            _logic = logic;
             _logic = new RegionLogic(_unitOfWork);
         }
         public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
