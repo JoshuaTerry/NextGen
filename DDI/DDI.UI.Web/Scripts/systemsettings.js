@@ -525,11 +525,11 @@ function AddOption() {
     var code = $('.cfoptioncode').val();
     var desc = $('.cfoptiondesc').val();
     var order = $('.cfoptionorder').val();
-    var option = [];
-
-    option.push('"Code": "' + code + '"');
-    option.push('"Description": "' + desc + '"');
-    option.push('"SortOrder": "' + order + '"');
+    var option = {
+        Code: code,
+        Description: desc,
+        SortOrder: order
+    };
 
     options.push(option);
 
@@ -642,61 +642,52 @@ function CustomFieldTypeSelected(selectedvalue) {
 function SaveCustomField() {
 
     var id = $('.cfid').val();
+    var method = '';
 
-    /*
     if (id) {
         // Update
-        var data = [];
+        var data = {
+            Id: id,
+            LabelText: $('.cflabel').val(),
+            MinValue: $('.cfminvalue').val(),
+            MaxValue: $('.cfmaxvalue').val(),
+            DecimalPlaces: $('.cfdecimalplaces').val(),
+            IsActive: true,
+            IsRequired: $('.cfisrequired').prop('checked'),
+            DisplayOrder: 1,
+            FieldType: $('.cftype').val(),
+            Entity: customfieldentity.CRM,
+            Options: []
+        }
 
-        data.push('"Id": "' + id + '"');
-        data.push('"LabelText": "' + $('.cflabel').val() + '"');
-        data.push('"MinValue": "' + $('.cfminvalue').val() + '"');
-        data.push('"MaxValue": "' + $('.cfmaxvalue').val() + '"');
-        data.push('"DecimalPlaces": "' + $('.cfdecimalplaces').val() + '"');
-        data.push('"IsActive": "' + true + '"');
-        data.push('"IsRequired": "' + $('.cfisrequired').prop('checked') + '"');
-        data.push('"DisplayOrder": "' + 1 + '"'); // $('.cforder').val(),
-        data.push('"FieldType": "' + $('.cftype').val() + '"');
-        data.push('"Entity": "' + customfieldentity.CRM + '"');
-        
-        data = "{" + data + "}";
-
-        SendCustomField('customfields', 'PATCH', data);
+        method = 'PATCH';
     }
     else {
         // Insert
         
-        var data = [];
+        var data = {
+            LabelText: $('.cflabel').val(),
+            MinValue: $('.cfminvalue').val(),
+            MaxValue: $('.cfmaxvalue').val(),
+            DecimalPlaces: $('.cfdecimalplaces').val(),
+            IsActive: true,
+            IsRequired: $('.cfisrequired').prop('checked'),
+            DisplayOrder: 1,
+            FieldType: $('.cftype').val(),
+            Entity: customfieldentity.CRM,
+            Options: []
+        }
 
-        data.push('"LabelText": "' + $('.cflabel').val() + '"');
-        data.push('"MinValue": "' + $('.cfminvalue').val() + '"');
-        data.push('"MaxValue": "' + $('.cfmaxvalue').val() + '"');
-        data.push('"DecimalPlaces": "' + $('.cfdecimalplaces').val() + '"');
-        data.push('"IsActive": "' + true + '"');
-        data.push('"IsRequired": "' + $('.cfisrequired').prop('checked') + '"');
-        data.push('"DisplayOrder": "' + 1 + '"'); // $('.cforder').val(),
-        data.push('"FieldType": "' + $('.cftype').val() + '"');
-        data.push('"Entity": "' + customfieldentity.CRM + '"');
-
-        data = '{' + data + '}';
-
-        SendCustomField('customfields', 'POST', data);
-    }
-    */
-
-    var data = {
-        LabelText: $('.cflabel').val(),
-        MinValue: $('.cfminvalue').val(),
-        MaxValue: $('.cfmaxvalue').val(),
-        DecimalPlaces: $('.cfdecimalplaces').val(),
-        IsActive: true,
-        IsRequired: $('.cfisrequired').prop('checked'),
-        DisplayOrder: 1,
-        FieldType: $('.cftype').val(),
-        Entity: customfieldentity.CRM
+        method = 'POST';
     }
 
-    SendCustomField('customfields', 'POST', data);
+    if (options && options.length > 0) {
+
+        data.Options = options;
+
+    }
+
+    SendCustomField('customfields', method, data);
 
 }
 
@@ -720,15 +711,11 @@ function SendCustomField(route, action, data) {
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: action,
-        data: data,
+        data: JSON.stringify(data),
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
-
-            if (options && options.length > 0) {
-
-            }
 
             DisplaySuccessMessage('Success', 'Custom field saved successfully.');
             
