@@ -168,7 +168,7 @@ namespace DDI.Business.Tests.Core
         private class TestConfiguration : ConfigurationBase
         {
             // Some random configuration properties
-            public ModuleType moduleType = ModuleType.CRM;
+            public override ModuleType ModuleType { get; } = ModuleType.CRM;
             public string Title { get; set; }
             public bool Enabled { get; set; }
             public int Age { get; set; }
@@ -199,7 +199,7 @@ namespace DDI.Business.Tests.Core
 
         private class AccountingConfiguration : ConfigurationBase
         {
-            public ModuleType moduleType = ModuleType.Accounting;
+            public override ModuleType ModuleType { get; } = ModuleType.Accounting;
             public string Title { get; set; }
         }
     }

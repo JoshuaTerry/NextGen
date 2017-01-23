@@ -17,7 +17,7 @@ namespace DDI.Business.CRM
     {
         #region Properties
 
-        public ModuleType moduleType = ModuleType.CRM;
+        public override ModuleType ModuleType { get; } = ModuleType.CRM;
 
         public bool UseRegionSecurity { get; set; }
 

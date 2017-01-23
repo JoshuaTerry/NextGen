@@ -13,8 +13,9 @@ namespace DDI.Business.Core
 {
     public abstract class ConfigurationBase
     {
-        
-        public ModuleType ModuleType;
+
+        public abstract ModuleType ModuleType { get; }
+      
 
         /// <summary>
         /// Load a property by converting it from a string.

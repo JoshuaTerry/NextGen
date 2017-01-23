@@ -28,12 +28,12 @@ namespace DDI.Business.ModuleInfo
         public string Name { get; set; }
 
 
-        public virtual bool IsRequired { get; set; }
+        public bool IsRequired { get; set; }
 
-        public virtual bool CanDisburse { get; set; }
+        public bool CanDisburse { get; set; }
 
-        public virtual string CheckStubInvoiceLabel { get; set; } = "";
-        public virtual bool HasCustomFields { get; set; } = false;
+        public string CheckStubInvoiceLabel { get; set; } = "";
+        public bool HasCustomFields { get; set; } = false;
 
         public ModuleType ModuleType{ get; set; }
 
