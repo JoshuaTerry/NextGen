@@ -3,8 +3,6 @@ using System.Threading;
 using DDI.Shared.Caching;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
-using DDI.Shared.ModuleInfo;
-using DDI.Shared.ModuleInfo.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Shared.Test.Caching

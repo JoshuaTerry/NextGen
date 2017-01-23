@@ -118,7 +118,6 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
-    <Compile Include="Models\ILinkedEntityCollection.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -170,7 +169,6 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\IEntity.cs" />
-    <Compile Include="Models\LinkedEntityCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Statics\CRM\ConstituentTypeCodes.cs" />

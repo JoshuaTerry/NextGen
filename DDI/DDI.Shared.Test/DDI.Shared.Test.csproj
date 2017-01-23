@@ -61,8 +61,6 @@
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
     <Compile Include="FakeConnectionManager.cs" />
     <Compile Include="Helpers\ReflectionHelperTests.cs" />
-    <Compile Include="Helpers\ModuleHelperTests.cs" />
-    <Compile Include="ModuleInfo\ModuleInfoBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConnectionManagerTests.cs" />
   </ItemGroup>
@@ -76,6 +74,7 @@
       <Name>DDI.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
