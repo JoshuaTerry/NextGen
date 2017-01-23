@@ -7,23 +7,22 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using DDI.Conversion;
+using DDI.Business.Core;
+using DDI.Business.CRM;
+using DDI.Conversion.Statics;
 using DDI.Data;
+using DDI.Shared;
+using DDI.Shared.Enums.Common;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using DDI.Shared.Enums;
-//using DDI.Shared.ModuleInfo;
+using DDI.Shared.Extensions;
 
 namespace DDI.Conversion.CRM
-{
-    //[ModuleType(Shared.Enums.ModuleType.CRM)]
-    internal class SettingsLoader :  ConversionBase
+{    
+    internal class SettingsLoader : ConversionBase
     {
-
-        ModuleType ModuleType = ModuleType.CRM;
         public enum ConversionMethod
         {
             Codes = 200001,
@@ -34,6 +33,7 @@ namespace DDI.Conversion.CRM
             RegionAreas,
             RelationshipTypes,
             Tags,
+            Configuration,
         }
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
@@ -54,31 +54,39 @@ namespace DDI.Conversion.CRM
         private const int SCHOOL_SET = 41;
         private const int DEGREE_SET = 42;
         private const int CONTACT_CATEGORY = 75;
+        private const int CUSTOM_FIELD_SET = 1900;
+        private const int CUSTOM_FIELD_VALUE_SET1 = 1901;
+        private const int CUSTOM_FIELD_VALUE_SET2 = 1902;
+        private const int CUSTOM_FIELD_VALUE_SET3 = 1903;
+        private const int CUSTOM_FIELD_VALUE_SET4 = 1904;
+        private const int CUSTOM_FIELD_VALUE_SET5 = 1905;
+        private const int CUSTOM_FIELD_VALUE_SET6 = 1906;
+        private const int CUSTOM_FIELD_VALUE_SET7 = 1907;
+        private const int CUSTOM_FIELD_VALUE_SET8 = 1908;
 
         private string _crmDirectory;
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
-            _crmDirectory = Path.Combine(baseDirectory, "CRM");
+            _crmDirectory = Path.Combine(baseDirectory, DirectoryName.CRM);
 
-            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes("NACodes.csv"));
-            RunConversion(ConversionMethod.ContactTypes, () => LoadContactTypes("ContactType.csv"));
-            RunConversion(ConversionMethod.Prefixes, () => LoadPrefixes("NamePrefix.csv"));
-            RunConversion(ConversionMethod.RegionLevels, () => LoadRegionLevels("RegionLevel.csv"));
-            RunConversion(ConversionMethod.Regions, () => LoadRegions("Region.csv"));
-            RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas("RegionAreas.csv"));
-            RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes("RelationshipType.csv"));
-            RunConversion(ConversionMethod.Tags, () => LoadTags("TagGroup.csv", "TagCode.csv"));
+            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.CRM_NACodes));
+            RunConversion(ConversionMethod.ContactTypes, () => LoadContactTypes(InputFile.CRM_ContactType));
+            RunConversion(ConversionMethod.Prefixes, () => LoadPrefixes(InputFile.CRM_NamePrefix));
+            RunConversion(ConversionMethod.RegionLevels, () => LoadRegionLevels(InputFile.CRM_RegionLevel));
+            RunConversion(ConversionMethod.Regions, () => LoadRegions(InputFile.CRM_Region));
+            RunConversion(ConversionMethod.RegionAreas, () => LoadRegionAreas(InputFile.CRM_RegionAreas));
+            RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes(InputFile.CRM_RelationshipType));
+            RunConversion(ConversionMethod.Tags, () => LoadTags(InputFile.CRM_TagGroup, InputFile.CRM_TagCode));
+            RunConversion(ConversionMethod.Configuration, () => LoadConfiguration(InputFile.CRM_NASetup));
         }
 
 
         private void LoadLegacyCodes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-
-            using (var importer = new FileImport(dataFile, "NACodes"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
                 {
@@ -208,23 +216,312 @@ namespace DDI.Conversion.CRM
                                p => p.Code,
                                new Degree { Code = code, Name = description, IsActive = active });
                             break;
-
+                        
+                        case CUSTOM_FIELD_SET:
+                            LoadCustomField(context, code, description, int1, int2, active);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET1:
+                            LoadCustomFieldOption(context, 1, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET2:
+                            LoadCustomFieldOption(context, 2, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET3:
+                            LoadCustomFieldOption(context, 3, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET4:
+                            LoadCustomFieldOption(context, 4, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET5:
+                            LoadCustomFieldOption(context, 5, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET6:
+                            LoadCustomFieldOption(context, 6, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET7:
+                            LoadCustomFieldOption(context, 7, code, description);
+                            break;
+                        case CUSTOM_FIELD_VALUE_SET8:
+                            LoadCustomFieldOption(context, 8, code, description);
+                            break;
+                        
                     }
                 }
             }
             context.SaveChanges();
         }
 
+        private void LoadCustomField(DomainContext context, string code, string description, int minValue, int maxValue, bool isActive)
+        {
+            // If there's no description, ignore the code.
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return;
+            }
+
+            int displayOrder = 0;
+            string displayOrderText;
+            int displayOffset = 0;
+            CustomFieldType customFieldType = CustomFieldType.TextBox;
+
+            // Convert code (like CHAR01) to data type and display order.
+            if (code.StartsWith("CHAR"))
+            {
+                customFieldType = CustomFieldType.TextBox;
+                displayOrderText = code.Substring(4, 2);
+            }
+            else if (code.StartsWith("DATE"))
+            {
+                customFieldType = CustomFieldType.Date;
+                displayOrderText = code.Substring(4, 2);
+                displayOffset = 8;
+            }
+            else if (code.StartsWith("DEC"))
+            {
+                customFieldType = CustomFieldType.Number;
+                displayOrderText = code.Substring(3, 2);
+                displayOffset = 10;
+            }
+            else
+            {
+                return;
+            }
+
+            if (!int.TryParse(displayOrderText, out displayOrder))
+            {
+                return;
+            }
+
+            displayOrder += displayOffset;
+
+            var customField = context.CustomField.FirstOrDefault(p => p.FieldType == customFieldType && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM);
+            if (customField == null)
+            {
+                customField = new CustomField();
+                context.CustomField.Add(customField);
+                customField.FieldType = customFieldType;
+                customField.DisplayOrder = displayOrder;
+                customField.Entity = CustomFieldEntity.CRM;
+            }
+
+            customField.IsActive = isActive;
+            customField.LabelText = description;
+            if (customFieldType == CustomFieldType.Number)
+            {
+                customField.MinValue = minValue.ToString();
+                customField.MaxValue = maxValue.ToString();
+                customField.DecimalPlaces = 2;
+            }
+            else
+            {
+                customField.MinValue = string.Empty;
+                customField.MaxValue = string.Empty;
+                customField.DecimalPlaces = 0;
+            }
+        }
+
+        private void LoadCustomFieldOption(DomainContext context, int displayOrder, string code, string description)
+        {
+            var customFields = context.CustomField.Local;
+
+            var customField = customFields.FirstOrDefault(p => p.FieldType == CustomFieldType.TextBox && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              customFields.FirstOrDefault(p => p.FieldType == CustomFieldType.DropDown && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              context.CustomField.FirstOrDefault(p => p.FieldType == CustomFieldType.TextBox && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM)
+                                ??
+                              context.CustomField.FirstOrDefault(p => p.FieldType == CustomFieldType.DropDown && p.DisplayOrder == displayOrder && p.Entity == CustomFieldEntity.CRM);
+            if (customField == null)
+            {
+                return;
+            }
+
+            var option = context.CustomFieldOption.Include(p => p.CustomField).FirstOrDefault(p => p.CustomField.Id == customField.Id && p.Code == code);
+            if (option == null)
+            {
+                option = new CustomFieldOption();
+                context.CustomFieldOption.Add(option);
+                option.CustomField = customField;
+                option.Code = code;
+            }
+            option.Description = description;
+
+            // Force custom field to "DropDown".
+            customField.FieldType = CustomFieldType.DropDown;
+        }
+
+        private void LoadConfiguration(string filename)
+        {
+            var bl = new ConfigurationLogic();
+            IUnitOfWork uow = bl.UnitOfWork;
+            
+            using (var ifile = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            {
+                while (ifile.GetNextRow())
+                {
+                    CRMConfiguration config = bl.GetConfiguration<CRMConfiguration>();
+
+                    // Salutations and formatting
+
+                    ApplySalutationSettings(uow, "O", ifile.GetString(0), ifile.GetString(1));
+                    ApplySalutationSettings(uow, "C", ifile.GetString(2), ifile.GetString(3));
+                    ApplySalutationSettings(uow, "F", ifile.GetString(4), ifile.GetString(5));
+
+                    string defaultSalutationFormat = ifile.GetString(6);
+                    if (defaultSalutationFormat == "1")
+                    {
+                        defaultSalutationFormat = "Dear {FULL}";
+                    }
+                    else
+                    {
+                        defaultSalutationFormat = "Dear {P}{L}";
+                    }
+
+                    SalutationType defaultSalType = SalutationType.Formal;
+
+                    switch (ifile.GetInt(7))
+                    {
+                        case 1: defaultSalType = SalutationType.Formal; break;
+                        case 2: defaultSalType = SalutationType.Informal; break;
+                        case 3: defaultSalType = SalutationType.FormalSeparate; break;
+                        case 4: defaultSalType = SalutationType.InformalSeparate; break;
+                    }
+
+                    foreach (ConstituentType ct in uow.Where<ConstituentType>(p => p.Code == "I"))
+                    {
+                        ct.SalutationFormal = defaultSalutationFormat;
+                    }
+
+                    config.OmitInactiveSpouse = ifile.GetBool(8);
+                    config.AddFirstNamesToSpouses = ifile.GetBool(9);
+                    config.DefaultSalutationType = defaultSalType;
+
+                    // Address types
+                    config.HomeAddressTypes = GetAddressTypes(uow, ifile.GetString(10));
+                    config.MailAddressTypes = GetAddressTypes(uow, ifile.GetString(11));
+
+                    string defaultAddressType = ifile.GetCode(12);
+                    config.DefaultAddressType = uow.FirstOrDefault<AddressType>(p => p.Code == defaultAddressType);
+
+                    // Deceased status code and tag
+                    string deceasedCode = ifile.GetCode(18);
+                    string deceasedTag = ifile.GetCode(19);
+
+                    if (string.IsNullOrWhiteSpace(deceasedCode))
+                    {
+                        config.DeceasedStatus = null;
+                    }
+                    else
+                    {
+                        config.DeceasedStatus = uow.FirstOrDefault<ConstituentStatus>(p => p.Code == deceasedCode);
+                    }
+
+                    config.DeceasedTags = new List<Tag>();
+
+                    if (!string.IsNullOrWhiteSpace(deceasedTag))
+                    {
+                        var tag = uow.FirstOrDefault<Tag>(p => p.Code == deceasedTag);
+                        if (tag != null)
+                        {
+                            config.DeceasedTags.Add(tag);
+                        }
+                    }
+
+                    // Name format
+                    string nameFormat = ifile.GetString(20);
+                    if (!string.IsNullOrWhiteSpace(nameFormat))
+                    {
+                        var ct = uow.FirstOrDefault<ConstituentType>(p => p.Code == "I");
+                        if (ct != null)
+                        {
+                            ct.NameFormat = ConvertNameFormat(nameFormat);
+                        }
+
+                    }
+
+                    // Misc. flags
+                    config.UseRegionSecurity = ifile.GetBool(21);
+                    config.ApplyDeceasedTag = ifile.GetBool(22);
+
+                    // Spouse relationships
+                    string spouseCodes = ifile.GetString(23);
+                    if (string.IsNullOrWhiteSpace(spouseCodes))
+                    {
+                        spouseCodes = "SPOU";
+                    }
+
+                    foreach (string entry in spouseCodes.Split(','))
+                    {
+                        string relationshipCode = entry.ToUpper().Trim();
+                        RelationshipType relationshipType = uow.FirstOrDefault<RelationshipType>(p => p.Code == relationshipCode);
+                        if (relationshipType != null)
+                        {
+                            relationshipType.IsSpouse = true;
+                        }
+                    }
+                    
+                    bl.SaveConfiguration(config);
+                    break;
+                }
+            }
+        }
+
+        private void ApplySalutationSettings(IUnitOfWork uow, string code, string formal, string informal)
+        {
+            ConstituentType ct = uow.FirstOrDefault<ConstituentType>(p => p.Code == code);
+            if (ct != null)
+            {
+                if (!string.IsNullOrWhiteSpace(formal))
+                {
+                    ct.SalutationFormal = formal.TrimEnd(',', ':');
+                }
+                if (!string.IsNullOrWhiteSpace(informal))
+                {
+                    ct.SalutationInformal = informal.TrimEnd(',', ':');
+                }
+            }
+        }
+
+        private IList<AddressType> GetAddressTypes(IUnitOfWork uow, string text)
+        {
+            List<AddressType> list = new List<AddressType>();
+
+            foreach (var entry in text.Split(','))
+            {
+                if (!string.IsNullOrWhiteSpace(entry))
+                {
+                    string trimmedEntry = entry.Trim().ToUpper();
+                    AddressType type = uow.FirstOrDefault<AddressType>(p => p.Code == trimmedEntry);
+                    if (type != null)
+                    {
+                        list.Add(type);
+                    }
+                }
+            }
+            return list;
+        }
+
+        private string ConvertNameFormat(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in text)
+            {
+                if (char.IsLetter(c))
+                    sb.Append('{').Append(Char.ToUpper(c)).Append('}');
+                else if (c == '.')
+                    sb.Insert(sb.Length - 1, 'I');
+            }
+            return sb.ToString();
+        }
+
         private void LoadContactTypes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-
-            using (var importer = new FileImport(dataFile, "ContactType"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string categoryCode = importer.GetString(0);
                     string typeCode = importer.GetString(1);
@@ -268,12 +565,12 @@ namespace DDI.Conversion.CRM
         private void LoadRegionLevels(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RegionLevel"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     string regionLabel = importer.GetString(1);
@@ -308,13 +605,12 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
 
             Dictionary<int, Region> regionDict = new Dictionary<int, Region>();
-            
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "Region"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string uniqueId = importer.GetString(0);
                     int uniqueNum;
@@ -364,13 +660,12 @@ namespace DDI.Conversion.CRM
 
             // Need to delete all region areas first...
             context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<RegionArea>()}");
-            
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RegionAreas"))
+
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string levelText = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(levelText))
@@ -489,12 +784,11 @@ namespace DDI.Conversion.CRM
             List<Tuple<string,string,bool>> fixups = new List<Tuple<string, string, bool>>(); // 0:code, 1:reciprocal-code, 2:isMale
             RelationshipType rtype;
 
-            string dataFile = Path.Combine(_crmDirectory, filename);
-            using (var importer = new FileImport(dataFile, "RelType"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     if (string.IsNullOrWhiteSpace(code) || code == "Code")
@@ -585,12 +879,11 @@ namespace DDI.Conversion.CRM
             Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
 
             // Load tag groups.
-            string dataFile = Path.Combine(_crmDirectory, groupFilename);
-            using (var importer = new FileImport(dataFile, "TagGroup"))
+            using (var importer = CreateFileImporter(_crmDirectory, groupFilename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
 
@@ -617,12 +910,9 @@ namespace DDI.Conversion.CRM
 
 
             // Load Tags.
-            dataFile = Path.Combine(_crmDirectory, tagFilename);
-            using (var importer = new FileImport(dataFile, "Tag"))
+            using (var importer = CreateFileImporter(_crmDirectory, tagFilename, typeof(ConversionMethod)))
             {
-                int count = 1;
-
-                while (count <= MethodArgs.MaxCount && importer.GetNextRow())
+                while (importer.GetNextRow())
                 {
                     string code = importer.GetString(0);
                     string name = importer.GetString(1);
@@ -651,12 +941,11 @@ namespace DDI.Conversion.CRM
         private void LoadPrefixes(string filename)
         {
             DomainContext context = new DomainContext();
-            string dataFile = Path.Combine(_crmDirectory, filename);
 
             // Force loading of genders
-            context.Genders.ToList();        
+            var genders = context.Genders.ToList();
 
-            using (var importer = new FileImport(dataFile, "Prefix"))
+            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
                 {
@@ -671,7 +960,7 @@ namespace DDI.Conversion.CRM
 
                     if (!string.IsNullOrWhiteSpace(gender))
                     {
-                        g1 = context.Genders.Local.FirstOrDefault(p => p.Code == gender);
+                        g1 = genders.FirstOrDefault(p => p.Code == gender);
                     }
                                         
                     Prefix prefix = new Prefix();
@@ -682,6 +971,7 @@ namespace DDI.Conversion.CRM
                     prefix.LabelAbbreviation = labelAbbreviation;
                     prefix.Salutation = salutation;
                     prefix.Gender = g1;
+                    prefix.GenderId = g1?.Id;
                     prefix.ShowOnline = showOnline;
 
                     context.Prefixes.AddOrUpdate(

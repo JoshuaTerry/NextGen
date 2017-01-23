@@ -5,12 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Conversion.Core
 {
+    /// <summary>
+    /// Seeding of initial data for the Core module.
+    /// </summary>
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod
