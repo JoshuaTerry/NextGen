@@ -88,9 +88,10 @@ namespace DDI.Business.Helpers
         /// <param name="text">The name to abbreviate.</param>
         /// <param name="allCaps">True to return result in all caps.</param>
         /// <param name="abbreviateAll">True to abbreviate every possible word.</param>
-        public static string AbbreviateNameLine(string text, bool allCaps, bool abbreviateAll)
+        /// <param name="unitOfWork">"Optional unit of work.</param>
+        public static string AbbreviateNameLine(string text, bool allCaps, bool abbreviateAll, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeNameLine(text, abbreviateAll);
+            Token[] tokens = TokenizeNameLine(unitOfWork, text, abbreviateAll);
             StringBuilder sb = new StringBuilder();
 
             foreach (var token in tokens)
@@ -128,9 +129,10 @@ namespace DDI.Business.Helpers
         /// <param name="text">The name to abbreviate.</param>
         /// <param name="targetLength">Maximum allowed length</param>
         /// <param name="allCaps">True to return result in all caps.</param>
-        public static string AbbreviateNameLine(string text, int targetLength, bool allCaps)
+        /// <param name="unitOfWork">Optional unit of work.</param>
+        public static string AbbreviateNameLine(string text, int targetLength, bool allCaps, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeNameLine(text, false);
+            Token[] tokens = TokenizeNameLine(unitOfWork, text, false);
             StringBuilder sb = new StringBuilder();
             int length = 0;
 
@@ -196,10 +198,10 @@ namespace DDI.Business.Helpers
         /// </summary>
         /// <param name="text">The name to expand.</param>
         /// <param name="addPeriods">True to add periods after initials or prefixes.</param>
-        /// <returns></returns>
-        public static string ExpandNameLine(string text, bool addPeriods)
+        /// <param name="unitOfWork">Optional unit of work.</param>
+        public static string ExpandNameLine(string text, bool addPeriods, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeNameLine(text, false);
+            Token[] tokens = TokenizeNameLine(unitOfWork, text, false);
             StringBuilder sb = new StringBuilder();
 
             foreach (var token in tokens)
@@ -276,9 +278,10 @@ namespace DDI.Business.Helpers
         /// <param name="text">Address to abbreviate.</param>
         /// <param name="allCaps">True to return result in all caps.</param>
         /// <param name="abbreviateAll">True to abbreviate every possible word.</param>
-        public static string AbbreviateAddressLine(string text, bool allCaps, bool abbreviateAll)
+        /// <param name="unitOfWork">Optional unit of work.</param>
+        public static string AbbreviateAddressLine(string text, bool allCaps, bool abbreviateAll, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeAddressLine(text, abbreviateAll);
+            Token[] tokens = TokenizeAddressLine(unitOfWork, text, abbreviateAll);
             StringBuilder sb = new StringBuilder();
 
             foreach (var token in tokens)
@@ -316,9 +319,10 @@ namespace DDI.Business.Helpers
         /// <param name="text">The address to abbreviate.</param>
         /// <param name="targetLength">Maximum allowed length</param>
         /// <param name="allCaps">True to return result in all caps.</param>
-        public static string AbbreviateAddressLine(string text, int targetLength, bool allCaps)
+        /// <param name="unitOfWork">Optional unit of work.</param>
+        public static string AbbreviateAddressLine(string text, int targetLength, bool allCaps, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeAddressLine(text, false);
+            Token[] tokens = TokenizeAddressLine(unitOfWork, text, false);
             StringBuilder sb = new StringBuilder();
             int length = 0;
 
@@ -382,10 +386,10 @@ namespace DDI.Business.Helpers
         /// Expand words in an address.
         /// </summary>
         /// <param name="text">Address to expand.</param>
-        /// <returns></returns>
-        public static string ExpandAddressLine(string text)
+        /// <param name="unitOfWork">Optional unit of work.</param>
+        public static string ExpandAddressLine(string text, IUnitOfWork unitOfWork = null)
         {
-            Token[] tokens = TokenizeAddressLine(text, false);
+            Token[] tokens = TokenizeAddressLine(unitOfWork, text, false);
             StringBuilder sb = new StringBuilder();
 
             foreach (var token in tokens)
@@ -419,7 +423,7 @@ namespace DDI.Business.Helpers
 
         #region Private Methods
 
-        private static Token[] TokenizeNameLine(string text, bool abbreviateAll)
+        private static Token[] TokenizeNameLine(IUnitOfWork uow, string text, bool abbreviateAll)
         {
             Token[] tokens = Tokenize(text);
             int index;
@@ -441,7 +445,7 @@ namespace DDI.Business.Helpers
 
 
                     // Is this word a name abbreviation or word?
-                    var abbr = GetAbbreviations().FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && !string.IsNullOrEmpty(p.NameWord));
+                    var abbr = GetAbbreviations(uow).FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && !string.IsNullOrEmpty(p.NameWord));
                     if (abbr != null)
                     {
 
@@ -487,7 +491,7 @@ namespace DDI.Business.Helpers
             return tokens;
         } // TokenizeNameLine
 
-        private static Token[] TokenizeAddressLine(string text, bool abbreviateAll)
+        private static Token[] TokenizeAddressLine(IUnitOfWork uow, string text, bool abbreviateAll)
         {
             Token[] tokens = Tokenize(text);
             int index;
@@ -509,7 +513,7 @@ namespace DDI.Business.Helpers
                     }
 
                     // Is this word an address abbreviation or word?
-                    var abbreviation = GetAbbreviations().FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && p.AddressWord.Length > 0);
+                    var abbreviation = GetAbbreviations(uow).FirstOrDefault(p => string.Compare(thisword, p.Word, true) == 0 && p.AddressWord.Length > 0);
                     if (abbreviation != null)
                     {
 
