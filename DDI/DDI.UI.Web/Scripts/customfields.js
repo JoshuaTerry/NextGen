@@ -7,6 +7,7 @@ var customfieldentity = {
     'NamedFunds': 10, 'CropEvents': 11, 'PlannedGiving': 12, 'Campaigns': 13, 'Investments': 14,
     'LineOfCredit': 15, 'Loans': 16, 'Portfolio': 17, 'Pools': 18, 'CRM': 19,
     'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25 };
+var currentcustomfieldentity = 0;
 
 $(document).ready(function () {
 
@@ -16,13 +17,15 @@ $(document).ready(function () {
 
 function DisplayCustomFieldsGrid(container, entity) {
 
+    currentcustomfieldentity = entity;
+
     if (container.indexOf('.') != 0)
         container = '.' + container;
 
     var datagrid = $('<div>').addClass('customfieldgrid');
 
     var columns = [
-        { dataField: 'Id', visible: false },
+        { dataField: 'Id', width: "0px" },
         { dataField: 'FieldType', caption: 'Field Type' },
         { dataField: 'LabelText', caption: 'Label Text' },
         { dataField: 'MinValue', caption: 'Min Value' },
@@ -31,8 +34,7 @@ function DisplayCustomFieldsGrid(container, entity) {
     ]
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
-        data: '{ entity: + ' + entity + ' }',
+        url: WEB_API_ADDRESS + route + 'entity/' + entity,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -86,8 +88,7 @@ function DisplayCustomFields(container, entity) {
         container = '.' + container;
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
-        data: '{ entity: + ' + entity + ' }',
+        url: WEB_API_ADDRESS + route + 'entity/' + entity,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',

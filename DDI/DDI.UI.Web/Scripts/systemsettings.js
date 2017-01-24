@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     });
 
-    CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+    // CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
 
 });
 
@@ -427,7 +427,7 @@ var options = [];
 
 function LoadCRMClientCustomFields() {
 
-    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.CRM); // CRM = 19
+    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.CRM); // CRM = 19
 
     CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
 
@@ -435,7 +435,7 @@ function LoadCRMClientCustomFields() {
 
 function LoadDonationClientCustomFields() {
 
-    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.Gifts); // Gifts = 9
+    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.Gifts); // Gifts = 9
 
     CreateNewCustomFieldModalLink(customfieldentity.Gifts, 'New Donations Custom Field');
 
@@ -443,15 +443,23 @@ function LoadDonationClientCustomFields() {
 
 function LoadGLClientCustomFields() {
 
-    DisplayCustomFieldsGrid('gridcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
+    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
 
     CreateNewCustomFieldModalLink(customfieldentity.GeneralLedger, 'New General Ledger Custom Field');
     
 }
 
+function RefreshCustomFieldsGrid() {
+
+    $('.contentcontainer').html('');
+
+    DisplayCustomFieldsGrid('contentcontainer', currentcustomfieldentity);
+
+}
+
 function CreateNewCustomFieldModalLink(entity, title) {
 
-    var modallink = $('<a>').attr('href', '#').text('New Custom Field').appendTo($('.contentcontainer'));
+    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.contentcontainer'));
     $('.gridcontainer').before($(modallink));
 
     $(modallink).click(function (e) {
@@ -549,6 +557,7 @@ function AddOption() {
 function ClearModal() {
 
     $('.options').hide();
+    options = [];
     $('.tempoptions').html('');
 
     $(modal).find('div.fieldblock input').not('.noclear').each(function () {
@@ -656,7 +665,7 @@ function SaveCustomField() {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: customfieldentity.CRM,
+            Entity: currentcustomfieldentity,
             Options: []
         }
 
@@ -674,7 +683,7 @@ function SaveCustomField() {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: customfieldentity.CRM,
+            Entity: currentcustomfieldentity,
             Options: []
         }
 
@@ -691,21 +700,6 @@ function SaveCustomField() {
 
 }
 
-function SaveOptions(id) {
-
-    options.forEach(function (o){
-
-        id = '11E9DB49-0FE5-4A38-9A3F-85C84532F7C8';
-        o.push('"CustomFieldId": "' + id + '"');
-
-        o = '{' + o + '}';
-
-        SendCustomFieldOption('customfieldoptions', 'POST', o);
-
-    })
-
-}
-
 function SendCustomField(route, action, data) {
 
     $.ajax({
@@ -718,27 +712,14 @@ function SendCustomField(route, action, data) {
         success: function (data) {
 
             DisplaySuccessMessage('Success', 'Custom field saved successfully.');
+
+            CloseModal();
+
+            RefreshCustomFieldsGrid();
             
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error saving custom field.');
-        }
-    });
-
-}
-
-function SendCustomFieldOption(route, action, data) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: action,
-        data: data,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function () {
-
-
         }
     });
 
