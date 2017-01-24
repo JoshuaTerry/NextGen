@@ -63,6 +63,7 @@
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="CRM\AddressLogicTest.cs" />
     <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
+    <Compile Include="CRM\NameFormatterTest.cs" />
     <Compile Include="CRM\ConstituentLogicTest.cs" />
     <Compile Include="CRM\ContactInfoLogicTest.cs" />
     <Compile Include="CRM\DataSources\ConstituentTypeDataSource.cs" />

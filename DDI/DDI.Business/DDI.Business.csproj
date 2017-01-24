@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
+    <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />

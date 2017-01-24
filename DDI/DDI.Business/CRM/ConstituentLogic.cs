@@ -58,7 +58,7 @@ namespace DDI.Business.CRM
             string nameLine1, nameLine2;
 
 
-            NameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
+            NameFormatter.GetNameLines(constituent, null, options, out nameLine1, out nameLine2);
             return nameLine1;
         }
 
