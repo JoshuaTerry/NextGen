@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DDI.Shared.Helpers;
-using DDI.Shared.ModuleInfo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
+using DDI.Shared.Models;
 
 namespace DDI.Shared.Test.Helpers
 {
@@ -25,21 +26,31 @@ namespace DDI.Shared.Test.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void ReflectionHelper_GetDecoratedWith()
+        public void Reflectionhelper_GetDecoratedWith_NotNull()
         {
-            var types = ReflectionHelper.GetDecoratedWith<ModuleTypeAttribute>();
-            Assert.IsNotNull(types, "GetDecoratedWith returned non-null value.");
-            Assert.IsTrue(types.Count > 10, "GetDecoratedWith returned multiple results.");
-            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDecoratedWith contains Accounting module.");
+            var types = ReflectionHelper.GetDecoratedWith<TestClassAttribute>();
+            Assert.IsNotNull(types, "GetDecoratedWith returned non-null value");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void ReflectionHelper_GetDerivedTypes()
+        public void Reflectionhelper_GetDecoratedWith_MultipleValues()
         {
-            var types = ReflectionHelper.GetDerivedTypes<DDI.Shared.ModuleInfo.Base.ModuleInfoBase>();
-            Assert.IsNotNull(types, "GetDerivedTypes returned non-null value.");
-            Assert.IsTrue(types.Count > 10, "GetDerivedTypes returned multiple results.");
-            CollectionAssert.Contains(types, typeof(DDI.Shared.ModuleInfo.Accounting), "GetDerivedTypes contains Accounting module.");
+            var types = ReflectionHelper.GetDecoratedWith<TestClassAttribute>();
+            Assert.IsTrue(types.Count > 1, "GetDecoratedWith returned multiple results");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ReflectionHelper_GetDerivedTypes_NotNull()
+        {
+            var types = ReflectionHelper.GetDerivedTypes<EntityBase>();
+            Assert.IsNotNull(types, "GetDerivedTypes returned non-null value");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ReflectionHelper_GetDerivedTypes_MultipleValues()
+        {
+            var types = ReflectionHelper.GetDerivedTypes<EntityBase>();
+            Assert.IsTrue(types.Count > 1, "GetDerivedTypes returned multiple results.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]

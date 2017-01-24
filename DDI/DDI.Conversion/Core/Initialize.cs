@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.Core
 {

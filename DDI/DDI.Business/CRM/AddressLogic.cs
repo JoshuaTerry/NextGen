@@ -20,11 +20,6 @@ namespace DDI.Business.CRM
     /// </summary>
     public class AddressLogic : EntityLogicBase<Address>
     {
-        #region Private Fields
-
-        private const string BP = "BP";  // Special text that appears in some postal code formats.  (No idea what it means...)
-
-        #endregion
 
         #region Constructors 
 
@@ -37,8 +32,6 @@ namespace DDI.Business.CRM
         #endregion
 
         #region Public Properties
-
-        public static string DefaultCountryCode => "US";
 
         /// <summary>
         /// Cached queryable collection of countries
@@ -126,7 +119,7 @@ namespace DDI.Business.CRM
         /// </summary>
         public bool IsForeignCountry(Country country)
         {
-            return country.ISOCode != DefaultCountryCode;
+            return country.ISOCode != AddressDefaults.DefaultCountryCode;
         }
 
         /// <summary>
@@ -155,12 +148,18 @@ namespace DDI.Business.CRM
                     {
                         text = AbbreviationHelper.ExpandAddressLine(text, UnitOfWork);
                         if (caps)
+                        {
                             text = text.ToUpper();
+                        }
                     }
                     else if (maxLength > 0)
+                    {
                         text = AbbreviationHelper.AbbreviateAddressLine(text, maxLength, caps, UnitOfWork);
+                    }
                     else if (caps)
+                    {
                         text = AbbreviationHelper.AbbreviateAddressLine(text, true, false, UnitOfWork);
+                    }
 
                     sb.Append(text).Append('\n');
                 }
@@ -168,9 +167,13 @@ namespace DDI.Business.CRM
 
             text = FormatCityStatePostalCode(address.City, address.State?.StateCode, address.PostalCode, address.Country);
             if (caps)
+            {
                 sb.Append(text.ToUpper());
+            }
             else
+            {
                 sb.Append(text);
+            }
 
             return sb.ToString().Trim('\n');
         }
@@ -197,7 +200,6 @@ namespace DDI.Business.CRM
             {
                 return string.Format("{0} {1} {2}", city, stateCode, postalCode);
             }
-
 
             if (string.IsNullOrWhiteSpace(country.AddressFormat))
             {
@@ -266,10 +268,10 @@ namespace DDI.Business.CRM
                 string rawEntry = StringHelper.LettersAndDigits(entry);
 
                 // Special case for BP - remove it from the raw format and raw code.
-                if (rawEntry.IndexOf(BP) >= 0)
+                if (rawEntry.IndexOf(AddressDefaults.PostalBoxSpecifier) >= 0)
                 {
-                    rawEntry = rawEntry.Replace(BP, string.Empty);
-                    rawcode = rawcode.Replace(BP, string.Empty);
+                    rawEntry = rawEntry.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
+                    rawcode = rawcode.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
                 }
                 if (rawEntry.Length == rawcode.Length)
                 {
@@ -361,10 +363,10 @@ namespace DDI.Business.CRM
                 string rawEntry = StringHelper.LettersAndDigits(entry);
 
                 // Special case for BP - remove it from the raw format and raw code.
-                if (rawEntry.IndexOf(BP) >= 0)
+                if (rawEntry.IndexOf(AddressDefaults.PostalBoxSpecifier) >= 0)
                 {
-                    rawEntry = rawEntry.Replace(BP, string.Empty);
-                    rawCode = rawCode.Replace(BP, string.Empty);
+                    rawEntry = rawEntry.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
+                    rawCode = rawCode.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
                     rawPostalCode = rawCode;
                 }
                 if (rawEntry.Length == rawCode.Length)
@@ -375,7 +377,9 @@ namespace DDI.Business.CRM
             }
 
             if (format == null)
+            {
                 isValid = false;
+            }
             else
             {
                 // Format and validate the postal code
