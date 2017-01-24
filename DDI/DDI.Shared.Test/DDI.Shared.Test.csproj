@@ -61,8 +61,6 @@
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
     <Compile Include="FakeConnectionManager.cs" />
     <Compile Include="Helpers\ReflectionHelperTests.cs" />
-    <Compile Include="Helpers\ModuleHelperTests.cs" />
-    <Compile Include="ModuleInfo\ModuleInfoBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConnectionManagerTests.cs" />
   </ItemGroup>
@@ -71,7 +69,12 @@
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DDI.WebApi\DDI.WebApi.csproj">
+      <Project>{7C76AAF9-FAD1-40A6-8140-D33229A9B942}</Project>
+      <Name>DDI.WebApi</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
