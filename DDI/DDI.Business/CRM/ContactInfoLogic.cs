@@ -25,31 +25,68 @@ namespace DDI.Business.CRM
 
         #endregion
 
-        public override void Validate(ContactInfo entity)
-        {
-            base.Validate(entity);
+        #region Public Methods
 
-            if (string.IsNullOrWhiteSpace(entity.Info))
+        /// <summary>
+        /// Validation logic
+        /// </summary>
+        /// <param name="contactInfo"></param>
+        public override void Validate(ContactInfo contactInfo)
+        {
+            base.Validate(contactInfo);
+
+            if (string.IsNullOrWhiteSpace(contactInfo.Info))
             {
                 throw new Exception("Contact information cannot be blank.");
             }
 
-            if (entity.ContactTypeId.IsNullOrEmpty())
+            if (contactInfo.ContactTypeId.IsNullOrEmpty())
             {
                 throw new Exception("Contact type is not specified.");
             }
 
+            // Get the category code.
+            string categoryCode = GetContactCategoryCode(contactInfo);
+
+            // If phone, format the phone number.
+            if (categoryCode == ContactCategoryCodes.Phone)
+            {
+                if (!ValidatePhoneNumber(contactInfo))
+                {
+                    throw new Exception("Phone number format is not valid for constituent's country.");
+                }
+            }
+
         }
 
-        public bool ValidatePhoneNumber(ContactInfo entity)
+        /// <summary>
+        /// Validate a phone number, removing formatting characters.
+        /// </summary>
+        /// <param name="contactInfo">ContactInfo entity containing the phone number to be validated.</param>
+        public bool ValidatePhoneNumber(ContactInfo contactInfo)
         {
+            Country country = GetCountryForContactInfo(contactInfo);
+            string phone = contactInfo.Info;
+
+            if (!ValidatePhoneNumber(ref phone, country))
+            {
+                return false;
+            }
+
+            contactInfo.Info = phone;
             return true;
         }
 
 
+        /// <summary>
+        /// Validate a phone number, removing formatting characters.
+        /// </summary>
+        /// <param name="phone">Phone number.  If validated, formatting characters will be removed.</param>
+        /// <param name="country">Country</param>
+        /// <returns></returns>
         public bool ValidatePhoneNumber(ref string phone, Country country)
         {
-            string origPhone;
+            string rawPhone; // Phone # minus extra stuff.
             string format;
             int formatDigits = 0;
 
@@ -58,38 +95,35 @@ namespace DDI.Business.CRM
                 return true;
             }
 
-            // Determine if phone # is raw digits.
-            bool isRaw = (phone.Any(p => !char.IsDigit(p)));
-
-            origPhone = phone;
+            rawPhone = phone;
 
             // Remove leading spaces or + from phone number.  
-            origPhone = origPhone.TrimStart('+', ' ');
+            rawPhone = rawPhone.TrimStart(ContactInfoDefaults.CallingCodeIndicator, ' ');
 
             // Remove the leading default international dialing prefix
-            if (origPhone.StartsWith(ContactInfoDefaults.DefaultInternationalPrefix))
+            if (rawPhone.StartsWith(ContactInfoDefaults.DefaultInternationalPrefix))
             {
-                origPhone = RemovePhoneDigits(origPhone, ContactInfoDefaults.DefaultInternationalPrefix.Length);
+                rawPhone = RemovePhoneDigits(rawPhone, ContactInfoDefaults.DefaultInternationalPrefix.Length);
             }
 
             if (country != null)
             {
                 // Remove the country specific international dialing prefix if it's at the beginning of the phone number.
-                if (!string.IsNullOrWhiteSpace(country.InternationalPrefix) && origPhone.StartsWith(country.InternationalPrefix))
+                if (!string.IsNullOrWhiteSpace(country.InternationalPrefix) && rawPhone.StartsWith(country.InternationalPrefix))
                 {
-                    origPhone = RemovePhoneDigits(origPhone, country.InternationalPrefix.Length);
+                    rawPhone = RemovePhoneDigits(rawPhone, country.InternationalPrefix.Length);
                 }
 
                 // Remove the calling code if it's at the beginning of the phone number.
-                if (!string.IsNullOrWhiteSpace(country.CallingCode) && origPhone.StartsWith(country.CallingCode))
+                if (!string.IsNullOrWhiteSpace(country.CallingCode) && rawPhone.StartsWith(country.CallingCode))
                 {
-                    origPhone = RemovePhoneDigits(origPhone, country.CallingCode.Length);
+                    rawPhone = RemovePhoneDigits(rawPhone, country.CallingCode.Length);
                 }
 
                 // Remove the trunk
-                if (!string.IsNullOrWhiteSpace(country.TrunkPrefix) && origPhone.StartsWith(country.TrunkPrefix))
+                if (!string.IsNullOrWhiteSpace(country.TrunkPrefix) && rawPhone.StartsWith(country.TrunkPrefix))
                 {
-                    origPhone = RemovePhoneDigits(origPhone, country.TrunkPrefix.Length);
+                    rawPhone = RemovePhoneDigits(rawPhone, country.TrunkPrefix.Length);
                 }
 
                 format = country.PhoneFormat ?? string.Empty;
@@ -102,10 +136,10 @@ namespace DDI.Business.CRM
                 format = string.Empty;
             }
 
-            // Extract digits from origPhone
+            // Extract digits from rawPhone
             StringBuilder sb = new StringBuilder();
             int digits = 0;
-            foreach (char c in origPhone)
+            foreach (char c in rawPhone)
             {
                 if (formatDigits > 0 && digits >= formatDigits)
                     sb.Append(c);
@@ -123,12 +157,205 @@ namespace DDI.Business.CRM
             }
             else
             {
-                phone = origPhone;
+                phone = rawPhone;
             }
 
             return (digits >= formatDigits);
         }
 
+        /// <summary>
+        /// Get the contact category code for a ContactInfo entity.
+        /// </summary>
+        public string GetContactCategoryCode(ContactInfo contactInfo)
+        {
+            if (contactInfo == null)
+            {
+                return string.Empty;
+            }
+
+            return GetContactCategoryCode(contactInfo.ContactType ?? UnitOfWork.GetReference(contactInfo, p => p.ContactType));
+        }
+
+        /// <summary>
+        /// Get the contact category code for a ContactType entity.
+        /// </summary>
+        public string GetContactCategoryCode(ContactType contactType)
+        {
+            if (contactType == null)
+            {
+                return string.Empty;
+            }
+
+            ContactCategory category = contactType.ContactCategory ?? UnitOfWork.GetReference(contactType, p => p.ContactCategory);
+            return category?.Code ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Format contact inforation based on the contact information's category (phone, email, etc.)
+        /// </summary>
+        /// <returns></returns>
+        public string FormatContactInformation(ContactInfo contactInfo)
+        {
+            if (string.IsNullOrWhiteSpace(contactInfo.Info))
+            {
+                return string.Empty;
+            }
+
+            // Get the category code.
+            string categoryCode = GetContactCategoryCode(contactInfo);
+
+            // If phone, format the phone number.
+            if (categoryCode == ContactCategoryCodes.Phone)
+            {
+                return FormatPhoneNumber(contactInfo);
+            }
+
+            return contactInfo.Info;
+        }
+
+        /// <summary>
+        /// Format a phone number.
+        /// </summary>
+        /// <param name="contactInfo">ConactInfo entity containing the phone number.</param>
+        /// <param name="includeInternationalPrefix">True to include international dialing prefix</param>
+        /// <param name="includeNANPPrefix">True to enforce NANP formatting for NANP countries.</param>
+        /// <param name="localFormat">True if caller is dialing from their own country.</param>
+        public string FormatPhoneNumber(ContactInfo contactInfo, bool includeInternationalPrefix = false, bool includeNANPPrefix = false, bool localFormat = false)
+        {
+            if (string.IsNullOrWhiteSpace(contactInfo.Info))
+            {
+                return string.Empty;
+            }
+
+            Country country = GetCountryForContactInfo(contactInfo);
+
+            return FormatPhoneNumber(contactInfo.Info, country, includeInternationalPrefix, includeNANPPrefix, localFormat);
+        }
+
+        /// <summary>
+        /// Format an unformatted phone number.
+        /// </summary>
+        /// <param name="phone">Unformatted phone number.</param>
+        /// <param name="country">Country for this phone number.</param>
+        /// <param name="includeInternationalPrefix">True to include international dialing prefix.</param>
+        /// <param name="includeNANPPrefix">True enforce NANP formatting for NANP countries.</param>
+        /// <param name="localFormat">True if caller is dialing from their own country.</param>
+        public string FormatPhoneNumber(string phone, Country country = null, bool includeInternationalPrefix = false, bool includeNANPPrefix = false, bool localFormat = false)
+        {
+
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            if (country == null)
+            {
+                country = UnitOfWork.GetBusinessLogic<AddressLogic>().GetDefaultCountry();
+            }
+
+            if (country != null)
+            {
+                string phoneFormat = country.PhoneFormat;
+
+                if (!localFormat)
+                {
+                    // Calling from USA...
+                    if (country.CallingCode == ContactInfoDefaults.NANPCallingCode)
+                    {
+                        // NANP country
+                        if (includeNANPPrefix)
+                        {
+                            sb.Append(ContactInfoDefaults.NANPTrunkPrefix);
+                            phoneFormat = ContactInfoDefaults.NANPFormat;
+                        }
+                    }
+                    else
+                    {
+                        // Other country
+                        if (includeInternationalPrefix)
+                        {
+                            sb.Append(ContactInfoDefaults.DefaultInternationalPrefix);
+                            sb.Append(' ');
+                        }
+                        if (!string.IsNullOrWhiteSpace(country.CallingCode))
+                        {
+                            sb.Append(country.CallingCode);
+                            sb.Append(' ');
+                        }
+                    }
+                }
+                else
+                {
+                    // Calling from specified country...
+                    if (country.CallingCode == ContactInfoDefaults.DefaultInternationalPrefix)
+                    {
+                        if (includeNANPPrefix)
+                        {
+                            sb.Append(ContactInfoDefaults.NANPTrunkPrefix);
+                            phoneFormat = ContactInfoDefaults.NANPFormat;
+                        }
+                    }
+
+                    // Include the trunk if there is one.
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(country.TrunkPrefix))
+                        {
+                            sb.Append(country.TrunkPrefix);
+                        }
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(phoneFormat))
+                {
+                    sb.Append(phone);
+                }
+                else
+                {
+                    string rawPhone = StringHelper.LettersAndDigits(phone);
+                    if (rawPhone.Length < phoneFormat.Count(c => c == 'X'))
+                    {
+                        // Phone doesn't have enough digits, so just append it.
+                        sb.Append(phone);
+                    }
+                    else
+                    {
+                        int position = 0;
+                        foreach (char c in phoneFormat)
+                        {
+                            if (c == 'X' && position < phone.Length)
+                            {
+                                sb.Append(phone[position++]);
+                            }
+                            else
+                            {
+                                sb.Append(c);
+                            }
+                        }
+
+                        // Tack on any remaining characters in the raw phone
+                        if (position < phone.Length)
+                        {
+                            sb.Append(' ').Append(phone.Substring(position));
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                // No country
+                sb.Append(phone);
+            }
+
+            return sb.ToString();
+        }
+
+        #endregion
+
+        #region Private Methods
         /// <summary>
         /// Remove specified # of digits from the front of a phone number, including any non-digits after that.
         /// </summary>
@@ -150,14 +377,29 @@ namespace DDI.Business.CRM
             return string.Empty;
         }
 
-        private Country GetCountryForContactInfo(ContactInfo entity)
+        private Country GetCountryForContactInfo(ContactInfo contactInfo)
         {
-            Constituent constituent = UnitOfWork.GetReference(entity, p => p.Constituent);
+            Country resultCountry = null;
+
+            var addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
+
+            Constituent constituent = contactInfo.Constituent ?? UnitOfWork.GetReference(contactInfo, p => p.Constituent);
             if (constituent != null)
             {
+                var constituentAddressLogic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
+                Address address = constituentAddressLogic.GetAddress(constituent, AddressCategory.Primary)?.Address;
+
+                if (address != null)
+                {
+                    addressLogic.LoadAllProperties(address);
+                    resultCountry = address.Country;
+                }                
             }
 
-            return UnitOfWork.FirstOrDefault<Country>(p => p.ISOCode == "US");
+            return resultCountry ?? addressLogic.GetDefaultCountry();
         }
+
+        #endregion
+
     }
 }
