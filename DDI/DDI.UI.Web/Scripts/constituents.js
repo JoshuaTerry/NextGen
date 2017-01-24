@@ -156,34 +156,13 @@ function DisplayConstituentPrimaryAddress() {
 
 function LoadDBATable() {
 
-    $('.doingbusinessastable').dxDataGrid({
-        dataSource: currentEntity.DoingBusinessAs,
-        columns: [
-            { dataField: 'StartDate', caption: 'From', },
-            { dataField: 'EndDate', caption: 'To' },
-            { dataField: 'Name', caption: 'Name' }
-        ],
-        paging: {
-            pageSize: 15
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
-        }
-    });
+    var columns = [
+        { dataField: 'StartDate', caption: 'From', },
+        { dataField: 'EndDate', caption: 'To' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/dbas');
 
 }
 
@@ -257,7 +236,52 @@ function LoadPaymentPreferencesTable() {
 
 }
 
+function LoadGrid(container, grid, columns, route) {
 
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
+    var datagrid = $('<div>').addClass(grid);
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $(datagrid).dxDataGrid({
+                dataSource: data.Data,
+                columns: columns,
+                paging: {
+                    pageSize: 25
+                },
+                pager: {
+                    showNavigationButtons: true,
+                    showPageSizeSelector: true,
+                    showInfo: true,
+                    allowedPageSizes: [15, 25, 50, 100]
+                },
+                groupPanel: {
+                    visible: true,
+                    allowColumnDragging: true
+                },
+                filterRow: {
+                    visible: true,
+                    showOperationChooser: false
+                }
+            });
+
+            $(datagrid).appendTo($(container));
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Grid.');
+        }
+    });
+
+}
 
 
 
