@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
+    <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
