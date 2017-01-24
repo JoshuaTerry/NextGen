@@ -420,7 +420,7 @@ function GetEditedFields(editcontainer) {
         }
 
         for (var key in currentEntity) {
-            if (key == property && currentEntity[key] != value) {
+            if (key == propertyName && currentEntity[key] != value) {
                 if (value == 'null') {
                     p.push('"' + propertyName + '": ' + null);
                 }
@@ -439,7 +439,7 @@ function GetEditedFields(editcontainer) {
         var value = $(this).val();
 
         for (var key in currentEntity) {
-            if (key == property && currentEntity[key] != value) {
+            if (key == propertyName && currentEntity[key] != value) {
                 if (value == 'null') {
                     p.push('"' + propertyName + '": ' + null);
                 }

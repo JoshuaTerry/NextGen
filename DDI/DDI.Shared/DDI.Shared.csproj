@@ -173,6 +173,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Statics\CRM\ContactInfoDefaults.cs" />
+    <Compile Include="Statics\CRM\AddressDefaults.cs" />
+    <Compile Include="Statics\CRM\AddressTypeCodes.cs" />
     <Compile Include="Statics\CRM\ConstituentTypeCodes.cs" />
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />

@@ -215,7 +215,7 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Build an addres label for one or two constituents.
         /// </summary>
-        public List<string> BuildAddressLabel(Constituent constituent1, Constituent constituent2, Address address, LabelFormattingOptions options)
+        public List<string> BuildAddressLabel(Constituent constituent1, Constituent constituent2, Address address, LabelFormattingOptions options, bool shouldDisplayContactInfo = false)
         {
             List<string> label = new List<string>();
             string line1, line2;
@@ -224,7 +224,7 @@ namespace DDI.Business.CRM
                 options = new LabelFormattingOptions();
 
             // Get options
-            AddressCategory addressMode = options.AddressCategory;
+            AddressCategory addressCategory = options.AddressCategory;
             string contactName = options.ContactName;
 
 
@@ -232,7 +232,7 @@ namespace DDI.Business.CRM
 
             if (!string.IsNullOrWhiteSpace(options.AddressType))
             {
-                addressMode = AddressCategory.None;
+                addressCategory = AddressCategory.None;
             }
 
             if (constituent1 != null)
@@ -284,7 +284,65 @@ namespace DDI.Business.CRM
                     contactName = contactName.ToUpper();
                 }
 
-                // TODO: More logic needed, pending other BL to be added.
+                // Get the address if it wasn't passed in
+                if (address == null)
+                {
+                    ConstituentAddress constituentAddress =
+                        UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>().GetAddress(constituent1, addressCategory, options.AddressType, options.allowVacationAddress, true, null, null);
+                    if (constituentAddress != null)
+                    {
+                        address = UnitOfWork.GetReference(constituentAddress, p => p.Address);
+                    }
+                }
+            }
+
+            string[] addressLines = null;
+            if (address != null)
+            {
+                string addrText = UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(address, options.Caps, options.ExpandAddress, options.MaxChars);
+                addressLines = addrText.Split('\n');
+            }
+
+            int addrLines = (addressLines == null ? 0 : addressLines.Length);
+
+            // Reserve a line for the contact name
+            if (!string.IsNullOrWhiteSpace(contactName))
+            {
+                addrLines++;
+            }
+
+            // Add the constituent's Name2 line (if there's room)
+            if (!string.IsNullOrWhiteSpace(nameLine2) && (options.MaxLines == 0 || (options.MaxLines > 0 && label.Count + addrLines + 1 <= options.MaxLines)))
+            {
+                label.Add(nameLine2);
+            }
+
+            // Add the contact name
+            if (!string.IsNullOrWhiteSpace(contactName))
+            {
+                label.Add(contactName);
+            }
+
+            // Add the address lines
+            if (addressLines != null)
+            {
+                label.AddRange(addressLines);
+            }
+
+            // Contact info
+            if (shouldDisplayContactInfo && constituent1 != null)
+            {                
+                foreach (var entry in UnitOfWork.GetReference(constituent1, p => p.ContactInfo))
+                {
+                    label.Add(entry.Info);
+                }
+            }
+            
+            // Remove any extra lines if there are too many
+            if (options.MaxLines > 0 && label.Count > options.MaxLines)
+            {
+                int toRemove = label.Count - options.MaxLines;
+                label.RemoveRange(options.MaxLines - 1, toRemove);
             }
 
             return label;

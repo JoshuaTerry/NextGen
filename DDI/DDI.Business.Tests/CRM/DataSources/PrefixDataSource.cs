@@ -14,6 +14,13 @@ namespace DDI.Business.Tests.CRM.DataSources
 
         public static IList<Prefix> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Prefix> existing = uow.GetRepositoryOrNull<Prefix>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
+
             var prefixes = new List<Prefix>();
             prefixes.Add(NewPrefix(uow, "Mr", "Mr.", "Mr.", "Mr.", "", "M"));
             prefixes.Add(NewPrefix(uow, "Miss", "Miss", "Miss", "Miss", "", "F"));

@@ -8,6 +8,7 @@ using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using System;
 using DDI.Shared.Enums.CRM;
+using DDI.Business.Core;
 
 namespace DDI.Business.CRM
 {
@@ -169,6 +170,10 @@ namespace DDI.Business.CRM
             return GetRelationships(constituent, category, null);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Get a collection of relationships for this constituent:  "XXXX is the YYYY of (this)".
         /// <para>memberRelationship is:</para>
@@ -178,14 +183,19 @@ namespace DDI.Business.CRM
         /// </summary>
         private List<Relationship> GetRelationships(Constituent constituent, RelationshipCategory category, bool? showInQuickView)
         {
+            if (constituent == null)
+            {
+                return new List<Relationship>();
+            }
+
             UnitOfWork.LoadReference(constituent, p => p.Relationship1s);
             UnitOfWork.LoadReference(constituent, p => p.Relationship2s);
 
             // The Relationship2 collection is the starting point:  All these have Constituent2 = (this)            
-            List<Relationship> list = GetRelationshipQuery(constituent.Relationship2s, category, showInQuickView).ToList();
+            List<Relationship> list = GetRelationshipQuery(constituent.Id, false, category, showInQuickView).ToList();
 
             // Add in Relationship1 rows:  All these have Constituent1 = (this)
-            foreach (Relationship row in GetRelationshipQuery(constituent.Relationship1s, category, showInQuickView))
+            foreach (Relationship row in GetRelationshipQuery(constituent.Id, true, category, showInQuickView))
             {
                 // Omit any duplicates
                 if (list.Any(p => p.Constituent1 == row.Constituent2))
@@ -200,30 +210,32 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Get a relationship LINQ query given a relationship collection.
         /// </summary>
-        private IQueryable<Relationship> GetRelationshipQuery(ICollection<Relationship> collection, RelationshipCategory category, bool? showInQuickView)
+        private IQueryable<Relationship> GetRelationshipQuery(Guid constituentId, bool isLeft, RelationshipCategory category, bool? showInQuickView)
         {
-            IQueryable<Relationship> query = collection.AsQueryable().IncludePath(p => p.RelationshipType);
+            IQueryable<Relationship> query = UnitOfWork.GetEntities<Relationship>(prop => prop.RelationshipType);
 
+            if (isLeft)
+            {
+                query = query.Where(p => p.Constituent1Id == constituentId);
+            }
+            else
+            {
+                query = query.Where(p => p.Constituent2Id == constituentId);
+            }
             // Modify the query based on category, showInQuickView parameters.
+
             if (category != null)
+            {
                 query = query.Where(p => p.RelationshipType.RelationshipCategory.Id == category.Id);
+            }
+
             if (showInQuickView.HasValue)
+            {
                 query = query.Where(p => p.RelationshipType.RelationshipCategory.IsShownInQuickView == showInQuickView);
+            }
+
             return query;
         }
-        #endregion
-
-        #region Inner Classes
-
-        /// <summary>
-        /// Class used to sort addresses in GetAddress method.
-        /// </summary>
-        private class WeightedAddress
-        {
-            public int weight;
-            public ConstituentAddress cAddress;
-        }
-
         #endregion
 
     }
