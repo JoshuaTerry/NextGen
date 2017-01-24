@@ -29,7 +29,7 @@ namespace DDI.Services
         }
         public IDataResponse<List<SectionPreference>> GetPreferencesBySectionName(string sectionName)
         {
-            var results = base.UnitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == sectionName).ToList();
+            var results = _unitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == sectionName).ToList();
             return GetIDataResponse(() => results);
         }
     }

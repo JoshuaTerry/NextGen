@@ -40,9 +40,9 @@ namespace DDI.Shared
 
         private string GetDecryptedConnectionString(string connection, string prefix = "Password=", string suffix = ";")
         {
-            string decryptedConnection = string.Empty;
+            string decryptedConnection = connection;
 
-            if (!string.IsNullOrEmpty(prefix))
+            if (!string.IsNullOrEmpty(prefix) && connection.Contains(prefix))
             {
                 string connectionStart = connection.Substring(0, connection.IndexOf(prefix) + prefix.Length);
                 string temp = connection.Replace(connectionStart, string.Empty);
