@@ -1,10 +1,12 @@
 ﻿using System.Web.Http;
 using DDI.Services;
-using DDI.Shared.Models.Client.Core; 
+using DDI.Services.Search;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class LanguagesController : ApiController
+    public class LanguagesController : ControllerBase
     {
         ServiceBase<Language> _service;
 
@@ -15,20 +17,40 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/languages")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/languages", Name = RouteNames.Language)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = result.TotalResults;
+
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.Language);
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (System.Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
     }
 }

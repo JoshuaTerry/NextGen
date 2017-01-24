@@ -1,10 +1,13 @@
 ﻿using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using System.Web.Http;
+using System.Web.Mvc.Html;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ProfessionsController : ApiController
+    public class ProfessionsController : ControllerBase
     {
         ServiceBase<Profession> _service;
 
@@ -15,20 +18,40 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/professions")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/professions", Name = RouteNames.Profession)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = result.TotalResults;
+
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.Profession);
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (System.Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
     }
 }

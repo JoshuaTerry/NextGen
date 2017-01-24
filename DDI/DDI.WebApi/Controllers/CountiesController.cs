@@ -37,7 +37,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/counties", Name = RouteNames.County)]
-        public IHttpActionResult GetAll(Guid? stateId = null, int? limit = 1000, int? offset = 0, string orderBy = "Description", string fields = null)
+        public IHttpActionResult GetAll(Guid? stateId = null, int? limit = 1000, int? offset = 0, string orderBy = "DisplayName", string fields = null)
         {
             var search = new ForeignKeySearch()
             {
