@@ -27,7 +27,6 @@ namespace DDI.Services
         {
             _unitOfWork = uow;
             _logic = logic;
-            _logic = new RegionLogic(_unitOfWork);
         }
         public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
         {
