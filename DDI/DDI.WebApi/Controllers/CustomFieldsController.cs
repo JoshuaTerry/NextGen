@@ -8,12 +8,12 @@ namespace DDI.WebApi.Controllers
 {
     public class CustomFieldsController : ApiController
     {
-        ServiceBase<CustomField> _service;
+        CustomFieldService _service;
 
         #region Constructors
 
-        public CustomFieldsController() : this(new ServiceBase<CustomField>()) { }
-        internal CustomFieldsController(ServiceBase<CustomField> service)
+        public CustomFieldsController() : this(new CustomFieldService()) { }
+        internal CustomFieldsController(CustomFieldService service)
         {
             _service = service;
         }
@@ -52,6 +52,25 @@ namespace DDI.WebApi.Controllers
             {
                 return InternalServerError();
             }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/v1/customfields/entity/{entityId}")]
+        public IHttpActionResult GetByEntityId(int entityId)
+        {
+            var result = _service.GetByEntityId(entityId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
             return Ok(result);
         }
 

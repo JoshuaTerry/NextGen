@@ -68,8 +68,10 @@
     <Compile Include="ConstituentService.cs" />
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
+    <Compile Include="CustomFieldService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
     <Compile Include="IConstituentService.cs" />
+    <Compile Include="ICustomFieldService.cs" />
     <Compile Include="ISectionPreferenceService.cs" />
     <Compile Include="LinqQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
