@@ -30,7 +30,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
             var search = new PageableSearch()
             {

@@ -181,6 +181,7 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.NewConstituent(id);
+
                 return Ok(response);
             }
             catch (Exception)
@@ -246,7 +247,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}/dbas")]
+        [Route("api/v1/constituents/{id}/dbas", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
         public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null)
         {
             try
@@ -273,7 +274,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}/educationlevel")]
+        [Route("api/v1/constituents/{id}/educationlevel", Name = RouteNames.Constituent + RouteNames.EducationLevel)]
         public IHttpActionResult GetEducationLevel(Guid id, string fields = null)
         {
             try

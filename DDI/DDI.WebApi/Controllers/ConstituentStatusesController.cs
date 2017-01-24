@@ -2,11 +2,13 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ConstituentStatusesController : ApiController
+    public class ConstituentStatusesController : ControllerBase
     {
         ServiceBase<ConstituentStatus> _service;
 
@@ -17,24 +19,44 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituentstatues")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = result.TotalResults;
+
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.ConstituentStatus);
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
 
         [HttpPost]
-        [Route("api/v1/constituentstatuses")]
+        [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentStatus item)
         {
             if (!ModelState.IsValid)
@@ -47,7 +69,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/constituentstatuses/{id}")]
+        [Route("api/v1/constituentstatuses/{id}", Name = RouteNames.ConstituentStatus + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             try

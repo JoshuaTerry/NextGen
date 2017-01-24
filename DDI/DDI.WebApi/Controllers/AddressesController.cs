@@ -20,18 +20,18 @@ namespace DDI.WebApi.Controllers
         private ServiceBase<Address> _service;
 
         public AddressesController()
-            :this(new ServiceBase<Address>(), new Pagination(), new DynamicTransmogrifier())
+            :this(new ServiceBase<Address>())
         {
         }
 
-        internal AddressesController(ServiceBase<Address> service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
+        internal AddressesController(ServiceBase<Address> service)
         {
             _service = service;
         }
 
         [HttpGet]
         [Route("api/v1/addresses", Name = RouteNames.Address)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
             var search = new PageableSearch()
             {

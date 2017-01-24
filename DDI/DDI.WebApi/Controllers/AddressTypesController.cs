@@ -3,6 +3,7 @@ using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
@@ -17,8 +18,8 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/addresstypes")]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
+        [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
             var search = new PageableSearch()
             {
@@ -40,6 +41,9 @@ namespace DDI.WebApi.Controllers
                     return InternalServerError();
                 }
 
+                var totalCount = result.TotalResults;
+
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, fields);
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
 
                 return Ok(dynamicResult);

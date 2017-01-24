@@ -2,11 +2,13 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ConstituentTypesController : ApiController
+    public class ConstituentTypesController : ControllerBase
     {
         ServiceBase<ConstituentType> _service;
 
@@ -17,37 +19,67 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituenttypes")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = result.TotalResults;
+
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.ConstituentType);
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
 
         [HttpPost]
-        [Route("api/v1/constituenttypes")]
+        [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentType item)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var response = _service.Add(item);
-            return Ok();
+                var response = _service.Add(item);
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPatch]
-        [Route("api/v1/constituenttypes/{id}")]
+        [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
@@ -59,12 +91,14 @@ namespace DDI.WebApi.Controllers
 
                 var response = _service.Update(id, changes);
 
-                return Ok(response);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return InternalServerError();
             }
         }
     }

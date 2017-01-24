@@ -29,9 +29,22 @@ namespace DDI.Services
         }
         public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
+            if (search == null)
+            {
+                search = new PageableSearch
+                {
+                    Limit = 25,
+                    Offset = 0
+                };
+            }
+
             IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
-            var query = new CriteriaQuery<T, IPageable>(queryable, search)
-                .SetOrderBy(search?.OrderBy);
+            var query = new CriteriaQuery<T, IPageable>(queryable, search);
+
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != "DisplayName")
+            {
+                query = query.SetOrderBy(search.OrderBy);
+            }
 
             var totalCount = query.GetQueryable().ToList().Count;
 
@@ -40,6 +53,10 @@ namespace DDI.Services
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            if (search.OrderBy == "DisplayName")
+            {
+                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
+            }
 
             response.TotalResults = totalCount;
 
