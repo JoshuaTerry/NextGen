@@ -64,49 +64,66 @@ namespace DDI.WebApi.Controllers
                 ConstituentTypeId = constituentTypeId
             };
 
-            var constituents = _service.GetConstituents(search);
-
-            if (constituents == null)
+            try
             {
-                return NotFound();
+                var constituents = _service.GetConstituents(search);
+
+                if (constituents == null)
+                {
+                    return NotFound();
+                }
+                if (!constituents.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = constituents.TotalResults;
+                var urlHelper = GetUrlHelper();
+
+                Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
+                var dynamicConstituents = DynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields);
+
+                return Ok(dynamicConstituents);
+
             }
-            if (!constituents.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            var totalCount = constituents.TotalResults;
-            var urlHelper = GetUrlHelper();
-
-            Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
-            var dynamicConstituents = DynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields);
-
-            return Ok(dynamicConstituents);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Get)]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            var constituent = _service.GetConstituentById(id);
-
-            if (constituent == null)
+            try
             {
-                return NotFound();
+                var constituent = _service.GetConstituentById(id);
+
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+                if (!constituent.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
+                return Ok(dynamicConstituent);
+
             }
-            if (!constituent.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
-            return Ok(dynamicConstituent);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/number/{num}")]
         public IHttpActionResult GetConstituentByConstituentNum(int num, string fields = null)
         {
+            try
             {
                 var constituent = _service.GetConstituentByConstituentNum(num);
 
@@ -123,21 +140,33 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicConstituent);
             }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPost]
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Constituent constituent)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.AddConstituent(constituent);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+
             }
-
-            var response = _service.AddConstituent(constituent);
-            var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-            return Ok(dynamicResponse);
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPost]
@@ -154,9 +183,9 @@ namespace DDI.WebApi.Controllers
                 var response = _service.NewConstituent(id);
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.ToString());
+                return InternalServerError();
             }
         }
 
@@ -176,9 +205,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicConstituent);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.ToString());
+                return InternalServerError();
             }
         }
 
@@ -193,57 +222,81 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
         public IHttpActionResult GetConstituentConstituentAddresses(Guid id, string fields = null)
         {
-            var result = _service.GetConstituentAddresses(id);
-
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetConstituentAddresses(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+                return Ok(dynamicResult);
+
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-            return Ok(dynamicResult);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/dbas")]
         public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null)
         {
-            var result = _service.GetConstituentDBAs(id);
-
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetConstituentDBAs(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+                return Ok(dynamicResult);
+
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-            return Ok(dynamicResult);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/educationlevel")]
         public IHttpActionResult GetEducationLevel(Guid id, string fields = null)
         {
-            var result = _service.GetEducationLevel(id);
-
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetEducationLevel(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+                return Ok(dynamicResult);
+
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-            return Ok(dynamicResult);
         }
     }
 }
