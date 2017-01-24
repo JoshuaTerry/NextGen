@@ -88,6 +88,8 @@
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
+    <Compile Include="Enums\CP\EFTAccountType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
     <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
@@ -119,6 +121,10 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
+    <Compile Include="Models\Client\CP\EFTFormat.cs" />
+    <Compile Include="Models\Client\CP\CardPaymentMethod.cs" />
+    <Compile Include="Models\Client\CP\EFTPaymentMethod.cs" />
+    <Compile Include="Models\Client\CP\PaymentMethodBase.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
