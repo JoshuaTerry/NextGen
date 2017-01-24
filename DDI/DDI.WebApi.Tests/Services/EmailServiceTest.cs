@@ -12,17 +12,19 @@ namespace DDI.WebApi.Tests.Services
     [TestClass]
     public class EmailServiceTest
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Services";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_email_service_with_fake_smtp_client_is_called_Should_throw_exception()
         {
             //Arrange
             Exception expectedException = null;
 
-            var service = new EmailService(new SmtpClient("fakeDDI.smtp.net", 25));
+            var service = new EmailService(new SmtpClient("localhost", 39));
             
 
             var To = new MailAddress("RClough@ddi.org");
-            var From = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            var From = new MailAddress("MadeUp@ddi.org");
             var body = "This was sent using our new email service.";
             var subject = "Test email service";
 
@@ -41,10 +43,11 @@ namespace DDI.WebApi.Tests.Services
 
             //Assert
             Assert.IsNotNull(expectedException);
+            Assert.AreEqual("Unknown remoting error.", expectedException.Message);
         }
 
         [Ignore]
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void When_correct_SMTP_info_is_used_Should_send_email()
         {
             //Arrange
@@ -54,7 +57,7 @@ namespace DDI.WebApi.Tests.Services
 
             // ***NOTE*** when running this test, PLEASE make sure to change the email to YOUR OWN email address
             var To = new MailAddress("RClough@ddi.org");
-            var From = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            var From = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);  //This will Fail. There is no Webconfig for the test project
             var body = "This was sent using our new email service.";
             var subject = "Test email service";
 

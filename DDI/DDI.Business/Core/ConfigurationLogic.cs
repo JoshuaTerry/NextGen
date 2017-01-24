@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
-using DDI.Shared.ModuleInfo;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared;
+using DDI.Shared.Caching;
 using DDI.Shared.Models;
 
 namespace DDI.Business.Core
@@ -21,7 +20,7 @@ namespace DDI.Business.Core
         #region Private Fields
 
         // Cache settings
-        private const int CONFIGURATION_TIMEOUT_MINS = 5;
+        private const int CONFIGURATION_TIMEOUT_SECS = 300; // Cached items removed after 5 minutes
         private const string CONFIGURATION_KEY = "CONFIG";
 
         private List<ConfigurationBase> _attachedConfigurations;
@@ -43,27 +42,18 @@ namespace DDI.Business.Core
 
         public T GetConfiguration<T> (bool reload = false) where T : ConfigurationBase
         {
-            T config = null;
-            ObjectCache cache = MemoryCache.Default;
+            T config = null;       
             
             string key = GetCacheKey<T>();
-            if (!reload)
+            if (reload)
             {
-                // Retrieve config from cache
-                config = cache[key] as T;
+                CacheHelper.RemoveEntry(key);
             }
-            if (config == null)
-            {
-                // Not retrieved: Load from the database.
-                config = LoadConfiguration(typeof(T)) as T;
-                if (config != null)
-                {
-                    // Update the cache
-                    cache.Set(key, config, GetCacheItemPolicy());
-                    _attachedConfigurations.Add(config);
-                }
-            }
-            else if (!_attachedConfigurations.Contains(config))
+            // Retrieve config from cache
+            config = CacheHelper.GetEntry(key, CONFIGURATION_TIMEOUT_SECS, false, () => LoadConfiguration(typeof(T)) as T, CacheItemRemoved);
+            
+            
+            if (config != null && !_attachedConfigurations.Contains(config))
             {
                 // If loaded from the cache, attach it to the unit of work.
                 config.Attach(UnitOfWork);
@@ -72,6 +62,7 @@ namespace DDI.Business.Core
 
             return config;
         }
+
 
         public void SaveConfiguration<T>(T config, bool saveChanges = true) where T : ConfigurationBase
         {
@@ -87,11 +78,10 @@ namespace DDI.Business.Core
                 UnitOfWork.SaveChanges();
             }
 
-            ObjectCache cache = MemoryCache.Default;
             string key = GetCacheKey<T>();
 
             // Update the cache
-            cache.Set(key, config, GetCacheItemPolicy());
+            CacheHelper.SetEntry(key, config, CONFIGURATION_TIMEOUT_SECS, false, CacheItemRemoved);
 
             if (!_attachedConfigurations.Contains(config))
             {
@@ -113,13 +103,7 @@ namespace DDI.Business.Core
             Type configType = config.GetType();
             Type EntityBaseType = typeof(EntityBase);
 
-            ModuleTypeAttribute attr = configType.GetAttribute<ModuleTypeAttribute>();
-            if (attr == null)
-            {
-                return;
-            }
-
-            ModuleType modType = attr.ModuleType;
+            ModuleType modType = config.ModuleType;
 
             // Load the entire set of config rows
             var configRows = UnitOfWork.Where<Configuration>(p => p.ModuleType == modType).ToList();
@@ -208,20 +192,19 @@ namespace DDI.Business.Core
 
         private ConfigurationBase LoadConfiguration(Type type)
         {
-            ModuleTypeAttribute attr = type.GetAttribute<ModuleTypeAttribute>();
-            if (attr == null)
-            {
-                return null;
-            }
+            //ModuleTypeAttribute attr = type.GetAttribute<ModuleTypeAttribute>();
+            //if (attr == null)
+            //{
+            //    return null;
+            //}
 
-            ModuleType modType = attr.ModuleType;
             Type EntityBaseType = typeof(EntityBase);
 
             // Create an instance of the config class.
             var config = (ConfigurationBase)Activator.CreateInstance(type);            
 
             // Iterate through each ModuleSetting and populate the config object.
-            foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == modType))
+            foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == config.ModuleType))
             {
                 string valString = row.Value;
                 bool failed = false;
@@ -316,23 +299,14 @@ namespace DDI.Business.Core
         /// Callback for when a cached configuration is removed.  This will remove it from _attachedConfigurations.
         /// </summary>
         /// <param name="arguments"></param>
-        private void CacheItemRemoved(CacheEntryRemovedArguments arguments)
-        {
-            ConfigurationBase config = arguments.CacheItem.Value as ConfigurationBase;
+        private void CacheItemRemoved(ConfigurationBase config)
+        {        
             if (config != null)
             {
                 _attachedConfigurations.Remove(config);
             }
         }
 
-        /// <summary>
-        /// Return a cache item policy for a configuration being added to the cache.
-        /// </summary>
-        /// <returns></returns>
-        private CacheItemPolicy GetCacheItemPolicy()
-        {
-            return new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(CONFIGURATION_TIMEOUT_MINS), RemovedCallback = CacheItemRemoved };
-        }
 
         #endregion
 

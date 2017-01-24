@@ -39,7 +39,7 @@ namespace DDI.Data
             {
                 foreach (var row in context.Countries)
                 {
-                    Country country = new Shared.Models.Common.Country()
+                Country country = new Shared.Models.Common.Country()
                     {
                         AddressFormat = row.AddressFormat,
                         CallingCode = row.CallingCode,
@@ -68,7 +68,7 @@ namespace DDI.Data
             {
                 foreach (var row in context.States)
                 {
-                    State state = new Shared.Models.Common.State()
+                State state = new Shared.Models.Common.State()
                     {
                         CountryId = row.CountryId,
                         Description = row.Description,

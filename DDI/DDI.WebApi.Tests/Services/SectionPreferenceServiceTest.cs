@@ -12,12 +12,18 @@ namespace DDI.WebApi.Tests.Services
     [TestClass]
     public class SectionPreferenceServiceTest
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Services";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void GetPreferencesBySectionName_ReturnsConstituentPreferences()
-        { 
+        {
             var repo = new Mock<IRepository<SectionPreference>>();
+            var unitOfWork = new UnitOfWorkNoDb();
+            unitOfWork.SetRepository(repo.Object);
             repo.Setup(r => r.Entities).Returns(SetupRepositorySectionPreferences());
-            var service = new SectionPreferenceService(repo.Object);
+
+            var service = new SectionPreferenceService(unitOfWork);
+
             var result = service.GetPreferencesBySectionName("Constituent");
 
             Assert.IsTrue(result.Data.Count == 2);

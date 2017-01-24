@@ -4,8 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
+using DDI.Shared.Caching;
 
 namespace DDI.Data
 {
@@ -13,62 +12,64 @@ namespace DDI.Data
     {
         private readonly string _cacheKey = string.Empty;
         private static readonly object _cacheItemLock = new object();
+        private const int DEFAULT_TIMEOUT_SECONDS = 1800; // 30 minutes
+
+        private int _timeoutSeconds;
+        private bool _isSlidingTimeout;
+
         public CachedRepository() :
-            this(new DomainContext())
+            this(new DomainContext(), DEFAULT_TIMEOUT_SECONDS, false)
         {
         }
-        
-        public CachedRepository(DbContext context) : base(context)
+
+        public CachedRepository(DbContext context) :
+            this(context, DEFAULT_TIMEOUT_SECONDS, false)
+        {
+        }
+
+        public CachedRepository(DbContext context, int timeoutSeconds, bool isSlidingTimeout) : base(context)
         {
             var type = typeof(T);
-            _cacheKey = $"{type.Name}_Key";
+            _cacheKey = $"{type.Name}_RepoKey";
+            _timeoutSeconds = timeoutSeconds;
+            _isSlidingTimeout = isSlidingTimeout;
         }
+
         public override IQueryable<T> Entities
         {
             get
             {
-                if (HttpContext.Current.Cache[_cacheKey] == null)
-                {
-                    lock (_cacheItemLock)
-                    {
-                        if (HttpContext.Current.Cache[_cacheKey] == null)
-                        {
-                            var data = EntitySet.ToList().AsQueryable<T>();
-                            HttpContext.Current.Cache.Insert(_cacheKey, data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0));
-                        }
-                    }
-                }
-                return (IQueryable<T>)HttpContext.Current.Cache[_cacheKey];
+                return CacheHelper.GetEntry(_cacheKey, _timeoutSeconds, _isSlidingTimeout, () => EntitySet.ToList().AsQueryable(), null);
             }
         }
 
         public override void Delete(T entity)
         {
-            HttpContext.Current.Cache[_cacheKey] = null;
+            CacheHelper.RemoveEntry(_cacheKey);
             base.Delete(entity);
         }
 
         public override T Insert(T entity)
         {
-            HttpContext.Current.Cache[_cacheKey] = null;
+            CacheHelper.RemoveEntry(_cacheKey);
             return base.Insert(entity);
         }
 
         public override T Update(T entity)
         {
-            HttpContext.Current.Cache[_cacheKey] = null;
+            CacheHelper.RemoveEntry(_cacheKey);
             return base.Update(entity);
         }
 
         public override int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
-        { 
-            HttpContext.Current.Cache[_cacheKey] = null;
+        {
+            CacheHelper.RemoveEntry(_cacheKey);
             return base.UpdateChangedProperties(id, propertyValues, action);
         }
 
         public override int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
-        { 
-            HttpContext.Current.Cache[_cacheKey] = null;
+        {
+            CacheHelper.RemoveEntry(_cacheKey);
             return base.UpdateChangedProperties(entity, propertyValues, action);
         }
     }

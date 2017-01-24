@@ -9,9 +9,9 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.ModuleInfo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using DDI.Shared.Enums;
 
 namespace DDI.Business.Tests.Core
 {
@@ -102,7 +102,7 @@ namespace DDI.Business.Tests.Core
 
             row = configRows.FirstOrDefault(p => p.Name == "EndDate");
             Assert.IsNotNull(row, "EndDate was saved");
-            Assert.AreEqual("12/31/1999", row.Value, "End date saved with correct value.");
+            Assert.AreEqual(DateTime.Parse("12/31/1999"), DateTime.Parse(row.Value), "End date saved with correct value.");
 
             row = configRows.FirstOrDefault(p => p.Name == "StartDate");
             Assert.IsNotNull(row, "StartDate was saved");
@@ -110,7 +110,7 @@ namespace DDI.Business.Tests.Core
 
             row = configRows.FirstOrDefault(p => p.Name == "TimeStamp");
             Assert.IsNotNull(row, "TimeStamp was saved");
-            Assert.AreEqual("1/1/2000 4:05 AM", row.Value, "TimeStamp saved with correct value.");
+            Assert.AreEqual(DateTime.Parse("1/1/2000 4:05:26 AM"), DateTime.Parse(row.Value), "TimeStamp saved with correct value.");
 
             row = configRows.FirstOrDefault(p => p.Name == "Denomination");
             Assert.IsNotNull(row, "Denomination was saved");
@@ -165,11 +165,10 @@ namespace DDI.Business.Tests.Core
         }
 
 
-        [ModuleType(Shared.Enums.ModuleType.CRM)]
         private class TestConfiguration : ConfigurationBase
         {
             // Some random configuration properties
-
+            public override ModuleType ModuleType { get; } = ModuleType.CRM;
             public string Title { get; set; }
             public bool Enabled { get; set; }
             public int Age { get; set; }
@@ -198,9 +197,9 @@ namespace DDI.Business.Tests.Core
             }
         }
 
-        [ModuleType(Shared.Enums.ModuleType.Accounting)]
         private class AccountingConfiguration : ConfigurationBase
         {
+            public override ModuleType ModuleType { get; } = ModuleType.Accounting;
             public string Title { get; set; }
         }
     }
