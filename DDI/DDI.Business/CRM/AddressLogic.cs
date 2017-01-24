@@ -201,7 +201,6 @@ namespace DDI.Business.CRM
                 return string.Format("{0} {1} {2}", city, stateCode, postalCode);
             }
 
-
             if (string.IsNullOrWhiteSpace(country.AddressFormat))
             {
                 format = $"{AddressFormatMacros.City}, {AddressFormatMacros.StateCode} {AddressFormatMacros.PostalCode}";

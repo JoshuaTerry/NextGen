@@ -25,7 +25,7 @@ namespace DDI.Business.Tests.CRM
         private IList<Prefix> _prefixes;
         private IList<ConstituentStatus> _statuses;
         private IList<RelationshipType> _relationshipTypes;
-        private ConstituentLogic _logic;
+        private ConstituentLogic _bl;
 
         [TestInitialize]
         public void Initialize()
@@ -99,30 +99,30 @@ namespace DDI.Business.Tests.CRM
             _constituents[1].Relationship1s = _relationships.Where(p => p.Constituent1 == _constituents[1]).ToList();
             _constituents[1].Relationship2s = _relationships.Where(p => p.Constituent2 == _constituents[1]).ToList();
 
-            _logic = new ConstituentLogic(_uow);
+            _bl = new ConstituentLogic(_uow);
 
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ConstituentLogic_GetSortName()
         {
-            Assert.AreEqual("Public John Q.", _logic.GetSortName(_constituents[0]));
+            Assert.AreEqual("Public John Q.", _bl.GetSortName(_constituents[0]));
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ConstituentLogic_GetFormattedName()
         {
-            Assert.AreEqual("John Q. Public Jr.", _logic.GetFormattedName(_constituents[0]));
+            Assert.AreEqual("John Q. Public Jr.", _bl.GetFormattedName(_constituents[0]));
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ConstituentLogic_GetSpouse()
         {
-            Constituent other = _logic.GetSpouse(_constituents[0]);
+            Constituent other = _bl.GetSpouse(_constituents[0]);
             Assert.IsNotNull(other, "GetSpouse 1 returned valid result.");
             Assert.AreEqual(2, other.ConstituentNumber, "GetSpouse 1 returned constituent 2.");
 
-            other = _logic.GetSpouse(_constituents[1]);
+            other = _bl.GetSpouse(_constituents[1]);
             Assert.IsNotNull(other, "GetSpouse 2 returned valid result.");
             Assert.AreEqual(1, other.ConstituentNumber, "GetSpouse 2 returned constituent 1.");
         }
@@ -130,7 +130,7 @@ namespace DDI.Business.Tests.CRM
         [TestMethod, TestCategory(TESTDESCR)]
         public void ConstituentLogic_IsConstituentActive()
         {
-            Assert.IsTrue(_logic.IsConstituentActive(_constituents[0]), "Constituent 1 is active.");
+            Assert.IsTrue(_bl.IsConstituentActive(_constituents[0]), "Constituent 1 is active.");
         }
 
 
