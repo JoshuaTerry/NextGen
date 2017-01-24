@@ -144,7 +144,7 @@
   <ItemGroup>
     <Compile Include="Controllers\GendersControllerTests.cs" />
     <Compile Include="Controllers\AccountControllerTests.cs" />
-    <Compile Include="Controllers\CustomFieldsControllerTest.cs" />
+    <Compile Include="Services\CustomFieldsServiceTest.cs" />
     <Compile Include="Fakes\FakeApplicationUserManager.cs" />
     <Compile Include="Helpers\PaginationTests.cs" />
     <Compile Include="Helpers\DynamicTransmogrifierTests.cs" />

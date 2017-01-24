@@ -31,7 +31,7 @@ namespace DDI.Services
 
         public IDataResponse<List<CustomField>> GetByEntityId(int entityId)
         {
-            var results = base.UnitOfWork.GetRepository<CustomField>().Entities.Where(c => c.Entity == (CustomFieldEntity)entityId).ToList();
+            var results = _unitOfWork.GetRepository<CustomField>().Entities.Where(c => c.Entity == (CustomFieldEntity)entityId).ToList();
             return GetIDataResponse(() => results);
         }
     }
