@@ -21,7 +21,7 @@ namespace DDI.Data.Migrations.Client
                         BankName = c.String(maxLength: 128),
                         BankAccount = c.String(maxLength: 64),
                         RoutingNumber = c.String(maxLength: 64),
-                        AccountType = c.Int(),
+                        TranCode = c.Int(),
                         EFTFormatId = c.Guid(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
                     })
