@@ -1,10 +1,12 @@
-﻿using System.Web.Http;
+﻿using System.Data.Entity.Core.Common.CommandTrees;
+using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {
-    public class AddressTypesController : ApiController
+    public class AddressTypesController : ControllerBase
     {
         ServiceBase<AddressType> _service;
 
@@ -16,19 +18,37 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/addresstypes")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit =  limit,
+                Offset = offset,
+                OrderBy =  orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll();
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
+
             }
-            if (!result.IsSuccessful)
+            catch (System.Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
     }
 }
