@@ -10,18 +10,12 @@ namespace DDI.Services
     public class LocationService : ILocationService
     {
         private IUnitOfWork _unitOfWork;
-        public LocationService()
-        {
-            Initialize(new UnitOfWorkEF());
-        }
+        public LocationService() : this(new UnitOfWorkEF()) { }
         public LocationService(IUnitOfWork uow)
         {
-            Initialize(uow);
+            _unitOfWork = uow;
         }
-        private void Initialize(IUnitOfWork uow)
-        {
-            _unitOfWork = uow; 
-        }
+        
         public IDataResponse<ZipLookupInfo> RefineAddress(string addressLine1, string addressLine2, string city, Guid? countryId, Guid? countyId, Guid? stateId, string zip)
         {
             Country country = null;
