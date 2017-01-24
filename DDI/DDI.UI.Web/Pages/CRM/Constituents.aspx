@@ -117,7 +117,7 @@
 
                         <div class="fieldblock">
                             <label>Nickname</label>
-                            <input type="text" class="editable NickName" />
+                            <input type="text" class="editable Nickname" />
                         </div>
 
                         <div class="fieldblock">
