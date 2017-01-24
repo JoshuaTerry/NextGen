@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Http.Routing;
 using DDI.Shared;
 using DDI.Shared.Attributes;
@@ -67,10 +66,24 @@ namespace DDI.WebApi.Helpers
             return result;
         }
 
-        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true)
+        private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true, IEnumerable<Guid> visited = null)
             where T : EntityBase
         {
             dynamic returnObject = new ExpandoObject();
+            if (visited == null)
+            {
+                visited = new List<Guid> {data.Id};
+            }
+            else if (visited.Contains(data.Id))
+            {
+                // To avoid infinite loops, if we have processed this object before, just return the Id
+                ((IDictionary<string, object>) returnObject)["Id"] = data.Id;
+                return returnObject;
+            }
+            else
+            {
+                visited = visited.Union(new Guid[] {data.Id});
+            }
             Type type = data.GetType();
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             PropertyInfo[] properties = type.GetProperties(flags);
@@ -82,12 +95,12 @@ namespace DDI.WebApi.Helpers
                 if (fieldValue is IEnumerable<EntityBase> && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
                 }
                 else if (fieldValue is EntityBase && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
                 }
                 else if (includeEverything || fieldsToInclude.Contains(propertyNameUppercased))
                 {
@@ -103,21 +116,22 @@ namespace DDI.WebApi.Helpers
 
         private List<string> StripFieldList(List<string> fieldsToInclude, string propertyNameUppercased)
         {
+            if (fieldsToInclude.Count == 0)
+            {
+                return fieldsToInclude;
+            }
             var currentProperty = $"{propertyNameUppercased}.";
-            var fieldArrayList = fieldsToInclude.Where(a => a.StartsWith(currentProperty));
-            var newFieldList = String.Join(",", fieldArrayList);
-            var strippedFields = newFieldList.Replace(currentProperty, ""); //TODO this can cause a problem if you had Address.CurrentAddress.State it would be CurrentState
-            var strippedFieldList = strippedFields.Split(',').ToList();
+            var strippedFieldList = fieldsToInclude.Where(a => a.StartsWith(currentProperty)).Select(a => a.Substring(currentProperty.Length)).ToList();
             return strippedFieldList;
         }
 
-        public dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddLinks = true)
+        public dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddLinks = true, IEnumerable<Guid> visited = null)
             where T : EntityBase
         {
             var list = new List<ExpandoObject>();
             foreach (var item in entities)
             {
-                list.Add(RecursivelyTransmogrify(item, urlHelper, fieldsToInclude, shouldAddLinks));
+                list.Add(RecursivelyTransmogrify(item, urlHelper, fieldsToInclude, shouldAddLinks, visited));
             }
         
             return list;

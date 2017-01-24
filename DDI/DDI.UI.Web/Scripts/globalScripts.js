@@ -2,6 +2,7 @@
 var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
 var auth_token = null;
 var editing = false;
+var lastActiveSection = null;
 var currentEntity = null;
 var modal = null;
 
@@ -274,14 +275,17 @@ function SetupEditControls() {
 
     $('.editable').prop('disabled', true);
 
-    $('.editbutton').click(function (e) {
 
+
+    $('.editbutton').click(function (e) {
         e.preventDefault();
+
+        var editcontainer = $(this).closest('.editcontainer');
+
 
         if (!editing) { // No other Edit in progress, good to go
 
-            StartEdit($(this).closest('.editcontainer'));
-
+            StartEdit(editcontainer);
         }
         else { // Another Edit already in progress
 
@@ -292,10 +296,14 @@ function SetupEditControls() {
                 StopEdit($('.editcontainer.active'));
 
                 // Start new edit
-                StartEdit($(this).closest('.editcontainer'));
+                StartEdit(editcontainer);
             }
             else {
-                // Do nothing
+                // Cancel
+
+                // Return to previous edit
+                $('.accordions').accordion('option', 'active', lastActiveSection);
+                
             }
 
         }
@@ -308,9 +316,9 @@ function SetupEditControls() {
 
         var editcontainer = $(this).closest('.editcontainer');
 
-        StopEdit($(editcontainer));
+        StopEdit(editcontainer);
 
-        SaveEdit($(editcontainer));
+        SaveEdit(editcontainer);
 
     });
 
@@ -318,7 +326,9 @@ function SetupEditControls() {
 
         e.preventDefault();
 
-        StopEdit($(this).closest('.editcontainer'));
+        var editcontainer = $(this).closest('.editcontainer');
+
+        StopEdit(editcontainer);
 
         CancelEdit();
 
@@ -327,8 +337,10 @@ function SetupEditControls() {
 }
 
 function StartEdit(editcontainer) {
-
+   
     editing = true;
+    // Get the index of the section that was previously edited
+    lastActiveSection = $('.accordions').accordion('option', 'active'); 
 
     $(editcontainer).find('.editmode-active').show();
     $(editcontainer).find('.editmode-inactive').hide();
@@ -447,8 +459,9 @@ function GetEditedFields(editcontainer) {
 function CancelEdit() {
 
     RefreshEntity();
-
 }
+
+    
 //
 // END EDITING
 
