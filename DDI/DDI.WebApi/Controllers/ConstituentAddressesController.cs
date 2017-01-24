@@ -14,70 +14,103 @@ using DDI.WebApi.Helpers;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class ConstituentAddressesController : ApiController
+    public class ConstituentAddressesController : ControllerBase
     {
         private ServiceBase<ConstituentAddress> _service;
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
 
         public ConstituentAddressesController()
-            :this(new ServiceBase<ConstituentAddress>(), new Pagination(), new DynamicTransmogrifier())
+            :this(new ServiceBase<ConstituentAddress>())
         {
         }
 
-        internal ConstituentAddressesController(ServiceBase<ConstituentAddress> service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
+        internal ConstituentAddressesController(ServiceBase<ConstituentAddress> service)
         {
             _service = service;
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
         }
 
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
         {
-            var result = _service.GetAll(); //TODO we need to be limiting this return and do proper pagification
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
 
         [HttpGet]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
-        public IHttpActionResult GetConstituentById(Guid id, string fields = null)
+        public IHttpActionResult GetConstituentAddressById(Guid id, string fields = null)
         {
-            var constituent = _service.GetById(id);
-
-            if (constituent == null)
+            try
             {
-                return NotFound();
+                var constituentAddress = _service.GetById(id);
+
+                if (constituentAddress == null)
+                {
+                    return NotFound();
+                }
+                if (!constituentAddress.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicConstituentAddress = DynamicTransmogrifier.ToDynamicResponse(constituentAddress, GetUrlHelper());
+
+                return Ok(dynamicConstituentAddress);
+
             }
-            if (!constituent.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-
-            return Ok(constituent);
         }
 
         [HttpPost]
         [Route("api/v1/constituentaddresses", Name = RouteNames.ConstituentAddress + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentAddress item)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var response = _service.Add(item);
-            return Ok();
+                var response = _service.Add(item);
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPatch]
@@ -93,12 +126,13 @@ namespace DDI.WebApi.Controllers
 
                 var response = _service.Update(id, changes);
 
-                return Ok(response);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
 
+                return Ok(dynamicResponse);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.ToString());
+                return InternalServerError();
             }
         }
 
@@ -106,7 +140,21 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Delete)]
         public IHttpActionResult Delete(Guid id)
         {
-            return Ok();
+            try
+            {
+                var entity = _service.GetById(id).Data;
+                if (entity == null)
+                {
+                    return NotFound();
+                }
+                _service.Delete(entity);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
     }
 }
