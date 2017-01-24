@@ -29,7 +29,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                var result = _service.GetAll();
+                var result = _service.GetAll(search);
 
                 if (result == null)
                 {

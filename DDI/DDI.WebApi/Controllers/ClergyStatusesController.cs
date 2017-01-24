@@ -2,11 +2,12 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ClergyStatusesController : ApiController
+    public class ClergyStatusesController : ControllerBase
     {
         ServiceBase<ClergyStatus> _service;
 
@@ -18,32 +19,60 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/clergystatuses")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = null, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var search = new PageableSearch()
             {
-                return NotFound();
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderby
+            };
+
+            try
+            {
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
+
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
 
         [HttpPost]
         [Route("api/v1/clergystatuses")]
         public IHttpActionResult Post([FromBody] ClergyStatus item)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var response = _service.Add(item);
-            return Ok();
+                var response = _service.Add(item);
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPatch]
@@ -59,12 +88,14 @@ namespace DDI.WebApi.Controllers
 
                 var response = _service.Update(id, changes);
 
-                return Ok(response);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.ToString());
+                return InternalServerError();
             }
         }
     }
