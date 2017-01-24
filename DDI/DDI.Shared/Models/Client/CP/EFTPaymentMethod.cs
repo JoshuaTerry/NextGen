@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(64)]
         public string RoutingNumber { get; set; }
 
-        public EFTAccountType TranCode { get; set; }
+        public EFTAccountType AccountType { get; set; }
 
         public Guid? EFTFormatId { get; set; }
 
