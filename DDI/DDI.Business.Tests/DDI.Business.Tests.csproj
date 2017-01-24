@@ -66,6 +66,7 @@
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="CRM\AddressLogicTest.cs" />
     <Compile Include="CRM\ConstituentLogicTest.cs" />
+    <Compile Include="CRM\ContactInfoLogicTest.cs" />
     <Compile Include="CRM\DataSources\ConstituentTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\CRMConfigurationDataSource.cs" />
     <Compile Include="CRM\DataSources\ConstituentStatusDataSource.cs" />
