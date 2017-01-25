@@ -50,7 +50,7 @@ namespace DDI.WebApi.Controllers
             return urlHelper;
         }
 
-        public IHttpActionResult GetAll(string routeName, int? limit = 1000, int? offset = 0, string orderBy = "DisplayName", string fields = null)
+        public IHttpActionResult GetAll(UrlHelper urlHelper, string routeName, int? limit = 1000, int? offset = 0, string orderBy = "DisplayName", string fields = null)
         {
             var search = new PageableSearch()
             {
@@ -73,8 +73,8 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = response.TotalResults;
 
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, routeName);
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
+                Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper, fields);
 
                 return Ok(dynamicResponse);
             }
@@ -85,7 +85,7 @@ namespace DDI.WebApi.Controllers
             
         }
 
-        public virtual IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(UrlHelper urlHelper, Guid id, string fields = null)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper, fields);
 
                 return Ok(dynamicResponse);
             }
@@ -109,7 +109,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        public virtual IHttpActionResult Post(T entity)
+        public IHttpActionResult Post(UrlHelper urlHelper, T entity)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper);
 
                 return Ok(dynamicResponse);
             }
@@ -134,7 +134,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        public virtual IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(UrlHelper urlHelper, Guid id, JObject changes)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper);
 
                 return Ok(dynamicResponse);
 

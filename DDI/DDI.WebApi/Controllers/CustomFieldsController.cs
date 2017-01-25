@@ -14,21 +14,21 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/customfields", Name = RouteNames.CustomField)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.CustomField, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.CustomField, limit, offset, orderby, fields);
         }
 
         [HttpPost]
         [Route("api/v1/customfields", Name = RouteNames.CustomField + RouteVerbs.Post)]
-        public override IHttpActionResult Post([FromBody] CustomField item)
+        public IHttpActionResult Post([FromBody] CustomField item)
         {
-            return base.Post(item);
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
         [Route("api/v1/customfields/{id}", Name = RouteNames.CustomField + RouteVerbs.Patch)]
-        public override IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(id, changes);
+            return base.Patch(GetUrlHelper(), id, changes);
         }
     }
 }

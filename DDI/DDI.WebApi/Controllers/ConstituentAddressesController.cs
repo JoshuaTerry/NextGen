@@ -20,28 +20,28 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
         public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.ConstituentAddress, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentAddress, limit, offset, orderby, fields);
         }
 
         [HttpGet]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
-        public override IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(id, fields);
+            return base.GetById(GetUrlHelper(), id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/constituentaddresses", Name = RouteNames.ConstituentAddress + RouteVerbs.Post)]
-        public override IHttpActionResult Post([FromBody] ConstituentAddress item)
+        public IHttpActionResult Post([FromBody] ConstituentAddress item)
         {
-            return base.Post(item);
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Patch)]
-        public override IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(id, changes);
+            return base.Patch(GetUrlHelper(), id, changes);
         }
 
         [HttpDelete]

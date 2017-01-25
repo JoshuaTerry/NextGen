@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/contacttypes", Name = RouteNames.ContactType)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.ContactType, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ContactType, limit, offset, orderby, fields);
         }
     }
 }

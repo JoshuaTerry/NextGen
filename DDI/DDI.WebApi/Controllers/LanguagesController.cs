@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/languages", Name = RouteNames.Language)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.Language, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.Language, limit, offset, orderby, fields);
         }
     }
 }

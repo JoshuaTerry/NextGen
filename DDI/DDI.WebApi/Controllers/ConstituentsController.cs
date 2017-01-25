@@ -148,9 +148,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
-        public override IHttpActionResult Post([FromBody] Constituent constituent)
+        public IHttpActionResult Post([FromBody] Constituent constituent)
         {
-            return base.Post(constituent);
+            return base.Post(GetUrlHelper(), constituent);
         }
 
         [HttpPost]
@@ -176,9 +176,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
-        public override IHttpActionResult Patch(Guid id, JObject constituentChanges)
+        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
-            return base.Patch(id, constituentChanges);
+            return base.Patch(GetUrlHelper(), id, constituentChanges);
         }
 
         [HttpDelete]

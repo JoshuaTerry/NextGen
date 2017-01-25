@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/prefixes", Name = RouteNames.Prefix)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.Prefix, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.Prefix, limit, offset, orderby, fields);
         }
     }
 }

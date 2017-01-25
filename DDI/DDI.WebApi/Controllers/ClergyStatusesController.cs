@@ -14,21 +14,21 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.ClergyStatus, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ClergyStatus, limit, offset, orderby, fields);
         }
 
         [HttpPost]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus + RouteVerbs.Post)]
-        public override IHttpActionResult Post([FromBody] ClergyStatus item)
+        public IHttpActionResult Post([FromBody] ClergyStatus item)
         {
-            return base.Post(item);
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
         [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Patch)]
-        public override IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(id, changes);
+            return base.Patch(GetUrlHelper(), id, changes);
         }
     }
 }

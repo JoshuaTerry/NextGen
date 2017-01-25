@@ -14,21 +14,21 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            return base.GetAll(RouteNames.ConstituentType, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentType, limit, offset, orderby, fields);
         }
 
         [HttpPost]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType + RouteVerbs.Post)]
-        public override IHttpActionResult Post([FromBody] ConstituentType item)
+        public IHttpActionResult Post([FromBody] ConstituentType item)
         {
-            return base.Post(item);
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
         [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Patch)]
-        public override IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(id, changes);
+            return base.Patch(GetUrlHelper(), id, changes);
         }
     }
 }
