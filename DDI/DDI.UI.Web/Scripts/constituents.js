@@ -335,6 +335,8 @@ function NewAddressModal() {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
 
+                CloseModal();
+
             },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the address.');
