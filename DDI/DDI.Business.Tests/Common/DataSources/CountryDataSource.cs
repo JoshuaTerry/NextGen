@@ -13,6 +13,12 @@ namespace DDI.Business.Tests.Common.DataSources
     {
         public static IList<Country> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Country> existing = uow.GetRepositoryOrNull<Country>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+            
             var list = new List<Country>();
             list.Add(new Country()
             {

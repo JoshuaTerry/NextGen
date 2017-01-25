@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
-using DDI.Shared.ModuleInfo;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared;
 using DDI.Shared.Caching;
@@ -104,13 +103,7 @@ namespace DDI.Business.Core
             Type configType = config.GetType();
             Type EntityBaseType = typeof(EntityBase);
 
-            ModuleTypeAttribute attr = configType.GetAttribute<ModuleTypeAttribute>();
-            if (attr == null)
-            {
-                return;
-            }
-
-            ModuleType modType = attr.ModuleType;
+            ModuleType modType = config.ModuleType;
 
             // Load the entire set of config rows
             var configRows = UnitOfWork.Where<Configuration>(p => p.ModuleType == modType).ToList();
@@ -199,20 +192,19 @@ namespace DDI.Business.Core
 
         private ConfigurationBase LoadConfiguration(Type type)
         {
-            ModuleTypeAttribute attr = type.GetAttribute<ModuleTypeAttribute>();
-            if (attr == null)
-            {
-                return null;
-            }
+            //ModuleTypeAttribute attr = type.GetAttribute<ModuleTypeAttribute>();
+            //if (attr == null)
+            //{
+            //    return null;
+            //}
 
-            ModuleType modType = attr.ModuleType;
             Type EntityBaseType = typeof(EntityBase);
 
             // Create an instance of the config class.
             var config = (ConfigurationBase)Activator.CreateInstance(type);            
 
             // Iterate through each ModuleSetting and populate the config object.
-            foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == modType))
+            foreach (var row in UnitOfWork.Where<Configuration>(p => p.ModuleType == config.ModuleType))
             {
                 string valString = row.Value;
                 bool failed = false;

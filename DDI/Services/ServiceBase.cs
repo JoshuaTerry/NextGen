@@ -64,18 +64,19 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<T> GetById(Guid id)
+        public virtual IDataResponse<T> GetById(Guid id)
         {
             var result = _unitOfWork.GetRepository<T>().GetById(id); 
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse Update(T entity)
+        public virtual IDataResponse Update(T entity)
         {
             var response = new DataResponse<T>();
             try
             {
                 response.Data = _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -97,6 +98,7 @@ namespace DDI.Services
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+            	_unitOfWork.SaveChanges();
 
                 response.Data = _unitOfWork.GetRepository<T>().GetById(id);
             }
@@ -114,6 +116,7 @@ namespace DDI.Services
             try
             {
                 response.Data = _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -123,12 +126,13 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse Delete(T entity)
+        public virtual IDataResponse Delete(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {

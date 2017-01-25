@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.CRM.DataSources;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
@@ -41,13 +42,9 @@ namespace DDI.Business.Tests.CRM
 
             CRMConfigurationDataSource.GetDataSource(_uow);
 
-            // Constituent types
-
             ConstituentType individualType = _constituentTypes.FirstOrDefault(p => p.Category == ConstituentCategory.Individual);
 
-            // Prefixes
-
-            // Constituents
+            // Set up two constituents with a spouse relationship.
 
             _constituents = new List<Constituent>();
             _constituents.Add(new Constituent()
@@ -61,7 +58,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "M"),
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             _constituents.Add(new Constituent()
@@ -75,7 +72,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "F"),
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             _uow.CreateRepositoryForDataSource(_constituents);

@@ -82,13 +82,25 @@ namespace DDI.Data
 
         public IRepository<T> GetRepository<T>() where T : class
         {
+            IRepository<T> repository = GetRepositoryOrNull<T>();
+
+            if (repository == null)
+            {             
+                throw new InvalidOperationException($"Repository for type {typeof(T)} must be added via SetRepository() method.");
+            }
+
+            return repository;
+        }
+
+        public IRepository<T> GetRepositoryOrNull<T>() where T : class
+        {
             IRepository<T> repository = null;
 
             var type = typeof(T);
 
             if (!_repositories.ContainsKey(type))
             {
-                throw new InvalidOperationException($"Repository for type {type} must be added via SetRepository() method.");
+                return null;
             }
             else
             {
@@ -192,11 +204,7 @@ namespace DDI.Data
         {
             if (entity != null)
             {
-                var entities = (ICollection<T>)(GetRepository<T>().Entities);
-                if (!entities.Contains(entity))
-                {
-                    entities.Add(entity);
-                }
+                GetRepository<T>().Attach(entity);
             }
         }
 

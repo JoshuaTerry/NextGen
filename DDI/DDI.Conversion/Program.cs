@@ -10,6 +10,7 @@ using DDI.Conversion;
 using System.Data.Entity.Migrations;
 using log4net;
 using DDI.Conversion.Statics;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Conversion
 {
@@ -35,8 +36,8 @@ namespace DDI.Conversion
 
             log4net.Config.XmlConfigurator.Configure();            
 
-            _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            
+            _filePath = Path.Combine(DirectoryName.DataDirectory, organization);           
+
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
