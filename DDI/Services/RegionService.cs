@@ -43,10 +43,15 @@ namespace DDI.Services
             return GetIDataResponse(() => result.ToList());
         }
 
-        public override IDataResponse<List<Region>> GetAll()
+        public IDataResponse<List<Region>> GetAll()
         {
             var result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.ParentRegionId == null);
             return GetIDataResponse(() => result.ToList());
+        }
+
+        public IDataResponse Add(Region entity)
+        {
+            return base.Add(entity);
         }
 
         public IDataResponse<List<Region>> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)

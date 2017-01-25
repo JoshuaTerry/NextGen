@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using DDI.Data;
 using DDI.Shared;
 using Newtonsoft.Json.Linq; 
@@ -10,6 +11,7 @@ using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.Services
 {
@@ -46,11 +48,15 @@ namespace DDI.Services
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId)
-                .SetOrderBy(search.OrderBy);
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
             // Created Range
             ApplyZipFilter(query, search);
             ApplyQuickFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
+            {
+                query = query.SetOrderBy(search.OrderBy);
+            }
 
             var totalCount = query.GetQueryable().ToList().Count;
 
@@ -59,7 +65,11 @@ namespace DDI.Services
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
-            
+            if (search.OrderBy == OrderByProperties.DisplayName)
+            {
+                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
+            }
+
             response.TotalResults = totalCount;
 
             return response;
