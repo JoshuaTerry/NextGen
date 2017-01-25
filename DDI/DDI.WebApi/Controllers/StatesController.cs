@@ -62,13 +62,13 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = result.TotalResults;
                 
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.State);
+                // Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.State);
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper());
 
                 return Ok(dynamicResult);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return InternalServerError();
             }
