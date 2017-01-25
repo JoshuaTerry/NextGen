@@ -1,4 +1,5 @@
 ﻿using DDI.Shared;
+using DDI.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -55,12 +56,43 @@ namespace DDI.Data
         /// </summary>
         public IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class
         {
-            IRepository<T> repository = new RepositoryNoDb<T>(dataSource);
-            _repositories[typeof(T)] = repository;
+            RepositoryNoDb<T> repository = null;
+            var type = typeof(T);
+            if (!_repositories.ContainsKey(type))
+            {
+                repository = new RepositoryNoDb<T>(dataSource);
+                _repositories[type] = repository;
+                repository.AssignForeignKeys();
+            }
+            else
+            {
+                repository = _repositories[type] as RepositoryNoDb<T>;
+            }
+
             return repository;
         }
 
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class
+        {
+            return CreateRepositoryForDataSource(dataSource.AsQueryable());
+        }
+
         public IRepository<T> GetRepository<T>() where T : class
+        {
+            IRepository<T> repository = GetRepositoryOrNull<T>();
+
+            if (repository == null)
+            {             
+                throw new InvalidOperationException($"Repository for type {typeof(T)} must be added via SetRepository() method.");
+            }
+
+            return repository;
+        }
+
+        public IRepository<T> GetRepositoryOrNull<T>() where T : class
         {
             IRepository<T> repository = null;
 
@@ -68,7 +100,7 @@ namespace DDI.Data
 
             if (!_repositories.ContainsKey(type))
             {
-                throw new InvalidOperationException($"Repository for type {type} must be added via SetRepository() method.");
+                return null;
             }
             else
             {
@@ -76,6 +108,11 @@ namespace DDI.Data
             }
 
             return repository;
+        }
+
+        public IRepository<T> GetCachedRepository<T>() where T : class
+        {
+            return GetRepository<T>();
         }
 
         public int SaveChanges()
@@ -165,10 +202,9 @@ namespace DDI.Data
 
         public void Attach<T>(T entity) where T : class
         {
-            var entities = (ICollection<T>)(GetRepository<T>().Entities);
-            if (!entities.Contains(entity))
+            if (entity != null)
             {
-                entities.Add(entity);
+                GetRepository<T>().Attach(entity);
             }
         }
 

@@ -100,6 +100,7 @@ function DoSearch() {
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
                     columns: [
+                        { dataField: 'Id', width: '0px' },
                         { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
                         { dataField: 'PrimaryAddress', caption: 'Primary Address' },
@@ -169,7 +170,7 @@ function GetSearchParameters() {
 
 function DisplayConstituent(id) {
 
-    sessionStorage.setItem("constituentnumber", id);
+    sessionStorage.setItem("constituentid", id);
     location.href = "Constituents.aspx";
 
 }
