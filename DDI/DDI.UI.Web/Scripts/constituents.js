@@ -146,7 +146,7 @@ function DisplayConstituentPrimaryAddress() {
                     $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
                 }
 
-                $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
 
             }
 
@@ -259,7 +259,6 @@ function LoadPaymentPreferencesTable() {
 
 }
 
-
 function LoadAlternateIDTable() {
 
     var columns = [
@@ -267,7 +266,7 @@ function LoadAlternateIDTable() {
             { dataField: 'ABANumber', caption: 'Code' },
             { dataField: 'AccountNumber', caption: 'Type' }
     ];
-    LoadGrid('alternateidtable', 'alternateidgrid', 'alternateidroute', columns);
+    // LoadGrid('alternateidtable', 'alternateidgrid', 'alternateidroute', columns);
     $('.newaltidmodal').click(function () {
         $('.alternateidmodal').dialog({
             closeOnEscape: false,
