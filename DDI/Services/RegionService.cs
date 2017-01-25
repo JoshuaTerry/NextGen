@@ -1,31 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using DDI.Business.CRM;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Data;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DDI.Services
 {
     public class RegionService : ServiceBase<Region>, IRegionService
     {
-        private IRepository<Region> _repository;
-
-        public RegionService() : this (new Repository<Region>()) { }
-        public RegionService(IRepository<Region> repo)
+        private IUnitOfWork _unitOfWork;
+        private RegionLogic _logic;
+        public RegionService()
         {
-            _repository = repo;
+            Initialize(new UnitOfWorkEF(), new RegionLogic());
         }
 
-        public IDataResponse<List<Region>> GetByLevel(int level, Guid? id)
+        public RegionService(IUnitOfWork uow, RegionLogic logic)
         {
-            var results = _repository.Entities.Where(r => r.Level == level);
-            if (id.HasValue)
-                results = results.Where(r => r.ParentRegionId == id.Value);
+            Initialize(uow, logic);
+        }
 
-            return GetIDataResponse(() => results.ToList());
+        private void Initialize(IUnitOfWork uow, RegionLogic logic)
+        {
+            _unitOfWork = uow;
+            _logic = logic;
+        }
+        public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
+        {
+            List<Region> result;
+            if (id != null && id != Guid.Empty)
+            {
+                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level && r.ParentRegionId == id).ToList();
+            }
+            else
+            {
+                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level).ToList();
+            }
+             
+            return GetIDataResponse(() => result.ToList());
+        }
+
+        public IDataResponse<List<Region>> GetAll()
+        {
+            var result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.ParentRegionId == null);
+            return GetIDataResponse(() => result.ToList());
+        }
+
+        public IDataResponse Add(Region entity)
+        {
+            return base.Add(entity);
+        }
+
+        public IDataResponse<List<Region>> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
+        {            
+            var result =_logic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
+            return GetIDataResponse(() => result.ToList());
         }
     }
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿using DDI.Services;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
+using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,19 +18,28 @@ namespace DDI.WebApi.Controllers
 {
     public class RegionsController : ApiController
     {
-        RegionService _service;
+        private IRegionService _service;
+        private IPagination _pagination;
+        private DynamicTransmogrifier _dynamicTransmogrifier;
 
-        public RegionsController() : this(new RegionService()) { }
-        internal RegionsController(RegionService service)
+        public RegionsController()
+            :this(new RegionService(), new Pagination(), new DynamicTransmogrifier())
         {
-            _service = service;
         }
 
-        [HttpGet]
-        [Route("api/v1/regions")]
-        public IHttpActionResult GetAll()
+        internal RegionsController(IRegionService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
         {
-            var result = _service.GetAll();
+            _service = service;
+            _pagination = pagination;
+            _dynamicTransmogrifier = dynamicTransmogrifier;
+        }
+                
+
+        [HttpGet]
+        [Route("api/v1/regions/{level}/{id}", Name = RouteNames.Region + RouteVerbs.Get)]
+        public IHttpActionResult GetRegionsByLevel(Guid? id, int level)
+        {
+            var result = _service.GetRegionsByLevel(id, level);
 
             if (result == null)
             {
@@ -34,14 +49,14 @@ namespace DDI.WebApi.Controllers
             {
                 return InternalServerError();
             }
+
             return Ok(result);
         }
-
         [HttpGet]
-        [Route("api/v1/regions/{level}/{id}")]
-        public IHttpActionResult GetByLevel(int level, Guid? id)
+        [Route("api/v1/regions/address", Name = RouteNames.Region + RouteNames.Address + RouteVerbs.Get)]
+        public IHttpActionResult GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {
-            var result = _service.GetByLevel(level, id);
+            var result = _service.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
 
             if (result == null)
             {
@@ -75,7 +90,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/regions")]
+        [Route("api/v1/regions", Name = RouteNames.Region + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Region item)
         {
             if (!ModelState.IsValid)
@@ -88,7 +103,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/regions/{id}")]
+        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
@@ -110,7 +125,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/v1/region")]
+        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Delete)]
         public IHttpActionResult Delete(Region item)
         {
             try
