@@ -2,12 +2,13 @@
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Microsoft.SqlServer.Server;
 
 namespace DDI.WebApi.Controllers
 {
-    public class StatesController : ControllerBase
+    public class StatesController : ControllerBase<State>
     {
         #region Private Fields
 

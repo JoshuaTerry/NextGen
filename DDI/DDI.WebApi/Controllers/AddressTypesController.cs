@@ -4,55 +4,17 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
+using LinqKit;
 
 namespace DDI.WebApi.Controllers
 {
-    public class AddressTypesController : ControllerBase
+    public class AddressTypesController : ControllerBase<AddressType>
     {
-        ServiceBase<AddressType> _service;
-
-        public AddressTypesController() : this(new ServiceBase<AddressType>()) { }
-        internal AddressTypesController(ServiceBase<AddressType> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
         [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var search = new PageableSearch()
-            {
-                Limit =  limit,
-                Offset = offset,
-                OrderBy =  orderby
-            };
-
-            try
-            {
-                var result = _service.GetAll(search);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var totalCount = result.TotalResults;
-
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, fields);
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-
-                return Ok(dynamicResult);
-
-            }
-            catch (System.Exception)
-            {
-                return InternalServerError();
-            }
+            return base.GetAll(RouteNames.AddressType, limit, offset, orderby, fields);
         }
     }
 }

@@ -14,7 +14,7 @@ using DDI.WebApi.Helpers;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class ConstituentsController : ControllerBase
+    public class ConstituentsController : ControllerBase<Constituent>
     {
         private IConstituentService _service;
 
@@ -148,25 +148,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] Constituent constituent)
+        public override IHttpActionResult Post([FromBody] Constituent constituent)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.AddConstituent(constituent);
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.Post(constituent);
         }
 
         [HttpPost]
@@ -192,31 +176,16 @@ namespace DDI.WebApi.Controllers
 
         [HttpPatch]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
-        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
+        public override IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var constituent = _service.UpdateConstituent(id, constituentChanges);
-                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper());
-
-                return Ok(dynamicConstituent);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.Patch(id, constituentChanges);
         }
 
         [HttpDelete]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Delete)]
-        public IHttpActionResult Delete(Guid id)
+        public override IHttpActionResult Delete(Guid id)
         {
-            return Ok();
+            return base.Delete(id);
         }
 
         [HttpGet]

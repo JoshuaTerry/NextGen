@@ -2,12 +2,13 @@
 using DDI.Services.Search;
 using System;
 using System.Web.Http;
+using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Microsoft.AspNet.Identity;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CountiesController : ControllerBase
+    public class CountiesController : ControllerBase<County>
     {
         #region Private Fields
 

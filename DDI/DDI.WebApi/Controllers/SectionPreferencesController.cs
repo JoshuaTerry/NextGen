@@ -1,13 +1,14 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors; 
 using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 
 namespace DDI.WebApi.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class SectionPreferencesController : ControllerBase
+    public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
         private ISectionPreferenceService _service;
 

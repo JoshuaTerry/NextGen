@@ -8,99 +8,27 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ClergyStatusesController : ControllerBase
+    public class ClergyStatusesController : ControllerBase<ClergyStatus>
     {
-        ServiceBase<ClergyStatus> _service;
-
-        public ClergyStatusesController() : this(new ServiceBase<ClergyStatus>()) { }
-        internal ClergyStatusesController(ServiceBase<ClergyStatus> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
         {
-            var search = new PageableSearch()
-            {
-                Limit = limit,
-                Offset = offset,
-                OrderBy = orderby
-            };
-
-            try
-            {
-                var result = _service.GetAll(search);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var totalCount = result.TotalResults;
-
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.ClergyStatus);
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-
-                return Ok(dynamicResult);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.GetAll(RouteNames.ClergyStatus, limit, offset, orderby, fields);
         }
 
         [HttpPost]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] ClergyStatus item)
+        public override IHttpActionResult Post([FromBody] ClergyStatus item)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Add(item);
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Patch)]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.Patch(id, changes);
         }
     }
 }
