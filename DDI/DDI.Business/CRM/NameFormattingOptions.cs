@@ -16,6 +16,9 @@ namespace DDI.Business.CRM
         public bool OmitPrefix { get; set; }
         public bool AddFirstNames { get; set; }
         public LabelRecipient Recipient { get; set; }
+        public bool IsSpouse { get; set; }
+        public bool IncludeInactive { get; set; }
+
         public NameFormattingOptions()
         {
             Recipient = LabelRecipient.Primary;

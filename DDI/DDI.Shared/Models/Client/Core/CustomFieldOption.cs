@@ -19,6 +19,8 @@ namespace DDI.Shared.Models.Client.Core
         public string Description { get; set; }
         public int SortOrder { get; set; }
 
+        public CustomField CustomField { get; set; }
+
         [NotMapped]
         public override string DisplayName
         {

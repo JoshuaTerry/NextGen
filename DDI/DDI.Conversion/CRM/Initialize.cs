@@ -10,11 +10,13 @@ using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.ModuleInfo;
+//using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.CRM
 {
-    [ModuleType(Shared.Enums.ModuleType.CRM)]
+    /// <summary>
+    /// Seeding of initial data for the CRM module.
+    /// </summary>       
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod
@@ -49,10 +51,10 @@ namespace DDI.Conversion.CRM
             //Constituent Types
             context.ConstituentTypes.AddOrUpdate(
                 p => p.Code,
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{P}{F}{MI}{L}{S}", SalutationFormal = "Dear {P}{L}", SalutationInformal = "Dear {N}" },
+                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{PREFIX}{FIRST}{MI}{LAST}{SUFFIX}", SalutationFormal = "Dear {PREFIX}{LAST}", SalutationInformal = "Dear {NICKNAME}" },
                 new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
                 new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {F}{MI}{L} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
+                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {FIRST}{MI}{LAST} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
             );
 
             //Genders
