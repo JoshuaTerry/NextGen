@@ -44,7 +44,7 @@ namespace DDI.WebApi.Controllers
                                                  string fields = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
-                                                 string orderby = "DisplayName")
+                                                 string orderBy = "DisplayName")
         {
             var search = new ConstituentSearch()
             {
@@ -56,7 +56,7 @@ namespace DDI.WebApi.Controllers
                 State = state,
                 Offset = offset,
                 Limit = limit,
-                OrderBy = orderby,
+                OrderBy = orderBy,
                 AlternateId = alternateId,
                 ZipFrom =  zipFrom,
                 ZipTo = zipTo,

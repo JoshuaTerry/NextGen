@@ -12,9 +12,9 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderby = "DisplayName", string fields = null)
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = "DisplayName", string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ClergyStatus, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ClergyStatus, limit, offset, orderBy, fields);
         }
 
         [HttpPost]

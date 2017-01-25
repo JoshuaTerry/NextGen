@@ -18,9 +18,9 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderby = "DisplayName", string fields = null)
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = "DisplayName", string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentAddress, limit, offset, orderby, fields);
+            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentAddress, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
