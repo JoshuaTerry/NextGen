@@ -2,70 +2,33 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ConstituentStatusesController : ApiController
+    public class ConstituentStatusesController : ControllerBase<ConstituentStatus>
     {
-        ServiceBase<ConstituentStatus> _service;
-
-        public ConstituentStatusesController() : this(new ServiceBase<ConstituentStatus>()) { }
-        internal ConstituentStatusesController(ServiceBase<ConstituentStatus> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
-        [Route("api/v1/constituentstatues")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentStatus, limit, offset, orderBy, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/constituentstatuses")]
+        [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentStatus item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok();
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
-        [Route("api/v1/constituentstatuses/{id}")]
+        [Route("api/v1/constituentstatuses/{id}", Name = RouteNames.ConstituentStatus + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Patch(GetUrlHelper(), id, changes);
         }
     }
 }

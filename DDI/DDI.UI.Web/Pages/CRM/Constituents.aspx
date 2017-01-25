@@ -9,6 +9,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <input id="hidconstituentid" runat="server" type="hidden" class="hidconstituentid" enableviewstate="true" />
+
     <div class="constituentcontainer">
 
         <div class="constituentinfocontainer">
@@ -117,7 +119,7 @@
 
                         <div class="fieldblock">
                             <label>Nickname</label>
-                            <input type="text" class="editable NickName" />
+                            <input type="text" class="editable Nickname" />
                         </div>
 
                         <div class="fieldblock">
@@ -400,7 +402,44 @@
                     <h1>Contact Information (Not Implemented Yet)</h1>
                     <div>
 
+                        <div class="accordions">
 
+                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
+                            <div>
+                                <div class="constituentaddressgridcontainer"></div>
+                            </div>
+
+                            <h1>Phone Numbers</h1>
+                            <div>
+                                <div class="constituentphonegridcontainer"></div>
+                            </div>
+
+                            <h1>Emails</h1>
+                            <div>
+                                <div class="constituentemailgridcontainer"></div>
+                            </div>
+
+                            <h1>Web Sites</h1>
+                            <div>
+                                <div class="constituentwebsitegridcontainer"></div>
+                            </div>
+
+                            <h1>Point of Contact</h1>
+                            <div>
+                                <div class="constituentpocgridcontainer"></div>
+                            </div>
+
+                            <h1>Social Media</h1>
+                            <div>
+                                <div class="constituentsocmedgridcontainer"></div>
+                            </div>
+
+                            <h1>Other Contacts</h1>
+                            <div>
+                                <div class="constituentothergridcontainer"></div>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -562,6 +601,112 @@
         <div class="dashboard">
 
             <h1>Dashboard</h1>
+
+        </div>
+
+    </div>
+
+    <div class="addressmodal" title="New Address" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Address Type</label>
+                <select class="na-AddressTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Address Line 1</label>
+                <textarea class="na-AddressLine1"></textarea>
+            </div>
+
+            <div class="fieldblock">
+                <label>Address Line 2</label>
+                <textarea class="na-AddressLine2"></textarea>
+            </div>
+
+            <div class="fieldblock">
+                <label>Country</label>
+                <select class="na-CountryId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Postal code</label>
+                <input type="text" class="na-PostalCode" />
+            </div>
+
+            <div class="inline">
+                <div class="fieldblock">
+                    <label style="width: 100px;">City</label>
+                    <input type="text" class="na-City" style="width: 85px;" />
+                </div>
+
+                <div class="fieldblock">
+                    <label style="width: 25px;">St</label>
+                    <select class="na-StateId" style="width: 106px;"></select>
+                </div>
+            </div>
+
+            <div class="fieldblock">
+                <label>County</label>
+                <select class="na-CountyId"></select>
+            </div>
+
+            <div class="fieldblock region1" style="display: none;">
+                <label class="region1label">Region 1</label>
+                <select class="na-Region1Id"></select>
+            </div>
+
+            <div class="fieldblock region2" style="display: none;">
+                <label class="region2label">Region 2</label>
+                <select class="na-Region2Id"></select>
+            </div>
+
+            <div class="fieldblock region3" style="display: none;">
+                <label class="region3label">Region 3</label>
+                <select class="na-Region3Id"></select>
+            </div>
+
+            <div class="fieldblock region4" style="display: none;">
+                <label class="region4label">Region 4</label>
+                <select class="na-Region4Id"></select>
+            </div>
+
+            <fieldset>
+                <legend>Address Options</legend>
+
+                <div class="fieldblock">
+                    <label>Is Preferred</label>
+                    <input type="checkbox" class="na-IsPreferred" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Residency</label>
+                    <select class="na-ResidentType">
+                        <option value="0">Primary</option>
+                        <option value="1">Secondary</option>
+                        <option value="2">Separate</option>
+                    </select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Comment</label>
+                    <input type="text" class="na-Comment" />
+                </div>
+
+                <div class="fieldblock range">
+                    <label>Dates</label>
+                    <input type="text" class="na-StartDate datepicker" />
+                    <span>to</span>
+                    <input type="text" class="na-EndDate datepicker" />
+                </div>
+
+            </fieldset>
+
+            <div class="modalbuttons">
+                <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
 
         </div>
 

@@ -191,6 +191,7 @@
     <Compile Include="App_Start\ApplicationRoleManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IApplicationUserManager.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
     <Compile Include="Controllers\ConstituentTypesController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountiesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\CustomFieldsController.cs" />
@@ -243,9 +245,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeLevelsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\MaritalStatusesController.cs" />
     <Compile Include="Controllers\PrefixesController.cs" />
     <Compile Include="Controllers\ProfessionsController.cs" />
+    <Compile Include="Controllers\RegionLevelsController.cs" />
+    <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
@@ -335,10 +340,6 @@
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
       <Project>{0e7d7e11-80b4-4751-8c21-b05a08a19473}</Project>
       <Name>DDI.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
-      <Name>DDI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>

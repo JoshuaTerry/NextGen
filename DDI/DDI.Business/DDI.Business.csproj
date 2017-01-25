@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CRM\ConstituentAddressLogic.cs" />
+    <Compile Include="CRM\RegionLogic.cs" />
+    <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="Common\ZipLookupInfo.cs" />
@@ -57,6 +62,9 @@
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Helpers\LinkedEntityHelper.cs" />
+    
+    <Compile Include="ModuleInfo\ModuleInfoCreator.cs" />
+    <Compile Include="ModuleInfo\ModuleInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

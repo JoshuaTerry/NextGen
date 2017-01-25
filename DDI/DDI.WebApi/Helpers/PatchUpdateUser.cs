@@ -5,7 +5,6 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using DDI.Data;
 using DDI.Shared.Models.Client.CRM;
 using DDI.WebApi.Models;
 using Newtonsoft.Json.Linq;

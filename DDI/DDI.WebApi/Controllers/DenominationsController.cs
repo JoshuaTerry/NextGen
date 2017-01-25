@@ -1,34 +1,18 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class DenominationsController : ApiController
+    public class DenominationsController : ControllerBase<Denomination>
     {
-        ServiceBase<Denomination> _service;
-
-        public DenominationsController() : this(new ServiceBase<Denomination>()) { }
-        internal DenominationsController(ServiceBase<Denomination> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
-        [Route("api/v1/denominations")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/denominations", Name = RouteNames.Denomination)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(GetUrlHelper(), RouteNames.Denomination, limit, offset, orderBy, fields);
         }
     }
 }

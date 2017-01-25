@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Data;
 using DDI.Shared.Enums;
-using DDI.Shared.ModuleInfo;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared;
+using DDI.Business.ModuleInfo;
 
 namespace DDI.Business.CRM
 {
-    [ModuleTypeAttribute(ModuleType.CRM)]
     public class CRMConfiguration : ConfigurationBase
     {
         #region Properties
+
+        public override ModuleType ModuleType { get; } = ModuleType.CRM;
 
         public bool UseRegionSecurity { get; set; }
 

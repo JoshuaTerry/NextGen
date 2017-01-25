@@ -6,6 +6,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.Services
 {
@@ -26,76 +28,115 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll()
+        public IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList();
-            return GetIDataResponse(() => result);
+            if (search == null)
+            {
+                search = new PageableSearch
+                {
+                    Limit = 25,
+                    Offset = 0
+                };
+            }
+
+            IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
+            var query = new CriteriaQuery<T, IPageable>(queryable, search);
+
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
+            {
+                query = query.SetOrderBy(search.OrderBy);
+            }
+
+            var totalCount = query.GetQueryable().ToList().Count;
+
+            query = query.SetLimit(search.Limit)
+                         .SetOffset(search.Offset);
+
+            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
+            var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            if (search.OrderBy == OrderByProperties.DisplayName)
+            {
+                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
+            }
+
+            response.TotalResults = totalCount;
+
+            return response;
         }
 
-        public IDataResponse<T> GetById(Guid id)
+        public virtual IDataResponse<T> GetById(Guid id)
         {
             var result = _unitOfWork.GetRepository<T>().GetById(id); 
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse Update(T entity)
+        public virtual IDataResponse Update(T entity)
         {
-            var response = new DataResponse();
+            var response = new DataResponse<T>();
             try
             {
-                _unitOfWork.GetRepository<T>().Update(entity);
+                response.Data = _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
         }
 
-        public IDataResponse<T> Update(Guid id, JObject changes)
+        public virtual IDataResponse<T> Update(Guid id, JObject changes)
         {
+            var response = new DataResponse<T>();
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
-
-            foreach (var pair in changes)
-            {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
-            }
-
-            _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
-
-            T t = _unitOfWork.GetRepository<T>().GetById(id);
-
-            return GetIDataResponse(() => t);
-        }
-        public IDataResponse Add(T entity)
-        {
-            var response = new DataResponse();
             try
             {
-                _unitOfWork.GetRepository<T>().Insert(entity);
+                foreach (var pair in changes)
+                {
+                    changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+                }
+
+                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+            	_unitOfWork.SaveChanges();
+
+                response.Data = _unitOfWork.GetRepository<T>().GetById(id);
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
         }
 
-        public IDataResponse Delete(T entity)
+        public IDataResponse<T> Add(T entity)
+        {
+            var response = new DataResponse<T>();
+            try
+            {
+                response.Data = _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return ProcessIDataResponseException(ex);
+            }
+
+            return response;
+        }
+
+        public virtual IDataResponse Delete(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -121,20 +162,16 @@ namespace DDI.Services
             try
             {
                 var result = funcToExecute();
-                var dataResponse = new DataResponse<T1>
+                var response = new DataResponse<T1>
                 {
                     Data = result,
                     IsSuccessful = true
                 };
-                return dataResponse;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message, e);
-                var response = new DataResponse<T1> { IsSuccessful = false };
-                response.ErrorMessages.Add(e.Message);
-                response.VerboseErrorMessages.Add(e.ToString());
                 return response;
+            }
+            catch (Exception ex)
+            {
+                return ProcessDataResponseException<T1>(ex);
             }
         }
 
@@ -152,10 +189,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message, ex);
-                response = new DataResponse { IsSuccessful = false };
-                response.ErrorMessages.Add(ex.Message);
-                response.VerboseErrorMessages.Add(ex.ToString());
+                return ProcessIDataResponseException(ex);
             }
 
             return response;
@@ -181,36 +215,27 @@ namespace DDI.Services
             };
         }
 
-        public static IDataResponse SafeExecute(Action method)
+        public IDataResponse<T> ProcessIDataResponseException(Exception ex)
         {
-            var response = new DataResponse();
-            try
-            {
-                method.Invoke();
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
-                _logger.Error(ex);
-            }
+            var response = new DataResponse<T>();
+            response.IsSuccessful = false;
+            response.ErrorMessages.Add(ex.Message);
+            response.VerboseErrorMessages.Add(ex.ToString());
+            _logger.Error(ex);
+
             return response;
         }
 
-        public static IDataResponse<T1> SafeExecute<T1>(Func<T1> method)
+        public DataResponse<T1> ProcessDataResponseException<T1>(Exception ex)
         {
             var response = new DataResponse<T1>();
-            try
-            {
-                response.Data = method.Invoke();
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
-                _logger.Error(ex);
-            }
+            response.IsSuccessful = false;
+            response.ErrorMessages.Add(ex.Message);
+            response.VerboseErrorMessages.Add(ex.ToString());
+            _logger.Error(ex);
+
             return response;
+
         }
     }
 }

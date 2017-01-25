@@ -13,7 +13,7 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-
+using DDI.Shared.Extensions;
 
 namespace DDI.Conversion.CRM
 {    
@@ -630,7 +630,7 @@ namespace DDI.Conversion.CRM
                     LabelFormattingOptions options = new LabelFormattingOptions() { OmitPrefix = true, Recipient = LabelRecipient.Primary };
                     string nameLine1, nameLine2;
 
-                    nameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
+                    nameFormatter.GetNameLines(constituent, null, options, out nameLine1, out nameLine2);
                     constituent.FormattedName = nameLine1;
 
                     constituentFile.AddRow(constituent);

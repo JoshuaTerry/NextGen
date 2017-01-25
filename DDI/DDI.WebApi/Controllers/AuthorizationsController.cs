@@ -28,20 +28,19 @@ namespace DDI.WebApi.Controllers
     public class AuthorizationsController : ApiController
     {
         private const string LOCAL_LOGIN_PROVIDER = "Local";
-        private ApplicationUserManager _userManager;
+        private IApplicationUserManager _userManager;
 
         public AuthorizationsController()
         {
         }
 
-        public AuthorizationsController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        public AuthorizationsController(IApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public ApplicationUserManager UserManager
+        public IApplicationUserManager UserManager
         {
             get
             {
@@ -89,7 +88,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/authorizations/manageinfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
-            IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
             if (user == null)
             {
