@@ -390,11 +390,39 @@
 
                     </div>
 
-                    <h1>Alternate ID (Not Implemented Yet)</h1>
+                    <h1>Alternate ID</h1>
                     <div>
+                        <a href="#" class="newaltidmodal">New</a>
+                        <div class="alternateidtable"></div>
 
+                        <div class="alternateidmodal" title="Alternate ID" style="display: none;">
 
+                            <div class="modalcontent">
 
+                                <div class="fieldblock">
+                                    <label>ID</label>
+                                    <input type="text" class="altidid" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Code</label>
+                                    <input type="text"  class="altidcode" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Type</label>
+                                    <input type="text"  class="altidtype" />
+                                </div>
+
+                                <div class="modalbuttons">
+                                    <input type="text" class="submitaltid" value="Submit" />
+
+                                    <a href ="#" class="linkcancel">Cancel</a>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <h1>Contact Information (Not Implemented Yet)</h1>

@@ -120,6 +120,8 @@ function DisplayConstituentData() {
         LoadEducationTable();
 
         LoadPaymentPreferencesTable();
+
+        LoadAlternateIDTable();
     }
 }
 
@@ -257,6 +259,25 @@ function LoadPaymentPreferencesTable() {
 
 }
 
+
+function LoadAlternateIDTable() {
+
+    var columns = [
+            { dataField: 'ID', caption: 'ID', },
+            { dataField: 'ABANumber', caption: 'Code' },
+            { dataField: 'AccountNumber', caption: 'Type' }
+    ];
+    LoadGrid('alternateidtable', 'alternateidgrid', 'alternateidroute', columns);
+    $('.newaltidmodal').click(function () {
+        $('.alternateidmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+           //  height: 225,
+            resizable: false
+        })
+    })
+}
 
 
 
