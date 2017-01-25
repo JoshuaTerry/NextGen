@@ -1,34 +1,19 @@
 ﻿using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using System.Web.Http;
+using System.Web.Mvc.Html;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ProfessionsController : ApiController
+    public class ProfessionsController : ControllerBase<Profession>
     {
-        ServiceBase<Profession> _service;
-
-        public ProfessionsController() : this(new ServiceBase<Profession>()) { }
-        internal ProfessionsController(ServiceBase<Profession> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
-        [Route("api/v1/professions")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/professions", Name = RouteNames.Profession)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(GetUrlHelper(), RouteNames.Profession, limit, offset, orderBy, fields);
         }
     }
 }
