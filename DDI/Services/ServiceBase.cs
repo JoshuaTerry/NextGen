@@ -26,24 +26,25 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll()
+        public virtual IDataResponse<List<T>> GetAll()
         {
             var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList();
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse<T> GetById(Guid id)
+        public virtual IDataResponse<T> GetById(Guid id)
         {
             var result = _unitOfWork.GetRepository<T>().GetById(id); 
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse Update(T entity)
+        public virtual IDataResponse Update(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -64,17 +65,19 @@ namespace DDI.Services
             }
 
             _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+            _unitOfWork.SaveChanges();
 
             T t = _unitOfWork.GetRepository<T>().GetById(id);
 
             return GetIDataResponse(() => t);
         }
-        public IDataResponse Add(T entity)
+        public virtual IDataResponse Add(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -85,12 +88,13 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse Delete(T entity)
+        public virtual IDataResponse Delete(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
