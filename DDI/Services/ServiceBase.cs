@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.Services
 {
@@ -41,7 +42,7 @@ namespace DDI.Services
             IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
             var query = new CriteriaQuery<T, IPageable>(queryable, search);
 
-            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != "DisplayName")
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
             {
                 query = query.SetOrderBy(search.OrderBy);
             }
@@ -53,7 +54,7 @@ namespace DDI.Services
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
-            if (search.OrderBy == "DisplayName")
+            if (search.OrderBy == OrderByProperties.DisplayName)
             {
                 response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
             }

@@ -44,7 +44,7 @@ namespace DDI.WebApi.Controllers
                                                  string fields = null,
                                                  int? offset = null, 
                                                  int? limit = 25, 
-                                                 string orderBy = "DisplayName")
+                                                 string orderBy = OrderByProperties.DisplayName)
         {
             var search = new ConstituentSearch()
             {
