@@ -78,6 +78,7 @@
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
+    <Compile Include="ServiceInterfaces\IService.cs" />
     <Compile Include="StateService.cs" />
   </ItemGroup>
   <ItemGroup>

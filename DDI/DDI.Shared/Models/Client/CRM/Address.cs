@@ -54,7 +54,7 @@ namespace DDI.Shared.Models.Client.CRM
             }
             set
             {
-                CountryId = value.Id;
+                CountryId = value?.Id;
                 _country = value;
             }
         }
@@ -69,7 +69,7 @@ namespace DDI.Shared.Models.Client.CRM
             }
             set
             {
-                StateId = value.Id;
+                StateId = value?.Id;
                 _state = value;
             }
         }
@@ -84,7 +84,7 @@ namespace DDI.Shared.Models.Client.CRM
             }
             set
             {
-                CountyId = value.Id;
+                CountyId = value?.Id;
                 _county = value;
             }
         }

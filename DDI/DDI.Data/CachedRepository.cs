@@ -61,16 +61,16 @@ namespace DDI.Data
             return base.Update(entity);
         }
 
-        public override int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public override void UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
             CacheHelper.RemoveEntry(_cacheKey);
-            return base.UpdateChangedProperties(id, propertyValues, action);
+            base.UpdateChangedProperties(id, propertyValues, action);
         }
 
-        public override int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public override void UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
             CacheHelper.RemoveEntry(_cacheKey);
-            return base.UpdateChangedProperties(entity, propertyValues, action);
+            base.UpdateChangedProperties(entity, propertyValues, action);
         }
     }
 }
