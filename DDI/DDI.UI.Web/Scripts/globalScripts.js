@@ -48,6 +48,8 @@ $(document).ready(function () {
 
         LoadNewConstituentModalDropDowns();
 
+        AutoZip();
+
     });
 
     $('.logout').click(function (e) {
@@ -250,79 +252,87 @@ function AutoZip() {
 
     $('.autozip').blur(function () {
 
-        var zip = $('.autozip').val();
+        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
+            'addressLine2=' + $('.nc-AddressLine2').val() +
+            'city=' + $('.autocity').val() +
+            'countryId=' + $('.autocountry').val() +
+            'countyId=' + $('.autocounty').val() +
+            'stateId=' + $('.autostate').val() +
+            '&zip=' + $('.autozip').val();
 
-        if (zip.length > 0) {
-
-            var data = {
-                ZipCode: zip
-            }
-
-            GetAutoZipData(data);
-
-        }
-
+        GetAutoZipData();
+        
     });
-
-}
-
-function AutoCityState() {
 
     $('.autocity').blur(function () {
 
-        var city = $('.autocity').val();
-        var state = $('.autostate').val();
-        
-        if (city.length > 0 && state.length > 0) {
+        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
+            'addressLine2=' + $('.nc-AddressLine2').val() +
+            'city=' + $('.autocity').val() +
+            'countryId=' + $('.autocountry').val() +
+            'countyId=' + $('.autocounty').val() +
+            'stateId=' + $('.autostate').val() +
+            '&zip=' + $('.autozip').val();
 
-            var data = {
-                City: city,
-                State: state
-            }
-
-            GetAutoZipData(data);
-
-        }
+        GetAutoZipData();
 
     });
 
     $('.autostate').blur(function () {
 
-        var city = $('.autocity').val();
-        var state = $('.autostate').val();
+        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
+            'addressLine2=' + $('.nc-AddressLine2').val() +
+            'city=' + $('.autocity').val() +
+            'countryId=' + $('.autocountry').val() +
+            'countyId=' + $('.autocounty').val() +
+            'stateId=' + $('.autostate').val() +
+            '&zip=' + $('.autozip').val();
 
-        if (city.length > 0 && state.length > 0) {
-
-            var data = {
-                City: city,
-                State: state
-            }
-
-            GetAutoZipData(data);
-
-        }
+        GetAutoZipData();
 
     });
 
 }
 
-function GetAutoZipData(data) {
+function GetAutoZipData() {
+
+    var fields = 'addressLine1=' + $('.nc-AddressLine1').val() +
+            '&addressLine2=' + $('.nc-AddressLine2').val() +
+            '&city=' + $('.autocity').val() +
+            '&countryId=' + $('.autocountry').val() +
+            '&countyId=' + $('.autocounty').val() +
+            '&stateId=' + $('.autostate').val() +
+            '&zip=' + $('.autozip').val();
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'zipcodesomethingawesome',
-        method: 'POST',
-        data: data,
+        url: WEB_API_ADDRESS + 'locations/?' + fields,
+        method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            $('.autozip').val(data.PostalCode);
-            $('.autocountry').val(data.Country);
-            $('.autostate').val(data.State);
-            $('.autocity').val(data.City);
-            $('.autocounty').val(data.County);
+            if (data && data.Data) {
 
+                $('.AddressLine1').val(data.Data.AddressLine1);
+                $('.AddressLine2').val(data.Data.AddressLine2);
+                $('.autozip').val(data.Data.PostalCode);
+
+                if (data.Data.Country) {
+                    $('.autocountry').val(data.Data.Country.Id);
+                }
+
+                if (data.Data.State) {
+                    $('.autostate').val(data.Data.State.Id);
+                }
+            
+                if (data.Data.County) {
+                    $('.autocounty').val(data.Data.County.Id);
+                }
+            
+                $('.autocity').val(data.Data.City);
+            }
+            
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading address data.');
