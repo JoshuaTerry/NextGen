@@ -26,18 +26,25 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll(IPageable search = null)
+        public virtual IDataResponse<List<T>> GetAll()
         {
             var result = _unitOfWork.GetRepository<T>().Entities.ToList().OrderBy(a => a.DisplayName).ToList();
             return GetIDataResponse(() => result);
         }
 
-        public IDataResponse Update(T entity)
+        public virtual IDataResponse<T> GetById(Guid id)
+        {
+            var result = _unitOfWork.GetRepository<T>().GetById(id); 
+            return GetIDataResponse(() => result);
+        }
+
+        public virtual IDataResponse Update(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -58,17 +65,19 @@ namespace DDI.Services
             }
 
             _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+            _unitOfWork.SaveChanges();
 
             T t = _unitOfWork.GetRepository<T>().GetById(id);
 
             return GetIDataResponse(() => t);
         }
-        public IDataResponse Add(T entity)
+        public virtual IDataResponse Add(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -79,12 +88,13 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse Delete(T entity)
+        public virtual IDataResponse Delete(T entity)
         {
             var response = new DataResponse();
             try
             {
                 _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -105,21 +115,22 @@ namespace DDI.Services
         }
 
 
-        public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute)
+        public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
-            return GetDataResponse(funcToExecute);
+            return GetDataResponse(funcToExecute, fieldList, shouldAddLinks);
         }
 
-        public IDataResponse<T1> GetDataResponse<T1>(Func<T1> funcToExecute)
+        public DataResponse<T1> GetDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
             try
             {
                 var result = funcToExecute();
-                return new DataResponse<T1>
+                var dataResponse = new DataResponse<T1>
                 {
                     Data = result,
                     IsSuccessful = true
                 };
+                return dataResponse;
             }
             catch (Exception e)
             {

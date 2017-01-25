@@ -4,14 +4,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data; 
+using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models;
+using DDI.Shared.Enums;
 
 namespace DDI.Business.Core
 {
     public abstract class ConfigurationBase
     {
+
+        public abstract ModuleType ModuleType { get; }
+      
+
         /// <summary>
         /// Load a property by converting it from a string.
         /// </summary>

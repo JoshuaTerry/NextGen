@@ -13,6 +13,8 @@ namespace DDI.Shared
 
         IRepository<T> GetRepository<T>() where T : class;
 
+        IRepository<T> GetCachedRepository<T>() where T : class;
+
         void SetRepository<T>(IRepository<T> repository) where T : class;
 
         int SaveChanges();
@@ -20,6 +22,8 @@ namespace DDI.Shared
         IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class;
 
         IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class;
+
+        IQueryable GetEntities(Type type);
 
         T FirstOrDefault<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class;
 

@@ -1,15 +1,17 @@
-using DDI.Shared.Attributes;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), EntityType("CRM_Constituent")]
+    [Table("Constituent"), Hateoas(RouteNames.Constituent)]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties        
@@ -109,6 +111,8 @@ namespace DDI.Shared.Models.Client.CRM
         [Column(TypeName = "date")]
         public DateTime? OrdinationDate { get; set; }
 
+        public PaymentMethod PreferredPaymentMethod { get; set; }
+
         [MaxLength(128)]
         public string PlaceOfOrdination { get; set; }
 
@@ -155,6 +159,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
+        [HateoasCollectionLink(RouteNames.ConstituentAddress)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
         public ICollection<AlternateId> AlternateIds { get; set; }
         public ICollection<ContactInfo> ContactInfo { get; set; }
@@ -164,6 +169,8 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<Ethnicity> Ethnicities { get; set; }
         public ICollection<PaymentPreference> PaymentPreferences { get; set; }
         public ICollection<Tag> Tags { get; set; }
+
+        public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
 
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }

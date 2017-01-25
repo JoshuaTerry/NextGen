@@ -14,7 +14,9 @@ namespace DDI.WebApi.Tests.Services
     [TestClass]
     public class ConstituentServiceTests
     {
-        [TestMethod]
+        private const string TESTDESCR = "WebApi | Services";
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Test_GetConstituentByConstituentNum()
         {
             var repo = new Mock<IRepository<Constituent>>();

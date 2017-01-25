@@ -39,6 +39,7 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.5.29.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.29\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -51,16 +52,33 @@
         <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Common\DataSources\AbbreviationDataSource.cs" />
+    <Compile Include="Common\DataSources\StateDataSource.cs" />
+    <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
     <Compile Include="Core\ConfigurationLogicTest.cs" />
     <Compile Include="Core\ConfigurationBaseTest.cs" />
+    <Compile Include="CRM\AddressLogicTest.cs" />
+    <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
+    <Compile Include="CRM\NameFormatterTest.cs" />
+    <Compile Include="CRM\ConstituentLogicTest.cs" />
+    <Compile Include="CRM\DataSources\ConstituentTypeDataSource.cs" />
+    <Compile Include="CRM\DataSources\CRMConfigurationDataSource.cs" />
+    <Compile Include="CRM\DataSources\ConstituentStatusDataSource.cs" />
+    <Compile Include="CRM\DataSources\AddressDataSource.cs" />
+    <Compile Include="CRM\DataSources\AddressTypeDataSource.cs" />
+    <Compile Include="CRM\DataSources\RelationshipTypeDataSource.cs" />
+    <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
+    <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
+    <Compile Include="CRM\DataSources\GenderDataSource.cs" />
+    <Compile Include="Helpers\AbbreviationHelperTest.cs" />
+    <Compile Include="Helpers\GuidHelper.cs" />
+    <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
+    <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
+    <Compile Include="ModuleInfo\ModuleInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
