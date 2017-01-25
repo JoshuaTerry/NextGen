@@ -35,6 +35,7 @@ namespace DDI.Business.Tests.CRM
         private IList<ContactCategory> _contactCategories;
         private IList<ContactType> _contactTypes;
         private ContactInfoLogic _bl;
+        private ContactInfo _emailContactInfo, _usPhoneContactInfo, _foreignPhoneContactInfo;
 
         [TestInitialize]
         public void Initialize()
@@ -71,12 +72,13 @@ namespace DDI.Business.Tests.CRM
         {
             BuildConstituentDataSource();
 
-            _contactInfo[0].Info = "317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(_contactInfo[0]), "10-digit US format valid");
-            Assert.AreEqual("3175551234", _contactInfo[0].Info, "10-digit US format returns raw digits");
+            _usPhoneContactInfo.Info = "317-555-1234";
+            Assert.IsTrue(_bl.ValidatePhoneNumber(_usPhoneContactInfo), "10-digit US format valid");
+            Assert.AreEqual("3175551234", _usPhoneContactInfo.Info, "10-digit US format returns raw digits");
 
-            Assert.IsTrue(_bl.ValidatePhoneNumber(_contactInfo[1]), "9-digit French format valid");
+            Assert.IsTrue(_bl.ValidatePhoneNumber(_foreignPhoneContactInfo), "9-digit French format valid");
 
+            FailIfNotException<ArgumentNullException>(() => _bl.ValidatePhoneNumber(null), "Null argument should throw exception.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -120,6 +122,118 @@ namespace DDI.Business.Tests.CRM
             Assert.AreEqual("523456789", phone, "9-digit French format with US dialing prefix returns raw digits");
         }
 
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_FormatContactInformation()
+        {
+            BuildConstituentDataSource();
+
+            string formattedInfo = _bl.FormatContactInformation(_usPhoneContactInfo);
+            Assert.AreEqual("(317) 555-1234", formattedInfo, "US phone # formatted correctly");
+
+            formattedInfo = _bl.FormatContactInformation(_foreignPhoneContactInfo);
+            Assert.AreEqual("+33 5 61 29 81 96", formattedInfo, "French phone # formatted correctly");
+
+            formattedInfo = _bl.FormatContactInformation(_emailContactInfo);
+            Assert.AreEqual(_emailContactInfo.Info, formattedInfo, "Email returned as-is.");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_FormatPhoneNumber_String()
+        {
+            string rawPhone = "3175551234";
+            Country country = _countries.FirstOrDefault(p => p.ISOCode == AddressDefaults.DefaultCountryCode);
+
+            string formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, false, false, false);
+            Assert.AreEqual("(317) 555-1234", formattedPhone, "Default US formatting");
+
+            formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, false, true, false);
+            Assert.AreEqual("1-317-555-1234", formattedPhone, "NANP formatting");
+
+            formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, false, true, true);
+            Assert.AreEqual("1-317-555-1234", formattedPhone, "NANP formatting, from local country");
+
+            rawPhone = "561298196";
+            country = _countries.FirstOrDefault(p => p.ISOCode == "FR");
+            formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, false, false, false);
+            Assert.AreEqual("+33 5 61 29 81 96", formattedPhone, "Default FR formatting");
+
+            formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, true, false, false);
+            Assert.AreEqual("011 33 5 61 29 81 96", formattedPhone, "FR formatting with international prefix");
+
+            formattedPhone = _bl.FormatPhoneNumber(rawPhone, country, false, false, true);
+            Assert.AreEqual("05 61 29 81 96", formattedPhone, "FR formatting from FR");
+
+            formattedPhone = _bl.FormatPhoneNumber(null, country, false, false, true);
+            Assert.AreEqual(string.Empty, formattedPhone, "Null phone returns empty.");
+
+            formattedPhone = _bl.FormatPhoneNumber(string.Empty, country, false, false, true);
+            Assert.AreEqual(string.Empty, formattedPhone, "Empty phone returns empty.");
+
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_FormatPhoneNumber_Entity()
+        {
+            BuildConstituentDataSource();
+
+            string formattedPhone = _bl.FormatPhoneNumber(_usPhoneContactInfo, false, false, false);
+            Assert.AreEqual("(317) 555-1234", formattedPhone, "Default US formatting");
+
+            formattedPhone = _bl.FormatPhoneNumber(_foreignPhoneContactInfo, false, false, false);
+            Assert.AreEqual("+33 5 61 29 81 96", formattedPhone, "Default FR formatting");
+
+            formattedPhone = _bl.FormatPhoneNumber(null, false, false, false);
+            Assert.AreEqual(string.Empty, formattedPhone, "Null contact info returns empty.");
+
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_Validate()
+        {
+            BuildConstituentDataSource();
+
+            FailIfException(() => _bl.Validate(_usPhoneContactInfo), "Validate for valid ContactInfo should pass.");
+
+            _usPhoneContactInfo.Info = string.Empty;
+            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on blank contact info.");
+
+            _usPhoneContactInfo.Info = "1234";
+            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on invalid phone #.");
+
+            _usPhoneContactInfo.Info = "3175551234";
+            _usPhoneContactInfo.ContactTypeId = null;
+            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no contact type ID.");
+
+            _usPhoneContactInfo.ContactTypeId = _usPhoneContactInfo.ContactType.Id;
+            _usPhoneContactInfo.ConstituentId = null;
+            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
+
+        }
+
+        private void FailIfException(Action action, string message)
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch
+            {
+                Assert.Fail(message);
+            }
+        }
+
+        private void FailIfNotException<T>(Action action, string message) where T : Exception
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch (T)
+            {
+                return;
+            }
+            Assert.Fail(message);
+        }
 
         private void BuildConstituentDataSource()
         {
@@ -202,15 +316,24 @@ namespace DDI.Business.Tests.CRM
 
             // Phone # for US constituent
             _contactInfo = new List<ContactInfo>();
-            _contactInfo.Add(new ContactInfo()
+            _contactInfo.Add(_usPhoneContactInfo = new ContactInfo()
             {
                 ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
                 Constituent = _constituents[0],
                 Info = "3175551234"                
             });
 
+            // Email
+            _contactInfo.Add(_emailContactInfo = new ContactInfo()
+            {
+                ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Email),
+                Constituent = _constituents[0],
+                Info = "jpublic@gmail.com"
+            });
+
+
             // Phone # for French constituent
-            _contactInfo.Add(new ContactInfo()
+            _contactInfo.Add(_foreignPhoneContactInfo = new ContactInfo()
             {
                 ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
                 Constituent = _constituents[1],

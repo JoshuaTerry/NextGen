@@ -30,7 +30,6 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Validation logic
         /// </summary>
-        /// <param name="contactInfo"></param>
         public override void Validate(ContactInfo contactInfo)
         {
             base.Validate(contactInfo);
@@ -43,6 +42,11 @@ namespace DDI.Business.CRM
             if (contactInfo.ContactTypeId.IsNullOrEmpty())
             {
                 throw new Exception("Contact type is not specified.");
+            }
+
+            if (contactInfo.ConstituentId.IsNullOrEmpty() && contactInfo.ParentContactId.IsNullOrEmpty())
+            {
+                throw new Exception("Contact information has no parent.");
             }
 
             // Get the category code.
@@ -65,6 +69,11 @@ namespace DDI.Business.CRM
         /// <param name="contactInfo">ContactInfo entity containing the phone number to be validated.</param>
         public bool ValidatePhoneNumber(ContactInfo contactInfo)
         {
+            if (contactInfo == null)
+            {
+                throw new ArgumentNullException(nameof(contactInfo));
+            }
+
             Country country = GetCountryForContactInfo(contactInfo);
             string phone = contactInfo.Info;
 
@@ -142,7 +151,9 @@ namespace DDI.Business.CRM
             foreach (char c in rawPhone)
             {
                 if (formatDigits > 0 && digits >= formatDigits)
+                {
                     sb.Append(c);
+                }
                 else if (char.IsDigit(c))
                 {
                     sb.Append(c);
@@ -196,7 +207,7 @@ namespace DDI.Business.CRM
         /// <returns></returns>
         public string FormatContactInformation(ContactInfo contactInfo)
         {
-            if (string.IsNullOrWhiteSpace(contactInfo.Info))
+            if (contactInfo == null || string.IsNullOrWhiteSpace(contactInfo.Info))
             {
                 return string.Empty;
             }
@@ -222,7 +233,7 @@ namespace DDI.Business.CRM
         /// <param name="localFormat">True if caller is dialing from their own country.</param>
         public string FormatPhoneNumber(ContactInfo contactInfo, bool includeInternationalPrefix = false, bool includeNANPPrefix = false, bool localFormat = false)
         {
-            if (string.IsNullOrWhiteSpace(contactInfo.Info))
+            if (contactInfo == null || string.IsNullOrWhiteSpace(contactInfo.Info))
             {
                 return string.Empty;
             }
@@ -242,6 +253,8 @@ namespace DDI.Business.CRM
         /// <param name="localFormat">True if caller is dialing from their own country.</param>
         public string FormatPhoneNumber(string phone, Country country = null, bool includeInternationalPrefix = false, bool includeNANPPrefix = false, bool localFormat = false)
         {
+            // Note:  Formatting logic supports calling within a country, or calling from USA to some other country.  
+            //        It does not currently support calling from a non-US country to a different country.
 
             if (string.IsNullOrWhiteSpace(phone))
             {
@@ -259,12 +272,11 @@ namespace DDI.Business.CRM
             {
                 string phoneFormat = country.PhoneFormat;
 
-                if (!localFormat)
-                {
-                    // Calling from USA...
+                if (!localFormat) // Calling from USA...
+                {                    
                     if (country.CallingCode == ContactInfoDefaults.NANPCallingCode)
                     {
-                        // NANP country
+                        // NANP country: USA, Canada, etc.
                         if (includeNANPPrefix)
                         {
                             sb.Append(ContactInfoDefaults.NANPTrunkPrefix);
@@ -273,7 +285,7 @@ namespace DDI.Business.CRM
                     }
                     else
                     {
-                        // Other country
+                        // Other non-NANP country
                         if (includeInternationalPrefix)
                         {
                             sb.Append(ContactInfoDefaults.DefaultInternationalPrefix);
@@ -281,16 +293,20 @@ namespace DDI.Business.CRM
                         }
                         if (!string.IsNullOrWhiteSpace(country.CallingCode))
                         {
+                            if (!includeInternationalPrefix)
+                            {
+                                sb.Append(ContactInfoDefaults.CallingCodeIndicator);
+                            }
                             sb.Append(country.CallingCode);
                             sb.Append(' ');
                         }
                     }
                 }
-                else
-                {
-                    // Calling from specified country...
-                    if (country.CallingCode == ContactInfoDefaults.DefaultInternationalPrefix)
+                else // Calling from specified country...
+                {                    
+                    if (country.CallingCode == ContactInfoDefaults.NANPCallingCode)
                     {
+                        // USA, Canada, etc.
                         if (includeNANPPrefix)
                         {
                             sb.Append(ContactInfoDefaults.NANPTrunkPrefix);
@@ -301,6 +317,7 @@ namespace DDI.Business.CRM
                     // Include the trunk if there is one.
                     else
                     {
+                        // Non-NANP country
                         if (!string.IsNullOrWhiteSpace(country.TrunkPrefix))
                         {
                             sb.Append(country.TrunkPrefix);
@@ -366,17 +383,20 @@ namespace DDI.Business.CRM
                 return string.Empty;
             }
 
-            for (int pos = digits; pos < text.Length; pos++)
+            for (int index = digits; index < text.Length; index++)
             {
                 // Skipping non-digits past the first (digits) characters.
-                if (char.IsDigit(text[pos]))
+                if (char.IsDigit(text[index]))
                 {
-                    return text.Substring(pos);
+                    return text.Substring(index);
                 }
             }
             return string.Empty;
         }
 
+        /// <summary>
+        /// For a ContactInfo, get the consitituent and grab the country from the constituent's primary address.
+        /// </summary>
         private Country GetCountryForContactInfo(ContactInfo contactInfo)
         {
             Country resultCountry = null;
@@ -386,11 +406,13 @@ namespace DDI.Business.CRM
             Constituent constituent = contactInfo.Constituent ?? UnitOfWork.GetReference(contactInfo, p => p.Constituent);
             if (constituent != null)
             {
+                // Get primary address.
                 var constituentAddressLogic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
                 Address address = constituentAddressLogic.GetAddress(constituent, AddressCategory.Primary)?.Address;
 
                 if (address != null)
                 {
+                    // Ensure country is loaded.
                     addressLogic.LoadAllProperties(address);
                     resultCountry = address.Country;
                 }                
