@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DDI.Shared.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting; 
 using DDI.Shared.Models;
 
 namespace DDI.Shared.Test.Helpers
