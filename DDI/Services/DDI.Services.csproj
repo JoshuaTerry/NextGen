@@ -70,8 +70,10 @@
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
     <Compile Include="IConstituentService.cs" />
+    <Compile Include="ILocationService.cs" />
     <Compile Include="ISectionPreferenceService.cs" />
     <Compile Include="LinqQuery.cs" />
+    <Compile Include="LocationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ConstituentSearch.cs" />
     <Compile Include="Search\PageableSearch.cs" />
