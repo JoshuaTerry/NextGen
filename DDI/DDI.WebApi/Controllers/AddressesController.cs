@@ -1,16 +1,11 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Routing;
+﻿using System.Runtime.InteropServices;
 using DDI.Services;
-using DDI.Services.Extensions;
-using Newtonsoft.Json.Linq;
-using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
@@ -28,7 +23,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id);
+            return base.GetById(GetUrlHelper(), id, fields);
         }
 
         [HttpPost]

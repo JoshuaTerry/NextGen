@@ -27,6 +27,15 @@ namespace DDI.Shared.Models.Client.CRM
         public bool IsChildLevel { get; set; }
 
 
+        public override string DisplayName
+        {
+            get
+            {
+                return Label;
+            }
+        }
+
         #endregion Public Properties
+
     }
 }
