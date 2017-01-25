@@ -55,7 +55,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<T> Update(Guid id, JObject changes)
+        public virtual IDataResponse<T> Update(Guid id, JObject changes)
         {
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 

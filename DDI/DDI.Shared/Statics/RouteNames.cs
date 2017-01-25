@@ -11,5 +11,6 @@ namespace DDI.Shared.Statics
         public const string Address = "Address";
         public const string Constituent = "Constituent";
         public const string ConstituentAddress = "ConstituentAddress";
+        public const string Region = "Region";
     }
 }
