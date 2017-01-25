@@ -1,106 +1,89 @@
-using System.Data.Entity;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.Core;
-using System.Data.Entity.Validation;
-using System.Data.Entity.Infrastructure;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using DDI.Shared;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Data
 {
     public class DomainContext : DbContext
     {
+        private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         #region Public Properties
-
+         
         public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
-        public virtual DbSet<Address> Addresses { get; set; }
+        #region Core Entities
 
-        public virtual DbSet<AddressType> AddressTypes { get; set; }
+        public DbSet<Configuration> Configurations { get; set; }
+        public DbSet<CustomField> CustomField { get; set; }
+        public DbSet<CustomFieldData> CustomFieldData { get; set; }
+        public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<SectionPreference> SectionPreferences { get; set; }
 
-        public virtual DbSet<AlternateId> AlternateIds { get; set; }
+        #endregion
 
-        public virtual DbSet<ClergyStatus> ClergyStatuses { get; set; }
+        #region CRM Entities
 
-        public virtual DbSet<ClergyType> ClergyTypes { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<AddressType> AddressTypes { get; set; }
+        public DbSet<AlternateId> AlternateIds { get; set; }
+        public DbSet<ClergyStatus> ClergyStatuses { get; set; }
+        public DbSet<ClergyType> ClergyTypes { get; set; }
+        public DbSet<Constituent> Constituents { get; set; }
+        public DbSet<ConstituentAddress> ConstituentAddresses { get; set; }         
+        public DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
+        public DbSet<ConstituentType> ConstituentTypes { get; set; }
+        public DbSet<ContactInfo> ContactInfoes { get; set; }
+        public DbSet<ContactCategory> ContactCategories { get; set; }
+        public DbSet<ContactType> ContactTypes { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
+        public DbSet<Denomination> Denominations { get; set; }
+        public DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<EducationLevel> EducationLevels { get; set; }         
+        public DbSet<Ethnicity> Ethnicities { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<IncomeLevel> IncomeLevels { get; set; }
+        public DbSet<MaritalStatus> MaritalStatuses { get; set; }
+        public DbSet<PaymentPreference> PaymentPreferences { get; set; }
+        public DbSet<Prefix> Prefixes { get; set; }
+        public DbSet<Profession> Professions { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<RegionArea> RegionAreas { get; set; }
+        public DbSet<RegionLevel> RegionLevels { get; set; }        
+        public DbSet<Relationship> Relationships { get; set; }
+        public DbSet<RelationshipCategory> RelationshipCategories { get; set; }
+        public DbSet<RelationshipType> RelationshipTypes { get; set; }
+        public DbSet<School> Schools { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagGroup> TagGroups { get; set; }
 
-        public virtual DbSet<Configuration> Configurations { get; set; }
+        #endregion
 
-        public virtual DbSet<Constituent> Constituents { get; set; }
+        #region CP Entities
 
-        public virtual DbSet<ConstituentAddress> ConstituentAddresses { get; set; }
-         
-        public virtual DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
+        public DbSet<CardPaymentMethod> CardPaymentMethods { get; set; }
+        public DbSet<EFTFormat> EFTFormats { get; set; }
+        public DbSet<EFTPaymentMethod> EFTPaymentMethods { get; set; }
+        public DbSet<PaymentMethodBase> PaymentMethods { get; set; }
 
-        public virtual DbSet<ConstituentType> ConstituentTypes { get; set; }
-
-        public virtual DbSet<ContactInfo> ContactInfoes { get; set; }
-
-        public virtual DbSet<ContactCategory> ContactCategories { get; set; }
-
-        public virtual DbSet<ContactType> ContactTypes { get; set; }
-
-        public virtual DbSet<CustomField> CustomField { get; set; }
-        
-        public virtual DbSet<CustomFieldData> CustomFieldData { get; set; }
-
-        public virtual DbSet<CustomFieldOption> CustomFieldOption { get; set; }
-
-        public virtual DbSet<Degree> Degrees { get; set; }
-
-        public virtual DbSet<Denomination> Denominations { get; set; }
-
-        public virtual DbSet<DoingBusinessAs> DoingBusinessAs { get; set; }
-
-        public virtual DbSet<Education> Educations { get; set; }
-
-        public virtual DbSet<EducationLevel> EducationLevels { get; set; }
-         
-        public virtual DbSet<Ethnicity> Ethnicities { get; set; }
-
-        public virtual DbSet<Gender> Genders { get; set; }
-
-        public virtual DbSet<IncomeLevel> IncomeLevels { get; set; }
-
-        public virtual DbSet<Language> Languages { get; set; }
-
-        public virtual DbSet<LogEntry> LogEntries { get; set; }
-
-        public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
-
-        public virtual DbSet<PaymentPreference> PaymentPreferences { get; set; }
-
-        public virtual DbSet<Prefix> Prefixes { get; set; }
-
-        public virtual DbSet<Profession> Professions { get; set; }
-
-        public virtual DbSet<Region> Regions { get; set; }
-
-        public virtual DbSet<RegionArea> RegionAreas { get; set; }
-
-        public virtual DbSet<RegionLevel> RegionLevels { get; set; }
-        
-        public virtual DbSet<Relationship> Relationships { get; set; }
-
-        public virtual DbSet<RelationshipCategory> RelationshipCategories { get; set; }
-
-        public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
-
-        public virtual DbSet<School> Schools { get; set; }
-
-        public virtual DbSet<SectionPreference> SectionPreferences { get; set; }
-
-        public virtual DbSet<Tag> Tags { get; set; }
-
-        public virtual DbSet<TagGroup> TagGroups { get; set; }
+        #endregion
 
         #endregion Public Properties
+
 
         #region Public Constructors
 
         public DomainContext()
-            : base("name=DomainContext")
+            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;

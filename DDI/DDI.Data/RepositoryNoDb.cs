@@ -207,14 +207,16 @@ namespace DDI.Data
                 propertyInfo?.SetValue(entity, keyValue.Value);
             }
 
-            action?.Invoke(entity);
+            action?.Invoke(entity);            
         }
 
         public List<string> GetModifiedProperties(T entity) 
         {
             return new List<string>();
         }
-        
+
+
+
         public T GetById(Guid id, params Expression<Func<T, object>>[] includes)
         {
             return GetById(id);
@@ -223,6 +225,60 @@ namespace DDI.Data
         public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
         {
             return Entities;
+        }
+
+        // Note:  The following methods apply only to the RepositoryNoDb class.
+
+        /// <summary>
+        /// Assign foreign key Guid properties for all entities.
+        /// </summary>
+        public void AssignForeignKeys()
+        {
+            foreach (var entity in _entities)
+            {
+                AssignForeignKeys(entity);
+            }
+        }
+
+        /// <summary>
+        /// Assign foreign key Guid properties for a specific entity.
+        /// </summary>
+        public void AssignForeignKeys(T entity)
+        {
+            var properties = typeof(T).GetProperties().Where(p => p.CanWrite);
+
+            // Step through writeable properties that are Guid or Guid?
+            foreach (var prop in properties.Where(p => p.PropertyType == typeof(Guid) || p.PropertyType == typeof(Guid?))) 
+            {
+                // This is a Guid property. If the name is "xId", look for property "x".
+                if (prop.Name.EndsWith("Id"))
+                {
+                    string entityPropName = prop.Name.Substring(0, prop.Name.Length - 2);
+                    var entityProp = properties.FirstOrDefault(p => p.Name == entityPropName);
+                    if (entityProp != null)
+                    {
+                        // Try to get the foreign key value.
+                        var fkEntity = entityProp.GetValue(entity) as EntityBase;
+                        if (fkEntity != null)
+                        {
+                            // Set the Id property to the foreign key's Id.
+                            prop.SetValue(entity, fkEntity.Id);
+                        }
+                        else
+                        {
+                            // Foreign key is null, so set the Id property to null or empty.
+                            if (prop.PropertyType == typeof(Guid?))
+                            {
+                                prop.SetValue(entity, null);
+                            }
+                            else
+                            {
+                                prop.SetValue(entity, default(Guid));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         #endregion Public Methods

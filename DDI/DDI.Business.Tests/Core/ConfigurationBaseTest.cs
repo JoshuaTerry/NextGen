@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DDI.Business.Common;
 using DDI.Business.Core;
 using DDI.Data;
-
+using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -92,6 +92,8 @@ namespace DDI.Business.Tests.Core
 
         private class TestConfiguration : ConfigurationBase
         {
+
+            public override ModuleType ModuleType { get; } = ModuleType.None;
             public List<Ethnicity> Ethnicities { get; set; }
         }
     }

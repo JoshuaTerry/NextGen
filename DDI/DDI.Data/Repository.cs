@@ -32,6 +32,7 @@ namespace DDI.Data
         private IDbSet<T> _entities = null;
         private SQLUtilities _utilities = null;
         private bool _isUOW = false;
+        private ICollection<T> _local = null;
 
         #endregion Private Fields
 
@@ -125,7 +126,7 @@ namespace DDI.Data
 
                 Attach(entity);
 
-                EntitySet.Remove(entity);
+                EntitySet.Remove(entity);                            
             }
             catch (DbEntityValidationException e)
             {
@@ -177,7 +178,11 @@ namespace DDI.Data
         /// </summary>
         public ICollection<T> GetLocal()
         {
-            return EntitySet.Local;
+            if (_local == null)
+            {
+                _local = EntitySet.Local;
+            }
+            return _local;
         }
 
         /// <summary>
@@ -248,8 +253,8 @@ namespace DDI.Data
                 {
                     // Add it only if not already added.
                     EntitySet.Add(entity);
-                }
-                
+                }                 
+
                 return entity;
             }
             catch (DbEntityValidationException e)
@@ -293,7 +298,7 @@ namespace DDI.Data
                 currentValues[keyValue.Key] = keyValue.Value;
             }
 
-            action?.Invoke(entity);            
+            action?.Invoke(entity); 
         }
 
         public List<string> GetModifiedProperties(T entity)

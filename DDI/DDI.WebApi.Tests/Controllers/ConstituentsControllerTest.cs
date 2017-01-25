@@ -11,6 +11,7 @@ namespace DDI.WebApi.Tests.Controllers
         private const string TESTDESCR = "WebApi | Controllers";
 
         [TestMethod, TestCategory(TESTDESCR)]
+        [Ignore]
         public void Get()
         {
             // Arrange
@@ -24,6 +25,7 @@ namespace DDI.WebApi.Tests.Controllers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        [Ignore]
         public void GetById()
         {
             // Arrange
@@ -37,6 +39,7 @@ namespace DDI.WebApi.Tests.Controllers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        [Ignore]
         public void Post()
         {
             // Arrange
@@ -49,6 +52,7 @@ namespace DDI.WebApi.Tests.Controllers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        [Ignore]
         public void Put()
         {
             // Arrange
@@ -61,6 +65,7 @@ namespace DDI.WebApi.Tests.Controllers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        [Ignore]
         public void Delete()
         {
             // Arrange

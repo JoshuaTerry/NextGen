@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 using DDI.Conversion;
 using DDI.Data;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.ModuleInfo;
 
 namespace DDI.Conversion.Core
 {
-    [ModuleType(Shared.Enums.ModuleType.SystemAdministration)]
+    /// <summary>
+    /// Seeding of initial data for the Core module.
+    /// </summary>
     internal class Initialize : ConversionBase
     {
         public enum ConversionMethod

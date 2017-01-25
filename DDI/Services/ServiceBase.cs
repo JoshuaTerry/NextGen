@@ -44,6 +44,7 @@ namespace DDI.Services
             try
             {
                 _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
