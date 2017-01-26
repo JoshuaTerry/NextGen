@@ -1,34 +1,18 @@
 ﻿using System.Web.Http;
 using DDI.Services;
-using DDI.Shared.Models.Client.Core; 
+using DDI.Services.Search;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class LanguagesController : ApiController
+    public class LanguagesController : ControllerBase<Language>
     {
-        ServiceBase<Language> _service;
-
-        public LanguagesController() : this(new ServiceBase<Language>()) { }
-        internal LanguagesController(ServiceBase<Language> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
-        [Route("api/v1/languages")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/languages", Name = RouteNames.Language)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(GetUrlHelper(), RouteNames.Language, limit, offset, orderBy, fields);
         }
     }
 }

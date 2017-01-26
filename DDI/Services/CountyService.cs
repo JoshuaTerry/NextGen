@@ -21,8 +21,11 @@ namespace DDI.Services
             var query = new CriteriaQuery<County, ForeignKeySearch>(result, search)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.Id, d => d.StateId);
 
+            var response = GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(c => c.DisplayName).ToList());
+            response.TotalResults = response.Data.Count;
+
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            return GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(c => c.DisplayName).ToList());
+            return response;
         }
 
         #endregion Public Methods

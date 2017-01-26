@@ -126,11 +126,7 @@ namespace DDI.Data
 
                 Attach(entity);
 
-                EntitySet.Remove(entity);
-                if (!_isUOW)
-                {
-                    _context.SaveChanges();
-                }                
+                EntitySet.Remove(entity);                            
             }
             catch (DbEntityValidationException e)
             {
@@ -257,12 +253,7 @@ namespace DDI.Data
                 {
                     // Add it only if not already added.
                     EntitySet.Add(entity);
-                }
-
-                if (!_isUOW)
-                {
-                    _context.SaveChanges();
-                }
+                }                 
 
                 return entity;
             }
@@ -283,11 +274,7 @@ namespace DDI.Data
 
                 Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
-                if (!_isUOW)
-                {
-                    _context.SaveChanges();
-                }
-
+                
                 return entity;
             }
             catch (DbEntityValidationException e)
@@ -296,12 +283,12 @@ namespace DDI.Data
             }
         }
 
-        public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public virtual void UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
-            return UpdateChangedProperties(GetById(id), propertyValues, action);
+            UpdateChangedProperties(GetById(id), propertyValues, action);
         }
 
-        public virtual int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public virtual void UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
@@ -311,9 +298,7 @@ namespace DDI.Data
                 currentValues[keyValue.Key] = keyValue.Value;
             }
 
-            action?.Invoke(entity);
-
-            return _isUOW ? 0 : _context.SaveChanges();
+            action?.Invoke(entity); 
         }
 
         public List<string> GetModifiedProperties(T entity)

@@ -80,6 +80,7 @@
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
     <Compile Include="ModuleInfo\ModuleInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegionLogicTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
