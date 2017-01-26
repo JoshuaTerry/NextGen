@@ -78,7 +78,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/users/roles")]
+        [Route("api/v1/users/roles/add")]
         public async Task<IHttpActionResult> Add([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeAddedToUsers(model.Emails, model.Roles) != null)
@@ -113,7 +113,7 @@ namespace DDI.WebApi.Controllers
         // This endpoint is given the POST attribute as DELETE does not allow a request body and we need it in order to send arrays of users and roles
         [HttpPost]
         [Route("api/v1/users/roles/remove")]
-        public async Task<IHttpActionResult> Delete([FromBody] UserRolesBindingModel model)
+        public async Task<IHttpActionResult> Remove([FromBody] UserRolesBindingModel model)
         {
             if (CanRolesBeRemovedFromUsers(model.Emails, model.Roles) != null)
             {
