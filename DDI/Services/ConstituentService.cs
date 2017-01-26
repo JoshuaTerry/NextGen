@@ -100,7 +100,19 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
-            Constituent constituent = _repository.GetById(id, c => c.ConstituentAddresses.First().Address, c => c.ConstituentType, c => c.Denominations, c => c.Ethnicities, c => c.Language);
+            Constituent constituent = _repository.GetById(id,
+                c => c.ClergyStatus,
+                c => c.ClergyType,
+                c => c.ConstituentStatus,
+                c => c.ConstituentType,
+                c => c.EducationLevel,
+                c => c.Gender,
+                c => c.IncomeLevel,
+                c => c.Language,
+                c => c.MaritalStatus,
+                c => c.Prefix,
+                c => c.Profession
+                );
             var response = GetIDataResponse(() => constituent);
 
             return response;
@@ -108,7 +120,7 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").Include("ConstituentType").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
             var response = GetIDataResponse(() => constituent);
             return response;
         }
