@@ -63,7 +63,7 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = result.TotalResults;
 
-                // Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
 
                 return Ok(dynamicResult);

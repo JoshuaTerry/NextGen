@@ -40,18 +40,19 @@ namespace DDI.Services
             _repository = _unitOfWork.GetRepository<Constituent>();
         }
         
-        public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
+        public override IDataResponse<List<Constituent>> GetAll(IPageable search)
         {
+            var constituentSearch = (ConstituentSearch) search;
             IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
-            var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
+            var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, constituentSearch)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
+                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(constituentSearch.City)))
+                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(constituentSearch.AlternateId)))
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
             // Created Range
-            ApplyZipFilter(query, search);
-            ApplyQuickFilter(query, search);
+            ApplyZipFilter(query, constituentSearch);
+            ApplyQuickFilter(query, constituentSearch);
 
             if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
             {
@@ -108,7 +109,7 @@ namespace DDI.Services
             }
         }
 
-        public IDataResponse<Constituent> GetConstituentById(Guid id)
+        public override IDataResponse<Constituent> GetById(Guid id)
         {
             Constituent constituent = _repository.GetById(id,
                 c => c.ClergyStatus,
@@ -130,8 +131,7 @@ namespace DDI.Services
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            var response = GetIDataResponse(() => constituent);
-            return response;
+            return GetById(constituent?.Id ?? Guid.Empty);
         }
 
         public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
@@ -150,9 +150,7 @@ namespace DDI.Services
 
             _unitOfWork.SaveChanges();
 
-            var constituent = _repository.GetById(id);
-
-            return GetIDataResponse(() => constituent);
+            return GetById(id);
         }
 
         public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)

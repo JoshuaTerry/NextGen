@@ -28,7 +28,7 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
-        public IDataResponse<List<T>> GetAll(IPageable search = null)
+        public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
         {
             if (search == null)
             {

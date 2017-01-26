@@ -37,7 +37,7 @@ namespace DDI.WebApi.Controllers
         #region Public Methods
 
         [HttpGet]
-        [Route("api/v1/states")]
+        [Route("api/v1/states", Name = RouteNames.State)]
         public IHttpActionResult GetAll(Guid? countryId = null, int? limit = 1000, int? offset = 0)
         {
             var search = new ForeignKeySearch()
@@ -62,7 +62,7 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = result.TotalResults;
                 
-                // Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.State);
+                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.State);
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper());
 
                 return Ok(dynamicResult);
