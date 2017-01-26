@@ -65,6 +65,7 @@ namespace DDI.Conversion.CP
         {
             DomainContext context = new DomainContext();
             char[] commaDelimiter = { ',' };
+            string eftPaymentMethodDiscriminator = typeof(EFTPaymentMethod).Name; // Value that EF would store in PaymentMethod.Discriminator
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -79,7 +80,7 @@ namespace DDI.Conversion.CP
                 joinOutputFile.SetColumnNames("PaymentMethodBase_Id", "Constituent_Id");
 
                 // The actual payment method file.
-                var outputFile = new FileExport<EFTPaymentMethod>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
+                var outputFile = new FileExport<EFTPaymentMethodWithDiscriminator>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
 
                 // Legacy ID file, to convert from OE id to SQL Id.
                 FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.PaymentMethodIdMappingFile), append, true);
@@ -110,7 +111,7 @@ namespace DDI.Conversion.CP
                     // Not all EFTInfo rows have a constituent number (PIN).  If PIN > 0, grab the constituent.
                     if (constituentNum > 0)
                     {
-                        _constituentIds.GetValueOrDefault(constituentNum);
+                        constituentId = _constituentIds.GetValueOrDefault(constituentNum);
                         if (constituentId == null || constituentId.Value == Guid.Empty)
                         {
                             importer.LogError($"Invalid constituent number {constituentNum}.");
@@ -127,11 +128,12 @@ namespace DDI.Conversion.CP
                     string legacyId = importer.GetString(7);
                     string statusCode = importer.GetString(8);
 
-                    var eftInfo = new EFTPaymentMethod();
+                    var eftInfo = new EFTPaymentMethodWithDiscriminator();
                     eftInfo.BankAccount = bankAccount;
                     eftInfo.BankName = bankName;
                     eftInfo.RoutingNumber = routingNumber;
                     eftInfo.Description = description;
+                    eftInfo.Discriminator = eftPaymentMethodDiscriminator;
                     
                     if (tranCode == "22")
                     {
@@ -191,6 +193,16 @@ namespace DDI.Conversion.CP
             }
         }
 
+        /// <summary>
+        /// Internal class for EFTPaymentMethod with a "Discriminator" column added.
+        /// </summary>
+        private class EFTPaymentMethodWithDiscriminator : EFTPaymentMethod
+        {
+            public string Discriminator { get; set; }
+        }
 
     }
+
+
+
 }
