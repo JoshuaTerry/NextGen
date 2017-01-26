@@ -8,6 +8,8 @@ h3 {  }
 a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
 
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
 
@@ -84,7 +86,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; border-radius: 5px; }
 .ui-dialog-titlebar { background-color: #0f75b4; color: white; }
 
-.modalcontent {  }
+.modalcontent { margin-top: 10px; }
 .modalcontent fieldset { margin-bottom: 10px; }
 .modalcontent div.inline { margin-bottom: 5px; }
 

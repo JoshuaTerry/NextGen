@@ -182,6 +182,7 @@
     <Compile Include="Statics\CRM\ConstituentTypeCodes.cs" />
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
+    <Compile Include="Statics\OrderByProperties.cs" />
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
