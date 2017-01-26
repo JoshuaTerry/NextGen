@@ -1,5 +1,6 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
+var currentaddress = null;
 
 $(document).ready(function () {
 
@@ -11,11 +12,17 @@ $(document).ready(function () {
         Resize();
     });
 
-    if (sessionStorage.getItem('constituentnumber')) {
-        GetConstituentData(parseInt(sessionStorage.getItem('constituentnumber')));
+    if (sessionStorage.getItem('constituentid')) {
 
-        sessionStorage.removeItem('constituentnumber');
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
+
+        // sessionStorage.removeItem('constituentnumber');
+
     }
+
+    GetConstituentData($('.hidconstituentid').val());
+
+    NewAddressModal();
 
 });
 
@@ -45,7 +52,7 @@ function LoadDropDowns() {
 function GetConstituentData(id) {
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituents/number/' + id,
+        url: WEB_API_ADDRESS + 'constituents/' + id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -83,7 +90,12 @@ function DisplayConstituentData() {
                 var classname = '.' + key;
 
                 if ($(classname).is('input')) {
-                    $(classname).val(value);
+                    if ($(classname).is(':checkbox')) {
+                        $(classname).prop('checked', value);
+                    }
+                    else {
+                        $(classname).val(value);
+                    }
                 }
 
                 if ($(classname).is('select')) {
@@ -259,7 +271,28 @@ function LoadPaymentPreferencesTable() {
 
 }
 
+
 function LoadAlternateIDTable() {
+
+    var columns = [
+            { dataField: 'ID', caption: 'ID', },
+            { dataField: 'ABANumber', caption: 'Code' },
+            { dataField: 'AccountNumber', caption: 'Type' }
+    ];
+    // LoadGrid('alternateidtable', 'alternateidgrid', 'alternateidroute', columns);
+    $('.newaltidmodal').click(function () {
+        $('.alternateidmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+           //  height: 225,
+            resizable: false
+        })
+    })
+}
+
+
+function NewAddressModal() {
 
     var columns = [
             { dataField: 'ID', caption: 'ID', },

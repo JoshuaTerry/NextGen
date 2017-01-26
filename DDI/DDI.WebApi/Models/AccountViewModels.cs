@@ -2,7 +2,7 @@
 
 namespace DDI.WebApi.Models
 {
-    // Models returned by AccountController actions.
+    // Models returned by AuthorizationsController actions.
 
     public class ExternalLoginViewModel
     {

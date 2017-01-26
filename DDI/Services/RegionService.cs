@@ -1,4 +1,8 @@
-﻿using DDI.Business.CRM;
+﻿using System;
+using System.Collections.Generic;
+using DDI.Business.CRM;
+using System.Text;
+using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
@@ -58,6 +62,6 @@ namespace DDI.Services
         {            
             var result =_logic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
             return GetIDataResponse(() => result.ToList());
-        }         
+        }
     }
 }
