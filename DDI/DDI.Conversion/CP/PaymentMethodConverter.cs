@@ -20,7 +20,7 @@ namespace DDI.Conversion.CP
 {
 
     /// <summary>
-    /// OpenEdge to SSIS Data Conversion for the payment methods (CRM and CP).
+    /// OpenEdge to SSIS Data Conversion for the payment methods and linkage to constituents.
     /// </summary>
     internal class PaymentMethodConverter : ConversionBase
     {
@@ -69,19 +69,19 @@ namespace DDI.Conversion.CP
             // Load the constituent Ids
             LoadConstituentIds();
 
-            // Load the tags
+            // Load the EFT formats
             var formats = LoadEntities(context.EFTFormats);
 
             using (var importer = CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)))
             {
-                // This is a join table created by EF.
+                // This is a join table for PaymentMethodBaseConstituents, created by EF.
                 var joinOutputFile = new FileExport<JoinRow>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodConstituentFile), append);
                 joinOutputFile.SetColumnNames("PaymentMethodBase_Id", "Constituent_Id");
 
                 // The actual payment method file.
                 var outputFile = new FileExport<EFTPaymentMethod>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
 
-                // Legacy ID file
+                // Legacy ID file, to convert from OE id to SQL Id.
                 FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.PaymentMethodIdMappingFile), append, true);
                 
                 if (!append)
@@ -99,16 +99,23 @@ namespace DDI.Conversion.CP
                     int constituentNum;
                     string constituentNumText = importer.GetString(0);
                 
-                    if (string.IsNullOrWhiteSpace(constituentNumText) || !int.TryParse(constituentNumText, out constituentNum))
+                    if (!int.TryParse(constituentNumText, out constituentNum))
                     {
+                        // non-blank invalid constituent number is probably a header row and can be skipped.
                         continue;
                     }
 
-                    Guid constituentId = _constituentIds.GetValueOrDefault(constituentNum);
-                    if (constituentId == default(Guid))
+                    Guid? constituentId = null;
+
+                    // Not all EFTInfo rows have a constituent number (PIN).  If PIN > 0, grab the constituent.
+                    if (constituentNum > 0)
                     {
-                        importer.LogError($"Invalid constituent number {constituentNum}.");
-                        continue;
+                        _constituentIds.GetValueOrDefault(constituentNum);
+                        if (constituentId == null || constituentId.Value == Guid.Empty)
+                        {
+                            importer.LogError($"Invalid constituent number {constituentNum}.");
+                            continue;
+                        }
                     }
 
                     string description = importer.GetString(1, 128);
@@ -161,7 +168,11 @@ namespace DDI.Conversion.CP
                     }
                                         
                     eftInfo.AssignPrimaryKey();
-                    joinOutputFile.AddRow(new JoinRow(eftInfo.Id, constituentId));
+
+                    if (constituentId != null)
+                    {
+                        joinOutputFile.AddRow(new JoinRow(eftInfo.Id, constituentId.Value));
+                    }
 
                     outputFile.AddRow(eftInfo);
 
