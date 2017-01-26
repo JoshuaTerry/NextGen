@@ -55,10 +55,7 @@ namespace DDI.Business.CRM
             // If phone, format the phone number.
             if (categoryCode == ContactCategoryCodes.Phone)
             {
-                if (!ValidatePhoneNumber(contactInfo))
-                {
-                    throw new Exception("Phone number format is not valid for constituent's country.");
-                }
+                ValidatePhoneNumber(contactInfo);                
             }
 
         }
@@ -67,7 +64,7 @@ namespace DDI.Business.CRM
         /// Validate a phone number, removing formatting characters.
         /// </summary>
         /// <param name="contactInfo">ContactInfo entity containing the phone number to be validated.</param>
-        public bool ValidatePhoneNumber(ContactInfo contactInfo)
+        public void ValidatePhoneNumber(ContactInfo contactInfo)
         {
             if (contactInfo == null)
             {
@@ -77,23 +74,23 @@ namespace DDI.Business.CRM
             Country country = GetCountryForContactInfo(contactInfo);
             string phone = contactInfo.Info;
 
-            if (!ValidatePhoneNumber(ref phone, country))
+            phone = SimplifyPhoneNumberForCountry(phone, country);
+            if (phone == null)
             {
-                return false;
+                throw new Exception("Phone number format is not valid for constituent's country.");
             }
 
-            contactInfo.Info = phone;
-            return true;
+            contactInfo.Info = phone;            
         }
 
 
         /// <summary>
-        /// Validate a phone number, removing formatting characters.
+        /// Simplify a phone number for a country, removing formatting characters and country-specific prefixes.
         /// </summary>
-        /// <param name="phone">Phone number.  If validated, formatting characters will be removed.</param>
+        /// <param name="phone">Phone number.</param>
         /// <param name="country">Country</param>
-        /// <returns></returns>
-        public bool ValidatePhoneNumber(ref string phone, Country country)
+        /// <returns>Null if phone number format is not valid for specified country.</returns>
+        public string SimplifyPhoneNumberForCountry(string phone, Country country)
         {
             string rawPhone; // Phone # minus extra stuff.
             string format;
@@ -101,7 +98,7 @@ namespace DDI.Business.CRM
 
             if (string.IsNullOrWhiteSpace(phone))
             {
-                return true;
+                return string.Empty;
             }
 
             rawPhone = phone;
@@ -164,14 +161,16 @@ namespace DDI.Business.CRM
             // If there were enough digits, store the raw data.
             if (formatDigits > 0 && formatDigits <= digits)
             {
-                phone = sb.ToString();
-            }
-            else
-            {
-                phone = rawPhone;
+                rawPhone = sb.ToString();
             }
 
-            return (digits >= formatDigits);
+            // If there were not enough digits, return null.
+            else if (formatDigits > digits)
+            {
+                rawPhone = null;
+            }
+
+            return rawPhone;
         }
 
         /// <summary>

@@ -68,58 +68,57 @@ namespace DDI.Business.Tests.CRM
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void ContactInfoLogic_ValidatePhoneNumber_Entity()
+        public void ContactInfoLogic_ValidatePhoneNumber()
         {
             BuildConstituentDataSource();
 
             _usPhoneContactInfo.Info = "317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(_usPhoneContactInfo), "10-digit US format valid");
+            FailIfException(() => _bl.ValidatePhoneNumber(_usPhoneContactInfo), "10-digit US format valid");
             Assert.AreEqual("3175551234", _usPhoneContactInfo.Info, "10-digit US format returns raw digits");
 
-            Assert.IsTrue(_bl.ValidatePhoneNumber(_foreignPhoneContactInfo), "9-digit French format valid");
+            FailIfException(() => _bl.ValidatePhoneNumber(_foreignPhoneContactInfo), "9-digit French format valid");
 
             FailIfNotException<ArgumentNullException>(() => _bl.ValidatePhoneNumber(null), "Null argument should throw exception.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void ContactInfoLogic_ValidatePhoneNumber_String()
+        public void ContactInfoLogic_SimplifyPhoneNumberForCountry()
         {
-            string phone;
+            string result;
             Country country = _countries.FirstOrDefault(p => p.ISOCode == AddressDefaults.DefaultCountryCode);
+            
+            result = _bl.SimplifyPhoneNumberForCountry("317-555-1234", country);
+            Assert.IsNotNull(result, "10-digit US format valid");
+            Assert.AreEqual("3175551234", result, "10-digit US format returns raw digits");
 
-            phone = "317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "10-digit US format valid");
-            Assert.AreEqual("3175551234", phone, "10-digit US format returns raw digits");
+            result = _bl.SimplifyPhoneNumberForCountry("(317) 555-1234 x5678", country);
+            Assert.IsNotNull(result, "10-digit with extension valid");
+            Assert.AreEqual("3175551234 x5678", result, "First 10 digits returned raw");
 
-            phone = "(317) 555-1234 x5678";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "10-digit with extension valid");
-            Assert.AreEqual("3175551234 x5678", phone, "First 10 digits returned raw");
+            result = _bl.SimplifyPhoneNumberForCountry("1-317-555-1234", country);        
+            Assert.IsNotNull(result, "10-digit US format with trunk prefix valid");
+            Assert.AreEqual("3175551234", result, "10-digit US format with trunk prefix returns raw digits");
 
-            phone = "1-317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "10-digit US format with trunk prefix valid");
-            Assert.AreEqual("3175551234", phone, "10-digit US format with trunk prefix returns raw digits");
+            result = _bl.SimplifyPhoneNumberForCountry("555-1234", country);
+            Assert.IsNull(result, "7 digit format not valid");
 
-            phone = "555-1234";
-            Assert.IsFalse(_bl.ValidatePhoneNumber(ref phone, country), "7 digit format not valid");
-            Assert.AreEqual("555-1234", phone, "Invalid format returned as-is");
+            country = _countries.FirstOrDefault(p => p.ISOCode == "CA");            
+            result = _bl.SimplifyPhoneNumberForCountry("403-555-1234", country);
+            Assert.IsNotNull(result, "10-digit Canadian format valid");
+            Assert.AreEqual("4035551234", result, "10-digit Canadian format returns raw digits");
 
-            country = _countries.FirstOrDefault(p => p.ISOCode == "CA");
-            phone = "317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "10-digit Canadian format valid");
-            Assert.AreEqual("3175551234", phone, "10-digit Canadian format returns raw digits");
-
-            phone = "+011-1-317-555-1234";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "Full international Canadian format valid");
-            Assert.AreEqual("3175551234", phone, "Full international Canadian format returns raw digits");
+            result = _bl.SimplifyPhoneNumberForCountry("+011-1-403-555-1234", country);
+            Assert.IsNotNull(result, "Full international Canadian format valid");
+            Assert.AreEqual("4035551234", result, "Full international Canadian format returns raw digits");
 
             country = _countries.FirstOrDefault(p => p.ISOCode == "FR");
-            phone = "5 23 45 67 89";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "9-digit French format valid");
-            Assert.AreEqual("523456789", phone, "9-digit French format returns raw digits");
+            result = _bl.SimplifyPhoneNumberForCountry("5 23 45 67 89", country);
+            Assert.IsNotNull(result, "9-digit French format valid");
+            Assert.AreEqual("523456789", result, "9-digit French format returns raw digits");
 
-            phone = "+011-33-523-456789";
-            Assert.IsTrue(_bl.ValidatePhoneNumber(ref phone, country), "9-digit French format with US dialing prefix valid");
-            Assert.AreEqual("523456789", phone, "9-digit French format with US dialing prefix returns raw digits");
+            result = _bl.SimplifyPhoneNumberForCountry("+011-33-523-456789", country);
+            Assert.IsNotNull(result, "9-digit French format with US dialing prefix valid");
+            Assert.AreEqual("523456789", result, "9-digit French format with US dialing prefix returns raw digits");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
