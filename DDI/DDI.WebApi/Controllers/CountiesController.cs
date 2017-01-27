@@ -2,10 +2,13 @@
 using DDI.Services.Search;
 using System;
 using System.Web.Http;
+using DDI.Shared.Models.Common;
+using DDI.Shared.Statics;
+using Microsoft.AspNet.Identity;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CountiesController : ApiController
+    public class CountiesController : ControllerBase<County>
     {
         #region Private Fields
 
@@ -34,26 +37,41 @@ namespace DDI.WebApi.Controllers
         #region Public Methods
 
         [HttpGet]
-        [Route("api/v1/counties")]
-        public IHttpActionResult GetAll(Guid? stateId = null,
-                                        string orderBy = "Description")
+        [Route("api/v1/counties", Name = RouteNames.County)]
+        public IHttpActionResult GetAll(Guid? stateId = null, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var search = new CountySearch()
+            var search = new ForeignKeySearch()
             {
-                StateId = stateId,
-                OrderBy = orderBy,
+                Id = stateId,
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderBy
             };
-            var result = _service.GetAll(search);
 
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetAll(search);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var totalCount = result.TotalResults;
+
+                // Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+
+                return Ok(dynamicResult);
             }
-            if (!result.IsSuccessful)
+            catch (Exception)
             {
                 return InternalServerError();
             }
-            return Ok(result);
         }
 
         #endregion Public Methods

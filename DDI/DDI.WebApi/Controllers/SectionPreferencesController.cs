@@ -1,19 +1,20 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Cors;
-using DDI.Data;
+using System.Web.Http.Cors; 
 using DDI.Services;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
+using DDI.WebApi.Helpers;
 
 namespace DDI.WebApi.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class SectionPreferencesController : ApiController
+    public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
         private ISectionPreferenceService _service;
 
         public SectionPreferencesController()
-            :this(new SectionPreferenceService(new CachedRepository<SectionPreference>()))
-        {
+            :this(new SectionPreferenceService())
+        {            
         }
 
         internal SectionPreferencesController(ISectionPreferenceService service)
@@ -22,21 +23,31 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/preferences/constituent")]
+        [Route("api/v1/preferences/constituent", Name = RouteNames.SectionPreference + RouteNames.Constituent)]
         public IHttpActionResult GetSectionPreferences(string sectionName)
         {
-            var response = _service.GetPreferencesBySectionName(sectionName);
-            
-            if (response == null)
+            try
             {
-                return NotFound();
+                var response = _service.GetPreferencesBySectionName(sectionName);
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+                if (!response.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+
             }
-            if (!response.IsSuccessful)
+            catch (System.Exception)
             {
                 return InternalServerError();
             }
-
-            return Ok(response);
         }         
     }
 }

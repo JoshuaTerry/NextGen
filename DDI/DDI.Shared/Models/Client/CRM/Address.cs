@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Attributes;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Address"), EntityType("CRM_Address")]
+    [Table("Address"), Hateoas(RouteNames.Address)]
     public class Address : EntityBase
     {
         #region Public Properties
@@ -42,49 +43,49 @@ namespace DDI.Shared.Models.Client.CRM
         public Guid? Region4Id { get; set; }
 
         // Non-mapped properties
+
+        private Country _country = null;
         [NotMapped]
         public Country Country
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetCountry(CountryId);
+                return _country;
             }
             set
             {
-                CountryId = value.Id;
+                CountryId = value?.Id;
+                _country = value;
             }
         }
 
+        private State _state = null;
         [NotMapped]
         public State State
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetState(StateId);
+                return _state;
             }
             set
             {
-                StateId = value.Id;
+                StateId = value?.Id;
+                _state = value;
             }
         }
 
-
+        private County _county = null;
         [NotMapped]
         public County County
         {
             get
             {
-                //TODO: 
-                return null;
-                //return CommonDataCache.GetCounty(CountyId);
+                return _county;
             }
             set
             {
-                CountyId = value.Id;
+                CountyId = value?.Id;
+                _county = value;
             }
         }
 

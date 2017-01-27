@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("ConstituentAddress")]
+    [Table("ConstituentAddress"), Hateoas(RouteNames.ConstituentAddress)]
     public class ConstituentAddress : EntityBase
     {
         #region Public Properties
@@ -48,6 +50,14 @@ namespace DDI.Shared.Models.Client.CRM
         public Constituent Constituent { get; set; }
 
         public AddressType AddressType { get; set; }
+
+        public override string DisplayName
+        {
+            get
+            {
+                return AddressType?.Code ?? Id.ToString();
+            }
+        }
 
         #endregion Public Properties
     }

@@ -37,9 +37,9 @@ namespace DDI.Shared
 
         T Update(T entity);
 
-        int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null);
+        void UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null);
 
-        int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null);
+        void UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null);
 
         List<string> GetModifiedProperties(T entity);
 
@@ -59,4 +59,11 @@ namespace DDI.Shared
 
         #endregion Public Methods
     }
+
+    // Defines non-generic versions of properties and methods.  (These are added only if needed.)
+    public interface IRepository
+    {
+        IQueryable Entities { get; }
+    }
+
 }

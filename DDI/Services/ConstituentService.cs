@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using DDI.Data;
 using DDI.Shared;
 using Newtonsoft.Json.Linq; 
@@ -9,6 +11,7 @@ using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.Services
 {
@@ -45,11 +48,15 @@ namespace DDI.Services
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId)
-                .SetOrderBy(search.OrderBy);
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
             // Created Range
             ApplyZipFilter(query, search);
             ApplyQuickFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
+            {
+                query = query.SetOrderBy(search.OrderBy);
+            }
 
             var totalCount = query.GetQueryable().ToList().Count;
 
@@ -57,96 +64,15 @@ namespace DDI.Services
                          .SetOffset(search.Offset);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            IDataResponse<List<Constituent>> response = GetIDataResponse(() => query.GetQueryable().ToList());
-            response.TotalResults = totalCount;
-            response.PageSize = search.Limit;
-            response.PageNumber = search.Offset + 1;
-            response.Links = new List<HATEOASLink>()
+            var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            if (search.OrderBy == OrderByProperties.DisplayName)
             {
-                new HATEOASLink()
-                {
-                    Href = search.ToQueryString(),
-                    Relationship = "self",
-                    Method = "GET"
-                }
-            };
-            if (response.TotalResults > 1)
-            {
-                response.Links.AddRange(AddPagingLinks(search, response));
+                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
             }
+
+            response.TotalResults = totalCount;
 
             return response;
-        }
-
-        private List<HATEOASLink> AddPagingLinks(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            var pagingLinks = new List<HATEOASLink>();
-
-            pagingLinks.Add(CreateFirstPageLink(originalSearch, response));
-            pagingLinks.Add(CreatePreviousPageLink(originalSearch, response));
-            pagingLinks.Add(CreateNextPageLink(originalSearch, response));
-            pagingLinks.Add(CreateLastPageLink(originalSearch, response));
-
-            return pagingLinks;
-        }
-
-        private HATEOASLink CreateFirstPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink firstPageLink = null;
-            firstPageLink = new HATEOASLink()
-            {
-                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset=0&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                Relationship = "first-page",
-                Method = "GET"
-            };
-            
-            return firstPageLink;
-        }
-
-        private HATEOASLink CreatePreviousPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink previousPageLink = null;
-            if (originalSearch.Offset > 0)
-            {
-                previousPageLink = new HATEOASLink()
-                {
-                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={--originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                    Relationship = "previous-page",
-                    Method = "GET"
-                };
-            }
-
-            return previousPageLink;
-        }
-
-        private HATEOASLink CreateNextPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink nextPageLink = null;
-            if (originalSearch.Offset < response.TotalResults/originalSearch.Limit)
-            {
-                nextPageLink = new HATEOASLink()
-                {
-                    Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={++originalSearch.Offset ?? 0}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                    Relationship = "next-page",
-                    Method = "GET"
-                };
-            }
-
-            return nextPageLink;
-        }
-
-        private HATEOASLink CreateLastPageLink(ConstituentSearch originalSearch, IDataResponse response)
-        {
-            HATEOASLink lastPageLink = null;
-            lastPageLink = new HATEOASLink()
-            {
-                Href = $"{originalSearch.GenericToQueryString(originalSearch)}&offset={response.TotalResults / originalSearch.Limit}&limit={originalSearch.Limit}&orderby={originalSearch.OrderBy}",
-                Relationship = "last-page",
-                Method = "GET"
-            };
-
-
-            return lastPageLink;
         }
 
         private void ApplyQuickFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
@@ -184,35 +110,15 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> GetConstituentById(Guid id)
         {
-            Constituent constituent = _repository.GetById(id);
-            IDataResponse<Constituent> response = GetIDataResponse(() => constituent);
-            response.Links = new List<HATEOASLink>()
-            {
-                new HATEOASLink()
-                {
-                    Href = $"api/v1/constituents/{id}",
-                    Relationship = "self",
-                    Method = "GET"
-                }
-            };
-
+            Constituent constituent = _repository.GetById(id, c => c.ConstituentType);
+            var response = GetIDataResponse(() => constituent);
             return response;
         }
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            IDataResponse<Constituent> response = GetIDataResponse(() => constituent);
-            response.Links = new List<HATEOASLink>()
-            {
-                new HATEOASLink()
-                {
-                    Href = $"api/v1/constituents?constituentNum={constituentNum}",
-                    Relationship = "self",
-                    Method = "GET"
-                }
-            };
-
+            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").Include("ConstituentType").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            var response = GetIDataResponse(() => constituent);
             return response;
         }
 
@@ -246,7 +152,16 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<EducationLevel> GetEducationLevels(Guid constituentId)
+        public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
+        {
+            Repository<ConstituentAddress> dbaRepo = new Repository<ConstituentAddress>();
+            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
+
+            IDataResponse<List<ConstituentAddress>> response = new DataResponse<List<ConstituentAddress>> { Data = data.ToList() };
+            return response;
+        }
+
+        public IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId)
         {
             Repository<Constituent> repo = new Repository<Constituent>();
             var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;
@@ -255,15 +170,20 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse AddConstituent(Constituent constituent)
+        public IDataResponse<Constituent> AddConstituent(Constituent constituent)
         {
-            var response = SafeExecute(() => 
+            try
             {
                 _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
                 _unitOfWork.SaveChanges();
-            });
-            return response;
+
+                return GetById(constituent.Id);
+            }
+            catch (Exception ex)
+            {
+                return ProcessIDataResponseException(ex);
+            };
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)

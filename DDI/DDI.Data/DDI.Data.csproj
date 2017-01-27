@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Web" />
@@ -62,6 +63,26 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.cs" />
+    <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.Designer.cs">
+      <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701232316587_PaymentMethod.cs" />
+    <Compile Include="Migrations\Client\201701232316587_PaymentMethod.Designer.cs">
+      <DependentUpon>201701232316587_PaymentMethod.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701152046175_ContactInfo.cs" />
+    <Compile Include="Migrations\Client\201701152046175_ContactInfo.Designer.cs">
+      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.cs" />
+    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.Designer.cs">
+      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.cs" />
+    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.Designer.cs">
+      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
     <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
       <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
@@ -71,8 +92,9 @@
       <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
-    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.Designer.cs">
-      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.cs" />
+    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.Designer.cs">
+      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
     <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
@@ -161,9 +183,10 @@
     <Compile Include="Migrations\Client\201612052134024_InitialMigration.cs" />
     <Compile Include="Migrations\Client\201612052134024_InitialMigration.Designer.cs">
       <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
-    </Compile> 
+    </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryNoDb.cs" />
     <Compile Include="Repository.cs" />
@@ -176,6 +199,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201701242312159_PaymentMethod_v2.resx">
+      <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701232316587_PaymentMethod.resx">
+      <DependentUpon>201701232316587_PaymentMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701152046175_ContactInfo.resx">
+      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701141745544_MaritalStatus2.resx">
+      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701131918535_Update SectionPreferences.resx">
+      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
       <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
     </EmbeddedResource>
@@ -184,6 +222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
       <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701131622214_AddingCustomFields.resx">
+      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
       <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
