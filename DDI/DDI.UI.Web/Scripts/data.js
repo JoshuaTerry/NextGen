@@ -1,11 +1,4 @@
 ﻿
-
-function ClearElement(e) {
-
-    $(e).html('');
-
-}
-
 function AddDefaultOption(e, text, val) {
 
     var option = $('<option>').val('null').text('');
@@ -13,7 +6,7 @@ function AddDefaultOption(e, text, val) {
 
 }
 
-function MakeServiceCall(e, method) {
+function MakeServiceCall(e, method, selectedValue) {
 
     $.ajax({
         url: WEB_API_ADDRESS + method,
@@ -25,10 +18,14 @@ function MakeServiceCall(e, method) {
 
             $.map(data.Data, function (item) {
 
-                option = $('<option>').val(item.Id).text(item.DisplayName); //item.Name || item.Description
+                option = $('<option>').val(item.Id).text(item.DisplayName);
                 $(option).appendTo($(e));
 
             });
+
+            if (selectedValue) {
+                $(e).val(selectedValue);
+            }
 
         },
         failure: function (response) {
@@ -38,21 +35,21 @@ function MakeServiceCall(e, method) {
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue) {
+function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue) {
 
     ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
-    MakeServiceCall(e, method);
+    MakeServiceCall(e, method, selectedValue);
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue, callback) {
+function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, callback) {
 
     ClearElement(e);
     AddDefaultOption(e, defaultText, defaultValue);
 
-    MakeServiceCall(e, method);
+    MakeServiceCall(e, method, selectedValue);
 
     if (callback) {
 

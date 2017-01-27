@@ -13,7 +13,7 @@ using Moq;
 namespace DDI.WebApi.Tests.Controllers
 {
     [TestClass]
-    public class AccountControllerTests
+    public class AuthorizationsControllerTests
     {
         [TestMethod]
         public async Task GetManageInfo()
@@ -25,7 +25,7 @@ namespace DDI.WebApi.Tests.Controllers
             mockIdentity.Setup(x => x.FindFirst(It.IsAny<string>())).Returns(claim);
             principal.SetupGet(p => p.Identity).Returns(mockIdentity.Object);
             var accountManager = new FakeApplicationUserManager();
-            var target = new AccountController(accountManager, null);
+            var target = new AuthorizationsController(accountManager, null);
             target.User = principal.Object;
             var result = await target.GetManageInfo("", false);
             Assert.AreEqual(result.Email, userId);

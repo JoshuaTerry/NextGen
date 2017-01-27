@@ -190,7 +190,12 @@ function LoadAccordions() {
 
     $('.accordions').accordion({
         heightStyle: "content",
-        collapsible: true
+        collapsible: true,
+        beforeActivate: function (event, ui) {
+            var newbutton = $(event.originalEvent.target).is('.ui-accordion-header > .newbutton');
+            if (newbutton)
+                return false;
+        }
     });
 
     $('.accordions').each(function () {
@@ -244,6 +249,34 @@ function FormatJSONDate(jsonDate) {
     }
     
     return date;
+}
+
+function ClearElement(e) {
+
+    if ($(e).is('select')
+        || $(e).is('div')) {
+
+        $(e).html('');
+
+    }
+
+    if ($(e).is('input')) {
+
+        if ($(e).is(':checkbox')) {
+            $(e).prop('checked', false);
+        }
+        else {
+            $(e).val('');
+        }
+
+    }
+    
+    if ($(e).is('textarea')) {
+
+        $(e).text('');
+
+    }
+
 }
 
 
@@ -405,11 +438,10 @@ function GetEditedFields(editcontainer) {
 
     var p = [];
 
-    // Fix the datetime / checkbox saving issue
     $(editcontainer).find('input.editable').each(function () {
 
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = '';
 
         if ($(this).is(':checkbox')) {
@@ -435,7 +467,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('select').each(function () {
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = $(this).val();
 
         for (var key in currentEntity) {

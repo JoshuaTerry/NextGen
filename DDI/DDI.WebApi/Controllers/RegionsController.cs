@@ -5,7 +5,14 @@ using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers
 {
@@ -45,7 +52,6 @@ namespace DDI.WebApi.Controllers
 
             return Ok(result);
         }
- 
         [HttpGet]
         [Route("api/v1/regions/address", Name = RouteNames.Region + RouteNames.Address + RouteVerbs.Get)]
         public IHttpActionResult GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
@@ -56,6 +62,25 @@ namespace DDI.WebApi.Controllers
             {
                 return NotFound();
             }
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/v1/regions/{id}")]
+        public IHttpActionResult GetById(Guid id)
+        {
+            var result = _service.GetById(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             if (!result.IsSuccessful)
             {
                 return InternalServerError();
@@ -101,9 +126,23 @@ namespace DDI.WebApi.Controllers
 
         [HttpDelete]
         [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Delete)]
-        public IHttpActionResult Delete(Guid id)
+        public IHttpActionResult Delete(Region item)
         {
-            return Ok();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var response = _service.Delete(item);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
     }
 }

@@ -13,3 +13,23 @@
 .constituentrealtionships { height: 175px; }
 .constituentname { font-weight: bold; text-align: center; }
 .constituenttags { width: 100%; }
+
+
+/* ADDRESS MODAL */
+.addressmodal div.modalcontent div.fieldblock label { display: inline-block; width: 100px; text-align: right; vertical-align: top; margin-top: 3px; }
+.addressmodal div.modalcontent div.fieldblock input { width: 225px; }
+.addressmodal div.modalcontent div.fieldblock select { width: 229px; }
+.addressmodal div.modalcontent div.fieldblock textarea { width: 223px; }
+.addressmodal div.modalcontent div.fieldblock input[type="checkbox"] { width: 15px; margin: 0 0 0 0; text-align: right; }
+
+.addressmodal div.inline { margin: 0px; padding: 0px; }
+
+.addressmodal fieldset { width: 313px; }
+.addressmodal div.modalcontent fieldset div.fieldblock input { width: 200px; }
+.addressmodal div.modalcontent fieldset div.fieldblock select { width: 204px; }
+.addressmodal div.modalcontent fieldset div.fieldblock.range input { width: 90px; } 
+.addressmodal div.modalcontent fieldset div.fieldblock.range span { width: 10px; display: inline-block; text-align: center; }
+/* END ADDRESS MODAL */
+
+
+

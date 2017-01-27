@@ -64,6 +64,11 @@ namespace DDI.WebApi.Tests.Fakes
             throw new NotImplementedException();
         }
 
+        public Task<IList<string>> GetRolesAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Microsoft.AspNet.Identity.IdentityResult> RemoveLoginAsync(string userId, Microsoft.AspNet.Identity.UserLoginInfo login)
         {
             throw new NotImplementedException();
