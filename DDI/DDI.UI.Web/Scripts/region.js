@@ -2,11 +2,13 @@
 
 function LoadRegions(container, prefix) {
 
-    GetRegionLevels(container, prefix);
+    if (container.indexOf('.') != 0) {
+        container = '.' + container;
+    }
 
-}
-
-function GetRegionLevels(container, prefix) {
+    if (prefix.indexOf('.') != 0) {
+        prefix = '.' + prefix;
+    }
 
     $.ajax({
         type: 'GET',
@@ -24,14 +26,14 @@ function GetRegionLevels(container, prefix) {
                 $('.region' + item.Level + 'label').text(item.Label);
 
                 if (!item.IsChildLevel) {
-                    LoadRegionDropDown(item.Level);
+                    LoadRegionDropDown(prefix, item.Level);
                 } else {
-                    $('.na-Region' + (item.Level - 1) + 'Id').change(function () {
+                    $(prefix + 'Region' + (item.Level - 1) + 'Id').change(function () {
 
-                        ClearElement('.na-Region' + item.Level + 'Id');
+                        ClearElement(prefix + 'Region' + item.Level + 'Id');
 
-                        if ($('.na-Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
-                            LoadRegionDropDown((item.Level), $('.na-Region' + item.Level + 'Id').val());
+                        if ($(prefix + 'Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
+                            LoadRegionDropDown(prefix, (item.Level), $(prefix + 'Region' + item.Level + 'Id').val());
                         }
 
                     });
@@ -49,7 +51,11 @@ function GetRegionLevels(container, prefix) {
 
 function CreateRegionControl(container, prefix, index) {
 
-    var field = $('<div>').addClass('.fieldblock').addClass('region' + index);
+    if (prefix.indexOf('.') == 0) {
+        prefix = prefix.replace('.', '');
+    }
+
+    var field = $('<div>').addClass('fieldblock').addClass('region' + index);
     var label = $('<label>').addClass('region' + index + 'label').appendTo($(field));
     var ddl = $('<select>').addClass(prefix + 'Region' + index + 'Id').appendTo($(field));
 
@@ -59,7 +65,7 @@ function CreateRegionControl(container, prefix, index) {
 
 }
 
-function LoadRegionDropDown(level, selectedvalue) {
+function LoadRegionDropDown(prefix, level, selectedvalue) {
 
     var route = 'regions/' + level;
 
@@ -76,8 +82,8 @@ function LoadRegionDropDown(level, selectedvalue) {
         crossDomain: true,
         success: function (data) {
 
-            var currentdropdown = $('.na-Region' + level + 'Id');
-            ClearElement('.na-Region' + level + 'Id');
+            var currentdropdown = $(prefix + 'Region' + level + 'Id');
+            ClearElement(prefix + 'Region' + level + 'Id');
             AddDefaultOption($(currentdropdown), '', '');
 
             $.map(data.Data, function (item) {

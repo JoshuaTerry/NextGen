@@ -78,6 +78,8 @@ function LoadNewConstituentModalDropDowns() {
 
     });
 
+    LoadRegions('regionscontainer', 'nc-');
+
 }
 
 function GetApiHeaders() {
@@ -337,8 +339,6 @@ function GetAutoZipData() {
                     }
 
                     $('.autocity').val(data.Data.City);
-
-                    // TODO : Need Regions and List of possible counties populated.
 
                 }
             

@@ -24,6 +24,7 @@
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\globalstyles.css" />
 
@@ -180,30 +181,8 @@
 
                         </div>
 
-                        <div>
+                        <div class="regionscontainer"></div>
 
-                            <div class="fieldblock">
-                                <label>Region 1</label>
-                                <select class="nc-region1"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Region 2</label>
-                                <select class="nc-region2"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Region 3</label>
-                                <select class="nc-region3"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Region 4</label>
-                                <select class="nc-region4"></select>
-                            </div>
-
-                            </div>
-                        </div>
                     </div>
 
                 </fieldset>

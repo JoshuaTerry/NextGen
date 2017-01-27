@@ -3,10 +3,11 @@ using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers
 {
-    public class RegionLevelsController : ApiController
+    public class RegionLevelsController : ControllerBase<RegionLevel>
     {
         ServiceBase<RegionLevel> _service;
 
@@ -17,95 +18,41 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/regionlevels")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel)]
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
+            orderBy = "ItemLevel";
             var result = _service.GetAll();
 
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(GetUrlHelper(), RouteNames.RegionLevel, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/regionlevels/{id}")]
-        public IHttpActionResult GetById(Guid id)
+        [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            var result = _service.GetById(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-
-            return Ok(result);
+            return base.GetById(GetUrlHelper(), id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/regionlevels")]
+        [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] RegionLevel item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok();
+            return base.Post(GetUrlHelper(), item);
         }
 
         [HttpPatch]
-        [Route("api/v1/regionlevels/{id}")]
+        [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Patch(GetUrlHelper(), id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/regionlevels")]
-        public IHttpActionResult Delete(RegionLevel item)
+        [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel + RouteVerbs.Delete)]
+        public IHttpActionResult Delete(Guid id)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Delete(item);
-
-                return Ok(response);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Delete(id);
         }
     }
 }
