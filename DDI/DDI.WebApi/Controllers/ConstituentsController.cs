@@ -113,7 +113,7 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicConstituent);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return InternalServerError();
             }

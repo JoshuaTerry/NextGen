@@ -233,6 +233,7 @@
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
     <Compile Include="Controllers\ConstituentTypesController.cs" />
+    <Compile Include="Controllers\AlternateIdsController.cs" />
     <Compile Include="Controllers\DoingBusinessAsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
