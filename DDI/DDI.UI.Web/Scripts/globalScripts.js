@@ -346,21 +346,18 @@ function GetAutoZipData() {
 
             if (data && data.Data) {
 
-                $('.AddressLine1').val(data.Data.AddressLine1);
-                $('.AddressLine2').val(data.Data.AddressLine2);
                 $('.autozip').val(data.Data.PostalCode);
 
-                if (data.Data.Country) {
-                    $('.autocountry').val(data.Data.Country.Id);
+                if (data.Data.State) {
+                    $('.autocountry').val(data.Data.State.CountryId);
+
+                    PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
                 }
 
-                if (data.Data.State) {
-                    $('.autostate').val(data.Data.State.Id);
-                }
-                if (data.Data.County) {
-                    $('.autocounty').val(data.Data.County.Id);
-                }
                 $('.autocity').val(data.Data.City);
+
+                // TODO : Need Regions and List of possible counties populated.
+
             }
             
         },
