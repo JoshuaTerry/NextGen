@@ -56,6 +56,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\DataSources\AbbreviationDataSource.cs" />
+    <Compile Include="Common\DataSources\ZipPlus4DataSource.cs" />
+    <Compile Include="Common\DataSources\ZipBranchDataSource.cs" />
+    <Compile Include="Common\DataSources\ZipStreetDataSource.cs" />
+    <Compile Include="Common\DataSources\ZipDataSource.cs" />
+    <Compile Include="Common\DataSources\CityDataSource.cs" />
+    <Compile Include="Common\DataSources\CountyDataSource.cs" />
     <Compile Include="Common\DataSources\StateDataSource.cs" />
     <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
