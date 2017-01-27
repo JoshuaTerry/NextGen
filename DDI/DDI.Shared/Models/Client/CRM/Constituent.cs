@@ -167,7 +167,6 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
         public ICollection<Education> Educations { get; set; }
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        public ICollection<PaymentPreference> PaymentPreferences { get; set; }
         public ICollection<Tag> Tags { get; set; }
 
         public ICollection<PaymentMethodBase> PaymentMethods { get; set; }

@@ -108,6 +108,10 @@
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.cs" />
+    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.Designer.cs">
+      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
@@ -234,6 +238,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701271545556_PaymentPreferences.resx">
+      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
