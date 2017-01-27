@@ -50,17 +50,6 @@
                 </asp:Menu>
                 <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
                     ShowStartingNode="false" />
-                <%--<ul>
-                    <li>
-                        <a runat="server" href="~/Constituents.aspx">Constituents</a>
-                    </li>
-                    <li>
-                        <a href="#" class="addconstituent">Add Constituent</a>
-                    </li>
-                    <li>
-                        <a runat="server" href="~/Search.aspx" class="searchbutton">Search</a>
-                    </li>
-                </ul>--%>
             </div>
         </header>
 
@@ -72,9 +61,11 @@
 
             <div class="modalcontent">
 
-                <div class="fieldblock">
-                    <label>ID</label>
-                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                <div class="fivecolumn">
+                    <div class="fieldblock">
+                        <label>ID</label>
+                        <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                    </div>
                 </div>
 
                 <div class="fivecolumn">
@@ -104,7 +95,7 @@
                     </div>
                 </div>
 
-                <div class="inline">
+                <div class="threecolumn">
                     <div class="fieldblock">
                         <label>Nick Name</label>
                         <input type="text" class="nc-NickName" />
@@ -121,7 +112,7 @@
                     </div>
                 </div>
 
-                <div class="inline">
+                <div class="threecolumn">
                     <div class="fieldblock">
                         <label>Tax ID</label>
                         <input type="text" class="nc-TaxID" />
@@ -211,8 +202,8 @@
                                 <select class="nc-region4"></select>
                             </div>
 
+                            </div>
                         </div>
-
                     </div>
 
                 </fieldset>
@@ -220,29 +211,30 @@
                 <fieldset>
                     <legend>Contact Information</legend>
 
-                    <div class="inline">
-                        <div class="fieldblock">
-                            <label>Email</label>
-                            <input type="email" class="nc-Email" />
+                    <div class="twocolumn">
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Email</label>
+                                <input type="email" class="nc-Email" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Email Type</label>
+                                <select class="nc-EmailType"></select>
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Email Type</label>
-                            <select class="nc-EmailType"></select>
-                        </div>
-                    </div>
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Phone</label>
+                                <input type="text" class="nc-Phone" />
+                            </div>
 
-                    <div class="inline">
-                        <div class="fieldblock">
-                            <label>Phone</label>
-                            <input type="text" class="nc-Phone" />
+                            <div class="fieldblock">
+                                <label>Phone Type</label>
+                                <select class="nc-PhoneType"></select>
+                            </div>
                         </div>
-
-                        <div class="fieldblock">
-                            <label>Phone Type</label>
-                            <select class="nc-PhoneType"></select>
-                        </div>
-
                     </div>
 
                 </fieldset>

@@ -27,8 +27,8 @@ $(document).ready(function () {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 800,
-            height: 640,
+            width: 900,
+            height: 625,
             resizable: false
         });
 
@@ -284,41 +284,17 @@ function AutoZip() {
 
     $('.autozip').blur(function () {
 
-        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
-            'addressLine2=' + $('.nc-AddressLine2').val() +
-            'city=' + $('.autocity').val() +
-            'countryId=' + $('.autocountry').val() +
-            'countyId=' + $('.autocounty').val() +
-            'stateId=' + $('.autostate').val() +
-            '&zip=' + $('.autozip').val();
-
         GetAutoZipData();
-        
+
     });
 
     $('.autocity').blur(function () {
-
-        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
-            'addressLine2=' + $('.nc-AddressLine2').val() +
-            'city=' + $('.autocity').val() +
-            'countryId=' + $('.autocountry').val() +
-            'countyId=' + $('.autocounty').val() +
-            'stateId=' + $('.autostate').val() +
-            '&zip=' + $('.autozip').val();
 
         GetAutoZipData();
 
     });
 
     $('.autostate').blur(function () {
-
-        var data = 'addressLine1=' + $('.nc-AddressLine1').val() +
-            'addressLine2=' + $('.nc-AddressLine2').val() +
-            'city=' + $('.autocity').val() +
-            'countryId=' + $('.autocountry').val() +
-            'countyId=' + $('.autocounty').val() +
-            'stateId=' + $('.autostate').val() +
-            '&zip=' + $('.autozip').val();
 
         GetAutoZipData();
 
@@ -328,43 +304,49 @@ function AutoZip() {
 
 function GetAutoZipData() {
 
-    var fields = 'addressLine1=' + $('.nc-AddressLine1').val() +
-            '&addressLine2=' + $('.nc-AddressLine2').val() +
-            '&city=' + $('.autocity').val() +
-            '&countryId=' + $('.autocountry').val() +
-            '&countyId=' + $('.autocounty').val() +
-            '&stateId=' + $('.autostate').val() +
-            '&zip=' + $('.autozip').val();
+    var zip = $('.autozip').val();
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'locations/?' + fields,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    if (zip && zip.length > 0) {
 
-            if (data && data.Data) {
+        var fields = 'addressLine1=' + $('.nc-AddressLine1').val() +
+                '&addressLine2=' + $('.nc-AddressLine2').val() +
+                '&city=' + $('.autocity').val() +
+                '&countryId=' + $('.autocountry').val() +
+                '&countyId=' + $('.autocounty').val() +
+                '&stateId=' + $('.autostate').val() +
+                '&zip=' + $('.autozip').val();
 
-                $('.autozip').val(data.Data.PostalCode);
+        $.ajax({
+            url: WEB_API_ADDRESS + 'locations/?' + fields,
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
 
-                if (data.Data.State) {
-                    $('.autocountry').val(data.Data.State.CountryId);
+                if (data && data.Data) {
 
-                    PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
+                    $('.autozip').val(data.Data.PostalCode);
+
+                    if (data.Data.State) {
+                        $('.autocountry').val(data.Data.State.CountryId);
+
+                        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
+                    }
+
+                    $('.autocity').val(data.Data.City);
+
+                    // TODO : Need Regions and List of possible counties populated.
+
                 }
-
-                $('.autocity').val(data.Data.City);
-
-                // TODO : Need Regions and List of possible counties populated.
-
-            }
             
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading address data.');
-        }
-    });
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+            }
+        });
+
+    }
 
 }
 
