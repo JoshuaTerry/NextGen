@@ -288,7 +288,7 @@ function NewAddressModal() {
 
     PopulateCountriesInModal(null);
 
-    LoadRegions();
+    LoadRegions('regionscontainer', 'na-');
 
     $('.cancelmodal').click(function (e) {
 
@@ -380,86 +380,6 @@ function PopulateCountiesInModal(selectedValue) {
 
     PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '', selectedValue);
 
-}
-
-function LoadRegions() {
-
-    GetRegionLevels();
-
-}
-
-function GetRegionLevels() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'regionlevels',
-        data: item,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.Data, function (item) {
-
-                $('.region' + item.Level).show();
-                $('.region' + item.Level + 'label').text(item.Label);
-                
-                if (!item.IsChildLevel) {
-                    LoadRegionDropDown(item.Level);
-                } else {
-                    $('.na-Region' + (item.Level - 1) + 'Id').change(function () {
-
-                        ClearElement('.na-Region' + item.Level + 'Id');
-
-                        if ($('.na-Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
-                            LoadRegionDropDown((item.Level), $('.na-Region' + item.Level + 'Id').val());
-                        }
-
-                    });
-                }
-
-            });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
-        }
-    });
-
-}
-
-function LoadRegionDropDown(level, selectedvalue) {
-
-    var route = 'regions/' + level;
-
-    if (selectedvalue)
-        route = route + '/' + selectedvalue;
-    else
-        route = route + '/null';
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + route,
-        data: item,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            var currentdropdown = $('.na-Region' + level + 'Id');
-            ClearElement('.na-Region' + level + 'Id');
-            AddDefaultOption($(currentdropdown), '', '');
-
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.DisplayName);
-                $(option).appendTo($(currentdropdown));
-
-            });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
-        }
-    });
 }
 
 function EditAddressModal(id) {
@@ -567,12 +487,7 @@ function LoadAddress(id) {
             PopulateStatesInModal(data.address.StateId);
             PopulateCountiesInModal(data.address.CountyId);
 
-            LoadRegions();
-
-            LoadRegion1(data.Address.Region1Id);
-            LoadRegion2(data.Address.Region2Id);
-            LoadRegion3(data.Address.Region3Id);
-            LoadRegion4(data.Address.Region4Id);
+            LoadRegions('regionscontainer', 'na-');
             
         },
         error: function (xhr, status, err) {

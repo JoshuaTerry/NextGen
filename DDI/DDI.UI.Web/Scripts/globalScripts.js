@@ -332,6 +332,8 @@ function GetAutoZipData() {
                         $('.autocountry').val(data.Data.State.CountryId);
 
                         PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
+
+                        PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '');
                     }
 
                     $('.autocity').val(data.Data.City);
@@ -347,28 +349,6 @@ function GetAutoZipData() {
         });
 
     }
-
-}
-
-function RegionSelection() {
-
-    $('.region1').change(function () {
-
-        // Load Region 2
-
-    });
-
-    $('.region2').change(function () {
-
-        // Load Region 3
-
-    });
-
-    $('.region3').change(function () {
-
-        // Load Region 4
-
-    });
 
 }
 

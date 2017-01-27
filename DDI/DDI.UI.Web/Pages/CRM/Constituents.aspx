@@ -2,7 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script type="text/javascript" src="..\..\Scripts/constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -661,25 +662,7 @@
                 <select class="na-CountyId"></select>
             </div>
 
-            <div class="fieldblock region1" style="display: none;">
-                <label class="region1label">Region 1</label>
-                <select class="na-Region1Id"></select>
-            </div>
-
-            <div class="fieldblock region2" style="display: none;">
-                <label class="region2label">Region 2</label>
-                <select class="na-Region2Id"></select>
-            </div>
-
-            <div class="fieldblock region3" style="display: none;">
-                <label class="region3label">Region 3</label>
-                <select class="na-Region3Id"></select>
-            </div>
-
-            <div class="fieldblock region4" style="display: none;">
-                <label class="region4label">Region 4</label>
-                <select class="na-Region4Id"></select>
-            </div>
+            <div class="regionscontainer"></div>
 
             <fieldset>
                 <legend>Address Options</legend>
