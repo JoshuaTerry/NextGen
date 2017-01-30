@@ -409,7 +409,7 @@
 
                     </div>
 
-                    <h1>Contact Information (Not Implemented Yet)</h1>
+                    <h1>Contact Information</h1>
                     <div>
 
                         <div class="accordions">
@@ -619,6 +619,9 @@
     <div class="addressmodal" title="New Address" style="display: none;">
 
         <div class="modalcontent">
+            
+            <input type="hidden" class="hidconstituentaddressid" />
+            <input type="hidden" class="hidaddressid" />
 
             <div class="fieldblock">
                 <label>Address Type</label>

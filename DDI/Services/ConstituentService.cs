@@ -155,7 +155,7 @@ namespace DDI.Services
         public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
         {
             Repository<ConstituentAddress> dbaRepo = new Repository<ConstituentAddress>();
-            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
+            var data = dbaRepo.Entities.Include("Address").Include("AddressType").Where(d => d.ConstituentId == constituentId);
 
             IDataResponse<List<ConstituentAddress>> response = new DataResponse<List<ConstituentAddress>> { Data = data.ToList() };
             return response;

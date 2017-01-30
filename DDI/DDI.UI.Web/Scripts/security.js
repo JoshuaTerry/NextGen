@@ -221,59 +221,7 @@ function AddUsersToRoles(user, roles) {
 }
 /* END USERS TAB */
 
-function LoadGrid(grid, container, columns, route, selected) {
 
-    if (container.indexOf('.') != 0)
-        container = '.' + container;
-
-    var datagrid = $('<div>').addClass(grid);
-
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $(datagrid).dxDataGrid({
-                dataSource: data,
-                columns: columns,
-                paging: {
-                    pageSize: 25
-                },
-                pager: {
-                    showNavigationButtons: true,
-                    showPageSizeSelector: true,
-                    showInfo: true,
-                    allowedPageSizes: [15, 25, 50, 100]
-                },
-                groupPanel: {
-                    visible: false,
-                    allowColumnDragging: true
-                },
-                filterRow: {
-                    visible: true,
-                    showOperationChooser: false
-                },
-                onRowClick: function (info) {
-
-                    if (selected) {
-                        selected();
-                    }
-
-                }
-            });
-
-            $(datagrid).appendTo($(container));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
-        }
-    });
-
-}
 
 
 
