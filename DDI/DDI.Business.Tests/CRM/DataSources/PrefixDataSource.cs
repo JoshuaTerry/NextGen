@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
@@ -31,6 +32,7 @@ namespace DDI.Business.Tests.CRM.DataSources
             prefixes.Add(NewPrefix(uow, "Drs", "Drs.", "Drs.", "Drs.", "", ""));
             prefixes.Add(NewPrefix(uow, "Law", "Lawyer", "{NAME}, Esq.", "{NAME}, Esq.", "Dear {MR} {NAME}", ""));
             prefixes.Add(NewPrefix(uow, "Abbot", "Abbot", "The Right Reverend", "Rt. Rev.", "Dear Father Abbot", "M"));
+            prefixes.Add(NewPrefix(uow, "Mon", "Monsieur", "Mon.", "Mon.", "", "M"));
             uow.CreateRepositoryForDataSource(prefixes);
             return prefixes;
         }    
@@ -44,7 +46,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 LabelPrefix = labelPrefix,
                 Name = name,
                 Salutation = salutation,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
             if (!string.IsNullOrWhiteSpace(genderCode))
             {

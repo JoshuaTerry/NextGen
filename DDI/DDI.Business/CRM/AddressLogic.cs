@@ -123,6 +123,14 @@ namespace DDI.Business.CRM
         }
 
         /// <summary>
+        /// Get the default country.
+        /// </summary>
+        public Country GetDefaultCountry()
+        {
+            return Countries.FirstOrDefault(p => p.ISOCode == AddressDefaults.DefaultCountryCode);
+        }
+
+        /// <summary>
         /// Format an address.  Multiple lines are separated by newline characters.
         /// </summary>
         /// <param name="address">The address to format</param>
