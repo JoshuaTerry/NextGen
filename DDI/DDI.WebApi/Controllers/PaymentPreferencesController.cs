@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Drawing;
 using System.Web.Http;
-using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Shared.Models.Client.CP;
 
 namespace DDI.WebApi.Controllers
 {
-    public class PaymentPreferencesController : ControllerBase<PaymentPreference>
+    public class PaymentPreferencesController : ControllerBase<PaymentMethodBase>
     {
         [HttpGet]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
@@ -27,7 +26,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] PaymentPreference entityToSave)
+        public IHttpActionResult Post([FromBody] PaymentMethodBase entityToSave)
         {
             return base.Post(GetUrlHelper(), entityToSave);
         }
