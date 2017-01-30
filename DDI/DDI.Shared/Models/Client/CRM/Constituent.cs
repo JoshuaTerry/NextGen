@@ -19,6 +19,9 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        public DateTime? BirthDate { get; set; }
+        public int? AgeRangeFrom { get; set; }
+        public int? AgeRangeTo { get; set; }
         public BirthDateType BirthDateType { get; set; }
 
         public int? BirthMonth { get; set; }

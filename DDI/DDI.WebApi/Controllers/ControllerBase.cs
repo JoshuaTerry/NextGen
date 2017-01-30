@@ -188,5 +188,7 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
         }
+
+        protected ServiceBase<T> Service { get { return _service; } }
     }
 }
