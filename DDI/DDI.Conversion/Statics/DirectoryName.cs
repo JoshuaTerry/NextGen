@@ -17,6 +17,8 @@ namespace DDI.Conversion.Statics
         #region Module Subdirectories
 
         public static string CRM => "CRM";
+        public static string GL => "GL";
+        public static string CP => "CP";
 
         #endregion
     }

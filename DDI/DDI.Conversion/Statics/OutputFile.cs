@@ -15,6 +15,7 @@ namespace DDI.Conversion.Statics
 
         public static string ConstituentIdMappingFile = "ConstituentId.csv";
         public static string AddressIdMappingFile = "AddressId.csv";
+        public static string PaymentMethodIdMappingFile = "PaymentMethodId.csv";
 
         #endregion
 
@@ -34,6 +35,14 @@ namespace DDI.Conversion.Statics
         public static string CRM_CustomDataFile => "CustomFieldData.csv";
 
         #endregion
+
+        #region CP SSIS Files
+
+        public static string CP_PaymentMethodFile => "PaymentMethod.csv";
+        public static string CP_PaymentMethodConstituentFile => "PaymentMethodBaseConstituents.csv";
+
+        #endregion
+
 
     }
 }

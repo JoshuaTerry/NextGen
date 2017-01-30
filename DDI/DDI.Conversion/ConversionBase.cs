@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -135,6 +137,20 @@ namespace DDI.Conversion
                 }
             }
             return legacyIds;
+        }
+
+        /// <summary>
+        /// Load all entities and return the local collection.
+        /// </summary>
+        protected ObservableCollection<T> LoadEntities<T>(DbSet<T> entities, params string[] paths) where T : class
+        {
+            IQueryable<T> query = entities;
+            foreach (string path in paths)
+            {
+                query = query.Include(path);
+            }
+            query.Load();
+            return entities.Local;
         }
 
         #endregion
