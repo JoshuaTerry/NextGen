@@ -33,31 +33,31 @@ namespace DDI.WebApi.Controllers
             return base.GetById(GetUrlHelper(), id, fields);
         }
 
-        [HttpGet]
-        [Route("api/v1/alternateid/constituent/{id}", Name = RouteNames.AlternateId + RouteVerbs.Get)]
-        public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null)
-        {
-            try
-            {
-                var response = _service.GetAlternateIdsByConstituent(constituentId);
-                if (response.Data == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return BadRequest(response.ErrorMessages.ToString());
-                }
+        //[HttpGet]
+        //[Route("api/v1/alternateid/constituent/{id}", Name = RouteNames.AlternateId + RouteVerbs.Get)]
+        //public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null)
+        //{
+        //    try
+        //    {
+        //        var response = _service.GetAlternateIdsByConstituent(constituentId);
+        //        if (response.Data == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        if (!response.IsSuccessful)
+        //        {
+        //            return BadRequest(response.ErrorMessages.ToString());
+        //        }
 
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
+        //        var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
 
-                return Ok(dynamicResponse);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
+        //        return Ok(dynamicResponse);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return InternalServerError();
+        //    }
+        //}
 
         [HttpPost]
         [Route("api/v1/alternateid", Name = RouteNames.AlternateId + RouteVerbs.Post)]

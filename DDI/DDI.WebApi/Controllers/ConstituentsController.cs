@@ -244,7 +244,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
+        [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId + RouteVerbs.Get)]
         public IHttpActionResult GetConstituentAlternateIds(Guid id, string fields = null)
         {
             try
