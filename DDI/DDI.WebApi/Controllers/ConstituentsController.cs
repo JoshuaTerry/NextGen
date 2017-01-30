@@ -190,11 +190,11 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetConstituentConstituentAddresses(Guid id, string fields = null)
+        public IHttpActionResult GetConstituentAddresses(Guid constituentId, string fields = null)
         {
             try
             {
-                var result = _service.GetConstituentAddresses(id);
+                var result = _service.GetConstituentAddresses(constituentId);
 
                 if (result == null)
                 {

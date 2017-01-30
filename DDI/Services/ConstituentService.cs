@@ -183,7 +183,7 @@ namespace DDI.Services
 
         public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
         {
-            var result = UnitOfWork.GetRepository<ConstituentAddress>().Entities.Include("Address").Where(a => a.ConstituentId == constituentId).ToList();
+            var result = UnitOfWork.GetRepository<ConstituentAddress>().Entities.Include("Address").Include("AddressType").Where(a => a.ConstituentId == constituentId).ToList();
             return GetIDataResponse(() => result.ToList());
         }
 

@@ -80,11 +80,13 @@
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IAlternateIdService.cs" />
+    <Compile Include="ServiceInterfaces\IConstituentAddressService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
     <Compile Include="Services\AlternateIdService.cs" />
+    <Compile Include="Services\ConstituentAddressService.cs" />
     <Compile Include="StateService.cs" />
   </ItemGroup>
   <ItemGroup>
