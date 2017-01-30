@@ -13,6 +13,7 @@ namespace DDI.Shared
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
         IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges);
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
+        IDataResponse<List<AlternateId>> GetConstituentAlternateIds(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId);
         IDataResponse<Constituent> AddConstituent(Constituent constituent);
         IDataResponse<int> GetNextConstituentNumber();

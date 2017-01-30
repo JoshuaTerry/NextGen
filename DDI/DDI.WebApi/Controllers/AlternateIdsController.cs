@@ -5,11 +5,20 @@ using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Services.ServiceInterfaces;
+using DDI.Services.Services;
 
 namespace DDI.WebApi.Controllers
 {
     public class AlternateIdsController : ControllerBase<AlternateId>
     {
+        private IAlternateIdService _service;
+        public AlternateIdsController() :this(new AlternateIdService()) { }
+
+        public AlternateIdsController(IAlternateIdService service)
+        {
+            this._service = service;
+        }
         [HttpGet]
         [Route("api/v1/alternateid", Name = RouteNames.AlternateId)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -22,6 +31,32 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(GetUrlHelper(), id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/alternateid/constituent/{id}", Name = RouteNames.AlternateId + RouteVerbs.Get)]
+        public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null)
+        {
+            try
+            {
+                var response = _service.GetAlternateIdsByConstituent(constituentId);
+                if (response.Data == null)
+                {
+                    return NotFound();
+                }
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
+
+                return Ok(dynamicResponse);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [HttpPost]

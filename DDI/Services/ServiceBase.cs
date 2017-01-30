@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.Services
 {
-    public class ServiceBase<T> where T : class, IEntity
+    public class ServiceBase<T> : IService<T> where T : class, IEntity
     {
         private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase<T>));
         private readonly IUnitOfWork _unitOfWork; 
@@ -110,7 +111,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<T> Add(T entity)
+        public virtual IDataResponse<T> Add(T entity)
         {
             var response = new DataResponse<T>();
             try

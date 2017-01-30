@@ -1,21 +1,20 @@
-﻿using System;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using DDI.Services;
-using DDI.Services.Extensions;
-using Newtonsoft.Json.Linq;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
+﻿using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared;
+using DDI.Shared.Logger;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class ConstituentsController : ControllerBase<Constituent>
     {
+        private static readonly Logger _logger = Logger.GetLogger(typeof(ConstituentsController));
         private IConstituentService _service;
 
         public ConstituentsController()
@@ -115,6 +114,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
                 return InternalServerError();
             }
         }
@@ -209,8 +209,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResult);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex);
                 return InternalServerError();
             }
         }
@@ -222,6 +223,33 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var result = _service.GetConstituentDBAs(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                if (!result.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
+                return Ok(dynamicResult);
+
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
+        public IHttpActionResult GetConstituentAlternateIds(Guid id, string fields = null)
+        {
+            try
+            {
+                var result = _service.GetConstituentAlternateIds(id);
 
                 if (result == null)
                 {

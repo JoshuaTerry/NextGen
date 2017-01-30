@@ -50,6 +50,7 @@ namespace DDI.Services
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(constituentSearch.City)))
                 .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(constituentSearch.AlternateId)))
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
+            
             // Created Range
             ApplyZipFilter(query, constituentSearch);
             ApplyQuickFilter(query, constituentSearch);
@@ -114,6 +115,8 @@ namespace DDI.Services
             Constituent constituent = _repository.GetById(id,
                 c => c.ClergyStatus,
                 c => c.ClergyType,
+                c => c.OrdinationDate,
+                c => c.PlaceOfOrdination,
                 c => c.ConstituentStatus,
                 c => c.ConstituentType,
                 c => c.EducationLevel,
@@ -121,9 +124,22 @@ namespace DDI.Services
                 c => c.IncomeLevel,
                 c => c.Language,
                 c => c.MaritalStatus,
+                c => c.BirthDate,
+                c => c.DeceasedDate,
+                c => c.MarriageDate,
+                c => c.DivorceDate,
+                c => c.ProspectDate,
+                c => c.AgeRangeFrom,
+                c => c.AgeRangeTo,
                 c => c.Prefix,
-                c => c.Profession
+                c => c.Profession,
+                c => c.FirstEmploymentDate,
+                c => c.Position,
+                c => c.EmploymentStartDate,
+                c => c.EmploymentEndDate,
+                c => c.IsEmployee 
                 );
+
             var response = GetIDataResponse(() => constituent);
             return response;
         }
@@ -154,30 +170,27 @@ namespace DDI.Services
         }
 
         public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)
-        {
-            Repository<DoingBusinessAs> dbaRepo = new Repository<DoingBusinessAs>();
-            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
+        { 
+            var result = UnitOfWork.GetRepository<DoingBusinessAs>().Entities.Where(d => d.ConstituentId == constituentId).ToList();
+            return GetIDataResponse(() => result.ToList());
+        }
 
-            IDataResponse<List<DoingBusinessAs>> response = new DataResponse<List<DoingBusinessAs>> { Data = data.ToList() };
-            return response;
+        public IDataResponse<List<AlternateId>> GetConstituentAlternateIds(Guid constituentId)
+        {
+            var result = UnitOfWork.GetRepository<AlternateId>().Entities.Where(a => a.ConstituentId == constituentId).ToList();
+            return GetIDataResponse(() => result.ToList());
         }
 
         public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
         {
-            Repository<ConstituentAddress> dbaRepo = new Repository<ConstituentAddress>();
-            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
-
-            IDataResponse<List<ConstituentAddress>> response = new DataResponse<List<ConstituentAddress>> { Data = data.ToList() };
-            return response;
+            var result = UnitOfWork.GetRepository<ConstituentAddress>().Entities.Include("Address").Where(a => a.ConstituentId == constituentId).ToList();
+            return GetIDataResponse(() => result.ToList());
         }
 
         public IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId)
-        {
-            Repository<Constituent> repo = new Repository<Constituent>();
-            var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;
-
-            IDataResponse<EducationLevel> response = new DataResponse<EducationLevel> { Data = data };
-            return response;
+        { 
+            var result = UnitOfWork.GetRepository<EducationLevel>().Entities.Where(e => e.Id == constituentId).FirstOrDefault();
+            return GetIDataResponse(() => result);
         }
 
         public IDataResponse<Constituent> AddConstituent(Constituent constituent)
