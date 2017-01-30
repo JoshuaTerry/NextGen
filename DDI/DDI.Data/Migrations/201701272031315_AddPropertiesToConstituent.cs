@@ -164,10 +164,7 @@ namespace DDI.Data.Migrations.Client
             AddColumn("dbo.CustomFieldOption", "CreatedOn", c => c.DateTime());
             AddColumn("dbo.CustomFieldOption", "LastModifiedBy", c => c.Guid());
             AddColumn("dbo.CustomFieldOption", "LastModifiedOn", c => c.DateTime());
-            AddColumn("dbo.LogEntry", "CreatedBy", c => c.Guid());
-            AddColumn("dbo.LogEntry", "CreatedOn", c => c.DateTime());
-            AddColumn("dbo.LogEntry", "LastModifiedBy", c => c.Guid());
-            AddColumn("dbo.LogEntry", "LastModifiedOn", c => c.DateTime());
+             
             AddColumn("dbo.RegionLevel", "CreatedBy", c => c.Guid());
             AddColumn("dbo.RegionLevel", "CreatedOn", c => c.DateTime());
             AddColumn("dbo.RegionLevel", "LastModifiedBy", c => c.Guid());
@@ -188,10 +185,7 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.RegionLevel", "LastModifiedBy");
             DropColumn("dbo.RegionLevel", "CreatedOn");
             DropColumn("dbo.RegionLevel", "CreatedBy");
-            DropColumn("dbo.LogEntry", "LastModifiedOn");
-            DropColumn("dbo.LogEntry", "LastModifiedBy");
-            DropColumn("dbo.LogEntry", "CreatedOn");
-            DropColumn("dbo.LogEntry", "CreatedBy");
+            
             DropColumn("dbo.CustomFieldOption", "LastModifiedOn");
             DropColumn("dbo.CustomFieldOption", "LastModifiedBy");
             DropColumn("dbo.CustomFieldOption", "CreatedOn");
