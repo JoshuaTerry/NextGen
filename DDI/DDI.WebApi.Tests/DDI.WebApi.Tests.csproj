@@ -143,7 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\GendersControllerTests.cs" />
-    <Compile Include="Controllers\AccountControllerTests.cs" />
+    <Compile Include="Controllers\AuthorizationsControllerTests.cs" />
     <Compile Include="Fakes\FakeApplicationUserManager.cs" />
     <Compile Include="Services\RegionServiceTest.cs" />
     <Compile Include="Helpers\PaginationTests.cs" />

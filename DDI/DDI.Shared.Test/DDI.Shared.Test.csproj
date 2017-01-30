@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Caching\CacheHelperTests.cs" />
     <Compile Include="EncryptionTests.cs" />
+    <Compile Include="Extensions\GuidExtensionsTests.cs" />
     <Compile Include="Extensions\DictionaryExtensionsTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
