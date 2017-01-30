@@ -417,9 +417,8 @@
                                 </div>
 
                                 <div class="modalbuttons">
-                                    <input type="text" class="submitaltid" value="Submit" />
-
-                                    <a href ="#" class="linkcancel">Cancel</a>
+                                    <input type="button" class="submitaltid" value="Save" />
+                                    <a href ="#" class="cancelmodal">Cancel</a>
                                 </div>
 
                             </div>
