@@ -27,8 +27,8 @@ $(document).ready(function () {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 800,
-            height: 640,
+            width: 900,
+            height: 625,
             resizable: false
         });
 
