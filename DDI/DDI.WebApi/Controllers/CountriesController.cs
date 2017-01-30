@@ -8,11 +8,13 @@ using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using DDI.Shared.Logger;
 
 namespace DDI.WebApi.Controllers
 {
     public class CountriesController : ControllerBase<Country>
     {
+        private static readonly Logger _logger = Logger.GetLogger(typeof(CountriesController));
         private const string US = "US";
         [HttpGet]
         [Route("api/v1/countries", Name = RouteNames.Country)]
@@ -53,8 +55,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex);
                 return InternalServerError();
             }
         }
