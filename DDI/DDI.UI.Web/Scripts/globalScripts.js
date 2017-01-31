@@ -310,8 +310,8 @@ function GetAutoZipData() {
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' + $('.nc-AddressLine1').val() +
-                '&addressLine2=' + $('.nc-AddressLine2').val() +
+        var fields = 'addressLine1=' + $('.autoaddress1').val() +
+                '&addressLine2=' + $('.autoaddress2').val() +
                 '&city=' + $('.autocity').val() +
                 '&countryId=' + $('.autocountry').val() +
                 '&countyId=' + $('.autocounty').val() +
@@ -333,9 +333,9 @@ function GetAutoZipData() {
                     if (data.Data.State) {
                         $('.autocountry').val(data.Data.State.CountryId);
 
-                        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
+                        PopulateDropDown('.autostate', 'states/?countryid=' + $('.autocountry').val(), '', '', data.Data.State.Id);
 
-                        PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '');
+                        PopulateDropDown('.autocounty', 'counties/?stateid=' + stateid, '', '');
                     }
 
                     $('.autocity').val(data.Data.City);

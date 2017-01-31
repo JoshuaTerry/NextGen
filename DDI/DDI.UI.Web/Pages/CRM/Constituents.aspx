@@ -630,17 +630,17 @@
 
             <div class="fieldblock">
                 <label>Address Line 1</label>
-                <input type="text" class="na-AddressLine1" />
+                <input type="text" class="na-AddressLine1 autoaddress1" />
             </div>
 
             <div class="fieldblock">
                 <label>Address Line 2</label>
-                <input type="text" class="na-AddressLine2" />
+                <input type="text" class="na-AddressLine2 autoaddress2" />
             </div>
 
             <div class="fieldblock">
                 <label>Country</label>
-                <select class="na-CountryId"></select>
+                <select class="na-CountryId autocountry"></select>
             </div>
 
             <div class="fieldblock">
@@ -662,7 +662,7 @@
 
             <div class="fieldblock">
                 <label>County</label>
-                <select class="na-CountyId"></select>
+                <select class="na-CountyId autocounty"></select>
             </div>
 
             <div class="regionscontainer"></div>
