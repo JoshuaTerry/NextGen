@@ -184,7 +184,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
+        [Route("api/v1/constituents/{constituentId}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
         public IHttpActionResult GetConstituentAddresses(Guid constituentId, string fields = null)
         {
             try

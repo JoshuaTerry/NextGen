@@ -639,13 +639,13 @@
             </div>
 
             <div class="fieldblock">
-                <label>Country</label>
-                <select class="na-CountryId autocountry"></select>
+                <label>Postal code</label>
+                <input type="text" class="na-PostalCode autozip" />
             </div>
 
             <div class="fieldblock">
-                <label>Postal code</label>
-                <input type="text" class="na-PostalCode autozip" />
+                <label>Country</label>
+                <select class="na-CountryId autocountry"></select>
             </div>
 
             <div class="inline">

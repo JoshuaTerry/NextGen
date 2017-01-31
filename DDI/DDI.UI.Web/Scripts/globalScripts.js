@@ -292,18 +292,6 @@ function AutoZip(container) {
 
     });
 
-    $(container).find('.autocity').blur(function () {
-
-        GetAutoZipData(container);
-
-    });
-
-    $(container).find('.autostate').blur(function () {
-
-        GetAutoZipData(container);
-
-    });
-
 }
 
 function GetAutoZipData(container) {
@@ -334,10 +322,10 @@ function GetAutoZipData(container) {
 
                     if (data.Data.State) {
                         $(container).find('.autocountry').val(data.Data.State.CountryId);
-
+                        
                         PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
-                        PopulateDropDown('.autocounty', 'counties/?stateid=' + stateid, '', '');
+                        PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
                     }
 
                     $(container).find('.autocity').val(data.Data.City);
