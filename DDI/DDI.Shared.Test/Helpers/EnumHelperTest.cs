@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
@@ -12,8 +13,11 @@ namespace DDI.Shared.Test.Helpers
         [TestMethod]
         public void When_Given_An_Enumeration_Member_Should_Return_Description_Attribute_Value()
         {
+            //Arrange
+            string description = string.Empty;
+
             //Act
-            var description = EnumHelper.GetDescription(PaymentMethod.SWIFT);
+            description = EnumHelper.GetDescription(PaymentMethod.SWIFT);
 
             //Assert
             Assert.AreEqual(description, "SWIFT Transfer");
@@ -22,8 +26,11 @@ namespace DDI.Shared.Test.Helpers
         [TestMethod]
         public void When_Given_An_Enumeration_Should_Return_Description_Attribute_Of_Members_As_List_Of_Strings()
         {
+            //Arrange
+            List<string> list = new List<string>();
+
             //Act
-            var list = EnumHelper.GetDescriptions<PaymentMethod>();
+            list = EnumHelper.GetDescriptions<PaymentMethod>();
 
             //Assert
             Assert.AreEqual(5, list.Count);
