@@ -23,7 +23,7 @@ namespace DDI.Shared.Test.Helpers
         public void When_Given_An_Enumeration_Should_Return_Members_As_List_Of_Strings()
         {
             //Act
-            var list = EnumHelper.GetDescriptions(typeof(PaymentMethod));
+            var list = EnumHelper.GetDescriptions<PaymentMethod>();
 
             //Assert
             Assert.AreEqual(5, list.Count);

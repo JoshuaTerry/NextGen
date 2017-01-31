@@ -45,11 +45,13 @@ namespace DDI.Shared.Helpers
             return definition;
         }
 
-        public static List<string> GetDescriptions(Type enumValue)
+        public static List<string> GetDescriptions<T>()
         {
             List<string> values = new List<string>();
 
-            MemberInfo[] members = enumValue.GetMembers();
+            Type type = typeof (T);
+
+            MemberInfo[] members = type.GetMembers();
 
             foreach (var member in members)
             {
