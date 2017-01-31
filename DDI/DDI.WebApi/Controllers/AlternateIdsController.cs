@@ -21,36 +21,26 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/alternateids", Name = RouteNames.AlternateId)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.AlternateId, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.AlternateId, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/alternateids/{id}", Name = RouteNames.AlternateId + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id, fields);
+            return base.GetById(id, fields);
         }
 
         [HttpGet]
         [Route("api/v1/alternateids/constituents/{constituentId}")]
         [Route("api/v1/constituents/{constituentId}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null)
+        public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
-                var response = Service.GetAlternateIdsByConstituent(constituentId);
-                if (response.Data == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return BadRequest(response.ErrorMessages.ToString());
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
-
-                return Ok(dynamicResponse);
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAlternateIdsByConstituent(constituentId, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.AlternateId, search, fields);
             }
             catch (Exception ex)
             {
@@ -63,14 +53,14 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/alternateids", Name = RouteNames.AlternateId + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] AlternateId entityToSave)
         {
-            return base.Post(GetUrlHelper(), entityToSave);
+            return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/alternateids/{id}", Name = RouteNames.AlternateId + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
-            return base.Patch(GetUrlHelper(), id, entityChanges);
+            return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]

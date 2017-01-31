@@ -28,7 +28,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
         public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentAddress, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.ConstituentAddress, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -61,14 +61,14 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentaddresses", Name = RouteNames.ConstituentAddress + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentAddress item)
         {
-            return base.Post(GetUrlHelper(), item);
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(GetUrlHelper(), id, changes);
+            return base.Patch(id, changes);
         }
 
         [HttpDelete]

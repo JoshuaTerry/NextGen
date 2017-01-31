@@ -10,6 +10,6 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface  IAlternateIdService : IService<AlternateId>
     {
-        IDataResponse<List<AlternateId>> GetAlternateIdsByConstituent(Guid constituentId);
+        IDataResponse<List<AlternateId>> GetAlternateIdsByConstituent(Guid constituentId, IPageable search);
     }
 }

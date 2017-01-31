@@ -16,5 +16,6 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse<T> Update(Guid id, JObject changes);
         IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
+        IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null);
     }
 }

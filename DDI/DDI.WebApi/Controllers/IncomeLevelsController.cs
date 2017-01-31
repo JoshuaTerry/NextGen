@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/incomelevels", Name = RouteNames.IncomeLevel)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.IncomeLevel, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.IncomeLevel, limit, offset, orderBy, fields);
         }
     }
 }

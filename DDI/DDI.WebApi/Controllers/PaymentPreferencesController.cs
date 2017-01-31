@@ -15,28 +15,28 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.PaymentPreference, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.PaymentPreference, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/paymentpreferences/{id}", Name = RouteNames.PaymentPreference + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id, fields);
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentPreference entityToSave)
         {
-            return base.Post(GetUrlHelper(), entityToSave);
+            return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/paymentpreferences/{id}", Name = RouteNames.PaymentPreference + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
-            return base.Patch(GetUrlHelper(), id, entityChanges);
+            return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
