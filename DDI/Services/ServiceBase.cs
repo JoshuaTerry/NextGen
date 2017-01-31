@@ -59,10 +59,16 @@ namespace DDI.Services
             {
                 response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
             }
+            response.Data = ModifySortOrder(response.Data);
 
             response.TotalResults = totalCount;
 
             return response;
+        }
+
+        protected virtual List<T> ModifySortOrder(List<T> data)
+        {
+            return data;
         }
 
         public virtual IDataResponse<T> GetById(Guid id)

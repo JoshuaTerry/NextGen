@@ -6,7 +6,6 @@ using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Services.ServiceInterfaces;
-using DDI.Services.Services;
 
 namespace DDI.WebApi.Controllers
 {

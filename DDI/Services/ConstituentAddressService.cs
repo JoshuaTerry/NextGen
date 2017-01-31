@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Services.Services
+namespace DDI.Services
 {
     public class ConstituentAddressService : ServiceBase<ConstituentAddress>, IConstituentAddressService
     {

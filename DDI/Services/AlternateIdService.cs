@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DDI.Services.Services
+namespace DDI.Services
 {
     public class AlternateIdService : ServiceBase<AlternateId>, IAlternateIdService
     {

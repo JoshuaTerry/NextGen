@@ -7,15 +7,8 @@ using DDI.Services.Search;
 
 namespace DDI.Services
 {
-    public class StateService : ServiceBase<County>
+    public class StateService : ServiceBase<State>
     {
-        public StateService() : base(new UnitOfWorkEF(new CommonContext()))
-        {
-        }
-
-        internal StateService(IUnitOfWork uow) : base(uow)
-        { 
-        }
         #region Public Methods
 
         public IDataResponse<List<State>> GetAll(ForeignKeySearch search= null)

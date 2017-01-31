@@ -74,10 +74,6 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var response = _service.GetAll(search);
-                if (response.Data == null)
-                {
-                    return NotFound();
-                }
                 if (!response.IsSuccessful)
                 {
                     return BadRequest(response.ErrorMessages.ToString());

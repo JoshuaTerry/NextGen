@@ -11,7 +11,6 @@ using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using DDI.Services.ServiceInterfaces;
-using DDI.Services.Services;
 
 namespace DDI.WebApi.Controllers
 {
