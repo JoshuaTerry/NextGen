@@ -178,11 +178,9 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<Education> Educations { get; set; }
         [HateoasCollectionLink(RouteNames.Ethnicity)]
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        [HateoasCollectionLink(RouteNames.PaymentPreference)]
-        public ICollection<PaymentPreference> PaymentPreferences { get; set; }
         [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
-
+        [HateoasCollectionLink(RouteNames.PaymentPreference)]
         public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
 
         [InverseProperty(nameof(Relationship.Constituent1))]
