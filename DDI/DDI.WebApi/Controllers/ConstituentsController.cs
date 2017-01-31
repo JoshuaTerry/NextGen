@@ -8,25 +8,17 @@ using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Services.Services;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class ConstituentsController : ControllerBase<Constituent>
     {
-        private static readonly Logger _logger = Logger.GetLogger(typeof(ConstituentsController));
-        private IConstituentService _service;
-
         public ConstituentsController()
-            :this(new ConstituentService())
+            : base(new ConstituentService())
         {
         }
-
-        internal ConstituentsController(IConstituentService service)
-        {
-            _service = service;
-        }
-
 
         [HttpGet]
         [Route("api/v1/constituents", Name = RouteNames.Constituent)]
@@ -65,7 +57,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                var constituents = _service.GetAll(search);
+                var constituents = Service.GetAll(search);
 
                 if (constituents == null)
                 {
@@ -85,8 +77,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicConstituents);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -97,7 +90,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var constituent = _service.GetById(id);
+                var constituent = Service.GetById(id);
 
                 if (constituent == null)
                 {
@@ -114,7 +107,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -125,7 +118,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var constituent = _service.GetConstituentByConstituentNum(num);
+                var constituent = ((ConstituentService)Service).GetConstituentByConstituentNum(num);
 
                 if (constituent == null)
                 {
@@ -140,8 +133,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicConstituent);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -164,12 +158,13 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var response = _service.NewConstituent(id);
+                var response = ((ConstituentService) Service).NewConstituent(id);
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -194,7 +189,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = _service.GetConstituentAddresses(constituentId);
+                var result = ((ConstituentService) Service).GetConstituentAddresses(constituentId);
 
                 if (result == null)
                 {
@@ -211,7 +206,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -222,7 +217,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = _service.GetConstituentDBAs(id);
+                var result = ((ConstituentService) Service).GetConstituentDBAs(id);
 
                 if (result == null)
                 {
@@ -237,35 +232,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResult);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
-            }
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId + RouteVerbs.Get)]
-        public IHttpActionResult GetConstituentAlternateIds(Guid id, string fields = null)
-        {
-            try
-            {
-                var result = _service.GetConstituentAlternateIds(id);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-                return Ok(dynamicResult);
-
-            }
-            catch (Exception)
-            {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -276,7 +245,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = _service.GetEducationLevel(id);
+                var result = ((ConstituentService) Service).GetEducationLevel(id);
 
                 if (result == null)
                 {
@@ -291,8 +260,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResult);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }

@@ -115,8 +115,6 @@ namespace DDI.Services
             Constituent constituent = _repository.GetById(id,
                 c => c.ClergyStatus,
                 c => c.ClergyType,
-                c => c.OrdinationDate,
-                c => c.PlaceOfOrdination,
                 c => c.ConstituentStatus,
                 c => c.ConstituentType,
                 c => c.EducationLevel,
@@ -124,20 +122,8 @@ namespace DDI.Services
                 c => c.IncomeLevel,
                 c => c.Language,
                 c => c.MaritalStatus,
-                c => c.BirthDate,
-                c => c.DeceasedDate,
-                c => c.MarriageDate,
-                c => c.DivorceDate,
-                c => c.ProspectDate,
-                c => c.AgeRangeFrom,
-                c => c.AgeRangeTo,
                 c => c.Prefix,
-                c => c.Profession,
-                c => c.FirstEmploymentDate,
-                c => c.Position,
-                c => c.EmploymentStartDate,
-                c => c.EmploymentEndDate,
-                c => c.IsEmployee 
+                c => c.Profession
                 );
 
             var response = GetIDataResponse(() => constituent);
@@ -172,12 +158,6 @@ namespace DDI.Services
         public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)
         { 
             var result = UnitOfWork.GetRepository<DoingBusinessAs>().Entities.Where(d => d.ConstituentId == constituentId).ToList();
-            return GetIDataResponse(() => result.ToList());
-        }
-
-        public IDataResponse<List<AlternateId>> GetConstituentAlternateIds(Guid constituentId)
-        {
-            var result = UnitOfWork.GetRepository<AlternateId>().Entities.Where(a => a.ConstituentId == constituentId).ToList();
             return GetIDataResponse(() => result.ToList());
         }
 
