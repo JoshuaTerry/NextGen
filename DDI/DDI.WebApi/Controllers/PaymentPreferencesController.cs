@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Web.Http;
 using DDI.Services;
-using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -11,6 +12,35 @@ namespace DDI.WebApi.Controllers
 {
     public class PaymentPreferencesController : ControllerBase<PaymentMethodBase>
     {
+        protected new IPaymentPreferenceService Service => (IPaymentPreferenceService)base.Service;
+
+        public PaymentPreferencesController()
+            :base(new PaymentPreferenceService())
+        {
+            
+        }
+
+        [HttpGet]
+        [Route("api/v1/paymentpreferences/paymentmethods")]
+        public IHttpActionResult GetPaymentMethods()
+        {
+            try
+            {
+                var response = Service.GetPaymentMethods();
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
         [HttpGet]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
