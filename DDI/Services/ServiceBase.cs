@@ -29,7 +29,14 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
+
         public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
+        {
+            var queryable = _unitOfWork.GetRepository<T>().Entities;
+            return GetPagedResults(queryable);
+        }
+
+        public virtual IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
@@ -40,7 +47,6 @@ namespace DDI.Services
                 };
             }
 
-            IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
             var query = new CriteriaQuery<T, IPageable>(queryable, search);
 
             if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
@@ -48,7 +54,7 @@ namespace DDI.Services
                 query = query.SetOrderBy(search.OrderBy);
             }
 
-            var totalCount = query.GetQueryable().ToList().Count;
+            var totalCount = query.GetQueryable().Count();
 
             query = query.SetLimit(search.Limit)
                          .SetOffset(search.Offset);
