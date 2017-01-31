@@ -60,6 +60,8 @@
     <Compile Include="ConversionBase.cs" />
     <Compile Include="ConversionMethodArgs.cs" />
     <Compile Include="Core\Initialize.cs" />
+    <Compile Include="CP\PaymentMethodConverter.cs" />
+    <Compile Include="CP\SettingsLoader.cs" />
     <Compile Include="CRM\ConstituentConverter.cs" />
     <Compile Include="CRM\Initialize.cs" />
     <Compile Include="FileExport.cs" />
@@ -89,6 +91,7 @@
       <Name>DDI.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
