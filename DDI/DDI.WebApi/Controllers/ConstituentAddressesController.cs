@@ -10,12 +10,21 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
+using DDI.Services.ServiceInterfaces;
+using DDI.Services.Services;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class ConstituentAddressesController : ControllerBase<ConstituentAddress>
     {
+        private IConstituentAddressService _service;
+        public ConstituentAddressesController() :this(new ConstituentAddressService()) { }
+
+        public ConstituentAddressesController(IConstituentAddressService service)
+        {
+            this._service = service;
+        }
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
         public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -27,7 +36,26 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id, fields);
+            try
+            {
+                var response = _service.GetById(id);
+                if (response.Data == null)
+                {
+                    return NotFound();
+                }
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
+
+                return Ok(dynamicResponse);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            } 
         }
 
         [HttpPost]

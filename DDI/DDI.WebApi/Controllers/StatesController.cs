@@ -1,17 +1,17 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Services;
+﻿using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared.Logger;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
-using Microsoft.SqlServer.Server;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
     public class StatesController : ControllerBase<State>
     {
         #region Private Fields
-
+        private static readonly Logger _logger = Logger.GetLogger(typeof(StatesController));
         private StateService _service;
 
         #endregion Private Fields
@@ -70,6 +70,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
                 return InternalServerError();
             }
         }

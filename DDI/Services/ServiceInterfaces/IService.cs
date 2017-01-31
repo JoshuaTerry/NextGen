@@ -10,11 +10,11 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface IService<T>
     {
-        IDataResponse<List<T>> GetAll();
+        IDataResponse<List<T>> GetAll(IPageable search = null);
         IDataResponse<T> GetById(Guid id);
         IDataResponse Update(T entity);
         IDataResponse<T> Update(Guid id, JObject changes);
-        IDataResponse Add(T entity);
+        IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
     }
 }

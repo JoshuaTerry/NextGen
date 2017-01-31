@@ -7,8 +7,6 @@ using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DDI.Services
@@ -53,11 +51,7 @@ namespace DDI.Services
             return GetIDataResponse(() => result.ToList());
         }
 
-        public IDataResponse Add(Region entity)
-        {
-            return base.Add(entity);
-        }
-
+       
         public IDataResponse<List<Region>> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {            
             var result =_logic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);

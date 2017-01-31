@@ -7,6 +7,8 @@ using System.Web.Http;
 using System.Web.Http.Routing;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Logger;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -19,18 +21,27 @@ namespace DDI.WebApi.Controllers
     {
         private IPagination _pagination;
         private DynamicTransmogrifier _dynamicTransmogrifier;
-        private ServiceBase<T> _service;
+        private readonly IService<T> _service;
+        private readonly Logger _logger;
+        protected IService<T> Service => _service;
+        protected Logger LoggerBase => _logger;
 
         public ControllerBase()
             :this(new ServiceBase<T>(), new DynamicTransmogrifier(), new Pagination())
         {
         }
 
-        internal ControllerBase(ServiceBase<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
+        public ControllerBase(IService<T> serviceBase)
+            : this(serviceBase, new DynamicTransmogrifier(), new Pagination())
+        {
+        }
+
+        internal ControllerBase(IService<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
         {
             _pagination = pagination;
             _dynamicTransmogrifier = dynamicTransmogrifier;
             _service = serviceBase;
+            _logger = Logger.GetLogger(typeof(T));
         }
 
         public IPagination Pagination
@@ -79,8 +90,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
             
@@ -104,8 +116,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -129,8 +142,9 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -155,8 +169,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResponse);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -183,10 +198,12 @@ namespace DDI.WebApi.Controllers
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
+
     }
 }

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Mail;
-using System.Runtime.Remoting;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.Http;
-using DDI.WebApi.Helpers;
+﻿using DDI.WebApi.Helpers;
 using DDI.WebApi.Models;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.SqlServer.Server;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Net.Http;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
@@ -135,7 +130,7 @@ namespace DDI.WebApi.Controllers
             ApplicationUser user = null;
             try
             {
-                user = UserManager.FindByIdAsync(id).Result;
+                user = await  UserManager.FindByIdAsync(id);
                 if (user == null)
                 {
                     return NotFound();
