@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip();
+        AutoZip(modal);
 
     });
 
@@ -282,41 +282,41 @@ function ClearElement(e) {
     }
 }
 
-function AutoZip() {
+function AutoZip(container) {
 
-    $('.autozip').blur(function () {
+    $(container).find('.autozip').blur(function () {
 
-        GetAutoZipData();
-
-    });
-
-    $('.autocity').blur(function () {
-
-        GetAutoZipData();
+        GetAutoZipData(container);
 
     });
 
-    $('.autostate').blur(function () {
+    $(container).find('.autocity').blur(function () {
 
-        GetAutoZipData();
+        GetAutoZipData(container);
+
+    });
+
+    $(container).find('.autostate').blur(function () {
+
+        GetAutoZipData(container);
 
     });
 
 }
 
-function GetAutoZipData() {
+function GetAutoZipData(container) {
 
-    var zip = $('.autozip').val();
+    var zip = $(container).find('.autozip').val();
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' + $('.autoaddress1').val() +
-                '&addressLine2=' + $('.autoaddress2').val() +
-                '&city=' + $('.autocity').val() +
-                '&countryId=' + $('.autocountry').val() +
-                '&countyId=' + $('.autocounty').val() +
-                '&stateId=' + $('.autostate').val() +
-                '&zip=' + $('.autozip').val();
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
+                '&city=' + $(container).find('.autocity').val() +
+                '&countryId=' + $(container).find('.autocountry').val() +
+                '&countyId=' + $(container).find('.autocounty').val() +
+                '&stateId=' + $(container).find('.autostate').val() +
+                '&zip=' + $(container).find('.autozip').val();
 
         $.ajax({
             url: WEB_API_ADDRESS + 'locations/?' + fields,
@@ -328,17 +328,17 @@ function GetAutoZipData() {
 
                 if (data && data.Data) {
 
-                    $('.autozip').val(data.Data.PostalCode);
+                    $(container).find('.autozip').val(data.Data.PostalCode);
 
                     if (data.Data.State) {
-                        $('.autocountry').val(data.Data.State.CountryId);
+                        $(container).find('.autocountry').val(data.Data.State.CountryId);
 
-                        PopulateDropDown('.autostate', 'states/?countryid=' + $('.autocountry').val(), '', '', data.Data.State.Id);
+                        PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
                         PopulateDropDown('.autocounty', 'counties/?stateid=' + stateid, '', '');
                     }
 
-                    $('.autocity').val(data.Data.City);
+                    $(container).find('.autocity').val(data.Data.City);
 
                 }
             

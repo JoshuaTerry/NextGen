@@ -306,7 +306,7 @@ function NewAddressModal() {
             resizable: false
         });
 
-        AutoZip();
+        AutoZip(modal);
 
     });
 
@@ -424,11 +424,11 @@ function EditAddressModal(id) {
 
     PopulateCountriesInModal(null);
 
+    AutoZip(modal);
+
     LoadRegions('regionscontainer', 'na-');
 
     LoadAddress(id);
-
-    AutoZip();
 
     $('.cancelmodal').click(function (e) {
 
