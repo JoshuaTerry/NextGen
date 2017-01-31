@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared.Enums.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Models.Client.CP;

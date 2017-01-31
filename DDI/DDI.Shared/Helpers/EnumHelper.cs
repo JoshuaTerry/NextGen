@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Helpers
 {
@@ -42,6 +44,24 @@ namespace DDI.Shared.Helpers
 
             return definition;
         }
+
+        public static List<string> GetDescriptions(Type enumValue)
+        {
+            List<string> values = new List<string>();
+
+            MemberInfo[] members = enumValue.GetMembers();
+
+            foreach (var member in members)
+            {
+                object[] attributes = member.GetCustomAttributes(typeof (DescriptionAttribute), false);
+                foreach (var attribute in attributes)
+                {
+                    values.Add(((DescriptionAttribute) attribute).Description);
+                }
+            }
+
+            return values;
+        } 
 
         public static T FromDescription<T>(string definition) where T : struct, IConvertible
         {
