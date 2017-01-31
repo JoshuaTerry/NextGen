@@ -20,7 +20,7 @@ namespace DDI.Shared.Test.Helpers
         }
 
         [TestMethod]
-        public void When_Given_An_Enumeration_Should_Return_Members_As_List_Of_Strings()
+        public void When_Given_An_Enumeration_Should_Return_Description_Attribute_Of_Members_As_List_Of_Strings()
         {
             //Act
             var list = EnumHelper.GetDescriptions<PaymentMethod>();
