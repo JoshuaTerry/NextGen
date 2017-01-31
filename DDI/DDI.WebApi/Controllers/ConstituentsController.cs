@@ -66,7 +66,7 @@ namespace DDI.WebApi.Controllers
 
             try
             {
-                var constituents = _service.GetConstituents(search);
+                var constituents = _service.GetAll(search);
 
                 if (constituents == null)
                 {
@@ -98,7 +98,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var constituent = _service.GetConstituentById(id);
+                var constituent = _service.GetById(id);
 
                 if (constituent == null)
                 {
@@ -113,7 +113,7 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicConstituent);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return InternalServerError();
             }

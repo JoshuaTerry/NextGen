@@ -204,6 +204,11 @@ namespace DDI.Business.CRM
                 break;
             }
 
+            if (resultAddress != null)
+            {
+                UnitOfWork.GetReference(resultAddress, p => p.Address);
+            }
+
             return resultAddress;
         }
 

@@ -53,7 +53,6 @@ namespace DDI.Data
         public DbSet<Gender> Genders { get; set; }
         public DbSet<IncomeLevel> IncomeLevels { get; set; }
         public DbSet<MaritalStatus> MaritalStatuses { get; set; }
-        public DbSet<PaymentPreference> PaymentPreferences { get; set; }
         public DbSet<Prefix> Prefixes { get; set; }
         public DbSet<Profession> Professions { get; set; }
         public DbSet<Region> Regions { get; set; }

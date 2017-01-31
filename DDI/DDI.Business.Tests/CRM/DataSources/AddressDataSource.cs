@@ -15,6 +15,8 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class AddressDataSource
     {
+        public static Address CanadianAddress { get; private set; }
+        public static Address FrenchAddress { get; private set; }
         public static IList<Address> GetDataSource(UnitOfWorkNoDb uow)
         {
             IList<Address> existing = uow.GetRepositoryOrNull<Address>()?.Entities.ToList();
@@ -34,7 +36,9 @@ namespace DDI.Business.Tests.CRM.DataSources
             list.Add(BuildAddress(uow, "503 Cloverdale Rd #101", "", "Montgomery", "US", "AL", "36106"));
             list.Add(BuildAddress(uow, "416 Central Dr", "", "Cullowhee", "US", "NC", "28723"));
 
-            list.Add(BuildAddress(uow, "9853 90 Ave NW", "", "Edmonton", "CA", "AB", "T6E 2T2"));
+            list.Add(CanadianAddress = BuildAddress(uow, "9853 90 Ave NW", "", "Edmonton", "CA", "AB", "T6E 2T2"));
+
+            list.Add(FrenchAddress = BuildAddress(uow, "20 Place Saint-Georges", "", "Toulouse", "FR", "", "31000"));
 
             uow.CreateRepositoryForDataSource(list);
             return list;
