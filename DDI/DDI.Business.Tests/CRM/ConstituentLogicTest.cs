@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DDI.Business.Tests.CRM
 {
     [TestClass]
-    public class ConstituentLogicTest
+    public class ConstituentLogicTest : TestBase
     {
 
         private const string TESTDESCR = "Business | CRM";

@@ -7,15 +7,13 @@ using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
 using DDI.Data;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.CRM
 {
     [TestClass]
-    public class AddressLogicTest
+    public class AddressLogicTest : TestBase
     {
 
         private const string TESTDESCR = "Business | CRM";

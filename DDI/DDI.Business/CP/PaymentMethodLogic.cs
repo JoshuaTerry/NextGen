@@ -5,8 +5,6 @@ using System.Text.RegularExpressions;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Common;
 
 namespace DDI.Business.CP
 {

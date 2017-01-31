@@ -10,13 +10,12 @@ using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using DDI.Shared.Enums;
 
 namespace DDI.Business.Tests.Core
 {
     [TestClass]
-    public class ConfigurationLogicTest
+    public class ConfigurationLogicTest : TestBase
     {
 
         private const string TESTDESCR = "Business | Core";
