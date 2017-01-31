@@ -188,6 +188,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ApplicationRoleManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IApplicationUserManager.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthorizationsController.cs" />
     <Compile Include="Controllers\AddressTypesController.cs" />
     <Compile Include="Controllers\ClergyStatusesController.cs" />
     <Compile Include="Controllers\ClergyTypesController.cs" />
@@ -232,22 +233,35 @@
     <Compile Include="Controllers\ConstituentsController.cs" />
     <Compile Include="Controllers\ConstituentStatusesController.cs" />
     <Compile Include="Controllers\ConstituentTypesController.cs" />
+    <Compile Include="Controllers\AlternateIdsController.cs" />
+    <Compile Include="Controllers\DoingBusinessAsController.cs" />
     <Compile Include="Controllers\ContactTypesController.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountiesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\CustomFieldsController.cs" />
+    <Compile Include="Controllers\ContactInfoController.cs" />
     <Compile Include="Controllers\DenominationsController.cs" />
+    <Compile Include="Controllers\TagsController.cs" />
+    <Compile Include="Controllers\PaymentPreferencesController.cs" />
+    <Compile Include="Controllers\EducationsController.cs" />
     <Compile Include="Controllers\EducationLevelsController.cs" />
     <Compile Include="Controllers\EthnicityController.cs" />
     <Compile Include="Controllers\GendersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeLevelsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\MaritalStatusesController.cs" />
     <Compile Include="Controllers\PrefixesController.cs" />
     <Compile Include="Controllers\ProfessionsController.cs" />
+    <Compile Include="Controllers\RegionLevelsController.cs" />
+    <Compile Include="Controllers\RegionsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SectionPreferencesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
+    <Compile Include="Controllers\UserRolesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -257,6 +271,7 @@
     <Compile Include="Helpers\LinqQuery.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
+    <Compile Include="Helpers\PatchUpdateUser.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -265,7 +280,9 @@
     <Compile Include="Models\BindingModels\RegisterBindingModel.cs" />
     <Compile Include="Models\BindingModels\RegisterExternalBindingModel.cs" />
     <Compile Include="Models\BindingModels\RemoveLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\RolesBindingModel.cs" />
     <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
+    <Compile Include="Models\BindingModels\UserRolesBindingModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />

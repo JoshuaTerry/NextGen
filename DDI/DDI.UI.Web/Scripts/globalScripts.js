@@ -27,8 +27,8 @@ $(document).ready(function () {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 800,
-            height: 640,
+            width: 900,
+            height: 625,
             resizable: false
         });
 
@@ -47,6 +47,8 @@ $(document).ready(function () {
         });
 
         LoadNewConstituentModalDropDowns();
+
+        AutoZip(modal);
 
     });
 
@@ -75,6 +77,8 @@ function LoadNewConstituentModalDropDowns() {
         PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
 
     });
+
+    LoadRegions('regionscontainer', 'nc-');
 
 }
 
@@ -141,21 +145,21 @@ function GetNewFields() {
     var p = [];
 
     $(modal).find('.modalcontent div.fieldblock input').each(function () {
-        var property = $(this).attr('class');
-        property = property.replace('nc-', '');
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
         var value = $(this).val();
 
         if (value && value.length > 0)
-            p.push('"' + property + '": "' + value + '"');
+            p.push('"' + propertyName + '": "' + value + '"');
     });
 
     $(modal).find('.modalcontent div.fieldblock select').each(function () {
-        var property = $(this).attr('class');
-        property = property.replace('nc-', '');
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
         var value = $(this).val();
 
         if (value && value.length > 0)
-            p.push('"' + property + '": "' + value + '"');
+            p.push('"' + propertyName + '": "' + value + '"');
     });
 
     p = '{' + p + '}';
@@ -166,17 +170,19 @@ function GetNewFields() {
 
 function CloseModal() {
 
-    ClearFields();
+    ClearFields('.modalcontent');
     
     $(modal).dialog('close');
 
 }
 
-function ClearFields() {
+function ClearFields(container) {
 
-    $('div.fieldblock input').val('');
+    $(container + ' div.fieldblock input').val('');
 
-    $('div.fieldblock select').val(0);
+    $(container + ' div.fieldblock textarea').val('');
+
+    $(container + ' div.fieldblock select').val(0);
 
 }
 
@@ -190,7 +196,12 @@ function LoadAccordions() {
 
     $('.accordions').accordion({
         heightStyle: "content",
-        collapsible: true
+        collapsible: true,
+        beforeActivate: function (event, ui) {
+            var newbutton = $(event.originalEvent.target).is('.ui-accordion-header > .newbutton');
+            if (newbutton)
+                return false;
+        }
     });
 
     $('.accordions').each(function () {
@@ -244,6 +255,91 @@ function FormatJSONDate(jsonDate) {
     }
     
     return date;
+}
+
+function ClearElement(e) {
+
+    if ($(e).is('select')
+        || $(e).is('div')) {
+
+        $(e).html('');
+
+    }
+
+    if ($(e).is('input')) {
+
+        if ($(e).is(':checkbox')) {
+            $(e).prop('checked', false);
+        }
+        else {
+            $(e).val('');
+        }
+
+    }
+    
+    if ($(e).is('textarea')) {
+
+        $(e).text('');
+
+    }
+}
+
+function AutoZip(container) {
+
+    $(container).find('.autozip').blur(function () {
+
+        GetAutoZipData(container);
+
+    });
+
+}
+
+function GetAutoZipData(container) {
+
+    var zip = $(container).find('.autozip').val();
+
+    if (zip && zip.length > 0) {
+
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
+                '&city=' + $(container).find('.autocity').val() +
+                '&countryId=' + $(container).find('.autocountry').val() +
+                '&countyId=' + $(container).find('.autocounty').val() +
+                '&stateId=' + $(container).find('.autostate').val() +
+                '&zip=' + $(container).find('.autozip').val();
+
+        $.ajax({
+            url: WEB_API_ADDRESS + 'locations/?' + fields,
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+
+                if (data && data.Data) {
+
+                    $(container).find('.autozip').val(data.Data.PostalCode);
+
+                    if (data.Data.State) {
+                        $(container).find('.autocountry').val(data.Data.State.CountryId);
+                        
+                        PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
+
+                        PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
+                    }
+
+                    $(container).find('.autocity').val(data.Data.City);
+
+                }
+            
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+            }
+        });
+
+    }
+
 }
 
 
@@ -405,11 +501,10 @@ function GetEditedFields(editcontainer) {
 
     var p = [];
 
-    // Fix the datetime / checkbox saving issue
     $(editcontainer).find('input.editable').each(function () {
 
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = '';
 
         if ($(this).is(':checkbox')) {
@@ -435,7 +530,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('select').each(function () {
         var property = $(this).attr('class').replace('editable ', '').split(' ');
-        var propertyName = property[0].replace('editable ', '');
+        var propertyName = property[0]
         var value = $(this).val();
 
         for (var key in currentEntity) {
@@ -460,8 +555,6 @@ function CancelEdit() {
 
     RefreshEntity();
 }
-
-    
 //
 // END EDITING
 

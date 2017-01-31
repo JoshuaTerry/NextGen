@@ -25,16 +25,16 @@ using DDI.WebApi.Services;
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class AccountController : ApiController
+    public class AuthorizationsController : ApiController
     {
-        private const string LocalLoginProvider = "Local";
+        private const string LOCAL_LOGIN_PROVIDER = "Local";
         private IApplicationUserManager _userManager;
 
-        public AccountController()
+        public AuthorizationsController()
         {
         }
 
-        public AccountController(IApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        public AuthorizationsController(IApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
@@ -61,7 +61,31 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        [Route("api/v1/ManageInfo")]
+        [HttpGet]
+        [Route("api/v1/authorizations/users/{email}/roles")]
+        public async Task<IHttpActionResult> GetUserRoles(string email)
+        {
+            var user = UserManager.Users.SingleOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IList<string> roles;
+            try
+            {
+                roles = await UserManager.GetRolesAsync(user.Id);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(roles);
+        }
+
+
+        [Route("api/v1/authorizations/manageinfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -86,20 +110,20 @@ namespace DDI.WebApi.Controllers
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
-                    LoginProvider = LocalLoginProvider,
+                    LoginProvider = LOCAL_LOGIN_PROVIDER,
                     ProviderKey = user.UserName,
                 });
             }
 
             return new ManageInfoViewModel
             {
-                LocalLoginProvider = LocalLoginProvider,
+                LocalLoginProvider = LOCAL_LOGIN_PROVIDER,
                 Email = user.UserName,
                 Logins = logins,
             };
         }
 
-        [Route("api/v1/ChangePassword")]
+        [Route("api/v1/authorizations/changepassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -118,7 +142,7 @@ namespace DDI.WebApi.Controllers
             return Ok();
         }
 
-        [Route("api/v1/SetPassword")]
+        [Route("api/v1/authorizations/setpassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -137,7 +161,7 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        [Route("api/v1/RemoveLogin")]
+        [Route("api/v1/authorizations/removelogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -147,7 +171,7 @@ namespace DDI.WebApi.Controllers
 
             IdentityResult result;
 
-            if (model.LoginProvider == LocalLoginProvider)
+            if (model.LoginProvider == LOCAL_LOGIN_PROVIDER)
             {
                 result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
             }
@@ -166,40 +190,8 @@ namespace DDI.WebApi.Controllers
         }
 
 
-        [AllowAnonymous]
-        [Route("api/v1/Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
-
-            var service = new EmailService();
-            var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
-            var to = new MailAddress(model.Email);
-            var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
-            var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
-
-            service.SendMailMessage(message);
-            
-            return Ok();
-        }
-
         [HttpPost]
-        [Route("api/v1/ConfirmEmail")]
+        [Route("api/v1/authorizations/confirmemail")]
         public async Task<IHttpActionResult> ConfirmEmail(ConfirmRegistrationBindingModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code))
@@ -236,7 +228,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/ForgotPassword")]
+        [Route("api/v1/authorizations/forgotpassword")]
         public async Task<IHttpActionResult> ForgotPassword(string email)
         {
             if (!ModelState.IsValid)
@@ -271,7 +263,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/ForgotPasswordConfirm")]
+        [Route("api/v1/authorizations/forgotpasswordconfirm")]
         public async Task<IHttpActionResult> ForgotPasswordConfirm(ForgotPasswordConfirmBindingModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Code) || string.IsNullOrWhiteSpace(model.NewPassword) || string.IsNullOrWhiteSpace(model.ConfirmPassword))
@@ -353,8 +345,7 @@ namespace DDI.WebApi.Controllers
         }
 
         private ApplicationUser GetUserByEmail(string email)
-        {
-            ApplicationUser user = null;
+        {             
             var users = UserManager.Users.Where(u => u.Email == email);
             if (users.Count() == 1)
             {

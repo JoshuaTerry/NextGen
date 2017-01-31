@@ -24,6 +24,7 @@
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\globalstyles.css" />
 
@@ -50,17 +51,6 @@
                 </asp:Menu>
                 <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
                     ShowStartingNode="false" />
-                <%--<ul>
-                    <li>
-                        <a runat="server" href="~/Constituents.aspx">Constituents</a>
-                    </li>
-                    <li>
-                        <a href="#" class="addconstituent">Add Constituent</a>
-                    </li>
-                    <li>
-                        <a runat="server" href="~/Search.aspx" class="searchbutton">Search</a>
-                    </li>
-                </ul>--%>
             </div>
         </header>
 
@@ -72,9 +62,11 @@
 
             <div class="modalcontent">
 
-                <div class="fieldblock">
-                    <label>ID</label>
-                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                <div class="fivecolumn">
+                    <div class="fieldblock">
+                        <label>ID</label>
+                        <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                    </div>
                 </div>
 
                 <div class="fivecolumn">
@@ -104,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="inline">
+                <div class="threecolumn">
                     <div class="fieldblock">
                         <label>Nick Name</label>
                         <input type="text" class="nc-NickName" />
@@ -121,7 +113,7 @@
                     </div>
                 </div>
 
-                <div class="inline">
+                <div class="threecolumn">
                     <div class="fieldblock">
                         <label>Tax ID</label>
                         <input type="text" class="nc-TaxID" />
@@ -141,49 +133,55 @@
                 <fieldset>
                     <legend>Primary Address</legend>
 
-                    <div>
-                        <div class="fieldblock">
-                            <label>Address Type</label>
-                            <select class="nc-AddressType"></select>
+                    <div class="threecolumn">
+
+                        <div>
+                            <div class="fieldblock">
+                                <label>Address Type</label>
+                                <select class="nc-AddressType"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Address Line 1</label>
+                                <input type="text" class="nc-AddressLine1 autoaddress1" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Address Line 2</label>
+                                <input type="text" class="nc-AddressLine2 autoaddress2" />
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Address Line 1</label>
-                            <input type="text" class="nc-AddressLine1" />
+                        <div>
+
+                            <div class="fieldblock">
+                                <label>Postal Code</label>
+                                <input type="text" class="nc-PostalCode autozip" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Country</label>
+                                <select class="nc-Country autocountry"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>State</label>
+                                <select class="nc-State autostate"></select>
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>City</label>
+                                <input type="text" class="nc-City autocity" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>County</label>
+                                <select class="nc-County autocounty"></select>
+                            </div>
+
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Address Line 2</label>
-                            <input type="text" class="nc-AddressLine2" />
-                        </div>
-                    </div>
-
-                    <div class="inline">
-
-                        <div class="fieldblock">
-                            <label>Postal Code</label>
-                            <input type="text" class="nc-PostalCode" style="width: 75px;" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Country</label>
-                            <select class="nc-Country" style="width: 150px;"></select>
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>State</label>
-                            <select class="nc-State" style="width: 150px;"></select>
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>City</label>
-                            <input type="text" class="nc-City" style="width: 150px;" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>County</label>
-                            <select class="nc-County" style="width: 150px;"></select>
-                        </div>
+                        <div class="regionscontainer"></div>
 
                     </div>
 
@@ -192,29 +190,30 @@
                 <fieldset>
                     <legend>Contact Information</legend>
 
-                    <div class="inline">
-                        <div class="fieldblock">
-                            <label>Email</label>
-                            <input type="email" class="nc-Email" />
+                    <div class="twocolumn">
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Email</label>
+                                <input type="email" class="nc-Email" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Email Type</label>
+                                <select class="nc-EmailType"></select>
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Email Type</label>
-                            <select class="nc-EmailType"></select>
-                        </div>
-                    </div>
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Phone</label>
+                                <input type="text" class="nc-Phone" />
+                            </div>
 
-                    <div class="inline">
-                        <div class="fieldblock">
-                            <label>Phone</label>
-                            <input type="text" class="nc-Phone" />
+                            <div class="fieldblock">
+                                <label>Phone Type</label>
+                                <select class="nc-PhoneType"></select>
+                            </div>
                         </div>
-
-                        <div class="fieldblock">
-                            <label>Phone Type</label>
-                            <select class="nc-PhoneType"></select>
-                        </div>
-
                     </div>
 
                 </fieldset>

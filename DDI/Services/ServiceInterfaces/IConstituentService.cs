@@ -8,13 +8,13 @@ namespace DDI.Shared
 { 
     public interface IConstituentService
     {
-        IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search);
-        IDataResponse<Constituent> GetConstituentById(Guid id);
+        IDataResponse<List<Constituent>> GetAll(IPageable search);
+        IDataResponse<Constituent> GetById(Guid id);
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
         IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges);
         IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId);
         IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId);
-        IDataResponse AddConstituent(Constituent constituent);
+        IDataResponse<Constituent> AddConstituent(Constituent constituent);
         IDataResponse<int> GetNextConstituentNumber();
         object NewConstituent(Guid id);
         IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId);

@@ -6,6 +6,7 @@ using System.Linq;
 using DDI.Shared.Attributes;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
@@ -18,6 +19,11 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        public DateTime? BirthDate { get; set; }
+        [NotMapped]
+        public int? AgeRangeFrom { get; set; }
+        [NotMapped]
+        public int? AgeRangeTo { get; set; }
         public BirthDateType BirthDateType { get; set; }
 
         public int? BirthMonth { get; set; }
@@ -110,6 +116,8 @@ namespace DDI.Shared.Models.Client.CRM
         [Column(TypeName = "date")]
         public DateTime? OrdinationDate { get; set; }
 
+        public PaymentMethod PreferredPaymentMethod { get; set; }
+
         [MaxLength(128)]
         public string PlaceOfOrdination { get; set; }
 
@@ -156,16 +164,24 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
-        [HateoasCollectionLink(RouteNames.ConstituentAddress)]
+
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
+
         public ICollection<AlternateId> AlternateIds { get; set; }
+
         public ICollection<ContactInfo> ContactInfo { get; set; }
+
         public ICollection<Denomination> Denominations { get; set; }
+
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
+
         public ICollection<Education> Educations { get; set; }
+
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        public ICollection<PaymentPreference> PaymentPreferences { get; set; }
+
         public ICollection<Tag> Tags { get; set; }
+
+        public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
 
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }

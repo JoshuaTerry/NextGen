@@ -1,90 +1,79 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Web.Http;
 using DDI.Shared.Models.Common;
 using DDI.Services;
-using Newtonsoft.Json.Linq; 
+using DDI.Services.Search;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
+using System.Linq;
+using DDI.Shared.Logger;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CountriesController : ApiController
+    public class CountriesController : ControllerBase<Country>
     {
-        #region Private Fields
-
-        private ServiceBase<Country> _service;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CountriesController()
-            : this(new ServiceBase<Country>())
-        {
-        }
-
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
-        internal CountriesController(ServiceBase<Country> service)
-        {
-            _service = service;
-        }
-
-        #endregion Internal Constructors
-
-        #region Public Methods
-
+        private static readonly Logger _logger = Logger.GetLogger(typeof(CountriesController));
+        private const string US = "US";
         [HttpGet]
-        [Route("api/v1/countries")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/countries", Name = RouteNames.Country)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
+            var urlHelper = GetUrlHelper();
+            var search = new PageableSearch()
             {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
-        }
+                Limit = limit,
+                Offset = offset,
+                OrderBy = orderBy
+            };
 
-        [HttpPost]
-        [Route("api/v1/countries")]
-        public IHttpActionResult Post([FromBody] Country item)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok();
-        }
-
-        [HttpPatch]
-        [Route("api/v1/countries/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
-        {
             try
             {
-                if (!ModelState.IsValid)
+                var response = base.Service.GetAll(search);
+                if (response.Data == null)
                 {
-                    return BadRequest(ModelState);
+                    return NotFound();
+                }
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
                 }
 
-                var response = _service.Update(id, changes);
+                var totalCount = response.TotalResults;
 
-                return Ok(response);
+                var us = response.Data.FirstOrDefault(c => c.CountryCode == US);
+                if (us != null)
+                {
+                    int index = response.Data.IndexOf(us);
+                    response.Data.RemoveAt(index);
+                    response.Data.Insert(0, us);
+                }
 
+                Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Country);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper, fields);
+
+                return Ok(dynamicResponse);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                _logger.Error(ex);
+                return InternalServerError();
             }
         }
-        #endregion Public Methods
+
+        [HttpPost]
+        [Route("api/v1/countries", Name = RouteNames.Country + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] Country item)
+        {
+            return base.Post(GetUrlHelper(), item);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/countries/{id}", Name = RouteNames.Country + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject changes)
+        {
+            return base.Patch(GetUrlHelper(), id, changes);
+        }
     }
 }
