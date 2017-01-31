@@ -42,6 +42,49 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("api/v1/paymentpreferences/accounttypes")]
+        public IHttpActionResult GetAccountTypes()
+        {
+            try
+            {
+                var response = Service.GetAccountTypes();
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/paymentpreferences/paymentmethodstatuses")]
+        public IHttpActionResult GetPaymentMethodStatuses()
+        {
+            try
+            {
+                var response = Service.GetPaymentMethodStatuses();
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+
+        [HttpGet]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {

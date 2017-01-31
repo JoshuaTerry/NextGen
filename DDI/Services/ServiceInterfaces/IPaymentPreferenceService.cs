@@ -13,5 +13,7 @@ namespace DDI.Services.ServiceInterfaces
     public interface IPaymentPreferenceService : IService<PaymentMethodBase>
     {
         IDataResponse GetPaymentMethods();
+        IDataResponse GetAccountTypes();
+        IDataResponse GetPaymentMethodStatuses();
     }
 }
