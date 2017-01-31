@@ -630,12 +630,12 @@
 
             <div class="fieldblock">
                 <label>Address Line 1</label>
-                <textarea class="na-AddressLine1"></textarea>
+                <input type="text" class="na-AddressLine1" />
             </div>
 
             <div class="fieldblock">
                 <label>Address Line 2</label>
-                <textarea class="na-AddressLine2"></textarea>
+                <input type="text" class="na-AddressLine2" />
             </div>
 
             <div class="fieldblock">
@@ -645,18 +645,18 @@
 
             <div class="fieldblock">
                 <label>Postal code</label>
-                <input type="text" class="na-PostalCode" />
+                <input type="text" class="na-PostalCode autozip" />
             </div>
 
             <div class="inline">
                 <div class="fieldblock">
                     <label style="width: 100px;">City</label>
-                    <input type="text" class="na-City" style="width: 85px;" />
+                    <input type="text" class="na-City autocity" style="width: 85px;" />
                 </div>
 
                 <div class="fieldblock">
                     <label style="width: 25px;">St</label>
-                    <select class="na-StateId" style="width: 106px;"></select>
+                    <select class="na-StateId autostate" style="width: 106px;"></select>
                 </div>
             </div>
 
