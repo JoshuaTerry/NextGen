@@ -15,6 +15,7 @@ namespace DDI.WebApi.Controllers
     //[Authorize]
     public class ConstituentsController : ControllerBase<Constituent>
     {
+        protected new IConstituentService Service => (IConstituentService) base.Service;
         public ConstituentsController()
             : base(new ConstituentService())
         {
@@ -118,7 +119,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var constituent = ((ConstituentService)Service).GetConstituentByConstituentNum(num);
+                var constituent = Service.GetConstituentByConstituentNum(num);
 
                 if (constituent == null)
                 {
@@ -158,7 +159,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var response = ((ConstituentService) Service).NewConstituent(id);
+                var response = Service.NewConstituent(id);
 
                 return Ok(response);
             }
@@ -189,7 +190,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = ((ConstituentService) Service).GetConstituentAddresses(constituentId);
+                var result = Service.GetConstituentAddresses(constituentId);
 
                 if (result == null)
                 {
@@ -217,7 +218,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = ((ConstituentService) Service).GetConstituentDBAs(id);
+                var result = Service.GetConstituentDBAs(id);
 
                 if (result == null)
                 {
@@ -245,7 +246,7 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var result = ((ConstituentService) Service).GetEducationLevel(id);
+                var result = Service.GetEducationLevel(id);
 
                 if (result == null)
                 {

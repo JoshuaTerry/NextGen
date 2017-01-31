@@ -27,7 +27,7 @@ namespace DDI.WebApi.Controllers
         protected Logger LoggerBase => _logger;
 
         public ControllerBase()
-            :this(new ServiceBase<T>(), new DynamicTransmogrifier(), new Pagination())
+            :this(new ServiceBase<T>())
         {
         }
 

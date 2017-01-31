@@ -12,6 +12,7 @@ namespace DDI.WebApi.Controllers
 {
     public class AlternateIdsController : ControllerBase<AlternateId>
     {
+        protected new IAlternateIdService Service => (IAlternateIdService) base.Service;
         public AlternateIdsController()
             : base(new AlternateIdService())
         {
@@ -33,12 +34,12 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/alternateids/constituents/{constituentId}")]
-        [Route("api/v1/constituents/{constituentId}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]
+        [Route("api/v1/constituents/{constituentId}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null)
         {
             try
             {
-                var response = ((AlternateIdService)Service).GetAlternateIdsByConstituent(constituentId);
+                var response = Service.GetAlternateIdsByConstituent(constituentId);
                 if (response.Data == null)
                 {
                     return NotFound();
