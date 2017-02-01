@@ -79,7 +79,7 @@ namespace DDI.Shared.Test.Helpers
             }
 
             //Assert
-            Assert.IsNull(exception);
+            Assert.AreEqual("Type of argument must be Enum.", exception.Message);
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
