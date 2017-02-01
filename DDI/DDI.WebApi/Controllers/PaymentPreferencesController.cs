@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.Search;
@@ -53,7 +54,7 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
                 return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentPreference, search, fields);
             }
             catch (Exception ex)
