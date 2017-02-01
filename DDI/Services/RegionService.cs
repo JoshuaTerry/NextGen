@@ -13,48 +13,43 @@ namespace DDI.Services
 {
     public class RegionService : ServiceBase<Region>, IRegionService
     {
-        private IUnitOfWork _unitOfWork;
-        private RegionLogic _logic;
+        private readonly IRepository<Region> _repository;
+        private readonly RegionLogic _regionLogic;
+
         public RegionService()
+            : this(new UnitOfWorkEF())
         {
-            Initialize(new UnitOfWorkEF(), new RegionLogic());
         }
 
-        public RegionService(IUnitOfWork uow, RegionLogic logic)
+        public RegionService(IUnitOfWork uow)
+            : this(uow, new RegionLogic(uow), uow.GetRepository<Region>())
         {
-            Initialize(uow, logic);
         }
 
-        private void Initialize(IUnitOfWork uow, RegionLogic logic)
+        private RegionService(IUnitOfWork uow, RegionLogic regionLogic, IRepository<Region> repository)
+            :base(uow)
         {
-            _unitOfWork = uow;
-            _logic = logic;
+            _regionLogic = regionLogic;
+            _repository = repository;
         }
         public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
         {
-            List<Region> result;
+            var result = UnitOfWork.GetRepository<Region>().GetEntities(IncludesForList);
             if (id != null && id != Guid.Empty)
             {
-                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level && r.ParentRegionId == id).ToList();
+                result = result.Where(r => r.Level == level && r.ParentRegionId == id);
             }
             else
             {
-                result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.Level == level).ToList();
+                result = result.Where(r => r.Level == level);
             }
              
             return GetIDataResponse(() => result.ToList());
         }
-
-        public IDataResponse<List<Region>> GetAll()
-        {
-            var result = UnitOfWork.GetRepository<Region>().Entities.Where(r => r.ParentRegionId == null);
-            return GetIDataResponse(() => result.ToList());
-        }
-
        
         public IDataResponse<List<Region>> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {            
-            var result =_logic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
+            var result =_regionLogic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
             return GetIDataResponse(() => result.ToList());
         }
     }

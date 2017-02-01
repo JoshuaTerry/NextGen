@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using DDI.Data;
 using DDI.Shared.Models.Client.CRM;
@@ -22,7 +23,7 @@ namespace DDI.WebApi.Tests.Services
             var repo = new Mock<IRepository<Constituent>>();
             var unitOfWork = new UnitOfWorkNoDb();
             unitOfWork.SetRepository(repo.Object);
-            repo.Setup(r => r.Entities).Returns(SetupRepositoryConstituents());
+            repo.Setup(r => r.GetEntities(It.IsNotNull<Expression<Func<Constituent, object>>>())).Returns(SetupRepositoryConstituents());
             
             var service = new ConstituentService(unitOfWork);
             var result = service.GetConstituentByConstituentNum(12345);
