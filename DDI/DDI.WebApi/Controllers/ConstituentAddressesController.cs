@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -17,13 +18,22 @@ namespace DDI.WebApi.Controllers
     //[Authorize]
     public class ConstituentAddressesController : ControllerBase<ConstituentAddress>
     {
-        private IConstituentAddressService _service;
-        public ConstituentAddressesController() :this(new ConstituentAddressService()) { }
-
-        public ConstituentAddressesController(IConstituentAddressService service)
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
         {
-            this._service = service;
+            return DataIncludes();
         }
+
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForList()
+        {
+            return DataIncludes();
+        }
+
+        private Expression<Func<ConstituentAddress, object>>[] DataIncludes()
+        {
+            Expression<Func<ConstituentAddress, object>>[] includes = {a => a.Address, a => a.AddressType};
+            return includes;
+        }
+
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
         public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -35,26 +45,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            try
-            {
-                var response = _service.GetById(id);
-                if (response.Data == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return BadRequest(response.ErrorMessages.ToString());
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper(), fields);
-
-                return Ok(dynamicResponse);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            } 
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
@@ -76,6 +67,24 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituentaddresses/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }

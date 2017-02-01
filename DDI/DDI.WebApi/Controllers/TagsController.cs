@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
@@ -44,6 +45,24 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/tags/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Tag, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }

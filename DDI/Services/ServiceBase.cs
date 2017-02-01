@@ -6,16 +6,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
 {
     public class ServiceBase<T> : IService<T> where T : class, IEntity
     {
         private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase<T>));
-        private readonly IUnitOfWork _unitOfWork; 
+        private readonly IUnitOfWork _unitOfWork;
+        private Expression<Func<T, object>>[] _includesForSingle = null;
+        private Expression<Func<T, object>>[] _includesForList = null;
 
         public ServiceBase() : this(new UnitOfWorkEF())
         {            
@@ -30,13 +34,25 @@ namespace DDI.Services
             get { return _unitOfWork; }
         }
 
-        public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
+        public Expression<Func<T, object>>[] IncludesForSingle
         {
-            var queryable = _unitOfWork.GetRepository<T>().Entities;
-            return GetPagedResults(queryable);
+            protected get { return _includesForSingle; }
+            set { _includesForSingle = value; }
         }
 
-        public virtual IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
+        public Expression<Func<T, object>>[] IncludesForList
+        {
+            protected get { return _includesForList; }
+            set { _includesForList = value; }
+        }
+
+        public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
+        {
+            var queryable = _unitOfWork.GetRepository<T>().GetEntities(_includesForList);
+            return GetPagedResults(queryable, search);
+        }
+
+        private IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
@@ -79,8 +95,14 @@ namespace DDI.Services
 
         public virtual IDataResponse<T> GetById(Guid id)
         {
-            var result = _unitOfWork.GetRepository<T>().GetById(id); 
+            var result = _unitOfWork.GetRepository<T>().GetById(id, _includesForSingle); 
             return GetIDataResponse(() => result);
+        }
+
+        public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
+        {
+            var queryable = UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression);
+            return GetPagedResults(queryable, search);
         }
 
         public virtual IDataResponse Update(T entity)

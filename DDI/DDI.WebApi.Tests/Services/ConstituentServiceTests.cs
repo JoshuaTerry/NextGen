@@ -23,7 +23,7 @@ namespace DDI.WebApi.Tests.Services
             var unitOfWork = new UnitOfWorkNoDb();
             unitOfWork.SetRepository(repo.Object);
             repo.Setup(r => r.Entities).Returns(SetupRepositoryConstituents());
-
+            
             var service = new ConstituentService(unitOfWork);
             var result = service.GetConstituentByConstituentNum(12345);
 
@@ -39,7 +39,7 @@ namespace DDI.WebApi.Tests.Services
             constituents.Add(new Constituent {
                 ConstituentNumber = 12345,
                 FormattedName = "Mr. John Doe",
-                Id = new Guid(),
+                Id = new Guid("E69FC3E8-C5CC-45B0-BA58-BF340A3706BC"),
             });
 
             return constituents.AsQueryable();

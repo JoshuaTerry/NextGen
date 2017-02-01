@@ -7,7 +7,10 @@ using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers
 {
@@ -18,6 +21,32 @@ namespace DDI.WebApi.Controllers
         public ConstituentsController()
             : base(new ConstituentService())
         {
+        }
+
+        protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Constituent, object>>[]
+            {
+                c => c.ClergyStatus,
+                c => c.ClergyType,
+                c => c.ConstituentStatus,
+                c => c.ConstituentType,
+                c => c.EducationLevel,
+                c => c.Gender,
+                c => c.IncomeLevel,
+                c => c.Language,
+                c => c.MaritalStatus,
+                c => c.Prefix,
+                c => c.Profession
+            };
+        }
+
+        protected override Expression<Func<Constituent, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<Constituent, object>>[]
+            {
+                a => a.ConstituentAddresses.First().Address
+            };
         }
 
         [HttpGet]
@@ -123,44 +152,6 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetConstituentAddresses(Guid constituentId, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetConstituentAddresses(constituentId);
-
-                return FinalizeResponse(result, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
-
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/dbas", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
-        public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetConstituentDBAs(id);
-
-                return FinalizeResponse(result, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
-
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
         }
     }
 }

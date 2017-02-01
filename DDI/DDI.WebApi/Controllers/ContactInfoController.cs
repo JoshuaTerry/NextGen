@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
@@ -10,6 +11,24 @@ namespace DDI.WebApi.Controllers
 {
     public class ContactInfoController : ControllerBase<ContactInfo>
     {
+
+        [HttpGet]
+        [Route("api/v1/contactinfo/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/contactinfo", Name = RouteNames.Constituent + RouteNames.ContactInfo)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.ContactInfo, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
         [HttpGet]
         [Route("api/v1/contactinfo", Name = RouteNames.ContactInfo)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
