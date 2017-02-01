@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -47,9 +48,13 @@ namespace DDI.Shared.Helpers
 
         public static List<string> GetDescriptions<T>()
         {
-            List<string> values = new List<string>();
+            var values = new List<string>();
+            if (typeof(T) == typeof(Enum))
+            {
+                return values;
+            }
 
-            Type type = typeof (T);
+            var type = typeof (T);
 
             MemberInfo[] members = type.GetMembers();
 
