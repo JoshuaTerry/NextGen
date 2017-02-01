@@ -11,10 +11,10 @@ namespace DDI.Services
     {
         #region Public Methods
 
-        public IDataResponse<List<State>> GetAll(ForeignKeySearch search= null)
+        public override IDataResponse<List<State>> GetAll(IPageable search = null)
         {
-            var result = UnitOfWork.GetRepository<State>().Entities;
-            var query = new CriteriaQuery<State, ForeignKeySearch>(result, search)
+            var result = UnitOfWork.GetRepository<State>().GetEntities(IncludesForList);
+            var query = new CriteriaQuery<State, ForeignKeySearch>(result, search as ForeignKeySearch)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.Id, d => d.CountryId);
 
             var response = GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(a => a.DisplayName).ToList());
