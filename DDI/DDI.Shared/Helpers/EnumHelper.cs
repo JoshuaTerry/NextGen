@@ -49,7 +49,7 @@ namespace DDI.Shared.Helpers
         public static List<string> GetDescriptions<T>()
         {
             var values = new List<string>();
-            if (typeof(T) == typeof(Enum))
+            if (typeof(T) != typeof(Enum))
             {
                 throw new ArgumentException("Type of argument must be Enum.");
             }
