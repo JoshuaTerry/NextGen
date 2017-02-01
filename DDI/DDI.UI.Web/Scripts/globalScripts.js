@@ -241,7 +241,9 @@ function LoadAccordions() {
 
 function LoadDatePickers() {
 
-    $('.datepicker').datepicker();
+    $('.datepicker').datepicker({
+        showOn: 'focus'
+    });
 
 }
 
