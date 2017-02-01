@@ -280,7 +280,7 @@
 
                     </div>
 
-                    <h1>Payment Preferences</h1>
+                    <h1>Payment Preferences<a href="#" title="New" class="newppmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
