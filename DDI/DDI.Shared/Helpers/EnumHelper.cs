@@ -51,7 +51,7 @@ namespace DDI.Shared.Helpers
             var values = new List<string>();
             if (typeof(T) == typeof(Enum))
             {
-                return values;
+                throw new ArgumentException("Type of argument must be Enum.");
             }
 
             var type = typeof (T);
