@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -43,6 +44,20 @@ namespace DDI.WebApi.Controllers
             _dynamicTransmogrifier = dynamicTransmogrifier;
             _service = serviceBase;
             _logger = Logger.GetLogger(typeof(T));
+            _service.IncludesForSingle = GetDataIncludesForSingle();
+            _service.IncludesForList = GetDataIncludesForList();
+        }
+
+        protected virtual Expression<Func<T, object>>[] GetDataIncludesForSingle()
+        {
+            //Each controller should implement this if they need specific children populated
+            return null;
+        }
+
+        protected virtual Expression<Func<T, object>>[] GetDataIncludesForList()
+        {
+            //Each controller should implement this if they need specific children populated
+            return null;
         }
 
         public IPagination Pagination

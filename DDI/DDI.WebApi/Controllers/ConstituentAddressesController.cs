@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -17,6 +18,21 @@ namespace DDI.WebApi.Controllers
     //[Authorize]
     public class ConstituentAddressesController : ControllerBase<ConstituentAddress>
     {
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
+        {
+            return DataIncludes();
+        }
+
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForList()
+        {
+            return DataIncludes();
+        }
+
+        private Expression<Func<ConstituentAddress, object>>[] DataIncludes()
+        {
+            Expression<Func<ConstituentAddress, object>>[] includes = {a => a.Address, a => a.AddressType};
+            return includes;
+        }
 
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
