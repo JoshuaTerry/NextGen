@@ -127,7 +127,9 @@ function DisplayConstituentData() {
 
         LoadDBATable();
 
-        LoadEducationTable();
+        LoadEducationGrid();
+
+        NewEducationModal();
 
         LoadPaymentPreferencesTable();
 
@@ -199,7 +201,7 @@ function LoadDBATable() {
 
 }
 
-function LoadEducationTable() {
+function LoadEducationGrid() {
 
     var columns = [
             { dataField: 'Id', width: '0px' },
@@ -213,7 +215,7 @@ function LoadEducationTable() {
     LoadGrid('educationgrid',
         'educationleveltable',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        'constituents/' + currentEntity.Id + '/educations',
         null,
         EditAddressModal);
 
@@ -221,13 +223,136 @@ function LoadEducationTable() {
 
 function NewEducationModal() {
 
+    $('.neweducationmodallink').click(function (e) {
 
+        e.preventDefault();
+
+        modal = $('.educationmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 600,
+            resizable: false
+        });
+
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.saveaddress').click(function () {
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Major: $('.ed-Comment').val(),
+            StartDate: $('.ed-StartDate').val(),
+            EndDate: $('.ed-EndDate').val(),
+            School: $('.na-School').val(),
+            Degree: $('.na-Degree').val()
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'educations',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Education saved successfully.');
+
+                CloseModal();
+
+                LoadEducationGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+            }
+        });
+
+    });
 
 }
 
-function EditEducationModal() {
+function EditEducationModal(id) {
 
+    modal = $('.educationmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 600,
+        resizable: false
+    });
 
+    LoadEducation(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.saveaddress').click(function () {
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Major: $('.ed-Comment').val(),
+            StartDate: $('.ed-StartDate').val(),
+            EndDate: $('.ed-EndDate').val(),
+            School: $('.na-School').val(),
+            Degree: $('.na-Degree').val()
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'educations',
+            data: fields,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Education saved successfully.');
+
+                CloseModal();
+
+                LoadEducationGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+            }
+        })
+
+    });
+
+}
+
+function LoadEducation(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'educations/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $('.ed-Major').val(data.Major),
+            $('.ed-StartDate').val(data.StartDate),
+            $('.ed-EndDate').val(data.EndDate),
+            $('.na-School').val(data.School),
+            $('.na-Degree').val(data.Degree)
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+        }
+    });
 
 }
 

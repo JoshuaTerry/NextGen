@@ -231,14 +231,16 @@
 
                     </div>
 
-                    <h1>Education</h1>
+                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
                     <div class="editcontainer">
+
                         <div class="fieldblock">
                             <label>Education Level</label>
                             <select class="editable EducationLevelId"></select>
                         </div>
 
-                        <div class="educationleveltable"></div>
+                        <div class="educationlevelgrid"></div>
+
                     </div>
 
                     <h1 class="organization">Organization</h1>
@@ -700,6 +702,52 @@
 
             <div class="modalbuttons">
                 <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="educationmodal" title="" style="display: none;"">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Major</label>
+                <input type="text" class="ed-Major" />
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Start Date</label>
+                    <input type="text" class="ed-StartDate datepicker" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>End Date</label>
+                    <input type="text" class="ed-EndDate datepicker" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>School</label>
+                    <select class="ed-School"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Degree</label>
+                    <select class="ed-Degree"></select>
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="saveeducation" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
