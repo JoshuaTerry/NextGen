@@ -9,10 +9,6 @@ namespace DDI.Services
 {
     public class CountyService : ServiceBase<County>
     {
-        public CountyService() : base(new UnitOfWorkEF(new CommonContext()))
-        {
-             
-        }
         #region Public Methods
 
         public IDataResponse<List<County>> GetAll(ForeignKeySearch search = null)

@@ -91,7 +91,7 @@ namespace DDI.Data
          
         #region Public Methods
 
-        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        public static string NameFor<T1>(Expression<Func<T1, object>> property, bool shouldContainObjectPath = false)
         {
             var member = property.Body as MemberExpression;
             if (member == null)

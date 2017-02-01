@@ -22,6 +22,14 @@ namespace DDI.Shared.Models
 
         public virtual string DisplayName => string.Empty;
 
+        public virtual Guid? CreatedBy { get; set; }
+
+        public virtual DateTime? CreatedOn { get; set; }
+
+        public virtual Guid? LastModifiedBy { get; set; }
+
+        public virtual DateTime? LastModifiedOn { get; set; }
+
         #endregion
 
         #region Constructors 

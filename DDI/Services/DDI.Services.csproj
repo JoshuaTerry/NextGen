@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConstituentService.cs" />
+    <Compile Include="CountryService.cs" />
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
+    <Compile Include="ServiceInterfaces\IConstituentAddressService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
@@ -103,6 +105,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
