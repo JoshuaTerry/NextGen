@@ -231,7 +231,7 @@
 
                     </div>
 
-                    <h1>Education (Not Implemented Yet)</h1>
+                    <h1>Education</h1>
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Education Level</label>

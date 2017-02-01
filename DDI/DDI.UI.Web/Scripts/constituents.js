@@ -201,36 +201,33 @@ function LoadDBATable() {
 
 function LoadEducationTable() {
 
-    $('.educationleveltable').dxDataGrid({
-        dataSource: currentEntity.Educations,
-        columns: [
-            { dataField: 'StartDate', caption: 'Start Date', },
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'StartDate', caption: 'Start Date' },
             { dataField: 'EndDate', caption: 'End Date' },
             { dataField: 'School', caption: 'School' },
             { dataField: 'Degree', caption: 'Degree' },
             { dataField: 'Major', caption: 'Major' }
-        ],
-        paging: {
-            pageSize: 15
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
-        }
-    });
+    ];
+
+    LoadGrid('educationgrid',
+        'educationleveltable',
+        columns,
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        null,
+        EditAddressModal);
+
+}
+
+function NewEducationModal() {
+
+
+
+}
+
+function EditEducationModal() {
+
+
 
 }
 
