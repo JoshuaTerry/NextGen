@@ -236,35 +236,90 @@ function LoadEducationTable() {
 
 function LoadPaymentPreferencesTable() {
 
-    $('.paymentpreferencestable').dxDataGrid({
-        dataSource: currentEntity.PaymentPreferences,
-        columns: [
-            { dataField: 'Name', caption: 'Description', },
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Name', caption: 'Description' },
             { dataField: 'ABANumber', caption: 'ABA Number' },
             { dataField: 'AccountNumber', caption: 'Account Number' },
             { dataField: '', caption: 'Ch/S' },
             { dataField: '', caption: 'Notes' }
-        ],
-        paging: {
-            pageSize: 15
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
+    ];
+
+    LoadGrid('paymentpreferencesgrid',
+        'paymentpreferencesgridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/paymentpreferences',
+        null,
+        EditAddressModal);
+    
+}
+
+function NewPaymentPreference() {
+
+    $('.newppmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.paymentpreferencemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 600,
+            resizable: false
+        });
+
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savepaymentpreference').click(function () {
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Description: $('.Description').val(),
+            BankName: $('.BankName').val(),
+            ABANumber: $('.ABANumber').val(),
+            AccountNumber: $('.AccountNumber').val(),
+            AccountType: $('.AccountType').val(),
+            Status: $('.Status').val()
         }
+
+        $.ajax({
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'paymentpreferences',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Preference saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment preference.');
+            }
+        });
+
+    });
+
+}
+
+function EditPaymentPreference(id) {
+
+    modal = $('.paymentpreferencemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 600,
+        resizable: false
     });
 
 }

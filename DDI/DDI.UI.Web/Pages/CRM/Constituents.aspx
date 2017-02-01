@@ -280,7 +280,7 @@
 
                     </div>
 
-                    <h1>Payment Preferences (Not Implemented Yet)</h1>
+                    <h1>Payment Preferences</h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -289,7 +289,7 @@
                         </div>
 
                         <label>ETF Information</label>
-                        <div class="paymentpreferencestable"></div>
+                        <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
@@ -700,6 +700,57 @@
 
             <div class="modalbuttons">
                 <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="paymentpreferencemodal" title="Payment Preference" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="Description" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Bank Name</label>
+                <input type="text" class="BankName" />
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>ABA Number</label>
+                    <input type="text" class="ABANumber" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Account Number</label>
+                    <input type="text" class="AccountNumber" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Account Type</label>
+                    <select class="AccountTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Status</label>
+                    <select class="StatusId" />
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savepaymentpreference" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
