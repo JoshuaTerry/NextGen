@@ -124,43 +124,5 @@ namespace DDI.WebApi.Controllers
         {
             return base.Delete(id);
         }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetConstituentAddresses(Guid constituentId, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetConstituentAddresses(constituentId);
-
-                return FinalizeResponse(result, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
-
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/dbas", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
-        public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetConstituentDBAs(id);
-
-                return FinalizeResponse(result, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
-
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
-        }
     }
 }

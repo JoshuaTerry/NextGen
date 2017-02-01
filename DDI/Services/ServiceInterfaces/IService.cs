@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,5 +18,6 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
         IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null);
+        IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null);
     }
 }

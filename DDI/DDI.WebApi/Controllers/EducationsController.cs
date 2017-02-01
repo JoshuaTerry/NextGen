@@ -45,5 +45,23 @@ namespace DDI.WebApi.Controllers
         {
             return base.Delete(id);
         }
+
+        [HttpGet]
+        [Route("api/v1/educations/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/educations", Name = RouteNames.Constituent + RouteNames.Education)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Education, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
     }
 }

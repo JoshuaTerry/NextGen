@@ -6,9 +6,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
 {
@@ -81,6 +83,12 @@ namespace DDI.Services
         {
             var result = _unitOfWork.GetRepository<T>().GetById(id); 
             return GetIDataResponse(() => result);
+        }
+
+        public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
+        {
+            var queryable = UnitOfWork.GetRepository<T>().Entities.Where(expression);
+            return GetPagedResults(queryable, search);
         }
 
         public virtual IDataResponse Update(T entity)

@@ -11,11 +11,6 @@ namespace DDI.WebApi.Controllers
 {
     public class AlternateIdsController : ControllerBase<AlternateId>
     {
-        protected new IAlternateIdService Service => (IAlternateIdService) base.Service;
-        public AlternateIdsController()
-            : base(new AlternateIdService())
-        {
-        }
 
         [HttpGet]
         [Route("api/v1/alternateids", Name = RouteNames.AlternateId)]
@@ -29,24 +24,6 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
-        }
-
-        [HttpGet]
-        [Route("api/v1/alternateids/constituents/{constituentId}")]
-        [Route("api/v1/constituents/{constituentId}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid constituentId, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAlternateIdsByConstituent(constituentId, search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.AlternateId, search, fields);
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
         }
 
         [HttpPost]
@@ -68,6 +45,24 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/alternateids/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.AlternateId, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }
