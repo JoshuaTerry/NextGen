@@ -152,7 +152,6 @@
     <Compile Include="Models\Client\CRM\Gender.cs" />
     <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
     <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
-    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
     <Compile Include="Models\Client\CRM\Prefix.cs" />
     <Compile Include="Models\Client\CRM\Profession.cs" />
     <Compile Include="Models\Client\CRM\Region.cs" />
