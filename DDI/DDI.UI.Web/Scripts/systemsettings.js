@@ -462,6 +462,8 @@ function CreateNewCustomFieldModalLink(entity, title) {
     var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.contentcontainer'));
     $('.gridcontainer').before($(modallink));
 
+    $(modallink).unbind('click');
+
     $(modallink).click(function (e) {
 
         e.preventDefault();
@@ -506,6 +508,8 @@ function CreateNewCustomFieldModal(entity, title) {
         CustomFieldTypeSelected($(this).val());
 
     });
+
+    $(save).unbind('click');
 
     $(save).click(function () {
 
@@ -716,6 +720,8 @@ function SendCustomField(route, action, data) {
             CloseModal();
 
             RefreshCustomFieldsGrid();
+
+            CreateNewCustomFieldModalLink(currentcustomfieldentity, '');
             
         },
         error: function (xhr, status, err) {
