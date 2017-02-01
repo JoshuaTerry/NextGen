@@ -18,8 +18,6 @@ namespace DDI.Services
     public class ConstituentService : ServiceBase<Constituent>, IConstituentService
     {
         private readonly IRepository<Constituent> _repository;
-
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ConstituentLogic _constituentlogic;
 
         public ConstituentService()
@@ -27,15 +25,14 @@ namespace DDI.Services
         {
         }
 
-
         public ConstituentService(IUnitOfWork uow)
             : this(uow, new ConstituentLogic(uow), uow.GetRepository<Constituent>())
         {
         }
 
         private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository )
+            :base(uow)
         {
-            _unitOfWork = uow;
             _constituentlogic = constituentLogic;
             _repository = repository;
         }
@@ -138,7 +135,7 @@ namespace DDI.Services
                 _constituentlogic.Validate(p);
             });
 
-            _unitOfWork.SaveChanges();
+            UnitOfWork.SaveChanges();
 
             return GetById(id);
         }
@@ -149,7 +146,7 @@ namespace DDI.Services
             {
                 _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
-                _unitOfWork.SaveChanges();
+                UnitOfWork.SaveChanges();
 
                 return GetById(constituent.Id);
             }
@@ -161,7 +158,7 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
         {            
-            var constituentType = _unitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
+            var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {
                 throw new ArgumentException("Constituent type ID is not valid.");               
