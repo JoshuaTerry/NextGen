@@ -135,7 +135,7 @@
 
                     <div class="fieldblock">
                         <label>Display Order</label>
-                        <select class="cforder"></select>
+                        <input type="text" class="cforder" />
                     </div>
 
                     <div class="fieldblock">
@@ -168,7 +168,7 @@
                     <fieldset>
                         <legend>Custom Field Options</legend>
 
-                        <div class="threecolumn">
+                        <div class="inline">
 
                             <div class="fieldblock">
                                 <label>Code</label>
