@@ -239,6 +239,8 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountiesController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\CustomFieldDataController.cs" />
+    <Compile Include="Controllers\CustomFieldOptionsController.cs" />
     <Compile Include="Controllers\CustomFieldsController.cs" />
     <Compile Include="Controllers\ContactInfoController.cs" />
     <Compile Include="Controllers\DenominationsController.cs" />
