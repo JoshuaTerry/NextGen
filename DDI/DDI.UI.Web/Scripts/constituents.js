@@ -324,30 +324,32 @@ function NewAddressModal() {
 
     });
 
+    $('.saveaddress').unbind('click');
+
     $('.saveaddress').click(function () {
 
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
-            IsPrimary: $('.na-IsPreferred').prop('checked'),
-            Comment: $('.na-Comment').val(),
-            StartDate: $('.na-StartDate').val(),
-            EndDate: $('.na-EndDate').val(),
+            IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.na-Comment').val(),
+            StartDate: $(modal).find('.na-StartDate').val(),
+            EndDate: $(modal).find('.na-EndDate').val(),
             StartDay: 0,
             EndDay: 0,
-            ResidentType: $('.na-ResidentType').val(),
-            AddressTypeId: $('.na-AddressTypeId').val(),
+            ResidentType: $(modal).find('.na-ResidentType').val(),
+            AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
             Address: {
-                AddressLine1: $('.na-AddressLine1').val(),
-                AddressLine2: $('.na-AddressLine2').val(),
-                City: $('.na-City').val(),
-                CountryId: $('.na-CountryId').val(),
-                CountyId: $('.na-CountyId').val(),
-                PostalCode: $('.na-PostalCode').val(),
-                StateId: $('.na-StateId').val(),
-                Region1Id: $('.na-Region1Id').val(),
-                Region2Id: $('.na-Region2Id').val(),
-                Region3Id: $('.na-Region3Id').val(),
-                Region4Id: $('.na-Region4Id').val()
+                AddressLine1: $(modal).find('.na-AddressLine1').val(),
+                AddressLine2: $(modal).find('.na-AddressLine2').val(),
+                City: $(modal).find('.na-City').val(),
+                CountryId: $(modal).find('.na-CountryId').val(),
+                CountyId: $(modal).find('.na-CountyId').val(),
+                PostalCode: $(modal).find('.na-PostalCode').val(),
+                StateId: $(modal).find('.na-StateId').val(),
+                Region1Id: $(modal).find('.na-Region1Id').val(),
+                Region2Id: $(modal).find('.na-Region2Id').val(),
+                Region3Id: $(modal).find('.na-Region3Id').val(),
+                Region4Id: $(modal).find('.na-Region4Id').val()
             }
         }
 
@@ -426,8 +428,6 @@ function EditAddressModal(id) {
 
     AutoZip(modal);
 
-    LoadRegions('regionscontainer', 'na-');
-
     LoadAddress(id);
 
     $('.cancelmodal').click(function (e) {
@@ -438,6 +438,8 @@ function EditAddressModal(id) {
 
     });
 
+    $('.saveaddress').unbind('click');
+
     $('.saveaddress').click(function () {
 
         // Get the changed fields from currentaddress and put into new array.
@@ -445,7 +447,7 @@ function EditAddressModal(id) {
         
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituentaddresses',
+            url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
             data: fields,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -467,26 +469,26 @@ function GetEditedAddressFields() {
 
     var item = {
         ConstituentId: $('.hidconstituentid').val(),
-        IsPrimary: $('.na-IsPreferred').prop('checked'),
-        Comment: $('.na-Comment').val(),
-        StartDate: $('.na-FromDate').val(),
-        EndDate: $('.na-ToDate').val(),
+        IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+        Comment: $(modal).find('.na-Comment').val(),
+        StartDate: $(modal).find('.na-StartDate').val(),
+        EndDate: $(modal).find('.na-EndDate').val(),
         StartDay: 0,
         EndDay: 0,
-        ResidentType: $('.na-Residency').val(),
-        AddressTypeId: $('.na-AddressTypeId').val(),
+        ResidentType: $(modal).find('.na-ResidentType').val(),
+        AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
         Address: {
-            AddressLine1: $('.na-AddressLine1').val(),
-            AddressLine2: $('.na-AddressLine2').val(),
-            City: $('.na-City').val(),
-            CountryId: $('.na-CountryId').val(),
-            CountyId: $('.na-CountyId').val(),
-            PostalCode: $('.na-PostalCode').val(),
-            StateId: $('.na-StateId').val(),
-            Region1Id: $('.na-Region1Id').val(),
-            Region2Id: $('.na-Region2Id').val(),
-            Region3Id: $('.na-Region3Id').val(),
-            Region4Id: $('.na-Region4Id').val()
+            AddressLine1: $(modal).find('.na-AddressLine1').val(),
+            AddressLine2: $(modal).find('.na-AddressLine2').val(),
+            City: $(modal).find('.na-City').val(),
+            CountryId: $(modal).find('.na-CountryId').val(),
+            CountyId: $(modal).find('.na-CountyId').val(),
+            PostalCode: $(modal).find('.na-PostalCode').val(),
+            StateId: $(modal).find('.na-StateId').val(),
+            Region1Id: $(modal).find('.na-Region1Id').val(),
+            Region2Id: $(modal).find('.na-Region2Id').val(),
+            Region3Id: $(modal).find('.na-Region3Id').val(),
+            Region4Id: $(modal).find('.na-Region4Id').val()
         }
     }
 
@@ -505,27 +507,32 @@ function LoadAddress(id) {
 
             currentaddress = data.Data;
 
-            $('.hidconstituentaddressid').val(data.Id);
-            $('.hidaddressid').val(data.Address.Id);
+            $('.hidconstituentaddressid').val(data.Data.Id);
+            $('.hidaddressid').val(data.Data.Address.Id);
 
-            $('.na-isIsPreferred').prop('checked', data.Address.IsPreferred);
-            $('.na-Comment').val(data.Address.Comment);
-            $('.na-StartDate').val(data.StartDate);
-            $('.na-EndDate').val(data.EndDate);
-            $('.na-ResidentType').val(data.ResidentType);
+            $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+            $('.na-Comment').val(data.Data.Address.Comment);
+            $('.na-StartDate').val(data.Data.StartDate);
+            $('.na-EndDate').val(data.Data.EndDate);
+            $('.na-ResidentType').val(data.Data.ResidentType);
 
-            $('.na-AddressLine1').val(data.Address.AddressLine1);
-            $('.na-AddressLine2').val(data.Address.AddressLine2);
-            $('.na-City').val(data.Address.City);
+            $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
+            $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
+            $('.na-City').val(data.Data.Address.City);
             
-            $('.na-PostalCode').val(data.Address.PostalCode);
+            $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
-            PopulateAddressTypesInModal(data.AddressTypeId);
-            PopulateCountiesInModal(data.Address.CountryId);
-            PopulateStatesInModal(data.Address.StateId);
-            PopulateCountiesInModal(data.Address.CountyId);
+            PopulateAddressTypesInModal(data.Data.AddressTypeId);
+            PopulateCountriesInModal(data.Data.Address.CountryId);
 
-            LoadRegions('regionscontainer', 'na-');
+            PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
+                PopulateCountiesInModal(null)
+            });
+
+            PopulateCountiesInModal(data.Data.Address.CountyId);
+
+            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
+            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
             
         },
         error: function (xhr, status, err) {
