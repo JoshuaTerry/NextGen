@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Statics.CP;
 
 namespace DDI.Business.CP
 {
@@ -26,7 +27,7 @@ namespace DDI.Business.CP
 
                 if (eftEntity.EFTFormat == null)
                 {
-                    throw new Exception("EFT Format is required.");
+                    throw new ValidationException(UserMessagesCP.EFTFormatRequired);
                 }
             }
         }
@@ -44,12 +45,12 @@ namespace DDI.Business.CP
 
             if (!Regex.IsMatch(number, @"^\d{9}$"))
             {
-                throw new Exception("Routing number must have nine digits.");
+                throw new ValidationException(UserMessagesCP.EFTRoutingNumberDigits);
             }
 
             if (number == "000000000")
             {
-                throw new Exception("Routing number cannot be all zeros.");
+                throw new ValidationException(UserMessagesCP.EFTRoutingNumberZero);
             }
 
             int checksum = (int)(char.GetNumericValue(number[0]) * 3 +
@@ -64,7 +65,7 @@ namespace DDI.Business.CP
 
             if (checksum % 10 != 0)
             {
-                throw new Exception("Invalid routing number (based on check digit.)");
+                throw new ValidationException(UserMessagesCP.EFTRoutingNumberNotValid);
             }
         }
     }
