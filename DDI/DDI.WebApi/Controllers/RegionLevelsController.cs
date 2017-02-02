@@ -9,20 +9,11 @@ namespace DDI.WebApi.Controllers
 {
     public class RegionLevelsController : ControllerBase<RegionLevel>
     {
-        ServiceBase<RegionLevel> _service;
-
-        public RegionLevelsController() : this(new ServiceBase<RegionLevel>()) { }
-        internal RegionLevelsController(ServiceBase<RegionLevel> service)
-        {
-            _service = service;
-        }
 
         [HttpGet]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.RegionLevel, string fields = null)
         {
-            orderBy = "ItemLevel";
-
             return base.GetAll(RouteNames.RegionLevel, limit, offset, orderBy, fields);
         }
 
@@ -49,7 +40,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpDelete]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel + RouteVerbs.Delete)]
-        public IHttpActionResult Delete(Guid id)
+        public new IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
         }
