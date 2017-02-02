@@ -392,28 +392,18 @@
 
                     </div>
 
-                    <h1>Alternate ID</h1>
+                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
-                        <a href="#" class="newaltidmodal">New</a>
-                        <div class="alternateidtable"></div>
+                        
+                        <div class="alternateidgridcontainer"></div>
 
                         <div class="alternateidmodal" title="Alternate ID" style="display: none;">
 
                             <div class="modalcontent">
 
                                 <div class="fieldblock">
-                                    <label>ID</label>
-                                    <input type="text" class="altidid" />
-                                </div>
-
-                                <div class="fieldblock">
-                                    <label>Code</label>
-                                    <input type="text"  class="altidcode" />
-                                </div>
-
-                                <div class="fieldblock">
-                                    <label>Type</label>
-                                    <input type="text"  class="altidtype" />
+                                    <label>Name</label>
+                                    <input type="text"  class="ai-Name" />
                                 </div>
 
                                 <div class="modalbuttons">
