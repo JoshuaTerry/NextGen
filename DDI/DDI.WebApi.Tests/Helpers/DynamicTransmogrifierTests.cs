@@ -347,7 +347,7 @@ namespace DDI.WebApi.Tests.Helpers
             Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Get && a.Relationship == (RouteRelationships.Get + RouteNames.ConstituentAddress)));
             Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Patch).Relationship == RouteRelationships.Update + RouteNames.Constituent);
             Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Delete).Relationship == RouteRelationships.Delete + RouteNames.Constituent);
-            Assert.IsTrue(links.Single(a => a.Method == RouteVerbs.Post).Relationship == RouteRelationships.New + RouteNames.ConstituentAddress);
+            Assert.IsNotNull(links.Single(a => a.Method == RouteVerbs.Post && a.Relationship == RouteRelationships.New + RouteNames.ConstituentAddress));
             Assert.IsTrue(result.ConstituentAddresses[0].Links.Count == 3);
             Assert.IsTrue(result.ConstituentAddresses[0].Address.Links.Count == 3);
         }

@@ -17,33 +17,30 @@ namespace DDI.Services
 {
     public class ConstituentService : ServiceBase<Constituent>, IConstituentService
     {
-        private IRepository<Constituent> _repository;
-
-        private IUnitOfWork _unitOfWork;
-        private ConstituentLogic _constituentlogic;
+        private readonly IRepository<Constituent> _repository;
+        private readonly ConstituentLogic _constituentlogic;
 
         public ConstituentService()
+            : this(new UnitOfWorkEF())
         {
-            Initialize(new UnitOfWorkEF());
         }
-
 
         public ConstituentService(IUnitOfWork uow)
+            : this(uow, new ConstituentLogic(uow), uow.GetRepository<Constituent>())
         {
-            Initialize(uow);
         }
 
-        private void Initialize(IUnitOfWork uow)
+        private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository )
+            :base(uow)
         {
-            _unitOfWork = uow;
-            _constituentlogic = new ConstituentLogic(_unitOfWork);
-            _repository = _unitOfWork.GetRepository<Constituent>();
+            _constituentlogic = constituentLogic;
+            _repository = repository;
         }
         
         public override IDataResponse<List<Constituent>> GetAll(IPageable search)
         {
             var constituentSearch = (ConstituentSearch) search;
-            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
+            IQueryable<Constituent> constituents = _repository.GetEntities(IncludesForList);
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, constituentSearch)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
@@ -112,19 +109,7 @@ namespace DDI.Services
 
         public override IDataResponse<Constituent> GetById(Guid id)
         {
-            Constituent constituent = _repository.GetById(id,
-                c => c.ClergyStatus,
-                c => c.ClergyType,
-                c => c.ConstituentStatus,
-                c => c.ConstituentType,
-                c => c.EducationLevel,
-                c => c.Gender,
-                c => c.IncomeLevel,
-                c => c.Language,
-                c => c.MaritalStatus,
-                c => c.Prefix,
-                c => c.Profession
-                );
+            Constituent constituent = _repository.GetById(id, IncludesForSingle);
 
             var response = GetIDataResponse(() => constituent);
             return response;
@@ -150,27 +135,9 @@ namespace DDI.Services
                 _constituentlogic.Validate(p);
             });
 
-            _unitOfWork.SaveChanges();
+            UnitOfWork.SaveChanges();
 
             return GetById(id);
-        }
-
-        public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)
-        { 
-            var result = UnitOfWork.GetRepository<DoingBusinessAs>().Entities.Where(d => d.ConstituentId == constituentId).ToList();
-            return GetIDataResponse(() => result.ToList());
-        }
-
-        public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
-        {
-            var result = UnitOfWork.GetRepository<ConstituentAddress>().Entities.Include("Address").Include("AddressType").Where(a => a.ConstituentId == constituentId).ToList();
-            return GetIDataResponse(() => result.ToList());
-        }
-
-        public IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId)
-        { 
-            var result = UnitOfWork.GetRepository<EducationLevel>().Entities.Where(e => e.Id == constituentId).FirstOrDefault();
-            return GetIDataResponse(() => result);
         }
 
         public IDataResponse<Constituent> AddConstituent(Constituent constituent)
@@ -179,7 +146,7 @@ namespace DDI.Services
             {
                 _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
-                _unitOfWork.SaveChanges();
+                UnitOfWork.SaveChanges();
 
                 return GetById(constituent.Id);
             }
@@ -191,7 +158,7 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
         {            
-            var constituentType = _unitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
+            var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {
                 throw new ArgumentException("Constituent type ID is not valid.");               
