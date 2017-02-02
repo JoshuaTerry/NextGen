@@ -68,6 +68,8 @@ function LoadGrid(grid, container, columns, route, selected, edit) {
     if (container.indexOf('.') != 0)
         container = '.' + container;
 
+    $(container).html('');
+
     var datagrid = $('<div>').addClass(grid);
 
     if (edit) {

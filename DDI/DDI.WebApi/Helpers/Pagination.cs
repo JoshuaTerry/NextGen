@@ -14,16 +14,23 @@ namespace DDI.WebApi.Helpers
         public void AddPaginationHeaderToResponse<T>(UrlHelper urlHelper, T search, int? totalCount, string routeName)
             where T : IPageable
         {
-            var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
-            HttpContext.Current.Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            if (search != null)
+            {
+                var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
+                HttpContext.Current.Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
         }
 
         public PaginationHeader CreatePaginationHeader<T>(UrlHelper urlHelper, T search, int? totalCount, string routeName)
             where T : IPageable
         {
-            int? offset = search.Offset;
-            int? limit = search.Limit;
-            int totalPages = (int) Math.Ceiling((double) totalCount / limit.Value);
+            int offset = search.Offset ?? 0;
+            int limit = search.Limit ?? int.MaxValue;
+            int totalPages = 1;
+            if (totalCount.HasValue && totalCount > 0)
+            {
+                totalPages = (int) Math.Ceiling((double) totalCount / limit);
+            }
 
             var prevLink = offset > 0 ? urlHelper.Link(routeName, search.ForPreviousPage()) : "";
             var nextLink = offset + 1 < totalPages ? urlHelper.Link(routeName, search.ForNextPage()) : "";

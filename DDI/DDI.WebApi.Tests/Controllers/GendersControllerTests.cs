@@ -19,7 +19,7 @@ namespace DDI.WebApi.Tests.Controllers
         {
             var uow = new Mock<IUnitOfWork>();
             var repo = new Mock<IRepository<Gender>>();  
-            repo.Setup(r => r.Entities).Returns(SetupRepo());
+            repo.Setup(r => r.GetEntities(null)).Returns(SetupRepo());
             uow.Setup(m => m.GetRepository<Gender>()).Returns(repo.Object);
             var service = new ServiceBase<Gender>(uow.Object);
             var result = service.GetAll();
