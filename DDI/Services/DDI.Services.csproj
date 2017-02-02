@@ -71,10 +71,8 @@
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
-    <Compile Include="IConstituentService.cs" />
     <Compile Include="ILocationService.cs" />
     <Compile Include="ICustomFieldService.cs" />
-    <Compile Include="ISectionPreferenceService.cs" />
     <Compile Include="LinqQuery.cs" />
     <Compile Include="LocationService.cs" />
     <Compile Include="PaymentPreferenceService.cs" />
