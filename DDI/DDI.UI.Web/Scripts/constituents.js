@@ -201,45 +201,45 @@ function NewDBAModal() {
             resizable: false
         });
 
-    });
+        $('.cancelmodal').click(function (e) {
 
-    $('.cancelmodal').click(function (e) {
+            e.preventDefault();
 
-        e.preventDefault();
+            CloseModal();
 
-        CloseModal();
+        });
 
-    });
+        $('.savedba').unbind('click');
 
-    $('.savedba').unbind('click');
+        $('.savedba').click(function () {
 
-    $('.savedba').click(function () {
-
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            Name: $(modal).find('.DBAName').val(),
-            StartDate: $(modal).find('.StartDate').val(),
-            EndDate: $(modal).find('.EndDate').val()
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: WEB_API_ADDRESS + 'doingbusinessas',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
-
-                CloseModal();
-
-                LoadDBAGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Name: $(modal).find('.DBAName').val(),
+                StartDate: $(modal).find('.StartDate').val(),
+                EndDate: $(modal).find('.EndDate').val()
             }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'doingbusinessas',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
+
+                    CloseModal();
+
+                    LoadDBAGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+                }
+            });
+
         });
 
     });
@@ -438,74 +438,74 @@ function NewAddressModal() {
             resizable: false
         });
 
-    });
+        $('.cancelmodal').click(function (e) {
 
-    AutoZip(modal);
+            e.preventDefault();
+
+            CloseModal();
+
+        });
+
+        $('.saveaddress').unbind('click');
+
+        $('.saveaddress').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.na-Comment').val(),
+                StartDate: $(modal).find('.na-StartDate').val(),
+                EndDate: $(modal).find('.na-EndDate').val(),
+                StartDay: 0,
+                EndDay: 0,
+                ResidentType: $(modal).find('.na-ResidentType').val(),
+                AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
+                Address: {
+                    AddressLine1: $(modal).find('.na-AddressLine1').val(),
+                    AddressLine2: $(modal).find('.na-AddressLine2').val(),
+                    City: $(modal).find('.na-City').val(),
+                    CountryId: $(modal).find('.na-CountryId').val(),
+                    CountyId: $(modal).find('.na-CountyId').val(),
+                    PostalCode: $(modal).find('.na-PostalCode').val(),
+                    StateId: $(modal).find('.na-StateId').val(),
+                    Region1Id: $(modal).find('.na-Region1Id').val(),
+                    Region2Id: $(modal).find('.na-Region2Id').val(),
+                    Region3Id: $(modal).find('.na-Region3Id').val(),
+                    Region4Id: $(modal).find('.na-Region4Id').val()
+                }
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'constituentaddresses',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+                    CloseModal();
+
+                    LoadAddressesGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+                }
+            });
+
+        });
+
+        AutoZip(modal);
+
+    });
 
     PopulateAddressTypesInModal(null);
 
     PopulateCountriesInModal(null);
 
     LoadRegions('regionscontainer', 'na-');
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal();
-
-    });
-
-    $('.saveaddress').unbind('click');
-
-    $('.saveaddress').click(function () {
-
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.na-Comment').val(),
-            StartDate: $(modal).find('.na-StartDate').val(),
-            EndDate: $(modal).find('.na-EndDate').val(),
-            StartDay: 0,
-            EndDay: 0,
-            ResidentType: $(modal).find('.na-ResidentType').val(),
-            AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
-            Address: {
-                AddressLine1: $(modal).find('.na-AddressLine1').val(),
-                AddressLine2: $(modal).find('.na-AddressLine2').val(),
-                City: $(modal).find('.na-City').val(),
-                CountryId: $(modal).find('.na-CountryId').val(),
-                CountyId: $(modal).find('.na-CountyId').val(),
-                PostalCode: $(modal).find('.na-PostalCode').val(),
-                StateId: $(modal).find('.na-StateId').val(),
-                Region1Id: $(modal).find('.na-Region1Id').val(),
-                Region2Id: $(modal).find('.na-Region2Id').val(),
-                Region3Id: $(modal).find('.na-Region3Id').val(),
-                Region4Id: $(modal).find('.na-Region4Id').val()
-            }
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: WEB_API_ADDRESS + 'constituentaddresses',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Address saved successfully.');
-
-                CloseModal();
-
-                LoadAddressesGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
-            }
-        });
-
-    });
 
 }
 
