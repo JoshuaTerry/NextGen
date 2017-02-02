@@ -1,11 +1,8 @@
-﻿using System;
-using System.Data;
-using System.Web.Http;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Services;
-using DDI.Services.Search;
+﻿using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
@@ -13,23 +10,23 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ClergyType, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.ClergyType, limit, offset, orderBy, fields);
         }
 
         [HttpPost]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ClergyType item)
         {
-            return base.Post(GetUrlHelper(), item);
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(GetUrlHelper(), id, changes);
+            return base.Patch(id, changes);
         }
     }
 }

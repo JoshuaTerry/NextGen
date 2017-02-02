@@ -249,17 +249,6 @@ namespace DDI.Conversion.CRM
             legacyIdFile.Dispose();
         }
 
-        private ObservableCollection<T> LoadEntities<T>(DbSet<T> entities, params string[] paths) where T : class
-        {
-            IQueryable<T> query = entities;
-            foreach (string path in paths)
-            {
-                query = query.Include(path);
-            }
-            query.Load();            
-            return entities.Local;
-        }
-
         private void ConvertIndividuals(string filename, bool append)
         {
             char[] commaDelimiter = { ',' };

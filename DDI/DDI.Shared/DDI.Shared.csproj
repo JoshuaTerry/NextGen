@@ -125,6 +125,7 @@
     <Compile Include="Models\Client\CP\CardPaymentMethod.cs" />
     <Compile Include="Models\Client\CP\EFTPaymentMethod.cs" />
     <Compile Include="Models\Client\CP\PaymentMethodBase.cs" />
+    <Compile Include="Models\Common\ZipLookupInfo.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -152,7 +153,6 @@
     <Compile Include="Models\Client\CRM\Gender.cs" />
     <Compile Include="Models\Client\CRM\IncomeLevel.cs" />
     <Compile Include="Models\Client\CRM\MaritalStatus.cs" />
-    <Compile Include="Models\Client\CRM\PaymentPreference.cs" />
     <Compile Include="Models\Client\CRM\Prefix.cs" />
     <Compile Include="Models\Client\CRM\Profession.cs" />
     <Compile Include="Models\Client\CRM\Region.cs" />

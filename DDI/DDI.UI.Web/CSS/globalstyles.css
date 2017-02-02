@@ -73,6 +73,8 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 .dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
 
+.regionscontainer label { margin-right: 3px; }
+
 /* EDIT CONTROLS */
 .editcontainer {  }
 .editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }

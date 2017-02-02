@@ -63,6 +63,14 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201701272031315_AddPropertiesToConstituent.cs" />
+    <Compile Include="Migrations\201701272031315_AddPropertiesToConstituent.Designer.cs">
+      <DependentUpon>201701272031315_AddPropertiesToConstituent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701301923425_AddPropertiesToConstituent.cs" />
+    <Compile Include="Migrations\201701301923425_AddPropertiesToConstituent.Designer.cs">
+      <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.cs" />
     <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.Designer.cs">
       <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
@@ -107,6 +115,10 @@
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.cs" />
+    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.Designer.cs">
+      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
@@ -199,6 +211,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701272031315_AddPropertiesToConstituent.resx">
+      <DependentUpon>201701272031315_AddPropertiesToConstituent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701301923425_AddPropertiesToConstituent.resx">
+      <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701242312159_PaymentMethod_v2.resx">
       <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
     </EmbeddedResource>
@@ -234,6 +252,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201701271545556_PaymentPreferences.resx">
+      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>

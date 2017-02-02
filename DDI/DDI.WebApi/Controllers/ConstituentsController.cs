@@ -1,33 +1,53 @@
-﻿using System;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using DDI.Services;
-using DDI.Services.Extensions;
-using Newtonsoft.Json.Linq;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
+﻿using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared;
+using DDI.Shared.Logger;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class ConstituentsController : ControllerBase<Constituent>
     {
-        private IConstituentService _service;
-
+        protected new IConstituentService Service => (IConstituentService) base.Service;
         public ConstituentsController()
-            :this(new ConstituentService())
+            : base(new ConstituentService())
         {
         }
 
-        internal ConstituentsController(IConstituentService service)
+        protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
-            _service = service;
+            return new Expression<Func<Constituent, object>>[]
+            {
+                c => c.ClergyStatus,
+                c => c.ClergyType,
+                c => c.ConstituentStatus,
+                c => c.ConstituentType,
+                c => c.EducationLevel,
+                c => c.Gender,
+                c => c.IncomeLevel,
+                c => c.Language,
+                c => c.MaritalStatus,
+                c => c.Prefix,
+                c => c.Profession
+            };
         }
 
+        protected override Expression<Func<Constituent, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<Constituent, object>>[]
+            {
+                a => a.ConstituentAddresses.First().Address
+            };
+        }
 
         [HttpGet]
         [Route("api/v1/constituents", Name = RouteNames.Constituent)]
@@ -64,59 +84,14 @@ namespace DDI.WebApi.Controllers
                 ConstituentTypeId = constituentTypeId
             };
 
-            try
-            {
-                var constituents = _service.GetConstituents(search);
-
-                if (constituents == null)
-                {
-                    return NotFound();
-                }
-                if (!constituents.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var totalCount = constituents.TotalResults;
-                var urlHelper = GetUrlHelper();
-
-                Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, RouteNames.Constituent);
-                var dynamicConstituents = DynamicTransmogrifier.ToDynamicResponse(constituents, urlHelper, fields);
-
-                return Ok(dynamicConstituents);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.GetAll(RouteNames.Constituent, search, fields);
         }
 
         [HttpGet]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Get)]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            try
-            {
-                var constituent = _service.GetConstituentById(id);
-
-                if (constituent == null)
-                {
-                    return NotFound();
-                }
-                if (!constituent.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
-                return Ok(dynamicConstituent);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
+            return base.GetById(id, fields);
         }
 
         [HttpGet]
@@ -125,23 +100,13 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var constituent = _service.GetConstituentByConstituentNum(num);
+                var constituent = Service.GetConstituentByConstituentNum(num);
 
-                if (constituent == null)
-                {
-                    return NotFound();
-                }
-                if (!constituent.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicConstituent = DynamicTransmogrifier.ToDynamicResponse(constituent, GetUrlHelper(), fields);
-
-                return Ok(dynamicConstituent);
+                return FinalizeResponse(constituent, fields);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -150,7 +115,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Constituent constituent)
         {
-            return base.Post(GetUrlHelper(), constituent);
+            return base.Post(constituent);
         }
 
         [HttpPost]
@@ -164,12 +129,13 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var response = _service.NewConstituent(id);
+                var response = Service.NewConstituent(id);
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -178,7 +144,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
-            return base.Patch(GetUrlHelper(), id, constituentChanges);
+            return base.Patch(id, constituentChanges);
         }
 
         [HttpDelete]
@@ -186,87 +152,6 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetConstituentConstituentAddresses(Guid id, string fields = null)
-        {
-            try
-            {
-                var result = _service.GetConstituentAddresses(id);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-                return Ok(dynamicResult);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/dbas", Name = RouteNames.Constituent + RouteNames.ConstituentDBA)]
-        public IHttpActionResult GetConstituentDBAs(Guid id, string fields = null)
-        {
-            try
-            {
-                var result = _service.GetConstituentDBAs(id);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-                return Ok(dynamicResult);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
-        }
-
-        [HttpGet]
-        [Route("api/v1/constituents/{id}/educationlevel", Name = RouteNames.Constituent + RouteNames.EducationLevel)]
-        public IHttpActionResult GetEducationLevel(Guid id, string fields = null)
-        {
-            try
-            {
-                var result = _service.GetEducationLevel(id);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                if (!result.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, GetUrlHelper(), fields);
-                return Ok(dynamicResult);
-
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
         }
     }
 }

@@ -42,5 +42,16 @@ namespace DDI.Conversion.Statics
         public static string CRM_CustomData => "CustomData.csv";
         #endregion
 
+        #region GL Files
+        public static string GL_FWCodes => "FWCodes.csv";
+        #endregion
+
+        #region CP Files
+        public static string CP_EFTInfo => "EFTInfo.csv";
+        #endregion
+
+
+
+
     }
 }

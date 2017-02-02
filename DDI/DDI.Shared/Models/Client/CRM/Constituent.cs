@@ -19,6 +19,11 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        public DateTime? BirthDate { get; set; }
+        [NotMapped]
+        public int? AgeRangeFrom { get; set; }
+        [NotMapped]
+        public int? AgeRangeTo { get; set; }
         public BirthDateType BirthDateType { get; set; }
 
         public int? BirthMonth { get; set; }
@@ -159,17 +164,24 @@ namespace DDI.Shared.Models.Client.CRM
         public Prefix Prefix { get; set; }
         public Profession Profession { get; set; }
 
+
         [HateoasCollectionLink(RouteNames.ConstituentAddress)]
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
+        [HateoasCollectionLink(RouteNames.AlternateId)]
         public ICollection<AlternateId> AlternateIds { get; set; }
+        [HateoasCollectionLink(RouteNames.ContactInfo)]
         public ICollection<ContactInfo> ContactInfo { get; set; }
+        [HateoasCollectionLink(RouteNames.Denomination)]
         public ICollection<Denomination> Denominations { get; set; }
+        [HateoasCollectionLink(RouteNames.DoingBusinessAs)]
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
+        [HateoasCollectionLink(RouteNames.Education)]
         public ICollection<Education> Educations { get; set; }
+        [HateoasCollectionLink(RouteNames.Ethnicity)]
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        public ICollection<PaymentPreference> PaymentPreferences { get; set; }
+        [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
-
+        [HateoasCollectionLink(RouteNames.PaymentPreference)]
         public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
 
         [InverseProperty(nameof(Relationship.Constituent1))]

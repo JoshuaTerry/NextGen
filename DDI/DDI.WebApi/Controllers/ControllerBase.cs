@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
+using DDI.Shared.Logger;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -19,18 +23,41 @@ namespace DDI.WebApi.Controllers
     {
         private IPagination _pagination;
         private DynamicTransmogrifier _dynamicTransmogrifier;
-        private ServiceBase<T> _service;
+        private readonly IService<T> _service;
+        private readonly Logger _logger;
+        protected IService<T> Service => _service;
+        protected Logger LoggerBase => _logger;
 
         public ControllerBase()
-            :this(new ServiceBase<T>(), new DynamicTransmogrifier(), new Pagination())
+            :this(new ServiceBase<T>())
         {
         }
 
-        internal ControllerBase(ServiceBase<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
+        public ControllerBase(IService<T> serviceBase)
+            : this(serviceBase, new DynamicTransmogrifier(), new Pagination())
+        {
+        }
+
+        internal ControllerBase(IService<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
         {
             _pagination = pagination;
             _dynamicTransmogrifier = dynamicTransmogrifier;
             _service = serviceBase;
+            _logger = Logger.GetLogger(typeof(T));
+            _service.IncludesForSingle = GetDataIncludesForSingle();
+            _service.IncludesForList = GetDataIncludesForList();
+        }
+
+        protected virtual Expression<Func<T, object>>[] GetDataIncludesForSingle()
+        {
+            //Each controller should implement this if they need specific children populated
+            return null;
+        }
+
+        protected virtual Expression<Func<T, object>>[] GetDataIncludesForList()
+        {
+            //Each controller should implement this if they need specific children populated
+            return null;
         }
 
         public IPagination Pagination
@@ -51,7 +78,7 @@ namespace DDI.WebApi.Controllers
             return urlHelper;
         }
 
-        public IHttpActionResult GetAll(UrlHelper urlHelper, string routeName, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(string routeName, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
         {
             var search = new PageableSearch()
             {
@@ -60,13 +87,47 @@ namespace DDI.WebApi.Controllers
                 OrderBy = orderBy
             };
 
+            return GetAll(routeName, search, fields, urlHelper ?? GetUrlHelper());
+
+        }
+
+        public IHttpActionResult GetAll(string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
+        {
             try
             {
+                urlHelper = urlHelper ?? GetUrlHelper();
                 var response = _service.GetAll(search);
-                if (response.Data == null)
-                {
-                    return NotFound();
-                }
+                return FinalizeResponse(response, routeName, search, fields, urlHelper);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+
+        }
+
+        public IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)
+        {
+            try
+            {
+                urlHelper = urlHelper ?? GetUrlHelper();
+                var response = _service.GetById(id);
+                return FinalizeResponse(response, fields, urlHelper);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+        public IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
+            where T1 : class, IEntity
+        {
+            try
+            {
+                urlHelper = urlHelper ?? GetUrlHelper();
                 if (!response.IsSuccessful)
                 {
                     return BadRequest(response.ErrorMessages.ToString());
@@ -79,18 +140,18 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
-            
         }
 
-        public IHttpActionResult GetById(UrlHelper urlHelper, Guid id, string fields = null)
+        public IHttpActionResult FinalizeResponse(IDataResponse<T> response, string fields = null, UrlHelper urlHelper = null)
         {
             try
             {
-                var response = _service.GetById(id);
+                urlHelper = urlHelper ?? GetUrlHelper();
                 if (response.Data == null)
                 {
                     return NotFound();
@@ -104,59 +165,50 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(dynamicResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
 
-        public IHttpActionResult Post(UrlHelper urlHelper, T entity)
+        public IHttpActionResult Post(T entity, UrlHelper urlHelper = null)
         {
             try
             {
+                urlHelper = urlHelper ?? GetUrlHelper();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
                 var response = _service.Add(entity);
-                if (!response.IsSuccessful)
-                {
-                    return BadRequest(response.ErrorMessages.ToString());
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper);
-
-                return Ok(dynamicResponse);
+                return FinalizeResponse(response, string.Empty, urlHelper);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
 
-        public IHttpActionResult Patch(UrlHelper urlHelper, Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject changes, UrlHelper urlHelper = null)
         {
             try
             {
+                urlHelper = urlHelper ?? GetUrlHelper();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
                 var response = _service.Update(id, changes);
-                if (!response.IsSuccessful)
-                {
-                    return BadRequest(response.ErrorMessages.ToString());
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper);
-
-                return Ok(dynamicResponse);
+                return FinalizeResponse(response, string.Empty, urlHelper);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -183,10 +235,12 @@ namespace DDI.WebApi.Controllers
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
+
     }
 }

@@ -48,7 +48,6 @@
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
-    <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
     <Compile Include="CRM\AddressLogic.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />

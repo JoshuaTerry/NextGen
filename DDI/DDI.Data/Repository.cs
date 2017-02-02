@@ -91,7 +91,7 @@ namespace DDI.Data
          
         #region Public Methods
 
-        public static string NameFor<T>(Expression<Func<T, object>> property, bool shouldContainObjectPath = false)
+        public static string NameFor<T1>(Expression<Func<T1, object>> property, bool shouldContainObjectPath = false)
         {
             var member = property.Body as MemberExpression;
             if (member == null)
@@ -105,7 +105,7 @@ namespace DDI.Data
             if (shouldContainObjectPath && member != null)
             {
                 var path = member.Expression.ToString();
-                var objectPath = member.Expression.ToString().Split('.');
+                var objectPath = member.Expression.ToString().Split('.').Where(a => !a.Equals("First()")).ToArray();
                 if (objectPath.Length >= 2)
                 {
                     path = String.Join(".", objectPath, 1, objectPath.Length - 1);

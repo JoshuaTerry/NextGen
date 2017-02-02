@@ -15,5 +15,6 @@ namespace DDI.Shared.Models.Common
         public string Word { get; set; }
        
         public string Expansion { get; set; }
+
     }
 }
