@@ -6,15 +6,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
 {
-    public class ServiceBase<T> where T : class, IEntity
+    public class ServiceBase<T> : IService<T> where T : class, IEntity
     {
         private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase<T>));
-        private readonly IUnitOfWork _unitOfWork; 
+        private readonly IUnitOfWork _unitOfWork;
+        private Expression<Func<T, object>>[] _includesForSingle = null;
+        private Expression<Func<T, object>>[] _includesForList = null;
 
         public ServiceBase() : this(new UnitOfWorkEF())
         {            
@@ -28,7 +33,26 @@ namespace DDI.Services
         {
             get { return _unitOfWork; }
         }
+
+        public Expression<Func<T, object>>[] IncludesForSingle
+        {
+            protected get { return _includesForSingle; }
+            set { _includesForSingle = value; }
+        }
+
+        public Expression<Func<T, object>>[] IncludesForList
+        {
+            protected get { return _includesForList; }
+            set { _includesForList = value; }
+        }
+
         public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
+        {
+            var queryable = _unitOfWork.GetRepository<T>().GetEntities(_includesForList);
+            return GetPagedResults(queryable, search);
+        }
+
+        private IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
@@ -39,7 +63,6 @@ namespace DDI.Services
                 };
             }
 
-            IQueryable<T> queryable = _unitOfWork.GetRepository<T>().Entities;
             var query = new CriteriaQuery<T, IPageable>(queryable, search);
 
             if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
@@ -47,7 +70,7 @@ namespace DDI.Services
                 query = query.SetOrderBy(search.OrderBy);
             }
 
-            var totalCount = query.GetQueryable().ToList().Count;
+            var totalCount = query.GetQueryable().Count();
 
             query = query.SetLimit(search.Limit)
                          .SetOffset(search.Offset);
@@ -58,16 +81,28 @@ namespace DDI.Services
             {
                 response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
             }
+            response.Data = ModifySortOrder(response.Data);
 
             response.TotalResults = totalCount;
 
             return response;
         }
 
+        protected virtual List<T> ModifySortOrder(List<T> data)
+        {
+            return data;
+        }
+
         public virtual IDataResponse<T> GetById(Guid id)
         {
-            var result = _unitOfWork.GetRepository<T>().GetById(id); 
+            var result = _unitOfWork.GetRepository<T>().GetById(id, _includesForSingle); 
             return GetIDataResponse(() => result);
+        }
+
+        public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
+        {
+            var queryable = UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression);
+            return GetPagedResults(queryable, search);
         }
 
         public virtual IDataResponse Update(T entity)
@@ -110,7 +145,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<T> Add(T entity)
+        public virtual IDataResponse<T> Add(T entity)
         {
             var response = new DataResponse<T>();
             try

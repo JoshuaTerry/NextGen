@@ -345,8 +345,7 @@ namespace DDI.WebApi.Controllers
         }
 
         private ApplicationUser GetUserByEmail(string email)
-        {
-            ApplicationUser user = null;
+        {             
             var users = UserManager.Users.Where(u => u.Email == email);
             if (users.Count() == 1)
             {

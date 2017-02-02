@@ -23,8 +23,7 @@ namespace DDI.Data
         where T : class
     {
         #region Private Fields
-
-        private bool _isUOW = false;
+         
         private IList<T> _entities = null;
         private IEnumerable<IEntity> _typedEntities = null;
 

@@ -170,17 +170,19 @@ function GetNewFields() {
 
 function CloseModal() {
 
-    ClearFields();
+    ClearFields('.modalcontent');
     
     $(modal).dialog('close');
 
 }
 
-function ClearFields() {
+function ClearFields(container) {
 
-    $('div.fieldblock input').val('');
+    $(container + ' div.fieldblock input').val('');
 
-    $('div.fieldblock select').val(0);
+    $(container + ' div.fieldblock textarea').val('');
+
+    $(container + ' div.fieldblock select').val(0);
 
 }
 
