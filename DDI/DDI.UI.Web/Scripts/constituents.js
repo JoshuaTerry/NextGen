@@ -560,8 +560,6 @@ function EditAddressModal(id) {
 
     AutoZip(modal);
 
-    LoadRegions('regionscontainer', 'na-');
-
     LoadAddress(id);
 
     $('.cancelmodal').click(function (e) {
@@ -581,7 +579,7 @@ function EditAddressModal(id) {
         
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituentaddresses',
+            url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
             data: fields,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -641,27 +639,32 @@ function LoadAddress(id) {
 
             currentaddress = data.Data;
 
-            $('.hidconstituentaddressid').val(data.Id);
-            $('.hidaddressid').val(data.Address.Id);
+            $('.hidconstituentaddressid').val(data.Data.Id);
+            $('.hidaddressid').val(data.Data.Address.Id);
 
-            $('.na-isIsPreferred').prop('checked', data.Address.IsPreferred);
-            $('.na-Comment').val(data.Address.Comment);
-            $('.na-StartDate').val(data.StartDate);
-            $('.na-EndDate').val(data.EndDate);
-            $('.na-ResidentType').val(data.ResidentType);
+            $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+            $('.na-Comment').val(data.Data.Address.Comment);
+            $('.na-StartDate').val(data.Data.StartDate);
+            $('.na-EndDate').val(data.Data.EndDate);
+            $('.na-ResidentType').val(data.Data.ResidentType);
 
-            $('.na-AddressLine1').val(data.Address.AddressLine1);
-            $('.na-AddressLine2').val(data.Address.AddressLine2);
-            $('.na-City').val(data.Address.City);
+            $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
+            $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
+            $('.na-City').val(data.Data.Address.City);
             
-            $('.na-PostalCode').val(data.Address.PostalCode);
+            $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
-            PopulateAddressTypesInModal(data.AddressTypeId);
-            PopulateCountiesInModal(data.Address.CountryId);
-            PopulateStatesInModal(data.Address.StateId);
-            PopulateCountiesInModal(data.Address.CountyId);
+            PopulateAddressTypesInModal(data.Data.AddressTypeId);
+            PopulateCountriesInModal(data.Data.Address.CountryId);
 
-            LoadRegions('regionscontainer', 'na-');
+            PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
+                PopulateCountiesInModal(null)
+            });
+
+            PopulateCountiesInModal(data.Data.Address.CountyId);
+
+            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
+            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
             
         },
         error: function (xhr, status, err) {

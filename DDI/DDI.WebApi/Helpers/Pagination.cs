@@ -14,8 +14,11 @@ namespace DDI.WebApi.Helpers
         public void AddPaginationHeaderToResponse<T>(UrlHelper urlHelper, T search, int? totalCount, string routeName)
             where T : IPageable
         {
-            var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
-            HttpContext.Current.Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            if (search != null)
+            {
+                var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
+                HttpContext.Current.Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
         }
 
         public PaginationHeader CreatePaginationHeader<T>(UrlHelper urlHelper, T search, int? totalCount, string routeName)
