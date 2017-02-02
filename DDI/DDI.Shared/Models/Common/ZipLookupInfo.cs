@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks; 
-using DDI.Shared.Models.Common;
+using System.Threading.Tasks;
 
-namespace DDI.Business.Common
+namespace DDI.Shared.Models.Common
 {
-    /// <summary>
-    /// Cass 
-    /// </summary>
-    public class ZipLookupInfo
+    public class ZipLookupInfo : EntityBase
     {
+        public override Guid Id { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
@@ -20,5 +17,4 @@ namespace DDI.Business.Common
         public string PostalCode { get; set; }
         public State State { get; set; }
     }
-
 }

@@ -2,7 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script type="text/javascript" src="..\..\Scripts/constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -146,6 +147,7 @@
 
                     </div>
 
+                    <%-- MAY BE INTRODUCED LATER --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -214,20 +216,9 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As (Not Implemented Yet)</h1>
-                    <div class="editcontainer">
+                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <div>
                         <div class="doingbusinessastable"></div>
-
-                        <div class="fieldblock">
-                            <label>Test Checkbox</label>
-                            <input type="checkbox" class="editable TestCheckbox" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Test Date</label>
-                            <input type="text" class="editable TestDate datepicker" />
-                        </div>
-
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>
@@ -408,7 +399,7 @@
 
                     </div>
 
-                    <h1>Contact Information (Not Implemented Yet)</h1>
+                    <h1>Contact Information</h1>
                     <div>
 
                         <div class="accordions">
@@ -615,9 +606,12 @@
 
     </div>
 
-    <div class="addressmodal" title="New Address" style="display: none;">
+    <div class="addressmodal" title="Address" style="display: none;">
 
         <div class="modalcontent">
+            
+            <input type="hidden" class="hidconstituentaddressid" />
+            <input type="hidden" class="hidaddressid" />
 
             <div class="fieldblock">
                 <label>Address Type</label>
@@ -626,60 +620,42 @@
 
             <div class="fieldblock">
                 <label>Address Line 1</label>
-                <textarea class="na-AddressLine1"></textarea>
+                <input type="text" class="na-AddressLine1 autoaddress1" />
             </div>
 
             <div class="fieldblock">
                 <label>Address Line 2</label>
-                <textarea class="na-AddressLine2"></textarea>
-            </div>
-
-            <div class="fieldblock">
-                <label>Country</label>
-                <select class="na-CountryId"></select>
+                <input type="text" class="na-AddressLine2 autoaddress2" />
             </div>
 
             <div class="fieldblock">
                 <label>Postal code</label>
-                <input type="text" class="na-PostalCode" />
+                <input type="text" class="na-PostalCode autozip" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Country</label>
+                <select class="na-CountryId autocountry"></select>
             </div>
 
             <div class="inline">
                 <div class="fieldblock">
                     <label style="width: 100px;">City</label>
-                    <input type="text" class="na-City" style="width: 85px;" />
+                    <input type="text" class="na-City autocity" style="width: 85px;" />
                 </div>
 
                 <div class="fieldblock">
                     <label style="width: 25px;">St</label>
-                    <select class="na-StateId" style="width: 106px;"></select>
+                    <select class="na-StateId autostate" style="width: 106px;"></select>
                 </div>
             </div>
 
             <div class="fieldblock">
                 <label>County</label>
-                <select class="na-CountyId"></select>
+                <select class="na-CountyId autocounty"></select>
             </div>
 
-            <div class="fieldblock region1" style="display: none;">
-                <label class="region1label">Region 1</label>
-                <select class="na-Region1Id"></select>
-            </div>
-
-            <div class="fieldblock region2" style="display: none;">
-                <label class="region2label">Region 2</label>
-                <select class="na-Region2Id"></select>
-            </div>
-
-            <div class="fieldblock region3" style="display: none;">
-                <label class="region3label">Region 3</label>
-                <select class="na-Region3Id"></select>
-            </div>
-
-            <div class="fieldblock region4" style="display: none;">
-                <label class="region4label">Region 4</label>
-                <select class="na-Region4Id"></select>
-            </div>
+            <div class="regionscontainer"></div>
 
             <fieldset>
                 <legend>Address Options</legend>
@@ -714,6 +690,36 @@
 
             <div class="modalbuttons">
                 <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dbamodal" title="Doing Business As" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hiddbaid" />
+
+            <div class="fieldblock">
+                <label>DBA Name:</label>
+                <input type="text" class="DBAName" />
+            </div>
+
+            <div class="fieldblock">
+                <label>From:</label>
+                <input type="text" class="StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>To:</label>
+                <input type="text" class="EndDate datepicker" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savedba" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

@@ -32,9 +32,11 @@ namespace DDI.Services
             _regionLogic = regionLogic;
             _repository = repository;
         }
+
         public IDataResponse<List<Region>> GetRegionsByLevel(Guid? id, int level)
         {
             var result = UnitOfWork.GetRepository<Region>().GetEntities(IncludesForList);
+
             if (id != null && id != Guid.Empty)
             {
                 result = result.Where(r => r.Level == level && r.ParentRegionId == id);
@@ -43,14 +45,21 @@ namespace DDI.Services
             {
                 result = result.Where(r => r.Level == level);
             }
-             
-            return GetIDataResponse(() => result.ToList());
+
+            var response = GetIDataResponse(() => result.ToList());
+            response.TotalResults = response.Data.Count;
+
+            return response;
         }
        
         public IDataResponse<List<Region>> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {            
             var result =_regionLogic.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
-            return GetIDataResponse(() => result.ToList());
+
+            var response = GetIDataResponse(() => result.ToList());
+            response.TotalResults = response.Data.Count;
+
+            return response;
         }
     }
 }

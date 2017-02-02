@@ -16,13 +16,9 @@ $(document).ready(function () {
 
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
 
-        // sessionStorage.removeItem('constituentnumber');
-
     }
 
     GetConstituentData($('.hidconstituentid').val());
-
-    NewAddressModal();
 
 });
 
@@ -34,13 +30,13 @@ function Resize() {
 
 function LoadDropDowns() {
     
-    PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
+    PopulateDropDown('.ConstituentStatusId', 'constituentstatuses', '', '');
     PopulateDropDown('.PrefixId', 'prefixes', '', '');
     PopulateDropDown('.GenderId', 'genders', '', '');
     PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
     PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
     PopulateDropDown('.DenominationId', 'denominations', '', '');
-    PopulateDropDown('.EthnicityId', 'ethnicity', '', '');
+    PopulateDropDown('.EthnicityId', 'ethnicities', '', '');
     PopulateDropDown('.LanguageId', 'languages', '', '');
     PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
@@ -127,11 +123,17 @@ function DisplayConstituentData() {
 
         DisplayConstituentPrimaryAddress();
 
-        LoadDBATable();
+        LoadDBAGrid();
+
+        NewDBAModal();
 
         LoadEducationTable();
 
         LoadPaymentPreferencesTable();
+
+        LoadContactInfo();
+
+        NewAddressModal();
     }
 }
 
@@ -166,39 +168,164 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
-function LoadDBATable() {
 
-    $('.doingbusinessastable').dxDataGrid({
-        dataSource: currentEntity.DoingBusinessAs,
-        columns: [
-            { dataField: 'StartDate', caption: 'From', },
-            { dataField: 'EndDate', caption: 'To' },
-            { dataField: 'Name', caption: 'Name' }
-        ],
-        paging: {
-            pageSize: 15
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
-        }
+/* Doing Business As Section */
+function LoadDBAGrid() {
+
+    var columns = [
+        { dataField: 'Id', width: '0px', },
+        { dataField: 'StartDate', caption: 'From', dataType: 'date' },
+        { dataField: 'EndDate', caption: 'To', dataType: 'date' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('dbagrid',
+        'doingbusinessastable',
+        columns,
+        'constituents/' + currentEntity.Id + '/doingbusinessas',
+        null,
+        EditDBA);
+
+}
+
+function NewDBAModal() {
+
+    $('.newdbamodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.dbamodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal();
+
+        });
+
+        $('.savedba').unbind('click');
+
+        $('.savedba').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Name: $(modal).find('.DBAName').val(),
+                StartDate: $(modal).find('.StartDate').val(),
+                EndDate: $(modal).find('.EndDate').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'doingbusinessas',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
+
+                    CloseModal();
+
+                    LoadDBAGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+                }
+            });
+
+        });
+
     });
 
 }
 
+function EditDBA(id) {
+
+    modal = $('.dbamodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadDBA(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savedba').unbind('click');
+
+    $('.savedba').click(function () {
+
+        var item = {
+            Id: $(modal).find('.hiddbaid').val(),
+            ConstituentId: $('.hidconstituentid').val(),
+            Name: $(modal).find('.DBAName').val(),
+            StartDate: $(modal).find('.StartDate').val(),
+            EndDate: $(modal).find('.EndDate').val()
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'doingbusinessas/' + $(modal).find('.hiddbaid').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
+
+                CloseModal();
+
+                LoadDBAGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+            }
+        });
+
+    });
+
+}
+
+function LoadDBA(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'doingbusinessas/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.hiddbaid').val(data.Data.Id);
+            $(modal).find('.StartDate').val(data.Data.StartDate);
+            $(modal).find('.EndDate').val(data.Data.EndDate);
+            $(modal).find('.DBAName').val(data.Data.Name);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+        }
+    });
+
+}
+/* End Doing Business As Section */
+
+
+/* Education Section */
 function LoadEducationTable() {
 
     $('.educationleveltable').dxDataGrid({
@@ -233,7 +360,9 @@ function LoadEducationTable() {
     });
 
 }
+/* End Education Section */
 
+/* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
     $('.paymentpreferencestable').dxDataGrid({
@@ -268,6 +397,33 @@ function LoadPaymentPreferencesTable() {
     });
 
 }
+/* End Payment Preference Section */
+
+
+/* Contact Information Section */
+function LoadContactInfo() {
+
+    LoadAddressesGrid();
+
+}
+
+function LoadAddressesGrid() {
+
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPrimary', caption: 'Is Primary' },
+        { dataField: 'AddressType.DisplayName', caption: 'Type' },
+        { dataField: 'Address.AddressLine1', caption: 'Address' }
+    ];
+
+    LoadGrid('constituentaddressgrid',
+        'constituentaddressgridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        null,
+        EditAddressModal);
+
+}
 
 function NewAddressModal() {
 
@@ -282,68 +438,74 @@ function NewAddressModal() {
             resizable: false
         });
 
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal();
+
+        });
+
+        $('.saveaddress').unbind('click');
+
+        $('.saveaddress').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.na-Comment').val(),
+                StartDate: $(modal).find('.na-StartDate').val(),
+                EndDate: $(modal).find('.na-EndDate').val(),
+                StartDay: 0,
+                EndDay: 0,
+                ResidentType: $(modal).find('.na-ResidentType').val(),
+                AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
+                Address: {
+                    AddressLine1: $(modal).find('.na-AddressLine1').val(),
+                    AddressLine2: $(modal).find('.na-AddressLine2').val(),
+                    City: $(modal).find('.na-City').val(),
+                    CountryId: $(modal).find('.na-CountryId').val(),
+                    CountyId: $(modal).find('.na-CountyId').val(),
+                    PostalCode: $(modal).find('.na-PostalCode').val(),
+                    StateId: $(modal).find('.na-StateId').val(),
+                    Region1Id: $(modal).find('.na-Region1Id').val(),
+                    Region2Id: $(modal).find('.na-Region2Id').val(),
+                    Region3Id: $(modal).find('.na-Region3Id').val(),
+                    Region4Id: $(modal).find('.na-Region4Id').val()
+                }
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'constituentaddresses',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+                    CloseModal();
+
+                    LoadAddressesGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+                }
+            });
+
+        });
+
+        AutoZip(modal);
+
     });
 
     PopulateAddressTypesInModal(null);
 
     PopulateCountriesInModal(null);
 
-    LoadRegions();
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal();
-
-    });
-
-    $('.saveaddress').click(function () {
-
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            IsPrimary: $('.na-IsPreferred').prop('checked'),
-            Comment: $('.na-Comment').val(),
-            StartDate: $('.na-StartDate').val(),
-            EndDate: $('.na-EndDate').val(),
-            StartDay: 0,
-            EndDay: 0,
-            ResidentType: $('.na-ResidentType').val(),
-            AddressTypeId: $('.na-AddressTypeId').val(),
-            Address: {
-                AddressLine1: $('.na-AddressLine1').val(),
-                AddressLine2: $('.na-AddressLine2').val(),
-                City: $('.na-City').val(),
-                CountryId: $('.na-CountryId').val(),
-                CountyId: $('.na-CountyId').val(),
-                PostalCode: $('.na-PostalCode').val(),
-                StateId: $('.na-StateId').val(),
-                Region1Id: $('.na-Region1Id').val(),
-                Region2Id: $('.na-Region2Id').val(),
-                Region3Id: $('.na-Region3Id').val(),
-                Region4Id: $('.na-Region4Id').val()
-            }
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: WEB_API_ADDRESS + 'constituentaddresses',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Address saved successfully.');
-
-                CloseModal();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
-            }
-        });
-
-    });
+    LoadRegions('regionscontainer', 'na-');
 
 }
 
@@ -382,86 +544,6 @@ function PopulateCountiesInModal(selectedValue) {
 
 }
 
-function LoadRegions() {
-
-    GetRegionLevels();
-
-}
-
-function GetRegionLevels() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'regionlevels',
-        data: item,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $.map(data.Data, function (item) {
-
-                $('.region' + item.Level).show();
-                $('.region' + item.Level + 'label').text(item.Label);
-                
-                if (!item.IsChildLevel) {
-                    LoadRegionDropDown(item.Level);
-                } else {
-                    $('.na-Region' + (item.Level - 1) + 'Id').change(function () {
-
-                        ClearElement('.na-Region' + item.Level + 'Id');
-
-                        if ($('.na-Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
-                            LoadRegionDropDown((item.Level), $('.na-Region' + item.Level + 'Id').val());
-                        }
-
-                    });
-                }
-
-            });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
-        }
-    });
-
-}
-
-function LoadRegionDropDown(level, selectedvalue) {
-
-    var route = 'regions/' + level;
-
-    if (selectedvalue)
-        route = route + '/' + selectedvalue;
-    else
-        route = route + '/null';
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + route,
-        data: item,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            var currentdropdown = $('.na-Region' + level + 'Id');
-            ClearElement('.na-Region' + level + 'Id');
-            AddDefaultOption($(currentdropdown), '', '');
-
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.DisplayName);
-                $(option).appendTo($(currentdropdown));
-
-            });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
-        }
-    });
-}
-
 function EditAddressModal(id) {
 
     modal = $('.addressmodal').dialog({
@@ -471,6 +553,12 @@ function EditAddressModal(id) {
         height: 560,
         resizable: false
     });
+
+    PopulateAddressTypesInModal(null);
+
+    PopulateCountriesInModal(null);
+
+    AutoZip(modal);
 
     LoadAddress(id);
 
@@ -482,6 +570,8 @@ function EditAddressModal(id) {
 
     });
 
+    $('.saveaddress').unbind('click');
+
     $('.saveaddress').click(function () {
 
         // Get the changed fields from currentaddress and put into new array.
@@ -489,7 +579,7 @@ function EditAddressModal(id) {
         
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituentaddresses',
+            url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
             data: fields,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -497,7 +587,7 @@ function EditAddressModal(id) {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-            },
+                },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the address.');
             }
@@ -511,26 +601,26 @@ function GetEditedAddressFields() {
 
     var item = {
         ConstituentId: $('.hidconstituentid').val(),
-        IsPrimary: $('.na-IsPreferred').prop('checked'),
-        Comment: $('.na-Comment').val(),
-        StartDate: $('.na-FromDate').val(),
-        EndDate: $('.na-ToDate').val(),
+        IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+        Comment: $(modal).find('.na-Comment').val(),
+        StartDate: $(modal).find('.na-StartDate').val(),
+        EndDate: $(modal).find('.na-EndDate').val(),
         StartDay: 0,
         EndDay: 0,
-        ResidentType: $('.na-Residency').val(),
-        AddressTypeId: $('.na-AddressTypeId').val(),
+        ResidentType: $(modal).find('.na-ResidentType').val(),
+        AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
         Address: {
-            AddressLine1: $('.na-AddressLine1').val(),
-            AddressLine2: $('.na-AddressLine2').val(),
-            City: $('.na-City').val(),
-            CountryId: $('.na-CountryId').val(),
-            CountyId: $('.na-CountyId').val(),
-            PostalCode: $('.na-PostalCode').val(),
-            StateId: $('.na-StateId').val(),
-            Region1Id: $('.na-Region1Id').val(),
-            Region2Id: $('.na-Region2Id').val(),
-            Region3Id: $('.na-Region3Id').val(),
-            Region4Id: $('.na-Region4Id').val()
+            AddressLine1: $(modal).find('.na-AddressLine1').val(),
+            AddressLine2: $(modal).find('.na-AddressLine2').val(),
+            City: $(modal).find('.na-City').val(),
+            CountryId: $(modal).find('.na-CountryId').val(),
+            CountyId: $(modal).find('.na-CountyId').val(),
+            PostalCode: $(modal).find('.na-PostalCode').val(),
+            StateId: $(modal).find('.na-StateId').val(),
+            Region1Id: $(modal).find('.na-Region1Id').val(),
+            Region2Id: $(modal).find('.na-Region2Id').val(),
+            Region3Id: $(modal).find('.na-Region3Id').val(),
+            Region4Id: $(modal).find('.na-Region4Id').val()
         }
     }
 
@@ -547,32 +637,34 @@ function LoadAddress(id) {
         crossDomain: true,
         success: function (data) {
 
-            currentaddress = data;
+            currentaddress = data.Data;
 
-            $('.hidconstituentid').val(id);
-            $('.na-isIsPreferred').prop('checked', data.Address.IsPreferred);
-            $('.na-Comment').val(data.Address.Comment);
-            $('.na-StartDate').val(data.StartDate);
-            $('.na-EndDate').val(data.EndDate);
-            $('.na-ResidentType').val(data.ResidentType);
+            $('.hidconstituentaddressid').val(data.Data.Id);
+            $('.hidaddressid').val(data.Data.Address.Id);
 
-            $('.na-AddressLine1').val(data.Address.AddressLine1);
-            $('.na-AddressLine2').val(data.Address.AddressLine2);
-            $('.na-City').val(data.Address.City);
+            $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+            $('.na-Comment').val(data.Data.Address.Comment);
+            $('.na-StartDate').val(data.Data.StartDate);
+            $('.na-EndDate').val(data.Data.EndDate);
+            $('.na-ResidentType').val(data.Data.ResidentType);
+
+            $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
+            $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
+            $('.na-City').val(data.Data.Address.City);
             
-            $('.na-PostalCode').val(data.Address.PostalCode);
+            $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
-            PopulateAddressTypesInModal(data.AddressTypeId);
-            PopulateCountiesInModal(data.address.CountryId);
-            PopulateStatesInModal(data.address.StateId);
-            PopulateCountiesInModal(data.address.CountyId);
+            PopulateAddressTypesInModal(data.Data.AddressTypeId);
+            PopulateCountriesInModal(data.Data.Address.CountryId);
 
-            LoadRegions();
+            PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
+                PopulateCountiesInModal(null)
+            });
 
-            LoadRegion1(data.Address.Region1Id);
-            LoadRegion2(data.Address.Region2Id);
-            LoadRegion3(data.Address.Region3Id);
-            LoadRegion4(data.Address.Region4Id);
+            PopulateCountiesInModal(data.Data.Address.CountyId);
+
+            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
+            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
             
         },
         error: function (xhr, status, err) {
@@ -581,8 +673,7 @@ function LoadAddress(id) {
     });
 
 }
-
-
+/* End Contact Information Section */
 
 
 

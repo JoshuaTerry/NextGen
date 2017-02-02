@@ -24,6 +24,7 @@
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\globalstyles.css" />
 
@@ -132,7 +133,8 @@
                 <fieldset>
                     <legend>Primary Address</legend>
 
-                    <div class="twocolumn">
+                    <div class="threecolumn">
+
                         <div>
                             <div class="fieldblock">
                                 <label>Address Type</label>
@@ -141,41 +143,46 @@
 
                             <div class="fieldblock">
                                 <label>Address Line 1</label>
-                                <input type="text" class="nc-AddressLine1" />
+                                <input type="text" class="nc-AddressLine1 autoaddress1" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Address Line 2</label>
-                                <input type="text" class="nc-AddressLine2" />
+                                <input type="text" class="nc-AddressLine2 autoaddress2" />
                             </div>
                         </div>
 
                         <div>
+
                             <div class="fieldblock">
                                 <label>Postal Code</label>
-                                <input type="text" class="nc-PostalCode" />
+                                <input type="text" class="nc-PostalCode autozip" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Country</label>
-                                <select class="nc-Country"></select>
+                                <select class="nc-Country autocountry"></select>
                             </div>
 
                             <div class="fieldblock">
                                 <label>State</label>
-                                <select class="nc-State"></select>
+                                <select class="nc-State autostate"></select>
                             </div>
 
                             <div class="fieldblock">
                                 <label>City</label>
-                                <input type="text" class="nc-City"/>
+                                <input type="text" class="nc-City autocity" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>County</label>
-                                <select class="nc-County"></select>
+                                <select class="nc-County autocounty"></select>
                             </div>
+
                         </div>
+
+                        <div class="regionscontainer"></div>
+
                     </div>
 
                 </fieldset>
