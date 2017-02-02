@@ -29,6 +29,7 @@ namespace DDI.Shared.Statics
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
         public const string Language = "Language";
+        public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
         public const string PaymentPreference = "PaymentPreference";
         public const string Prefix = "Prefix";

@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.AddressType, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.AddressType, limit, offset, orderBy, fields);
         }
     }
 }
