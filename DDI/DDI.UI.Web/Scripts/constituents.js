@@ -30,13 +30,13 @@ function Resize() {
 
 function LoadDropDowns() {
     
-    PopulateDropDown('.ConstituentStatusId', 'constituentstatues', '', '');
+    PopulateDropDown('.ConstituentStatusId', 'constituentstatuses', '', '');
     PopulateDropDown('.PrefixId', 'prefixes', '', '');
     PopulateDropDown('.GenderId', 'genders', '', '');
     PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
     PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
     PopulateDropDown('.DenominationId', 'denominations', '', '');
-    PopulateDropDown('.EthnicityId', 'ethnicity', '', '');
+    PopulateDropDown('.EthnicityId', 'ethnicities', '', '');
     PopulateDropDown('.LanguageId', 'languages', '', '');
     PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
@@ -182,7 +182,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'constituents/' + currentEntity.Id + '/dbas',
+        'constituents/' + currentEntity.Id + '/doingbusinessas',
         null,
         EditDBA);
 
