@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
@@ -14,6 +15,13 @@ namespace DDI.Business.Tests.CRM.DataSources
 
         public static IList<Prefix> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Prefix> existing = uow.GetRepositoryOrNull<Prefix>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
+
             var prefixes = new List<Prefix>();
             prefixes.Add(NewPrefix(uow, "Mr", "Mr.", "Mr.", "Mr.", "", "M"));
             prefixes.Add(NewPrefix(uow, "Miss", "Miss", "Miss", "Miss", "", "F"));
@@ -21,7 +29,10 @@ namespace DDI.Business.Tests.CRM.DataSources
             prefixes.Add(NewPrefix(uow, "Mrs", "Mrs.", "Mrs.", "Mrs.", "", "F"));
             prefixes.Add(NewPrefix(uow, "Rev", "Rev.", "The Reverend", "Rev.", "", ""));
             prefixes.Add(NewPrefix(uow, "Dr", "Dr.", "Dr.", "Dr.", "", ""));
+            prefixes.Add(NewPrefix(uow, "Drs", "Drs.", "Drs.", "Drs.", "", ""));
             prefixes.Add(NewPrefix(uow, "Law", "Lawyer", "{NAME}, Esq.", "{NAME}, Esq.", "Dear {MR} {NAME}", ""));
+            prefixes.Add(NewPrefix(uow, "Abbot", "Abbot", "The Right Reverend", "Rt. Rev.", "Dear Father Abbot", "M"));
+            prefixes.Add(NewPrefix(uow, "Mon", "Monsieur", "Mon.", "Mon.", "", "M"));
             uow.CreateRepositoryForDataSource(prefixes);
             return prefixes;
         }    
@@ -35,7 +46,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 LabelPrefix = labelPrefix,
                 Name = name,
                 Salutation = salutation,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
             if (!string.IsNullOrWhiteSpace(genderCode))
             {

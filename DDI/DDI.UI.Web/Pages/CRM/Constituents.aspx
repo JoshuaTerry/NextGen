@@ -2,12 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script type="text/javascript" src="..\..\Scripts/constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+    <input id="hidconstituentid" runat="server" type="hidden" class="hidconstituentid" enableviewstate="true" />
 
     <div class="constituentcontainer">
 
@@ -83,7 +86,7 @@
                     <h1>Name</h1>
                     <div class="editcontainer">
 
-                        <div class="inline">
+                        <div class="fivecolumn">
                             <div class="fieldblock">
                                 <label>Prefix</label>
                                 <select class="editable PrefixId"></select>
@@ -110,22 +113,24 @@
                             </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Name 2</label>
-                            <input type="text" class="editable Name2" />
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Name 2</label>
+                                <input type="text" class="editable Name2" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Nickname</label>
+                            <input type="text" class="editable Nickname" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Salutation</label>
+                                <input type="text" class="editable Salutation" />
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            <label>Nickname</label>
-                            <input type="text" class="editable NickName" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Salutation</label>
-                            <input type="text" class="editable Salutation" />
-                        </div>
-
-                        <div class="inline">
+                        <div class="threecolumn">
                             <div class="fieldblock">
                                 <label>Tax ID</label>
                                 <input type="text" class="editable TaxId" />
@@ -142,6 +147,7 @@
 
                     </div>
 
+                    <%-- MAY BE INTRODUCED LATER --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -165,24 +171,26 @@
                     <h1>Clergy Section</h1>
                     <div class="editcontainer">
                         
-                        <div class="fieldblock">
-                            <label>Clergy Type</label>
-                            <select class="editable ClergyTypeId"></select>
-                        </div>
+                        <div class="fourcolumn">
+                            <div class="fieldblock">
+                                <label>Clergy Type</label>
+                                <select class="editable ClergyTypeId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Clergy Status</label>
-                            <select class="editable ClergyStatusId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Clergy Status</label>
+                                <select class="editable ClergyStatusId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Ordination Date</label>
-                            <input type="text" class="editable OrdinationDate datepicker" />
-                        </div>
+                            <div class="fieldblock">
+                                <label>Ordination Date</label>
+                                <input type="text" class="editable OrdinationDate datepicker" />
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Place of Ordination</label>
-                            <input type="text" class="editable PlaceOfOrdination" />
+                            <div class="fieldblock">
+                                <label>Place of Ordination</label>
+                                <input type="text" class="editable PlaceOfOrdination" />
+                            </div>
                         </div>
 
                     </div>
@@ -190,37 +198,27 @@
                     <h1>Demographics</h1>
                     <div class="editcontainer">
 
-                        <div class="fieldblock">
-                            <label>Denomination</label>
-                            <select class="editable DenominationId"></select>
-                        </div>
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Denomination</label>
+                                <select class="editable DenominationId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Ethnicity</label>
-                            <select class="editable EthnicityId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Ethnicity</label>
+                                <select class="editable EthnicityId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Language</label>
-                            <select class="editable LanguageId"></select>
+                            <div class="fieldblock">
+                                <label>Language</label>
+                                <select class="editable LanguageId"></select>
+                            </div>
                         </div>
-
                     </div>
 
-                    <h1>Doing Business As (Not Implemented Yet)</h1>
-                    <div class="editcontainer">
+                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <div>
                         <div class="doingbusinessastable"></div>
-
-                        <div class="fieldblock">
-                            <label>Test Checkbox</label>
-                            <input type="checkbox" class="editable TestCheckbox" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Test Date</label>
-                            <input type="text" class="editable TestDate datepicker" />
-                        </div>
-
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>
@@ -338,31 +336,35 @@
                     <h1>Professional</h1>
                     <div class="editcontainer">
 
-                        <div class="fieldblock">
-                            <label>Profession</label>
-                            <select class="editable ProfessionId"></select>
-                        </div>
+                        <div class="threecolumn">
+                            <div class="fieldblock">
+                                <label>Profession</label>
+                                <select class="editable ProfessionId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Income Level</label>
-                            <select class="editable IncomeLevelId"></select>
-                        </div>
+                            <div class="fieldblock">
+                                <label>Income Level</label>
+                                <select class="editable IncomeLevelId"></select>
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>First Employed</label>
-                            <input type="text" class="editable FirstEmploymentDate datepicker" />
+                            <div class="fieldblock">
+                                <label>First Employed</label>
+                                <input type="text" class="editable FirstEmploymentDate datepicker" />
+                            </div>
                         </div>
+                        
+                        <div class="twocolumn">
+                            <div class="fieldblock">
+                                <label>Employer</label>
+                                <input type="text" class="editable Employer" />
+                            </div>
 
-                        <div class="fieldblock">
-                            <label>Employer</label>
-                            <input type="text" class="editable Employer" />
+                            <div class="fieldblock">
+                                <label>Position</label>
+                                <input type="text" class="editable Position" />
+                            </div>
                         </div>
-
-                        <div class="fieldblock">
-                            <label>Position</label>
-                            <input type="text" class="editable Position" />
-                        </div>
-
+                            
                         <div class="twocolumn">
                             <div class="fieldblock">
                                 <label>Start</label>
@@ -397,10 +399,47 @@
 
                     </div>
 
-                    <h1>Contact Information (Not Implemented Yet)</h1>
+                    <h1>Contact Information</h1>
                     <div>
 
+                        <div class="accordions">
 
+                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
+                            <div>
+                                <div class="constituentaddressgridcontainer"></div>
+                            </div>
+
+                            <h1>Phone Numbers</h1>
+                            <div>
+                                <div class="constituentphonegridcontainer"></div>
+                            </div>
+
+                            <h1>Emails</h1>
+                            <div>
+                                <div class="constituentemailgridcontainer"></div>
+                            </div>
+
+                            <h1>Web Sites</h1>
+                            <div>
+                                <div class="constituentwebsitegridcontainer"></div>
+                            </div>
+
+                            <h1>Point of Contact</h1>
+                            <div>
+                                <div class="constituentpocgridcontainer"></div>
+                            </div>
+
+                            <h1>Social Media</h1>
+                            <div>
+                                <div class="constituentsocmedgridcontainer"></div>
+                            </div>
+
+                            <h1>Other Contacts</h1>
+                            <div>
+                                <div class="constituentothergridcontainer"></div>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -562,6 +601,127 @@
         <div class="dashboard">
 
             <h1>Dashboard</h1>
+
+        </div>
+
+    </div>
+
+    <div class="addressmodal" title="Address" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <input type="hidden" class="hidconstituentaddressid" />
+            <input type="hidden" class="hidaddressid" />
+
+            <div class="fieldblock">
+                <label>Address Type</label>
+                <select class="na-AddressTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Address Line 1</label>
+                <input type="text" class="na-AddressLine1 autoaddress1" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Address Line 2</label>
+                <input type="text" class="na-AddressLine2 autoaddress2" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Postal code</label>
+                <input type="text" class="na-PostalCode autozip" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Country</label>
+                <select class="na-CountryId autocountry"></select>
+            </div>
+
+            <div class="inline">
+                <div class="fieldblock">
+                    <label style="width: 100px;">City</label>
+                    <input type="text" class="na-City autocity" style="width: 85px;" />
+                </div>
+
+                <div class="fieldblock">
+                    <label style="width: 25px;">St</label>
+                    <select class="na-StateId autostate" style="width: 106px;"></select>
+                </div>
+            </div>
+
+            <div class="fieldblock">
+                <label>County</label>
+                <select class="na-CountyId autocounty"></select>
+            </div>
+
+            <div class="regionscontainer"></div>
+
+            <fieldset>
+                <legend>Address Options</legend>
+
+                <div class="fieldblock">
+                    <label>Is Preferred</label>
+                    <input type="checkbox" class="na-IsPreferred" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Residency</label>
+                    <select class="na-ResidentType">
+                        <option value="0">Primary</option>
+                        <option value="1">Secondary</option>
+                        <option value="2">Separate</option>
+                    </select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Comment</label>
+                    <input type="text" class="na-Comment" />
+                </div>
+
+                <div class="fieldblock range">
+                    <label>Dates</label>
+                    <input type="text" class="na-StartDate datepicker" />
+                    <span>to</span>
+                    <input type="text" class="na-EndDate datepicker" />
+                </div>
+
+            </fieldset>
+
+            <div class="modalbuttons">
+                <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dbamodal" title="Doing Business As" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hiddbaid" />
+
+            <div class="fieldblock">
+                <label>DBA Name:</label>
+                <input type="text" class="DBAName" />
+            </div>
+
+            <div class="fieldblock">
+                <label>From:</label>
+                <input type="text" class="StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>To:</label>
+                <input type="text" class="EndDate datepicker" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savedba" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
 
         </div>
 

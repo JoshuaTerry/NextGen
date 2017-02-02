@@ -70,6 +70,7 @@
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
     <Content Include="CSS\search.css" />
+    <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
@@ -126,7 +127,9 @@
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\region.js" />
     <Content Include="Scripts\registrationconfirmation.js" />
+    <Content Include="Scripts\security.js" />
     <Content Include="Scripts\systemsettings.js" />
     <Content Include="Pages\Admin\Security.aspx" />
     <Content Include="Pages\Admin\SystemSettings.aspx" />
@@ -562,7 +565,6 @@
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />
-    <Folder Include="Pages\NewFolder1\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

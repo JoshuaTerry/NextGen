@@ -9,6 +9,7 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.Tests.CRM.DataSources
 {
@@ -17,13 +18,34 @@ namespace DDI.Business.Tests.CRM.DataSources
         public static CRMConfiguration GetDataSource(UnitOfWorkNoDb uow)
         {
             uow.CreateRepositoryForDataSource(new List<Configuration>());
-            var bl = uow.GetBusinessLogic<ConfigurationLogic>();
-            var config = bl.GetConfiguration<CRMConfiguration>();
-            config.DefaultSalutationType = Shared.Enums.CRM.SalutationType.Formal;
-            config.AddFirstNamesToSpouses = false;
-            config.OmitInactiveSpouse = true;
-            bl.SaveConfiguration(config);
-            return config;
+            var logic = uow.GetBusinessLogic<ConfigurationLogic>();
+
+            var addressTypes = AddressTypeDataSource.GetDataSource(uow);
+
+            var configuration = logic.GetConfiguration<CRMConfiguration>();
+            configuration.DefaultSalutationType = Shared.Enums.CRM.SalutationType.Formal;
+            configuration.AddFirstNamesToSpouses = false;
+            configuration.OmitInactiveSpouse = true;
+
+            configuration.DefaultAddressType = addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home);
+
+            configuration.HomeAddressTypes = new AddressType[]
+            {
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Location),
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Work)
+            };
+
+            configuration.MailAddressTypes = new AddressType[]
+            {
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Mailing),
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
+                addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Work),
+            };
+
+            logic.SaveConfiguration(configuration);
+
+            return configuration;
         }    
 
     }

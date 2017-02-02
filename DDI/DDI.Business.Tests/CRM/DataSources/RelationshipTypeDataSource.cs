@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
@@ -14,6 +15,12 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static IList<RelationshipType> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<RelationshipType> existing = uow.GetRepositoryOrNull<RelationshipType>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
             var list = new List<RelationshipType>();
             list.Add(AddType(uow, "SPOU", "Spouse", ConstituentCategory.Individual, true));
             list.Add(AddType(uow, "FATH", "Father"));
@@ -44,7 +51,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 IsSpouse = isSpouse,
                 IsActive = true,
                 ConstituentCategory = category,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
 
             if (!string.IsNullOrWhiteSpace(categoryCode))

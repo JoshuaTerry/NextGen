@@ -4,30 +4,37 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DDI.Shared.Models.Client.CRM
+namespace DDI.Shared.Models.Client.CP
 {
-    [Table("PaymentPreference")]
-    public class PaymentPreference : EntityBase
+    [Table("EFTFormat")]
+    public class EFTFormat : EntityBase
     {
         #region Public Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        public Constituent Constituent { get; set; }
-
-        public Guid? ConstituentId { get; set; }
+        [MaxLength(4)]
+        public string Code { get; set; }
 
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public int ABANumber { get; set; }
+        public bool IsActive { get; set; }
 
-        [MaxLength(128)]
-        public string AccountNumber { get; set; }
-
-        [MaxLength(128)]
-        public string AccountType { get; set; }
         #endregion Public Properties
+
+        #region Public Methods
+
+        public override string DisplayName
+        {
+            get
+            {
+                return Code + ": " + Name;
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -2,41 +2,19 @@
 using System.Web.Http;
 using DDI.Shared.Models.Client.Core;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CustomFieldsController : ApiController
+    public class CustomFieldsController : ControllerBase<CustomField>
     {
-        CustomFieldService _service;
-
-        #region Constructors
-
-        public CustomFieldsController() : this(new CustomFieldService()) { }
-        internal CustomFieldsController(CustomFieldService service)
-        {
-            _service = service;
-        }
-
-        #endregion
-
-        #region Methods
-
         [HttpGet]
-        [Route("api/v1/customfields")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/customfields", Name = RouteNames.CustomField)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(RouteNames.CustomField, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -75,40 +53,18 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/customfields")]
+        [Route("api/v1/customfields", Name = RouteNames.CustomField + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] CustomField item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok(response);
+            return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/customfields/{id}")]
+        [Route("api/v1/customfields/{id}", Name = RouteNames.CustomField + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Patch(id, changes);
         }
-
         [HttpDelete]
         [Route("api/v1/customfields")]
         public IHttpActionResult Delete(Guid id)
@@ -137,6 +93,5 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        #endregion
     }
 }

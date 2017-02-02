@@ -1,34 +1,20 @@
-﻿using System.Web.Http;
+﻿using System.Data.Entity.Core.Common.CommandTrees;
+using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
+using LinqKit;
 
 namespace DDI.WebApi.Controllers
 {
-    public class AddressTypesController : ApiController
+    public class AddressTypesController : ControllerBase<AddressType>
     {
-        ServiceBase<AddressType> _service;
-
-        public AddressTypesController() : this(new ServiceBase<AddressType>()) { }
-        internal AddressTypesController(ServiceBase<AddressType> service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
-        [Route("api/v1/addresstypes")]
-        public IHttpActionResult GetAll()
+        [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(RouteNames.AddressType, limit, offset, orderBy, fields);
         }
     }
 }

@@ -10,5 +10,9 @@ namespace DDI.Shared.Models
     {
         Guid Id { get; set; }
         string DisplayName { get; }
+        Guid? CreatedBy { get; set; }
+        DateTime? CreatedOn { get; set; }
+        Guid? LastModifiedBy { get; set; }
+        DateTime? LastModifiedOn { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using DDI.Data;
 using DDI.Shared;
 using Newtonsoft.Json.Linq; 
@@ -10,47 +11,51 @@ using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
+using DDI.Shared.Statics;
 
 namespace DDI.Services
 {
     public class ConstituentService : ServiceBase<Constituent>, IConstituentService
     {
-        private IRepository<Constituent> _repository;
-
-        private IUnitOfWork _unitOfWork;
-        private ConstituentLogic _constituentlogic;
+        private readonly IRepository<Constituent> _repository;
+        private readonly ConstituentLogic _constituentlogic;
 
         public ConstituentService()
+            : this(new UnitOfWorkEF())
         {
-            Initialize(new UnitOfWorkEF());
         }
-
 
         public ConstituentService(IUnitOfWork uow)
+            : this(uow, new ConstituentLogic(uow), uow.GetRepository<Constituent>())
         {
-            Initialize(uow);
         }
 
-        private void Initialize(IUnitOfWork uow)
+        private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository )
+            :base(uow)
         {
-            _unitOfWork = uow;
-            _constituentlogic = new ConstituentLogic(_unitOfWork);
-            _repository = _unitOfWork.GetRepository<Constituent>();
+            _constituentlogic = constituentLogic;
+            _repository = repository;
         }
         
-        public IDataResponse<List<Constituent>> GetConstituents(ConstituentSearch search)
+        public override IDataResponse<List<Constituent>> GetAll(IPageable search)
         {
-            IQueryable<Constituent> constituents = _repository.Entities.Include("ConstituentAddresses.Address");
-            var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, search)
+            var constituentSearch = (ConstituentSearch) search;
+            IQueryable<Constituent> constituents = _repository.GetEntities(IncludesForList);
+            var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, constituentSearch)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
                 .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(search.City)))
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(search.AlternateId)))
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId)
-                .SetOrderBy(search.OrderBy);
+                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(constituentSearch.City)))
+                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(constituentSearch.AlternateId)))
+                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
+            
             // Created Range
-            ApplyZipFilter(query, search);
-            ApplyQuickFilter(query, search);
+            ApplyZipFilter(query, constituentSearch);
+            ApplyQuickFilter(query, constituentSearch);
+
+            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
+            {
+                query = query.SetOrderBy(search.OrderBy);
+            }
 
             var totalCount = query.GetQueryable().ToList().Count;
 
@@ -59,7 +64,11 @@ namespace DDI.Services
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
             var response = GetIDataResponse(() => query.GetQueryable().ToList());
-            
+            if (search.OrderBy == OrderByProperties.DisplayName)
+            {
+                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
+            }
+
             response.TotalResults = totalCount;
 
             return response;
@@ -98,19 +107,18 @@ namespace DDI.Services
             }
         }
 
-        public IDataResponse<Constituent> GetConstituentById(Guid id)
+        public override IDataResponse<Constituent> GetById(Guid id)
         {
-            Constituent constituent = _repository.GetById(id, c => c.ConstituentType);
-            var response = GetIDataResponse(() => constituent);
+            Constituent constituent = _repository.GetById(id, IncludesForSingle);
 
+            var response = GetIDataResponse(() => constituent);
             return response;
         }
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
-            var constituent = _repository.Entities.Include("ConstituentAddresses.Address").Include("ConstituentType").FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            var response = GetIDataResponse(() => constituent);
-            return response;
+            var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            return GetById(constituent?.Id ?? Guid.Empty);
         }
 
         public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
@@ -127,54 +135,30 @@ namespace DDI.Services
                 _constituentlogic.Validate(p);
             });
 
-            _unitOfWork.SaveChanges();
+            UnitOfWork.SaveChanges();
 
-            var constituent = _repository.GetById(id);
-
-            return GetIDataResponse(() => constituent);
+            return GetById(id);
         }
 
-        public IDataResponse<List<DoingBusinessAs>> GetConstituentDBAs(Guid constituentId)
+        public IDataResponse<Constituent> AddConstituent(Constituent constituent)
         {
-            Repository<DoingBusinessAs> dbaRepo = new Repository<DoingBusinessAs>();
-            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
-
-            IDataResponse<List<DoingBusinessAs>> response = new DataResponse<List<DoingBusinessAs>> { Data = data.ToList() };
-            return response;
-        }
-
-        public IDataResponse<List<ConstituentAddress>> GetConstituentAddresses(Guid constituentId)
-        {
-            Repository<ConstituentAddress> dbaRepo = new Repository<ConstituentAddress>();
-            var data = dbaRepo.Entities.Where(d => d.ConstituentId == constituentId);
-
-            IDataResponse<List<ConstituentAddress>> response = new DataResponse<List<ConstituentAddress>> { Data = data.ToList() };
-            return response;
-        }
-
-        public IDataResponse<EducationLevel> GetEducationLevel(Guid constituentId)
-        {
-            Repository<Constituent> repo = new Repository<Constituent>();
-            var data = repo.Entities.Include(p => p.EducationLevel).FirstOrDefault(e => e.Id == constituentId)?.EducationLevel;
-
-            IDataResponse<EducationLevel> response = new DataResponse<EducationLevel> { Data = data };
-            return response;
-        }
-
-        public IDataResponse AddConstituent(Constituent constituent)
-        {
-            var response = SafeExecute(() => 
+            try
             {
                 _constituentlogic.Validate(constituent);
                 _repository.Insert(constituent);
-                _unitOfWork.SaveChanges();
-            });
-            return response;
+                UnitOfWork.SaveChanges();
+
+                return GetById(constituent.Id);
+            }
+            catch (Exception ex)
+            {
+                return ProcessIDataResponseException(ex);
+            };
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
         {            
-            var constituentType = _unitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
+            var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {
                 throw new ArgumentException("Constituent type ID is not valid.");               

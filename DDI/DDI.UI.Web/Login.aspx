@@ -12,8 +12,6 @@
 
     <div class="login">
 
-        <a href="#" class="newuser">New User</a>
-
         <div class="fieldblock">
             <label class="inline">Email</label>
             <input type="email" name="email" class="username" />
@@ -45,33 +43,6 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submitforgotpassword" value="Submit" />
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="newusermodal" title="New User" style="display: none;">
-
-        <div class="modalcontent">
-
-            <div class="fieldblock">
-                <label>Email</label>
-                <input type="email" name="email" class="newusername" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Password</label>
-                <input type="password" name="password" class="newpassword" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="newconfirmpassword" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitnewuser" value="Submit" />
             </div>
 
         </div>

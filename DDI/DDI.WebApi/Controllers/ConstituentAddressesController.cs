@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -10,103 +11,80 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
-    public class ConstituentAddressesController : ApiController
+    public class ConstituentAddressesController : ControllerBase<ConstituentAddress>
     {
-        private ServiceBase<ConstituentAddress> _service;
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
-
-        public ConstituentAddressesController()
-            :this(new ServiceBase<ConstituentAddress>(), new Pagination(), new DynamicTransmogrifier())
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
         {
+            return DataIncludes();
         }
 
-        internal ConstituentAddressesController(ServiceBase<ConstituentAddress> service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
+        protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForList()
         {
-            _service = service;
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
+            return DataIncludes();
+        }
+
+        private Expression<Func<ConstituentAddress, object>>[] DataIncludes()
+        {
+            Expression<Func<ConstituentAddress, object>>[] includes = {a => a.Address, a => a.AddressType};
+            return includes;
         }
 
         [HttpGet]
         [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll(); //TODO we need to be limiting this return and do proper pagification
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return base.GetAll(RouteNames.ConstituentAddress, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
-        public IHttpActionResult GetConstituentById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            var constituent = _service.GetById(id);
-
-            if (constituent == null)
-            {
-                return NotFound();
-            }
-            if (!constituent.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-
-            return Ok(constituent);
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/constituentaddresses", Name = RouteNames.ConstituentAddress + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentAddress item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok();
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Patch(id, changes);
         }
 
         [HttpDelete]
         [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Delete)]
-        public IHttpActionResult Delete(Guid id)
+        public override IHttpActionResult Delete(Guid id)
         {
-            return Ok();
+            return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituentaddresses/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }

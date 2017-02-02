@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Common;
@@ -13,6 +14,12 @@ namespace DDI.Business.Tests.Common.DataSources
     {
         public static IList<Country> GetDataSource(UnitOfWorkNoDb uow)
         {
+            IList<Country> existing = uow.GetRepositoryOrNull<Country>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+            
             var list = new List<Country>();
             list.Add(new Country()
             {
@@ -28,7 +35,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 InternationalPrefix = "011",
                 TrunkPrefix = "1",
                 PhoneFormat = "(XXX) XXX-XXXX",
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             list.Add(new Country()
@@ -45,7 +52,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 InternationalPrefix = "011",
                 TrunkPrefix = "1",
                 PhoneFormat = "(XXX) XXX-XXXX",
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             list.Add(new Country()
@@ -62,7 +69,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 InternationalPrefix = "00",
                 TrunkPrefix = "0",
                 PhoneFormat = "X XX XX XX XX",
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             list.Add(new Country()
@@ -79,7 +86,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 InternationalPrefix = "00",
                 TrunkPrefix = "",
                 PhoneFormat = "XXXX XXXX",
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             });
 
             uow.CreateRepositoryForDataSource(list);

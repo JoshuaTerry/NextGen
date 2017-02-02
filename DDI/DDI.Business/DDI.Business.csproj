@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CRM\ContactInfoLogic.cs" />
+    <Compile Include="CRM\ConstituentAddressLogic.cs" />
+    <Compile Include="CRM\RegionLogic.cs" />
+    <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
-    <Compile Include="Common\ZipLookupInfo.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
     <Compile Include="CRM\AddressLogic.cs" />
     <Compile Include="CRM\RelationshipLogic.cs" />
@@ -59,7 +62,6 @@
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Helpers\LinkedEntityHelper.cs" />
-    
     <Compile Include="ModuleInfo\ModuleInfoCreator.cs" />
     <Compile Include="ModuleInfo\ModuleInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

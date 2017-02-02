@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Common;
@@ -13,7 +14,13 @@ namespace DDI.Business.Tests.Common.DataSources
     {
         public static IList<State> GetDataSource(UnitOfWorkNoDb uow)
         {
-            var countries = uow.GetEntities<Country>();
+            IList<State> existing = uow.GetRepositoryOrNull<State>()?.Entities.ToList();
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            var countries = CountryDataSource.GetDataSource(uow);
             var statesList = new List<State>();
 
             var country = countries.FirstOrDefault(p => p.ISOCode == "US");
@@ -112,7 +119,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 StateCode = code,
                 Description = description,
                 FIPSCode = fips,
-                Id = Guid.NewGuid()
+                Id = GuidHelper.NextGuid()
             };
         }
 

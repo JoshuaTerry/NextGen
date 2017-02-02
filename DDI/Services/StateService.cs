@@ -7,25 +7,21 @@ using DDI.Services.Search;
 
 namespace DDI.Services
 {
-    public class StateService : ServiceBase<County>
+    public class StateService : ServiceBase<State>
     {
-        public StateService() : base(new UnitOfWorkEF(new CommonContext()))
-        {
-        }
-
-        internal StateService(IUnitOfWork uow) : base(uow)
-        { 
-        }
         #region Public Methods
 
-        public IDataResponse<List<State>> GetAll(ForeignKeySearch search= null)
+        public override IDataResponse<List<State>> GetAll(IPageable search = null)
         {
-            var result = UnitOfWork.GetRepository<State>().Entities;
-            var query = new CriteriaQuery<State, ForeignKeySearch>(result, search)
+            var result = UnitOfWork.GetRepository<State>().GetEntities(IncludesForList);
+            var query = new CriteriaQuery<State, ForeignKeySearch>(result, search as ForeignKeySearch)
                 .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.Id, d => d.CountryId);
 
+            var response = GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(a => a.DisplayName).ToList());
+            response.TotalResults = response.Data.Count;
+
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            return GetIDataResponse(() => query.GetQueryable().ToList().OrderBy(a => a.DisplayName).ToList());
+            return response;
         }
 
         #endregion Public Methods

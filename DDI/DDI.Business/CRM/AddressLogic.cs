@@ -11,6 +11,7 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Helpers;
 using DDI.Shared.Statics.CRM;
+using DDI.Business.Helpers;
 
 namespace DDI.Business.CRM
 {
@@ -19,11 +20,6 @@ namespace DDI.Business.CRM
     /// </summary>
     public class AddressLogic : EntityLogicBase<Address>
     {
-        #region Private Fields
-
-        private const string BP = "BP";  // Special text that appears in some postal code formats.  (No idea what it means...)
-
-        #endregion
 
         #region Constructors 
 
@@ -37,8 +33,9 @@ namespace DDI.Business.CRM
 
         #region Public Properties
 
-        public string DefaultCountryCode => "US";
-
+        /// <summary>
+        /// Cached queryable collection of countries
+        /// </summary>
         public IQueryable<Country> Countries
         {
             get
@@ -47,6 +44,9 @@ namespace DDI.Business.CRM
             }
         }
 
+        /// <summary>
+        /// Cached queryable collection of states
+        /// </summary>
         public IQueryable<State> States
         {
             get
@@ -55,6 +55,9 @@ namespace DDI.Business.CRM
             }
         }
 
+        /// <summary>
+        /// Cached queryable collection of counties
+        /// </summary>
         public IQueryable<County> Counties
         {
             get
@@ -71,11 +74,14 @@ namespace DDI.Business.CRM
         /// Load the Country, State, and County properties for an address.
         /// </summary>
         /// <param name="address"></param>
-        public void LoadAllProperties(Address address)
+        public void LoadAllProperties(Address address, bool reload = false)
         {
             if (address.CountryId != null)
-            {               
-                address.Country = Countries.FirstOrDefault(p => p.Id == address.CountryId);                
+            {
+                if (reload || address.Country == null)
+                {
+                    address.Country = Countries.FirstOrDefault(p => p.Id == address.CountryId);
+                }
             }
             else
             {
@@ -84,7 +90,10 @@ namespace DDI.Business.CRM
 
             if (address.StateId != null)
             {
-                address.State = States.FirstOrDefault(p => p.Id == address.StateId);
+                if (reload || address.State == null)
+                {
+                    address.State = States.FirstOrDefault(p => p.Id == address.StateId);
+                }
             }
             else
             {
@@ -93,7 +102,10 @@ namespace DDI.Business.CRM
 
             if (address.CountyId != null)
             {
-                address.County = Counties.FirstOrDefault(p => p.Id == address.CountyId);
+                if (reload || address.County == null)
+                {
+                    address.County = Counties.FirstOrDefault(p => p.Id == address.CountyId);
+                }
             }
             else
             {
@@ -102,15 +114,95 @@ namespace DDI.Business.CRM
 
         }
 
+        /// <summary>
+        /// Determine if a country is non-US
+        /// </summary>
         public bool IsForeignCountry(Country country)
         {
-            return country.ISOCode != DefaultCountryCode;
+            return country.ISOCode != AddressDefaults.DefaultCountryCode;
         }
 
+        /// <summary>
+        /// Get the default country.
+        /// </summary>
+        public Country GetDefaultCountry()
+        {
+            return Countries.FirstOrDefault(p => p.ISOCode == AddressDefaults.DefaultCountryCode);
+        }
+
+        /// <summary>
+        /// Format an address.  Multiple lines are separated by newline characters.
+        /// </summary>
+        /// <param name="address">The address to format</param>
+        /// <param name="caps">TRUE to abbreviate text and convert to uppercase</param>
+        /// <param name="expand">TRUE to expand all abbreviations</param>
+        /// <param name="maxLength">Maximum line length (0 for no maximum)</param>
+        /// <returns></returns>
+        public string FormatAddress(Address address, bool caps, bool expand, int maxLength)
+        {
+            StringBuilder sb = new StringBuilder();
+            string text;
+            string[] AddressLines = new string[] { address.AddressLine1, address.AddressLine2 };
+
+            LoadAllProperties(address);
+
+            for (int i = 0; i < AddressLines.Count(); i++)
+            {
+                if (!string.IsNullOrWhiteSpace(AddressLines[i]))
+                {
+                    text = AddressLines[i];
+
+                    if (expand)
+                    {
+                        text = AbbreviationHelper.ExpandAddressLine(text, UnitOfWork);
+                        if (caps)
+                        {
+                            text = text.ToUpper();
+                        }
+                    }
+                    else if (maxLength > 0)
+                    {
+                        text = AbbreviationHelper.AbbreviateAddressLine(text, maxLength, caps, UnitOfWork);
+                    }
+                    else if (caps)
+                    {
+                        text = AbbreviationHelper.AbbreviateAddressLine(text, true, false, UnitOfWork);
+                    }
+
+                    sb.Append(text).Append('\n');
+                }
+            }
+
+            text = FormatCityStatePostalCode(address.City, address.State?.StateCode, address.PostalCode, address.Country);
+            if (caps)
+            {
+                sb.Append(text.ToUpper());
+            }
+            else
+            {
+                sb.Append(text);
+            }
+
+            return sb.ToString().Trim('\n');
+        }
+
+        /// <summary>
+        /// Format a city, state, postal code, and country.  Multiple lines are separated by newline characters.
+        /// </summary>
         public string FormatCityStatePostalCode(string city, string stateCode, string postalCode, Country country)
         {
             string rslt;
             string format;
+
+            if (stateCode == null)
+            {
+                stateCode = string.Empty;
+            }
+
+            if (postalCode == null)
+            {
+                postalCode = string.Empty;
+            }
 
             if (country == null)
             {
@@ -155,6 +247,9 @@ namespace DDI.Business.CRM
             return rslt.Replace(AddressFormatMacros.Newline, "\n");
         }
 
+        /// <summary>
+        /// Format a postal code based on country-specific formatting.
+        /// </summary>
         public string FormatPostalCode(string postalCode, Country country)
         {
 
@@ -181,10 +276,10 @@ namespace DDI.Business.CRM
                 string rawEntry = StringHelper.LettersAndDigits(entry);
 
                 // Special case for BP - remove it from the raw format and raw code.
-                if (rawEntry.IndexOf(BP) >= 0)
+                if (rawEntry.IndexOf(AddressDefaults.PostalBoxSpecifier) >= 0)
                 {
-                    rawEntry = rawEntry.Replace(BP, string.Empty);
-                    rawcode = rawcode.Replace(BP, string.Empty);
+                    rawEntry = rawEntry.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
+                    rawcode = rawcode.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
                 }
                 if (rawEntry.Length == rawcode.Length)
                 {
@@ -221,6 +316,14 @@ namespace DDI.Business.CRM
         }
 
 
+        /// <summary>
+        ///  Validate a postal code, based on country-specific formatting.
+        /// </summary>
+        /// <param name="postalCode">Postal code to validate</param>
+        /// <param name="countryId">ID of country</param>
+        /// <param name="rawPostalCode">Postal code with all formatting characters removed.</param>
+        /// <param name="formattedPostalCode">Fully formatted postal code</param>
+        /// <returns>TRUE if postal code formatting is valid.</returns>
         public bool ValidatePostalCode(string postalCode, Guid? countryId, out string rawPostalCode, out string formattedPostalCode)
         {
             Country country = null;
@@ -230,7 +333,15 @@ namespace DDI.Business.CRM
             }
             return ValidatePostalCode(postalCode, country, out rawPostalCode, out formattedPostalCode);
         }
-        
+
+        /// <summary>
+        ///  Validate a postal code, based on country-specific formatting.
+        /// </summary>
+        /// <param name="postalCode">Postal code to validate</param>
+        /// <param name="country">Country</param>
+        /// <param name="rawPostalCode">Postal code with all formatting characters removed.</param>
+        /// <param name="formattedPostalCode">Fully formatted postal code</param>
+        /// <returns>TRUE if postal code formatting is valid.</returns>
         public bool ValidatePostalCode(string postalCode, Country country, out string rawPostalCode, out string formattedPostalCode)
         {
             bool isValid = true;
@@ -260,10 +371,10 @@ namespace DDI.Business.CRM
                 string rawEntry = StringHelper.LettersAndDigits(entry);
 
                 // Special case for BP - remove it from the raw format and raw code.
-                if (rawEntry.IndexOf(BP) >= 0)
+                if (rawEntry.IndexOf(AddressDefaults.PostalBoxSpecifier) >= 0)
                 {
-                    rawEntry = rawEntry.Replace(BP, string.Empty);
-                    rawCode = rawCode.Replace(BP, string.Empty);
+                    rawEntry = rawEntry.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
+                    rawCode = rawCode.Replace(AddressDefaults.PostalBoxSpecifier, string.Empty);
                     rawPostalCode = rawCode;
                 }
                 if (rawEntry.Length == rawCode.Length)
@@ -274,7 +385,9 @@ namespace DDI.Business.CRM
             }
 
             if (format == null)
+            {
                 isValid = false;
+            }
             else
             {
                 // Format and validate the postal code

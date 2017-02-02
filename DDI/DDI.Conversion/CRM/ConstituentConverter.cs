@@ -249,17 +249,6 @@ namespace DDI.Conversion.CRM
             legacyIdFile.Dispose();
         }
 
-        private ObservableCollection<T> LoadEntities<T>(DbSet<T> entities, params string[] paths) where T : class
-        {
-            IQueryable<T> query = entities;
-            foreach (string path in paths)
-            {
-                query = query.Include(path);
-            }
-            query.Load();            
-            return entities.Local;
-        }
-
         private void ConvertIndividuals(string filename, bool append)
         {
             char[] commaDelimiter = { ',' };
@@ -630,7 +619,7 @@ namespace DDI.Conversion.CRM
                     LabelFormattingOptions options = new LabelFormattingOptions() { OmitPrefix = true, Recipient = LabelRecipient.Primary };
                     string nameLine1, nameLine2;
 
-                    nameFormatter.BuildNameLines(constituent, null, options, out nameLine1, out nameLine2);
+                    nameFormatter.GetNameLines(constituent, null, options, out nameLine1, out nameLine2);
                     constituent.FormattedName = nameLine1;
 
                     constituentFile.AddRow(constituent);

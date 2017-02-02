@@ -23,8 +23,7 @@ namespace DDI.Data
         where T : class
     {
         #region Private Fields
-
-        private bool _isUOW = false;
+         
         private IList<T> _entities = null;
         private IEnumerable<IEntity> _typedEntities = null;
 
@@ -192,12 +191,12 @@ namespace DDI.Data
             return entity;
         }
 
-        public virtual int UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public virtual void UpdateChangedProperties(Guid id, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
-            return UpdateChangedProperties(GetById(id), propertyValues, action);
+            UpdateChangedProperties(GetById(id), propertyValues, action);
         }
 
-        public virtual int UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
+        public virtual void UpdateChangedProperties(T entity, IDictionary<string, object> propertyValues, Action<T> action = null)
         {
             Type type = entity.GetType();
 
@@ -207,9 +206,7 @@ namespace DDI.Data
                 propertyInfo?.SetValue(entity, keyValue.Value);
             }
 
-            action?.Invoke(entity);
-
-            return 1;
+            action?.Invoke(entity);            
         }
 
         public List<string> GetModifiedProperties(T entity) 
