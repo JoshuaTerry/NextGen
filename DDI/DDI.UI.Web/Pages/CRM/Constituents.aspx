@@ -409,7 +409,7 @@
 
                     </div>
 
-                    <h1>Contact Information (Not Implemented Yet)</h1>
+                    <h1>Contact Information</h1>
                     <div>
 
                         <div class="accordions">
@@ -619,6 +619,9 @@
     <div class="addressmodal" title="New Address" style="display: none;">
 
         <div class="modalcontent">
+            
+            <input type="hidden" class="hidconstituentaddressid" />
+            <input type="hidden" class="hidaddressid" />
 
             <div class="fieldblock">
                 <label>Address Type</label>
@@ -627,39 +630,39 @@
 
             <div class="fieldblock">
                 <label>Address Line 1</label>
-                <textarea class="na-AddressLine1"></textarea>
+                <input type="text" class="na-AddressLine1 autoaddress1" />
             </div>
 
             <div class="fieldblock">
                 <label>Address Line 2</label>
-                <textarea class="na-AddressLine2"></textarea>
-            </div>
-
-            <div class="fieldblock">
-                <label>Country</label>
-                <select class="na-CountryId"></select>
+                <input type="text" class="na-AddressLine2 autoaddress2" />
             </div>
 
             <div class="fieldblock">
                 <label>Postal code</label>
-                <input type="text" class="na-PostalCode" />
+                <input type="text" class="na-PostalCode autozip" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Country</label>
+                <select class="na-CountryId autocountry"></select>
             </div>
 
             <div class="inline">
                 <div class="fieldblock">
                     <label style="width: 100px;">City</label>
-                    <input type="text" class="na-City" style="width: 85px;" />
+                    <input type="text" class="na-City autocity" style="width: 85px;" />
                 </div>
 
                 <div class="fieldblock">
                     <label style="width: 25px;">St</label>
-                    <select class="na-StateId" style="width: 106px;"></select>
+                    <select class="na-StateId autostate" style="width: 106px;"></select>
                 </div>
             </div>
 
             <div class="fieldblock">
                 <label>County</label>
-                <select class="na-CountyId"></select>
+                <select class="na-CountyId autocounty"></select>
             </div>
 
             <div class="regionscontainer"></div>

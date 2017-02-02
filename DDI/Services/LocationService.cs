@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using DDI.Business.Common;
 using DDI.Shared;
 using DDI.Data;
 using DDI.Shared.Models.Common;
+using DDI.Business.Common;
 using DDI.Business.CRM;
 
 namespace DDI.Services

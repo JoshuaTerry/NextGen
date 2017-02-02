@@ -10,6 +10,8 @@ function LoadRegions(container, prefix) {
         prefix = '.' + prefix;
     }
 
+    $(container).html('');
+
     $.ajax({
         type: 'GET',
         url: WEB_API_ADDRESS + 'regionlevels',

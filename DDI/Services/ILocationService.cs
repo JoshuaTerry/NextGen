@@ -1,4 +1,4 @@
-﻿using DDI.Business.Common;
+﻿using DDI.Shared.Models.Common;
 using DDI.Shared;
 using System;
 

@@ -22,30 +22,29 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             orderBy = "ItemLevel";
-            var result = _service.GetAll();
 
-            return base.GetAll(GetUrlHelper(), RouteNames.RegionLevel, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.RegionLevel, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id, fields);
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] RegionLevel item)
         {
-            return base.Post(GetUrlHelper(), item);
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(GetUrlHelper(), id, changes);
+            return base.Patch(id, changes);
         }
 
         [HttpDelete]

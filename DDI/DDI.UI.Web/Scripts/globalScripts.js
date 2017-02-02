@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip();
+        AutoZip(modal);
 
     });
 
@@ -284,41 +284,29 @@ function ClearElement(e) {
     }
 }
 
-function AutoZip() {
+function AutoZip(container) {
 
-    $('.autozip').blur(function () {
+    $(container).find('.autozip').blur(function () {
 
-        GetAutoZipData();
-
-    });
-
-    $('.autocity').blur(function () {
-
-        GetAutoZipData();
-
-    });
-
-    $('.autostate').blur(function () {
-
-        GetAutoZipData();
+        GetAutoZipData(container);
 
     });
 
 }
 
-function GetAutoZipData() {
+function GetAutoZipData(container) {
 
-    var zip = $('.autozip').val();
+    var zip = $(container).find('.autozip').val();
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' + $('.nc-AddressLine1').val() +
-                '&addressLine2=' + $('.nc-AddressLine2').val() +
-                '&city=' + $('.autocity').val() +
-                '&countryId=' + $('.autocountry').val() +
-                '&countyId=' + $('.autocounty').val() +
-                '&stateId=' + $('.autostate').val() +
-                '&zip=' + $('.autozip').val();
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
+                '&city=' + $(container).find('.autocity').val() +
+                '&countryId=' + $(container).find('.autocountry').val() +
+                '&countyId=' + $(container).find('.autocounty').val() +
+                '&stateId=' + $(container).find('.autostate').val() +
+                '&zip=' + $(container).find('.autozip').val();
 
         $.ajax({
             url: WEB_API_ADDRESS + 'locations/?' + fields,
@@ -330,17 +318,17 @@ function GetAutoZipData() {
 
                 if (data && data.Data) {
 
-                    $('.autozip').val(data.Data.PostalCode);
+                    $(container).find('.autozip').val(data.Data.PostalCode);
 
                     if (data.Data.State) {
-                        $('.autocountry').val(data.Data.State.CountryId);
+                        $(container).find('.autocountry').val(data.Data.State.CountryId);
+                        
+                        PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
-                        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '', data.Data.State.Id);
-
-                        PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '');
+                        PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
                     }
 
-                    $('.autocity').val(data.Data.City);
+                    $(container).find('.autocity').val(data.Data.City);
 
                 }
             

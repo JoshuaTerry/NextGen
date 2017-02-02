@@ -26,6 +26,7 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var result = Service.GetRegionsByLevel(id, level);
+
                 return FinalizeResponse(result, RouteNames.Region + RouteNames.Level, null);
             }
             catch (Exception ex)
@@ -41,6 +42,7 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var result = Service.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
+
                 return FinalizeResponse(result, RouteNames.Region + RouteNames.Address, null);
             }
             catch (Exception ex)

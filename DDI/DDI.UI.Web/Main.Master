@@ -143,12 +143,12 @@
 
                             <div class="fieldblock">
                                 <label>Address Line 1</label>
-                                <input type="text" class="nc-AddressLine1" />
+                                <input type="text" class="nc-AddressLine1 autoaddress1" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Address Line 2</label>
-                                <input type="text" class="nc-AddressLine2" />
+                                <input type="text" class="nc-AddressLine2 autoaddress2" />
                             </div>
                         </div>
 

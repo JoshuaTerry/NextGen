@@ -16,8 +16,6 @@ $(document).ready(function () {
 
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
 
-        // sessionStorage.removeItem('constituentnumber');
-
     }
 
     GetConstituentData($('.hidconstituentid').val());
@@ -132,6 +130,8 @@ function DisplayConstituentData() {
         LoadEducationTable();
 
         LoadPaymentPreferencesTable();
+
+        LoadContactInfo();
     }
 }
 
@@ -269,6 +269,30 @@ function LoadPaymentPreferencesTable() {
 
 }
 
+function LoadContactInfo() {
+
+    LoadAddressesGrid();
+
+}
+
+function LoadAddressesGrid() {
+
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPrimary', caption: 'Is Primary' },
+        { dataField: 'AddressType.DisplayName', caption: 'Type' },
+        { dataField: 'Address.AddressLine1', caption: 'Address' }
+    ];
+
+    LoadGrid('constituentaddressgrid',
+        'constituentaddressgridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        null,
+        EditAddressModal);
+
+}
+
 function NewAddressModal() {
 
     $('.newaddressmodallink').click(function (e) {
@@ -281,6 +305,8 @@ function NewAddressModal() {
             width: 375,
             resizable: false
         });
+
+        AutoZip(modal);
 
     });
 
@@ -337,6 +363,8 @@ function NewAddressModal() {
 
                 CloseModal();
 
+                LoadAddressesGrid();
+
             },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the address.');
@@ -391,6 +419,14 @@ function EditAddressModal(id) {
         height: 560,
         resizable: false
     });
+
+    PopulateAddressTypesInModal(null);
+
+    PopulateCountriesInModal(null);
+
+    AutoZip(modal);
+
+    LoadRegions('regionscontainer', 'na-');
 
     LoadAddress(id);
 
@@ -467,9 +503,11 @@ function LoadAddress(id) {
         crossDomain: true,
         success: function (data) {
 
-            currentaddress = data;
+            currentaddress = data.Data;
 
-            $('.hidconstituentid').val(id);
+            $('.hidconstituentaddressid').val(data.Id);
+            $('.hidaddressid').val(data.Address.Id);
+
             $('.na-isIsPreferred').prop('checked', data.Address.IsPreferred);
             $('.na-Comment').val(data.Address.Comment);
             $('.na-StartDate').val(data.StartDate);
@@ -483,9 +521,9 @@ function LoadAddress(id) {
             $('.na-PostalCode').val(data.Address.PostalCode);
 
             PopulateAddressTypesInModal(data.AddressTypeId);
-            PopulateCountiesInModal(data.address.CountryId);
-            PopulateStatesInModal(data.address.StateId);
-            PopulateCountiesInModal(data.address.CountyId);
+            PopulateCountiesInModal(data.Address.CountryId);
+            PopulateStatesInModal(data.Address.StateId);
+            PopulateCountiesInModal(data.Address.CountyId);
 
             LoadRegions('regionscontainer', 'na-');
             
