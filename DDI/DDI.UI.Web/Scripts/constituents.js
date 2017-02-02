@@ -643,7 +643,7 @@ function LoadAddress(id) {
             $('.hidaddressid').val(data.Data.Address.Id);
 
             $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
-            $('.na-Comment').val(data.Data.Address.Comment);
+            $('.na-Comment').val(data.Data.Comment);
             $('.na-StartDate').val(data.Data.StartDate);
             $('.na-EndDate').val(data.Data.EndDate);
             $('.na-ResidentType').val(data.Data.ResidentType);
