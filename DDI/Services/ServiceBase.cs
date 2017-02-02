@@ -58,8 +58,8 @@ namespace DDI.Services
             {
                 search = new PageableSearch
                 {
-                    Limit = 25,
-                    Offset = 0
+                    Limit = SearchParameters.LimitDefault,
+                    Offset = SearchParameters.OffsetDefault
                 };
             }
 
@@ -110,8 +110,9 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                response.Data = _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.GetRepository<T>().Update(entity);
                 _unitOfWork.SaveChanges();
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -135,7 +136,7 @@ namespace DDI.Services
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
             	_unitOfWork.SaveChanges();
 
-                response.Data = _unitOfWork.GetRepository<T>().GetById(id);
+                response.Data = _unitOfWork.GetRepository<T>().GetById(id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -150,8 +151,9 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                response.Data = _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.GetRepository<T>().Insert(entity);
                 _unitOfWork.SaveChanges();
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
