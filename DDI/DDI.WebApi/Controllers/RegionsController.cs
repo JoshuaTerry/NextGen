@@ -12,38 +12,30 @@ namespace DDI.WebApi.Controllers
 {
     public class RegionsController : ControllerBase<Region>
     {
-        protected new IRegionService Service => (IRegionService) base.Service;
 
-        public RegionsController()
-            :base(new RegionService())
+        [HttpGet]
+        [Route("api/v1/regions/regionlevels/{level}")]
+        [Route("api/v1/regionlevels/{level}/regions", Name = RouteNames.RegionLevel + RouteNames.Region)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByLevel(int level, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
+            return GetRegions(level, null, fields, offset, limit, orderBy);
         }
 
         [HttpGet]
-        [Route("api/v1/regions/{level}/{id}", Name = RouteNames.Region + RouteNames.Level)]
-        public IHttpActionResult GetRegionsByLevel(Guid? id, int level)
+        [Route("api/v1/regions/{id}/regionlevels/{nextLevel}")]
+        [Route("api/v1/regionlevels/{nextLevel}/regions/{id}", Name = RouteNames.Region + RouteNames.RegionLevel + RouteNames.RegionChildren)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByNextLevel(int nextLevel, Guid? id = null, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
-            try
-            {
-                var result = Service.GetRegionsByLevel(id, level);
-
-                return FinalizeResponse(result, RouteNames.Region + RouteNames.Level, null);
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
+            return GetRegions(nextLevel, id, fields, offset, limit, orderBy);
         }
-        [HttpGet]
-        [Route("api/v1/regions/address", Name = RouteNames.Region + RouteNames.Address)]
-        public IHttpActionResult GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
+
+        private IHttpActionResult GetRegions(int level, Guid? id, string fields, int? offset, int? limit, string orderBy)
         {
             try
             {
-                var result = Service.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
-
-                return FinalizeResponse(result, RouteNames.Region + RouteNames.Address, null);
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search);
+                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, fields);
             }
             catch (Exception ex)
             {
