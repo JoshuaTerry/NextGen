@@ -10,7 +10,7 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/languages", Name = RouteNames.Language)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Language, limit, offset, orderBy, fields);
         }
