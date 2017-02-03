@@ -16,7 +16,7 @@ using DDI.Shared.Statics.CRM;
 namespace DDI.Business.Tests.Common
 {
     [TestClass]
-    public class ZipLookupTest
+    public class ZipLookupTest : TestBase
     {
         private ZipLookup _zipLookup;
         private UnitOfWorkNoDb _uow;
