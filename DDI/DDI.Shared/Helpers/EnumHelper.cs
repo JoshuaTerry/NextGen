@@ -46,9 +46,9 @@ namespace DDI.Shared.Helpers
             return definition;
         }
 
-        public static List<string> GetDescriptions<T>()
+        public static Dictionary<string, int> GetDescriptions<T>()
         {
-            var values = new List<string>();
+            var values = new Dictionary<string, int>();
             if (!typeof(T).IsEnum)
             {
                 throw new ArgumentException("Type of argument must be Enum.");
@@ -56,14 +56,14 @@ namespace DDI.Shared.Helpers
 
             var type = typeof (T);
 
-            MemberInfo[] members = type.GetMembers();
+            FieldInfo[] fields = type.GetFields();
 
-            foreach (var member in members)
+            foreach (var field in fields)
             {
-                object[] attributes = member.GetCustomAttributes(typeof (DescriptionAttribute), false);
+                object[] attributes = field.GetCustomAttributes(typeof (DescriptionAttribute), false);
                 foreach (var attribute in attributes)
                 {
-                    values.Add(((DescriptionAttribute) attribute).Description);
+                    values.Add(((DescriptionAttribute) attribute).Description, (int)field.GetValue(field));
                 }
             }
 
