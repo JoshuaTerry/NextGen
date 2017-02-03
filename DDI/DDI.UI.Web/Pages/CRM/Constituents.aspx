@@ -229,7 +229,7 @@
                             <select class="editable EducationLevelId"></select>
                         </div>
 
-                        <div class="educationlevelgrid"></div>
+                        <div class="educationgridcontainer"></div>
 
                     </div>
 
@@ -600,7 +600,7 @@
 
         </div>
 
-        <div class="dashboard">
+        <div class="dashboard" style="display: none;">
 
             <h1>Dashboard</h1>
 
@@ -732,7 +732,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;"">
 
         <div class="modalcontent">
             

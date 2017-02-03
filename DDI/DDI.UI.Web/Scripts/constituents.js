@@ -332,19 +332,26 @@ function LoadEducationGrid() {
 
     var columns = [
             { dataField: 'Id', width: '0px' },
-            { dataField: 'StartDate', caption: 'Start Date' },
-            { dataField: 'EndDate', caption: 'End Date' },
-            { dataField: 'School', caption: 'School' },
-            { dataField: 'Degree', caption: 'Degree' },
+            { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
+            { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
+            { dataField: 'School.DisplayName', caption: 'School' },
+            { dataField: 'Degree.DisplayName', caption: 'Degree' },
             { dataField: 'Major', caption: 'Major' }
     ];
 
     LoadGrid('educationgrid',
-        'educationleveltable',
+        'educationgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/educations',
         null,
-        EditAddressModal);
+        EditEducationModal);
+
+}
+
+function EducationModalDropDowns() {
+
+    PopulateDropDown('.ed-Degree', 'degrees', '', '', null);
+    PopulateDropDown('.ed-School', 'schools', '', '', null);
 
 }
 
@@ -361,45 +368,47 @@ function NewEducationModal() {
             resizable: false
         });
 
-    });
+        EducationModalDropDowns();
 
-    $('.cancelmodal').click(function (e) {
+        $('.cancelmodal').click(function (e) {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        CloseModal();
+            CloseModal();
 
-    });
+        });
 
-    $('.saveaddress').click(function () {
+        $('.saveeducation').click(function () {
 
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            Major: $('.ed-Comment').val(),
-            StartDate: $('.ed-StartDate').val(),
-            EndDate: $('.ed-EndDate').val(),
-            School: $('.na-School').val(),
-            Degree: $('.na-Degree').val()
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: WEB_API_ADDRESS + 'educations',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Education saved successfully.');
-
-                CloseModal();
-
-                LoadEducationGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Major: $('.ed-Major').val(),
+                StartDate: $('.ed-StartDate').val(),
+                EndDate: $('.ed-EndDate').val(),
+                SchoolId: $('.ed-School').val(),
+                DegreeId: $('.ed-Degree').val()
             }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'educations',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Education saved successfully.');
+
+                    CloseModal();
+
+                    LoadEducationGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+                }
+            });
+
         });
 
     });
@@ -415,6 +424,8 @@ function EditEducationModal(id) {
         resizable: false
     });
 
+    EducationModalDropDowns();
+
     LoadEducation(id);
 
     $('.cancelmodal').click(function (e) {
@@ -425,21 +436,21 @@ function EditEducationModal(id) {
 
     });
 
-    $('.saveaddress').click(function () {
+    $('.saveeducation').click(function () {
 
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
-            Major: $('.ed-Comment').val(),
+            Major: $('.ed-Major').val(),
             StartDate: $('.ed-StartDate').val(),
             EndDate: $('.ed-EndDate').val(),
-            School: $('.na-School').val(),
-            Degree: $('.na-Degree').val()
+            SchoolId: $('.ed-School').val(),
+            DegreeId: $('.ed-Degree').val()
         }
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'educations',
-            data: fields,
+            url: WEB_API_ADDRESS + 'educations/' + id,
+            data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
             success: function () {
@@ -469,11 +480,11 @@ function LoadEducation(id) {
         crossDomain: true,
         success: function (data) {
 
-            $('.ed-Major').val(data.Major),
-            $('.ed-StartDate').val(data.StartDate),
-            $('.ed-EndDate').val(data.EndDate),
-            $('.na-School').val(data.School),
-            $('.na-Degree').val(data.Degree)
+            $('.ed-Major').val(data.Data.Major),
+            $('.ed-StartDate').val(data.Data.StartDate),
+            $('.ed-EndDate').val(data.Data.EndDate),
+            $('.ed-School').val(data.Data.SchoolId),
+            $('.ed-Degree').val(data.Data.DegreeId)
 
         },
         error: function (xhr, status, err) {
