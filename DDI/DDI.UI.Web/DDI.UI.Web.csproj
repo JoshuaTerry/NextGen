@@ -561,7 +561,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Pages\Common\" />
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
