@@ -147,6 +147,7 @@
 
                     </div>
 
+                    <%-- MAY BE INTRODUCED LATER --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -215,20 +216,9 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As (Not Implemented Yet)</h1>
-                    <div class="editcontainer">
+                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <div>
                         <div class="doingbusinessastable"></div>
-
-                        <div class="fieldblock">
-                            <label>Test Checkbox</label>
-                            <input type="checkbox" class="editable TestCheckbox" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Test Date</label>
-                            <input type="text" class="editable TestDate datepicker" />
-                        </div>
-
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>
@@ -616,7 +606,7 @@
 
     </div>
 
-    <div class="addressmodal" title="New Address" style="display: none;">
+    <div class="addressmodal" title="Address" style="display: none;">
 
         <div class="modalcontent">
             
@@ -700,6 +690,36 @@
 
             <div class="modalbuttons">
                 <input type="button" class="saveaddress" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dbamodal" title="Doing Business As" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hiddbaid" />
+
+            <div class="fieldblock">
+                <label>DBA Name:</label>
+                <input type="text" class="DBAName" />
+            </div>
+
+            <div class="fieldblock">
+                <label>From:</label>
+                <input type="text" class="StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>To:</label>
+                <input type="text" class="EndDate datepicker" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savedba" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

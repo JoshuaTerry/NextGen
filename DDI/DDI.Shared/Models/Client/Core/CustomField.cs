@@ -12,7 +12,7 @@ namespace DDI.Shared.Models.Client.Core
         #region Properties
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
         public string LabelText { get; set; }
         public string MinValue { get; set; }

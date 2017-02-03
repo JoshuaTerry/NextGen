@@ -12,6 +12,7 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-ui.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.toast.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\jquery.datepair.min.js"></script>
 
     <!-- DevExtreme Files -->
     <script type="text/javascript" src="..\..\Scripts/dx.web.js"></script>
@@ -25,6 +26,7 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
     <link rel="stylesheet" href="CSS\globalstyles.css" />
 

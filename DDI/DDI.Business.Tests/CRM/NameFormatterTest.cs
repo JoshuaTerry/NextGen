@@ -16,7 +16,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DDI.Business.Tests.CRM
 {
     [TestClass]
-    public class NameFormatterTest
+    public class NameFormatterTest : TestBase
     {
 
         private const string TESTDESCR = "Business | CRM";

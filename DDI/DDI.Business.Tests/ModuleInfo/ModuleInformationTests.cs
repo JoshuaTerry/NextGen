@@ -7,10 +7,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DDI.Business.ModuleInfo;
 using DDI.Business;
 using DDI.Shared.Enums;
+using DDI.Business.Tests;
 
 namespace DDI.Shared.Test.ModuleInfo
 {
-    class ModuleInformationTests
+    class ModuleInformationTests : TestBase
     {
         private const string TESTDESCR = "Business | ModuleInformation";
 

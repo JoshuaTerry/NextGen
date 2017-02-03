@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.Shared
 { 
-    public interface IConstituentService
+    public interface IConstituentService : IService<Constituent>
     {
-        IDataResponse<List<Constituent>> GetAll(IPageable search);
-        IDataResponse<Constituent> GetById(Guid id);
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
-        IDataResponse<Constituent> UpdateConstituent(Guid id, JObject constituentChanges);
-        IDataResponse<Constituent> AddConstituent(Constituent constituent);
-        IDataResponse<int> GetNextConstituentNumber();
-        object NewConstituent(Guid id);
+        IDataResponse<Constituent> NewConstituent(Guid constituentTypeId);
     }
 }

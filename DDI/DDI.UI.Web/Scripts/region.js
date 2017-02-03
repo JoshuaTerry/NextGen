@@ -67,12 +67,12 @@ function CreateRegionControl(container, prefix, index) {
 
 }
 
-function LoadRegionDropDown(prefix, level, selectedvalue) {
+function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
 
     var route = 'regions/' + level;
 
-    if (selectedvalue)
-        route = route + '/' + selectedvalue;
+    if (parentid)
+        route = route + '/' + parentid;
     else
         route = route + '/null';
 
@@ -94,6 +94,12 @@ function LoadRegionDropDown(prefix, level, selectedvalue) {
                 $(option).appendTo($(currentdropdown));
 
             });
+
+            if (selectedvalue) {
+
+                $(currentdropdown).val(selectedvalue);
+
+            }
 
         },
         error: function (xhr, status, err) {
