@@ -20,10 +20,7 @@ namespace DDI.Shared.Models.Client.CRM
         public override Guid Id { get; set; }
 
         public DateTime? BirthDate { get; set; }
-        [NotMapped]
-        public int? AgeRangeFrom { get; set; }
-        [NotMapped]
-        public int? AgeRangeTo { get; set; }
+         
         public BirthDateType BirthDateType { get; set; }
 
         public int? BirthMonth { get; set; }
@@ -31,7 +28,11 @@ namespace DDI.Shared.Models.Client.CRM
         public int? BirthDay { get; set; }
 
         public int? BirthYear { get; set; }
-         
+
+        public int? BirthYearFrom { get; set; }
+
+        public int? BirthYearTo { get; set; }
+
         [MaxLength(128)]
         public string Business { get; set; }
 

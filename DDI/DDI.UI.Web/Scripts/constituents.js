@@ -115,6 +115,8 @@ function GetConstituentData(id) {
 
             currentEntity = data.Data;
 
+            LoadLinks(currentEntity);
+
             DisplayConstituentData();
             
         },
