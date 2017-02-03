@@ -288,10 +288,34 @@
 
                         <div class="twocolumn">
 
-                            <div>
+                            <div>                                
                                 <div class="fieldblock">
                                     <label>Birth Date</label>
-                                    <input type="text" class="editable BirthDate datepicker" />
+                                    <div class="threecolumn">
+                                        <div style="width: 50px;">
+                                        <select class="editable BirthMonth">
+                                        <option></option>
+                                        <option>01</option>
+                                        <option>02</option>
+                                        <option>03</option>
+                                        <option>04</option>
+                                        <option>05</option>
+                                        <option>06</option>
+                                        <option>07</option>
+                                        <option>08</option>
+                                        <option>09</option>
+                                        <option>10</option>
+                                        <option>11</option>
+                                        <option>12</option>
+                                    </select>
+                                        </div>
+                                        <div style="width: 50px;">
+                                    <select class="editable BirthDay"></select>
+                                            </div>
+                                        <div style="width: 100px;">
+                                    <select class="editable BirthYear"></select>
+                                            </div>
+                                    </div>
                                 </div>
 
                                 <div class="fieldblock">

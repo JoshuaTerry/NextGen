@@ -30,10 +30,8 @@ namespace DDI.Shared.Models.Client.CRM
 
         public int? BirthDay { get; set; }
 
-        public int? BirthYearFrom { get; set; }
-
-        public int? BirthYearTo { get; set; }
-
+        public int? BirthYear { get; set; }
+         
         [MaxLength(128)]
         public string Business { get; set; }
 
