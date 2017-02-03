@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Common
 {
-    public class ZipLookupInfo : EntityBase
+    public class ZipLookupInfo : ICanTransmogrify
     {
-        public override Guid Id { get; set; }
+        public ZipLookupInfo()
+        {
+            Id = Guid.NewGuid();
+        }
+        public  Guid Id { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }

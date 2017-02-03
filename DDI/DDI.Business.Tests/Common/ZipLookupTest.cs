@@ -46,9 +46,9 @@ namespace DDI.Business.Tests.Common
         public void ZipLookup_AbbreviateWords()
         {
             // This method assumes words are capitalized.
-            Assert.AreEqual(_zipLookup.AbbreviateWords("NORTH RIVER ROAD"), "N RIV RD", "Basic functionality test.");
+            Assert.AreEqual(_zipLookup.AbbreviateWordsFromAddressLine("NORTH RIVER ROAD"), "N RIV RD", "Basic functionality test.");
             // Periods should be omitted, other non-letters should be included.
-            Assert.AreEqual(_zipLookup.AbbreviateWords("N. A-B ROAD"), "N A-B RD", "Period should be omitted.");
+            Assert.AreEqual(_zipLookup.AbbreviateWordsFromAddressLine("N. A-B ROAD"), "N A-B RD", "Period should be omitted.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -66,13 +66,13 @@ namespace DDI.Business.Tests.Common
         public void ZipLookup_WordSplit()
         {
             string[] rslt = new string[] { "A1C", "D2F" };
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C D2F"), rslt, "Basic functionality.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C-D2F"), rslt, "'-' Delimiter test failed.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C.D2F"), rslt, "'.' Delimiter test failed.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C,D2F"), rslt, "',' Delimiter test failed.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C'D2F"), rslt, "quote Delimiter test failed.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C\"D2F"), rslt, "double quote Delimiter test failed.");
-            CollectionAssert.AreEquivalent(_zipLookup.WordSplit("A1C. D2F"), rslt, "Multiple delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C D2F"), rslt, "Basic functionality.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C-D2F"), rslt, "'-' Delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C.D2F"), rslt, "'.' Delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C,D2F"), rslt, "',' Delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C'D2F"), rslt, "quote Delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C\"D2F"), rslt, "double quote Delimiter test failed.");
+            CollectionAssert.AreEquivalent(_zipLookup.SplitStringIntoListOfWords("A1C. D2F"), rslt, "Multiple delimiter test failed.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -95,7 +95,7 @@ namespace DDI.Business.Tests.Common
             List<string> list = text1.Split(' ').ToList();
             List<string> rsltList = text2.Split(' ').ToList();
 
-            _zipLookup.WordCombine(list);
+            list =_zipLookup.CombineSomeAbbreviations(list);
 
             CollectionAssert.AreEquivalent(list, rsltList);
         }
@@ -168,7 +168,7 @@ namespace DDI.Business.Tests.Common
             ZipLookup.Address rslt;
             string descr;
 
-            rslt = _zipLookup.SplitAddress("100 E Main St North");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("100 E Main St North");
             descr = "Basic functionality test failed.";
 
             Assert.AreEqual(rslt.Prefix, "E", descr);
@@ -177,57 +177,57 @@ namespace DDI.Business.Tests.Common
             Assert.AreEqual(rslt.Suffix2, "N", descr);
             Assert.AreEqual(rslt.StreetNum, "100", descr);
 
-            rslt = _zipLookup.SplitAddress("100 E Main St Apt #471 C");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("100 E Main St Apt #471 C");
             descr = "Secondary address test failed.";
 
             Assert.AreEqual(rslt.SecondaryAbbr, "APT", descr);
             Assert.AreEqual(rslt.SecondaryNum, "471C", descr);
 
-            rslt = _zipLookup.SplitAddress("100 E Main St Suite 5 1/2");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("100 E Main St Suite 5 1/2");
             descr = "Secondary address with fraction test failed.";
 
             Assert.AreEqual(rslt.SecondaryAbbr, "STE", descr);
             Assert.AreEqual(rslt.SecondaryNum, "5 1/2", descr);
 
-            rslt = _zipLookup.SplitAddress("100 E Main St 9th Floor");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("100 E Main St 9th Floor");
             descr = "Secondary address with ordinal secondary test failed.";
 
             Assert.AreEqual(rslt.SecondaryAbbr, "FL", descr);
             Assert.AreEqual(rslt.SecondaryNum, "9", descr);
 
-            rslt = _zipLookup.SplitAddress("HC 1 Box 72A");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("HC 1 Box 72A");
             descr = "RR with Box test failed.";
 
             Assert.AreEqual(rslt.Street, "HC 1", descr);
             Assert.AreEqual(rslt.StreetNum, "72A", descr);
 
-            rslt = _zipLookup.SplitAddress("PO Box 40234");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("PO Box 40234");
             descr = "PO Box test failed.";
 
             Assert.AreEqual(rslt.Street, "PO BOX", descr);
             Assert.AreEqual(rslt.StreetNum, "40234", descr);
 
-            rslt = _zipLookup.SplitAddress("Box C");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("Box C");
             descr = "Box test failed.";
 
             Assert.AreEqual(rslt.Street, "PO BOX", descr);
             Assert.AreEqual(rslt.StreetNum, "C", descr);
 
-            rslt = _zipLookup.SplitAddress("One West Main");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("One West Main");
             descr = "Street number 'One' test failed.";
 
             Assert.AreEqual(rslt.Street, "MAIN", descr);
             Assert.AreEqual(rslt.StreetNum, "ONE", descr);
             Assert.AreEqual(rslt.Prefix, "W", descr);
 
-            rslt = _zipLookup.SplitAddress("A9A Main St");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("A9A Main St");
             descr = "Non-numeric street number test failed.";
 
             Assert.AreEqual(rslt.Street, "MAIN", descr);
             Assert.AreEqual(rslt.StreetNum, "A9A", descr);
             Assert.AreEqual(rslt.Suffix, "ST", descr);
 
-            rslt = _zipLookup.SplitAddress("125 E 700 S");
+            rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("125 E 700 S");
             descr = "Grid style test failed.";
 
             Assert.AreEqual(rslt.StreetNum, "125", descr);

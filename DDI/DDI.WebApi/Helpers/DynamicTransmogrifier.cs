@@ -23,19 +23,19 @@ namespace DDI.WebApi.Helpers
                 TotalResults = response.TotalResults,
                 VerboseErrorMessages = response.VerboseErrorMessages
             };
-            if (response.Data is IEnumerable<EntityBase>)
+            if (response.Data is IEnumerable<ICanTransmogrify>)
             {
-                dynamicResponse.Data = ToDynamicList((response.Data as IEnumerable<EntityBase>), urlHelper, fields, shouldAddHateoasLinks);
+                dynamicResponse.Data = ToDynamicList((response.Data as IEnumerable<ICanTransmogrify>), urlHelper, fields, shouldAddHateoasLinks);
             }
-            else if (response.Data is EntityBase)
+            else if (response.Data is ICanTransmogrify)
             {
-                dynamicResponse.Data = ToDynamicObject((response.Data as EntityBase), urlHelper, fields, shouldAddHateoasLinks);
+                dynamicResponse.Data = ToDynamicObject((response.Data as ICanTransmogrify), urlHelper, fields, shouldAddHateoasLinks);
             }
             return dynamicResponse;
         }
 
         public dynamic ToDynamicList<T>(IEnumerable<T> data, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
-            where T : EntityBase
+            where T : ICanTransmogrify
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
@@ -51,7 +51,7 @@ namespace DDI.WebApi.Helpers
         }
 
         public dynamic ToDynamicObject<T>(T data, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
-            where T : EntityBase
+            where T : ICanTransmogrify
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
@@ -67,7 +67,7 @@ namespace DDI.WebApi.Helpers
         }
 
         private dynamic RecursivelyTransmogrify<T>(T data, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddHateoasLinks = true, IEnumerable<Guid> visited = null)
-            where T : EntityBase
+            where T : ICanTransmogrify
         {
             dynamic returnObject = new ExpandoObject();
             if (visited == null)
@@ -92,15 +92,15 @@ namespace DDI.WebApi.Helpers
             {
                 var fieldValue = property.GetValue(data, null);
                 var propertyNameUppercased = property.Name.ToUpper();
-                if (fieldValue is IEnumerable<EntityBase> && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
+                if (fieldValue is IEnumerable<ICanTransmogrify> && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<EntityBase>), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<ICanTransmogrify>), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
                 }
-                else if (fieldValue is EntityBase && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
+                else if (fieldValue is ICanTransmogrify && (includeEverything || fieldsToInclude.Any(a => a.StartsWith($"{propertyNameUppercased}."))))  
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as EntityBase), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
+                    ((IDictionary<string, object>) returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as ICanTransmogrify), urlHelper, strippedFieldList, shouldAddHateoasLinks, visited); 
                 }
                 else if (includeEverything || fieldsToInclude.Contains(propertyNameUppercased))
                 {
@@ -109,7 +109,7 @@ namespace DDI.WebApi.Helpers
             }
             if (shouldAddHateoasLinks)
             {
-                returnObject = AddHateoasLinks(returnObject, data as EntityBase, urlHelper);
+                returnObject = AddHateoasLinks(returnObject, data as ICanTransmogrify, urlHelper);
             }
             return returnObject;
         }
@@ -126,7 +126,7 @@ namespace DDI.WebApi.Helpers
         }
 
         public dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, UrlHelper urlHelper, List<string> fieldsToInclude = null, bool shouldAddLinks = true, IEnumerable<Guid> visited = null)
-            where T : EntityBase
+            where T : ICanTransmogrify
         {
             var list = new List<ExpandoObject>();
             foreach (var item in entities)
@@ -139,7 +139,7 @@ namespace DDI.WebApi.Helpers
         
 
         private dynamic AddHateoasLinks<T>(IDictionary<string, object> entity, T data, UrlHelper urlHelper)
-            where T: EntityBase
+            where T: ICanTransmogrify
         {
             string routePath = data.GetType().GetCustomAttribute<HateoasAttribute>()?.RouteName;
             if (!string.IsNullOrWhiteSpace(routePath))
@@ -151,7 +151,7 @@ namespace DDI.WebApi.Helpers
             return entity;
         }
 
-        private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : EntityBase
+        private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : ICanTransmogrify
         {
             List<HateoasLink> hateoasLinks = null;
             var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
@@ -182,7 +182,7 @@ namespace DDI.WebApi.Helpers
         }
 
         private List<HateoasLink> AddSelfHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) 
-            where T: EntityBase
+            where T: ICanTransmogrify
         {
             return new List<HateoasLink>
             {
