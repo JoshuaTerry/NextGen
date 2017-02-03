@@ -52,14 +52,14 @@ namespace DDI.Business.CRM
                 
         public Constituent ConvertAgeRange (Constituent constituent)
         {
-            if (constituent.AgeRangeFrom.HasValue)
+            if (constituent.BirthYearFrom.HasValue)
             {
-                constituent.AgeRangeFrom = DateTime.Now.Year - constituent.AgeRangeFrom;
+                constituent.BirthYearFrom = DateTime.Now.Year - constituent.BirthYearFrom;
             }
 
-            if (constituent.AgeRangeTo.HasValue)
+            if (constituent.BirthYearTo.HasValue)
             {
-                constituent.AgeRangeTo = DateTime.Now.Year - constituent.AgeRangeTo;
+                constituent.BirthYearTo = DateTime.Now.Year - constituent.BirthYearTo;
             }
 
             return constituent;

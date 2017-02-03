@@ -149,7 +149,7 @@ namespace DDI.Services
         {
             foreach (var change in changes)
             {
-                if (change.Key == nameof(Constituent.AgeRangeFrom) || change.Key == nameof(Constituent.AgeRangeTo))
+                if (change.Key == nameof(Constituent.BirthYearFrom) || change.Key == nameof(Constituent.BirthYearTo))
                 {
                     if (change.Value != null)
                     {

@@ -337,9 +337,9 @@
                             <div>
                                 <div class="fieldblock range">
                                     <label>Age</label>
-                                    <input type="number" class="editable AgeFrom" />
+                                    <input type="number" class="editable BirthYearFrom" />
                                     to:
-                                    <input type="number" class="editable AgeTo" />
+                                    <input type="number" class="editable BirthYearTo" />
                                 </div>
 
                                 <div class="fieldblock">
