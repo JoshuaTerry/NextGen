@@ -42,6 +42,121 @@ namespace DDI.Business.Tests.Common
 
         private const string TESTDESCR = "Business | Common";
 
+        [TestMethod, TestCategory(TESTDESCR), TestCategory("LongRunning")]
+        public void PinningTests()
+        {
+            var zipLookup = new ZipLookup(new UnitOfWorkEF());
+            ZipLookupInfo zli;
+            string resultAddress;
+            var result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "705 hendricks street", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1263", result);
+            Assert.AreEqual("705 HENDRICKS ST", resultAddress);
+
+            #region APARTMENT
+
+            #endregion
+
+            #region HWY BOX
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "HWY C 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "HIGHWAY C 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "H C 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "HWY CONTRACT 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "HIGHWAY CONTRACT 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "H CONTRACT 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "HC 67 Box 450", PostalCode = "95546" }, out resultAddress);
+            Assert.AreEqual("9800", result);
+            Assert.AreEqual("450 HC 67", resultAddress);
+            #endregion 
+
+            #region RR BOX
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "R 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "R R 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "R RT 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "RURAL RT 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "RURAL R 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "RT 2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("9802", result);
+            Assert.AreEqual("4339 RR 2", resultAddress);
+            // These don't work in the old code
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "RR2 Box 4339", PostalCode = "35761" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            #endregion
+
+            #region PO BOX
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "P O Box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            zli = new ZipLookupInfo { AddressLine1 = "PO Box L", PostalCode = "46016" };
+            result = zipLookup.Zip4Lookup(zli, out resultAddress);
+            Assert.AreEqual("Anderson", zli.City);
+            Assert.AreEqual("", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "PO Box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "P.O. box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "1234 PO Box", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            //The below don't work before refactor
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "1234 P.O. Box", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "1234 box", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "p0 box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "poSt oFFice box 1234", PostalCode = "46016" }, out resultAddress);
+            //            Assert.AreEqual("2703", result);
+            //            Assert.AreEqual(" E POST RD", resultAddress);
+            Assert.AreEqual("1234", result);
+            Assert.AreEqual("1234 PO BOX", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "12 PO Box 34", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "PO Box JIM", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "#1234 po box", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "#po box 1234", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            result = zipLookup.Zip4Lookup(new ZipLookupInfo { AddressLine1 = "PSC 001 Box 001", PostalCode = "46016" }, out resultAddress);
+            Assert.AreEqual("", result);
+            Assert.AreEqual("", resultAddress);
+            #endregion
+        }
         [TestMethod, TestCategory(TESTDESCR)]
         public void ZipLookup_AbbreviateWords()
         {

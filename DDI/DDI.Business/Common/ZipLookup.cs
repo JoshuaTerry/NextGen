@@ -479,7 +479,10 @@ namespace DDI.Business.Common
         internal Address CreateFormattedAbbreviatedAddressLines(string text)
         {
             Address resultAddress = new Address();
-
+//            if (IsPOBox(text, out resultAddress))
+//            {
+//                return resultAddress;
+//            }
             List<string> words = SplitStringIntoListOfWords(text.ToUpper());
             List<string> abbreviatedWords = new List<string>();
             words = CombineSomeAbbreviations(words);
@@ -535,6 +538,23 @@ namespace DDI.Business.Common
             }
 
             return resultAddress;
+        }
+
+        private bool IsPOBox(string text, out Address resultAddress)
+        {
+            resultAddress = new Address();
+            Regex poBoxRegex = new Regex(@"(?i)\b(?:p(?:ost)?\.?\s*[o0](?:ffice)?\.?\s*b(?:[o0]x)?|b[o0]x)");
+            if (poBoxRegex.IsMatch(text))
+            {
+                var newLine = poBoxRegex.Replace(text, "");
+                if (Regex.IsMatch(newLine.Trim(), @"^\d+$"))
+                {
+                    resultAddress.Street = "PO BOX";
+                    resultAddress.StreetNum = newLine.Trim();
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void FormattAddress(List<string> abbreviatedWords, List<string> words, Address resultAddress)

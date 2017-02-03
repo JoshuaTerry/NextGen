@@ -87,6 +87,7 @@
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
+    <Compile Include="AddressService.cs" />
     <Compile Include="StateService.cs" />
   </ItemGroup>
   <ItemGroup>
