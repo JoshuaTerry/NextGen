@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CP\PaymentMethodLogic.cs" />
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />

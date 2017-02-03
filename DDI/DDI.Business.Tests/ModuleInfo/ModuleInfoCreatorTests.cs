@@ -1,16 +1,16 @@
-﻿using DDI.Business.ModuleInfo;
-using DDI.Shared.Enums;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.ModuleInfo;
+using DDI.Shared.Enums;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.ModuleInfo
 {
     [TestClass]
-    public class ModuleInfoCreatorTests
+    public class ModuleInfoCreatorTests : TestBase
     {
         #region Private Fields
 
