@@ -90,6 +90,7 @@ function DoSearch() {
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        crossDomain: true,
         success: function (data) {
 
             if (data.Data.length == 1) {

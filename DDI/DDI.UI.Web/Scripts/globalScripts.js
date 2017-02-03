@@ -12,6 +12,8 @@ $(document).ready(function () {
 
     LoadDatePickers();
 
+    LoadDatePair();
+
     LoadTabs();
 
     LoadAccordions();
@@ -241,10 +243,27 @@ function LoadAccordions() {
 
 function LoadDatePickers() {
 
-    $('.datepicker').datepicker({
-        showOn: 'focus'
-    });
+    $('.datepicker').datepicker();
 
+}
+
+function LoadDatePair() {
+
+    if ($.timpicker) {
+
+        $('.datepair .time').timepicker({
+            'showDuration': true,
+            'timeFormat': 'g:ia'
+        });
+
+        $('datepair .date').datepicker({
+            'format': 'm/d/yyyy',
+            'autoclose': true
+        });
+
+        $('.datepair').datepair();
+
+    }
 }
 
 function FormatJSONDate(jsonDate) {
@@ -341,6 +360,21 @@ function GetAutoZipData(container) {
         });
 
     }
+
+}
+
+function ExecuteFunction(functionName, context) {
+
+    var args = [].slice.call(arguments).splice(2);
+    var namespaces = functionName.split(".");
+    var func = namespaces.pop();
+
+    for (var i = 0; i < namespaces.length; i++) {
+        context = context[namespaces[i]];
+    }
+
+    if (context[func])
+        return context[func].apply(context, args);
 
 }
 
@@ -524,7 +558,6 @@ function GetEditedFields(editcontainer) {
                 else {
                     p.push('"' + propertyName + '": "' + value + '"');
                 }
-                
             }
         }
 

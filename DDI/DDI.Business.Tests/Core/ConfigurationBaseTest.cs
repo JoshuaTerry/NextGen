@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DDI.Business.Tests.Core
 {
     [TestClass]
-    public class ConfigurationBaseTest
+    public class ConfigurationBaseTest : TestBase
     {
 
         private const string TESTDESCR = "Business | Core";

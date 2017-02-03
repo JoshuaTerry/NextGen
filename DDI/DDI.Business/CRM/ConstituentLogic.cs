@@ -9,6 +9,7 @@ using DDI.Shared.Models.Client.CRM;
 using System;
 using DDI.Shared.Enums.CRM;
 using DDI.Business.Core;
+using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -121,7 +122,7 @@ namespace DDI.Business.CRM
                 isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNumber) == 0;
 
                 if (tries >= _maxTries)
-                    throw new Exception("Exceeded maximum number of tries to retreive NextSequenceValue");
+                    throw new ValidationException(UserMessagesCRM.NextSequenceValueTooManyTries);
             }
 
             return nextNumber;
