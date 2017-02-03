@@ -88,7 +88,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.PaymentPreference, limit, offset, orderBy, fields);
         }
@@ -124,7 +124,7 @@ namespace DDI.WebApi.Controllers
         [HttpGet]
         [Route("api/v1/paymentpreferences/constituents/{id}")]
         [Route("api/v1/constituents/{id}/paymentpreferences", Name = RouteNames.Constituent + RouteNames.PaymentPreference)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {

@@ -62,8 +62,8 @@ namespace DDI.WebApi.Controllers
                                                  string alternateId = null,
                                                  Guid? constituentTypeId = null,
                                                  string fields = null,
-                                                 int? offset = null, 
-                                                 int? limit = 25, 
+                                                 int? offset = SearchParameters.OffsetDefault, 
+                                                 int? limit = SearchParameters.LimitDefault, 
                                                  string orderBy = OrderByProperties.DisplayName)
         {
             var search = new ConstituentSearch()

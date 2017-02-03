@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.RegionLevel, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.RegionLevel, string fields = null)
         {
             return base.GetAll(RouteNames.RegionLevel, limit, offset, orderBy, fields);
         }
