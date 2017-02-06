@@ -42,7 +42,6 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-
 }
 
 function GetConstituentData(id) {
@@ -140,6 +139,8 @@ function DisplayConstituentData() {
         LoadAlternateIDTable();
 
         NewAlternateIdModal();
+
+        PopulateUserIdDropDown();
     }
 }
 
@@ -404,6 +405,26 @@ function LoadPaymentPreferencesTable() {
 
 }
 /* End Payment Preference Section */
+
+/* Professional Section */
+function PopulateUserIdDropDown() {
+    $('.IsEmployee').change(function () {
+
+        if (this.checked) {
+
+            PopulateDropDown('.UserId', 'userid', '', '');
+            // populate dropdown
+
+        } else {
+
+            $('.UserId option').remove();
+            // clear dropdown
+        }
+    });
+}
+
+/* End Professional Section */
+
 
 /* Alternate Id Section */
 
@@ -827,6 +848,7 @@ function LoadAddress(id) {
 
 }
 /* End Contact Information Section */
+
 
 
 
