@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
@@ -130,7 +132,7 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+                    changedProperties.Add(ConvertToType<T>(pair).Key, ConvertToType<T>(pair).Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
@@ -179,13 +181,28 @@ namespace DDI.Services
             return response;
         }
 
-        private Type ConvertToType<T1>(string property)
+        private KeyValuePair<string, object> ConvertToType<T1>(KeyValuePair<string, JToken> pair)
         {
-            Type classType = typeof(T1);
+            var returnValue = new KeyValuePair<string, object>();
 
-            var propertyType = classType.GetProperty(property).PropertyType;
+            var type = typeof(T1);
+            var property = type.GetProperty(pair.Key);
 
-            return propertyType;
+            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
+            {
+                returnValue = !pair.Value.IsNullOrEmpty() ? new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(Nullable.GetUnderlyingType(property.PropertyType))) : new KeyValuePair<string, object>(pair.Key, null);
+            }
+            else
+            {
+                if (pair.Value == null)
+                {
+                    throw new NullReferenceException("Updated value of property cannot be null.");
+                }
+
+                returnValue = new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(property.PropertyType));
+            }
+            
+            return returnValue;
         }
 
 
