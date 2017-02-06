@@ -132,7 +132,7 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(ConvertToType<T>(pair).Key, ConvertToType<T>(pair).Value);
+                    changedProperties.Add(JsonExtensions.ConvertToType<T>(pair).Key, JsonExtensions.ConvertToType<T>(pair).Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
@@ -180,31 +180,6 @@ namespace DDI.Services
 
             return response;
         }
-
-        private KeyValuePair<string, object> ConvertToType<T1>(KeyValuePair<string, JToken> pair)
-        {
-            var returnValue = new KeyValuePair<string, object>();
-
-            var type = typeof(T1);
-            var property = type.GetProperty(pair.Key);
-
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
-            {
-                returnValue = !pair.Value.IsNullOrEmpty() ? new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(Nullable.GetUnderlyingType(property.PropertyType))) : new KeyValuePair<string, object>(pair.Key, null);
-            }
-            else
-            {
-                if (pair.Value.IsNullOrEmpty())
-                {
-                    throw new NullReferenceException("Updated value of property cannot be null or empty.");
-                }
-
-                returnValue = new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(property.PropertyType));
-            }
-            
-            return returnValue;
-        }
-
 
         public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
