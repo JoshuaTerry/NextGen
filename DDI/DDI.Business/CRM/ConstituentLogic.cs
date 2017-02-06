@@ -171,9 +171,12 @@ namespace DDI.Business.CRM
             return GetRelationships(constituent, category, null);
         }
 
-        public override object BuildSearchDocument(Constituent entity)
+        /// <summary>
+        /// Build a ConstituentDocument for Elasticsearch indexing.
+        /// </summary>
+        public override Shared.Models.Search.ISearchDocument BuildSearchDocument(Constituent entity)
         {
-            var document = new Shared.Models.Search.Constituent();
+            var document = new Shared.Models.Search.ConstituentDocument();
 
             document.Id = entity.Id;
             document.Name = entity.FormattedName ?? string.Empty;
@@ -189,28 +192,28 @@ namespace DDI.Business.CRM
             }
 
             // Load contact info
-            document.ContactInfo = new List<Shared.Models.Search.ContactInfo>();
+            document.ContactInfo = new List<Shared.Models.Search.ContactInfoDocument>();
             foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
             {
                 Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
 
-                document.ContactInfo.Add(new Shared.Models.Search.ContactInfo()
+                document.ContactInfo.Add(new Shared.Models.Search.ContactInfoDocument()
                 {
                     Id = item.Id,
                     Comment = item.Comment ?? string.Empty,
                     Info = item.Info ?? string.Empty,
                     ContactCategoryId = categoryId
-                });                                
+                });
             }
 
             // Load addresses
-            document.Addresses = new List<Shared.Models.Search.Address>();
+            document.Addresses = new List<Shared.Models.Search.AddressDocument>();
             foreach (var constituentAddress in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
             {
                 Address address = UnitOfWork.GetReference(constituentAddress, p => p.Address);
                 if (address != null)
                 {
-                    document.Addresses.Add(new Shared.Models.Search.Address()
+                    document.Addresses.Add(new Shared.Models.Search.AddressDocument()
                     {
                         Id = address.Id,
                         StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),
@@ -222,6 +225,15 @@ namespace DDI.Business.CRM
                     });
                 }
             }
+
+            if (UnitOfWork.GetReference(entity, p => p.ConstituentType).Category == ConstituentCategory.Organization)
+            {
+                document.DoingBusinessAs = UnitOfWork.GetReference(entity, p => p.DoingBusinessAs).Select(p => p.Name).ToList();
+            }
+            else
+            {
+                document.DoingBusinessAs = null;
+            } 
 
             return document;
         }

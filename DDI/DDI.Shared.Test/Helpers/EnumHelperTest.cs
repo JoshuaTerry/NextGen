@@ -100,7 +100,7 @@ namespace DDI.Shared.Test.Helpers
             Assert.AreEqual(3, dictionary.GetValueOrDefault("Number Three"));
             Assert.AreEqual(4, dictionary.GetValueOrDefault("Number Four"));
         }
-
+        /*
         [TestMethod, TestCategory(TESTDESCR)]
         public void WebControlTest()
         {
@@ -126,6 +126,6 @@ namespace DDI.Shared.Test.Helpers
             Assert.AreEqual(3, dictionary.GetValueOrDefault("Wire Transfer"));
             Assert.AreEqual(4, dictionary.GetValueOrDefault("SWIFT Transfer"));
         }
-
+        */
     }
 }

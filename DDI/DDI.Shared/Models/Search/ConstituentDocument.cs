@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using DDI.Shared.Attributes;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Search
 {    
-    public class Constituent
+    /// <summary>
+    /// Elasticsearch constituent document (CRM).
+    /// </summary>
+    public class ConstituentDocument : ISearchDocument
     {
         public Guid Id { get; set; }
 
@@ -22,9 +18,10 @@ namespace DDI.Shared.Models.Search
 
         public string Source { get; set; }
 
-        public IList<ContactInfo> ContactInfo { get; set; }
+        public IList<ContactInfoDocument> ContactInfo { get; set; }
         public IList<string> AlternateIds { get; set; }
-        public IList<Address> Addresses { get; set; }
+        public IList<AddressDocument> Addresses { get; set; }
+        public IList<String> DoingBusinessAs { get; set; }
        
     }
 }

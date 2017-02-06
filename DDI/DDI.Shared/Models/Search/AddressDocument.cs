@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Search
 {
-    public class Address
+    /// <summary>
+    /// Elasticsearch address document (CRM).
+    /// </summary>
+    public class AddressDocument : ISearchDocument
     {
         public Guid Id { get; set; }
         public string StreetAddress { get; set; }

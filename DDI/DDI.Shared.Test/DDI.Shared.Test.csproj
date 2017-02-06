@@ -72,10 +72,6 @@
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Services\DDI.Services.csproj">
-      <Project>{23bfe6f8-f3ea-4be6-a193-ca70f9452943}</Project>
-      <Name>DDI.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

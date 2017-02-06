@@ -126,9 +126,9 @@
     <Compile Include="Models\Client\CP\EFTPaymentMethod.cs" />
     <Compile Include="Models\Client\CP\PaymentMethodBase.cs" />
     <Compile Include="Models\Common\ZipLookupInfo.cs" />
-    <Compile Include="Models\Search\ContactInfo.cs" />
-    <Compile Include="Models\Search\Address.cs" />
-    <Compile Include="Models\Search\Constituent.cs" />
+    <Compile Include="Models\Search\ContactInfoDocument.cs" />
+    <Compile Include="Models\Search\AddressDocument.cs" />
+    <Compile Include="Models\Search\ConstituentDocument.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -179,6 +179,7 @@
     <Compile Include="Models\Common\ZipPlus4.cs" />
     <Compile Include="Models\Common\ZipStreet.cs" />
     <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\Search\ISearchDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Statics\CP\UserMessagesCP.cs" />

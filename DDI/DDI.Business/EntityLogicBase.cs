@@ -27,7 +27,7 @@ namespace DDI.Business
 
         public virtual void Validate(T entity) { }
 
-        public virtual object BuildSearchDocument(T entity)
+        public virtual Shared.Models.Search.ISearchDocument BuildSearchDocument(T entity)
         {
             return null;
         }
