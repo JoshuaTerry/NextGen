@@ -171,6 +171,61 @@ namespace DDI.Business.CRM
             return GetRelationships(constituent, category, null);
         }
 
+        public override object BuildSearchDocument(Constituent entity)
+        {
+            var document = new Shared.Models.Search.Constituent();
+
+            document.Id = entity.Id;
+            document.Name = entity.FormattedName ?? string.Empty;
+            document.ConstituentStatusId = entity.ConstituentStatusId;
+            document.ConstituentTypeId = entity.ConstituentTypeId;
+            document.Source = entity.Source ?? string.Empty;
+
+            // Load alternate IDs
+            document.AlternateIds = new List<string>();
+            foreach (var item in UnitOfWork.GetReference(entity, p => p.AlternateIds))
+            {
+                document.AlternateIds.Add(item.Name);
+            }
+
+            // Load contact info
+            document.ContactInfo = new List<Shared.Models.Search.ContactInfo>();
+            foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
+            {
+                Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
+
+                document.ContactInfo.Add(new Shared.Models.Search.ContactInfo()
+                {
+                    Id = item.Id,
+                    Comment = item.Comment ?? string.Empty,
+                    Info = item.Info ?? string.Empty,
+                    ContactCategoryId = categoryId
+                });                                
+            }
+
+            // Load addresses
+            document.Addresses = new List<Shared.Models.Search.Address>();
+            foreach (var constituentAddress in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
+            {
+                Address address = UnitOfWork.GetReference(constituentAddress, p => p.Address);
+                if (address != null)
+                {
+                    document.Addresses.Add(new Shared.Models.Search.Address()
+                    {
+                        Id = address.Id,
+                        StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),
+                        City = address.City ?? string.Empty,
+                        PostalCode = address.PostalCode ?? string.Empty,
+                        CountryId = address.CountryId ?? Guid.Empty,
+                        StateId = address.StateId ?? Guid.Empty
+
+                    });
+                }
+            }
+
+            return document;
+        }
+
         #endregion
 
         #region Private Methods

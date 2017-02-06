@@ -40,6 +40,8 @@ namespace DDI.Conversion
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
 
+            Run<CRM.ConstituentSearchIndexer>();
+
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
@@ -61,7 +63,7 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
 
             //Run<CP.SettingsLoader>();
-            Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+            //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
 
         }
 

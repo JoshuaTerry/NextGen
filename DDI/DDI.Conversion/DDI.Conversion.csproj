@@ -63,6 +63,7 @@
     <Compile Include="CP\PaymentMethodConverter.cs" />
     <Compile Include="CP\SettingsLoader.cs" />
     <Compile Include="CRM\ConstituentConverter.cs" />
+    <Compile Include="CRM\ConstituentSearchIndexer.cs" />
     <Compile Include="CRM\Initialize.cs" />
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
