@@ -194,9 +194,9 @@ namespace DDI.Services
             }
             else
             {
-                if (pair.Value == null)
+                if (pair.Value.IsNullOrEmpty())
                 {
-                    throw new NullReferenceException("Updated value of property cannot be null.");
+                    throw new NullReferenceException("Updated value of property cannot be null or empty.");
                 }
 
                 returnValue = new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(property.PropertyType));
