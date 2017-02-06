@@ -416,11 +416,28 @@
 
                     </div>
 
-                    <h1>Alternate ID (Not Implemented Yet)</h1>
+                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
+                        
+                        <div class="alternateidgridcontainer"></div>
 
+                        <div class="alternateidmodal" title="Alternate ID" style="display: none;">
 
+                            <div class="modalcontent">
 
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text"  class="ai-Name" />
+                                </div>
+
+                                <div class="modalbuttons">
+                                    <input type="button" class="submitaltid" value="Save" />
+                                    <a href ="#" class="cancelmodal">Cancel</a>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <h1>Contact Information</h1>
