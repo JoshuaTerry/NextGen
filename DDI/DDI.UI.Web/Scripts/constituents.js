@@ -37,10 +37,10 @@ function LoadYears()
 function PopulateMonthDays()
 {
     var arrayLookup = {
-        '01': 31, '02': 29, '03': 31,
-        '04': 30, '05': 31,
-        '06': 30, '07': 31,
-        '08': 31, '09': 30,
+        '1': 31, '2': 29, '3': 31,
+        '4': 30, '5': 31,
+        '6': 30, '7': 31,
+        '8': 31, '9': 30,
         '10': 31, '11': 30, '12': 31
     }
     var month = $('.BirthMonth').val();
@@ -198,6 +198,12 @@ function DisplayConstituentData() {
         LoadAlternateIDTable();
 
         NewAlternateIdModal();
+
+        PopulateMonthDays();
+
+        AmendMonthDays();
+
+        $('.BirthDay').val(currentEntity.BirthDay);
     }
 }
 
