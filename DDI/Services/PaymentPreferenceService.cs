@@ -18,6 +18,7 @@ namespace DDI.Services
         public IDataResponse GetPaymentMethods()
         {
             var response = GetDataResponse(EnumHelper.GetDescriptions<PaymentMethod>);
+            response.TotalResults = response.Data.Count;
 
             return response;
         }
@@ -25,6 +26,7 @@ namespace DDI.Services
         public IDataResponse GetAccountTypes()
         {
             var response = GetDataResponse(EnumHelper.GetDescriptions<EFTAccountType>);
+            response.TotalResults = response.Data.Count;
 
             return response;
         }
@@ -32,6 +34,7 @@ namespace DDI.Services
         public IDataResponse GetPaymentMethodStatuses()
         {
             var response = GetDataResponse(EnumHelper.GetDescriptions<PaymentMethodStatus>);
+            response.TotalResults = response.Data.Count;
 
             return response;
         }

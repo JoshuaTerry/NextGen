@@ -38,6 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -70,6 +71,10 @@
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\DDI.Services.csproj">
+      <Project>{23bfe6f8-f3ea-4be6-a193-ca70f9452943}</Project>
+      <Name>DDI.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

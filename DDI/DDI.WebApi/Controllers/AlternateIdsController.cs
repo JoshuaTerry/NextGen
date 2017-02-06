@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
@@ -11,10 +12,9 @@ namespace DDI.WebApi.Controllers
 {
     public class AlternateIdsController : ControllerBase<AlternateId>
     {
-
         [HttpGet]
         [Route("api/v1/alternateids", Name = RouteNames.AlternateId)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.AlternateId, limit, offset, orderBy, fields);
         }
@@ -50,7 +50,7 @@ namespace DDI.WebApi.Controllers
         [HttpGet]
         [Route("api/v1/alternateids/constituents/{id}")]
         [Route("api/v1/constituents/{id}/alternateids", Name = RouteNames.Constituent + RouteNames.AlternateId)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = null, int? limit = 25, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {

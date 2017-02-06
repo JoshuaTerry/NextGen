@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,7 @@ using DDI.Shared.Attributes;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
+using Microsoft.Ajax.Utilities;
 
 namespace DDI.WebApi.Helpers
 {
@@ -153,30 +155,39 @@ namespace DDI.WebApi.Helpers
 
         private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : EntityBase
         {
-            List<HateoasLink> hateoasLinks = null;
+            List<HateoasLink> hateoasLinks = new List<HateoasLink>();
             var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
             foreach (var propertyInfo in properties)
             {
-                if (hateoasLinks == null)
-                {
-                    hateoasLinks = new List<HateoasLink>();
-                }
                 string propertyRoute = propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
-                hateoasLinks.AddRange(new List<HateoasLink>
-                { 
-                    new HateoasLink
+                try
+                {
+                    hateoasLinks.Add(new HateoasLink
                     {
                         Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
                         Relationship = $"{RouteRelationships.New}{propertyRoute}",
                         Method = RouteVerbs.Post
-                    },
-                    new HateoasLink
+                    });
+                }
+                catch (ArgumentException)
+                {
+                    //Ignore the error if the route doesn't exist
+                }
+                try
+                {
+                    hateoasLinks.Add(new HateoasLink
                     {
-                        Href = urlHelper.Link($"{routePath}{propertyRoute}", new {id = data.Id}),
+                        // For speeds sake, try and just use the id. If that returns null, that means there are other values that are needed. In that case use the whole data object.
+                        Href = urlHelper.Link($"{routePath}{propertyRoute}", new { id = data.Id }) 
+                            ?? urlHelper.Link($"{routePath}{propertyRoute}", data).SubstringUpToFirst('?'),
                         Relationship = $"{RouteRelationships.Get}{propertyRoute}",
                         Method = RouteVerbs.Get
-                    }
-                });
+                    });
+                }
+                catch (ArgumentException)
+                {
+                    //Ignore the error if the route doesn't exist
+                }
             }
             return hateoasLinks;
         }
