@@ -107,53 +107,10 @@ namespace DDI.Services
             }
         }
 
-        public override IDataResponse<Constituent> GetById(Guid id)
-        {
-            Constituent constituent = _repository.GetById(id, IncludesForSingle);
-
-            var response = GetIDataResponse(() => constituent);
-            return response;
-        }
-
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
             return GetById(constituent?.Id ?? Guid.Empty);
-        }
-
-        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
-        {
-            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
-
-            foreach (var pair in changes)
-            {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
-            }
-
-            _repository.UpdateChangedProperties(id, changedProperties, p =>
-            {
-                _constituentlogic.Validate(p);
-            });
-
-            UnitOfWork.SaveChanges();
-
-            return GetById(id);
-        }
-
-        public IDataResponse<Constituent> AddConstituent(Constituent constituent)
-        {
-            try
-            {
-                _constituentlogic.Validate(constituent);
-                _repository.Insert(constituent);
-                UnitOfWork.SaveChanges();
-
-                return GetById(constituent.Id);
-            }
-            catch (Exception ex)
-            {
-                return ProcessIDataResponseException(ex);
-            };
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
@@ -172,25 +129,6 @@ namespace DDI.Services
 
             return new DataResponse<Constituent>() { Data = constituent };
 
-        }
-
-        private Type ConvertToType<T>(string property)
-        {
-            Type classType = typeof(T);
-
-            var propertyType = classType.GetProperty(property).PropertyType;
-
-            return propertyType;
-        }
-
-        public IDataResponse<int> GetNextConstituentNumber()
-        {
-            throw new NotImplementedException();
-        }
-
-        object IConstituentService.NewConstituent(Guid id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@ using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
@@ -12,9 +13,23 @@ namespace DDI.WebApi.Controllers
     //[Authorize]
     public class AddressesController : ControllerBase<Address>
     {
+        protected override Expression<Func<Address, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Address, object>>[]
+            {
+                a => a.Country,
+                a => a.County,
+                a => a.Region1,
+                a => a.Region2,
+                a => a.Region3,
+                a => a.Region4,
+                a => a.State
+            };
+        }
+
         [HttpGet]
         [Route("api/v1/addresses", Name = RouteNames.Address)]
-        public IHttpActionResult GetAll(int? limit = 25, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Address, limit, offset, orderBy, fields);
         }
