@@ -7,7 +7,7 @@ using Moq;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 
-namespace DDI.WebApi.Tests.Controllers
+namespace DDI.Services.Tests.Controllers
 {
     [TestClass]
     public class RegionsServiceTest
