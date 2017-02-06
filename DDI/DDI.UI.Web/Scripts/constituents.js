@@ -136,6 +136,10 @@ function DisplayConstituentData() {
         LoadContactInfo();
 
         NewAddressModal();
+
+        LoadAlternateIDTable();
+
+        NewAlternateIdModal();
     }
 }
 
@@ -160,7 +164,7 @@ function DisplayConstituentPrimaryAddress() {
                     $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
                 }
 
-                $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
 
             }
 
@@ -401,6 +405,153 @@ function LoadPaymentPreferencesTable() {
 }
 /* End Payment Preference Section */
 
+/* Alternate Id Section */
+
+function LoadAlternateIDTable() {
+
+    var columns = [
+            { dataField: 'Id', width:'0px' },
+            { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('altidgrid',
+       'alternateidgridcontainer',
+       columns,
+       'constituents/' + currentEntity.Id + '/alternateids',
+       null,
+       EditAlternateId);
+}
+
+function NewAlternateIdModal() {
+
+    $('.newaltidmodal').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.alternateidmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitaltid').unbind('click');
+
+        $('.submitaltid').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Name: $(modal).find('.ai-Name').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'alternateids',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+   
+
+}
+
+function EditAlternateId(id) {
+
+    modal = $('.alternateidmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadAlternateId(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitaltid').unbind('click');
+
+    $('.submitaltid').click(function () {
+
+        var item = {
+            Id: id,
+            ConstituentId: $('.hidconstituentid').val(),
+            Name: $(modal).find('.ai-Name').val()
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'alternateids/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
+
+                CloseModal();
+
+                LoadAlternateIDTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
+            }
+        });
+
+    });
+
+}
+
+function LoadAlternateId(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'alternateids/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.ai-Name').val(data.Data.Name);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Alternate Id.');
+        }
+    });
+
+}
+
+/* End Alternate Id Section */
+
 
 /* Contact Information Section */
 function LoadContactInfo() {
@@ -578,7 +729,7 @@ function EditAddressModal(id) {
 
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
-        
+
         $.ajax({
             type: 'PATCH',
             url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
@@ -589,7 +740,7 @@ function EditAddressModal(id) {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                },
+            },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the address.');
             }
@@ -653,7 +804,7 @@ function LoadAddress(id) {
             $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
             $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
             $('.na-City').val(data.Data.Address.City);
-            
+
             $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
             PopulateAddressTypesInModal(data.Data.AddressTypeId);
@@ -667,7 +818,7 @@ function LoadAddress(id) {
 
             LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
             LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
-            
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading the address.');
