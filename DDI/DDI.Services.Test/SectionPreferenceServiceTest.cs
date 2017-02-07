@@ -7,7 +7,7 @@ using Moq;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 
-namespace DDI.WebApi.Tests.Services
+namespace DDI.Services.Tests.Services
 {
     [TestClass]
     public class SectionPreferenceServiceTest

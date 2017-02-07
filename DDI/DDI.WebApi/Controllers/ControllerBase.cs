@@ -15,6 +15,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
+using System.Web.Http.Results;
 
 namespace DDI.WebApi.Controllers
 {
@@ -97,6 +98,7 @@ namespace DDI.WebApi.Controllers
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
                 var response = _service.GetAll(search);
+               
                 return FinalizeResponse(response, routeName, search, fields, urlHelper);
             }
             catch (Exception ex)
