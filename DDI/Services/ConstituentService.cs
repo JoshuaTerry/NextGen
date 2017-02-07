@@ -6,12 +6,13 @@ using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using DDI.Data;
 using DDI.Shared;
-using Newtonsoft.Json.Linq; 
+using Newtonsoft.Json.Linq;
 using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
+using DDI.Shared.Logger;
 
 namespace DDI.Services
 {
@@ -19,7 +20,7 @@ namespace DDI.Services
     {
         private readonly IRepository<Constituent> _repository;
         private readonly ConstituentLogic _constituentlogic;
-
+        private readonly Logger _logger;
         public ConstituentService()
             : this(new UnitOfWorkEF())
         {
@@ -110,6 +111,7 @@ namespace DDI.Services
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            constituent = _constituentlogic.ConvertAgeRange(constituent);
             return GetById(constituent?.Id ?? Guid.Empty);
         }
 
@@ -129,6 +131,40 @@ namespace DDI.Services
 
             return new DataResponse<Constituent>() { Data = constituent };
 
+        }
+
+        public override IDataResponse<Constituent> Add(Constituent entity)
+        {
+            entity = _constituentlogic.ConvertAgeRange(entity);
+            return base.Add(entity);
+        }
+
+        public override IDataResponse Update(Constituent entity)
+        {
+            entity = _constituentlogic.ConvertAgeRange(entity);
+            return base.Update(entity);
+        }
+
+        public override IDataResponse<Constituent> Update(Guid id, JObject changes)
+        {
+            foreach (var change in changes)
+            {
+                if (change.Key == nameof(Constituent.BirthYearFrom) || change.Key == nameof(Constituent.BirthYearTo))
+                {
+                    if (change.Value != null)
+                    {
+                        try
+                        {
+                            _constituentlogic.ConvertAgeRange((int)change.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex);
+                        }
+                    }
+                }
+            }
+            return base.Update(id, changes);
         }
     }
 }

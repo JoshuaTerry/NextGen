@@ -290,10 +290,34 @@
 
                         <div class="twocolumn">
 
-                            <div>
+                            <div>                                
                                 <div class="fieldblock">
                                     <label>Birth Date</label>
-                                    <input type="text" class="editable BirthDate datepicker" />
+                                    <div class="threecolumn">
+                                        <div style="width: 50px;">
+                                        <select class="editable BirthMonth">
+                                        <option></option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="12">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                        </div>
+                                        <div style="width: 50px;">
+                                    <select class="editable BirthDay"></select>
+                                            </div>
+                                        <div style="width: 100px;">
+                                    <select class="editable BirthYear"></select>
+                                            </div>
+                                    </div>
                                 </div>
 
                                 <div class="fieldblock">
@@ -315,9 +339,9 @@
                             <div>
                                 <div class="fieldblock range">
                                     <label>Age</label>
-                                    <input type="number" class="editable AgeFrom" />
+                                    <input type="number" class="editable BirthYearFrom" />
                                     to:
-                                    <input type="number" class="editable AgeTo" />
+                                    <input type="number" class="editable BirthYearTo" />
                                 </div>
 
                                 <div class="fieldblock">

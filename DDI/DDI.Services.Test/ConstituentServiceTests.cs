@@ -1,16 +1,14 @@
-﻿using System;
+﻿using DDI.Data;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using DDI.Data;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using DDI.Shared; 
 
-namespace DDI.WebApi.Tests.Services
+namespace DDI.Services.Tests.Services
 {
     [TestClass]
     public class ConstituentServiceTests
