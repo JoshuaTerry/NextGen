@@ -188,7 +188,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'constituents/' + currentEntity.Id + '/doingbusinessas',
+        Links.GetDoingBusinessAs.Href,
         null,
         EditDBA);
 
@@ -228,7 +228,7 @@ function NewDBAModal() {
 
             $.ajax({
                 type: 'POST',
-                url: WEB_API_ADDRESS + 'doingbusinessas',
+                url: Links.NewDoingBusinessAs.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -417,7 +417,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       'constituents/' + currentEntity.Id + '/alternateids',
+       Links.GetAlternateId.Href,
        null,
        EditAlternateId);
 }
@@ -444,8 +444,8 @@ function NewAlternateIdModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'alternateids',
+                type: Links.NewAlternateId.Method,
+                url: Links.NewAlternateId.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,

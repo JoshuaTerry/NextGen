@@ -9,27 +9,22 @@ function LoadLinks(entity) {
 
 function GetLinks(entity) {
 
-    var links = '';
+    var links = [];
 
     if (entity && entity.Links) {
 
-        //$.map(entity.Links, function (link) {
+        $.map(entity.Links, function (link) {
 
-        //    var relationship = link.Relationship;
+            links[link.Relationship] = {
+                Href: link.Href,
+                Method: link.Method
+            };
 
-        //    links += "{" + relationship + ": {" +
-        //                'Href: ' + "'" + link.Href + "'" +
-        //                ', Method: ' + "'" + link.Method + "'}}";
-
-        //});
-
-        //links = '{' + links + '}'
-
-        links = JSON.parse(entity.Links);
-
-        return links;
+        });
 
     }
+
+    return links;
 
 }
 
