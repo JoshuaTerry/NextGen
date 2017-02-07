@@ -749,22 +749,22 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Type</label>
-                <select class="pn-PhoneNumberType" />
+                <label>Type:</label>
+                <select class="pn-PhoneNumberType ContactTypeId" />
             </div>
 
             <div class="fieldblock">
-                <label>Phone</label>
+                <label>Phone:</label>
                 <input type="text"  class="pn-Info" />
             </div>
 
             <div class="fieldblock">
-                <label>Is Preferred</label>
+                <label>Is Preferred:</label>
                 <input type="checkbox"  class="pn-IsPreferred" />
             </div>
 
             <div class="fieldblock">
-                <label>Comment</label>
+                <label>Comment:</label>
                 <input type="text"  class="pn-Comment" />
             </div>
 

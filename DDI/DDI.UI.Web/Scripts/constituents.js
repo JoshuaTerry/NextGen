@@ -42,6 +42,7 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
+    PopulateDropDown('.ContactTypeId', 'contacttypes', '', '');
 
 }
 
@@ -142,6 +143,8 @@ function DisplayConstituentData() {
         NewAlternateIdModal();
 
         LoadPhoneNumbersTable();
+
+        NewPhoneNumberModal();
     }
 }
 
@@ -871,7 +874,7 @@ function NewPhoneNumberModal() {
 
             $.ajax({
                 type: 'POST',
-                url: WEB_API_ADDRESS + 'alternateids',
+                url: WEB_API_ADDRESS + '/contactinfo',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -885,7 +888,7 @@ function NewPhoneNumberModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
                 }
             });
 
@@ -906,14 +909,14 @@ function NewPhoneNumberModal() {
 
 function EditPhoneNumber(id) {
 
-    modal = $('.alternateidmodal').dialog({
+    modal = $('.phonenumbermodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadAlternateId(id);
+    LoadPhoneNumber(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -923,9 +926,9 @@ function EditPhoneNumber(id) {
 
     });
 
-    $('.submitaltid').unbind('click');
+    $('.submitphonenumber').unbind('click');
 
-    $('.submitaltid').click(function () {
+    $('.submitphonenumber').click(function () {
 
         var item = {
             Id: id,
@@ -935,13 +938,13 @@ function EditPhoneNumber(id) {
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'alternateids/' + id,
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
 
                 CloseModal();
 
@@ -949,7 +952,7 @@ function EditPhoneNumber(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
             }
         });
 
