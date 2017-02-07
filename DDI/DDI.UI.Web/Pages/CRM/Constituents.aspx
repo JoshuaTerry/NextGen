@@ -426,7 +426,7 @@
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
 
-                            <h1>Phone Numbers</h1>
+                            <h1>Phone Numbers<a href="#" title="New" class="newphonenumbermodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentphonegridcontainer"></div>
                             </div>
@@ -738,6 +738,39 @@
             <div class="modalbuttons">
                 <input type="button" class="savedba" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+                        
+    <div class="phonenumbermodal" title="Phone Number" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Type</label>
+                <select class="pn-PhoneNumberType" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Phone</label>
+                <input type="text"  class="pn-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred</label>
+                <input type="checkbox"  class="pn-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment</label>
+                <input type="text"  class="pn-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitphonenumber" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>

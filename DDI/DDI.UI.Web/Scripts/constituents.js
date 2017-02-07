@@ -140,6 +140,8 @@ function DisplayConstituentData() {
         LoadAlternateIDTable();
 
         NewAlternateIdModal();
+
+        LoadPhoneNumbersTable();
     }
 }
 
@@ -827,22 +829,156 @@ function LoadAddress(id) {
 
 }
 
-function LoadPhoneNumbersGrid() {
+// Phone # Subsection
+function LoadPhoneNumbersTable() {
 
     var columns = [ // double check these against models
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'PhoneNumberType.DisplayName', caption: 'Type' },
-        { dataField: 'Address.AddressLine1', caption: 'Address' }
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
     ];
 
     LoadGrid('constituentphonegrid',
         'constituentphonegridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        'constituents/' + currentEntity.Id + '/contactinfo', 
         null,
-        EditAddressModal);
+        EditPhoneNumber);
 }
+
+function NewPhoneNumberModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Name: $(modal).find('.ai-Name').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'alternateids',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+
+
+}
+
+function EditPhoneNumber(id) {
+
+    modal = $('.alternateidmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadAlternateId(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitaltid').unbind('click');
+
+    $('.submitaltid').click(function () {
+
+        var item = {
+            Id: id,
+            ConstituentId: $('.hidconstituentid').val(),
+            Name: $(modal).find('.ai-Name').val()
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'alternateids/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
+
+                CloseModal();
+
+                LoadAlternateIDTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhoneNumber(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Name').val(data.Data.Name);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Phone # Subsection
+
+
+
 /* End Contact Information Section */
 
 
