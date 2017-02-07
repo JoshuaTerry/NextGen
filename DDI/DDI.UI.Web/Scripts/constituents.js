@@ -174,6 +174,28 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
+/* Demographics Section */
+
+$(function() {
+    $(".tagBoxDenominations").dxTagBox({
+        dataSourece: denominations,
+        valueExpr: "id",
+        displayExpr: "DisplayName",
+        placeholder: "Please select denomination(s)"
+    });
+});
+
+$(function() {
+    $(".tagBoxEthnicity").dxTagBox({
+        dataSourece: ethnicities,
+        valueExpr: "id",
+        displayExpr: "DisplayName",
+        placeholder: "Please select ethnicity(s)"
+    });
+});
+
+/* Demographics Section End */
+
 
 /* Doing Business As Section */
 function LoadDBAGrid() {

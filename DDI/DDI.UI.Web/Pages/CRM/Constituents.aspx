@@ -201,12 +201,12 @@
                         <div class="threecolumn">
                             <div class="fieldblock">
                                 <label>Denomination</label>
-                                <select class="editable DenominationId"></select>
+                                <div class="editable tagBoxDenomination DenominationId"></div>
                             </div>
 
                             <div class="fieldblock">
                                 <label>Ethnicity</label>
-                                <select class="editable EthnicityId"></select>
+                                <div class="editable tagBoxEthnicity EthnicityId"></div>
                             </div>
 
                             <div class="fieldblock">
