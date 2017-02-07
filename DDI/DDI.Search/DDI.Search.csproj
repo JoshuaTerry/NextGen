@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E7D7E11-80B4-4751-8C21-B05A08A19473}</ProjectGuid>
+    <ProjectGuid>{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDI.Business</RootNamespace>
-    <AssemblyName>DDI.Business</AssemblyName>
+    <RootNamespace>DDI.Search</RootNamespace>
+    <AssemblyName>DDI.Search</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,58 +30,44 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.5.0.1\lib\net45\Elasticsearch.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nest, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.5.0.1\lib\net45\Nest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CP\PaymentMethodLogic.cs" />
-    <Compile Include="CRM\ContactInfoLogic.cs" />
-    <Compile Include="CRM\ConstituentAddressLogic.cs" />
-    <Compile Include="CRM\RegionLogic.cs" />
-    <Compile Include="CRM\SalutationFormattingOptions.cs" />
-    <Compile Include="Helpers\AbbreviationHelper.cs" />
-    <Compile Include="Common\ZipLookup.cs" />
-    <Compile Include="CRM\AddressCategory.cs" />
-    <Compile Include="CRM\AddressLogic.cs" />
-    <Compile Include="CRM\RelationshipLogic.cs" />
-    <Compile Include="CRM\ConstituentLogic.cs" />
-    <Compile Include="CRM\LabelFormattingOptions.cs" />
-    <Compile Include="CRM\LabelRecipient.cs" />
-    <Compile Include="CRM\NameFormatter.cs" />
-    <Compile Include="CRM\NameFormattingOptions.cs" />
-    <Compile Include="Core\ConfigurationBase.cs" />
-    <Compile Include="Core\ConfigurationLogic.cs" />
-    <Compile Include="EntityLogicBase.cs" />
-    <Compile Include="CRM\CRMConfiguration.cs" />
-    <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
-    <Compile Include="Helpers\LinkedEntityHelper.cs" />
-    <Compile Include="ModuleInfo\ModuleInfoCreator.cs" />
-    <Compile Include="ModuleInfo\ModuleInformation.cs" />
+    <Compile Include="ElasticRepository.cs" />
+    <Compile Include="Models\AddressDocument.cs" />
+    <Compile Include="Models\ConstituentDocument.cs" />
+    <Compile Include="Models\ContactInfoDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
-      <Name>DDI.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DDI.Search\DDI.Search.csproj">
-      <Project>{9cb38eba-c2bb-4153-b47d-73cee54bb92f}</Project>
-      <Name>DDI.Search</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Shared.Models;
 
-namespace DDI.Shared.Models.Search
+namespace DDI.Search.Models
 {
     /// <summary>
     /// Elasticsearch ContactInfo document (CRM)

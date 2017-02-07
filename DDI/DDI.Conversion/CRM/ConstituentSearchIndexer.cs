@@ -6,8 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Data;
+using DDI.Search;
+using DDI.Search.Models;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Search;
 
 namespace DDI.Conversion.CRM
 {

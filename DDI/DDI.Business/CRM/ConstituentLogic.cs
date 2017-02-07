@@ -10,6 +10,8 @@ using System;
 using DDI.Shared.Enums.CRM;
 using DDI.Business.Core;
 using DDI.Shared.Statics.CRM;
+using DDI.Search.Models;
+using DDI.Shared.Models;
 
 namespace DDI.Business.CRM
 {
@@ -174,9 +176,9 @@ namespace DDI.Business.CRM
         /// <summary>
         /// Build a ConstituentDocument for Elasticsearch indexing.
         /// </summary>
-        public override Shared.Models.Search.ISearchDocument BuildSearchDocument(Constituent entity)
+        public override ISearchDocument BuildSearchDocument(Constituent entity)
         {
-            var document = new Shared.Models.Search.ConstituentDocument();
+            var document = new ConstituentDocument();
 
             document.Id = entity.Id;
             document.Name = entity.FormattedName ?? string.Empty;
@@ -192,12 +194,12 @@ namespace DDI.Business.CRM
             }
 
             // Load contact info
-            document.ContactInfo = new List<Shared.Models.Search.ContactInfoDocument>();
+            document.ContactInfo = new List<ContactInfoDocument>();
             foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
             {
                 Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
 
-                document.ContactInfo.Add(new Shared.Models.Search.ContactInfoDocument()
+                document.ContactInfo.Add(new ContactInfoDocument()
                 {
                     Id = item.Id,
                     Comment = item.Comment ?? string.Empty,
@@ -207,13 +209,13 @@ namespace DDI.Business.CRM
             }
 
             // Load addresses
-            document.Addresses = new List<Shared.Models.Search.AddressDocument>();
+            document.Addresses = new List<AddressDocument>();
             foreach (var constituentAddress in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
             {
                 Address address = UnitOfWork.GetReference(constituentAddress, p => p.Address);
                 if (address != null)
                 {
-                    document.Addresses.Add(new Shared.Models.Search.AddressDocument()
+                    document.Addresses.Add(new AddressDocument()
                     {
                         Id = address.Id,
                         StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),

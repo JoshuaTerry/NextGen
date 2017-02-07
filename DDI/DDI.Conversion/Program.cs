@@ -36,10 +36,9 @@ namespace DDI.Conversion
                 organization = "NG";
             }
 
-            log4net.Config.XmlConfigurator.Configure();            
+            log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-
 
             // These can be uncommented to run individual conversions.
 

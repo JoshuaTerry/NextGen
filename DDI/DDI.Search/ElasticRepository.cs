@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nest;
 
-namespace DDI.Data
+namespace DDI.Search
 {
     /// <summary>
     /// ElasticSearch repository
@@ -21,11 +21,12 @@ namespace DDI.Data
 
         public ElasticRepository()
         {
-            _uri = new Uri(ConfigurationManager.AppSettings["ElasticsearchUrl"]);
+            var configManager = new Shared.DDIConfigurationManager();
+            _uri = new Uri(configManager.AppSettings["ElasticsearchUrl"]);
+
             _connectionSettings = new ConnectionSettings(_uri);
             _connectionSettings.DefaultIndex(_indexName);
             _client = new ElasticClient(_connectionSettings);
-            
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace DDI.Data
         {
             var indexResp = _client.Index(document);            
         }
-
+        
         /// <summary>
         /// Update a set of documents in the Elasticsearch database.
         /// </summary>

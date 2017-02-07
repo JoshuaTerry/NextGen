@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Shared.Models.Search
+namespace DDI.Shared.Models
 {
     /// <summary>
     /// Interface for Elasticsearch documents.
