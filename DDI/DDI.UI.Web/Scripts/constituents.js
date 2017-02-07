@@ -826,6 +826,23 @@ function LoadAddress(id) {
     });
 
 }
+
+function LoadPhoneNumbersGrid() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'PhoneNumberType.DisplayName', caption: 'Type' },
+        { dataField: 'Address.AddressLine1', caption: 'Address' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        null,
+        EditAddressModal);
+}
 /* End Contact Information Section */
 
 
