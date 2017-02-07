@@ -869,12 +869,15 @@ function NewPhoneNumberModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                Name: $(modal).find('.ai-Name').val()
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                //IsPreferred: $(modal).find('.pn-IsPreferred').val(), // prevents from saving for some reason...
+                Comment: $(modal).find('.pn-Comment').val()
             }
 
             $.ajax({
                 type: 'POST',
-                url: WEB_API_ADDRESS + '/contactinfo',
+                url: WEB_API_ADDRESS + 'contactinfo/',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
