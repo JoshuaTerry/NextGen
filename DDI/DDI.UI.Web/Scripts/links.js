@@ -1,5 +1,5 @@
 ﻿
-var Links = {};
+var Links = [];
 
 function LoadLinks(entity) {
 
@@ -9,18 +9,23 @@ function LoadLinks(entity) {
 
 function GetLinks(entity) {
 
-    var links = {};
+    var links = '';
 
     if (entity && entity.Links) {
 
-        $.map(entity.Links, function (link) {
+        //$.map(entity.Links, function (link) {
 
-            $(Links).add(link.Relationship, {
-                Href: link.Href,
-                Method: link.Method
-            });
+        //    var relationship = link.Relationship;
 
-        });
+        //    links += "{" + relationship + ": {" +
+        //                'Href: ' + "'" + link.Href + "'" +
+        //                ', Method: ' + "'" + link.Method + "'}}";
+
+        //});
+
+        //links = '{' + links + '}'
+
+        links = JSON.parse(entity.Links);
 
         return links;
 
