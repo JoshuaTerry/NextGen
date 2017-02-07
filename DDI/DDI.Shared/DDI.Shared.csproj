@@ -103,6 +103,7 @@
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="HATEOASLink.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Statics\CRM\ConstituentTypeCodes.cs" />
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
+    <Compile Include="Statics\SearchParameters.cs" />
     <Compile Include="Statics\CRM\UserMessagesCRM.cs" />
     <Compile Include="Statics\OrderByProperties.cs" />
     <Compile Include="Statics\RouteRelationships.cs" />

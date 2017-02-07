@@ -78,7 +78,7 @@ namespace DDI.WebApi.Controllers
             return urlHelper;
         }
 
-        public IHttpActionResult GetAll(string routeName, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(string routeName, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
         {
             var search = new PageableSearch()
             {

@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
@@ -58,8 +60,8 @@ namespace DDI.Services
             {
                 search = new PageableSearch
                 {
-                    Limit = 25,
-                    Offset = 0
+                    Limit = SearchParameters.LimitDefault,
+                    Offset = SearchParameters.OffsetDefault
                 };
             }
 
@@ -110,8 +112,9 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                response.Data = _unitOfWork.GetRepository<T>().Update(entity);
+                _unitOfWork.GetRepository<T>().Update(entity);
                 _unitOfWork.SaveChanges();
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -129,13 +132,13 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+                    changedProperties.Add(JsonExtensions.ConvertToType<T>(pair).Key, JsonExtensions.ConvertToType<T>(pair).Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
             	_unitOfWork.SaveChanges();
 
-                response.Data = _unitOfWork.GetRepository<T>().GetById(id);
+                response.Data = _unitOfWork.GetRepository<T>().GetById(id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -150,8 +153,9 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                response.Data = _unitOfWork.GetRepository<T>().Insert(entity);
+                _unitOfWork.GetRepository<T>().Insert(entity);
                 _unitOfWork.SaveChanges();
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -176,16 +180,6 @@ namespace DDI.Services
 
             return response;
         }
-
-        private Type ConvertToType<T1>(string property)
-        {
-            Type classType = typeof(T1);
-
-            var propertyType = classType.GetProperty(property).PropertyType;
-
-            return propertyType;
-        }
-
 
         public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
