@@ -472,8 +472,6 @@ function NewPaymentPreference() {
 
     });
 
-    
-
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -488,11 +486,12 @@ function NewPaymentPreference() {
             ConstituentId: $('.hidconstituentid').val(),
             Description: $('.Description').val(),
             BankName: $('.BankName').val(),
-            ABANumber: $('.ABANumber').val(),
-            AccountNumber: $('.AccountNumber').val(),
+            RoutingNumber: $('.RoutingNumber').val(),
+            BankAccount: $('.AccountNumber').val(),
             AccountType: $('.AccountType').val(),
-            Status: $('.Status').val()
-        }
+            Status: $('.Status').val(),
+            StatusDate: new Date()
+        };
 
         $.ajax({
             type: Links.NewPaymentPreference.Method,
@@ -526,6 +525,59 @@ function EditPaymentPreference(id) {
         width: 600,
         resizable: false
     });
+
+    LoadPaymentPreference(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savepaymentpreference').unbind('click');
+
+    $('.savepaymentpreference').click(function () {
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Description: $('.Description').val(),
+            BankName: $('.BankName').val(),
+            RoutingNumber: $('.RoutingNumber').val(),
+            BankAccount: $('.AccountNumber').val(),
+            AccountType: $('.AccountType').val(),
+            Status: $('.Status').val(),
+            StatusDate: new Date()
+        };
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Preference saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Payment Preference.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPaymentPreference(id) {
+
+
 
 }
 /* End Payment Preference Section */

@@ -810,8 +810,8 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>ABA Number</label>
-                    <input type="text" class="ABANumber" />
+                    <label>Rounting Number</label>
+                    <input type="text" class="RoutingNumber" />
                 </div>
 
                 <div class="fieldblock">
@@ -825,12 +825,22 @@
 
                 <div class="fieldblock">
                     <label>Account Type</label>
-                    <select class="AccountTypeId"></select>
+                    <select class="AccountTypeId">
+                        <option value="0">Checking Account</option>
+                        <option value="1">Savings Account</option>
+                    </select>
                 </div>
 
                 <div class="fieldblock">
                     <label>Status</label>
-                    <select class="StatusId"></select>
+                    <select class="StatusId">
+                        <option value="0">Active</option>
+                        <option value="1">Inactive</option>
+                        <option value="2">Pre-note Required</option>
+                        <option value="3">Pre-Note Sent</option>
+                        <option value="4">Expired</option>
+                        <option value="5">Not Valid</option>
+                    </select>
                 </div>
 
             </div>
