@@ -1,9 +1,11 @@
 ﻿<%@ Page Title="DDI - System Settings" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="SystemSettings.aspx.cs" Inherits="DDI.UI.Web.SystemSettings" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+    
+    <link rel="stylesheet" href="../../CSS/systemsettings.css" />
+    
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
-    <link rel="stylesheet" href="..\..\CSS\systemsettings.css" />
+    <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
 
 </asp:Content>
 
@@ -16,87 +18,191 @@
             <h1>Cash Processing</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Bank Accounts</a></li>
-                    <li><a href="#" class="">Batch Groups</a></li>
-                    <li><a href="#" class="">General Settings</a></li>
-                    <li><a href="#" class="">Receipt Item Types</a></li>
+                    <li><a href="#" class="LoadBankAccounts">Bank Accounts</a></li>
+                    <li><a href="#" class="LoadBatchGroups">Batch Groups</a></li>
+                    <li><a href="#" class="LoadGeneralSettings">General Settings</a></li>
+                    <li><a href="#" class="LoadReceiptItems">Receipt Item Types</a></li>
                 </ul>
             </div>
 
             <h1>Common</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Alternate ID Types</a></li>
-                    <li><a href="#" class="">Business Date</a></li>
-                    <li><a href="#" class="">Calendar Dates</a></li>
-                    <li><a href="#" class="">Document Types</a></li>
-                    <li><a href="#" class="">Home Screen</a></li>
-                    <li><a href="#" class="">Merge Form System</a></li>
-                    <li><a href="#" class="">Notes Settings</a></li>
-                    <li><a href="#" class="">Status Codes</a></li>
-                    <li><a href="#" class="">Transaction Codes</a></li>
+                    <li><a href="#" class="LoadAlternateIDTypes">Alternate ID Types</a></li>
+                    <li><a href="#" class="LoadBusinessDate">Business Date</a></li>
+                    <li><a href="#" class="LoadCalendarDates">Calendar Dates</a></li>
+                    <li><a href="#" class="LoadDocumentTypes">Document Types</a></li>
+                    <li><a href="#" class="LoadCommonHomeSreen">Home Screen</a></li>
+                    <li><a href="#" class="LoadMergeFormSystem">Merge Form System</a></li>
+                    <li><a href="#" class="LoadNotesSettings">Notes Settings</a></li>
+                    <li><a href="#" class="LoadStatusCodes">Status Codes</a></li>
+                    <li><a href="#" class="LoadTransactionCodes">Transaction Codes</a></li>
                 </ul>
             </div>
 
             <h1>CRM</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Alternate ID</a></li>
-                    <li><a href="#" class="">Clergy</a></li>
-                    <li><a href="#" class="">Client Custom Fields</a></li>
-                    <li><a href="#" class="">Constituent Types</a></li>
-                    <li><a href="#" class="">Contact Information</a></li>
-                    <li><a href="#" class="">Demographics</a></li>
-                    <li><a href="#" class="">Doing Business As</a></li>
-                    <li><a href="#" class="">Education</a></li>
-                    <li><a href="#" class="">Gender</a></li>
-                    <li><a href="#" class="">Hub Search</a></li>
-                    <li><a href="#" class="">Organization</a></li>
-                    <li><a href="#" class="">Payment Preferences</a></li>
-                    <li><a href="#" class="">Personal</a></li>
-                    <li><a href="#" class="">Prefix</a></li>
-                    <li><a href="#" class="">Professional</a></li>
-                    <li><a href="#" class="">Regions</a></li>
-                    <li><a href="#" class="">Relationship</a></li>
-                    <li><a href="#" class="">Tags</a></li>
+                    <li><a href="#" class="LoadAlternateID">Alternate ID</a></li>
+                    <li><a href="#" class="LoadClergy">Clergy</a></li>
+                    <li><a href="#" class="LoadConstituentTypes">Constituent Types</a></li>
+                    <li><a href="#" class="LoadContactInformation">Contact Information</a></li>
+                    <li><a href="#" class="LoadDemographics">Demographics</a></li>
+                    <li><a href="#" class="LoadDBA">Doing Business As</a></li>
+                    <li><a href="#" class="LoadEducation">Education</a></li>
+                    <li><a href="#" class="LoadGender">Gender</a></li>
+                    <li><a href="#" class="LoadHubSearch">Hub Search</a></li>
+                    <li><a href="#" class="LoadOrganization">Organization</a></li>
+                    <li><a href="#" class="LoadPaymentPreferences">Payment Preferences</a></li>
+                    <li><a href="#" class="LoadPersonal">Personal</a></li>
+                    <li><a href="#" class="LoadPrefix">Prefix</a></li>
+                    <li><a href="#" class="LoadProfessional">Professional</a></li>
+                    <li><a href="#" class="LoadRegions">Regions</a></li>
+                    <li><a href="#" class="LoadRelationship">Relationship</a></li>
+                    <li><a href="#" class="LoadTags">Tags</a></li>
                 </ul>
             </div>
 
             <h1>Donations</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Client Custom Fields</a></li>
-                    <li><a href="#" class="">Donation Settings</a></li>
-                    <li><a href="#" class="">Donor Settings</a></li>
-                    <li><a href="#" class="">GL Account Auto Assing</a></li>
-                    <li><a href="#" class="">Home Screen</a></li>
+                    <li><a href="#" class="LoadDonationSettings">Donation Settings</a></li>
+                    <li><a href="#" class="LoadDonorSettings">Donor Settings</a></li>
+                    <li><a href="#" class="LoadGLAccountAutoAssign">GL Account Auto Assign</a></li>
+                    <li><a href="#" class="LoadDonationHomeScreen">Home Screen</a></li>
                 </ul>
             </div>
 
             <h1>General Ledger</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Accounting Settings</a></li>
-                    <li><a href="#" class="">Budget Settings</a></li>
-                    <li><a href="#" class="">Chart of Accounts Settings</a></li>
-                    <li><a href="#" class="">Client Custom Fields</a></li>
-                    <li><a href="#" class="">Entities</a></li>
-                    <li><a href="#" class="">Fiscal Year Settings</a></li>
-                    <li><a href="#" class="">Fund Accounting Settings</a></li>
-                    <li><a href="#" class="">GL Format Settings</a></li>
-                    <li><a href="#" class="">Journal Settings</a></li>
-                    <li><a href="#" class="">Utilities</a></li>
+                    <li><a href="#" class="LoadAccountingSettings">Accounting Settings</a></li>
+                    <li><a href="#" class="LoadBudgetSettings">Budget Settings</a></li>
+                    <li><a href="#" class="LoadChartAccountsSettings">Chart of Accounts Settings</a></li>
+                    <li><a href="#" class="LoadEntities">Entities</a></li>
+                    <li><a href="#" class="LoadFiscalYearSettings">Fiscal Year Settings</a></li>
+                    <li><a href="#" class="LoadFundAccountingSettings">Fund Accounting Settings</a></li>
+                    <li><a href="#" class="LoadGLFormatSettings">GL Format Settings</a></li>
+                    <li><a href="#" class="LoadJournalSettings">Journal Settings</a></li>
+                    <li><a href="#" class="LoadUtilities">Utilities</a></li>
                 </ul>
             </div>
 
             <h1>Reports</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="">Page Footers</a></li>
-                    <li><a href="#" class="">Page Headers</a></li>
-                    <li><a href="#" class="">Report Footers</a></li>
-                    <li><a href="#" class="">Report Headers</a></li>
+                    <li><a href="#" class="LoadPageFooters">Page Footers</a></li>
+                    <li><a href="#" class="LoadPageHeaders">Page Headers</a></li>
+                    <li><a href="#" class="LoadReportFooters">Report Footers</a></li>
+                    <li><a href="#" class="LoadReportHeaders">Report Headers</a></li>
                 </ul>
+            </div>
+
+            <h1>Custom Fields</h1>
+            <div>
+                <ul>
+                    <li><a href="#" class="LoadCRMClientCustomFields">Client Custom Fields</a></li>
+                    <li><a href="#" class="LoadDonationClientCustomFields">Donation Custom Fields</a></li>
+                    <li><a href="#" class="LoadGLClientCustomFields">GL Format Custom Fields</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="contentcontainer">
+            <div class="gridcontainer"></div>
+        </div>
+
+    </div>
+
+    <div class="newcustomfieldmodal" title="New Custom Field" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="cfid" />
+
+            <div class="twocolumn">
+
+                <div class="fieldproperties" style="width: 100%;">
+                    <div class="fieldblock">
+                        <label>Label Text</label>
+                        <input type="text" class="cflabel" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Type</label>
+                        <select class="cftype"></select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Display Order</label>
+                        <input type="text" class="cforder" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label class="inline">Is Required</label>
+                        <input type="checkbox" class="cfisrequired" />
+                    </div>
+
+                    <div class="fieldblock decimalplacecontainer" style="display: none;">
+                        <label>Decimal Places</label>
+                        <input type="number" class="cfdecimalplaces" />
+                    </div>
+
+                    <div class="minmaxvalues" style="display: none;">
+
+                        <div class="fieldblock">
+                            <label>Min Value</label>
+                            <input type="text" class="cfminvalue" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Max Value</label>
+                            <input type="text" class="cfmaxvalue" />
+                        </div>
+                            
+                    </div>
+                </div>
+                
+                <div class="options">
+
+                    <fieldset>
+                        <legend>Custom Field Options</legend>
+
+                        <div class="inline">
+
+                            <div class="fieldblock">
+                                <label>Code</label>
+                                <input type="text" class="cfoptioncode" maxlength="4" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Description</label>
+                                <input type="text" class="cfoptiondesc" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>Order</label>
+                                <input type="number" class="cfoptionorder" />
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>&nbsp;</label>
+                                <input type="button" class="addoption noclear" value="Add" />
+                            </div>
+
+                        </div>
+
+                        <table class="tempoptions"></table>
+
+                    </fieldset>
+
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitcf" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>

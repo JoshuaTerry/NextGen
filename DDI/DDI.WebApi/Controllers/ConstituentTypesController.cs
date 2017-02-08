@@ -12,23 +12,23 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ConstituentType, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.ConstituentType, limit, offset, orderBy, fields);
         }
 
         [HttpPost]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentType item)
         {
-            return base.Post(GetUrlHelper(), item);
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(GetUrlHelper(), id, changes);
+            return base.Patch(id, changes);
         }
     }
 }

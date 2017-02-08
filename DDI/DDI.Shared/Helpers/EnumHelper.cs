@@ -1,10 +1,13 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Helpers
 {
@@ -42,6 +45,30 @@ namespace DDI.Shared.Helpers
 
             return definition;
         }
+
+        public static Dictionary<string, int> GetDescriptions<T>()
+        {
+            var values = new Dictionary<string, int>();
+            if (!typeof(T).IsEnum)
+            {
+                throw new ArgumentException("Type of argument must be Enum.");
+            }
+
+            var type = typeof (T);
+
+            FieldInfo[] fields = type.GetFields();
+
+            foreach (var field in fields)
+            {
+                object[] attributes = field.GetCustomAttributes(typeof (DescriptionAttribute), false);
+                foreach (var attribute in attributes)
+                {
+                    values.Add(((DescriptionAttribute) attribute).Description, (int)field.GetValue(field));
+                }
+            }
+
+            return values;
+        } 
 
         public static T FromDescription<T>(string definition) where T : struct, IConvertible
         {

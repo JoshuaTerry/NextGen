@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DDI.Data;
+﻿using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using DDI.Shared; 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
-namespace DDI.WebApi.Tests.Services
+namespace DDI.Services.Tests.Services
 {
     [TestClass]
     public class ConstituentServiceTests
@@ -22,8 +21,8 @@ namespace DDI.WebApi.Tests.Services
             var repo = new Mock<IRepository<Constituent>>();
             var unitOfWork = new UnitOfWorkNoDb();
             unitOfWork.SetRepository(repo.Object);
-            repo.Setup(r => r.Entities).Returns(SetupRepositoryConstituents());
-
+            repo.Setup(r => r.GetEntities(It.IsNotNull<Expression<Func<Constituent, object>>>())).Returns(SetupRepositoryConstituents());
+            
             var service = new ConstituentService(unitOfWork);
             var result = service.GetConstituentByConstituentNum(12345);
 
@@ -39,7 +38,7 @@ namespace DDI.WebApi.Tests.Services
             constituents.Add(new Constituent {
                 ConstituentNumber = 12345,
                 FormattedName = "Mr. John Doe",
-                Id = new Guid(),
+                Id = new Guid("E69FC3E8-C5CC-45B0-BA58-BF340A3706BC"),
             });
 
             return constituents.AsQueryable();

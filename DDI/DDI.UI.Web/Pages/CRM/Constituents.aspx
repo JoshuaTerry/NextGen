@@ -147,6 +147,7 @@
 
                     </div>
 
+                    <%-- MAY BE INTRODUCED LATER --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -215,20 +216,9 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As (Not Implemented Yet)</h1>
-                    <div class="editcontainer">
+                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <div>
                         <div class="doingbusinessastable"></div>
-
-                        <div class="fieldblock">
-                            <label>Test Checkbox</label>
-                            <input type="checkbox" class="editable TestCheckbox" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Test Date</label>
-                            <input type="text" class="editable TestDate datepicker" />
-                        </div>
-
                     </div>
 
                     <h1>Education (Not Implemented Yet)</h1>
@@ -298,10 +288,34 @@
 
                         <div class="twocolumn">
 
-                            <div>
+                            <div>                                
                                 <div class="fieldblock">
                                     <label>Birth Date</label>
-                                    <input type="text" class="editable BirthDate datepicker" />
+                                    <div class="threecolumn">
+                                        <div style="width: 50px;">
+                                        <select class="editable BirthMonth">
+                                        <option></option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="12">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                        </div>
+                                        <div style="width: 50px;">
+                                    <select class="editable BirthDay"></select>
+                                            </div>
+                                        <div style="width: 100px;">
+                                    <select class="editable BirthYear"></select>
+                                            </div>
+                                    </div>
                                 </div>
 
                                 <div class="fieldblock">
@@ -323,9 +337,9 @@
                             <div>
                                 <div class="fieldblock range">
                                     <label>Age</label>
-                                    <input type="number" class="editable AgeFrom" />
+                                    <input type="number" class="editable BirthYearFrom" />
                                     to:
-                                    <input type="number" class="editable AgeTo" />
+                                    <input type="number" class="editable BirthYearTo" />
                                 </div>
 
                                 <div class="fieldblock">
@@ -402,11 +416,28 @@
 
                     </div>
 
-                    <h1>Alternate ID (Not Implemented Yet)</h1>
+                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
+                        
+                        <div class="alternateidgridcontainer"></div>
 
+                        <div class="alternateidmodal" title="Alternate ID" style="display: none;">
 
+                            <div class="modalcontent">
 
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text"  class="ai-Name" />
+                                </div>
+
+                                <div class="modalbuttons">
+                                    <input type="button" class="submitaltid" value="Save" />
+                                    <a href ="#" class="cancelmodal">Cancel</a>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <h1>Contact Information</h1>
@@ -616,7 +647,7 @@
 
     </div>
 
-    <div class="addressmodal" title="New Address" style="display: none;">
+    <div class="addressmodal" title="Address" style="display: none;">
 
         <div class="modalcontent">
             
@@ -707,7 +738,54 @@
 
     </div>
 
-    <div class="paymentpreferencemodal" title="Payment Preference" style="display: none;">
+    <div class="dbamodal" title="Doing Business As" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hiddbaid" />
+
+            <div class="fieldblock">
+                <label>DBA Name:</label>
+                <input type="text" class="DBAName" />
+            </div>
+
+            <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>From:</label>
+                <input type="text" class="StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>To:</label>
+                <input type="text" class="EndDate datepicker" />
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Account Type</label>
+                    <select class="AccountTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Status</label>
+                    <select class="StatusId" />
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savedba" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+	
+	<div class="paymentpreferencemodal" title="Payment Preference" style="display: none;">
 
         <div class="modalcontent">
 

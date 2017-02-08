@@ -11,9 +11,9 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/professions", Name = RouteNames.Profession)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.Profession, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.Profession, limit, offset, orderBy, fields);
         }
     }
 }

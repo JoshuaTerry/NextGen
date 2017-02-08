@@ -10,23 +10,23 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.ClergyType, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.ClergyType, limit, offset, orderBy, fields);
         }
 
         [HttpPost]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ClergyType item)
         {
-            return base.Post(GetUrlHelper(), item);
+            return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
-            return base.Patch(GetUrlHelper(), id, changes);
+            return base.Patch(id, changes);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
@@ -13,30 +14,30 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/tags", Name = RouteNames.Tag)]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(GetUrlHelper(), RouteNames.Tag, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.Tag, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/tags/{id}", Name = RouteNames.Tag + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(GetUrlHelper(), id, fields);
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/tags", Name = RouteNames.Tag + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Tag entityToSave)
         {
-            return base.Post(GetUrlHelper(), entityToSave);
+            return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/tags/{id}", Name = RouteNames.Tag + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
-            return base.Patch(GetUrlHelper(), id, entityChanges);
+            return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
@@ -44,6 +45,24 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/tags/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Tag, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }

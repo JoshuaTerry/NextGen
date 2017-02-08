@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DDI.Business.Tests.CRM
 {
     [TestClass]
-    public class ContactInfoLogicTest
+    public class ContactInfoLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | CRM";
         private UnitOfWorkNoDb _uow;
@@ -73,12 +73,12 @@ namespace DDI.Business.Tests.CRM
             BuildConstituentDataSource();
 
             _usPhoneContactInfo.Info = "317-555-1234";
-            FailIfException(() => _bl.ValidatePhoneNumber(_usPhoneContactInfo), "10-digit US format valid");
+            AssertNoException(() => _bl.ValidatePhoneNumber(_usPhoneContactInfo), "10-digit US format valid");
             Assert.AreEqual("3175551234", _usPhoneContactInfo.Info, "10-digit US format returns raw digits");
 
-            FailIfException(() => _bl.ValidatePhoneNumber(_foreignPhoneContactInfo), "9-digit French format valid");
+            AssertNoException(() => _bl.ValidatePhoneNumber(_foreignPhoneContactInfo), "9-digit French format valid");
 
-            FailIfNotException<ArgumentNullException>(() => _bl.ValidatePhoneNumber(null), "Null argument should throw exception.");
+            AssertThrowsException<ArgumentNullException>(() => _bl.ValidatePhoneNumber(null), "Null argument should throw exception.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -191,48 +191,23 @@ namespace DDI.Business.Tests.CRM
         {
             BuildConstituentDataSource();
 
-            FailIfException(() => _bl.Validate(_usPhoneContactInfo), "Validate for valid ContactInfo should pass.");
+            AssertNoException(() => _bl.Validate(_usPhoneContactInfo), "Validate for valid ContactInfo should pass.");
 
             _usPhoneContactInfo.Info = string.Empty;
-            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on blank contact info.");
+            AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on blank contact info.");
 
             _usPhoneContactInfo.Info = "1234";
-            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on invalid phone #.");
+            AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail on invalid phone #.");
 
             _usPhoneContactInfo.Info = "3175551234";
             _usPhoneContactInfo.ContactTypeId = null;
-            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no contact type ID.");
+            AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no contact type ID.");
 
             _usPhoneContactInfo.ContactTypeId = _usPhoneContactInfo.ContactType.Id;
             _usPhoneContactInfo.ConstituentId = null;
-            FailIfNotException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
+            AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
 
-        }
-
-        private void FailIfException(Action action, string message)
-        {
-            try
-            {
-                action.Invoke();
-            }
-            catch
-            {
-                Assert.Fail(message);
-            }
-        }
-
-        private void FailIfNotException<T>(Action action, string message) where T : Exception
-        {
-            try
-            {
-                action.Invoke();
-            }
-            catch (T)
-            {
-                return;
-            }
-            Assert.Fail(message);
-        }
+        }      
 
         private void BuildConstituentDataSource()
         {

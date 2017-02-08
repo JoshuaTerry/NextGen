@@ -6,136 +6,87 @@ using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {
-    public class RegionsController : ApiController
+    public class RegionsController : ControllerBase<Region>
     {
-        private IRegionService _service;
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
-
-        public RegionsController()
-            :this(new RegionService(), new Pagination(), new DynamicTransmogrifier())
-        {
-        }
-
-        internal RegionsController(IRegionService service, IPagination pagination, DynamicTransmogrifier dynamicTransmogrifier)
-        {
-            _service = service;
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
-        }
-                
 
         [HttpGet]
-        [Route("api/v1/regions/{level}/{id}", Name = RouteNames.Region + RouteVerbs.Get)]
-        public IHttpActionResult GetRegionsByLevel(Guid? id, int level)
+        [Route("api/v1/regions/regionlevels/{level}")]
+        [Route("api/v1/regionlevels/{level}/regions", Name = RouteNames.RegionLevel + RouteNames.Region)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByLevel(int level, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
-            var result = _service.GetRegionsByLevel(id, level);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-
-            return Ok(result);
-        }
-        [HttpGet]
-        [Route("api/v1/regions/address", Name = RouteNames.Region + RouteNames.Address + RouteVerbs.Get)]
-        public IHttpActionResult GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
-        {
-            var result = _service.GetRegionsByAddress(countryid, stateId, countyId, city, zipcode);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-
-            return Ok(result);
+            return GetRegions(level, null, fields, offset, limit, orderBy);
         }
 
         [HttpGet]
-        [Route("api/v1/regions/{id}")]
-        public IHttpActionResult GetById(Guid id)
+        [Route("api/v1/regions/{id}/regionlevels/{nextLevel}")]
+        [Route("api/v1/regionlevels/{nextLevel}/regions/{id}", Name = RouteNames.Region + RouteNames.RegionLevel + RouteNames.RegionChildren)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByNextLevel(int nextLevel, Guid? id = null, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
-            var result = _service.GetById(id);
+            return GetRegions(nextLevel, id, fields, offset, limit, orderBy);
+        }
 
-            if (result == null)
+        private IHttpActionResult GetRegions(int level, Guid? id, string fields, int? offset, int? limit, string orderBy)
+        {
+            try
             {
-                return NotFound();
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search);
+                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, fields);
             }
-
-            if (!result.IsSuccessful)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
+        }
 
-            return Ok(result);
+        [HttpGet]
+        [Route("api/v1/regions", Name = RouteNames.Region)]
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ParentRegionId == null, search);
+                return FinalizeResponse(response, RouteNames.Region, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/regions", Name = RouteNames.Region + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] Region item)
+        public IHttpActionResult Post([FromBody] Region entityToSave)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = _service.Add(item);
-            return Ok();
+            return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Patch)]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Update(id, changes);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
         [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Delete)]
-        public IHttpActionResult Delete(Region item)
+        public override IHttpActionResult Delete(Guid id)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var response = _service.Delete(item);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
+            return base.Delete(id);
         }
     }
 }
