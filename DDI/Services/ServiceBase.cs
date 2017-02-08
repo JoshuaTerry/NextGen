@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
@@ -130,7 +132,7 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
+                    changedProperties.Add(JsonExtensions.ConvertToType<T>(pair).Key, JsonExtensions.ConvertToType<T>(pair).Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
@@ -178,16 +180,6 @@ namespace DDI.Services
 
             return response;
         }
-
-        private Type ConvertToType<T1>(string property)
-        {
-            Type classType = typeof(T1);
-
-            var propertyType = classType.GetProperty(property).PropertyType;
-
-            return propertyType;
-        }
-
 
         public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
         {
