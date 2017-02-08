@@ -60,7 +60,7 @@ function AmendMonthDays()
     var year = $('.BirthYear').val();
     var month = $('.BirthMonth').val();
     var day = $('.BirthDay').val();
-    if (year != null && month == '02')
+    if (year != null && month == '2')
     {
         var option29 = $('.BirthDay option[value="29"]');
 
