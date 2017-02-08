@@ -871,7 +871,484 @@ function NewPhoneNumberModal() {
                 ConstituentId: $('.hidconstituentid').val(),
                 ContactType: $(modal).find('.pn-PhoneNumberType').val(),
                 Info: $(modal).find('.pn-Info').val(),
-                //IsPreferred: $(modal).find('.pn-IsPreferred').val(), // prevents from saving for some reason...
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadPhoneNumbersTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+
+
+}
+
+function EditPhoneNumber(id) {
+
+    modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhoneNumber(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal();
+
+                LoadPhoneNumbersTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhoneNumber(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId , '', '');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Phone # Subsection
+
+// Emails Subsection
+function LoadEmailTable() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/contactinfo',
+        null,
+        EditPhoneNumber);
+}
+
+function NewEmailModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+
+
+}
+
+function EditEmail(id) {
+
+    modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhoneNumber(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal();
+
+                LoadPhoneNumbersTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadEmail(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Emails Subsection
+
+// Websites Subsection
+function LoadWebsiteTable() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/contactinfo',
+        null,
+        EditPhoneNumber);
+}
+
+function NewWebsiteModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+
+
+}
+
+function EditWebsite(id) {
+
+    modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhoneNumber(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal();
+
+                LoadPhoneNumbersTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadWebsite(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Websites Subsection
+
+// Point Of Contact Subsection
+function LoadPhoneNumbersTable() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/contactinfo',
+        null,
+        EditPhoneNumber);
+}
+
+function NewPhoneNumberModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.pn-Comment').val()
             }
 
@@ -934,9 +1411,13 @@ function EditPhoneNumber(id) {
     $('.submitphonenumber').click(function () {
 
         var item = {
-            Id: id,
+
             ConstituentId: $('.hidconstituentid').val(),
-            Name: $(modal).find('.ai-Name').val()
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
         }
 
         $.ajax({
@@ -951,7 +1432,7 @@ function EditPhoneNumber(id) {
 
                 CloseModal();
 
-                LoadAlternateIDTable();
+                LoadPhoneNumbersTable();
 
             },
             error: function (xhr, status, err) {
@@ -972,7 +1453,11 @@ function LoadPhoneNumber(id) {
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Name').val(data.Data.Name);
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -981,11 +1466,324 @@ function LoadPhoneNumber(id) {
     });
 
 }
-// End Phone # Subsection
+// End Point Of Contact Subsection
+
+// Social Media Subsection
+function LoadPhoneNumbersTable() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/contactinfo',
+        null,
+        EditPhoneNumber);
+}
+
+function NewPhoneNumberModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
 
 
+
+}
+
+function EditPhoneNumber(id) {
+
+    modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhoneNumber(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal();
+
+                LoadPhoneNumbersTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhoneNumber(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Social Media Subsection
+
+// Other Contacts Subsection
+function LoadPhoneNumbersTable() {
+
+    var columns = [ // double check these against models
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituentphonegrid',
+        'constituentphonegridcontainer',
+        columns,
+        'constituents/' + currentEntity.Id + '/contactinfo',
+        null,
+        EditPhoneNumber);
+}
+
+function NewPhoneNumberModal() {
+
+    $('.newphonenumbermodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal();
+
+                    LoadAlternateIDTable();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+
+
+}
+
+function EditPhoneNumber(id) {
+
+    modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhoneNumber(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal();
+
+                LoadPhoneNumbersTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhoneNumber(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Contacts Subsection
 
 /* End Contact Information Section */
-
-
-
