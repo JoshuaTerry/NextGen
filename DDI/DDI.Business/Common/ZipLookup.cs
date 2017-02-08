@@ -9,6 +9,7 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Shared.Models.Common;
+using DDI.Shared.Statics.Common;
 
 namespace DDI.Business.Common
 {
@@ -17,6 +18,7 @@ namespace DDI.Business.Common
     /// </summary>
     public class ZipLookup : IDisposable
     {
+        private char[] _trimChars = new char[] { ',', ' ', '#', '.', '(', ')', '"', ':', ':', '\'', '@', '&' };
         #region Fields
 
         private static IList<Abbreviation> _abbreviations = null;
@@ -479,13 +481,25 @@ namespace DDI.Business.Common
         internal Address CreateFormattedAbbreviatedAddressLines(string text)
         {
             Address resultAddress = new Address();
-//            if (IsPOBox(text, out resultAddress))
-//            {
-//                return resultAddress;
-//            }
+            if (IsRuralRoute(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsHighwayContract(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsMilitaryBox(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsPOBox(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            text = FormatForApartment(text);
             List<string> words = SplitStringIntoListOfWords(text.ToUpper());
             List<string> abbreviatedWords = new List<string>();
-            words = CombineSomeAbbreviations(words);
 
             foreach (var word in words)
             {
@@ -501,24 +515,11 @@ namespace DDI.Business.Common
             // Logic from "wordclass" procedure in z4spladr.p
 
             // First, scan for a secondary address:  APT n, BLDG n, FLR n, etc.
-            SecondaryAddressLogic(abbreviatedWords, resultAddress, words);
+            FormatSecondaryAddressLineWords(ref abbreviatedWords, ref resultAddress, ref words);
 
-            // Handle RR, HC
-            if (IsRROrHC(abbreviatedWords, resultAddress, words))
-            {
-                return resultAddress;
-            }
+            RemoveEmptyWordsFromEnd(ref abbreviatedWords, ref words);
 
-            // Handle PO Box
-            if (IsPOBox(abbreviatedWords, resultAddress, words))
-            {
-                return resultAddress;
-            }
-
-            // Remove empty entries at the end
-            RemoveEmptyWordsFromEnd(abbreviatedWords, words);
-
-            FormattAddress(abbreviatedWords, words, resultAddress);
+            FormattAddress(abbreviatedWords, words, ref resultAddress);
 
             if (string.IsNullOrWhiteSpace(resultAddress.Street))
             {
@@ -540,24 +541,79 @@ namespace DDI.Business.Common
             return resultAddress;
         }
 
+        private string FormatForApartment(string text)
+        {
+            return Regex.Replace(text, AddressStrings.ApartmentRegex, AddressStrings.ApartmentAbbreviation);
+        }
+
+        private bool IsMilitaryBox(string text, out Address resultAddress)
+        {
+            resultAddress = new Address();
+            Regex regex = new Regex(AddressStrings.MilitaryBoxRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{matches[AddressStrings.MilitaryRegexGroupName].Value.Trim(_trimChars)} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsRuralRoute(string text, out Address resultAddress)
+        {
+            resultAddress = new Address();
+            Regex regex = new Regex(AddressStrings.RuralRouteRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{AddressStrings.RuralRouteAbbreviation} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsHighwayContract(string text, out Address resultAddress)
+        {
+            resultAddress = new Address();
+            Regex regex = new Regex(AddressStrings.HighwayContractRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{AddressStrings.HighwayContractAbbreviation} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
         private bool IsPOBox(string text, out Address resultAddress)
         {
             resultAddress = new Address();
-            Regex poBoxRegex = new Regex(@"(?i)\b(?:p(?:ost)?\.?\s*[o0](?:ffice)?\.?\s*b(?:[o0]x)?|b[o0]x)");
-            if (poBoxRegex.IsMatch(text))
+            Regex regex = new Regex(AddressStrings.POBoxRegex);
+            if (regex.IsMatch(text))
             {
-                var newLine = poBoxRegex.Replace(text, "");
-                if (Regex.IsMatch(newLine.Trim(), @"^\d+$"))
+                var regexPieces = regex.Split(text);
+                if (regexPieces.Length == 2)
                 {
-                    resultAddress.Street = "PO BOX";
-                    resultAddress.StreetNum = newLine.Trim();
+                    resultAddress.Street = AddressStrings.POBoxAbbreviation;
+                    if (string.IsNullOrWhiteSpace(regexPieces[1]))
+                    {
+                        resultAddress.StreetNum = regexPieces[0].Trim(_trimChars);
+                    }
+                    else
+                    {
+                        resultAddress.StreetNum = regexPieces[1].Trim(_trimChars);
+                        resultAddress.SecondaryNum = regexPieces[0].Trim(_trimChars);
+                    }
                     return true;
                 }
             }
             return false;
         }
 
-        private void FormattAddress(List<string> abbreviatedWords, List<string> words, Address resultAddress)
+        private void FormattAddress(List<string> abbreviatedWords, List<string> words, ref Address resultAddress)
         {
             int index;
             int suffixLen = int.MaxValue;
@@ -653,94 +709,34 @@ namespace DDI.Business.Common
             }
         }
 
-        private void RemoveEmptyWordsFromEnd(List<string> abbreviatedWords, List<string> words)
+        private void RemoveEmptyWordsFromEnd(ref List<string> abbreviatedWords, ref List<string> words)
         {
-            int index;
-            for (index = abbreviatedWords.Count - 1; index >= 0; index--)
-            {
-                if (string.IsNullOrWhiteSpace(abbreviatedWords[index]))
-                {
-                    abbreviatedWords.RemoveAt(index);
-                }
-            }
-
-            for (index = words.Count - 1; index >= 0; index--)
-            {
-                if (string.IsNullOrWhiteSpace(words[index]))
-                {
-                    words.RemoveAt(index);
-                }
-            }
+            abbreviatedWords = abbreviatedWords.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+            words = words.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
         }
 
-        private bool IsPOBox(List<string> abbreviatedWords, Address resultAddress, List<string> words)
-        {
-            if ((abbreviatedWords[0] == "PO" && abbreviatedWords.Count >= 2 && abbreviatedWords[1] == "BOX") || (abbreviatedWords[0] == "BOX"))
-            {
-                resultAddress.Street = "PO BOX";
-                bool foundBox = false;
-
-                for (int pos = 0; pos < words.Count; pos++)
-                {
-                    if (!foundBox && abbreviatedWords[pos] == "BOX")
-                    {
-                        foundBox = true;
-                    }
-                    else if (foundBox)
-                    {
-                        resultAddress.StreetNum = resultAddress.StreetNum + words[pos];
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsRROrHC(List<string> abbreviatedWords, Address resultAddress, List<string> words)
-        {
-            if (abbreviatedWords[0] == "RR" || abbreviatedWords[0] == "HC" || abbreviatedWords[0] == "R")
-            {
-                resultAddress.Street = (abbreviatedWords[0] == "HC" ? "HC" : "RR");
-
-                bool foundBox = false;
-                for (int pos = 1; pos < words.Count; pos++)
-                {
-                    if (!foundBox && abbreviatedWords[pos] == "BOX")
-                    {
-                        foundBox = true;
-                    }
-                    else if (!foundBox)
-                    {
-                        resultAddress.Street = (resultAddress.Street + " " + words[pos]).Trim();
-                    }
-                    else
-                    {
-                        resultAddress.StreetNum = (resultAddress.StreetNum + " " + words[pos]).Trim();
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        private void SecondaryAddressLogic(List<string> abbreviatedWords, Address resultAddress, List<string> words)
+        private void FormatSecondaryAddressLineWords(ref List<string> abbreviatedWords, ref Address resultAddress, ref List<string> words)
         {
             for (int index = abbreviatedWords.Count - 1; index >= 0; index--)
             {
-                var sec = _abbreviations.FirstOrDefault(p => p.Word == abbreviatedWords[index] && p.IsSecondary == true);
+                var abbreviatedWord = abbreviatedWords[index];
+                var sec = _abbreviations.FirstOrDefault(p => p.Word == abbreviatedWord && p.IsSecondary == true);
                 if (sec != null)
                 {
                     // It might be "APARTMENT ROAD" or "FLOOR STREET" - these aren't secondary addresses.
-                    if (index + 1 < abbreviatedWords.Count &&
-                        _abbreviations.Any(p => p.Word == abbreviatedWords[index + 1] && p.IsSuffix))
+                    if (index + 1 < abbreviatedWords.Count)
                     {
-                        continue;
+                        var nextAbbreviatedWord = abbreviatedWords[index + 1];
+                        if (_abbreviations.Any(p => p.Word == nextAbbreviatedWord && p.IsSuffix))
+                        {
+                            continue;
+                        }
                     }
 
                     resultAddress.SecondaryAbbr = sec.USPSAbbreviation;
 
                     // If the secondary is at the end of the address, the number is the previous word in some cases.
-                    if (index == abbreviatedWords.Count - 1 && index > 0 && "BLDG,DEPT,FLR,OFC,RM,STE,UNIT".Contains(abbreviatedWords[index]))
+                    if (index == abbreviatedWords.Count - 1 && index > 0 && "BLDG,DEPT,FLR,OFC,RM,STE,UNIT".Contains(abbreviatedWord))
                     {
                         resultAddress.SecondaryNum = words[index - 1];
                         words[index - 1] = string.Empty;
@@ -958,81 +954,6 @@ namespace DDI.Business.Common
         internal List<string> SplitStringIntoListOfWords(string text)
         {
             return text.Split(new[] {' ', '.', ',', '\'', '"', '-'}).Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
-        }
-
-        /// <summary>
-        /// Combine certain words in a list of words.
-        /// </summary>
-        internal List<string> CombineSomeAbbreviations(List<string> wordList)
-        {
-            var returnList = new List<string>(wordList);
-            if (returnList.Count < 1)
-            {
-                return returnList;
-            }
-
-            int startPosition = 0;
-
-            // Assumes all words have been capitalized
-
-            if (returnList.Count > 1)
-            {
-                // P O => PO
-                if (returnList[0] == "P" && returnList[1] == "O")
-                {
-                    returnList[0] = "PO";
-                    returnList.RemoveAt(1);
-                }
-
-                // R R => RR, RURAL RT => RR, etc.
-                else if ((returnList[0] == "RURAL" || returnList[0] == "R") &&
-                         (returnList[1] == "RT" || returnList[1] == "R"))
-                {
-                    returnList[0] = "RR";
-                    returnList.RemoveAt(1);
-                }
-
-                // H C => HC, etc.
-                else if ((returnList[0] == "HWY" || returnList[0] == "H" || returnList[0] == "HIGHWAY") &&
-                         (returnList[1] == "CONTRACT" || returnList[1] == "C"))
-                {
-                    returnList[0] = "HC";
-                    returnList.RemoveAt(1);
-                }
-            }
-
-            // RT => RR
-            if (returnList[startPosition] == "RT")
-                returnList[0] = "RR";
-
-            // Append all remaining words, inserting APT if necessary
-            bool apartmentFound = false;
-            for (int i = startPosition; i < returnList.Count; i++)
-            {
-                if (returnList[i] == "APT" || returnList[i] == "APARTMENT")
-                {
-                    apartmentFound = true;
-                    returnList[i] = "APT";
-                }
-                else if (returnList[i].StartsWith("#"))
-                {
-                    if (!apartmentFound)
-                    {
-                        returnList.Insert(i, "APT");
-                        apartmentFound = true;
-                        continue;
-                    }
-
-                    if (returnList[i] == "#")
-                    {
-                        returnList.RemoveAt(i);
-                        continue;
-                    }
-
-                    returnList[i] = returnList[i].TrimStart('#');
-                }
-            }
-            return returnList;
         }
 
         /// <summary>

@@ -179,6 +179,7 @@
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
+    <Compile Include="Statics\Common\AddressStrings.cs" />
     <Compile Include="Statics\CRM\ContactCategoryCodes.cs" />
     <Compile Include="Statics\CRM\ContactInfoDefaults.cs" />
     <Compile Include="Statics\CRM\AddressDefaults.cs" />
