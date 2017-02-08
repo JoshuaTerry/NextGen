@@ -311,7 +311,7 @@ function GetAutoZipData(container) {
                 '&zip=' + $(container).find('.autozip').val();
 
         $.ajax({
-            url: WEB_API_ADDRESS + 'locations/?' + fields,
+            url: WEB_API_ADDRESS + 'addresses/zip/?' + fields,
             method: 'GET',
             contentType: 'application/json; charset-utf-8',
             dataType: 'json',
