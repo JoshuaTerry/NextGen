@@ -36,17 +36,17 @@ namespace DDI.Business.CRM
 
             if (string.IsNullOrWhiteSpace(contactInfo.Info))
             {
-                throw new Exception("Contact information cannot be blank.");
+                throw new ValidationException(UserMessagesCRM.ContactInfoBlank);
             }
 
             if (contactInfo.ContactTypeId.IsNullOrEmpty())
             {
-                throw new Exception("Contact type is not specified.");
+                throw new ValidationException(UserMessagesCRM.ContactTypeMissing);
             }
 
             if (contactInfo.ConstituentId.IsNullOrEmpty() && contactInfo.ParentContactId.IsNullOrEmpty())
             {
-                throw new Exception("Contact information has no parent.");
+                throw new ValidationException(UserMessagesCRM.ContactInfoNoParent);
             }
 
             // Get the category code.
@@ -77,7 +77,7 @@ namespace DDI.Business.CRM
             phone = SimplifyPhoneNumberForCountry(phone, country);
             if (phone == null)
             {
-                throw new Exception("Phone number format is not valid for constituent's country.");
+                throw new ValidationException(UserMessagesCRM.PhoneFormatNotValid);
             }
 
             contactInfo.Info = phone;            

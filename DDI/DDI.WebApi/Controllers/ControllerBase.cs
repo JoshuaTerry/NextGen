@@ -15,6 +15,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
+using System.Web.Http.Results;
 
 namespace DDI.WebApi.Controllers
 {
@@ -78,7 +79,7 @@ namespace DDI.WebApi.Controllers
             return urlHelper;
         }
 
-        public IHttpActionResult GetAll(string routeName, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(string routeName, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
         {
             var search = new PageableSearch()
             {
@@ -97,6 +98,7 @@ namespace DDI.WebApi.Controllers
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
                 var response = _service.GetAll(search);
+               
                 return FinalizeResponse(response, routeName, search, fields, urlHelper);
             }
             catch (Exception ex)

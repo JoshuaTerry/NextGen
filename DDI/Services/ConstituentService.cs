@@ -6,12 +6,13 @@ using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using DDI.Data;
 using DDI.Shared;
-using Newtonsoft.Json.Linq; 
+using Newtonsoft.Json.Linq;
 using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
+using DDI.Shared.Logger;
 
 namespace DDI.Services
 {
@@ -19,7 +20,7 @@ namespace DDI.Services
     {
         private readonly IRepository<Constituent> _repository;
         private readonly ConstituentLogic _constituentlogic;
-
+        private readonly Logger _logger;
         public ConstituentService()
             : this(new UnitOfWorkEF())
         {
@@ -107,53 +108,11 @@ namespace DDI.Services
             }
         }
 
-        public override IDataResponse<Constituent> GetById(Guid id)
-        {
-            Constituent constituent = _repository.GetById(id, IncludesForSingle);
-
-            var response = GetIDataResponse(() => constituent);
-            return response;
-        }
-
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
+            constituent = _constituentlogic.ConvertAgeRange(constituent);
             return GetById(constituent?.Id ?? Guid.Empty);
-        }
-
-        public IDataResponse<Constituent> UpdateConstituent(Guid id, JObject changes)
-        {
-            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
-
-            foreach (var pair in changes)
-            {
-                changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<Constituent>(pair.Key)));
-            }
-
-            _repository.UpdateChangedProperties(id, changedProperties, p =>
-            {
-                _constituentlogic.Validate(p);
-            });
-
-            UnitOfWork.SaveChanges();
-
-            return GetById(id);
-        }
-
-        public IDataResponse<Constituent> AddConstituent(Constituent constituent)
-        {
-            try
-            {
-                _constituentlogic.Validate(constituent);
-                _repository.Insert(constituent);
-                UnitOfWork.SaveChanges();
-
-                return GetById(constituent.Id);
-            }
-            catch (Exception ex)
-            {
-                return ProcessIDataResponseException(ex);
-            };
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
@@ -174,23 +133,38 @@ namespace DDI.Services
 
         }
 
-        private Type ConvertToType<T>(string property)
+        public override IDataResponse<Constituent> Add(Constituent entity)
         {
-            Type classType = typeof(T);
-
-            var propertyType = classType.GetProperty(property).PropertyType;
-
-            return propertyType;
+            entity = _constituentlogic.ConvertAgeRange(entity);
+            return base.Add(entity);
         }
 
-        public IDataResponse<int> GetNextConstituentNumber()
+        public override IDataResponse Update(Constituent entity)
         {
-            throw new NotImplementedException();
+            entity = _constituentlogic.ConvertAgeRange(entity);
+            return base.Update(entity);
         }
 
-        object IConstituentService.NewConstituent(Guid id)
+        public override IDataResponse<Constituent> Update(Guid id, JObject changes)
         {
-            throw new NotImplementedException();
+            foreach (var change in changes)
+            {
+                if (change.Key == nameof(Constituent.BirthYearFrom) || change.Key == nameof(Constituent.BirthYearTo))
+                {
+                    if (change.Value != null)
+                    {
+                        try
+                        {
+                            _constituentlogic.ConvertAgeRange((int)change.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex);
+                        }
+                    }
+                }
+            }
+            return base.Update(id, changes);
         }
     }
 }

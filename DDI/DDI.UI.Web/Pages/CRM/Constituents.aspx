@@ -288,10 +288,34 @@
 
                         <div class="twocolumn">
 
-                            <div>
+                            <div>                                
                                 <div class="fieldblock">
                                     <label>Birth Date</label>
-                                    <input type="text" class="editable BirthDate datepicker" />
+                                    <div class="threecolumn">
+                                        <div style="width: 50px;">
+                                        <select class="editable BirthMonth">
+                                        <option></option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="12">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                        </div>
+                                        <div style="width: 50px;">
+                                    <select class="editable BirthDay"></select>
+                                            </div>
+                                        <div style="width: 100px;">
+                                    <select class="editable BirthYear"></select>
+                                            </div>
+                                    </div>
                                 </div>
 
                                 <div class="fieldblock">
@@ -313,9 +337,9 @@
                             <div>
                                 <div class="fieldblock range">
                                     <label>Age</label>
-                                    <input type="number" class="editable AgeFrom" />
+                                    <input type="number" class="editable BirthYearFrom" />
                                     to:
-                                    <input type="number" class="editable AgeTo" />
+                                    <input type="number" class="editable BirthYearTo" />
                                 </div>
 
                                 <div class="fieldblock">
@@ -392,11 +416,28 @@
 
                     </div>
 
-                    <h1>Alternate ID (Not Implemented Yet)</h1>
+                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
+                        
+                        <div class="alternateidgridcontainer"></div>
 
+                        <div class="alternateidmodal" title="Alternate ID" style="display: none;">
 
+                            <div class="modalcontent">
 
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text"  class="ai-Name" />
+                                </div>
+
+                                <div class="modalbuttons">
+                                    <input type="button" class="submitaltid" value="Save" />
+                                    <a href ="#" class="cancelmodal">Cancel</a>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <h1>Contact Information</h1>

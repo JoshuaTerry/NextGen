@@ -21,6 +21,7 @@ namespace DDI.Shared.Statics
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";
+        public const string Entity = "Entity";
         public const string Denomination = "Denomination";
         public const string DoingBusinessAs = "DoingBusinessAs";
         public const string Education = "Education";
@@ -36,6 +37,7 @@ namespace DDI.Shared.Statics
         public const string Profession = "Profession";
         public const string Region = "Region";
         public const string RegionLevel = "RegionLevels";
+        public const string RegionChildren = "ChildrenRegion";
         public const string SectionPreference = "SectionPreference";
         public const string State = "State";
         public const string Tag = "Tag";

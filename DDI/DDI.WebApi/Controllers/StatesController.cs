@@ -18,7 +18,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/states", Name = RouteNames.State)]
-        public IHttpActionResult GetAll(Guid? countryId = null, int? limit = 1000, int? offset = 0)
+        public IHttpActionResult GetAll(Guid? countryId = null, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault)
         {
             var search = new ForeignKeySearch()
             {

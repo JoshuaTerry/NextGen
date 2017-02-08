@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Extensions;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Web.UI.WebControls;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
+using System.Linq;
 
 namespace DDI.Shared.Test.Helpers
 {
@@ -44,34 +47,34 @@ namespace DDI.Shared.Test.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void When_Given_An_Enumeration_Should_Return_Description_Attribute_Of_Members_As_List_Of_Strings()
+        public void When_Given_An_Enumeration_Should_Return_Description_Attribute_Of_Members_As_Dictionary_Of_String_And_Int()
         {
             //Arrange
-            List<string> list = new List<string>();
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
 
             //Act
-            list = EnumHelper.GetDescriptions<PaymentMethod>();
+            dictionary = EnumHelper.GetDescriptions<PaymentMethod>();
 
             //Assert
-            Assert.AreEqual(5, list.Count);
-            Assert.AreEqual("None", list[0]);
-            Assert.AreEqual("Check", list[1]);
-            Assert.AreEqual("ACH Transfer", list[2]);
-            Assert.AreEqual("Wire Transfer", list[3]);
-            Assert.AreEqual("SWIFT Transfer", list[4]);
+            Assert.AreEqual(5, dictionary.Count);
+            Assert.AreEqual(0, dictionary.GetValueOrDefault("None"));
+            Assert.AreEqual(1, dictionary.GetValueOrDefault("Check"));
+            Assert.AreEqual(2, dictionary.GetValueOrDefault("ACH Transfer"));
+            Assert.AreEqual(3, dictionary.GetValueOrDefault("Wire Transfer"));
+            Assert.AreEqual(4, dictionary.GetValueOrDefault("SWIFT Transfer"));
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void When_GetDescriptions_Is_Passed_Something_Other_Than_Enumeration_Should_Return_Nothing()
+        public void When_GetDescriptions_Is_Passed_Something_Other_Than_Enumeration_Should_Throw_Exception()
         {
             //Arrange
-            List<string> list = new List<string>();
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
             Exception exception = null;
 
             //Act
             try
             {
-                list = EnumHelper.GetDescriptions<Constituent>();
+                dictionary = EnumHelper.GetDescriptions<Constituent>();
             }
             catch (Exception ex)
             {
@@ -79,23 +82,49 @@ namespace DDI.Shared.Test.Helpers
             }
 
             //Assert
-            Assert.AreEqual("Type of argument must be Enum.", exception.Message);
+            Assert.AreEqual("Type of argument must be Enum.", exception?.Message);
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void When_Enumeration_Without_All_Members_Having_Descriptions_Should_Return_The_Elements_That_Do_Have_Descriptions()
         {
             //Arrange
-            List<string> list = new List<string>();
-            
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+
             //Act
-            list = EnumHelper.GetDescriptions<TestEnumeration>();
+            dictionary = EnumHelper.GetDescriptions<TestEnumeration>();
 
             //Assert
-            Assert.AreEqual(3, list.Count);
-            Assert.AreEqual("Number Two", list[0]);
-            Assert.AreEqual("Number Three", list[1]);
-            Assert.AreEqual("Number Four", list[2]);
+            Assert.AreEqual(3, dictionary.Count);
+            Assert.AreEqual(2, dictionary.GetValueOrDefault("Number Two"));
+            Assert.AreEqual(3, dictionary.GetValueOrDefault("Number Three"));
+            Assert.AreEqual(4, dictionary.GetValueOrDefault("Number Four"));
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void WebControlTest()
+        {
+            //Arrange
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+
+            //Act
+            dictionary = EnumHelper.GetDescriptions<PaymentMethod>();
+
+            var service = new DDI.Services.PaymentPreferenceService();
+            var response = service.GetDataResponse(EnumHelper.GetDescriptions<PaymentMethod>);
+            response.TotalResults = response.Data.Count;
+
+            DropDownList ddl = new DropDownList();
+
+            response.Data.ToList().ForEach(i => ddl.Items.Add(new ListItem(i.Key, i.Value.ToString())));
+
+            //Assert
+            Assert.AreEqual(5, dictionary.Count);
+            Assert.AreEqual(0, dictionary.GetValueOrDefault("None"));
+            Assert.AreEqual(1, dictionary.GetValueOrDefault("Check"));
+            Assert.AreEqual(2, dictionary.GetValueOrDefault("ACH Transfer"));
+            Assert.AreEqual(3, dictionary.GetValueOrDefault("Wire Transfer"));
+            Assert.AreEqual(4, dictionary.GetValueOrDefault("SWIFT Transfer"));
         }
 
     }
