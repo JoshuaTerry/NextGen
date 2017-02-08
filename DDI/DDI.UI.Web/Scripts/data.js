@@ -90,7 +90,7 @@ function LoadGrid(grid, container, columns, route, selected, edit) {
     }
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
+        url: route,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
