@@ -19,8 +19,66 @@ $(document).ready(function () {
     }
 
     GetConstituentData($('.hidconstituentid').val());
+    LoadYears();
+
+    $('.BirthMonth').change(function () { PopulateMonthDays(); });    
+    $('.BirthYear').change(function () { AmendMonthDays(); });
 
 });
+
+function LoadYears()
+{
+    var currentYear = new Date().getFullYear();
+    $('.BirthYear').append('<option value=> </option>');
+    for (x = currentYear; x >= currentYear - 100; x--) {
+        $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
+    }
+}
+function PopulateMonthDays()
+{
+    var arrayLookup = {
+        '1': 31, '2': 29, '3': 31,
+        '4': 30, '5': 31,
+        '6': 30, '7': 31,
+        '8': 31, '9': 30,
+        '10': 31, '11': 30, '12': 31
+    }
+    var month = $('.BirthMonth').val();
+    if (month != null)
+    {
+        var days = arrayLookup[month];
+        $('.BirthDay').html('');
+        $('.BirthDay').append('<option value=> </option>');
+        for (x = 1; x <= days; x++) {
+            $('.BirthDay').append('<option value=' + x + '>' + x + '</option>');
+        }
+    }    
+}
+
+function AmendMonthDays()
+{
+    var year = $('.BirthYear').val();
+    var month = $('.BirthMonth').val();
+    var day = $('.BirthDay').val();
+    if (year != null && month == '02')
+    {
+        var option29 = $('.BirthDay option[value="29"]');
+
+        if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0)) {
+            if ($(option29).val() === undefined) {
+                $('.BirthDay').append('<option value="29">29</option>');
+            }
+            else {
+                return;
+            }
+        }
+        else {
+            if ($(option29) != null) {
+                $(option29).remove();
+            }
+        }
+    }
+}
 
 function Resize() {
 
@@ -142,7 +200,13 @@ function DisplayConstituentData() {
 
         NewAlternateIdModal();
 
-        LoadPhoneNumbersTable();
+        PopulateMonthDays();
+
+        AmendMonthDays();
+
+        $('.BirthDay').val(currentEntity.BirthDay);
+	
+	LoadPhoneNumbersTable();
 
         NewPhoneNumberModal();
     }

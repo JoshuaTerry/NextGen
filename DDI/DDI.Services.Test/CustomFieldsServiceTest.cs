@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using DDI.Shared;
 
-namespace DDI.WebApi.Tests.Controllers
+namespace DDI.Services.Tests.Controllers
 {
     [TestClass]
     public class CustomFieldsServiceTest

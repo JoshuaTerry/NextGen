@@ -14,7 +14,10 @@ namespace DDI.WebApi.Controllers
 {
     public class CountriesController : ControllerBase<Country>
     {
-
+        public CountriesController(ServiceBase<Country> service)
+            : base(service)
+        {
+        }
         public CountriesController()
             : base(new CountryService())
         {
