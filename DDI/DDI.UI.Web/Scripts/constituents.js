@@ -293,7 +293,7 @@ function NewDBAModal() {
             }
 
             $.ajax({
-                type: 'POST',
+                type: Links.NewDoingBusinessAs.Method,
                 url: Links.NewDoingBusinessAs.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
