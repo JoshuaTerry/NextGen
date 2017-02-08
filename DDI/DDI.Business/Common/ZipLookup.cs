@@ -8,6 +8,7 @@ using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.Common;
 
@@ -42,12 +43,12 @@ namespace DDI.Business.Common
         /// Perform Zip+4 lookup on an address.
         /// </summary>
         /// <returns></returns>
-        public string GetZipPlus4(ZipLookupInfo address, out string resultAddress)
+        public string GetZipPlus4(ref Address addressToFormat, out string plus4Zip)
         {
 
-            resultAddress = string.Empty;
+            plus4Zip = string.Empty;
 
-            string fullAddressLines = string.Join(" ", address.AddressLine1, address.AddressLine2);
+            string fullAddressLines = string.Join(" ", addressToFormat.AddressLine1, addressToFormat.AddressLine2);
             int rating = 99999999;
             ZipPlus4 bestZip4 = null;
             List<string> zipList = new List<string>();
@@ -55,16 +56,16 @@ namespace DDI.Business.Common
 
             Initialize();
 
-            Address workAddr = CreateFormattedAbbreviatedAddressLines(fullAddressLines);
-            string zipCode = address.PostalCode ?? string.Empty;
+            USPSAddress workAddr = CreateFormattedAbbreviatedAddressLines(fullAddressLines);
+            string zipCode = addressToFormat.PostalCode ?? string.Empty;
             if (zipCode.Length > 5)
             {
                 zipCode = zipCode.Substring(0, 5);
             }
 
-            if (address.State != null)
+            if (addressToFormat.State != null)
             {
-                _uow.Attach(address.State);
+                _uow.Attach(addressToFormat.State);
             }
 
             if (zipCode.Length == 5)
@@ -76,12 +77,13 @@ namespace DDI.Business.Common
                     preferredBranch = GetPreferredBranch(z);
 
                     // If no city was provided, or if the city doesn't match the preferred or any other branch, set the city to the preferred branch name.
-                    if (string.IsNullOrWhiteSpace(address.City) || (address.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == address.City)))
+                    var addressToFormatCity = addressToFormat.City;
+                    if (string.IsNullOrWhiteSpace(addressToFormat.City) || (addressToFormat.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addressToFormatCity)))
                     {
-                        address.City = preferredBranch;
+                        addressToFormat.City = preferredBranch;
                     }
                     // Set the state code.
-                    address.State = z.City.State;
+                    addressToFormat.State = z.City.State;
                 }
 
                 zipList.Add(zipCode);
@@ -100,10 +102,12 @@ namespace DDI.Business.Common
                 }
 
             }
-            else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(address.City))
+            else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(addressToFormat.City))
             {
                 // No ZIP provided, use city & state to find branches & build a list of ZIPs.
-                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == address.City && p.Zip.City.StateId == address.State.Id))
+                var addressToFormatCity = addressToFormat.City;
+                var addressToFormatState = addressToFormat.State;
+                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
                 //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
                 {
                     if (!zipList.Contains(branch.Zip.ZipCode))
@@ -116,7 +120,7 @@ namespace DDI.Business.Common
             if (!string.IsNullOrWhiteSpace(fullAddressLines))
             {
 
-                Address tempAddr = new Address(workAddr);
+                USPSAddress tempAddr = new USPSAddress(workAddr);
                 foreach (string zipItem in zipList)
                 {
                     zipCode = zipItem;
@@ -204,14 +208,15 @@ namespace DDI.Business.Common
                     // Try to find the best 5-digit Zip.
 
                     string zipItem = null;
-                    if (!string.IsNullOrWhiteSpace(address.PostalCode))
+                    if (!string.IsNullOrWhiteSpace(addressToFormat.PostalCode))
                     {
-                        zipItem = zipList.FirstOrDefault(p => address.PostalCode.StartsWith(p));
+                        var addressToFormatPostalCode = addressToFormat.PostalCode;
+                        zipItem = zipList.FirstOrDefault(p => addressToFormatPostalCode.StartsWith(p));
                     } 
                     else if (zipList.Count == 1)
                     {
                         zipItem = zipList[0];
-                        address.PostalCode = zipList[0]; // Go ahead and fill in the zip code if none was provided and only one match found.
+                        addressToFormat.PostalCode = zipList[0]; // Go ahead and fill in the zip code if none was provided and only one match found.
                     }
                     else 
                     {
@@ -223,21 +228,21 @@ namespace DDI.Business.Common
                         Zip zip = _uow.GetEntities<Zip>().FirstOrDefault(p => p.ZipCode == zipItem);
 
                         // If necessary, populate state, country, and county.
-                        if (address.State == null)
+                        if (addressToFormat.State == null)
                         {
-                            address.State = zip.City?.State;
+                            addressToFormat.State = zip.City?.State;
                         }
 
-                        if (address.Country == null)
+                        if (addressToFormat.Country == null)
                         {
-                            address.Country = address.State?.Country;
+                            addressToFormat.Country = addressToFormat.State?.Country;
                         }
 
                         _uow.LoadReference(zip, p => p.City);
 
-                        if (address.County == null && zip.City != null)
+                        if (addressToFormat.County == null && zip.City != null)
                         {
-                            address.County = _uow.GetReference(zip.City, p => p.County);
+                            addressToFormat.County = _uow.GetReference(zip.City, p => p.County);
                         }
                     }
                 }
@@ -248,20 +253,20 @@ namespace DDI.Business.Common
 
             // Zip+4 found.  Best ZIP code in zipCode.
 
-            address.PostalCode = zipCode;
+            addressToFormat.PostalCode = zipCode;
 
             // Get the county and country.
-            if (address.County == null)
+            if (addressToFormat.County == null)
             {
                 _uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
                 _uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
 
-                address.County = bestZip4.ZipStreet.Zip.City.County;
+                addressToFormat.County = bestZip4.ZipStreet.Zip.City.County;
             }
 
-            if (address.Country == null && address.State != null)
+            if (addressToFormat.Country == null && addressToFormat.State != null)
             {
-                address.Country = _uow.GetReference(address.State, p => p.Country);
+                addressToFormat.Country = _uow.GetReference(addressToFormat.State, p => p.Country);
             }
 
             // Build result address
@@ -294,7 +299,7 @@ namespace DDI.Business.Common
                 }
             }
 
-            resultAddress = string.Join(" ", resultList);
+            plus4Zip = string.Join(" ", resultList);
 
             // Non-deliverable address...
             if (bestZip4.Plus4.IndexOf("ND") >= 0)
@@ -322,7 +327,7 @@ namespace DDI.Business.Common
             }
             if (plus4.Length > 0)
             {
-                address.PostalCode = address.PostalCode + "-" + plus4;
+                addressToFormat.PostalCode = addressToFormat.PostalCode + "-" + plus4;
             }
             return plus4;
 
@@ -383,7 +388,7 @@ namespace DDI.Business.Common
                 s1 == s2;
         }
 
-        internal List<ZipStreet> GetStreetList(IEnumerable<ZipStreet> zipStreets, Address workAddr)
+        internal List<ZipStreet> GetStreetList(IEnumerable<ZipStreet> zipStreets, USPSAddress workAddr)
         {
             if (zipStreets == null)
             {
@@ -391,7 +396,7 @@ namespace DDI.Business.Common
             }
 
             int passNum = 0;
-            Address tempAddr = new Address(workAddr);
+            USPSAddress tempAddr = new USPSAddress(workAddr);
 
             List<ZipStreet> streetList1 = new List<ZipStreet>();
             List<ZipStreet> streetList2 = new List<ZipStreet>();
@@ -478,9 +483,9 @@ namespace DDI.Business.Common
         /// <summary>
         /// Split a street address into an Address object.
         /// </summary>
-        internal Address CreateFormattedAbbreviatedAddressLines(string text)
+        internal USPSAddress CreateFormattedAbbreviatedAddressLines(string text)
         {
-            Address resultAddress = new Address();
+            USPSAddress resultAddress = new USPSAddress();
             if (IsRuralRoute(text, out resultAddress))
             {
                 return resultAddress;
@@ -546,9 +551,9 @@ namespace DDI.Business.Common
             return Regex.Replace(text, AddressStrings.ApartmentRegex, AddressStrings.ApartmentAbbreviation);
         }
 
-        private bool IsMilitaryBox(string text, out Address resultAddress)
+        private bool IsMilitaryBox(string text, out USPSAddress resultAddress)
         {
-            resultAddress = new Address();
+            resultAddress = new USPSAddress();
             Regex regex = new Regex(AddressStrings.MilitaryBoxRegex, RegexOptions.ExplicitCapture);
             if (regex.IsMatch(text))
             {
@@ -560,9 +565,9 @@ namespace DDI.Business.Common
             return false;
         }
 
-        private bool IsRuralRoute(string text, out Address resultAddress)
+        private bool IsRuralRoute(string text, out USPSAddress resultAddress)
         {
-            resultAddress = new Address();
+            resultAddress = new USPSAddress();
             Regex regex = new Regex(AddressStrings.RuralRouteRegex, RegexOptions.ExplicitCapture);
             if (regex.IsMatch(text))
             {
@@ -574,9 +579,9 @@ namespace DDI.Business.Common
             return false;
         }
 
-        private bool IsHighwayContract(string text, out Address resultAddress)
+        private bool IsHighwayContract(string text, out USPSAddress resultAddress)
         {
-            resultAddress = new Address();
+            resultAddress = new USPSAddress();
             Regex regex = new Regex(AddressStrings.HighwayContractRegex, RegexOptions.ExplicitCapture);
             if (regex.IsMatch(text))
             {
@@ -588,9 +593,9 @@ namespace DDI.Business.Common
             return false;
         }
 
-        private bool IsPOBox(string text, out Address resultAddress)
+        private bool IsPOBox(string text, out USPSAddress resultAddress)
         {
-            resultAddress = new Address();
+            resultAddress = new USPSAddress();
             Regex regex = new Regex(AddressStrings.POBoxRegex);
             if (regex.IsMatch(text))
             {
@@ -613,7 +618,7 @@ namespace DDI.Business.Common
             return false;
         }
 
-        private void FormattAddress(List<string> abbreviatedWords, List<string> words, ref Address resultAddress)
+        private void FormattAddress(List<string> abbreviatedWords, List<string> words, ref USPSAddress resultAddress)
         {
             int index;
             int suffixLen = int.MaxValue;
@@ -715,7 +720,7 @@ namespace DDI.Business.Common
             words = words.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
         }
 
-        private void FormatSecondaryAddressLineWords(ref List<string> abbreviatedWords, ref Address resultAddress, ref List<string> words)
+        private void FormatSecondaryAddressLineWords(ref List<string> abbreviatedWords, ref USPSAddress resultAddress, ref List<string> words)
         {
             for (int index = abbreviatedWords.Count - 1; index >= 0; index--)
             {
@@ -1013,7 +1018,7 @@ namespace DDI.Business.Common
         /// <summary>
         /// Class for representing address information.
         /// </summary>
-        internal class Address
+        internal class USPSAddress
         {
             public string Prefix { get; set; }
             public string Street { get; set; }
@@ -1022,17 +1027,17 @@ namespace DDI.Business.Common
             public string StreetNum { get; set; }
             public string SecondaryAbbr { get; set; }
             public string SecondaryNum { get; set; }
-            public Address()
+            public USPSAddress()
             {
                 Prefix = Street = Suffix = Suffix2 = StreetNum = SecondaryAbbr = SecondaryNum = string.Empty;
             }
 
-            public Address(Address c) : base()
+            public USPSAddress(USPSAddress c) : base()
             {
                 CopyFrom(c);
             }
 
-            public void CopyFrom(Address c)
+            public void CopyFrom(USPSAddress c)
             {
                 Prefix = c.Prefix;
                 Street = c.Street;

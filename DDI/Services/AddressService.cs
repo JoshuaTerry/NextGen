@@ -16,6 +16,7 @@ namespace DDI.Services
     {
         private readonly IRepository<Address> _repository;
         private readonly AddressLogic _addressLogic;
+        private readonly ZipLookup _zipLookup;
 
         public AddressService()
             : this(new UnitOfWorkEF())
@@ -23,15 +24,16 @@ namespace DDI.Services
         }
 
         public AddressService(IUnitOfWork uow)
-            : this(uow, new AddressLogic(uow), uow.GetRepository<Address>())
+            : this(uow, new AddressLogic(uow), uow.GetRepository<Address>(), new ZipLookup(uow))
         {
         }
 
-        private AddressService(IUnitOfWork uow, AddressLogic addressLogic, IRepository<Address> repository)
+        private AddressService(IUnitOfWork uow, AddressLogic addressLogic, IRepository<Address> repository, ZipLookup zipLookup)
             :base(uow)
         {
             _addressLogic = addressLogic;
             _repository = repository;
+            _zipLookup = zipLookup;
         }
         #region Public Methods
         public IDataResponse<Address> RefineAddress(string addressLine1, string addressLine2, string city, Guid? countryId, Guid? countyId, Guid? stateId, string zip)
@@ -49,39 +51,21 @@ namespace DDI.Services
             if (stateId != null)
                 state = _addressLogic.States.FirstOrDefault(s => s.Id == stateId);
 
-            var zipLookupInfo = new ZipLookupInfo();
-            zipLookupInfo.AddressLine1 = addressLine1;
-            zipLookupInfo.AddressLine2 = addressLine2;
-            zipLookupInfo.City = city;
-            zipLookupInfo.PostalCode = zip;
-
-            if (country != null)
-                zipLookupInfo.Country = country;
-
-            if (county != null)
-                zipLookupInfo.County = county;
-
-            if (state != null)
-                zipLookupInfo.State = state;
+            var addressToFormat = new Address
+            {
+                AddressLine1 = addressLine1,
+                AddressLine2 = addressLine2,
+                City = city,
+                PostalCode = zip,
+                Country = country,
+                County = county,
+                State = state
+            };
 
             string resultAddress = string.Empty;
-            ZipLookup zl = new ZipLookup();
-            zl.GetZipPlus4(zipLookupInfo, out resultAddress);
-            Address address = new Address
-            {
-                AddressLine1 = zipLookupInfo.AddressLine1,
-                AddressLine2 = zipLookupInfo.AddressLine2,
-                City = zipLookupInfo.City,
-                PostalCode = zipLookupInfo.PostalCode,
-                Country = zipLookupInfo.Country,
-                County = zipLookupInfo.County,
-                State = zipLookupInfo.State,
-                CountryId = zipLookupInfo.Country.Id,
-                CountyId = zipLookupInfo.County.Id,
-                StateId = zipLookupInfo.State.Id,
-            };
+            _zipLookup.GetZipPlus4(ref addressToFormat, out resultAddress);
             IDataResponse<Address> response = new DataResponse<Address>();
-            response.Data = address;
+            response.Data = addressToFormat;
             return response;
         }
 

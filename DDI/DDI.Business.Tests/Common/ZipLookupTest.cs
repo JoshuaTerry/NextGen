@@ -300,7 +300,7 @@ namespace DDI.Business.Tests.Common
         [TestMethod, TestCategory(TESTDESCR)]
         public void ZipLookup_SplitAddress()
         {
-            ZipLookup.Address rslt;
+            ZipLookup.USPSAddress rslt;
             string descr;
 
             rslt = _zipLookup.CreateFormattedAbbreviatedAddressLines("100 E Main St North");
