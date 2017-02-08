@@ -445,13 +445,10 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-
         var editcontainer = $(this).closest('.editcontainer');
-
         StopEdit(editcontainer);
 
         SaveEdit(editcontainer);
-
     });
 
     $('.cancelbutton').click(function (e) {

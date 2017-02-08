@@ -85,66 +85,98 @@
                     
                     <h1>Name</h1>
                     <div class="editcontainer">
+                        <div class="individualConstituent">
+                            <div class="fivecolumn">
+                                <div class="fieldblock">
+                                    <label>Prefix</label>
+                                    <select class="editable PrefixId"></select>
+                                </div>
 
-                        <div class="fivecolumn">
-                            <div class="fieldblock">
-                                <label>Prefix</label>
-                                <select class="editable PrefixId"></select>
+                                <div class="fieldblock">
+                                    <label>First</label>
+                                    <input type="text" class="editable FirstName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Middle</label>
+                                    <input type="text" class="editable MiddleName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Last</label>
+                                    <input type="text" class="editable LastName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Suffix</label>
+                                    <input type="text" class="editable Suffix" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>First</label>
-                                <input type="text" class="editable FirstName" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="editable Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Nickname</label>
+                                <input type="text" class="editable Nickname" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="editable Salutation" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Middle</label>
-                                <input type="text" class="editable MiddleName" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Last</label>
-                                <input type="text" class="editable LastName" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Suffix</label>
-                                <input type="text" class="editable Suffix" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" class="editable TaxId" />
+                                </div>
+                                <div class="fieldblock">
+                                    <label>Gender</label>
+                                    <select class="editable GenderId"></select>
+                                </div>
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="editable Source" />
+                                </div>
                             </div>
                         </div>
+                        <div class="organizationConstituent">
 
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Name 2</label>
-                                <input type="text" class="editable Name2" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text" class="editable Name" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="editable Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="editable Salutation" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Nickname</label>
-                            <input type="text" class="editable Nickname" />
+                            <div class="twocolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" name="taxIdOrganization" class="editable TaxId" pattern="^\d{2}-?\d{7}$" title="Must be in format: 12-3456789" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="editable Source" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Salutation</label>
-                                <input type="text" class="editable Salutation" />
-                            </div>
                         </div>
-
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Tax ID</label>
-                                <input type="text" class="editable TaxId" />
-                            </div>
-                            <div class="fieldblock">
-                                <label>Gender</label>
-                                <select class="editable GenderId"></select>
-                            </div>
-                            <div class="fieldblock">
-                                <label>Source</label>
-                                <input type="text" class="editable Source" />
-                            </div>
-                        </div>
-
                     </div>
 
                     <%-- MAY BE INTRODUCED LATER --%>
@@ -231,8 +263,8 @@
                         <div class="educationleveltable"></div>
                     </div>
 
-                    <h1 class="organization">Organization</h1>
-                    <div class="editcontainer organization">
+                    <h1>Organization</h1>
+                    <div class="editcontainer">
 
                         <div class="inline">
                             <div class="fieldblock">
