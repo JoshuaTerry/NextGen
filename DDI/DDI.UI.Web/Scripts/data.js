@@ -77,18 +77,11 @@ function LoadTagBoxes(tagBox, container, route) {
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
-            var actualData = data;
-
-            if (data.Data) {
-                actualData = data.Data;
-            }
-
             $(tagBoxControl).dxTagBox({
-                dataSource: actualData,
+                dataSource: data.Data,
                 displayExpr: 'DisplayName',
                 valueExpr: 'Id',
                 showClearButton: true,
-                height: 'auto'
             });
 
             $(tagBoxControl).appendTo(container);
