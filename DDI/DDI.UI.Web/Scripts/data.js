@@ -35,11 +35,10 @@ function MakeServiceCall(e, method, selectedValue) {
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue) {
+function PopulateDropDown(e, method, selectedValue) {
 
     ClearElement(e);
-    AddDefaultOption(e, defaultText, defaultValue);
-
+    
     MakeServiceCall(e, method, selectedValue);
 
 }
@@ -60,6 +59,45 @@ function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, c
         });
 
     }
+
+}
+
+function LoadTagBoxes(tagBox, container, route) {
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
+    $(container).html('');
+
+    var tagBoxControl = $('<div>').addClass(tagBox);
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            var actualData = data;
+
+            if (data.Data) {
+                actualData = data.Data;
+            }
+
+            $(tagBoxControl).dxTagBox({
+                dataSource: actualData,
+                displayExpr: 'DisplayName',
+                valueExpr: 'Id',
+                showClearButton: true,
+                height: 'auto'
+            });
+
+            $(tagBoxControl).appendTo(container);
+        },
+        failure: function(response) {
+            alert(response);
+        }
+    });
+
 
 }
 

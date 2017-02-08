@@ -35,14 +35,11 @@ function LoadDropDowns() {
     PopulateDropDown('.GenderId', 'genders', '', '');
     PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
     PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
-    PopulateDropDown('.DenominationId', 'denominations', '', '');
-    PopulateDropDown('.EthnicityId', 'ethnicities', '', '');
     PopulateDropDown('.LanguageId', 'languages', '', '');
     PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-
 }
 
 function GetConstituentData(id) {
@@ -125,11 +122,15 @@ function DisplayConstituentData() {
 
         DisplayConstituentPrimaryAddress();
 
+        LoadDenominationsTagBox();
+
         LoadDBAGrid();
 
         NewDBAModal();
 
         LoadEducationTable();
+
+        LoadEthnicitiesTagBox();
 
         LoadPaymentPreferencesTable();
 
@@ -174,28 +175,17 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
-/* Demographics Section */
+/* Demograpics Section */
 
-$(function() {
-    $(".tagBoxDenominations").dxTagBox({
-        dataSourece: denominations,
-        valueExpr: "id",
-        displayExpr: "DisplayName",
-        placeholder: "Please select denomination(s)"
-    });
-});
+function LoadDenominationsTagBox() {
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+}
 
-$(function() {
-    $(".tagBoxEthnicity").dxTagBox({
-        dataSourece: ethnicities,
-        valueExpr: "id",
-        displayExpr: "DisplayName",
-        placeholder: "Please select ethnicity(s)"
-    });
-});
+function LoadEthnicitiesTagBox() {
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+}
 
-/* Demographics Section End */
-
+/* End Demographics Section */
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
