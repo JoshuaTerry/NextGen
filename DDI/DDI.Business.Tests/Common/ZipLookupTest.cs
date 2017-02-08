@@ -11,6 +11,7 @@ using DDI.Shared.Models.Common;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Business.Tests.Common.DataSources;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.Tests.Common
@@ -385,13 +386,13 @@ namespace DDI.Business.Tests.Common
             string resultAddress;
 
             // Standard ZIP+4 lookup for DDI Address
-            ZipLookupInfo zip4Lookup = new ZipLookupInfo()
+            var zip4Lookup = new Address()
             {
                 AddressLine1 = "101 W Ohio St",
                 AddressLine2 = "Suite 1650",
                 PostalCode = "46204"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
 
             Assert.AreEqual("46204-4201", zip4Lookup.PostalCode, "Zip+4 for 101 W. Ohio Suite 1650");
             Assert.IsNotNull(zip4Lookup.County);
@@ -399,120 +400,120 @@ namespace DDI.Business.Tests.Common
             Assert.AreEqual("Indianapolis", zip4Lookup.City);
 
             // Zip+4 Lookup for a valid address using City/State instead of ZIP code.
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "102 W Ohio St",
                 City = "Indianapolis",
                 State = indiana
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46204-2153", zip4Lookup.PostalCode, "Zip for 102 W. Ohio via City/State");
 
             // Zip+4 lookup where ZIP code is incorrect, but it can be corrected.
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "102 W Ohio St",
                 PostalCode = "46229",
                 State = indiana
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46204-2153", zip4Lookup.PostalCode, "Corrected Zip for 102 W. Ohio via City/State");
 
             // Lookup on an invalid street address.  Should return county and city.
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "10223 W Ohio St",
                 PostalCode = "46204"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46204", zip4Lookup.PostalCode, "Zip for invalid street not modified.");
             Assert.IsNotNull(zip4Lookup.County);
             Assert.AreEqual("Marion", zip4Lookup.County.Description, "Zip+4 lookup returned Marion county");
             Assert.AreEqual("Indianapolis", zip4Lookup.City);
 
             // Lookup on City/State alone where ZIP code is unique and can be returned.
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "",
                 City = "Beech Grove",
                 State = indiana
             };
 
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46107", zip4Lookup.PostalCode, "Singleton Zip Beech Grove");
             Assert.IsNotNull(zip4Lookup.County);
             Assert.AreEqual("Marion", zip4Lookup.County.Description, "Zip+4 lookup returned Marion county");
 
             // ZIP code on ambiguous street number address with double suffix
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "15380 Ten Point Drive",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060-7994", zip4Lookup.PostalCode, "Ten Point Drive");
 
             // ZIP code lookup with Apartment in range
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "347 S 8th St Apt 3",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060-2700", zip4Lookup.PostalCode, "Valid apt #");
 
             // ZIP code lookup with Apartment out of range
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "347 S 8th St Apt 5",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060-2714", zip4Lookup.PostalCode, "Invalid apt #");
 
             // ZIP code lookup with alpha Apartment
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "304 S 8th St Apt E",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060-2710", zip4Lookup.PostalCode, "Alpha apartment");
 
             // ZIP code lookup with fractional street number
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "998 1/2 South 8th Street",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060-3417", zip4Lookup.PostalCode, "Fractional street number");
 
             // Non-deliverable address
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "1005 S. 8th St.",
                 PostalCode = "46060"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46060", zip4Lookup.PostalCode, "Non-deliverable address");
 
             // PO Box
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "PO Box 2015",
                 PostalCode = "46061"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46061-2015", zip4Lookup.PostalCode, "PO Box");
 
             // Written street number
-            zip4Lookup = new ZipLookupInfo()
+            zip4Lookup = new Address()
             {
                 AddressLine1 = "One West Ohio St.",
                 PostalCode = "46204"
             };
-            _zipLookup.GetZipPlus4(zip4Lookup, out resultAddress);
+            _zipLookup.GetZipPlus4(ref zip4Lookup, out resultAddress);
             Assert.AreEqual("46204-1916", zip4Lookup.PostalCode, "Written street number");
             
         }

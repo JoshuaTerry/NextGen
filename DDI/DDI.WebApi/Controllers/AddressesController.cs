@@ -15,9 +15,12 @@ namespace DDI.WebApi.Controllers
     public class AddressesController : ControllerBase<Address>
     {
         protected new IAddressService Service => (IAddressService) base.Service;
+
         public AddressesController()
             : base(new AddressService())
         {
+        }
+
         protected override Expression<Func<Address, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Address, object>>[]
