@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/degrees", Name = RouteNames.Degree)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.School, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.Degree, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
