@@ -206,9 +206,17 @@ function DisplayConstituentData() {
 
         $('.BirthDay').val(currentEntity.BirthDay);
 	
-	LoadPhoneNumbersTable();
+	    LoadPhoneNumbersTable();
 
-        NewPhoneNumberModal();
+	    NewPhoneNumberModal();
+
+	   LoadEmailTable();
+
+	   NewEmailModal();
+
+	   LoadWebsiteTable();
+
+	   NewWebsiteModal();
     }
 }
 
@@ -899,7 +907,7 @@ function LoadAddress(id) {
 // Phone # Subsection
 function LoadPhoneNumbersTable() {
 
-    var columns = [ // double check these against models
+    var columns = [ 
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
@@ -1000,7 +1008,7 @@ function EditPhoneNumber(id) {
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
             Info: $(modal).find('.pn-Info').val(),
             IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
             Comment: $(modal).find('.pn-Comment').val()
@@ -1058,44 +1066,44 @@ function LoadPhoneNumber(id) {
 // Emails Subsection
 function LoadEmailTable() {
 
-    var columns = [ // double check these against models
+    var columns = [ 
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Info', caption: 'Email' },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-        'constituentphonegridcontainer',
+    LoadGrid('constituentemailgrid',
+        'constituentemailgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/contactinfo',
         null,
-        EditPhoneNumber);
+        EditEmail);
 }
 
 function NewEmailModal() {
 
-    $('.newphonenumbermodallink').click(function (e) {
+    $('.newemailmodallink').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.phonenumbermodal').dialog({
+        modal = $('.emailmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
-        $('.submitphonenumber').unbind('click');
+        $('.submitemail').unbind('click');
 
-        $('.submitphonenumber').click(function () {
+        $('.submitemail').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.pn-Comment').val()
+                ContactType: $(modal).find('.e-EmailType').val(),
+                Info: $(modal).find('.e-Info').val(),
+                IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.e-Comment').val()
             }
 
             $.ajax({
@@ -1106,7 +1114,7 @@ function NewEmailModal() {
                 crossDomain: true,
                 success: function () {
 
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                    DisplaySuccessMessage('Success', 'Email saved successfully.');
 
                     CloseModal();
 
@@ -1114,7 +1122,7 @@ function NewEmailModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Email');
                 }
             });
 
@@ -1135,14 +1143,14 @@ function NewEmailModal() {
 
 function EditEmail(id) {
 
-    modal = $('.phonenumbermodal').dialog({
+    modal = $('.emailmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadPhoneNumber(id);
+    LoadEmail(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1152,17 +1160,17 @@ function EditEmail(id) {
 
     });
 
-    $('.submitphonenumber').unbind('click');
+    $('.submitemail').unbind('click');
 
-    $('.submitphonenumber').click(function () {
+    $('.submitemail').click(function () {
 
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
+            // ContactType: $(modal).find('.e-EmailType').val(),
+            Info: $(modal).find('.e-Info').val(),
+            IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.e-Comment').val()
 
         }
 
@@ -1174,15 +1182,15 @@ function EditEmail(id) {
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                DisplaySuccessMessage('Success', 'Email saved successfully.');
 
                 CloseModal();
 
-                LoadPhoneNumbersTable();
+                LoadEmailTable();
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Email.');
             }
         });
 
@@ -1199,11 +1207,11 @@ function LoadEmail(id) {
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Info').val(data.Data.Info);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data.Comment);
+            $(modal).find('.e-Info').val(data.Data.Info);
+            $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.e-Comment').val(data.Data.Comment);
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+            PopulateDropDown('.e-EmailType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -1221,40 +1229,40 @@ function LoadWebsiteTable() {
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Info', caption: 'URL:' },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-        'constituentphonegridcontainer',
+    LoadGrid('constituentwebsitegrid',
+        'constituentwebsitegridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/contactinfo',
         null,
-        EditPhoneNumber);
+        EditWebsite);
 }
 
 function NewWebsiteModal() {
 
-    $('.newphonenumbermodallink').click(function (e) {
+    $('.newwebsitesmodallink').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.phonenumbermodal').dialog({
+        modal = $('.websitemodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
-        $('.submitphonenumber').unbind('click');
+        $('.submitwebsites').unbind('click');
 
-        $('.submitphonenumber').click(function () {
+        $('.submitwebsites').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.pn-Comment').val()
+                ContactType: $(modal).find('.ws-WebSiteType').val(),
+                Info: $(modal).find('.ws-Info').val(),
+                IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.ws-Comment').val()
             }
 
             $.ajax({
@@ -1265,15 +1273,15 @@ function NewWebsiteModal() {
                 crossDomain: true,
                 success: function () {
 
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                    DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
                     CloseModal();
 
-                    LoadAlternateIDTable();
+                    LoadWebsiteTable();
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Web Site');
                 }
             });
 
@@ -1294,14 +1302,14 @@ function NewWebsiteModal() {
 
 function EditWebsite(id) {
 
-    modal = $('.phonenumbermodal').dialog({
+    modal = $('.websitemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadPhoneNumber(id);
+    LoadWebsite(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1311,17 +1319,17 @@ function EditWebsite(id) {
 
     });
 
-    $('.submitphonenumber').unbind('click');
+    $('.submitwebsites').unbind('click');
 
-    $('.submitphonenumber').click(function () {
+    $('.submitwebsites').click(function () {
 
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
+            // ContactType: $(modal).find('.ws-WebSiteType').val(),
+            Info: $(modal).find('.ws-Info').val(),
+            IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.ws-Comment').val()
 
         }
 
@@ -1337,7 +1345,7 @@ function EditWebsite(id) {
 
                 CloseModal();
 
-                LoadPhoneNumbersTable();
+                LoadWebsiteTable();
 
             },
             error: function (xhr, status, err) {
@@ -1374,7 +1382,7 @@ function LoadWebsite(id) {
 // End Websites Subsection
 
 // Point Of Contact Subsection
-function LoadPhoneNumbersTable() {
+function LoadPointOfContactTable() {
 
     var columns = [ // double check these against models
         { dataField: 'Id', width: '0px' },
@@ -1392,7 +1400,7 @@ function LoadPhoneNumbersTable() {
         EditPhoneNumber);
 }
 
-function NewPhoneNumberModal() {
+function NewPointOfContactModal() {
 
     $('.newphonenumbermodallink').click(function (e) {
 
@@ -1451,7 +1459,7 @@ function NewPhoneNumberModal() {
 
 }
 
-function EditPhoneNumber(id) {
+function EditPointOfContact(id) {
 
     modal = $('.phonenumbermodal').dialog({
         closeOnEscape: false,
@@ -1508,7 +1516,7 @@ function EditPhoneNumber(id) {
 
 }
 
-function LoadPhoneNumber(id) {
+function LoadPointOfContact(id) {
 
     $.ajax({
         type: 'GET',
@@ -1533,7 +1541,7 @@ function LoadPhoneNumber(id) {
 // End Point Of Contact Subsection
 
 // Social Media Subsection
-function LoadPhoneNumbersTable() {
+function LoadMediaTable() {
 
     var columns = [ // double check these against models
         { dataField: 'Id', width: '0px' },
@@ -1551,7 +1559,7 @@ function LoadPhoneNumbersTable() {
         EditPhoneNumber);
 }
 
-function NewPhoneNumberModal() {
+function NewMediaModal() {
 
     $('.newphonenumbermodallink').click(function (e) {
 
@@ -1610,7 +1618,7 @@ function NewPhoneNumberModal() {
 
 }
 
-function EditPhoneNumber(id) {
+function EditMedia(id) {
 
     modal = $('.phonenumbermodal').dialog({
         closeOnEscape: false,
@@ -1667,7 +1675,7 @@ function EditPhoneNumber(id) {
 
 }
 
-function LoadPhoneNumber(id) {
+function LoadMedia(id) {
 
     $.ajax({
         type: 'GET',
@@ -1692,7 +1700,7 @@ function LoadPhoneNumber(id) {
 // End Social Media Subsection
 
 // Other Contacts Subsection
-function LoadPhoneNumbersTable() {
+function LoadOtherContactsTable() {
 
     var columns = [ // double check these against models
         { dataField: 'Id', width: '0px' },
@@ -1710,7 +1718,7 @@ function LoadPhoneNumbersTable() {
         EditPhoneNumber);
 }
 
-function NewPhoneNumberModal() {
+function NewOtherContactsModal() {
 
     $('.newphonenumbermodallink').click(function (e) {
 
@@ -1769,7 +1777,7 @@ function NewPhoneNumberModal() {
 
 }
 
-function EditPhoneNumber(id) {
+function EditOtherContacts(id) {
 
     modal = $('.phonenumbermodal').dialog({
         closeOnEscape: false,
@@ -1826,7 +1834,7 @@ function EditPhoneNumber(id) {
 
 }
 
-function LoadPhoneNumber(id) {
+function LoadOtherContacts(id) {
 
     $.ajax({
         type: 'GET',

@@ -455,22 +455,22 @@
                                 <div class="constituentphonegridcontainer"></div>
                             </div>
 
-                            <h1>Emails</h1>
+                            <h1>Emails<a href="#" title="New" class="newemailmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentemailgridcontainer"></div>
                             </div>
 
-                            <h1>Web Sites</h1>
+                            <h1>Web Sites<a href="#" title="New" class="newwebsitesmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentwebsitegridcontainer"></div>
                             </div>
 
-                            <h1>Point of Contact</h1>
+                            <h1>Point of Contact<a href="#" title="New" class="newpointofcontactmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentpocgridcontainer"></div>
                             </div>
 
-                            <h1>Social Media</h1>
+                            <h1>Social Media<a href="#" title="New" class="newsocialmediamodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentsocmedgridcontainer"></div>
                             </div>
@@ -771,16 +771,16 @@
     <div class="phonenumbermodal" title="Phone Number" style="display: none;">
 
         <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="pn-PhoneNumberType ContactTypeId" />
+                </div>
 
-            <div class="fieldblock">
-                <label>Type:</label>
-                <select class="pn-PhoneNumberType ContactTypeId" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Phone:</label>
-                <input type="text"  class="pn-Info" />
-            </div>
+                <div class="fieldblock">
+                    <label>Phone:</label>
+                    <input type="text"  class="pn-Info" />
+                </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -794,6 +794,72 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submitphonenumber" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="emailmodal" title="Email" style="display: none;">
+
+        <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="e-EmailType ContactTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Email:</label>
+                    <input type="text"  class="e-Info" />
+                </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="e-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="e-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitemail" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="websitesmodal" title="Web Sites" style="display: none;">
+
+        <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="ws-WebSiteType ContactTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Web Site:</label>
+                    <input type="text"  class="ws-Info" />
+                </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="ws-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="ws-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitwebsites" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
