@@ -6,13 +6,14 @@ using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class AddressesController : ControllerBase<Address>
     {
-        protected new ILocationService Service => (ILocationService) base.Service;
+        protected new IAddressService Service => (IAddressService) base.Service;
         public AddressesController()
             : base(new AddressService())
         {

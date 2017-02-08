@@ -42,7 +42,7 @@ namespace DDI.Business.Common
         /// Perform Zip+4 lookup on an address.
         /// </summary>
         /// <returns></returns>
-        public string Zip4Lookup(ZipLookupInfo address, out string resultAddress)
+        public string GetZipPlus4(ZipLookupInfo address, out string resultAddress)
         {
 
             resultAddress = string.Empty;

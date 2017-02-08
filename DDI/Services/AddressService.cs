@@ -7,11 +7,12 @@ using System.Linq;
 using DDI.Business.Common;
 using DDI.Business.CRM;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
 {
-    public class AddressService : ServiceBase<Address>, ILocationService
+    public class AddressService : ServiceBase<Address>, IAddressService
     {
         private readonly IRepository<Address> _repository;
         private readonly AddressLogic _addressLogic;
@@ -65,7 +66,7 @@ namespace DDI.Services
 
             string resultAddress = string.Empty;
             ZipLookup zl = new ZipLookup();
-            zl.Zip4Lookup(zipLookupInfo, out resultAddress);
+            zl.GetZipPlus4(zipLookupInfo, out resultAddress);
             Address address = new Address
             {
                 AddressLine1 = zipLookupInfo.AddressLine1,
