@@ -1341,7 +1341,7 @@ function EditWebsite(id) {
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
                 CloseModal();
 
@@ -1349,7 +1349,7 @@ function EditWebsite(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Web Site.');
             }
         });
 
@@ -1366,15 +1366,15 @@ function LoadWebsite(id) {
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Info').val(data.Data.Info);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data.Comment);
+            $(modal).find('.ws-Info').val(data.Data.Info);
+            $(modal).find('.ws-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.ws-Comment').val(data.Data.Comment);
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+            PopulateDropDown('.ws-WebSiteType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the Web Site.');
         }
     });
 
