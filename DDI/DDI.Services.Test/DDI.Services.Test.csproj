@@ -65,7 +65,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Extensions\PageableSearchExtensionsTest.cs" />
-    <Compile Include="Extensions\ConvertToTypeTest.cs" />
+    <Compile Include="Extensions\JsonExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
