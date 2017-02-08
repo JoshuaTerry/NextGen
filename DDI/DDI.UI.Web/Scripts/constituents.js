@@ -52,7 +52,8 @@ function PopulateMonthDays()
         for (x = 1; x <= days; x++) {
             $('.BirthDay').append('<option value=' + x + '>' + x + '</option>');
         }
-    }    
+    }
+    AmendMonthDays();
 }
 
 function AmendMonthDays()
