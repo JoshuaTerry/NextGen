@@ -412,7 +412,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/educations',
+        Links.GetEducation.Href,
         null,
         EditEducationModal);
 
@@ -460,8 +460,8 @@ function NewEducationModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'educations',
+                type: Links.NewEducation.Method,
+                url: Links.NewEducation.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
