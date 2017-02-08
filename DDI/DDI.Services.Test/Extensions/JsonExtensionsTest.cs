@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 namespace DDI.Services.Test.Extensions
 {
     [TestClass]
-    public class ConvertToTypeTest
+    public class JsonExtensionsTest
     {
         public class TestObject
         {
@@ -23,7 +23,7 @@ namespace DDI.Services.Test.Extensions
         }
          
         [TestMethod]
-        public void TestMethod1()
+        public void When_ConvertToObject_Is_Called_Should_Create_Dictionary_Of_Changed_Properties()
         {
             // Arrange2
             var item = new TestObject()
@@ -40,7 +40,8 @@ namespace DDI.Services.Test.Extensions
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
             foreach (var pair in jObject)
             {
-                changedProperties.Add(JsonExtensions.ConvertToType<TestObject>(pair).Key, JsonExtensions.ConvertToType<TestObject>(pair).Value);
+                var convertedPair = JsonExtensions.ConvertToType<TestObject>(pair);
+                changedProperties.Add(convertedPair.Key, convertedPair.Value);
             }
 
             //Assert

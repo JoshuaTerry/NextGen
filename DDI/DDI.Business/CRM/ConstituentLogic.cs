@@ -51,7 +51,27 @@ namespace DDI.Business.CRM
                 return _nameFormatter;
             }
         }
+                
+        public Constituent ConvertAgeRange (Constituent constituent)
+        {
+            if (constituent.BirthYearFrom.HasValue)
+            {
+                constituent.BirthYearFrom = DateTime.Now.Year - constituent.BirthYearFrom;
+            }
 
+            if (constituent.BirthYearTo.HasValue)
+            {
+                constituent.BirthYearTo = DateTime.Now.Year - constituent.BirthYearTo;
+            }
+
+            return constituent;
+        }
+
+        public int ConvertAgeRange(int value)
+        {
+            value = DateTime.Now.Year - value;
+            return value;
+        }
         /// <summary>
         /// Get the formatted name for a constituent.
         /// </summary>
