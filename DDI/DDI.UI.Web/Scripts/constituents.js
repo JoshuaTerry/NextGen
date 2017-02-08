@@ -100,6 +100,8 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
+    PopulateDropDown('.AccountTypeId', 'paymentpreferences/accounttypes', '', '');
+    // PopulateDropDown('.PreferredPaymentMethod', 'paymentpreferences/paymentmethods', '', '');
 
 }
 
@@ -190,6 +192,8 @@ function DisplayConstituentData() {
         LoadEducationTable();
 
         LoadPaymentPreferencesTable();
+
+        NewPaymentPreference();
 
         LoadContactInfo();
 
@@ -468,6 +472,8 @@ function NewPaymentPreference() {
 
     });
 
+    
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -691,7 +697,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        Links.GetConstituentAddress.Href,
         null,
         EditAddressModal);
 

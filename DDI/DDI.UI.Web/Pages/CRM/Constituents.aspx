@@ -275,7 +275,13 @@
 
                         <div class="fieldblock">
                             <label>Method</label>
-                            <select class="editable PaymentMethodId"></select>
+                            <select class="editable PreferredPaymentMethod">
+                                <option value="0">None</option>
+                                <option value="1">Check</option>
+                                <option value="2">ACH Transfer</option>
+                                <option value="3">Wire Transfer</option>
+                                <option value="4">SWIFT Transfer</option>
+                            </select>
                         </div>
 
                         <label>ETF Information</label>
@@ -751,34 +757,36 @@
 
             <div class="twocolumn">
 
-            <div class="fieldblock">
-                <label>From:</label>
-                <input type="text" class="StartDate datepicker" />
-            </div>
-
-            <div class="fieldblock">
-                <label>To:</label>
-                <input type="text" class="EndDate datepicker" />
-
-            </div>
-
-            <div class="twocolumn">
-
                 <div class="fieldblock">
-                    <label>Account Type</label>
-                    <select class="AccountTypeId" />
+                    <label>From:</label>
+                    <input type="text" class="StartDate datepicker" />
                 </div>
 
                 <div class="fieldblock">
-                    <label>Status</label>
-                    <select class="StatusId" />
+                    <label>To:</label>
+                    <input type="text" class="EndDate datepicker" />
+
                 </div>
 
-            </div>
+                <div class="twocolumn">
 
-            <div class="modalbuttons">
-                <input type="button" class="savedba" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                    <div class="fieldblock">
+                        <label>Account Type</label>
+                        <select class="AccountTypeId"></select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Status</label>
+                        <select class="StatusId"></select>
+                    </div>
+
+                </div>
+
+                <div class="modalbuttons">
+                    <input type="button" class="savedba" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
+
             </div>
 
         </div>
@@ -817,12 +825,12 @@
 
                 <div class="fieldblock">
                     <label>Account Type</label>
-                    <select class="AccountTypeId" />
+                    <select class="AccountTypeId"></select>
                 </div>
 
                 <div class="fieldblock">
                     <label>Status</label>
-                    <select class="StatusId" />
+                    <select class="StatusId"></select>
                 </div>
 
             </div>
