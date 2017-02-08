@@ -465,17 +465,17 @@
                                 <div class="constituentwebsitegridcontainer"></div>
                             </div>
 
-                            <h1>Point of Contact<a href="#" title="New" class="newpointofcontactmodallink newbutton"></a></h1>
+                            <h1>Point of Contact<a href="#" title="New" class="newpocmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentpocgridcontainer"></div>
                             </div>
 
-                            <h1>Social Media<a href="#" title="New" class="newsocialmediamodallink newbutton"></a></h1>
+                            <h1>Social Media<a href="#" title="New" class="newsocmedmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentsocmedgridcontainer"></div>
                             </div>
 
-                            <h1>Other Contacts</h1>
+                            <h1>Other Contacts<a href="#" title="New" class="newothercontactsmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentothergridcontainer"></div>
                             </div>
@@ -867,4 +867,69 @@
 
     </div>
 
+    <div class="pocmodal" title="Point Of Contact" style="display: none;">
+
+        <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="poc-PocType ContactTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Info:</label>
+                    <input type="text"  class="poc-Info" />
+                </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="poc-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="poc-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitpoc" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="socmedmodal" title="Social Media" style="display: none;">
+
+        <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="sm-SocialMediaType ContactTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>URL:</label>
+                    <input type="text"  class="sm-Info" />
+                </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="sm-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="sm-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitsocmed" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>

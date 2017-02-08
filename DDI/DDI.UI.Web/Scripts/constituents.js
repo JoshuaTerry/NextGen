@@ -210,13 +210,17 @@ function DisplayConstituentData() {
 
 	    NewPhoneNumberModal();
 
-	   LoadEmailTable();
+	    LoadEmailTable();
 
-	   NewEmailModal();
+	    NewEmailModal();
 
-	   LoadWebsiteTable();
+	    LoadWebsiteTable();
 
-	   NewWebsiteModal();
+	    NewWebsiteModal();
+
+	    LoadPointOfContactTable();
+
+	    NewPointOfContactModal();
     }
 }
 
@@ -1388,40 +1392,40 @@ function LoadPointOfContactTable() {
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Info', caption: 'Info' },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-        'constituentphonegridcontainer',
+    LoadGrid('constituentpocgrid',
+        'constituentpocgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/contactinfo',
         null,
-        EditPhoneNumber);
+        EditPointOfContact);
 }
 
 function NewPointOfContactModal() {
 
-    $('.newphonenumbermodallink').click(function (e) {
+    $('.newpocmodallink').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.phonenumbermodal').dialog({
+        modal = $('.pocmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
-        $('.submitphonenumber').unbind('click');
+        $('.submitpoc').unbind('click');
 
-        $('.submitphonenumber').click(function () {
+        $('.submitpoc').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.pn-Comment').val()
+                ContactType: $(modal).find('.poc-PocType').val(),
+                Info: $(modal).find('.poc-Info').val(),
+                IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.poc-Comment').val()
             }
 
             $.ajax({
@@ -1432,7 +1436,7 @@ function NewPointOfContactModal() {
                 crossDomain: true,
                 success: function () {
 
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                    DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
                     CloseModal();
 
@@ -1440,7 +1444,7 @@ function NewPointOfContactModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact');
                 }
             });
 
@@ -1461,7 +1465,7 @@ function NewPointOfContactModal() {
 
 function EditPointOfContact(id) {
 
-    modal = $('.phonenumbermodal').dialog({
+    modal = $('.pocmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
@@ -1478,17 +1482,17 @@ function EditPointOfContact(id) {
 
     });
 
-    $('.submitphonenumber').unbind('click');
+    $('.submitpoc').unbind('click');
 
-    $('.submitphonenumber').click(function () {
+    $('.submitpoc').click(function () {
 
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
+            // ContactType: $(modal).find('.poc-PocType').val(),
+            Info: $(modal).find('.poc-Info').val(),
+            IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.poc-Comment').val()
 
         }
 
@@ -1500,15 +1504,15 @@ function EditPointOfContact(id) {
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
                 CloseModal();
 
-                LoadPhoneNumbersTable();
+                LoadPointOfContactTable();
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact.');
             }
         });
 
@@ -1525,15 +1529,15 @@ function LoadPointOfContact(id) {
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Info').val(data.Data.Info);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data.Comment);
+            $(modal).find('.poc-Info').val(data.Data.Info);
+            $(modal).find('.poc-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.poc-Comment').val(data.Data.Comment);
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+            PopulateDropDown('.poc-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the Point of Contact.');
         }
     });
 
@@ -1541,46 +1545,46 @@ function LoadPointOfContact(id) {
 // End Point Of Contact Subsection
 
 // Social Media Subsection
-function LoadMediaTable() {
+function LoadSocialMediaTable() {
 
     var columns = [ // double check these against models
         { dataField: 'Id', width: '0px' },
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Phone #' },
+        { dataField: 'Info', caption: 'URL' },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-        'constituentphonegridcontainer',
+    LoadGrid('constituentsocmedgrid',
+        'constituentsocmedgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/contactinfo',
         null,
         EditPhoneNumber);
 }
 
-function NewMediaModal() {
+function NewSocialMediaModal() {
 
-    $('.newphonenumbermodallink').click(function (e) {
+    $('.newsocmedmodallink').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.phonenumbermodal').dialog({
+        modal = $('.socmedmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
-        $('.submitphonenumber').unbind('click');
+        $('.submitsocmed').unbind('click');
 
-        $('.submitphonenumber').click(function () {
+        $('.submitsocmed').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.pn-Comment').val()
+                ContactType: $(modal).find('.sm-SocialMediaType').val(),
+                Info: $(modal).find('.sm-Info').val(),
+                IsPreferred: $(modal).find('.sm-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.sm-Comment').val()
             }
 
             $.ajax({
@@ -1591,15 +1595,15 @@ function NewMediaModal() {
                 crossDomain: true,
                 success: function () {
 
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                    DisplaySuccessMessage('Success', 'Social Media saved successfully.');
 
                     CloseModal();
 
-                    LoadAlternateIDTable();
+                    LoadSocialMediaTable();
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Social Media');
                 }
             });
 
@@ -1618,9 +1622,9 @@ function NewMediaModal() {
 
 }
 
-function EditMedia(id) {
+function EditSocialMedia(id) {
 
-    modal = $('.phonenumbermodal').dialog({
+    modal = $('.socmedmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
@@ -1637,17 +1641,17 @@ function EditMedia(id) {
 
     });
 
-    $('.submitphonenumber').unbind('click');
+    $('.submitsocmed').unbind('click');
 
-    $('.submitphonenumber').click(function () {
+    $('.submitsocmed').click(function () {
 
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
+            // ContactType: $(modal).find('.sm-PhoneNumberType').val(),
+            Info: $(modal).find('.sm-Info').val(),
+            IsPreferred: $(modal).find('.sm-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.sm-Comment').val()
 
         }
 
@@ -1659,11 +1663,11 @@ function EditMedia(id) {
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                DisplaySuccessMessage('Success', 'Social Media saved successfully.');
 
                 CloseModal();
 
-                LoadPhoneNumbersTable();
+                LoadSocialMediaTable();
 
             },
             error: function (xhr, status, err) {
@@ -1675,7 +1679,7 @@ function EditMedia(id) {
 
 }
 
-function LoadMedia(id) {
+function LoadSocialMedia(id) {
 
     $.ajax({
         type: 'GET',
