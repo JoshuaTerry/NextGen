@@ -4,14 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using DDI.Data;
-using DDI.Conversion;
-using DDI.Shared.Models.Client;
-using System.Data.Entity.Migrations;
-using log4net;
 using DDI.Conversion.Statics;
-using DDI.Shared.Models.Client.CRM;
+using log4net;
 
 namespace DDI.Conversion
 {
@@ -40,6 +34,9 @@ namespace DDI.Conversion
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
 
+            // Elasticsearch POC
+            DDI.Search.SearchPOC.PerformSearch();
+
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
@@ -65,7 +62,7 @@ namespace DDI.Conversion
 
             // Post-conversion tasks
 
-            // Run<CRM.ConstituentSearchIndexer>();
+            Run<CRM.ConstituentSearchIndexer>();
 
         }
 

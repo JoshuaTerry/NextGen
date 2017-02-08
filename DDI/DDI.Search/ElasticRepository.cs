@@ -4,29 +4,25 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Shared.Models;
 using Nest;
 
 namespace DDI.Search
 {
     /// <summary>
-    /// ElasticSearch repository
+    /// ElasticSearch strongly typed repository
     /// </summary>
     /// <typeparam name="T">Document type</typeparam>
-    public class ElasticRepository<T> where T : class
+    public class ElasticRepository<T> where T : class, ISearchDocument
     {
-        private ElasticClient _client;
-        private Uri _uri;
-        private ConnectionSettings _connectionSettings;
-        private string _indexName = "demo"; // TODO:  This will need to be based on the "client code" once this has been established.
 
-        public ElasticRepository()
+        private NestClient _client;
+
+        public ElasticRepository() : this(new NestClient()) { }
+
+        public ElasticRepository(NestClient client)
         {
-            var configManager = new Shared.DDIConfigurationManager();
-            _uri = new Uri(configManager.AppSettings["ElasticsearchUrl"]);
-
-            _connectionSettings = new ConnectionSettings(_uri);
-            _connectionSettings.DefaultIndex(_indexName);
-            _client = new ElasticClient(_connectionSettings);
+            _client = client;
         }
 
         /// <summary>
@@ -35,9 +31,9 @@ namespace DDI.Search
         /// <param name="document"></param>
         public void Update(T document)
         {
-            var indexResp = _client.Index(document);            
+            _client.IndexDocument(document);
         }
-        
+
         /// <summary>
         /// Update a set of documents in the Elasticsearch database.
         /// </summary>
@@ -48,13 +44,41 @@ namespace DDI.Search
         /// <param name="onCompleted">Action to perform when all documents have been submitted for update.</param>
         public void BulkUpdate(IEnumerable<T> documents, int pageSize, Action<long> onNext = null, Action<Exception> onError = null, Action onCompleted = null)
         {
-            var bulkAll = _client.BulkAll(documents, b => b.BackOffRetries(2).BackOffTime("30s").MaxDegreeOfParallelism(4).Size(pageSize)); // Using recommended values.
-            bulkAll.Subscribe(new BulkAllObserver(
-                onNext: n => onNext?.Invoke(n.Page * pageSize),
-                onError: onError,
-                onCompleted: onCompleted
-                ));
+            _client.BulkIndexDocuments(documents, pageSize, onNext, onError, onCompleted); 
+        }
+
+        /// <summary>
+        /// Create a new strongly typed ElasticQuery.
+        /// </summary>
+        /// <returns></returns>
+        public ElasticQuery<T> CreateQuery()
+        {
+            return new ElasticQuery<T>();
+        }
+
+        /// <summary>
+        /// Perform a document search, returning strongly typed search results.
+        /// </summary>
+        /// <param name="query">The ElasticQuery  </param>
+        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int pageSize, int page)
+        {
+            ISearchRequest request = query.BuildSearchRequest();
+            request.Size = pageSize;
+            request.From = page * pageSize;
+            var response = _client.ElasticClient.Search<T>(request);
+
+            var result = new DocumentSearchResult<T>();
+            result.ElasticClient = _client.ElasticClient;
+            result.Request = request;
+            result.Documents = response.Documents;
+            result.TotalCount = (int)response.Total;
+
+            return result;            
         }
     }
+
 
 }

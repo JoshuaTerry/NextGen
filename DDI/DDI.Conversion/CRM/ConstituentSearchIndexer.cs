@@ -30,17 +30,22 @@ namespace DDI.Conversion.CRM
 
         private void BuildConstituentIndex()
         {
-            _elasticRepository = new ElasticRepository<ConstituentDocument>();
+            NestClient nestClient = new NestClient();
+            nestClient.DeleteIndex();
+            nestClient.CreateIndex();
+
+            _elasticRepository = new ElasticRepository<ConstituentDocument>(nestClient);
+            
             ConstituentLogic bl;
 
             Console.WriteLine("Starting constituent indexing...");
 
-            var query = new BatchUnitOfWork<Constituent>(p => p.ConstituentAddresses.First().Address, 
-                                                         p => p.ContactInfo, 
-                                                         p => p.ContactInfo.First().ContactType.ContactCategory, 
+            var query = new BatchUnitOfWork<Constituent>(p => p.ConstituentAddresses.First().Address,
+                                                         p => p.ContactInfo,
+                                                         p => p.ContactInfo.First().ContactType.ContactCategory,
                                                          p => p.AlternateIds,
-                                                         p => p.ConstituentType)
-                .Where(p => p.ConstituentNumber == 40036);
+                                                         p => p.ConstituentType);
+
             query.OnNextBatch = (count, batch) =>
             {
                 bl = query.UnitOfWork.GetBusinessLogic<ConstituentLogic>();
