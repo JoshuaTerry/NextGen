@@ -40,7 +40,7 @@ namespace DDI.Shared.Test.Helpers
             string description = string.Empty;
 
             //Act
-            description = EnumHelper.GetDescription(PaymentMethod.SWIFT);
+            description = EnumHelper.GetDescription(PaymentMethodType.SWIFT);
 
             //Assert
             Assert.AreEqual(description, "SWIFT Transfer");
@@ -53,7 +53,7 @@ namespace DDI.Shared.Test.Helpers
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
 
             //Act
-            dictionary = EnumHelper.GetDescriptions<PaymentMethod>();
+            dictionary = EnumHelper.GetDescriptions<PaymentMethodType>();
 
             //Assert
             Assert.AreEqual(5, dictionary.Count);
@@ -108,10 +108,10 @@ namespace DDI.Shared.Test.Helpers
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
 
             //Act
-            dictionary = EnumHelper.GetDescriptions<PaymentMethod>();
+            dictionary = EnumHelper.GetDescriptions<PaymentMethodType>();
 
             var service = new DDI.Services.PaymentPreferenceService();
-            var response = service.GetDataResponse(EnumHelper.GetDescriptions<PaymentMethod>);
+            var response = service.GetDataResponse(EnumHelper.GetDescriptions<PaymentMethodType>);
             response.TotalResults = response.Data.Count;
 
             DropDownList ddl = new DropDownList();
