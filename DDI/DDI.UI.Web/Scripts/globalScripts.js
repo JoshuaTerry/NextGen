@@ -450,8 +450,7 @@ function SetupEditControls() {
             StopEdit(editcontainer);
             SaveEdit(editcontainer);
         } else {
-            // This should be a better formated dialog box. What is our standard?
-            alert("There are invalid fields. Please fix those and then try saving again.");
+            DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
         }
     });
 
