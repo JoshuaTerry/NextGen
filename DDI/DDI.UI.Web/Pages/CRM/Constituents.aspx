@@ -475,7 +475,7 @@
                                 <div class="constituentsocmedgridcontainer"></div>
                             </div>
 
-                            <h1>Other Contacts<a href="#" title="New" class="newothercontactsmodallink newbutton"></a></h1>
+                            <h1>Other Contacts<a href="#" title="New" class="newothermodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentothergridcontainer"></div>
                             </div>
@@ -926,6 +926,39 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submitsocmed" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="othermodal" title="Other Contacts" style="display: none;">
+
+        <div class="modalcontent">
+            
+                <div class="fieldblock">
+                    <label>Type:</label>
+                    <select class="o-OtherType ContactTypeId" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Info:</label>
+                    <input type="text"  class="o-Info" />
+                </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="o-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="o-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitother" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 

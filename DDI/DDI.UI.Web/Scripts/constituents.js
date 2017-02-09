@@ -221,6 +221,14 @@ function DisplayConstituentData() {
 	    LoadPointOfContactTable();
 
 	    NewPointOfContactModal();
+
+	    LoadSocialMediaTable();
+
+	    NewSocialMediaModal();
+
+	    LoadOtherContactsTable();
+
+	    NewOtherContactsModal();
     }
 }
 
@@ -1251,12 +1259,13 @@ function NewWebsiteModal() {
 
         e.preventDefault();
 
-        modal = $('.websitemodal').dialog({
+        modal = $('.websitesmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
+
         $('.submitwebsites').unbind('click');
 
         $('.submitwebsites').click(function () {
@@ -1714,36 +1723,36 @@ function LoadOtherContactsTable() {
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-        'constituentphonegridcontainer',
+    LoadGrid('constituentothergrid',
+        'constituentothergridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/contactinfo',
         null,
-        EditPhoneNumber);
+        EditOtherContacts);
 }
 
 function NewOtherContactsModal() {
 
-    $('.newphonenumbermodallink').click(function (e) {
+    $('.newothermodallink').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.phonenumbermodal').dialog({
+        modal = $('.othermodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
-        $('.submitphonenumber').unbind('click');
+        $('.submitother').unbind('click');
 
-        $('.submitphonenumber').click(function () {
+        $('.submitother').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.pn-Comment').val()
+                ContactType: $(modal).find('.o-OtherType').val(),
+                Info: $(modal).find('.o-Info').val(),
+                IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.o-Comment').val()
             }
 
             $.ajax({
@@ -1754,15 +1763,15 @@ function NewOtherContactsModal() {
                 crossDomain: true,
                 success: function () {
 
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                    DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
                     CloseModal();
 
-                    LoadAlternateIDTable();
+                    LoadOtherContactsTable();
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Other Contact');
                 }
             });
 
@@ -1783,14 +1792,14 @@ function NewOtherContactsModal() {
 
 function EditOtherContacts(id) {
 
-    modal = $('.phonenumbermodal').dialog({
+    modal = $('.othermodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadPhoneNumber(id);
+    LoadOtherContacts(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1800,17 +1809,17 @@ function EditOtherContacts(id) {
 
     });
 
-    $('.submitphonenumber').unbind('click');
+    $('.submitother').unbind('click');
 
-    $('.submitphonenumber').click(function () {
+    $('.submitother').click(function () {
 
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
+            // ContactType: $(modal).find('.o-OtherType').val(),
+            Info: $(modal).find('.o-Info').val(),
+            IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.o-Comment').val()
 
         }
 
@@ -1822,15 +1831,15 @@ function EditOtherContacts(id) {
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+                DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
                 CloseModal();
 
-                LoadPhoneNumbersTable();
+                LoadOtherContactsTable();
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Other Contacts.');
             }
         });
 
@@ -1847,19 +1856,19 @@ function LoadOtherContacts(id) {
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Info').val(data.Data.Info);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data.Comment);
+            $(modal).find('.o-Info').val(data.Data.Info);
+            $(modal).find('.o-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.o-Comment').val(data.Data.Comment);
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
+            PopulateDropDown('.o-PhoneNumberType', 'contacttypes/?Id=' + data.Data.ContactTypeId, '', '');
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the Other Contact.');
         }
     });
 
 }
-// End Contacts Subsection
+// End Other Contacts Subsection
 
 /* End Contact Information Section */
