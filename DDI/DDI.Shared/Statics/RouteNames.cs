@@ -17,6 +17,7 @@ namespace DDI.Shared.Statics
         public const string ConstituentDBA = "ConstituentDBA";
         public const string ConstituentStatus = "ConstituentStatus";
         public const string ConstituentType = "ConstituentType";
+        public const string ContactCategory = "ContactCategory";
         public const string ContactType = "ContactType";
         public const string Country = "Country";
         public const string County = "County";
