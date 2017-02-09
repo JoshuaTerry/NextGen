@@ -15,5 +15,6 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse GetPaymentMethods();
         IDataResponse GetAccountTypes();
         IDataResponse GetPaymentMethodStatuses();
+        IDataResponse<T> Save<T>(T entityToSave) where T : EntityBase;
     }
 }
