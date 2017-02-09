@@ -64,6 +64,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201702091934005_PaymentMethodUpdateMR.cs" />
+    <Compile Include="Migrations\201702091934005_PaymentMethodUpdateMR.Designer.cs">
+      <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.cs" />
     <Compile Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.Designer.cs">
       <DependentUpon>201702090410032_AddingPaymentMethodTables.cs</DependentUpon>
@@ -220,6 +224,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702091934005_PaymentMethodUpdateMR.resx">
+      <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.resx">
       <DependentUpon>201702090410032_AddingPaymentMethodTables.cs</DependentUpon>
     </EmbeddedResource>
