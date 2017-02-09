@@ -14,6 +14,8 @@ $(document).ready(function () {
 
     LoadDatePair();
 
+    LoadHeaderInfo();
+
     LoadTabs();
 
     LoadAccordions();
@@ -66,6 +68,71 @@ $(document).ready(function () {
 
 });
 
+function LoadHeaderInfo() {
+    LoadBusinessDate();
+    LoadBusinessUnit();
+    LoadEnvironment();
+}
+
+function LoadBusinessDate() {
+
+    if (sessionStorage.getItem('businessdate')) {
+        $('.businessdate').text(sessionStorage.getItem('businessdate'));
+    }
+    else {
+
+        $.ajax({
+            url: WEB_API_ADDRESS + 'businessdate',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                
+                var date = FormatJSONDate(data.Data);
+
+                if (date) {
+                    sessionStorage.setItem('businessdate', date);
+                }
+
+                $('.businessdate').text(date);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+}
+
+function LoadBusinessUnit() {
+    /* Will be implemented with Business Unit */
+}
+
+function LoadEnvironment() {
+    if (sessionStorage.getItem('environment')) {
+        $('.environment').text(sessionStorage.getItem('environment'));
+    }
+    else {
+        $.ajax({
+            url: WEB_API_ADDRESS + 'environment',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+
+                if (data.Data.length > 0) {
+                    sessionStorage.setItem('environment', data.Data);
+                }
+
+                $('.environment').text(data.Data);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+}
 function LoadNewConstituentModalDropDowns() {
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
@@ -133,7 +200,7 @@ function SaveNewConstituent() {
             ClearFields();
 
             CloseModal();
-
+            
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
@@ -271,8 +338,7 @@ function FormatJSONDate(jsonDate) {
     var date = '';
 
     if (jsonDate) {
-        date = new Date(parseInt(jsonDate.substr(6)));
-        date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+        date = new Date(jsonDate).toDateString();
     }
     
     return date;
