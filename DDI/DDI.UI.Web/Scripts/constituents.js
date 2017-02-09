@@ -575,18 +575,18 @@ function LoadPaymentPreferencesTable() {
     var columns = [
             { dataField: 'Id', width: '0px' },
             { dataField: 'Name', caption: 'Description' },
-            { dataField: 'ABANumber', caption: 'ABA Number' },
-            { dataField: 'AccountNumber', caption: 'Account Number' },
-            { dataField: '', caption: 'Ch/S' },
+            { dataField: 'RoutingNumber', caption: 'Routing Number' },
+            { dataField: 'BankAccount', caption: 'Account Number' },
+            { dataField: 'AccountType', caption: 'Ch/S' },
             { dataField: '', caption: 'Notes' }
     ];
 
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentPreference.Href,
+        Links.GetPaymentPreferenceEFT.Href,
         null,
-        EditAddressModal);
+        EditPaymentPreference);
     
 }
 
@@ -628,13 +628,13 @@ function NewPaymentPreference() {
 
         $.ajax({
             type: Links.NewPaymentPreference.Method,
-            url: Links.NewPaymentPreference.Href,
+            url: Links.NewPaymentPreference.Href + '/eft',
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Payment Preference saved successfully.');
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
                 CloseModal();
 
@@ -642,7 +642,7 @@ function NewPaymentPreference() {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the payment preference.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
             }
         });
 
@@ -686,13 +686,13 @@ function EditPaymentPreference(id) {
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+            url: WEB_API_ADDRESS + 'paymentpreferences/EFT/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage('Success', 'Payment Preference saved successfully.');
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
                 CloseModal();
 
@@ -700,7 +700,7 @@ function EditPaymentPreference(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Payment Preference.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
             }
         });
 
@@ -710,7 +710,35 @@ function EditPaymentPreference(id) {
 
 function LoadPaymentPreference(id) {
 
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'paymentpreferences/EFT/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
 
+            //ConstituentId: $('.hidconstituentid').val(),
+            //Description: $('.Description').val(),
+            //BankName: $('.BankName').val(),
+            //RoutingNumber: $('.RoutingNumber').val(),
+            //BankAccount: $('.AccountNumber').val(),
+            //AccountType: $('.AccountType').val(),
+            //Status: $('.Status').val(),
+            //StatusDate: new Date()
+
+            $(modal).find('.Description').val(data.Data.Description);
+            $(modal).find('.BankName').val(data.Data.BankName);
+            $(modal).find('.RoutingNumber').val(data.Data.RoutingNumber);
+            $(modal).find('.AccountNumber').val(data.Data.AccountNumber);
+            $(modal).find('.AccountType').val(data.Data.AccountType);
+            $(modal).find('.Status').val(data.Data.Status);
+            // $(modal).find('.StatusDate').val(data.Data.StatusDate);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
+        }
+    });
 
 }
 /* End Payment Preference Section */
