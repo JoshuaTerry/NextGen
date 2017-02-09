@@ -71,10 +71,9 @@
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
-    <Compile Include="ILocationService.cs" />
+    <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
-    <Compile Include="LocationService.cs" />
     <Compile Include="PaymentPreferenceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ConstituentSearch.cs" />
@@ -88,6 +87,7 @@
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
+    <Compile Include="AddressService.cs" />
     <Compile Include="StateService.cs" />
   </ItemGroup>
   <ItemGroup>
