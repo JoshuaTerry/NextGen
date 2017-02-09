@@ -9,7 +9,7 @@ using DDI.Shared.Models.Client.CRM;
 namespace DDI.Shared.Models.Client.CP
 {
     [Table("PaymentMethod")]
-    public class PaymentMethodBase : EntityBase
+    public class PaymentMethod : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -25,5 +25,23 @@ namespace DDI.Shared.Models.Client.CP
         public ICollection<Constituent> Constituents { get; set; }
 
         public override string DisplayName => Description;
+
+        [MaxLength(128)]
+        public string BankName { get; set; }
+
+        [MaxLength(64)]
+        public string BankAccount { get; set; }
+
+        [MaxLength(64)]
+        public string RoutingNumber { get; set; }
+
+        public EFTAccountType AccountType { get; set; }
+
+        public Guid? EFTFormatId { get; set; }
+
+        public EFTFormat EFTFormat { get; set; }
+
+        [MaxLength(128)]
+        public string CardToken { get; set; }
     }
 }
