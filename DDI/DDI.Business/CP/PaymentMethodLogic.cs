@@ -9,7 +9,7 @@ using DDI.Shared.Statics.CP;
 
 namespace DDI.Business.CP
 {
-    public class PaymentMethodLogic : EntityLogicBase<EFTPaymentMethod>
+    public class PaymentMethodLogic : EntityLogicBase<PaymentMethod>
     {
         public PaymentMethodLogic() : this(new UnitOfWorkEF()) { }
 
@@ -17,12 +17,12 @@ namespace DDI.Business.CP
         {
         }
 
-        public override void Validate(EFTPaymentMethod entity)
+        public override void Validate(PaymentMethod entity)
         {
             base.Validate(entity);
-            if (entity is EFTPaymentMethod)
+            if (entity is PaymentMethod)
             {
-                EFTPaymentMethod eftEntity = entity as EFTPaymentMethod;
+                PaymentMethod eftEntity = entity as PaymentMethod;
                 ValidateRoutingNumber(eftEntity.RoutingNumber);
 
                 if (eftEntity.EFTFormat == null)

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace DDI.Shared.Enums.CRM
 {
-    public enum PaymentMethod
+    public enum PaymentMethodType
     {
         [Description("None")]
         None = 0,
