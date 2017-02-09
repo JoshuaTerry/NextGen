@@ -132,7 +132,8 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(JsonExtensions.ConvertToType<T>(pair).Key, JsonExtensions.ConvertToType<T>(pair).Value);
+                    var convertedPair = JsonExtensions.ConvertToType<T>(pair);
+                    changedProperties.Add(convertedPair.Key, convertedPair.Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);

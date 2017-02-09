@@ -985,6 +985,7 @@ function EditAddressModal(id) {
 function GetEditedAddressFields() {
 
     var item = {
+        Id: $(modal).find('.hidconstituentaddressid').val(),
         ConstituentId: $('.hidconstituentid').val(),
         IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
@@ -995,6 +996,7 @@ function GetEditedAddressFields() {
         ResidentType: $(modal).find('.na-ResidentType').val(),
         AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
         Address: {
+            Id: $(modal).find('.hidaddressid').val(),
             AddressLine1: $(modal).find('.na-AddressLine1').val(),
             AddressLine2: $(modal).find('.na-AddressLine2').val(),
             City: $(modal).find('.na-City').val(),

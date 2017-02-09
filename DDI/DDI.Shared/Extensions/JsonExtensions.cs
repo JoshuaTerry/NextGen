@@ -18,11 +18,24 @@ namespace DDI.Shared.Extensions
 
             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                returnValue = !pair.Value.IsNullOrEmpty() ? new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(Nullable.GetUnderlyingType(property.PropertyType))) : new KeyValuePair<string, object>(pair.Key, null);
+                if (pair.Value.Type == JTokenType.String &&
+                    Nullable.GetUnderlyingType(property.PropertyType) == typeof (Guid) &&
+                    !string.IsNullOrWhiteSpace(pair.Value.ToString()))
+                {
+                    Guid guidValue;
+                    guidValue = Guid.Parse(pair.Value.ToString());
+
+                    returnValue = new KeyValuePair<string, object>(pair.Key, guidValue);
+                }
+                else
+                {
+                    var test = !pair.Value.IsNullOrEmpty();
+                    returnValue = !pair.Value.IsNullOrEmpty() ? new KeyValuePair<string, object>(pair.Key, pair.Value.ToObject(Nullable.GetUnderlyingType(property.PropertyType))) : new KeyValuePair<string, object>(pair.Key, null);
+                }
             }
             else
             {
-                if (pair.Value.IsNullOrEmpty())
+                if (pair.Value.IsNullOrEmpty() && pair.Value.Type != JTokenType.String)
                 {
                     throw new NullReferenceException("Updated value of property cannot be null or empty.");
                 }
@@ -38,7 +51,10 @@ namespace DDI.Shared.Extensions
             return (token == null) ||
                    (token.Type == JTokenType.Array && !token.HasValues) ||
                    (token.Type == JTokenType.Object && !token.HasValues) ||
+                   (token.Type == JTokenType.String && token.ToString().ToLower() == "null") ||
+                   (token.Type == JTokenType.String && token.ToString() == string.Empty) ||
                    (token.Type == JTokenType.Null);
         }
     }
 }
+
