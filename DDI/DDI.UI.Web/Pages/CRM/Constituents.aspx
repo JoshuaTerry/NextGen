@@ -803,24 +803,24 @@
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="Description" />
+                <input type="text" class="pp-Description" />
             </div>
 
             <div class="fieldblock">
                 <label>Bank Name</label>
-                <input type="text" class="BankName" />
+                <input type="text" class="pp-BankName" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>Rounting Number</label>
-                    <input type="text" class="RoutingNumber" />
+                    <input type="text" class="pp-RoutingNumber" />
                 </div>
 
                 <div class="fieldblock">
                     <label>Account Number</label>
-                    <input type="text" class="AccountNumber" />
+                    <input type="text" class="pp-AccountNumber" />
                 </div>
 
             </div>
@@ -829,7 +829,8 @@
 
                 <div class="fieldblock">
                     <label>Account Type</label>
-                    <select class="AccountTypeId">
+                    <select class="pp-AccountType">
+                        <option value=""></option>
                         <option value="0">Checking Account</option>
                         <option value="1">Savings Account</option>
                     </select>
@@ -837,7 +838,8 @@
 
                 <div class="fieldblock">
                     <label>Status</label>
-                    <select class="StatusId">
+                    <select class="pp-Status">
+                        <option value=""></option>
                         <option value="0">Active</option>
                         <option value="1">Inactive</option>
                         <option value="2">Pre-note Required</option>

@@ -18,7 +18,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/paymentpreferences/eft", Name = RouteNames.PaymentPreference + RouteNames.EFT)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.PaymentPreference, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.PaymentPreference + RouteNames.EFT, limit, offset, orderBy, fields);
         }
 
         [HttpGet]

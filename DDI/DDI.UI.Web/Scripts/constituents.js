@@ -571,6 +571,7 @@ function LoadEducation(id) {
 }
 /* End Education Section */
 
+
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
@@ -615,22 +616,26 @@ function NewPaymentPreference() {
 
     });
 
+    $('.savepaymentpreference').unbind('click');
+
     $('.savepaymentpreference').click(function () {
+
+        var date = new Date();
 
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
-            Description: $('.Description').val(),
-            BankName: $('.BankName').val(),
-            RoutingNumber: $('.RoutingNumber').val(),
-            BankAccount: $('.AccountNumber').val(),
-            AccountType: $('.AccountType').val(),
-            Status: $('.Status').val(),
-            StatusDate: new Date()
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
+            StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
         };
 
         $.ajax({
-            type: Links.NewPaymentPreference.Method,
-            url: Links.NewPaymentPreference.Href + '/eft',
+            type: Links.NewPaymentPreferenceEFT.Method,
+            url: Links.NewPaymentPreferenceEFT.Href,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -677,18 +682,18 @@ function EditPaymentPreference(id) {
 
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
-            Description: $('.Description').val(),
-            BankName: $('.BankName').val(),
-            RoutingNumber: $('.RoutingNumber').val(),
-            BankAccount: $('.AccountNumber').val(),
-            AccountType: $('.AccountType').val(),
-            Status: $('.Status').val(),
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
             StatusDate: new Date()
         };
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'paymentpreferences/EFT/' + id,
+            url: WEB_API_ADDRESS + 'paymentpreferences/eft/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -714,26 +719,17 @@ function LoadPaymentPreference(id) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'paymentpreferences/EFT/' + id,
+        url: WEB_API_ADDRESS + 'paymentpreferences/eft/' + id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
 
-            //ConstituentId: $('.hidconstituentid').val(),
-            //Description: $('.Description').val(),
-            //BankName: $('.BankName').val(),
-            //RoutingNumber: $('.RoutingNumber').val(),
-            //BankAccount: $('.AccountNumber').val(),
-            //AccountType: $('.AccountType').val(),
-            //Status: $('.Status').val(),
-            //StatusDate: new Date()
-
-            $(modal).find('.Description').val(data.Data.Description);
-            $(modal).find('.BankName').val(data.Data.BankName);
-            $(modal).find('.RoutingNumber').val(data.Data.RoutingNumber);
-            $(modal).find('.AccountNumber').val(data.Data.AccountNumber);
-            $(modal).find('.AccountType').val(data.Data.AccountType);
-            $(modal).find('.Status').val(data.Data.Status);
+            $(modal).find('.pp-Description').val(data.Data.Description);
+            $(modal).find('.pp-BankName').val(data.Data.BankName);
+            $(modal).find('.pp-RoutingNumber').val(data.Data.RoutingNumber);
+            $(modal).find('.pp-AccountNumber').val(data.Data.BankAccount);
+            $(modal).find('.pp-AccountType').val(data.Data.AccountType);
+            $(modal).find('.pp-Status').val(data.Data.Status);
             // $(modal).find('.StatusDate').val(data.Data.StatusDate);
 
         },
@@ -744,6 +740,7 @@ function LoadPaymentPreference(id) {
 
 }
 /* End Payment Preference Section */
+
 
 /* Professional Section */
 function PopulateUserIdDropDown() {
