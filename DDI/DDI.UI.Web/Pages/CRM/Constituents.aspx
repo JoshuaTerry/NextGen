@@ -253,14 +253,16 @@
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1>Education (Not Implemented Yet)</h1>
+                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
                     <div class="editcontainer">
+
                         <div class="fieldblock">
                             <label>Education Level</label>
                             <select class="editable EducationLevelId"></select>
                         </div>
 
-                        <div class="educationleveltable"></div>
+                        <div class="educationgridcontainer"></div>
+
                     </div>
 
                     <h1>Organization</h1>
@@ -671,7 +673,7 @@
 
         </div>
 
-        <div class="dashboard">
+        <div class="dashboard" style="display: none;">
 
             <h1>Dashboard</h1>
 
@@ -773,8 +775,8 @@
     <div class="dbamodal" title="Doing Business As" style="display: none;">
 
         <div class="modalcontent">
-
             <input type="hidden" class="hiddbaid" />
+
 
             <div class="fieldblock">
                 <label>DBA Name:</label>
@@ -784,15 +786,64 @@
             <div class="fieldblock">
                 <label>From:</label>
                 <input type="text" class="StartDate datepicker" />
+
             </div>
+
 
             <div class="fieldblock">
                 <label>To:</label>
                 <input type="text" class="EndDate datepicker" />
+
             </div>
 
             <div class="modalbuttons">
                 <input type="button" class="savedba" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+	
+	<div class="educationmodal" title="Education" style="display: none;"">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Major</label>
+                <input type="text" class="ed-Major" />
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Start Date</label>
+                    <input type="text" class="ed-StartDate datepicker" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>End Date</label>
+                    <input type="text" class="ed-EndDate datepicker" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>School</label>
+                    <select class="ed-School"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Degree</label>
+                    <select class="ed-Degree"></select>
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="saveeducation" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

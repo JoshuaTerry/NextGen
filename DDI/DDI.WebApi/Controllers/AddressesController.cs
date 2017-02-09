@@ -7,12 +7,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers
 {
     //[Authorize]
     public class AddressesController : ControllerBase<Address>
     {
+        protected new IAddressService Service => (IAddressService) base.Service;
+
+        public AddressesController()
+            : base(new AddressService())
+        {
+        }
+
         protected override Expression<Func<Address, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Address, object>>[]
@@ -60,6 +68,24 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/addresses/zip")]
+        public IHttpActionResult RefineLocation(string addressLine1 = null, string addressLine2 = null, string city = null, Guid? countryId = null, Guid? countyId = null, Guid? stateId = null, string zip = null)
+        {
+            try
+            {
+                var fields = "City,Country,County.Id,County.Description,State.Id,State.CountryId,State.Description,PostalCode";
+                var response = Service.RefineAddress(addressLine1, addressLine2, city, countryId, countyId, stateId, zip);
+
+                return FinalizeResponse(response, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
         }
     }
 }
