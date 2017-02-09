@@ -52,7 +52,8 @@ function PopulateMonthDays()
         for (x = 1; x <= days; x++) {
             $('.BirthDay').append('<option value=' + x + '>' + x + '</option>');
         }
-    }    
+    }
+    AmendMonthDays();
 }
 
 function AmendMonthDays()
@@ -60,7 +61,7 @@ function AmendMonthDays()
     var year = $('.BirthYear').val();
     var month = $('.BirthMonth').val();
     var day = $('.BirthDay').val();
-    if (year != null && month == '02')
+    if (year != null && month == '2')
     {
         var option29 = $('.BirthDay option[value="29"]');
 
@@ -186,7 +187,9 @@ function DisplayConstituentData() {
 
         NewDBAModal();
 
-        LoadEducationTable();
+        LoadEducationGrid();
+
+        NewEducationModal();
 
         LoadEthnicitiesTagBox();
 
@@ -205,6 +208,8 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
+	
+	PopulateUserIdDropDown();
     }
 }
 
@@ -264,7 +269,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'constituents/' + currentEntity.Id + '/doingbusinessas',
+        Links.GetDoingBusinessAs.Href,
         null,
         EditDBA);
 
@@ -303,8 +308,8 @@ function NewDBAModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'doingbusinessas',
+                type: Links.NewDoingBusinessAs.Method,
+                url: Links.NewDoingBusinessAs.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -408,36 +413,167 @@ function LoadDBA(id) {
 
 
 /* Education Section */
-function LoadEducationTable() {
+function LoadEducationGrid() {
 
-    $('.educationleveltable').dxDataGrid({
-        dataSource: currentEntity.Educations,
-        columns: [
-            { dataField: 'StartDate', caption: 'Start Date', },
-            { dataField: 'EndDate', caption: 'End Date' },
-            { dataField: 'School', caption: 'School' },
-            { dataField: 'Degree', caption: 'Degree' },
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
+            { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
+            { dataField: 'School.DisplayName', caption: 'School' },
+            { dataField: 'Degree.DisplayName', caption: 'Degree' },
             { dataField: 'Major', caption: 'Major' }
-        ],
-        paging: {
-            pageSize: 15
+    ];
+
+    LoadGrid('educationgrid',
+        'educationgridcontainer',
+        columns,
+        Links.GetEducation.Href,
+        null,
+        EditEducationModal);
+
+}
+
+function EducationModalDropDowns() {
+
+    PopulateDropDown('.ed-Degree', 'degrees', '', '', null);
+    PopulateDropDown('.ed-School', 'schools', '', '', null);
+
+}
+
+function NewEducationModal() {
+
+    $('.neweducationmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.educationmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 600,
+            resizable: false
+        });
+
+        EducationModalDropDowns();
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal();
+
+        });
+
+        $('.saveeducation').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                Major: $('.ed-Major').val(),
+                StartDate: $('.ed-StartDate').val(),
+                EndDate: $('.ed-EndDate').val(),
+                SchoolId: $('.ed-School').val(),
+                DegreeId: $('.ed-Degree').val()
+            }
+
+            $.ajax({
+                type: Links.NewEducation.Method,
+                url: Links.NewEducation.Href,
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Education saved successfully.');
+
+                    CloseModal();
+
+                    LoadEducationGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+                }
+            });
+
+        });
+
+    });
+
+}
+
+function EditEducationModal(id) {
+
+    modal = $('.educationmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 600,
+        resizable: false
+    });
+
+    EducationModalDropDowns();
+
+    LoadEducation(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.saveeducation').click(function () {
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Major: $('.ed-Major').val(),
+            StartDate: $('.ed-StartDate').val(),
+            EndDate: $('.ed-EndDate').val(),
+            SchoolId: $('.ed-School').val(),
+            DegreeId: $('.ed-Degree').val()
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'educations/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Education saved successfully.');
+
+                CloseModal();
+
+                LoadEducationGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+            }
+        })
+
+    });
+
+}
+
+function LoadEducation(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'educations/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $('.ed-Major').val(data.Data.Major),
+            $('.ed-StartDate').val(data.Data.StartDate),
+            $('.ed-EndDate').val(data.Data.EndDate),
+            $('.ed-School').val(data.Data.SchoolId),
+            $('.ed-Degree').val(data.Data.DegreeId)
+
         },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
         }
     });
 
@@ -481,6 +617,26 @@ function LoadPaymentPreferencesTable() {
 }
 /* End Payment Preference Section */
 
+/* Professional Section */
+function PopulateUserIdDropDown() {
+    $('.IsEmployee').change(function () {
+
+        if (this.checked) {
+
+            PopulateDropDown('.UserId', 'userid', '', '');
+            // populate dropdown
+
+        } else {
+
+            $('.UserId option').remove();
+            // clear dropdown
+        }
+    });
+}
+
+/* End Professional Section */
+
+
 /* Alternate Id Section */
 
 function LoadAlternateIDTable() {
@@ -493,7 +649,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       'constituents/' + currentEntity.Id + '/alternateids',
+       Links.GetAlternateId.Href,
        null,
        EditAlternateId);
 }
@@ -520,8 +676,8 @@ function NewAlternateIdModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'alternateids',
+                type: Links.NewAlternateId.Method,
+                url: Links.NewAlternateId.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -648,7 +804,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        Links.GetConstituentAddress.Href,
         null,
         EditAddressModal);
 
@@ -705,8 +861,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
+                type: Links.NewConstituentAddress.Method,
+                url: Links.NewConstituentAddress.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -903,6 +1059,7 @@ function LoadAddress(id) {
 
 }
 /* End Contact Information Section */
+
 
 
 

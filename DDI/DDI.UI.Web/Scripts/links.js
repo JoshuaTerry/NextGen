@@ -1,5 +1,5 @@
 ﻿
-var Links = {};
+var Links = [];
 
 function LoadLinks(entity) {
 
@@ -9,22 +9,22 @@ function LoadLinks(entity) {
 
 function GetLinks(entity) {
 
-    var links = {};
+    var links = [];
 
     if (entity && entity.Links) {
 
         $.map(entity.Links, function (link) {
 
-            $(Links).add(link.Relationship, {
+            links[link.Relationship] = {
                 Href: link.Href,
                 Method: link.Method
-            });
+            };
 
         });
 
-        return links;
-
     }
+
+    return links;
 
 }
 

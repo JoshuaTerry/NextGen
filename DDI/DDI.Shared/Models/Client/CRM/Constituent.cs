@@ -180,8 +180,10 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<Ethnicity> Ethnicities { get; set; }
         [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
-        [HateoasCollectionLink(RouteNames.PaymentPreference)]
-        public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
+        [HateoasCollectionLink(RouteNames.PaymentPreference + RouteNames.Card)]
+        public ICollection<CardPaymentMethod> CardPaymentMethods { get; set; }
+        [HateoasCollectionLink(RouteNames.PaymentPreference + RouteNames.EFT)]
+        public ICollection<EFTPaymentMethod> EFTPaymentMethods { get; set; }
 
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
