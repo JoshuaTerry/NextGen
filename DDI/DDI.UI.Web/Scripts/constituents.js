@@ -791,7 +791,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        Links.GetConstituentAddress.Href,
         null,
         EditAddressModal);
 
@@ -848,8 +848,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
+                type: Links.NewConstituentAddress.Method,
+                url: Links.NewConstituentAddress.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
