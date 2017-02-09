@@ -8,7 +8,9 @@ using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
+using DDI.Shared.Statics.Common;
 
 namespace DDI.Business.Common
 {
@@ -17,6 +19,7 @@ namespace DDI.Business.Common
     /// </summary>
     public class ZipLookup : IDisposable
     {
+        private char[] _trimChars = new char[] { ',', ' ', '#', '.', '(', ')', '"', ':', ':', '\'', '@', '&' };
         #region Fields
 
         private static IList<Abbreviation> _abbreviations = null;
@@ -40,12 +43,12 @@ namespace DDI.Business.Common
         /// Perform Zip+4 lookup on an address.
         /// </summary>
         /// <returns></returns>
-        public string Zip4Lookup(ZipLookupInfo addr, out string resultAddress)
+        public string GetZipPlus4(ref Address addressToFormat, out string plus4Zip)
         {
 
-            resultAddress = string.Empty;
+            plus4Zip = string.Empty;
 
-            string fullAddr = string.Join(" ", addr.AddressLine1, addr.AddressLine2);
+            string fullAddressLines = string.Join(" ", addressToFormat.AddressLine1, addressToFormat.AddressLine2);
             int rating = 99999999;
             ZipPlus4 bestZip4 = null;
             List<string> zipList = new List<string>();
@@ -53,14 +56,16 @@ namespace DDI.Business.Common
 
             Initialize();
 
-            Address workAddr = SplitAddress(fullAddr);
-            string zipCode = addr.PostalCode ?? string.Empty;
+            USPSAddress workAddr = CreateFormattedAbbreviatedAddressLines(fullAddressLines);
+            string zipCode = addressToFormat.PostalCode ?? string.Empty;
             if (zipCode.Length > 5)
-                zipCode = zipCode.Substring(0, 5);
-
-            if (addr.State != null)
             {
-                _uow.Attach(addr.State);
+                zipCode = zipCode.Substring(0, 5);
+            }
+
+            if (addressToFormat.State != null)
+            {
+                _uow.Attach(addressToFormat.State);
             }
 
             if (zipCode.Length == 5)
@@ -72,12 +77,13 @@ namespace DDI.Business.Common
                     preferredBranch = GetPreferredBranch(z);
 
                     // If no city was provided, or if the city doesn't match the preferred or any other branch, set the city to the preferred branch name.
-                    if (string.IsNullOrWhiteSpace(addr.City) || (addr.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addr.City)))
+                    var addressToFormatCity = addressToFormat.City;
+                    if (string.IsNullOrWhiteSpace(addressToFormat.City) || (addressToFormat.City != preferredBranch && !z.ZipBranches.Any(p => p.Description == addressToFormatCity)))
                     {
-                        addr.City = preferredBranch;
+                        addressToFormat.City = preferredBranch;
                     }
                     // Set the state code.
-                    addr.State = z.City.State;
+                    addressToFormat.State = z.City.State;
                 }
 
                 zipList.Add(zipCode);
@@ -96,10 +102,12 @@ namespace DDI.Business.Common
                 }
 
             }
-            else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(addr.City))
+            else if (string.IsNullOrWhiteSpace(zipCode) && !string.IsNullOrWhiteSpace(addressToFormat.City))
             {
                 // No ZIP provided, use city & state to find branches & build a list of ZIPs.
-                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addr.City && p.Zip.City.StateId == addr.State.Id))
+                var addressToFormatCity = addressToFormat.City;
+                var addressToFormatState = addressToFormat.State;
+                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
                 //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
                 {
                     if (!zipList.Contains(branch.Zip.ZipCode))
@@ -109,10 +117,10 @@ namespace DDI.Business.Common
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(fullAddr))
+            if (!string.IsNullOrWhiteSpace(fullAddressLines))
             {
 
-                Address tempAddr = new Address(workAddr);
+                USPSAddress tempAddr = new USPSAddress(workAddr);
                 foreach (string zipItem in zipList)
                 {
                     zipCode = zipItem;
@@ -200,14 +208,15 @@ namespace DDI.Business.Common
                     // Try to find the best 5-digit Zip.
 
                     string zipItem = null;
-                    if (!string.IsNullOrWhiteSpace(addr.PostalCode))
+                    if (!string.IsNullOrWhiteSpace(addressToFormat.PostalCode))
                     {
-                        zipItem = zipList.FirstOrDefault(p => addr.PostalCode.StartsWith(p));
+                        var addressToFormatPostalCode = addressToFormat.PostalCode;
+                        zipItem = zipList.FirstOrDefault(p => addressToFormatPostalCode.StartsWith(p));
                     } 
                     else if (zipList.Count == 1)
                     {
                         zipItem = zipList[0];
-                        addr.PostalCode = zipList[0]; // Go ahead and fill in the zip code if none was provided and only one match found.
+                        addressToFormat.PostalCode = zipList[0]; // Go ahead and fill in the zip code if none was provided and only one match found.
                     }
                     else 
                     {
@@ -219,21 +228,21 @@ namespace DDI.Business.Common
                         Zip zip = _uow.GetEntities<Zip>().FirstOrDefault(p => p.ZipCode == zipItem);
 
                         // If necessary, populate state, country, and county.
-                        if (addr.State == null)
+                        if (addressToFormat.State == null)
                         {
-                            addr.State = zip.City?.State;
+                            addressToFormat.State = zip.City?.State;
                         }
 
-                        if (addr.Country == null)
+                        if (addressToFormat.Country == null)
                         {
-                            addr.Country = addr.State?.Country;
+                            addressToFormat.Country = addressToFormat.State?.Country;
                         }
 
                         _uow.LoadReference(zip, p => p.City);
 
-                        if (addr.County == null && zip.City != null)
+                        if (addressToFormat.County == null && zip.City != null)
                         {
-                            addr.County = _uow.GetReference(zip.City, p => p.County);
+                            addressToFormat.County = _uow.GetReference(zip.City, p => p.County);
                         }
                     }
                 }
@@ -244,20 +253,20 @@ namespace DDI.Business.Common
 
             // Zip+4 found.  Best ZIP code in zipCode.
 
-            addr.PostalCode = zipCode;
+            addressToFormat.PostalCode = zipCode;
 
             // Get the county and country.
-            if (addr.County == null)
+            if (addressToFormat.County == null)
             {
                 _uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
                 _uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
 
-                addr.County = bestZip4.ZipStreet.Zip.City.County;
+                addressToFormat.County = bestZip4.ZipStreet.Zip.City.County;
             }
 
-            if (addr.Country == null && addr.State != null)
+            if (addressToFormat.Country == null && addressToFormat.State != null)
             {
-                addr.Country = _uow.GetReference(addr.State, p => p.Country);
+                addressToFormat.Country = _uow.GetReference(addressToFormat.State, p => p.Country);
             }
 
             // Build result address
@@ -290,7 +299,7 @@ namespace DDI.Business.Common
                 }
             }
 
-            resultAddress = string.Join(" ", resultList);
+            plus4Zip = string.Join(" ", resultList);
 
             // Non-deliverable address...
             if (bestZip4.Plus4.IndexOf("ND") >= 0)
@@ -318,7 +327,7 @@ namespace DDI.Business.Common
             }
             if (plus4.Length > 0)
             {
-                addr.PostalCode = addr.PostalCode + "-" + plus4;
+                addressToFormat.PostalCode = addressToFormat.PostalCode + "-" + plus4;
             }
             return plus4;
 
@@ -379,7 +388,7 @@ namespace DDI.Business.Common
                 s1 == s2;
         }
 
-        internal List<ZipStreet> GetStreetList(IEnumerable<ZipStreet> zipStreets, Address workAddr)
+        internal List<ZipStreet> GetStreetList(IEnumerable<ZipStreet> zipStreets, USPSAddress workAddr)
         {
             if (zipStreets == null)
             {
@@ -387,7 +396,7 @@ namespace DDI.Business.Common
             }
 
             int passNum = 0;
-            Address tempAddr = new Address(workAddr);
+            USPSAddress tempAddr = new USPSAddress(workAddr);
 
             List<ZipStreet> streetList1 = new List<ZipStreet>();
             List<ZipStreet> streetList2 = new List<ZipStreet>();
@@ -396,7 +405,7 @@ namespace DDI.Business.Common
             while (true)
             {
                 // Get the set of matching ZipStreets
-                string abbrStreet = AbbreviateWords(workAddr.Street);
+                string abbrStreet = AbbreviateWordsFromAddressLine(workAddr.Street);
                 foreach (var item in zipStreets.Where(p => p.Street == abbrStreet))
                     //new XPCollection<ZipStreet>(ses, CriteriaOperator.Parse("Zip.ZipCode == ? && Street == ?", zip, abbrStreet)))
                 {
@@ -474,56 +483,275 @@ namespace DDI.Business.Common
         /// <summary>
         /// Split a street address into an Address object.
         /// </summary>
-        internal Address SplitAddress(string text)
+        internal USPSAddress CreateFormattedAbbreviatedAddressLines(string text)
         {
-            Address rslt = new Address();
-
-            int idx;
-
-            List<string> words = WordSplit(text.ToUpper());
-            List<string> abbrs = new List<string>();
-            WordCombine(words);
+            USPSAddress resultAddress = new USPSAddress();
+            if (IsRuralRoute(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsHighwayContract(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsMilitaryBox(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            if (IsPOBox(text, out resultAddress))
+            {
+                return resultAddress;
+            }
+            text = FormatForApartment(text);
+            List<string> words = SplitStringIntoListOfWords(text.ToUpper());
+            List<string> abbreviatedWords = new List<string>();
 
             foreach (var word in words)
             {
-                abbrs.Add(AbbreviateWords(word));
+                abbreviatedWords.Add(GetAbbreviatedWord(word));
             }
 
             // Empty address?
-            if (abbrs.Count == 0)
+            if (abbreviatedWords.Count == 0)
             {
-                return rslt;
+                return resultAddress;
             }
 
             // Logic from "wordclass" procedure in z4spladr.p
 
             // First, scan for a secondary address:  APT n, BLDG n, FLR n, etc.
-            for (idx = abbrs.Count - 1; idx >= 0; idx--)
+            FormatSecondaryAddressLineWords(ref abbreviatedWords, ref resultAddress, ref words);
+
+            RemoveEmptyWordsFromEnd(ref abbreviatedWords, ref words);
+
+            FormattAddress(abbreviatedWords, words, ref resultAddress);
+
+            if (string.IsNullOrWhiteSpace(resultAddress.Street))
             {
-                var sec = _abbreviations.FirstOrDefault(p => p.Word == abbrs[idx] && p.IsSecondary == true);
+                resultAddress.Street = resultAddress.Prefix;
+                resultAddress.Prefix = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(resultAddress.Street))
+            {
+                resultAddress.Street = resultAddress.Suffix;
+                resultAddress.Suffix = string.Empty;
+            }
+
+            if (resultAddress.Street.StartsWith("MC "))
+            {
+                resultAddress.Street = "MC" + resultAddress.Street.Substring(3);
+            }
+
+            return resultAddress;
+        }
+
+        private string FormatForApartment(string text)
+        {
+            return Regex.Replace(text, AddressStrings.ApartmentRegex, $" {AddressStrings.ApartmentAbbreviation} ");
+        }
+
+        private bool IsMilitaryBox(string text, out USPSAddress resultAddress)
+        {
+            resultAddress = new USPSAddress();
+            Regex regex = new Regex(AddressStrings.MilitaryBoxRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{matches[AddressStrings.MilitaryRegexGroupName].Value.Trim(_trimChars)} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsRuralRoute(string text, out USPSAddress resultAddress)
+        {
+            resultAddress = new USPSAddress();
+            Regex regex = new Regex(AddressStrings.RuralRouteRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{AddressStrings.RuralRouteAbbreviation} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsHighwayContract(string text, out USPSAddress resultAddress)
+        {
+            resultAddress = new USPSAddress();
+            Regex regex = new Regex(AddressStrings.HighwayContractRegex, RegexOptions.ExplicitCapture);
+            if (regex.IsMatch(text))
+            {
+                var matches = regex.Match(text).Groups;
+                resultAddress.Street = $"{AddressStrings.HighwayContractAbbreviation} {matches[AddressStrings.StreetRegexGroupName].Value.Trim(_trimChars)}";
+                resultAddress.StreetNum = matches[AddressStrings.BoxRegexGroupName].Value.Trim(_trimChars);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsPOBox(string text, out USPSAddress resultAddress)
+        {
+            resultAddress = new USPSAddress();
+            Regex regex = new Regex(AddressStrings.POBoxRegex);
+            if (regex.IsMatch(text))
+            {
+                var regexPieces = regex.Split(text);
+                if (regexPieces.Length == 2)
+                {
+                    resultAddress.Street = AddressStrings.POBoxAbbreviation;
+                    if (string.IsNullOrWhiteSpace(regexPieces[1]))
+                    {
+                        resultAddress.StreetNum = regexPieces[0].Trim(_trimChars);
+                    }
+                    else
+                    {
+                        resultAddress.StreetNum = regexPieces[1].Trim(_trimChars);
+                        resultAddress.SecondaryNum = regexPieces[0].Trim(_trimChars);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void FormattAddress(List<string> abbreviatedWords, List<string> words, ref USPSAddress resultAddress)
+        {
+            int index;
+            int suffixLen = int.MaxValue;
+            int suffix2Len = 0;
+            string tempSuffix = string.Empty;
+            string tempSuffix2 = string.Empty;
+
+
+            for (index = 0; index < abbreviatedWords.Count; index++)
+            {
+                string abbr = abbreviatedWords[index];
+                string word = words[index];
+                if (string.IsNullOrWhiteSpace(abbr))
+                {
+                    continue;
+                }
+
+                if (AbbreviationHelper.IsDirectional(abbr))
+                {
+                    if (!string.IsNullOrWhiteSpace(resultAddress.Street) && (index == abbreviatedWords.Count - 1 || !string.IsNullOrWhiteSpace(resultAddress.Suffix2)))
+                    {
+                        resultAddress.Suffix2 = abbr;
+                        tempSuffix2 = word;
+                        suffix2Len = resultAddress.Street.Length;
+                        continue;
+                    }
+                    else if (string.IsNullOrWhiteSpace(resultAddress.Street) && string.IsNullOrWhiteSpace(resultAddress.Prefix))
+                    {
+                        resultAddress.Prefix = abbr;
+                        continue;
+                    }
+                }
+                else
+                {
+                    var suffix = _abbreviations.FirstOrDefault(p => p.Word == abbr && p.IsSuffix == true);
+                    if (suffix != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(resultAddress.Suffix2))
+                        {
+                            resultAddress.Street = (resultAddress.Street.Substring(0, suffix2Len) + " " + tempSuffix2 +
+                                                    resultAddress.Street.Substring(suffix2Len)).Trim();
+                            resultAddress.Suffix2 = string.Empty;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(resultAddress.Suffix))
+                        {
+                            resultAddress.Street = (resultAddress.Street.Substring(0, suffixLen) + " " + tempSuffix +
+                                                    resultAddress.Street.Substring(suffixLen)).Trim();
+                        }
+
+                        suffixLen = resultAddress.Street.Length;
+                        resultAddress.Suffix = abbr;
+                        tempSuffix = word;
+                        continue;
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(resultAddress.Suffix))
+                {
+                    resultAddress.Street = (resultAddress.Street + " " + tempSuffix).Trim();
+                    resultAddress.Suffix = string.Empty;
+                }
+
+                //  Street number may not begin with a digit.  Examples include "ONE", A9A.  Anything with a digit could be a street number.
+                if (word.Length > 0)
+                {
+                    if ((resultAddress.StreetNum.Length == 0 && _writtenNumbers.Contains(word))
+                        ||
+                        Regex.IsMatch(word, @"\d"))
+                    {
+                        if (string.IsNullOrWhiteSpace(resultAddress.Street) && string.IsNullOrWhiteSpace(resultAddress.Prefix) && string.IsNullOrWhiteSpace(resultAddress.Suffix) &&
+                            !word.Contains("ST") && !word.Contains("ND") && !word.Contains("RD") && !word.Contains("TH"))
+                        {
+                            if (word.Contains('/'))
+                            {
+                                resultAddress.StreetNum = (resultAddress.StreetNum + " " + word).Trim();
+                            }
+                            else
+                            {
+                                resultAddress.StreetNum = resultAddress.StreetNum + word;
+                            }
+                        }
+                        else
+                        {
+                            resultAddress.Street = (resultAddress.Street + " " + word).Trim();
+                        }
+                    }
+                    else
+                    {
+                        resultAddress.Street = (resultAddress.Street + " " + word).Trim();
+                    }
+                }
+            }
+        }
+
+        private void RemoveEmptyWordsFromEnd(ref List<string> abbreviatedWords, ref List<string> words)
+        {
+            abbreviatedWords = abbreviatedWords.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+            words = words.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+        }
+
+        private void FormatSecondaryAddressLineWords(ref List<string> abbreviatedWords, ref USPSAddress resultAddress, ref List<string> words)
+        {
+            for (int index = abbreviatedWords.Count - 1; index >= 0; index--)
+            {
+                var abbreviatedWord = abbreviatedWords[index];
+                var sec = _abbreviations.FirstOrDefault(p => p.Word == abbreviatedWord && p.IsSecondary == true);
                 if (sec != null)
                 {
                     // It might be "APARTMENT ROAD" or "FLOOR STREET" - these aren't secondary addresses.
-                    if (idx + 1 < abbrs.Count &&
-                        _abbreviations.Any(p => p.Word == abbrs[idx + 1] && p.IsSuffix))
+                    if (index + 1 < abbreviatedWords.Count)
                     {
-                        continue;
+                        var nextAbbreviatedWord = abbreviatedWords[index + 1];
+                        if (_abbreviations.Any(p => p.Word == nextAbbreviatedWord && p.IsSuffix))
+                        {
+                            continue;
+                        }
                     }
 
-                    rslt.SecondaryAbbr = sec.USPSAbbreviation;
+                    resultAddress.SecondaryAbbr = sec.USPSAbbreviation;
 
                     // If the secondary is at the end of the address, the number is the previous word in some cases.
-                    if (idx == abbrs.Count - 1 && idx > 0 && "BLDG,DEPT,FLR,OFC,RM,STE,UNIT".Contains(abbrs[idx]))
+                    if (index == abbreviatedWords.Count - 1 && index > 0 && "BLDG,DEPT,FLR,OFC,RM,STE,UNIT".Contains(abbreviatedWord))
                     {
-                        rslt.SecondaryNum = words[idx - 1];
-                        words[idx - 1] = string.Empty;
-                        abbrs[idx - 1] = string.Empty;
+                        resultAddress.SecondaryNum = words[index - 1];
+                        words[index - 1] = string.Empty;
+                        abbreviatedWords[index - 1] = string.Empty;
                     }
 
                     else
                     {
                         // Build the secondary address number:  APT 5 A => APT 5A
-                        for (int pos = idx + 1; pos < abbrs.Count; pos++)
+                        for (int pos = index + 1; pos < abbreviatedWords.Count; pos++)
                         {
                             string term = words[pos];
                             // Stop if we find something that looks like an abbreviation
@@ -535,216 +763,41 @@ namespace DDI.Business.Common
                             if (term.IndexOf('/') >= 0)
                             {
                                 // Something like BLDG 5 1/2
-                                rslt.SecondaryNum = (rslt.SecondaryNum + " " + term).Trim();
+                                resultAddress.SecondaryNum = (resultAddress.SecondaryNum + " " + term).Trim();
                             }
                             else
                             {
-                                rslt.SecondaryNum = rslt.SecondaryNum + term;
+                                resultAddress.SecondaryNum = resultAddress.SecondaryNum + term;
                             }
                             words[pos] = string.Empty;
-                            abbrs[pos] = string.Empty;
+                            abbreviatedWords[pos] = string.Empty;
                         }
                     }
 
-                    words[idx] = string.Empty;
-                    abbrs[idx] = string.Empty;
+                    words[index] = string.Empty;
+                    abbreviatedWords[index] = string.Empty;
 
                     // Convert ordinal numbers to regular numbers in secondary address number.
-                    if (rslt.SecondaryNum == "1ST")
+                    if (resultAddress.SecondaryNum == "1ST")
                     {
-                        rslt.SecondaryNum = "1";
+                        resultAddress.SecondaryNum = "1";
                     }
-                    else if (rslt.SecondaryNum == "2ND")
+                    else if (resultAddress.SecondaryNum == "2ND")
                     {
-                        rslt.SecondaryNum = "2";
+                        resultAddress.SecondaryNum = "2";
                     }
-                    else if (rslt.SecondaryNum == "3RD")
+                    else if (resultAddress.SecondaryNum == "3RD")
                     {
-                        rslt.SecondaryNum = "3";
+                        resultAddress.SecondaryNum = "3";
                     }
-                    else if (rslt.SecondaryNum.Length >= 3 && char.IsDigit(rslt.SecondaryNum[0]) && rslt.SecondaryNum.EndsWith("TH"))
+                    else if (resultAddress.SecondaryNum.Length >= 3 && char.IsDigit(resultAddress.SecondaryNum[0]) && resultAddress.SecondaryNum.EndsWith("TH"))
                     {
-                        rslt.SecondaryNum = rslt.SecondaryNum.Substring(0, rslt.SecondaryNum.Length - 2);
+                        resultAddress.SecondaryNum = resultAddress.SecondaryNum.Substring(0, resultAddress.SecondaryNum.Length - 2);
                     }
 
                     break;
                 }
             } // secondary address logic
-
-            // Handle RR, HC
-
-            if (abbrs[0] == "RR" || abbrs[0] == "HC" || abbrs[0] == "R")
-            {
-                rslt.Street = (abbrs[0] == "HC" ? "HC" : "RR");
-
-                bool foundBox = false;
-                for (int pos = 1; pos < words.Count; pos++)
-                {
-                    if (!foundBox && abbrs[pos] == "BOX")
-                    {
-                        foundBox = true;
-                    }
-                    else if (!foundBox)
-                    {
-                        rslt.Street = (rslt.Street + " " + words[pos]).Trim();
-                    }
-                    else
-                    {
-                        rslt.StreetNum = (rslt.StreetNum + " " + words[pos]).Trim();
-                    }
-                }
-                return rslt;
-            }
-
-            // Handle PO Box
-
-            if ((abbrs[0] == "PO" && abbrs.Count >= 2 && abbrs[1] == "BOX") || (abbrs[0] == "BOX"))
-            {
-                rslt.Street = "PO BOX";
-                bool foundBox = false;
-
-                for (int pos = 0; pos < words.Count; pos++)
-                {
-                    if (!foundBox && abbrs[pos] == "BOX")
-                    {
-                        foundBox = true;
-                    }
-                    else if (foundBox)
-                    {
-                        rslt.StreetNum = rslt.StreetNum + words[pos];
-                    }
-                }
-                return rslt;
-            }
-
-            // Remove empty entries at the end
-            for (idx = abbrs.Count - 1; idx >= 0; idx--)
-            {
-                if (string.IsNullOrWhiteSpace(abbrs[idx]))
-                {
-                    abbrs.RemoveAt(idx);
-                }
-            }
-
-            for (idx = words.Count - 1; idx >= 0; idx--)
-            {
-                if (string.IsNullOrWhiteSpace(words[idx]))
-                {
-                    words.RemoveAt(idx);
-                }
-            }
-
-            int suffixLen = int.MaxValue;
-            int suffix2Len = 0;
-            string tempSuffix = string.Empty;
-            string tempSuffix2 = string.Empty;
-
-
-            for (idx = 0; idx < abbrs.Count; idx++)
-            {
-                string abbr = abbrs[idx];
-                string word = words[idx];
-                if (string.IsNullOrWhiteSpace(abbr))
-                {
-                    continue;
-                }
-
-                if (AbbreviationHelper.IsDirectional(abbr))
-                {
-                    if (!string.IsNullOrWhiteSpace(rslt.Street) && (idx == abbrs.Count - 1 || !string.IsNullOrWhiteSpace(rslt.Suffix2)))
-                    {
-                        rslt.Suffix2 = abbr;
-                        tempSuffix2 = word;
-                        suffix2Len = rslt.Street.Length;
-                        continue;
-                    }
-                    else if (string.IsNullOrWhiteSpace(rslt.Street) && string.IsNullOrWhiteSpace(rslt.Prefix))
-                    {
-                        rslt.Prefix = abbr;
-                        continue;
-                    }
-                }
-                else
-                {
-                    var suffix = _abbreviations.FirstOrDefault(p => p.Word == abbr && p.IsSuffix == true);
-                    if (suffix != null)
-                    {
-                        if (!string.IsNullOrWhiteSpace(rslt.Suffix2))
-                        {
-                            rslt.Street = (rslt.Street.Substring(0, suffix2Len) + " " + tempSuffix2 +
-                                           rslt.Street.Substring(suffix2Len)).Trim();
-                            rslt.Suffix2 = string.Empty;
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(rslt.Suffix))
-                        {
-                            rslt.Street = (rslt.Street.Substring(0, suffixLen) + " " + tempSuffix +
-                                           rslt.Street.Substring(suffixLen)).Trim();
-
-                        }
-
-                        suffixLen = rslt.Street.Length;
-                        rslt.Suffix = abbr;
-                        tempSuffix = word;
-                        continue;
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(rslt.Suffix))
-                {
-                    rslt.Street = (rslt.Street + " " + tempSuffix).Trim();
-                    rslt.Suffix = string.Empty;
-                }
-
-                //  Street number may not begin with a digit.  Examples include "ONE", A9A.  Anything with a digit could be a street number.
-                if (word.Length > 0)
-                {
-                    if ((rslt.StreetNum.Length == 0 && _writtenNumbers.Contains(word)) 
-                          || 
-                        Regex.IsMatch(word, @"\d"))
-                    {
-                        if (string.IsNullOrWhiteSpace(rslt.Street) && string.IsNullOrWhiteSpace(rslt.Prefix) && string.IsNullOrWhiteSpace(rslt.Suffix) &&
-                            !word.Contains("ST") && !word.Contains("ND") && !word.Contains("RD") && !word.Contains("TH"))
-                        {
-                            if (word.Contains('/'))
-                            {
-                                rslt.StreetNum = (rslt.StreetNum + " " + word).Trim();
-                            }
-                            else
-                            {
-                                rslt.StreetNum = rslt.StreetNum + word;
-                            }
-                        }
-                        else
-                        {
-                            rslt.Street = (rslt.Street + " " + word).Trim();
-                        }
-                    }
-                    else
-                    {
-                        rslt.Street = (rslt.Street + " " + word).Trim();
-                    }
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(rslt.Street))
-            {
-                rslt.Street = rslt.Prefix;
-                rslt.Prefix = string.Empty;
-            }
-
-            if (string.IsNullOrWhiteSpace(rslt.Street))
-            {
-                rslt.Street = rslt.Suffix;
-                rslt.Suffix = string.Empty;
-            }
-
-            if (rslt.Street.StartsWith("MC "))
-            {
-                rslt.Street = "MC" + rslt.Street.Substring(3);
-            }
-
-            return rslt;
         }
 
         /// <summary>
@@ -878,49 +931,9 @@ namespace DDI.Business.Common
         /// </summary>
         internal List<String> SplitNumber(string text)
         {
-            List<string> rslt = new List<string>();
-            bool numeric = false;
-            StringBuilder sb = new StringBuilder();
-
-            // for each character...
-            foreach (char c in text)
-            {
-                if (char.IsDigit(c) || (c == '/' && numeric))
-                {
-                    if (!numeric)  // Start of a numeric part
-                    {
-                        if (sb.Length > 0)
-                        {
-                            rslt.Add(sb.ToString()); // Add previous non-numeric part to the list.
-                        }
-                        sb.Clear();
-                        numeric = true;
-                    }
-                    sb.Append(c);
-                }
-                else
-                {
-                    if (numeric) // Start of a non-numeric part
-                    {
-                        if (sb.Length > 0)
-                        {
-                            rslt.Add(sb.ToString()); // Add previous numeric part to the list.
-                        }
-                        sb.Clear();
-                        numeric = false;
-                    }
-                    sb.Append(c);
-                }
-            }
-
-            // Add any final part to the list.
-            if (sb.Length > 0)
-            {
-                rslt.Add(sb.ToString());
-            }
-
-            return rslt;
-
+            string pattern = @"([0-9\/]+)"; //split on any non-alpha character, include all pieces in the result
+            var result = Regex.Split(text, pattern).Where(a => !string.IsNullOrEmpty(a)).ToList();
+            return result;
         }
 
         /// <summary>
@@ -943,155 +956,36 @@ namespace DDI.Business.Common
         /// <summary>
         /// Split an address into words delmited by space or .,'"-
         /// </summary>
-        internal List<string> WordSplit(string text)
+        internal List<string> SplitStringIntoListOfWords(string text)
         {
-            List<string> rslt = new List<string>();
-            StringBuilder sb = new StringBuilder();
-
-            foreach (char c in text)
-            {
-                if (" .,'\"-".IndexOf(c) >= 0)
-                {
-                    if (sb.Length > 0)
-                    {
-                        rslt.Add(sb.ToString());
-                    }
-                    sb.Clear();
-                }
-                else
-                {
-                    sb.Append(c);
-                }
-            }
-
-            // Get final entry
-            if (sb.Length > 0)
-            {
-                rslt.Add(sb.ToString());
-            }
-
-            return rslt;
-        }
-
-        /// <summary>
-        /// Combine certain words in a list of words.
-        /// </summary>
-        internal void WordCombine(List<string> wordList)
-        {
-            if (wordList.Count < 1)
-            {
-                return;
-            }
-
-            List<string> rslt = new List<string>();
-            int startPos = 0;
-
-            // Assumes all words have been capitalized
-
-            if (wordList.Count > 1)
-            {
-                // P O => PO
-                if (wordList[0] == "P" && wordList[1] == "O")
-                {
-                    wordList[0] = "PO";
-                    wordList.RemoveAt(1);
-                }
-
-                // R R => RR, RURAL RT => RR, etc.
-                else if ((wordList[0] == "RURAL" || wordList[0] == "R") &&
-                         (wordList[1] == "RT" || wordList[1] == "R"))
-                {
-                    wordList[0] = "RR";
-                    wordList.RemoveAt(1);
-                }
-
-                // H C => HC, etc.
-                else if ((wordList[0] == "HWY" || wordList[0] == "H" || wordList[0] == "HIGHWAY") &&
-                         (wordList[1] == "CONTRACT" || wordList[1] == "C"))
-                {
-                    wordList[0] = "HC";
-                    wordList.RemoveAt(1);
-                }
-            }
-
-            // RT => RR
-            if (wordList[startPos] == "RT")
-                wordList[0] = "RR";
-
-            // Append all remaining words, inserting APT if necessary
-            bool aptFound = false;
-            for (int pos = startPos; pos < wordList.Count; pos++)
-            {
-                if (wordList[pos] == "APT" || wordList[pos] == "APARTMENT")
-                {
-                    aptFound = true;
-                    wordList[pos] = "APT";
-                }
-                else if (wordList[pos].StartsWith("#"))
-                {
-                    if (!aptFound)
-                    {
-                        wordList.Insert(pos, "APT");
-                        aptFound = true;
-                        continue;
-                    }
-
-                    if (wordList[pos] == "#")
-                    {
-                        wordList.RemoveAt(pos);
-                        continue;
-                    }
-
-                    wordList[pos] = wordList[pos].TrimStart('#');
-                }
-            }
+            return text.Split(new[] {' ', '.', ',', '\'', '"', '-'}).Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
         }
 
         /// <summary>
         /// Abbreviate all words in a string.  (String must be all caps.)
         /// </summary>
-        internal string AbbreviateWords(string text)
+        internal string AbbreviateWordsFromAddressLine(string originalAddressLine)
         {
-            StringBuilder sb = new StringBuilder(); // word (seq. of letters)
             StringBuilder rslt = new StringBuilder(); // result string
-            int idx;
 
-            for (idx = 0; idx < text.Length; idx++)
+            string pattern = "([^A-Za-z])"; //split on any non-alpha character, include all pieces in the result
+            string[] result = Regex.Split(originalAddressLine, pattern);
+            foreach (var eachWordSegment in result)
             {
-                char c = text[idx];
-
-                if (char.IsLetter(c))
-                {
-                    // build sequence of letters
-                    sb.Append(c);
-                }
-                if (idx == text.Length - 1 || !char.IsLetter(c)) // if end of a word or end of the text
-                {
-                    if (sb.Length > 0)
-                    {
-                        // Abbreviate the word
-                        string word = sb.ToString();
-                        var abbr = _abbreviations.FirstOrDefault(p => p.Word == word && p.AddressWord != null && p.AddressWord.Length > 0);
-                        if (abbr != null)
-                        {
-                            rslt.Append(abbr.USPSAbbreviation);
-                        }
-                        else
-                        {
-                            rslt.Append(word); // no abbrevation found for this word.
-                        }
-                        sb.Clear();
-                    }
-
-                    // Omit periods, otherwise append non-letters to the result
-                    if (c != '.' && !char.IsLetter(c))
-                    {
-                        rslt.Append(c);
-                    }
-                }
+                rslt.Append(GetAbbreviatedWord(eachWordSegment));
             }
 
             return rslt.ToString();
+        }
+
+        internal string GetAbbreviatedWord(string word)
+        {
+            if (word == ".")
+            {
+                return string.Empty;
+            }
+            var abbr = _abbreviations.FirstOrDefault(p => p.Word == word && !string.IsNullOrEmpty(p.AddressWord))?.USPSAbbreviation ?? word;
+            return abbr;
         }
 
         #endregion
@@ -1124,7 +1018,7 @@ namespace DDI.Business.Common
         /// <summary>
         /// Class for representing address information.
         /// </summary>
-        internal class Address
+        internal class USPSAddress
         {
             public string Prefix { get; set; }
             public string Street { get; set; }
@@ -1133,17 +1027,17 @@ namespace DDI.Business.Common
             public string StreetNum { get; set; }
             public string SecondaryAbbr { get; set; }
             public string SecondaryNum { get; set; }
-            public Address()
+            public USPSAddress()
             {
                 Prefix = Street = Suffix = Suffix2 = StreetNum = SecondaryAbbr = SecondaryNum = string.Empty;
             }
 
-            public Address(Address c) : base()
+            public USPSAddress(USPSAddress c) : base()
             {
                 CopyFrom(c);
             }
 
-            public void CopyFrom(Address c)
+            public void CopyFrom(USPSAddress c)
             {
                 Prefix = c.Prefix;
                 Street = c.Street;

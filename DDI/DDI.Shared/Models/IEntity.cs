@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models
 {
-    public interface IEntity
+    public interface IEntity : ICanTransmogrify
     {
-        Guid Id { get; set; }
         string DisplayName { get; }
         Guid? CreatedBy { get; set; }
         DateTime? CreatedOn { get; set; }
