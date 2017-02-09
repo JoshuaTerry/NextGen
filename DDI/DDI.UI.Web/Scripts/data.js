@@ -82,6 +82,7 @@ function LoadTagBoxes(tagBox, container, route) {
                 displayExpr: 'DisplayName',
                 valueExpr: 'Id',
                 showClearButton: true,
+                disabled: true
             });
 
             $(tagBoxControl).appendTo(container);

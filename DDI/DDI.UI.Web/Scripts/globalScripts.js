@@ -483,7 +483,11 @@ function StartEdit(editcontainer) {
         $(this).prop('disabled', false);
 
     });
-
+    $(editcontainer).find('.dx-tagbox').each(function() {
+        $(this).dxTagBox({
+            disabled: false
+        });
+    });
 }
 
 function StopEdit(editcontainer) {

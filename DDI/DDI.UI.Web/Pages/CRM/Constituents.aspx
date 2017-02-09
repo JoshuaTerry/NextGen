@@ -197,22 +197,19 @@
 
                     <h1>Demographics</h1>
                     <div class="editcontainer">
+                        <div class="fieldblock">
+                            <label>Denomination</label>
+                            <div class="editable tagDenominationsContainer"></div>
+                        </div>
 
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Denomination</label>
-                                <div class="editable tagDenominationsContainer"></div>
-                            </div>
+                        <div class="fieldblock">
+                            <label>Ethnicity</label>
+                            <div class="editable tagEthnicitiesContainer"></div>
+                        </div>
 
-                            <div class="fieldblock">
-                                <label>Ethnicity</label>
-                                <div class="editable tagEthnicitiesContainer"></div>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Language</label>
-                                <select class="editable LanguageId"></select>
-                            </div>
+                        <div class="fieldblock">
+                            <label>Language</label>
+                            <select class="editable LanguageId"></select>
                         </div>
                     </div>
 
