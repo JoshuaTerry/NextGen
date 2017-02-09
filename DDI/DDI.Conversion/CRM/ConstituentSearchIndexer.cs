@@ -8,6 +8,7 @@ using DDI.Business.CRM;
 using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
+using DDI.Search.Statics;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Conversion.CRM
@@ -31,8 +32,9 @@ namespace DDI.Conversion.CRM
         private void BuildConstituentIndex()
         {
             NestClient nestClient = new NestClient();
-            nestClient.DeleteIndex();
-            nestClient.CreateIndex();
+            /*
+            nestClient.DeleteIndex(IndexNames.GetIndexName(IndexNames.CRM));
+            string indexName = nestClient.CreateIndex(IndexNames.CRM);
 
             _elasticRepository = new ElasticRepository<ConstituentDocument>(nestClient);
             
@@ -49,17 +51,19 @@ namespace DDI.Conversion.CRM
             query.OnNextBatch = (count, batch) =>
             {
                 bl = query.UnitOfWork.GetBusinessLogic<ConstituentLogic>();
-                IndexLogic(batch.Select(p => bl.BuildSearchDocument(p) as ConstituentDocument), count * query.BatchSize);
+                IndexLogic(batch.Select(p => bl.BuildSearchDocument(p) as ConstituentDocument), count * query.BatchSize, indexName);
             };
 
             query.Process();
+            */
+            nestClient.CreateAlias(IndexNames.CRM);
         }
 
-        private void IndexLogic(IEnumerable<ConstituentDocument> constituents, int skip)
+        private void IndexLogic(IEnumerable<ConstituentDocument> constituents, int skip, string indexName)
         {
             var waitHandle = new CountdownEvent(1);
 
-            _elasticRepository.BulkUpdate(constituents, 100, p => Console.WriteLine($"{skip + p}: {DateTime.Now.ToString("HH:mm:ss")}"), e => Console.WriteLine(e.Message), () => waitHandle.Signal());
+            _elasticRepository.BulkUpdate(constituents, 100, p => Console.WriteLine($"{skip + p}: {DateTime.Now.ToString("HH:mm:ss")}"), e => Console.WriteLine(e.Message), () => waitHandle.Signal(), indexName);
 
             waitHandle.Wait();
         }
