@@ -72,7 +72,7 @@ namespace DDI.Data
         public DbSet<CardPaymentMethod> CardPaymentMethods { get; set; }
         public DbSet<EFTFormat> EFTFormats { get; set; }
         public DbSet<EFTPaymentMethod> EFTPaymentMethods { get; set; }
-        public DbSet<PaymentMethodBase> PaymentMethods { get; set; }
+        // public DbSet<PaymentMethodBase> PaymentMethods { get; set; }
 
         #endregion
 
