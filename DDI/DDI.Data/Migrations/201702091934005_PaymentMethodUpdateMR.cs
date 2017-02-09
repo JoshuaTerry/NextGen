@@ -7,6 +7,7 @@ namespace DDI.Data.Migrations.Client
     {
         public override void Up()
         {
+            DropTable("dbo.PaymentMethod");
             RenameTable(name: "dbo.EFTPaymentMethod", newName: "PaymentMethod");
             RenameTable(name: "dbo.EFTPaymentMethodConstituents", newName: "PaymentMethodConstituents");
             DropForeignKey("dbo.CardPaymentMethodConstituents", "CardPaymentMethod_Id", "dbo.CardPaymentMethod");
@@ -18,9 +19,7 @@ namespace DDI.Data.Migrations.Client
             RenameColumn(table: "dbo.PaymentMethodConstituents", name: "EFTPaymentMethod_Id", newName: "PaymentMethod_Id");
             RenameIndex(table: "dbo.PaymentMethodConstituents", name: "IX_EFTPaymentMethod_Id", newName: "IX_PaymentMethod_Id");
             AddColumn("dbo.PaymentMethod", "CardToken", c => c.String(maxLength: 128));
-            DropColumn("dbo.Constituent", "PaymentMethodBase_Id");
             DropTable("dbo.CardPaymentMethod");
-            DropTable("dbo.PaymentMethod");
             DropTable("dbo.CardPaymentMethodConstituents");
         }
         
