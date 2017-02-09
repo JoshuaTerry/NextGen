@@ -257,7 +257,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeLevelsController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
-    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\MaritalStatusesController.cs" />
     <Compile Include="Controllers\PrefixesController.cs" />
     <Compile Include="Controllers\ProfessionsController.cs" />

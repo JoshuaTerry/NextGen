@@ -52,7 +52,8 @@ function PopulateMonthDays()
         for (x = 1; x <= days; x++) {
             $('.BirthDay').append('<option value=' + x + '>' + x + '</option>');
         }
-    }    
+    }
+    AmendMonthDays();
 }
 
 function AmendMonthDays()
@@ -60,7 +61,7 @@ function AmendMonthDays()
     var year = $('.BirthYear').val();
     var month = $('.BirthMonth').val();
     var day = $('.BirthDay').val();
-    if (year != null && month == '02')
+    if (year != null && month == '2')
     {
         var option29 = $('.BirthDay option[value="29"]');
 
@@ -102,7 +103,6 @@ function LoadDropDowns() {
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
     PopulateDropDown('.AccountTypeId', 'paymentpreferences/accounttypes', '', '');
     // PopulateDropDown('.PreferredPaymentMethod', 'paymentpreferences/paymentmethods', '', '');
-
 }
 
 function GetConstituentData(id) {
@@ -210,6 +210,8 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
+	
+	PopulateUserIdDropDown();
     }
 }
 
@@ -743,6 +745,26 @@ function LoadPaymentPreference(id) {
 }
 /* End Payment Preference Section */
 
+/* Professional Section */
+function PopulateUserIdDropDown() {
+    $('.IsEmployee').change(function () {
+
+        if (this.checked) {
+
+            PopulateDropDown('.UserId', 'userid', '', '');
+            // populate dropdown
+
+        } else {
+
+            $('.UserId option').remove();
+            // clear dropdown
+        }
+    });
+}
+
+/* End Professional Section */
+
+
 /* Alternate Id Section */
 
 function LoadAlternateIDTable() {
@@ -967,8 +989,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
+                type: Links.NewConstituentAddress.Method,
+                url: Links.NewConstituentAddress.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -1165,6 +1187,7 @@ function LoadAddress(id) {
 
 }
 /* End Contact Information Section */
+
 
 
 
