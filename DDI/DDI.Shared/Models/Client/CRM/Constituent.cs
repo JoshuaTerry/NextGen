@@ -185,6 +185,7 @@ namespace DDI.Shared.Models.Client.CRM
         [HateoasCollectionLink(RouteNames.PaymentPreference + RouteNames.EFT)]
         public ICollection<EFTPaymentMethod> EFTPaymentMethods { get; set; }
 
+        [HateoasCollectionLink(RouteNames.Relationship)] //both relationships are handled with the same route
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
 
