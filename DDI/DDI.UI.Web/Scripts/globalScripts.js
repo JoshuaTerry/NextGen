@@ -445,10 +445,14 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-        var editcontainer = $(this).closest('.editcontainer');
-        StopEdit(editcontainer);
-
-        SaveEdit(editcontainer);
+        if ($('#form1').valid()) {
+            var editcontainer = $(this).closest('.editcontainer');
+            StopEdit(editcontainer);
+            SaveEdit(editcontainer);
+        } else {
+            // This should be a better formated dialog box. What is our standard?
+            alert("There are invalid fields. Please fix those and then try saving again.");
+        }
     });
 
     $('.cancelbutton').click(function (e) {
@@ -458,7 +462,7 @@ function SetupEditControls() {
         var editcontainer = $(this).closest('.editcontainer');
 
         StopEdit(editcontainer);
-
+        $('#form1').validate().resetForm();
         CancelEdit();
 
     });

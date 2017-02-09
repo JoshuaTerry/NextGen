@@ -145,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="organizationConstituent">
+                        <div class="organizationConstituent" style="display: none;">
 
                             <div class="threecolumn">
                                 <div class="fieldblock">
