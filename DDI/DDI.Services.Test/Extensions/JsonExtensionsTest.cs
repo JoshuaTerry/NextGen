@@ -63,9 +63,8 @@ namespace DDI.Services.Test.Extensions
             Assert.IsTrue(four is DateTime?);
             Assert.AreEqual(new DateTime(2017, 1, 31), changedProperties.GetValueOrDefault("Test4"));
 
-            //var five = changedProperties.GetValueOrDefault("Test5");
-            //Assert.IsTrue(five is DateTime?);
-            //Assert.AreEqual(null, changedProperties.GetValueOrDefault("Test5"));
+            var five = changedProperties.GetValueOrDefault("Test5");
+            Assert.IsNull(five);
         }
     }
 }
