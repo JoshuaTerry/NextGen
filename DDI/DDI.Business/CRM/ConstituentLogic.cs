@@ -207,11 +207,7 @@ namespace DDI.Business.CRM
             document.Source = entity.Source ?? string.Empty;
 
             // Load alternate IDs
-            document.AlternateIds = new List<string>();
-            foreach (var item in UnitOfWork.GetReference(entity, p => p.AlternateIds))
-            {
-                document.AlternateIds.Add(item.Name);
-            }
+            document.AlternateIds = UnitOfWork.GetReference(entity, p => p.AlternateIds).Select(p => p.Name).ToList();
 
             // Load contact info
             document.ContactInfo = new List<ContactInfoDocument>();

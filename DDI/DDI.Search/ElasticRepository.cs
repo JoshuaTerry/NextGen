@@ -42,7 +42,7 @@ namespace DDI.Search
         /// <param name="onNext">Action to perform for each page.</param>
         /// <param name="onError">Action to perform if an exception is thrown.</param>
         /// <param name="onCompleted">Action to perform when all documents have been submitted for update.</param>
-        /// <param name="indexName">Index name.</param>
+        /// <param name="indexName">Index name.  If null, use the default index for the document type.</param>
         public void BulkUpdate(IEnumerable<T> documents, int pageSize, Action<long> onNext = null, Action<Exception> onError = null, Action onCompleted = null, string indexName = null)
         {
             _client.BulkIndexDocuments(documents, pageSize, onNext, onError, onCompleted, indexName); 

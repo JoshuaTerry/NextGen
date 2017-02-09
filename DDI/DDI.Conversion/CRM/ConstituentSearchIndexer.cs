@@ -32,9 +32,9 @@ namespace DDI.Conversion.CRM
         private void BuildConstituentIndex()
         {
             NestClient nestClient = new NestClient();
-            /*
-            nestClient.DeleteIndex(IndexNames.GetIndexName(IndexNames.CRM));
-            string indexName = nestClient.CreateIndex(IndexNames.CRM);
+            
+            nestClient.DeleteIndex(IndexHelper.GetIndexName(IndexSuffixes.CRM));
+            string indexName = nestClient.CreateIndex(IndexSuffixes.CRM);
 
             _elasticRepository = new ElasticRepository<ConstituentDocument>(nestClient);
             
@@ -55,8 +55,8 @@ namespace DDI.Conversion.CRM
             };
 
             query.Process();
-            */
-            nestClient.CreateAlias(IndexNames.CRM);
+            
+            nestClient.CreateAlias(IndexSuffixes.CRM, true);
         }
 
         private void IndexLogic(IEnumerable<ConstituentDocument> constituents, int skip, string indexName)

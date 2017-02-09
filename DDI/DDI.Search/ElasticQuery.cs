@@ -135,7 +135,7 @@ namespace DDI.Search
             _boolQuery.Should = _should;
             _boolQuery.MustNot = _mustNot;            
 
-            return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery));
+            return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery)).Index(IndexHelper.GetIndexName<T>());
         }
 
         /// <summary>

@@ -158,7 +158,7 @@ namespace DDI.Data
                     OnNextBatch?.Invoke(_count, entities);
 
                     // Iterate through each entity in the query.
-                    foreach (var entity in entities)
+                    foreach (var entity in entities.Where(p => p != null))
                     {
                         yield return entity;
                     }

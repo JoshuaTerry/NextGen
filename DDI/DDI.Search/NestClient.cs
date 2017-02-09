@@ -42,21 +42,14 @@ namespace DDI.Search
         {
             var configManager = new Shared.DDIConfigurationManager();
             _uri = new Uri(configManager.AppSettings["ElasticsearchUrl"]);
-            IndexNames.Initialize(_indexName);
+            IndexHelper.Initialize(_indexName);
 
             _connectionSettings = new ConnectionSettings(_uri);
-            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type,string>(IndexNames.IndexAliases));
+            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type,string>(IndexHelper.IndexAliases));
             _client = new ElasticClient(_connectionSettings);
         }
 
         #endregion
-
-        #region Private Methods
-
-
-
-        #endregion
-
 
         #region Public Methods
 
@@ -79,12 +72,12 @@ namespace DDI.Search
             // Build the mappings for this index suffix.
             var mappings = new MappingsDescriptor();
 
-            foreach (Type type in IndexNames.GetTypesForIndexSuffix(indexSuffix))
+            foreach (Type type in IndexHelper.GetTypesForIndexSuffix(indexSuffix))
             {
                 mappings.Map(type, m => m.AutoMap());
             }
 
-            string indexName = IndexNames.GetIndexName(indexSuffix);
+            string indexName = IndexHelper.GetIndexName(indexSuffix);
 
             // Create an index descriptor
             var descriptor = new CreateIndexDescriptor(indexName)
@@ -100,39 +93,46 @@ namespace DDI.Search
         /// Delete then create the alias for an index suffix.
         /// </summary>
         /// <param name="indexSuffix"></param>
-        public void CreateAlias(string indexSuffix)
+        public void CreateAlias(string indexSuffix, bool removeOldIndex = false)
         {
-            string alias = IndexNames.GetIndexAlias(indexSuffix);
-            string index = IndexNames.GetIndexName(indexSuffix);
+            string alias = IndexHelper.GetIndexAlias(indexSuffix);
+            string newIndex = IndexHelper.GetIndexName(indexSuffix);
 
-            _client.Alias(r => r.Remove(rs => rs.Alias(alias)).Add(aa => aa.Alias(alias).Index(index)));
-        }
+            // Build the alias descriptor.
+            BulkAliasDescriptor descriptor = new BulkAliasDescriptor();
+            string existingIndex = GetCurrentIndexForAlias(indexSuffix);
+            if (!string.IsNullOrWhiteSpace(existingIndex))
+            {
+                descriptor.Remove(p => p.Alias(alias).Index(existingIndex));
+            }
+            
+            descriptor.Add(p => p.Alias(alias).Index(newIndex));
 
-        public string GetCurrentIndexForAlias(string indexSuffix)
-        {
-            string alias = IndexNames.GetIndexAlias(indexSuffix);
-            var response = _client.GetAlias(p => p.AllIndices());
-
-            return string.Empty;         
+            if (removeOldIndex && !string.IsNullOrWhiteSpace(existingIndex))
+            {
+                descriptor.Remove(p => p.Index(existingIndex));
+            }
+            
+            // Execute the alias descriptor via the client.
+            _client.Alias(d => descriptor);
         }
 
         /// <summary>
         /// Index a document.
         /// </summary>
         /// <param name="document">Document to index.</param>
-        public void IndexDocument<T>(T document) where T : class
+        /// <param name="indexName">Specific index name.  If null, use the default index for document type.</param>
+        public void IndexDocument<T>(T document, string indexName = null) where T : class
         {
-            _client.Index(document);
-        }
+            if (!string.IsNullOrWhiteSpace(indexName))
+            {
+                _client.Index(document, p => p.Index(indexName));
 
-        /// <summary>
-        /// Index a document using specified index name.
-        /// </summary>
-        /// <param name="document">Document to index.</param>
-        /// <param name="indexName">Index name.</param>
-        public void IndexDocument<T>(T document, string indexName) where T : class
-        {
-            _client.Index(document, p => p.Index(indexName));
+            }
+            else
+            {
+                _client.Index(document);
+            }
         }
 
         /// <summary>
@@ -158,6 +158,21 @@ namespace DDI.Search
                         onError: onError,
                         onCompleted: onCompleted
                         ));
+        }
+
+        #endregion
+
+        #region Private Methods
+        
+        /// <summary>
+        /// Given an index suffix, determine if an alias exists and return the current index name being used for the alias.
+        /// </summary>
+        private string GetCurrentIndexForAlias(string indexSuffix)
+        {
+            string alias = IndexHelper.GetIndexAlias(indexSuffix);
+
+            var response = _client.GetAlias(p => p.AllIndices());
+            return response.Indices.FirstOrDefault(p => p.Value.Any(a => a.Name == alias)).Key;
         }
 
         #endregion
