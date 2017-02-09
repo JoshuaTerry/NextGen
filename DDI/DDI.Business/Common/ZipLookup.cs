@@ -548,7 +548,7 @@ namespace DDI.Business.Common
 
         private string FormatForApartment(string text)
         {
-            return Regex.Replace(text, AddressStrings.ApartmentRegex, AddressStrings.ApartmentAbbreviation);
+            return Regex.Replace(text, AddressStrings.ApartmentRegex, $" {AddressStrings.ApartmentAbbreviation} ");
         }
 
         private bool IsMilitaryBox(string text, out USPSAddress resultAddress)

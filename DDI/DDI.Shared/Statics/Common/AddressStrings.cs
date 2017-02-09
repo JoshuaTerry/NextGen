@@ -8,7 +8,7 @@ namespace DDI.Shared.Statics.Common
 {
     public static class AddressStrings
     {
-        public const string ApartmentAbbreviation = " APT ";
+        public const string ApartmentAbbreviation = "APT";
         public const string ApartmentRegex = @"(?i)\b((?:AP(?:(ARTMENT)|(T)))(?:((\s*[.#]\s*)|(\s*)))|(?:\s*[#]\s*))";
         public const string BoxRegexGroupName = "box";
         public const string HighwayContractAbbreviation = "HC";

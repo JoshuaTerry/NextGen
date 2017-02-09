@@ -126,7 +126,6 @@
     <Compile Include="Models\Client\CP\CardPaymentMethod.cs" />
     <Compile Include="Models\Client\CP\EFTPaymentMethod.cs" />
     <Compile Include="Models\Client\CP\PaymentMethodBase.cs" />
-    <Compile Include="Models\Common\ZipLookupInfo.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
