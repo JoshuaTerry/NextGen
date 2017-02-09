@@ -65,7 +65,7 @@ namespace DDI.Conversion.CP
         {
             DomainContext context = new DomainContext();
             char[] commaDelimiter = { ',' };
-            string eftPaymentMethodDiscriminator = typeof(EFTPaymentMethod).Name; // Value that EF would store in PaymentMethod.Discriminator
+            string eftPaymentMethodDiscriminator = typeof(PaymentMethod).Name; // Value that EF would store in PaymentMethod.Discriminator
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -196,7 +196,7 @@ namespace DDI.Conversion.CP
         /// <summary>
         /// Internal class for EFTPaymentMethod with a "Discriminator" column added.
         /// </summary>
-        private class EFTPaymentMethodWithDiscriminator : EFTPaymentMethod
+        private class EFTPaymentMethodWithDiscriminator : PaymentMethod
         {
             public string Discriminator { get; set; }
         }

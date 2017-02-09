@@ -14,7 +14,7 @@ using DDI.Shared.Models;
 
 namespace DDI.Services
 {
-    public class PaymentPreferenceService : ServiceBase<PaymentMethodBase>, IPaymentPreferenceService
+    public class PaymentPreferenceService : ServiceBase<PaymentMethod>, IPaymentPreferenceService
     {
         public IDataResponse GetPaymentMethods()
         {

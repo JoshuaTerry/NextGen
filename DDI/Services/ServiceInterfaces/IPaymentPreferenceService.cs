@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.ServiceInterfaces
 {
-    public interface IPaymentPreferenceService : IService<PaymentMethodBase>
+    public interface IPaymentPreferenceService : IService<PaymentMethod>
     {
         IDataResponse GetPaymentMethods();
         IDataResponse GetAccountTypes();

@@ -102,7 +102,6 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-
 }
 
 function GetConstituentData(id) {
@@ -208,6 +207,8 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
+	
+	PopulateUserIdDropDown();
     }
 }
 
@@ -608,6 +609,26 @@ function LoadPaymentPreferencesTable() {
 }
 /* End Payment Preference Section */
 
+/* Professional Section */
+function PopulateUserIdDropDown() {
+    $('.IsEmployee').change(function () {
+
+        if (this.checked) {
+
+            PopulateDropDown('.UserId', 'userid', '', '');
+            // populate dropdown
+
+        } else {
+
+            $('.UserId option').remove();
+            // clear dropdown
+        }
+    });
+}
+
+/* End Professional Section */
+
+
 /* Alternate Id Section */
 
 function LoadAlternateIDTable() {
@@ -775,7 +796,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/constituentaddresses',
+        Links.GetConstituentAddress.Href,
         null,
         EditAddressModal);
 
@@ -832,8 +853,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
+                type: Links.NewConstituentAddress.Method,
+                url: Links.NewConstituentAddress.Href,
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -1030,6 +1051,7 @@ function LoadAddress(id) {
 
 }
 /* End Contact Information Section */
+
 
 
 
