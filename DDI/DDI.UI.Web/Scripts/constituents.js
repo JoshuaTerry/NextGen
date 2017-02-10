@@ -930,7 +930,20 @@ function GenerateContactInfoSection() {
    // $("h1:contains('Contact Information')").next('.accordions').after('Hello!!'); //find('.accordions').find('.constituentphonegridcontainer').append('Hello!!');
     $("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
     NewPhoneNumberModal();
+    $("h1:contains('Emails')").append('<a href="#" title="New" class="newemailmodallink newbutton"></a>');
+    $("h1:contains('Web Sites')").append('<a href="#" title="New" class="newwebsitesmodallink newbutton"></a>');
+    $("h1:contains('Point of Contact')").append('<a href="#" title="New" class="newpocmodallink newbutton"></a>');
+    $("h1:contains('Social Media')").append('<a href="#" title="New" class="newsocmedmodallink newbutton"></a>');
+    $("h1:contains('Other Contacts')").append('<a href="#" title="New" class="newothermodallink newbutton"></a>');
+    
+    // Need to generate the WHOLE accordion. Tear the stuff out constituents.aspx and 
+    // generate it dynamically.
+    // After that, iterate thru the contact types and grab the infos for each one
+    // plug em in
     // Grab the constituent ID
+    // Can either make a collection and iterate over or hard code. Not sure which would be easier. 
+    // Maybe experiment both ways
+    // overall...shoud not be THAT bad
 }
 
 // Phone # Subsection
