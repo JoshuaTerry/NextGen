@@ -450,7 +450,7 @@
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
 
-                            <h1>Phone Numbers<a href="#" title="New" class="newphonenumbermodallink newbutton"></a></h1>
+                            <h1>Phone Numbers</h1>
                             <div>
                                 <div class="constituentphonegridcontainer"></div>
                             </div>

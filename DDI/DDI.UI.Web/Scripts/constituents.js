@@ -34,6 +34,7 @@ function LoadYears()
         $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
     }
 }
+
 function PopulateMonthDays()
 {
     var arrayLookup = {
@@ -100,7 +101,7 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-    PopulateDropDown('.ContactTypeId', 'contacttypes', '', '');
+    PopulateDropDown('.ContactTypeId', 'contacttypes/', '', '');
    //  PopulateDropDown('.ContactTypeId', 'contacttypes/', '', ''); // get the contact type associated with contact category phone
 
 
@@ -207,14 +208,16 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
+
+        GenerateContactInfoSection();
 	
-	    LoadPhoneNumbersTable();
+	    //LoadPhoneNumbersTable();
 
-	    NewPhoneNumberModal();
+	    //NewPhoneNumberModal();
 
-	    LoadEmailTable();
+	    //LoadEmailTable();
 
-	    NewEmailModal();
+	    //NewEmailModal();
 
 	    //LoadWebsiteTable();
 
@@ -918,6 +921,18 @@ function LoadAddress(id) {
 
 }
 
+function GenerateContactInfoSection() {
+    // generate the 'add' buttons
+    // .accordions -> h1 -> \
+    // <a href="#" title="New" class="newphonenumbermodallink newbutton"></a>
+    // iterate over the contact infos and add all the green bars/
+    // add the 'h1:contains()' dynamically
+   // $("h1:contains('Contact Information')").next('.accordions').after('Hello!!'); //find('.accordions').find('.constituentphonegridcontainer').append('Hello!!');
+    $("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
+    NewPhoneNumberModal();
+    // Grab the constituent ID
+}
+
 // Phone # Subsection
 function LoadPhoneNumbersTable() {
 
@@ -1023,7 +1038,7 @@ function EditPhoneNumber(id) {
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.pn-PhoneNumberType').val(),
+            ContactType: $(modal).find('.pn-PhoneNumberType').val(),
             Info: $(modal).find('.pn-Info').val(),
             IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
             Comment: $(modal).find('.pn-Comment').val()
@@ -1092,7 +1107,8 @@ function LoadEmailTable() {
     LoadGrid('constituentemailgrid',
         'constituentemailgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/contactinfo',
+        //'constituents/' + currentEntity.Id + '/contactinfo',
+        'contactinfo/A4BBF374-4C47-45D7-AF2E-92C81F3BADFA/' + currentEntity.Id,
         null,
         EditEmail);
 }
@@ -1182,7 +1198,7 @@ function EditEmail(id) {
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            // ContactType: $(modal).find('.e-EmailType').val(),
+            ContactType: $(modal).find('.e-EmailType').val(),
             Info: $(modal).find('.e-Info').val(),
             IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
             Comment: $(modal).find('.e-Comment').val()
