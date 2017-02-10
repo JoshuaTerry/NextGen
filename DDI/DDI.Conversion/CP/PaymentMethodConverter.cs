@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.CRM;
 using DDI.Conversion.Statics;
 using DDI.Data;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Enums.CP;
 
 namespace DDI.Conversion.CP
 {
@@ -65,7 +59,7 @@ namespace DDI.Conversion.CP
         {
             DomainContext context = new DomainContext();
             char[] commaDelimiter = { ',' };
-            string eftPaymentMethodDiscriminator = typeof(EFTPaymentMethod).Name; // Value that EF would store in PaymentMethod.Discriminator
+            string eftPaymentMethodDiscriminator = typeof(PaymentMethod).Name; // Value that EF would store in PaymentMethod.Discriminator
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -77,10 +71,10 @@ namespace DDI.Conversion.CP
             {
                 // This is a join table for PaymentMethodBaseConstituents, created by EF.
                 var joinOutputFile = new FileExport<JoinRow>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodConstituentFile), append);
-                joinOutputFile.SetColumnNames("PaymentMethodBase_Id", "Constituent_Id");
+                joinOutputFile.SetColumnNames("PaymentMethod_Id", "Constituent_Id");
 
                 // The actual payment method file.
-                var outputFile = new FileExport<EFTPaymentMethodWithDiscriminator>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
+                var outputFile = new FileExport<PaymentMethod>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
 
                 // Legacy ID file, to convert from OE id to SQL Id.
                 FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.PaymentMethodIdMappingFile), append, true);
@@ -128,20 +122,20 @@ namespace DDI.Conversion.CP
                     string legacyId = importer.GetString(7);
                     string statusCode = importer.GetString(8);
 
-                    var eftInfo = new EFTPaymentMethodWithDiscriminator();
+                    var eftInfo = new PaymentMethod();
+                    eftInfo.Category = PaymentMethodCategory.EFT;
                     eftInfo.BankAccount = bankAccount;
                     eftInfo.BankName = bankName;
                     eftInfo.RoutingNumber = routingNumber;
                     eftInfo.Description = description;
-                    eftInfo.Discriminator = eftPaymentMethodDiscriminator;
                     
                     if (tranCode == "22")
                     {
-                        eftInfo.AccountType = Shared.Enums.CP.EFTAccountType.Checking;
+                        eftInfo.AccountType = EFTAccountType.Checking;
                     }
                     else if (tranCode == "32")
                     {
-                        eftInfo.AccountType = Shared.Enums.CP.EFTAccountType.Savings;
+                        eftInfo.AccountType = EFTAccountType.Savings;
                     }
                     else
                     {
@@ -162,11 +156,11 @@ namespace DDI.Conversion.CP
                     
                     switch(statusCode)
                     {
-                        case "I": eftInfo.Status = Shared.Enums.CP.PaymentMethodStatus.Inactive; break;
-                        case "P": eftInfo.Status = Shared.Enums.CP.PaymentMethodStatus.PrenoteRequired; break;
-                        case "S": eftInfo.Status = Shared.Enums.CP.PaymentMethodStatus.PrenoteSent; break;
+                        case "I": eftInfo.Status = PaymentMethodStatus.Inactive; break;
+                        case "P": eftInfo.Status = PaymentMethodStatus.PrenoteRequired; break;
+                        case "S": eftInfo.Status = PaymentMethodStatus.PrenoteSent; break;
                         default:
-                            eftInfo.Status = Shared.Enums.CP.PaymentMethodStatus.Active; break;
+                            eftInfo.Status = PaymentMethodStatus.Active; break;
                     }
                                         
                     eftInfo.AssignPrimaryKey();
@@ -191,14 +185,6 @@ namespace DDI.Conversion.CP
                 joinOutputFile.Dispose();
                 outputFile.Dispose();
             }
-        }
-
-        /// <summary>
-        /// Internal class for EFTPaymentMethod with a "Discriminator" column added.
-        /// </summary>
-        private class EFTPaymentMethodWithDiscriminator : EFTPaymentMethod
-        {
-            public string Discriminator { get; set; }
         }
 
     }
