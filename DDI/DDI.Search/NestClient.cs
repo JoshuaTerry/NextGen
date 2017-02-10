@@ -106,15 +106,15 @@ namespace DDI.Search
                 descriptor.Remove(p => p.Alias(alias).Index(existingIndex));
             }
             
-            descriptor.Add(p => p.Alias(alias).Index(newIndex));
+            descriptor.Add(p => p.Alias(alias).Index(newIndex));           
+
+            // Execute the alias descriptor via the client.
+            _client.Alias(d => descriptor);
 
             if (removeOldIndex && !string.IsNullOrWhiteSpace(existingIndex))
             {
-                descriptor.Remove(p => p.Index(existingIndex));
+                _client.DeleteIndex(existingIndex);
             }
-            
-            // Execute the alias descriptor via the client.
-            _client.Alias(d => descriptor);
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace DDI.Conversion.CRM
             query.OnNextBatch = (count, batch) =>
             {
                 bl = query.UnitOfWork.GetBusinessLogic<ConstituentLogic>();
-                IndexLogic(batch.Select(p => bl.BuildSearchDocument(p) as ConstituentDocument), count * query.BatchSize, indexName);
+                    IndexLogic(batch.Select(p => bl.BuildSearchDocument(p) as ConstituentDocument).Where(p => p != null), count * query.BatchSize, indexName);
             };
 
             query.Process();

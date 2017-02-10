@@ -244,7 +244,7 @@ namespace DDI.Business.CRM
                 }
             }
 
-            if (UnitOfWork.GetReference(entity, p => p.ConstituentType).Category == ConstituentCategory.Organization)
+            if (UnitOfWork.GetReference(entity, p => p.ConstituentType)?.Category == ConstituentCategory.Organization)
             {
                 document.DoingBusinessAs = UnitOfWork.GetReference(entity, p => p.DoingBusinessAs).Select(p => p.Name).ToList();
             }
