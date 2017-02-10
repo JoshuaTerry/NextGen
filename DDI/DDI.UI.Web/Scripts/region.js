@@ -15,7 +15,6 @@ function LoadRegions(container, prefix) {
     $.ajax({
         type: 'GET',
         url: WEB_API_ADDRESS + 'regionlevels',
-        data: item,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -78,7 +77,6 @@ function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
     $.ajax({
         type: 'GET',
         url: WEB_API_ADDRESS + route,
-        data: item,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
