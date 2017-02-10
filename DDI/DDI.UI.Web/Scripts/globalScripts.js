@@ -321,12 +321,12 @@ function GetAutoZipData(container) {
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
-                '&addressLine2=' + $(container).find('.autoaddress2').val() +
-                '&city=' + $(container).find('.autocity').val() +
-                '&countryId=' + $(container).find('.autocountry').val() +
-                '&countyId=' + $(container).find('.autocounty').val() +
-                '&stateId=' + $(container).find('.autostate').val() +
+        var fields = 'addressLine1=' +
+                '&addressLine2=' +
+                '&city=' +
+                '&countryId=' +
+                '&countyId=' +
+                '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
         $.ajax({
