@@ -88,6 +88,7 @@
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
