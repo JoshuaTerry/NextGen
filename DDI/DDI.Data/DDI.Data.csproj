@@ -64,8 +64,8 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201702091934005_PaymentMethodUpdateMR.cs" />
-    <Compile Include="Migrations\201702091934005_PaymentMethodUpdateMR.Designer.cs">
+    <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.cs" />
+    <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.Designer.cs">
       <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.cs" />
@@ -80,8 +80,8 @@
     <Compile Include="Migrations\Client\201701301923425_AddPropertiesToConstituent.Designer.cs">
       <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702032027460_AddBirthYearToConstituent.cs" />
-    <Compile Include="Migrations\201702032027460_AddBirthYearToConstituent.Designer.cs">
+    <Compile Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.cs" />
+    <Compile Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.Designer.cs">
       <DependentUpon>201702032027460_AddBirthYearToConstituent.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.cs" />
@@ -132,6 +132,10 @@
     <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.cs" />
     <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.Designer.cs">
       <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201702100312545_PaymentMethod_v3.cs" />
+    <Compile Include="Migrations\Client\201702100312545_PaymentMethod_v3.Designer.cs">
+      <DependentUpon>201702100312545_PaymentMethod_v3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
@@ -224,7 +228,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702091934005_PaymentMethodUpdateMR.resx">
+    <EmbeddedResource Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.resx">
       <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.resx">
@@ -236,7 +240,7 @@
     <EmbeddedResource Include="Migrations\Client\201701301923425_AddPropertiesToConstituent.resx">
       <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702032027460_AddBirthYearToConstituent.resx">
+    <EmbeddedResource Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.resx">
       <DependentUpon>201702032027460_AddBirthYearToConstituent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701242312159_PaymentMethod_v2.resx">
@@ -277,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201701271545556_PaymentPreferences.resx">
       <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201702100312545_PaymentMethod_v3.resx">
+      <DependentUpon>201702100312545_PaymentMethod_v3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>

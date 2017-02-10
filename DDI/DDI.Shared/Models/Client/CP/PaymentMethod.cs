@@ -18,6 +18,8 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(128)]
         public string Description { get; set; }
 
+        public PaymentMethodCategory Category { get; set; }
+
         public PaymentMethodStatus Status { get; set; }
 
         public DateTime? StatusDate { get; set; }
