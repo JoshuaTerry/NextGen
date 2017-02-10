@@ -11,24 +11,13 @@ namespace DDI.WebApi.Controllers
 {
     public class ContactInfoController : ControllerBase<ContactInfo>
     {
+        protected new IContactInfoService Service => (IContactInfoService)base.Service;
 
-        [HttpGet]
-        [Route("api/v1/contactinfo/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/contactinfo", Name = RouteNames.Constituent + RouteNames.ContactInfo)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public ContactInfoController()
+            : base(new ContactInfoService())
         {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.ContactInfo, search, fields);
-            }
-            catch (Exception ex)
-            {
-                LoggerBase.Error(ex);
-                return InternalServerError();
-            }
         }
+
         [HttpGet]
         [Route("api/v1/contactinfo", Name = RouteNames.ContactInfo)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -41,6 +30,25 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/contactinfo/{categoryid}/{constituentid}", Name = RouteNames.ContactCategory + RouteNames.ContactInfo)]
+        public IHttpActionResult GetContactInfoByContactCategoryForConstituent(Guid? categoryId, Guid? constituentId)
+        {
+            var result = Service.GetContactInfoByContactCategoryForConstituent(categoryId, constituentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            if (!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]

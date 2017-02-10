@@ -15,7 +15,7 @@ using DDI.Shared.Logger;
 
 namespace DDI.Services
 {
-    class ContactInfoService : ServiceBase<ContactInfo>, IContactInfoService
+    public class ContactInfoService : ServiceBase<ContactInfo>, IContactInfoService
     {
         private IRepository<ContactInfo> _repository;
 

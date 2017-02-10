@@ -26,6 +26,8 @@ namespace DDI.WebApi.Controllers
             return base.GetById(id, fields);
         }
 
+       
+
         [HttpPost]
         [Route("api/v1/contactcategory", Name = RouteNames.ContactCategory + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ContactCategory entityToSave)
