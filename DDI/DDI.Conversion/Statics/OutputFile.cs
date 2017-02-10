@@ -39,7 +39,7 @@ namespace DDI.Conversion.Statics
         #region CP SSIS Files
 
         public static string CP_PaymentMethodFile => "PaymentMethod.csv";
-        public static string CP_PaymentMethodConstituentFile => "PaymentMethodBaseConstituents.csv";
+        public static string CP_PaymentMethodConstituentFile => "PaymentMethodConstituents.csv";
 
         #endregion
 
