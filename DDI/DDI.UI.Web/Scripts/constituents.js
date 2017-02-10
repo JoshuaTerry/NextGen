@@ -3,6 +3,7 @@ var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
 $(document).ready(function () {
+    $('#form1').validate();
 
     Resize();
 
@@ -218,7 +219,11 @@ function DisplayConstituentData() {
 function DisplayConstituentType() {
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
     if (currentEntity.ConstituentType.Category === 0) {
-        $('.organization').hide();
+        $('.organizationConstituent').hide();
+        $('.individualConstituent').show();
+    } else {
+        $('.organizationConstituent').show();
+        $('.individualConstituent').hide();
     }
 }
 
