@@ -156,7 +156,7 @@ namespace DDI.Services
             {
                 _unitOfWork.GetRepository<T>().Insert(entity);
                 _unitOfWork.SaveChanges();
-                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id);
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
