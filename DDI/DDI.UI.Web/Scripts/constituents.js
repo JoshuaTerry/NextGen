@@ -587,7 +587,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentPreferenceEFT.Href,
+        Links.GetPaymentPreference.Href,
         null,
         EditPaymentPreference);
     
@@ -634,8 +634,8 @@ function NewPaymentPreference() {
         };
 
         $.ajax({
-            type: Links.NewPaymentPreferenceEFT.Method,
-            url: Links.NewPaymentPreferenceEFT.Href,
+            type: Links.NewPaymentPreference.Method,
+            url: Links.NewPaymentPreference.Href,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -693,7 +693,7 @@ function EditPaymentPreference(id) {
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'paymentpreferences/eft/' + id,
+            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -719,7 +719,7 @@ function LoadPaymentPreference(id) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'paymentpreferences/eft/' + id,
+        url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
