@@ -882,6 +882,9 @@
                 </div>
 
             </div>
+            
+            <input type="hidden" class="pp-StatusDate" />
+            <input type="hidden" class="pp-PreviousStatus" />
 
             <div class="modalbuttons">
                 <input type="button" class="savepaymentpreference" value="Save" />

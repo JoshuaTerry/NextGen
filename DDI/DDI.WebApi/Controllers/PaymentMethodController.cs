@@ -9,11 +9,24 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Models.Client.CP;
+using System.Collections.Generic;
 
 namespace DDI.WebApi.Controllers
 {
     public class PaymentMethodController : ControllerBase<PaymentMethod>
     {
+        private IConstituentService ConstituentService;
+
+        public PaymentMethodController() : this(new ConstituentService())
+        {
+
+        }
+
+        public PaymentMethodController(IConstituentService constituentService)
+        {
+            ConstituentService = constituentService;
+        }
+
         [HttpGet]
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -32,7 +45,28 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
-            return base.Post(entityToSave);
+            if (entityToSave.ConstituentId.HasValue)
+            {
+                if (entityToSave.Constituents == null)
+                {
+                    entityToSave.Constituents = new List<DDI.Shared.Models.Client.CRM.Constituent>();
+                }
+
+                var constituent = ConstituentService.GetById(entityToSave.ConstituentId.Value).Data;
+                
+                if (constituent.PaymentMethods == null)
+                {
+                    constituent.PaymentMethods = new List<PaymentMethod>();
+                }
+
+                constituent.PaymentMethods.Add(entityToSave);
+
+                return Ok(ConstituentService.Update(constituent));
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPatch]

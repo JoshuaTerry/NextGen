@@ -685,6 +685,18 @@ function EditPaymentPreference(id) {
 
     $('.savepaymentpreference').click(function () {
 
+        var date = '';
+        var prevStatus = $(modal).find('.pp-PreviousStatus').val();
+        var selectedStatus = $(modal).find('.pp-Status').val();
+        
+        if (prevStatus != selectedStatus) {
+
+            var newDate = new Date();
+
+            date = newDate.getMonth() + 1 + '/' + newDate.getDate() + '/' + newDate.getFullYear();
+
+        }
+
         var item = {
             ConstituentId: $('.hidconstituentid').val(),
             Description: $(modal).find('.pp-Description').val(),
@@ -693,7 +705,7 @@ function EditPaymentPreference(id) {
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
             Status: $(modal).find('.pp-Status').val(),
-            StatusDate: new Date()
+            StatusDate: date
         };
 
         $.ajax({
@@ -735,7 +747,8 @@ function LoadPaymentPreference(id) {
             $(modal).find('.pp-AccountNumber').val(data.Data.BankAccount);
             $(modal).find('.pp-AccountType').val(data.Data.AccountType);
             $(modal).find('.pp-Status').val(data.Data.Status);
-            // $(modal).find('.StatusDate').val(data.Data.StatusDate);
+            $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
+            $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
 
         },
         error: function (xhr, status, err) {
