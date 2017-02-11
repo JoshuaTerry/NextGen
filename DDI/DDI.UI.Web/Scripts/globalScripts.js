@@ -271,8 +271,9 @@ function FormatJSONDate(jsonDate) {
     var date = '';
 
     if (jsonDate) {
-        date = new Date(parseInt(jsonDate.substr(6)));
-        date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+        //date = new Date(parseInt(jsonDate.substr(6)));
+        //date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+        date = new Date(jsonDate).toDateString();
     }
     
     return date;
@@ -593,6 +594,34 @@ function CancelEdit() {
 //
 // END EDITING
 
+// DELETING
+//
+
+function DeleteEntity(url, method, confirmationMessage) {
+    var okToDelete = confirm(confirmationMessage);
+    if (okToDelete == true) {
+        // delete the entity
+        $.ajax({
+            url: url,
+            method: method,
+            headers: GetApiHeaders(),
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function(data) {
+                // Display success
+                DisplaySuccessMessage('Success', 'The item was deleted.');
+            },
+            error: function(xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during delete. It was unsuccessful');
+            }
+        });
+    };
+
+}
+
+//
+// END DELETING
 
 // MESSAGING
 //

@@ -103,6 +103,24 @@ function LoadGrid(grid, container, columns, route, selected, edit) {
                 actualData = data.Data;
             }
 
+            if (actualData && Array.isArray(actualData)) {
+                actualData.forEach(function(eachItem) {
+                    var links = [];
+                    if (eachItem.Links) {
+                        $.map(eachItem.Links,
+                            function(link) {
+
+                                links[link.Relationship] = {
+                                    Href: link.Href,
+                                    Method: link.Method
+                                };
+
+                            });
+                        eachItem.FormattedLinks = links;
+                    };
+                });
+            }
+
             $(datagrid).dxDataGrid({
                 dataSource: actualData,
                 columns: columns,

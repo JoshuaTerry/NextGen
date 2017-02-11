@@ -102,6 +102,7 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
+    PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
 }
 
 function GetConstituentData(id) {
@@ -196,8 +197,6 @@ function DisplayConstituentData() {
 
         LoadContactInfo();
 
-        NewAddressModal();
-
         LoadAlternateIDTable();
 
         NewAlternateIdModal();
@@ -208,7 +207,12 @@ function DisplayConstituentData() {
 
         $('.BirthDay').val(currentEntity.BirthDay);
 	
-	PopulateUserIdDropDown();
+        PopulateUserIdDropDown();
+
+        LoadRelationshipsGrid();
+        NewRelationshipModal();
+
+        NewAddressModal();
     }
 }
 
@@ -247,6 +251,185 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
+function LoadRelationshipsGrid() {
+
+    var columns = [
+        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
+        { dataField: 'DisplayName', caption: 'Relationship' },
+    ];
+    columns.push({
+        width: '100px',
+        alignment: 'center',
+        cellTemplate: function(container, options) {
+            $('<a/>')
+                .addClass('editthing')
+                .text('Edit')
+                .click(function(e) {
+                    e.preventDefault();
+
+                    EditRelationship(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
+                })
+                .appendTo(container);
+        }
+    });
+    columns.push({
+        width: '100px',
+        alignment: 'center',
+        cellTemplate: function (container, options) {
+            $('<a/>')
+                .addClass('editthing')
+                .text('Remove')
+                .click(function (e) {
+                    e.preventDefault();
+
+                    DeleteEntity(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, "Delete that " + options.data.DisplayName + "?");
+                })
+                .appendTo(container);
+        }
+    });
+
+    LoadGrid('relationshipsgrid',
+        'relationshipstable',
+        columns,
+        Links.GetRelationship.Href,
+        null);
+}
+
+function EditRelationship(getUrl, patchUrl) {
+
+    modal = $('.relationshipmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadRelationship(getUrl);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.saverelationship').unbind('click');
+
+    $('.saverelationship').click(function () {
+
+        var item = {
+            Id: $(modal).find('.hidrelationshipid').val(),
+            Constituent1Id: $('.FormattedName1').val(),
+            Constituent2Id: $(modal).find('.FormattedName2').val(),
+            RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: patchUrl,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship saved successfully.');
+
+                CloseModal();
+
+                LoadRelationshipsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during the saving of the Relationship.');
+            }
+        });
+
+    });
+
+}
+
+function NewRelationshipModal() {
+
+    $('.newrelationshipmodal')
+        .click(function(e) {
+
+            e.preventDefault();
+
+            modal = $('.relationshipmodal')
+                .dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: 250,
+                    resizable: false
+                });
+            $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+
+            $('.cancelmodal')
+                .click(function(e) {
+
+                    e.preventDefault();
+
+                    CloseModal();
+
+                });
+
+            $('.saverelationship').unbind('click');
+
+            $('.saverelationship')
+                .click(function() {
+
+                    var item = {
+                        Constituent1Id: $('.FormattedName1').val(),
+                        Constituent2Id: $(modal).find('.FormattedName2').val(),
+                        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+                    }
+
+                    $.ajax({
+                        type: Links.NewRelationship.Method,
+                        url: Links.NewRelationship.Href,
+                        data: item,
+                        contentType: 'application/x-www-form-urlencoded',
+                        crossDomain: true,
+                        success: function() {
+
+                            DisplaySuccessMessage('Success', 'Relationship saved successfully.');
+
+                            CloseModal();
+
+                            LoadRelationshipsGrid();
+
+                        },
+                        error: function(xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during the saving of the Relationship.');
+                        }
+                    });
+
+                });
+        });
+}
+
+
+function LoadRelationship(url) {
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function(data) {
+
+            $(modal).find('.hidrelationshipid').val(data.Data.Id);
+            $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
+            $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
+            $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+
+        },
+        error: function(xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationship.');
+        }
+    });
+}
 
 /* Doing Business As Section */
 function LoadDBAGrid() {

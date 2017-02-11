@@ -34,7 +34,7 @@
             </div>
 
             <h1>Relationships</h1>
-            <div class="editable Realtionships">
+            <div class="editable relationshipsQuickView">
 
             </div>
         </div>
@@ -569,9 +569,8 @@
             
             <!-- Relationships Tab -->
             <div id="tab-relationships" class="scrollable">
-
-
-
+                <h1>Relationships<a href="#" class="newrelationshipmodal newbutton"></a></h1>
+                <div class="relationshipstable"></div>
             </div>
             
             <!-- Donor Tab -->
@@ -798,6 +797,36 @@
 
             <div class="modalbuttons">
                 <input type="button" class="savedba" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="relationshipmodal" title="Relationship" style="display: none;">
+
+        <div class="modalcontent">
+            <input type="hidden" class="hidrelationshipid" />
+
+            <div class="fieldblock">
+                <label>Constituent</label>
+                <input type="text" class="FormattedName1" />
+            </div>
+
+            <div class="fieldblock">
+                <label>is the</label>
+                <select class="RelationshipTypeId"></select>
+
+            </div>
+
+            <div class="fieldblock">
+                <label>of</label>
+                <input type="text" class="FormattedName2" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="saverelationship" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
