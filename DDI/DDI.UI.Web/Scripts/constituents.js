@@ -95,8 +95,6 @@ function LoadDropDowns() {
     PopulateDropDown('.GenderId', 'genders', '', '');
     PopulateDropDown('.ClergyTypeId', 'clergytypes', '', '');
     PopulateDropDown('.ClergyStatusId', 'clergystatuses', '', '');
-    PopulateDropDown('.DenominationId', 'denominations', '', '');
-    PopulateDropDown('.EthnicityId', 'ethnicities', '', '');
     PopulateDropDown('.LanguageId', 'languages', '', '');
     PopulateDropDown('.EducationLevelId', 'educationlevels', '', '');
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
@@ -186,6 +184,8 @@ function DisplayConstituentData() {
 
         DisplayConstituentPrimaryAddress();
 
+        LoadDenominationsTagBox();
+
         LoadDBAGrid();
 
         NewDBAModal();
@@ -193,6 +193,8 @@ function DisplayConstituentData() {
         LoadEducationGrid();
 
         NewEducationModal();
+
+        LoadEthnicitiesTagBox();
 
         LoadPaymentPreferencesTable();
 
@@ -251,6 +253,17 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
+/* Demograpics Section */
+
+function LoadDenominationsTagBox() {
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+}
+
+function LoadEthnicitiesTagBox() {
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+}
+
+/* End Demographics Section */
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
@@ -1128,6 +1141,7 @@ function EditAddressModal(id) {
 function GetEditedAddressFields() {
 
     var item = {
+        Id: $(modal).find('.hidconstituentaddressid').val(),
         ConstituentId: $('.hidconstituentid').val(),
         IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
@@ -1138,6 +1152,7 @@ function GetEditedAddressFields() {
         ResidentType: $(modal).find('.na-ResidentType').val(),
         AddressTypeId: $(modal).find('.na-AddressTypeId').val(),
         Address: {
+            Id: $(modal).find('.hidaddressid').val(),
             AddressLine1: $(modal).find('.na-AddressLine1').val(),
             AddressLine2: $(modal).find('.na-AddressLine2').val(),
             City: $(modal).find('.na-City').val(),
