@@ -922,12 +922,17 @@ function LoadAddress(id) {
 }
 
 function GenerateContactInfoSection() {
-    // generate the 'add' buttons
-    // .accordions -> h1 -> \
-    // <a href="#" title="New" class="newphonenumbermodallink newbutton"></a>
-    // iterate over the contact infos and add all the green bars/
-    // add the 'h1:contains()' dynamically
-   // $("h1:contains('Contact Information')").next('.accordions').after('Hello!!'); //find('.accordions').find('.constituentphonegridcontainer').append('Hello!!');
+   
+    // Need to load the info from the database
+
+    //  need the accordions div after addresses
+    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers'));
+    $("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
+
+   
+    //...and the content in the accordions 
+
+    // ...then add the AddModal buttons
     $("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
     NewPhoneNumberModal();
     $("h1:contains('Emails')").append('<a href="#" title="New" class="newemailmodallink newbutton"></a>');
