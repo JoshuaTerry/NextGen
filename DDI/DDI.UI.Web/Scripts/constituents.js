@@ -595,11 +595,20 @@ function LoadPaymentPreferencesTable() {
 
     var columns = [
             { dataField: 'Id', width: '0px' },
-            { dataField: 'Name', caption: 'Description' },
+            { dataField: 'Description', caption: 'Description' },
             { dataField: 'RoutingNumber', caption: 'Routing Number' },
             { dataField: 'BankAccount', caption: 'Account Number' },
-            { dataField: 'AccountType', caption: 'Ch/S' },
-            { dataField: '', caption: 'Notes' }
+            {
+                caption: 'Ch/S', cellTemplate: function (container, options) {
+                    var type = 'Ch';
+
+                    if (options.data.AccountType == '1') {
+                        type = 'S';
+                    }
+
+                    $('<label>').text(type).appendTo(container);
+                }
+            }
     ];
 
     LoadGrid('paymentpreferencesgrid',
@@ -711,7 +720,6 @@ function EditPaymentPreference(id) {
         }
 
         var item = {
-            ConstituentId: $('.hidconstituentid').val(),
             Description: $(modal).find('.pp-Description').val(),
             BankName: $(modal).find('.pp-BankName').val(),
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
