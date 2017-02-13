@@ -46,7 +46,8 @@ namespace DDI.Search
         public NestClient()
         {
             var configManager = new Shared.DDIConfigurationManager();
-            _uri = new Uri(configManager.AppSettings["ElasticsearchUrl"]);
+            string url = configManager.AppSettings["ElasticsearchUrl"] ?? "http://localhost:9200";
+            _uri = new Uri(url);
             IndexHelper.Initialize(_indexName);
 
             _connectionSettings = new ConnectionSettings(_uri);

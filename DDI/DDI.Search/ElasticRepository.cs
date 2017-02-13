@@ -20,7 +20,6 @@ namespace DDI.Search
         #region Private Fields
 
         private NestClient _client;
-        private const int DEFAULT_PAGE_SIZE = 10; // Elasticsearch default page size
 
         #endregion
 

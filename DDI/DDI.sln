@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Conversion", "DDI.Conve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Search", "DDI.Search\DDI.Search.csproj", "{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Search.Tests", "DDI.Search.Tests\DDI.Search.Tests.csproj", "{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
