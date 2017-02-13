@@ -78,7 +78,7 @@ function LoadTagBoxes(tagBox, container, route) {
         crossDomain: true,
         success: function (data) {
             $(tagBoxControl).dxTagBox({
-                dataSource: data.Data,
+                items: data.Data,
                 displayExpr: 'DisplayName',
                 valueExpr: 'Id',
                 showClearButton: true,

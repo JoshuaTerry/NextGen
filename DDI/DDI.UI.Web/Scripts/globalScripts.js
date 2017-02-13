@@ -584,6 +584,10 @@ function GetEditedFields(editcontainer) {
         }
     });
 
+    $(editcontainer).find('.dx-tagBox').each(function() {
+        alert($(this).classList[0]);
+    });
+
     p = '{' + p + '}';
 
     return p;
