@@ -211,29 +211,7 @@ function DisplayConstituentData() {
 
         GenerateContactInfoSection();
 	
-	    //LoadPhoneNumbersTable();
 
-	    //NewPhoneNumberModal();
-
-	    //LoadEmailTable();
-
-	    //NewEmailModal();
-
-	    //LoadWebsiteTable();
-
-	    //NewWebsiteModal();
-
-	    //LoadPointOfContactTable();
-
-	    //NewPointOfContactModal();
-
-	    //LoadSocialMediaTable();
-
-	    //NewSocialMediaModal();
-
-	    //LoadOtherContactsTable();
-
-	    //NewOtherContactsModal();
     }
 }
 
@@ -923,38 +901,58 @@ function LoadAddress(id) {
 
 function GenerateContactInfoSection() {
    
-    // Need to load the info from the database
+    LoadCategories(function(data) {
 
- 
+        var categoryData = data.Data;
+
+        categoryData.forEach(function (category) {
+            $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text(category.SectionTitle));
+            // categoryTitles.push(category.SectionTitle);
+            // instead of tossing them in a variable, I can just make the damn accordions right here!
+
+        });
+
+    });
+
+
+    //categoryHeaders.forEach(function (title) {
+    //    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text(title));
+    //});
     //  need the accordions div after addresses
-    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers')); // this is backwards (should start with inserting h1 and go back)
+   // $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers')); // this is backwards (should start with inserting h1 and go back)
    
-    $("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
-    $("h1:contains('Emails')").next('div').after($('<h1></h1>').text('Web Sites'));
-    $("h1:contains('Web Sites')").next('div').after($('<h1></h1>').text('Point of Contact'));
-    $("h1:contains('Point of Contact')").next('div').after($('<h1></h1>').text('Social Media'));
-    $("h1:contains('Social Media')").next('div').after($('<h1></h1>').text('Other Contacts'));
-
+    //$("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
     //...and the content in the accordions 
 
     // ...then add the AddModal buttons
-    $("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
-    NewPhoneNumberModal();
-    $("h1:contains('Emails')").append('<a href="#" title="New" class="newemailmodallink newbutton"></a>');
-    $("h1:contains('Web Sites')").append('<a href="#" title="New" class="newwebsitesmodallink newbutton"></a>');
-    $("h1:contains('Point of Contact')").append('<a href="#" title="New" class="newpocmodallink newbutton"></a>');
-    $("h1:contains('Social Media')").append('<a href="#" title="New" class="newsocmedmodallink newbutton"></a>');
-    $("h1:contains('Other Contacts')").append('<a href="#" title="New" class="newothermodallink newbutton"></a>');
+    //$("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
+    //NewPhoneNumberModal();
+    //$("h1:contains('Emails')").append('<a href="#" title="New" class="newemailmodallink newbutton"></a>');
+    //$("h1:contains('Web Sites')").append('<a href="#" title="New" class="newwebsitesmodallink newbutton"></a>');
+    //$("h1:contains('Point of Contact')").append('<a href="#" title="New" class="newpocmodallink newbutton"></a>');
+    //$("h1:contains('Social Media')").append('<a href="#" title="New" class="newsocmedmodallink newbutton"></a>');
+    //$("h1:contains('Other Contacts')").append('<a href="#" title="New" class="newothermodallink newbutton"></a>');
     
-    // Need to generate the WHOLE accordion. Tear the stuff out constituents.aspx and 
-    // generate it dynamically.
-    // After that, iterate thru the contact types and grab the infos for each one
-    // plug em in
-    // Grab the constituent ID
-    // Can either make a collection and iterate over or hard code. Not sure which would be easier. 
-    // Maybe experiment both ways
-    // overall...shoud not be THAT bad
-    LoadContactInfo();
+    
+   
+}
+
+function LoadCategories(CategoryTitles) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactcategory',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            CategoryTitles(data);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
+        }
+    });
 }
 
 // Phone # Subsection
