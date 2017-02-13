@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
@@ -33,7 +34,20 @@ namespace DDI.WebApi.Helpers
             {
                 dynamicResponse.Data = ToDynamicObject((response.Data as ICanTransmogrify), urlHelper, fields, shouldAddHateoasLinks);
             }
+            else if (IsSimple(response.Data.GetType()))
+            {
+                dynamicResponse.Data = response.Data;
+            }
             return dynamicResponse;
+        }
+        internal bool IsSimple(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                // nullable type, check if the nested type is simple.
+                return IsSimple(type.GetGenericArguments()[0]);
+            }
+            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal);
         }
 
         public dynamic ToDynamicList<T>(IEnumerable<T> data, UrlHelper urlHelper, string fields = null, bool shouldAddHateoasLinks = true)
@@ -47,7 +61,12 @@ namespace DDI.WebApi.Helpers
             {
                 return data;
             }
-            var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
+            var upperCaseFields = fields?.ToUpper();
+            if (!string.IsNullOrWhiteSpace(upperCaseFields) && !upperCaseFields.Contains("LINKS"))
+            {
+                shouldAddHateoasLinks = false;
+            }
+            var listOfFields = upperCaseFields?.Split(',').ToList() ?? new List<string>();
             var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHateoasLinks);
             return result;
         }
@@ -63,7 +82,12 @@ namespace DDI.WebApi.Helpers
             {
                 return data;
             }
-            var listOfFields = fields?.ToUpper().Split(',').ToList() ?? new List<string>();
+            var upperCaseFields = fields?.ToUpper();
+            if (!string.IsNullOrWhiteSpace(upperCaseFields) && !upperCaseFields.Contains("LINKS"))
+            {
+                shouldAddHateoasLinks = false;
+            }
+            var listOfFields = upperCaseFields?.Split(',').ToList() ?? new List<string>();
             var result = RecursivelyTransmogrify(data, urlHelper, listOfFields, shouldAddHateoasLinks);
             return result;
         }
@@ -111,7 +135,7 @@ namespace DDI.WebApi.Helpers
             }
             if (shouldAddHateoasLinks)
             {
-                returnObject = AddHateoasLinks(returnObject, data as ICanTransmogrify, urlHelper);
+                returnObject = AddHateoasLinks(returnObject, data as ICanTransmogrify, urlHelper, fieldsToInclude);
             }
             return returnObject;
         }
@@ -140,82 +164,107 @@ namespace DDI.WebApi.Helpers
         }
         
 
-        private dynamic AddHateoasLinks<T>(IDictionary<string, object> entity, T data, UrlHelper urlHelper)
+        private dynamic AddHateoasLinks<T>(IDictionary<string, object> entity, T data, UrlHelper urlHelper, List<string> fieldsToInclude )
             where T: ICanTransmogrify
         {
             string routePath = data.GetType().GetCustomAttribute<HateoasAttribute>()?.RouteName;
             if (!string.IsNullOrWhiteSpace(routePath))
             {
-                var links = AddSelfHateoasLinks(data, urlHelper, routePath);
-                links.AddRangeNullSafe(FindAllAddChildHateoasLinks(data, urlHelper, routePath));
+                var links = AddSelfHateoasLinks(data, urlHelper, routePath, fieldsToInclude);
+                links.AddRangeNullSafe(FindAllAddChildHateoasLinks(data, urlHelper, routePath, fieldsToInclude));
                 entity.Add("Links", links);
             }
             return entity;
         }
 
-        private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) where T : ICanTransmogrify
+        private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath, List<string> fieldsToInclude) where T : ICanTransmogrify
         {
             List<HateoasLink> hateoasLinks = new List<HateoasLink>();
             var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
+            bool doesIncludeAllLinks = (fieldsToInclude?.Count == 0) || fieldsToInclude.Contains("LINKS");
             foreach (var propertyInfo in properties)
             {
                 string propertyRoute = propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
-                try
+                if (doesIncludeAllLinks || fieldsToInclude.Contains($"LINKS.{propertyRoute.ToUpper()}"))
                 {
-                    hateoasLinks.Add(new HateoasLink
+                    try
                     {
-                        Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
-                        Relationship = $"{RouteRelationships.New}{propertyRoute}",
-                        Method = RouteVerbs.Post
-                    });
-                }
-                catch (ArgumentException)
-                {
-                    //Ignore the error if the route doesn't exist
-                }
-                try
-                {
-                    hateoasLinks.Add(new HateoasLink
+                        hateoasLinks.Add(new HateoasLink
+                        {
+                            Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
+                            Relationship = $"{RouteRelationships.New}{propertyRoute}",
+                            Method = RouteVerbs.Post
+                        });
+                    }
+                    catch (ArgumentException)
                     {
-                        // For speeds sake, try and just use the id. If that returns null, that means there are other values that are needed. In that case use the whole data object.
-                        Href = urlHelper.Link($"{routePath}{propertyRoute}", new { id = data.Id }) 
-                            ?? urlHelper.Link($"{routePath}{propertyRoute}", data).SubstringUpToFirst('?'),
-                        Relationship = $"{RouteRelationships.Get}{propertyRoute}",
-                        Method = RouteVerbs.Get
-                    });
-                }
-                catch (ArgumentException)
-                {
-                    //Ignore the error if the route doesn't exist
+                        //Ignore the error if the route doesn't exist
+                    }
+                    try
+                    {
+                        hateoasLinks.Add(new HateoasLink
+                        {
+                            // For speeds sake, try and just use the id. If that returns null, that means there are other values that are needed. In that case use the whole data object.
+                            Href = urlHelper.Link($"{routePath}{propertyRoute}", new
+                            {
+                                id = data.Id
+                            })
+                                   ?? urlHelper.Link($"{routePath}{propertyRoute}", data).SubstringUpToFirst('?'),
+                            Relationship = $"{RouteRelationships.Get}{propertyRoute}",
+                            Method = RouteVerbs.Get
+                        });
+                    }
+                    catch (ArgumentException)
+                    {
+                        //Ignore the error if the route doesn't exist
+                    }
                 }
             }
             return hateoasLinks;
         }
 
-        private List<HateoasLink> AddSelfHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath) 
+        private List<HateoasLink> AddSelfHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath, List<string> fieldsToInclude) 
             where T: ICanTransmogrify
         {
-            return new List<HateoasLink>
+            var returnList = new List<HateoasLink>();
+            bool doesIncludeAllLinks = (fieldsToInclude?.Count == 0) || fieldsToInclude.Contains("LINKS");
+            if (doesIncludeAllLinks || fieldsToInclude.Contains("LINKS.SELF"))
             {
-                new HateoasLink()
+                returnList.Add(new HateoasLink()
                 {
-                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Get}", new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Get}", new
+                    {
+                        id = data.Id
+                    }),
                     Relationship = RouteRelationships.Self,
                     Method = RouteVerbs.Get
-                },
-                new HateoasLink()
+                });
+            }
+            if (doesIncludeAllLinks || fieldsToInclude.Contains("LINKS.PATCH"))
+            {
+                returnList.Add(new HateoasLink()
                 {
-                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Patch}", new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Patch}", new
+                    {
+                        id = data.Id
+                    }),
                     Relationship = $"{RouteRelationships.Update}{data.GetType().Name}",
                     Method = RouteVerbs.Patch
-                },
-                new HateoasLink()
+                });
+            }
+            if (doesIncludeAllLinks || fieldsToInclude.Contains("LINKS.DELETE"))
+            {
+                returnList.Add(new HateoasLink()
                 {
-                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Delete}", new {id = data.Id}), 
+                    Href = urlHelper.Link($"{routePath}{RouteVerbs.Delete}", new
+                    {
+                        id = data.Id
+                    }),
                     Relationship = $"{RouteRelationships.Delete}{data.GetType().Name}",
                     Method = RouteVerbs.Delete
-                },
-            };
+                });
+            }
+            return returnList;
         }
     }
 }

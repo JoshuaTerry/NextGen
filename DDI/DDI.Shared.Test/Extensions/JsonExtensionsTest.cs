@@ -16,6 +16,7 @@ namespace DDI.Shared.Test.Extensions
             public int? Test3 { get; set; }
             public DateTime? Test4 { get; set; }
             public DateTime? Test5 { get; set; }
+            public int[] Test6 { get; set; }
         }
          
         [TestMethod]
@@ -28,7 +29,8 @@ namespace DDI.Shared.Test.Extensions
                 Test2 = string.Empty,
                 Test3 = 5,
                 Test4 = new DateTime(2017, 1, 31),
-                Test5 = ""
+                Test5 = "",
+                Test6 = new int[] {}
             };
             JObject jObject = JObject.FromObject(item);
 
@@ -41,7 +43,7 @@ namespace DDI.Shared.Test.Extensions
             }
 
             //Assert
-            Assert.AreEqual(5, changedProperties.Count);
+            Assert.AreEqual(6, changedProperties.Count);
 
             var one = changedProperties.GetValueOrDefault("Test1");
             Assert.IsTrue(one is string);
@@ -61,6 +63,9 @@ namespace DDI.Shared.Test.Extensions
 
             var five = changedProperties.GetValueOrDefault("Test5");
             Assert.IsNull(five);
+
+            var six = changedProperties.GetValueOrDefault("Test6");
+            Assert.AreEqual(((int[]) six).Length, 0);
         }
     }
 }

@@ -224,8 +224,12 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\RelationshipTypesController.cs" />
+    <Compile Include="Controllers\RelationshipsController.cs" />
     <Compile Include="Controllers\AuthorizationsController.cs" />
     <Compile Include="Controllers\AddressTypesController.cs" />
+    <Compile Include="Controllers\BusinessDateController.cs" />
+    <Compile Include="Controllers\BusinessUnitControllers.cs" />
     <Compile Include="Controllers\ClergyStatusesController.cs" />
     <Compile Include="Controllers\ClergyTypesController.cs" />
     <Compile Include="Controllers\AddressesController.cs" />
@@ -245,6 +249,7 @@
     <Compile Include="Controllers\CustomFieldsController.cs" />
     <Compile Include="Controllers\ContactInfoController.cs" />
     <Compile Include="Controllers\DenominationsController.cs" />
+    <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\PaymentPreferencesController.cs" />
@@ -364,7 +369,9 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\BusinessDate\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
