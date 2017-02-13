@@ -18,6 +18,13 @@ namespace DDI.WebApi.Controllers
     //[Authorize]
     public class ConstituentAddressesController : ControllerBase<ConstituentAddress>
     {
+
+        public ConstituentAddressesController()
+            :base(new ConstituentAddressService())
+        {
+            
+        }
+
         protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
         {
             return DataIncludes();

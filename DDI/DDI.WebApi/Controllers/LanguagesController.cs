@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Models.Client.Core;
@@ -13,6 +14,13 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Language, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/languages/{id}")]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
         }
     }
 }
