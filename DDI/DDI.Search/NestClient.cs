@@ -19,7 +19,7 @@ namespace DDI.Search
         private ElasticClient _client;
         private Uri _uri;
         private ConnectionSettings _connectionSettings;
-        private string _indexName = "demo"; // TODO:  This will need to be based on the "client code" once this has been established.
+        private string _indexName;
 
         #endregion
 
@@ -43,15 +43,28 @@ namespace DDI.Search
 
         #region Constructors
 
-        public NestClient()
+        public NestClient() : this(null, null)
         {
-            var configManager = new Shared.DDIConfigurationManager();
-            string url = configManager.AppSettings["ElasticsearchUrl"] ?? "http://localhost:9200";
+        }
+
+        public NestClient(string url, string indexBaseName)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                var configManager = new Shared.DDIConfigurationManager();
+                url = configManager.AppSettings["ElasticsearchUrl"];
+            }
+            if (string.IsNullOrWhiteSpace(indexBaseName))
+            {
+                indexBaseName = "demo"; // TODO:  This will need to be based on the "client code" once this has been established.
+            }
+
             _uri = new Uri(url);
+            _indexName = indexBaseName;
             IndexHelper.Initialize(_indexName);
 
             _connectionSettings = new ConnectionSettings(_uri);
-            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type,string>(IndexHelper.IndexAliases));
+            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type, string>(IndexHelper.IndexAliases));
             _client = new ElasticClient(_connectionSettings);
         }
 

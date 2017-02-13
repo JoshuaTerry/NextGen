@@ -12,13 +12,20 @@ namespace DDI.Search.Tests
     [TestClass]
     public class ElasticRepositoryTests
     {
+        private NestClient _client;
 
-        private const string TESTDESCR = "Search ";
+        private const string TESTDESCR = "Search";
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _client = new NestClient("http://localhost:9200", "test");
+        }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void SimpleMatchQuery()
         {
-            var repo = new ElasticRepository<ConstituentDocument>();
+            var repo = new ElasticRepository<ConstituentDocument>(_client);
             var query = repo.CreateQuery();
             query.Must.Match(p => p.Name, "Smith");
 
@@ -40,7 +47,7 @@ namespace DDI.Search.Tests
         [TestMethod, TestCategory(TESTDESCR)]
         public void GetSearchUri()
         {
-            var repo = new ElasticRepository<ConstituentDocument>();
+            var repo = new ElasticRepository<ConstituentDocument>(_client);
             Uri uri = repo.GetSearchUri();
             Assert.IsTrue(uri.ToString().EndsWith("/constituent/_search"), "Search Uri formatted correctly.");
         }
