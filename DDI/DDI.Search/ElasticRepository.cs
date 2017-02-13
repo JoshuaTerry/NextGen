@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Models;
 using Nest;
+using System.Web;
 
 namespace DDI.Search
 {
@@ -15,8 +17,14 @@ namespace DDI.Search
     /// <typeparam name="T">Document type</typeparam>
     public class ElasticRepository<T> where T : class, ISearchDocument
     {
+        #region Private Fields
 
         private NestClient _client;
+        private const int DEFAULT_PAGE_SIZE = 10; // Elasticsearch default page size
+
+        #endregion
+
+        #region Constructors
 
         public ElasticRepository() : this(new NestClient()) { }
 
@@ -24,6 +32,19 @@ namespace DDI.Search
         {
             _client = client;
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// The NestClient for the repository.
+        /// </summary>
+        public NestClient Client => _client;
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Update a document in the Elasticsearch database.
@@ -79,6 +100,33 @@ namespace DDI.Search
 
             return result;            
         }
+
+        /// <summary>
+        /// Get the Json body for an ElasticQuery.
+        /// </summary>
+        public string GetQueryJsonBody(ElasticQuery<T> query)
+        {
+            var ms = new MemoryStream();
+
+            Client.ElasticClient.Serializer.Serialize(query.GetQuery(), ms);
+            return Encoding.UTF8.GetString(ms.ToArray()).Replace("\r\n", string.Empty).Replace("  ", " ");
+        }
+
+        /// <summary>
+        /// Get the URI for a search command.
+        /// </summary>
+        public Uri GetSearchUri()
+        {
+            string index = IndexHelper.GetIndexAlias<T>();
+            string document = typeof(T).GetAttribute<ElasticsearchTypeAttribute>()?.Name
+                    ??
+                    typeof(T).Name.ToLower();
+
+            return new Uri(Client.Uri, $"{index}/{document}/_search");
+        }
+
+        #endregion
+
     }
 
 

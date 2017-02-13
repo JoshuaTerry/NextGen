@@ -26,13 +26,18 @@ namespace DDI.Search
         #region Public Properties
 
         /// <summary>
-        /// Nest ElasticClient
+        /// The Nest ElasticClient object.
         /// </summary>
         public ElasticClient ElasticClient
         {
             get { return _client; }
             set { _client = value; }
         }
+
+        /// <summary>
+        /// The Uri for this client.
+        /// </summary>
+        public Uri Uri => _uri;
 
         #endregion
 
@@ -54,7 +59,7 @@ namespace DDI.Search
         #region Public Methods
 
         /// <summary>
-        /// Delete a specific.
+        /// Delete a specific index.
         /// </summary>
         public void DeleteIndex(string indexName)
         {

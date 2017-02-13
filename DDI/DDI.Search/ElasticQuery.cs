@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -15,9 +16,16 @@ namespace DDI.Search
     /// <typeparam name="T">Search document type</typeparam>
     public class ElasticQuery<T> where T : class, ISearchDocument
     {
+        #region Private Fields
+
         private BoolQuery _boolQuery;
         private List<QueryContainer> _must, _should, _mustNot;
         private Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>> _nestedQueryDict;
+        private bool _isFinalized = false;
+
+        #endregion
+
+        #region Constructors
 
         public ElasticQuery()
         {
@@ -27,6 +35,10 @@ namespace DDI.Search
             _mustNot = new List<QueryContainer>();
             _nestedQueryDict = new Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>>();
         }
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// Add a "Must" query term that must be satisfied in order for a document to be included.
@@ -39,6 +51,9 @@ namespace DDI.Search
             }
         }
 
+        /// <summary>
+        /// Add a "Must Not" query term that if satisified, causes a document to be excluded.
+        /// </summary>
         public BoolQueryTerm MustNot
         {
             get
@@ -47,6 +62,9 @@ namespace DDI.Search
             }
         }
 
+        /// <summary>
+        /// Add a "Should" query term that if satisfied, causes a document's score to be boosted.
+        /// </summary>
         public BoolQueryTerm Should
         {
             get
@@ -55,50 +73,9 @@ namespace DDI.Search
             }
         }
 
+        #endregion
 
-        /// <summary>
-        /// Add a "Must" full-text query term.
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">String value</param>
-        public ElasticQuery<T> MustMatch(Expression<Func<T, object>> predicate, string value)
-        {
-            _must.Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value)));
-            return this;
-        }
-
-        /// <summary>
-        /// Add a "Must" exact-match query term.
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">Object value</param>
-        public ElasticQuery<T> MustEqual(Expression<Func<T, object>> predicate, object value)
-        {
-            _must.Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value)));            
-            return this;
-        }
-
-        /// <summary>
-        /// Add a "Must" exact-match query term.
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">Object value</param>
-        public ElasticQuery<T> MustPrefix(Expression<Func<T, object>> predicate, string value)
-        {
-            _must.Add(new QueryContainerDescriptor<T>().Prefix(m => m.Field(predicate).Value(value)));
-            return this;
-        }       
-
-        /// <summary>
-        /// Add a "Should" exact-match query term.  (Matching documents are scored higher.)
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">Object value</param>
-        public ElasticQuery<T> ShouldEqual(Expression<Func<T, object>> predicate, object value)
-        {
-            _should.Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value)));
-            return this;
-        }
+        #region Public Methods
 
         /// <summary>
         /// Build the search request
@@ -107,31 +84,41 @@ namespace DDI.Search
         public ISearchRequest BuildSearchRequest()
         {
 
-            foreach (var kvp in _nestedQueryDict)
-            {
-                kvp.Value.Query(p => kvp.Key.BuildQuery());
-            }
-
-            _boolQuery.Must = _must;
-            _boolQuery.Should = _should;
-            _boolQuery.MustNot = _mustNot;            
-
+            FinalizeQuery();           
 
             return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery)).Index(IndexHelper.GetIndexName<T>());
         }
 
-        public BoolQuery BuildQuery()
+        public QueryContainer GetQuery()
         {
-            foreach (var kvp in _nestedQueryDict)
+            FinalizeQuery();
+
+            return new QueryContainer(_boolQuery);
+            //return _boolQuery;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Finalize the query by populating the Bool query's Must, MustNot and Should properties and recursively processing nested queries.
+        /// </summary>
+        private void FinalizeQuery()
+        {
+            if (!_isFinalized)
             {
-                kvp.Value.Query(p => kvp.Key.BuildQuery());
+                foreach (var kvp in _nestedQueryDict)
+                {
+                    kvp.Value.Query(p => kvp.Key.GetQuery());
+                }
+
+                _boolQuery.Must = _must;
+                _boolQuery.Should = _should;
+                _boolQuery.MustNot = _mustNot;
             }
 
-            _boolQuery.Must = _must;
-            _boolQuery.Should = _should;
-            _boolQuery.MustNot = _mustNot;
-
-            return _boolQuery;
+            _isFinalized = true;
         }
 
         /// <summary>
@@ -193,10 +180,18 @@ namespace DDI.Search
             return sb.ToString();
         }
 
-        public enum  BoolQueryTermType
+        #endregion
+
+        #region Enums
+
+        public enum BoolQueryTermType
         {
             Must, MustNot, Should
         }
+
+        #endregion
+
+        #region Internal Classes
 
         public class BoolQueryTerm
         {
@@ -228,6 +223,7 @@ namespace DDI.Search
                 return this;
             }
 
+           
             public ElasticQuery<T> Match(Expression<Func<T, object>> predicate, string value)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value).Boost(_boost)));
@@ -260,11 +256,13 @@ namespace DDI.Search
             {
                 NestedQueryDescriptor<T> nested = new NestedQueryDescriptor<T>().Path(predicate);
 
-                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Nested(p => p.Path(predicate).Query(q => nestedQuery.BuildQuery())));
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Nested(p => p.Path(predicate).Query(q => nestedQuery.GetQuery())));
                 return _query;
             }
 
         }
+
+        #endregion
 
     }
 }

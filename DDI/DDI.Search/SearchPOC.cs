@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,16 +19,20 @@ namespace DDI.Search
         {
             var repo = new ElasticRepository<ConstituentDocument>();
             var query = repo.CreateQuery();
-
+            
             var addrQuery = new ElasticQuery<ConstituentDocument>();
             addrQuery.Must.Match(p => p.Addresses[0].City, "Indianapolis");
             addrQuery.Must.Match(p => p.Addresses[0].StreetAddress, "Silver");
 
             query.Must.Nested(p => p.Addresses, addrQuery);
 
+
             //query.Must.BeInList(p => p.AlternateIds, "S1233,S3091");
-            //query.MustNot.BeInList(p => p.AlternateIds, "DSD66");            
-            
+            //query.MustNot.BeInList(p => p.AlternateIds, "DSD66");
+
+            string body = repo.GetQueryJsonBody(query);
+            Uri uri = repo.GetSearchUri();
+                       
             var results = repo.DocumentSearch(query, 50, 0);
             if (results.TotalCount == 0)
             {
