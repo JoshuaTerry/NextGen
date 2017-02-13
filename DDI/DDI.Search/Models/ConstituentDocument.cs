@@ -10,10 +10,13 @@ namespace DDI.Search.Models
     /// Elasticsearch constituent document (CRM).
     /// </summary>
     [ElasticsearchType(Name = "constituent")]
-    public class ConstituentDocument : ISearchDocument
+    public class ConstituentDocument : ISearchDocument, IAutoMappable
     {
         [Keyword(IncludeInAll = false)]
         public Guid Id { get; set; }
+
+        [Number]
+        public int ConstituentNumber { get; set; }
 
         [Keyword(IncludeInAll = false)]
         public Guid? ConstituentStatusId { get; set; }
@@ -23,6 +26,9 @@ namespace DDI.Search.Models
 
         [Text]
         public string Name { get; set; }
+
+        [Text]
+        public string PrimaryAddress { get; set; }
 
         [Keyword]
         public string Source { get; set; }
@@ -38,6 +44,11 @@ namespace DDI.Search.Models
 
         [Text]
         public IList<String> DoingBusinessAs { get; set; }
+
+        public void AutoMap(MappingsDescriptor mappings)
+        {
+            mappings.Map<ConstituentDocument>(p => p.AutoMap());
+        }
 
         // TODO:  More stuff needs to be added for DC-367 (POC Cleanup)
 

@@ -18,16 +18,24 @@ namespace DDI.Search
         {
             var repo = new ElasticRepository<ConstituentDocument>();
             var query = repo.CreateQuery();
-            query.MustBeInList(p => p.AlternateIds, "S1233");
-            query.MustNotBeInList(p => p.AlternateIds, "DSD66+XXYYZ");
-            var results = repo.DocumentSearch(query, 10, 0);
+
+            var addrQuery = new ElasticQuery<ConstituentDocument>();
+            addrQuery.Must.Match(p => p.Addresses[0].City, "Indianapolis");
+            addrQuery.Must.Match(p => p.Addresses[0].StreetAddress, "Silver");
+
+            query.Must.Nested(p => p.Addresses, addrQuery);
+
+            //query.Must.BeInList(p => p.AlternateIds, "S1233,S3091");
+            //query.MustNot.BeInList(p => p.AlternateIds, "DSD66");            
+            
+            var results = repo.DocumentSearch(query, 50, 0);
             if (results.TotalCount == 0)
             {
                 Console.WriteLine("Not found.");
             }
             foreach (var item in results.Documents)
             {
-                Console.WriteLine(item.Name);
+                Console.WriteLine($"{item.ConstituentNumber}: {item.Name}, {item.PrimaryAddress}");
             }
 
             Console.ReadLine();

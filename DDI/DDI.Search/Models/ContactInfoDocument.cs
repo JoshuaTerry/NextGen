@@ -12,7 +12,7 @@ namespace DDI.Search.Models
     /// Elasticsearch ContactInfo document (CRM)
     /// </summary>
     [ElasticsearchType(Name = "contactInfo")]
-    public class ContactInfoDocument : ISearchDocument
+    public class ContactInfoDocument : ISearchDocument , IAutoMappable
     {
         [Keyword(IncludeInAll = false)]
         public Guid Id { get; set; }
@@ -28,6 +28,11 @@ namespace DDI.Search.Models
 
         [Text]
         public string Comment { get; set; }
+
+        public void AutoMap(MappingsDescriptor mappings)
+        {
+            mappings.Map<ContactInfoDocument>(p => p.AutoMap());
+        }
 
     }
 }

@@ -71,10 +71,15 @@ namespace DDI.Search
         {
             // Build the mappings for this index suffix.
             var mappings = new MappingsDescriptor();
+            Type iAutoMappable = typeof(IAutoMappable);
 
-            foreach (Type type in IndexHelper.GetTypesForIndexSuffix(indexSuffix))
+            // Iterate through each document type that implements IAutoMappable.
+            foreach (Type type in IndexHelper.GetTypesForIndexSuffix(indexSuffix).Where(t => iAutoMappable.IsAssignableFrom(t)))
             {
-                mappings.Map(type, m => m.AutoMap());
+                // Create an instance and use the objects AutoMap method to do the automapping.  This is necessary
+                // because the non-generic version of Map doesn't handle AutoMap in Nest.
+
+                (Activator.CreateInstance(type) as IAutoMappable)?.AutoMap(mappings);
             }
 
             string indexName = IndexHelper.GetIndexName(indexSuffix);

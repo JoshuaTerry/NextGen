@@ -200,11 +200,22 @@ namespace DDI.Business.CRM
         {
             var document = new ConstituentDocument();
 
+            var constituentAddressLogic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
+            var addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
+
             document.Id = entity.Id;
+            document.ConstituentNumber = entity.ConstituentNumber;
             document.Name = entity.FormattedName ?? string.Empty;
             document.ConstituentStatusId = entity.ConstituentStatusId;
             document.ConstituentTypeId = entity.ConstituentTypeId;
             document.Source = entity.Source ?? string.Empty;
+
+            // Primary address            
+            ConstituentAddress constituentAddress = constituentAddressLogic.GetAddress(entity, AddressCategory.Primary);
+            if (constituentAddress != null)
+            {
+                document.PrimaryAddress = addressLogic.FormatAddress(constituentAddress.Address).Replace("\n", ", ");
+            }
 
             // Load alternate IDs
             document.AlternateIds = UnitOfWork.GetReference(entity, p => p.AlternateIds).Select(p => p.Name).ToList();
@@ -226,9 +237,9 @@ namespace DDI.Business.CRM
 
             // Load addresses
             document.Addresses = new List<AddressDocument>();
-            foreach (var constituentAddress in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
+            foreach (var entry in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
             {
-                Address address = UnitOfWork.GetReference(constituentAddress, p => p.Address);
+                Address address = UnitOfWork.GetReference(entry, p => p.Address);
                 if (address != null)
                 {
                     document.Addresses.Add(new AddressDocument()

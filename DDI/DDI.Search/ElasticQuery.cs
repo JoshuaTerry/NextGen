@@ -17,6 +17,7 @@ namespace DDI.Search
     {
         private BoolQuery _boolQuery;
         private List<QueryContainer> _must, _should, _mustNot;
+        private Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>> _nestedQueryDict;
 
         public ElasticQuery()
         {
@@ -24,8 +25,36 @@ namespace DDI.Search
             _must = new List<QueryContainer>();
             _should = new List<QueryContainer>();
             _mustNot = new List<QueryContainer>();
-
+            _nestedQueryDict = new Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>>();
         }
+
+        /// <summary>
+        /// Add a "Must" query term that must be satisfied in order for a document to be included.
+        /// </summary>
+        public BoolQueryTerm Must 
+        {
+            get
+            {
+                return new BoolQueryTerm(this, BoolQueryTermType.Must);
+            }
+        }
+
+        public BoolQueryTerm MustNot
+        {
+            get
+            {
+                return new BoolQueryTerm(this, BoolQueryTermType.MustNot);
+            }
+        }
+
+        public BoolQueryTerm Should
+        {
+            get
+            {
+                return new BoolQueryTerm(this, BoolQueryTermType.Should);
+            }
+        }
+
 
         /// <summary>
         /// Add a "Must" full-text query term.
@@ -45,74 +74,20 @@ namespace DDI.Search
         /// <param name="value">Object value</param>
         public ElasticQuery<T> MustEqual(Expression<Func<T, object>> predicate, object value)
         {
-            _must.Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value)));
-            //new QueryContainerDescriptor<T>().ConstantScore(cs => cs.Filter(f => f.Term(m => m.Field(predicate).Value(value)))));
+            _must.Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value)));            
             return this;
         }
 
         /// <summary>
-        /// Add a "Must" query term for a delimited list of codes or tags.
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="list">Delimited list of strings</param>
-        public ElasticQuery<T> MustBeInList(Expression<Func<T, object>> predicate, string list)
-        {
-            list = ConvertListToQueryString(list);
-            if (!string.IsNullOrWhiteSpace(list))
-            {
-                _must.Add(new QueryContainerDescriptor<T>().QueryString(q => q.Fields(f => f.Field(predicate)).Query(list)));
-            }
-            return this;
-        }
-
-        /// <summary>
-        /// Add a "Must Not" full-text query term.  (Matching documents are always excluded)
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">String value</param>
-        public ElasticQuery<T> MustNotMatch(Expression<Func<T, object>> predicate, string value)
-        {
-            _mustNot.Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value)));
-            return this;
-        }
-
-        /// <summary>
-        /// Add a "Must Not" exact-match query term.  (Matching documents are always excluded)
+        /// Add a "Must" exact-match query term.
         /// </summary>
         /// <param name="predicate">Path to the property being queried</param>
         /// <param name="value">Object value</param>
-        public ElasticQuery<T> MustNotEqual(Expression<Func<T, object>> predicate, object value)
+        public ElasticQuery<T> MustPrefix(Expression<Func<T, object>> predicate, string value)
         {
-            _mustNot.Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value)));
+            _must.Add(new QueryContainerDescriptor<T>().Prefix(m => m.Field(predicate).Value(value)));
             return this;
-        }
-
-
-        /// <summary>
-        /// Add a "Must Not" query term for a delimited list of codes or tags.  (Matching documents are always excluded)
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="list">Delimited list of strings</param>
-        public ElasticQuery<T> MustNotBeInList(Expression<Func<T, object>> predicate, string list)
-        {
-            list = ConvertListToQueryString(list);
-            if (!string.IsNullOrWhiteSpace(list))
-            {
-                _mustNot.Add(new QueryContainerDescriptor<T>().QueryString(q => q.Fields(f => f.Field(predicate)).Query(list)));
-            }
-            return this;
-        }
-
-        /// <summary>
-        /// Add a "Should" full-text query term.  (Matching documents are scored higher.)
-        /// </summary>
-        /// <param name="predicate">Path to the property being queried</param>
-        /// <param name="value">String value</param>
-        public ElasticQuery<T> ShouldMatch(Expression<Func<T, object>> predicate, string value)
-        {
-            _should.Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value)));
-            return this;
-        }
+        }       
 
         /// <summary>
         /// Add a "Should" exact-match query term.  (Matching documents are scored higher.)
@@ -131,11 +106,32 @@ namespace DDI.Search
         /// <returns></returns>
         public ISearchRequest BuildSearchRequest()
         {
+
+            foreach (var kvp in _nestedQueryDict)
+            {
+                kvp.Value.Query(p => kvp.Key.BuildQuery());
+            }
+
             _boolQuery.Must = _must;
             _boolQuery.Should = _should;
             _boolQuery.MustNot = _mustNot;            
 
+
             return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery)).Index(IndexHelper.GetIndexName<T>());
+        }
+
+        public BoolQuery BuildQuery()
+        {
+            foreach (var kvp in _nestedQueryDict)
+            {
+                kvp.Value.Query(p => kvp.Key.BuildQuery());
+            }
+
+            _boolQuery.Must = _must;
+            _boolQuery.Should = _should;
+            _boolQuery.MustNot = _mustNot;
+
+            return _boolQuery;
         }
 
         /// <summary>
@@ -195,6 +191,79 @@ namespace DDI.Search
                 sb.Append(')');
             }
             return sb.ToString();
+        }
+
+        public enum  BoolQueryTermType
+        {
+            Must, MustNot, Should
+        }
+
+        public class BoolQueryTerm
+        {
+            private ElasticQuery<T> _query;
+            private BoolQueryTermType _type;
+            private double? _boost;
+
+            public BoolQueryTerm(ElasticQuery<T> query, BoolQueryTermType type)
+            {
+                _query = query;
+                _type = type;
+                _boost = null;
+            }
+
+            private IList<QueryContainer> GetQueryContainer()
+            {
+                switch(_type)
+                {
+                    case BoolQueryTermType.Must: return _query._must;
+                    case BoolQueryTermType.MustNot: return _query._mustNot;
+                    case BoolQueryTermType.Should: return _query._should;
+                    default: return _query._must;
+                }
+            }
+
+            public BoolQueryTerm Boost(int boost)
+            {
+                _boost = boost;
+                return this;
+            }
+
+            public ElasticQuery<T> Match(Expression<Func<T, object>> predicate, string value)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value).Boost(_boost)));
+                return _query;
+            }
+
+            public ElasticQuery<T> Equal(Expression<Func<T, object>> predicate, object value)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value).Boost(_boost)));
+                return _query;
+            }
+
+            public ElasticQuery<T> BeInList(Expression<Func<T, object>> predicate, string list)
+            {
+                list = _query.ConvertListToQueryString(list);
+                if (!string.IsNullOrWhiteSpace(list))
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(q => q.Fields(f => f.Field(predicate)).Query(list).Boost(_boost)));
+                }
+                return _query;
+            }
+
+            public ElasticQuery<T> Prefix(Expression<Func<T, object>> predicate, string value)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Prefix(m => m.Field(predicate).Value(value).Boost(_boost)));
+                return _query;
+            }
+
+            public ElasticQuery<T> Nested(Expression<Func<T, object>> predicate, ElasticQuery<T> nestedQuery)
+            {
+                NestedQueryDescriptor<T> nested = new NestedQueryDescriptor<T>().Path(predicate);
+
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Nested(p => p.Path(predicate).Query(q => nestedQuery.BuildQuery())));
+                return _query;
+            }
+
         }
 
     }

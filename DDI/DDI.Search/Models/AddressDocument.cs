@@ -12,7 +12,7 @@ namespace DDI.Search.Models
     /// Elasticsearch address document (CRM).
     /// </summary>
     [ElasticsearchType(Name = "address")]
-    public class AddressDocument : ISearchDocument
+    public class AddressDocument : ISearchDocument, IAutoMappable
     {
         [Keyword(IncludeInAll = false)]
         public Guid Id { get; set; }
@@ -34,5 +34,11 @@ namespace DDI.Search.Models
 
         [Boolean(Ignore = true)]
         public bool IsPrimary { get; set; }
+
+        public void AutoMap(MappingsDescriptor mappings)
+        {
+            mappings.Map<AddressDocument>(p => p.AutoMap());
+        }
+
     }
 }

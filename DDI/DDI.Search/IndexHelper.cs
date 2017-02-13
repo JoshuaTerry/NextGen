@@ -50,7 +50,7 @@ namespace DDI.Search
             // or if new search document types are added.
             _indexVersions = new Dictionary<string, string>
             {
-                { IndexSuffixes.CRM, "2" }
+                { IndexSuffixes.CRM, "2.1" }
             };
         }
 

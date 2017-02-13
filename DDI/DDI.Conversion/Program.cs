@@ -35,7 +35,7 @@ namespace DDI.Conversion
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
 
             // Elasticsearch POC
-            //DDI.Search.SearchPOC.PerformSearch();
+            DDI.Search.SearchPOC.PerformSearch();
 
             // These can be uncommented to run individual conversions.
 
@@ -62,7 +62,7 @@ namespace DDI.Conversion
 
             // Post-conversion tasks
 
-            Run<CRM.ConstituentSearchIndexer>();
+            //Run<CRM.ConstituentSearchIndexer>();
 
         }
 
