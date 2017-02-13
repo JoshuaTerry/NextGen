@@ -450,7 +450,7 @@
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
 
-                            <h1>Phone Numbers</h1>
+                           <%-- <h1>Phone Numbers</h1>
                             <div>
                                 <div class="constituentphonegridcontainer"></div>
                             </div>
@@ -478,7 +478,7 @@
                             <h1>Other Contacts</h1>
                             <div>
                                 <div class="constituentothergridcontainer"></div>
-                            </div>
+                            </div>--%>
 
                         </div>
 

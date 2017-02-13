@@ -925,11 +925,16 @@ function GenerateContactInfoSection() {
    
     // Need to load the info from the database
 
+ 
     //  need the accordions div after addresses
-    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers'));
-    $("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
-
+    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers')); // this is backwards (should start with inserting h1 and go back)
    
+    $("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
+    $("h1:contains('Emails')").next('div').after($('<h1></h1>').text('Web Sites'));
+    $("h1:contains('Web Sites')").next('div').after($('<h1></h1>').text('Point of Contact'));
+    $("h1:contains('Point of Contact')").next('div').after($('<h1></h1>').text('Social Media'));
+    $("h1:contains('Social Media')").next('div').after($('<h1></h1>').text('Other Contacts'));
+
     //...and the content in the accordions 
 
     // ...then add the AddModal buttons
@@ -949,6 +954,7 @@ function GenerateContactInfoSection() {
     // Can either make a collection and iterate over or hard code. Not sure which would be easier. 
     // Maybe experiment both ways
     // overall...shoud not be THAT bad
+    LoadContactInfo();
 }
 
 // Phone # Subsection
@@ -965,7 +971,6 @@ function LoadPhoneNumbersTable() {
     LoadGrid('constituentphonegrid',
         'constituentphonegridcontainer',
         columns,
-        // 'constituents/' + currentEntity.Id + '/contactinfo', 
         'contactinfo/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1/' + currentEntity.Id,
         null,
         EditPhoneNumber);
