@@ -650,14 +650,47 @@ function GetEditedFields(editcontainer) {
         }
     });
 
-    $(editcontainer).find('.dx-tagBox').each(function() {
-        alert($(this).classList[0]);
+    var denominations = [];
+    $('.tagBoxDenominations').dxTagBox('instance').option('selectedItems').forEach(function(denomItem) {
+        denominations.push(denomItem.Id);
     });
+    SaveChildCollection(denominations, Links.NewDenomination.Href);
+
+    var ethnicities = [];
+    $('.tagBoxEthnicities').dxTagBox('instance').option('selectedItems').forEach(function (ethnItem) {
+        ethnicities.push(ethnItem.Id);
+    });
+    SaveChildCollection(ethnicities, Links.NewEthnicity.Href);
 
     p = '{' + p + '}';
 
     return p;
 
+}
+
+function SaveChildCollection(children, route) {
+    $.ajax({
+        url: route,
+        method: 'POST',
+        headers: GetApiHeaders(),
+        data: JSON.stringify({ChildIds: children}),
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+            // Display updated entity data
+            currentEntity = data.Data;
+
+            RefreshEntity();
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+        }
+    });
 }
 
 function CancelEdit() {

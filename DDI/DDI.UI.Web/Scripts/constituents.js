@@ -252,11 +252,11 @@ function DisplayConstituentPrimaryAddress() {
 /* Demograpics Section */
 
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('Denominations', 'tagDenominationsContainer', 'denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('Ethnicities', 'tagEthnicitiesContainer', 'ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
 }
 
 /* End Demographics Section */

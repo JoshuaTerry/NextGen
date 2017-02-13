@@ -97,7 +97,10 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .dx-texteditor.dx-state-disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #ddd; color: #333333; }
 .dx-texteditor-input { padding: 0px;}
 .dx-placeholder { margin: 0px; padding: 0px; }
-.dx-placeholder:before { padding: 0 0 5px 3px; }
+.dx-placeholder:before { padding: 0 0 5px 4px; }
+
+.dx-tag-content { padding: 0 25px 5px 6px; margin: 3px 0 3px 4px; height: 19px; }
+.dx-tag-content span { font-size: 12px; font-family: Arial, Helvetica, sans-serif; }
 
 /* END TAG BOX CONTROL */
 
