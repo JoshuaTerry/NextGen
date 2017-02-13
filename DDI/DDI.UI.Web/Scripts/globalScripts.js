@@ -26,7 +26,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        modal = $('.addconstituentmodal').dialog({
+        var modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 900,
@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         $('.savenewconstituent').click(function () {
 
-            SaveNewConstituent();
+            SaveNewConstituent(modal);
 
         });
 
@@ -44,7 +44,7 @@ $(document).ready(function () {
 
             e.preventDefault();
 
-            CloseModal();
+            CloseModal(modal);
 
         });
 
@@ -111,7 +111,7 @@ function GetQueryString() {
     return vars;
 }
 
-function SaveNewConstituent() {
+function SaveNewConstituent(modal) {
 
     // Get the fields
     var fields = GetNewFields();
@@ -132,7 +132,7 @@ function SaveNewConstituent() {
             
             ClearFields();
 
-            CloseModal();
+            CloseModal(modal);
 
         },
         error: function (xhr, status, err) {
@@ -170,7 +170,7 @@ function GetNewFields() {
 
 }
 
-function CloseModal() {
+function CloseModal(modal) {
 
     ClearFields('.modalcontent');
     
@@ -599,16 +599,15 @@ function CancelEdit() {
 
 function DeleteEntity(url, method, confirmationMessage) {
     var okToDelete = confirm(confirmationMessage);
-    if (okToDelete == true) {
+    if (okToDelete === true) {
         // delete the entity
         $.ajax({
             url: url,
             method: method,
             headers: GetApiHeaders(),
             contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
             crossDomain: true,
-            success: function(data) {
+            success: function() {
                 // Display success
                 DisplaySuccessMessage('Success', 'The item was deleted.');
             },
