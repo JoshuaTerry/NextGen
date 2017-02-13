@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstituentAddressService.cs" />
     <Compile Include="ConstituentService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="CountyService.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
-    <Compile Include="ServiceInterfaces\IConstituentAddressService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="ServiceInterfaces\IPaymentPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
