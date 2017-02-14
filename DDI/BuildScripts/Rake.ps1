@@ -79,18 +79,18 @@ $Config = GetConfigValues -deployEnvironment:$deployEnvironment
 $Files = GetConfigFiles -workingDirectory:$workingDirectory
 foreach($file in $Files)
 {
-	(Get-Content $file) |  ForEach-Object { $_ -replace "<add key=""Environment"".*/>" , "<add key=""Environment"" value=""$($Config.Environment)"" />" } | Set-Content $file
-	(Get-Content $file) |  ForEach-Object { $_ -replace "<add key=""SmtpHost"".*/>" , "<add key=""SmtpHost"" value=""$($Config.SmtpHost)"" />" } | Set-Content $file
-	(Get-Content $file) |  ForEach-Object { $_ -replace "<add key=""WebRoot"".*/>" , "<add key=""WebRoot"" value=""$($Config.WebRoot)"" />" } | Set-Content $file
-	(Get-Content $file) |  ForEach-Object { $_ -replace "<add name=""CommonContext"".*/>" , "<add name=""CommonContext"" connectionString=""$($Config.CommonContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file
-	(Get-Content $file) |  ForEach-Object { $_ -replace "<add name=""DomainContext"".*/>" , "<add name=""DomainContext"" connectionString=""$($Config.DomainContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""Environment"".*/>" , "<add key=""Environment"" value=""$($Config.Environment)"" />" } | Set-Content $file.FullName
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""SmtpHost"".*/>" , "<add key=""SmtpHost"" value=""$($Config.SmtpHost)"" />" } | Set-Content $file.FullName
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""WebRoot"".*/>" , "<add key=""WebRoot"" value=""$($Config.WebRoot)"" />" } | Set-Content $file.FullName
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add name=""CommonContext"".*/>" , "<add name=""CommonContext"" connectionString=""$($Config.CommonContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file.FullName
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add name=""DomainContext"".*/>" , "<add name=""DomainContext"" connectionString=""$($Config.DomainContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file.FullName
 
 }
 
 $Files = GetJSFiles -workingDirectory:$workingDirectory
 foreach($file in $Files)
 {
-	(Get-Content $file) |  ForEach-Object { $_ -replace "var WEB_API_ADDRESS = '.*';" , "var WEB_API_ADDRESS = '$($Config.WEB_API_ADDRESS)';" } | Set-Content $file
+	(Get-Content $file.FullName) |  ForEach-Object { $_ -replace "var WEB_API_ADDRESS = '.*';" , "var WEB_API_ADDRESS = '$($Config.WEB_API_ADDRESS)';" } | Set-Content $file.FullName
 
 }
 Write-Host "All Done!!!"
