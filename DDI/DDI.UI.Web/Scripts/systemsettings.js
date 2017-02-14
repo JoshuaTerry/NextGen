@@ -476,12 +476,12 @@ function CreateNewCustomFieldModalLink(entity, title) {
 
 function CreateNewCustomFieldModal(entity, title) {
 
-    modal = $('.newcustomfieldmodal').dialog({
+    var modal = $('.newcustomfieldmodal').dialog({
         closeOnEscape: false,
         modal: true,
         resizable: false,
         beforeClose: function (event, ui) {
-            ClearModal();
+            ClearModal(modal);
         }
     });
 
@@ -513,7 +513,7 @@ function CreateNewCustomFieldModal(entity, title) {
 
     $(save).click(function () {
 
-        SaveCustomField();
+        SaveCustomField(modal);
 
     });
 
@@ -521,7 +521,7 @@ function CreateNewCustomFieldModal(entity, title) {
 
         e.preventDefault();
 
-        ClearModal();
+        ClearModal(modal);
 
         $('.ui-dialog').css('width', '300px');
         $('.fieldproperties').attr('style', 'width: 100%');
@@ -558,7 +558,7 @@ function AddOption() {
     $('.cfoptionorder').val('');
 }
 
-function ClearModal() {
+function ClearModal(modal) {
 
     $('.options').hide();
     options = [];
@@ -652,7 +652,7 @@ function CustomFieldTypeSelected(selectedvalue) {
 
 }
 
-function SaveCustomField() {
+function SaveCustomField(modal) {
 
     var id = $('.cfid').val();
     var method = '';
@@ -700,11 +700,11 @@ function SaveCustomField() {
 
     }
 
-    SendCustomField('customfields', method, data);
+    SendCustomField('customfields', method, data, modal);
 
 }
 
-function SendCustomField(route, action, data) {
+function SendCustomField(route, action, data, modal) {
 
     $.ajax({
         url: WEB_API_ADDRESS + route,
@@ -717,7 +717,7 @@ function SendCustomField(route, action, data) {
 
             DisplaySuccessMessage('Success', 'Custom field saved successfully.');
 
-            CloseModal();
+            CloseModal(modal);
 
             RefreshCustomFieldsGrid();
 

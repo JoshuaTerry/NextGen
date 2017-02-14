@@ -100,6 +100,8 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
+    PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
+    EducationModalDropDowns();
 }
 
 function GetConstituentData(id) {
@@ -200,8 +202,6 @@ function DisplayConstituentData() {
 
         LoadContactInfo();
 
-        NewAddressModal();
-
         LoadAlternateIDTable();
 
         NewAlternateIdModal();
@@ -212,7 +212,12 @@ function DisplayConstituentData() {
 
         $('.BirthDay').val(currentEntity.BirthDay);
 	
-	PopulateUserIdDropDown();
+        PopulateUserIdDropDown();
+
+        LoadRelationshipsGrid();
+        NewRelationshipModal();
+
+        NewAddressModal();
     }
 }
 
@@ -263,6 +268,92 @@ function LoadEthnicitiesTagBox() {
 
 /* End Demographics Section */
 
+function LoadRelationshipsData() {
+    $.ajax({
+        type: Links.GetRelationship.method,
+        url: Links.GetRelationship.Href,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            LoadRelationshipsQuickView(data);
+            LoadRelationshipsTab(data);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
+        }
+    });
+}
+
+function LoadRelationshipsQuickView(data) {
+    var formattedData = "<ul>";
+    if (data.Data && Array.isArray(data.Data)) {
+        data.Data.forEach(function (eachItem) {
+            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
+            };
+        });
+    }
+    formattedData = formattedData + "</ul>";
+    $('.relationshipsQuickView').html(formattedData);
+}
+
+function LoadRelationshipsTab(data) {
+    var columns = [
+        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
+        { dataField: 'DisplayName', caption: 'Relationship' },
+    ];
+    LoadGridFromHateoas("relationshipsgrid",
+        "relationshipstable",
+        columns,
+        Links.GetRelationship.Href,
+        null,
+        EditRelationship,
+        DeleteEntity,
+        "Delete that ",
+        data);
+
+}
+
+function LoadRelationshipsGrid() {
+
+    LoadRelationshipsData();
+}
+
+function EditRelationship(getUrl, patchUrl) {
+    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
+}
+
+function NewRelationshipModal() {
+    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, Links.NewRelationship.Method, Links.NewRelationship.Href, LoadRelationshipsGrid);
+}
+
+function LoadRelationship(url, modal) {
+    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
+}
+
+function GetRelationshipToSave(modal, isUpdate) {
+    var item = {
+        Constituent1Id: $('.FormattedName1').val(),
+        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+    }
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidrelationshipid').val();
+    }
+    return item;
+}
+
+function PrePopulateNewRelationshipModal(modal) {
+    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+}
+
+function LoadRelationshipData(data, modal) {
+    $(modal).find('.hidrelationshipid').val(data.Data.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+}
+
 /* Doing Business As Section */
 function LoadDBAGrid() {
 
@@ -288,7 +379,7 @@ function NewDBAModal() {
 
         e.preventDefault();
 
-        modal = $('.dbamodal').dialog({
+        var modal = $('.dbamodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
@@ -299,7 +390,7 @@ function NewDBAModal() {
 
             e.preventDefault();
 
-            CloseModal();
+            CloseModal(modal);
 
         });
 
@@ -324,7 +415,7 @@ function NewDBAModal() {
 
                     DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadDBAGrid();
 
@@ -342,20 +433,20 @@ function NewDBAModal() {
 
 function EditDBA(id) {
 
-    modal = $('.dbamodal').dialog({
+    var modal = $('.dbamodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadDBA(id);
+    LoadDBA(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -381,7 +472,7 @@ function EditDBA(id) {
 
                 DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadDBAGrid();
 
@@ -395,7 +486,7 @@ function EditDBA(id) {
 
 }
 
-function LoadDBA(id) {
+function LoadDBA(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -453,7 +544,7 @@ function NewEducationModal() {
 
         e.preventDefault();
 
-        modal = $('.educationmodal').dialog({
+        var modal = $('.educationmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 600,
@@ -466,10 +557,11 @@ function NewEducationModal() {
 
             e.preventDefault();
 
-            CloseModal();
+            CloseModal(modal);
 
         });
 
+        $('.saveeducation').unbind('click');
         $('.saveeducation').click(function () {
 
             var item = {
@@ -491,7 +583,7 @@ function NewEducationModal() {
 
                     DisplaySuccessMessage('Success', 'Education saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadEducationGrid();
 
@@ -509,14 +601,13 @@ function NewEducationModal() {
 
 function EditEducationModal(id) {
 
-    modal = $('.educationmodal').dialog({
+    var modal = $('.educationmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 600,
         resizable: false
     });
 
-    EducationModalDropDowns();
 
     LoadEducation(id);
 
@@ -524,10 +615,11 @@ function EditEducationModal(id) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
+    $('.saveeducation').unbind('click');
     $('.saveeducation').click(function () {
 
         var item = {
@@ -545,19 +637,19 @@ function EditEducationModal(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function() {
 
                 DisplaySuccessMessage('Success', 'Education saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadEducationGrid();
 
             },
-            error: function (xhr, status, err) {
+            error: function(xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error occurred during saving the education.');
             }
-        })
+        });
 
     });
 
@@ -822,7 +914,7 @@ function NewAlternateIdModal() {
 
         e.preventDefault();
 
-        modal = $('.alternateidmodal').dialog({
+        var modal = $('.alternateidmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
@@ -847,7 +939,7 @@ function NewAlternateIdModal() {
 
                     DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadAlternateIDTable();
 
@@ -864,7 +956,7 @@ function NewAlternateIdModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -874,20 +966,20 @@ function NewAlternateIdModal() {
 
 function EditAlternateId(id) {
 
-    modal = $('.alternateidmodal').dialog({
+    var modal = $('.alternateidmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadAlternateId(id);
+    LoadAlternateId(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -911,7 +1003,7 @@ function EditAlternateId(id) {
 
                 DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadAlternateIDTable();
 
@@ -925,7 +1017,7 @@ function EditAlternateId(id) {
 
 }
 
-function LoadAlternateId(id) {
+function LoadAlternateId(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -978,7 +1070,7 @@ function NewAddressModal() {
 
         e.preventDefault();
 
-        modal = $('.addressmodal').dialog({
+        var modal = $('.addressmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 375,
@@ -989,7 +1081,7 @@ function NewAddressModal() {
 
             e.preventDefault();
 
-            CloseModal();
+            CloseModal(modal);
 
         });
 
@@ -1032,7 +1124,7 @@ function NewAddressModal() {
 
                     DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadAddressesGrid();
 
@@ -1093,7 +1185,7 @@ function PopulateCountiesInModal(selectedValue) {
 
 function EditAddressModal(id) {
 
-    modal = $('.addressmodal').dialog({
+    var modal = $('.addressmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 375,
@@ -1113,7 +1205,7 @@ function EditAddressModal(id) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 

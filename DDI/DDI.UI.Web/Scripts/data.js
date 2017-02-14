@@ -94,7 +94,28 @@ function LoadTagBoxes(tagBox, container, route) {
 
 }
 
-function LoadGrid(grid, container, columns, route, selected, edit) {
+function LoadGrid(grid, container, columns, route, selected, edit, data) {
+    if (edit) {
+        columns.push({
+            width: '100px',
+            alignment: 'center',
+            cellTemplate: function(container, options) {
+                $('<a/>')
+                    .addClass('editthing')
+                    .text('Edit')
+                    .click(function(e) {
+                        e.preventDefault();
+
+                        edit($(this).parent().parent().find('td').first().text());
+                    })
+                    .appendTo(container);
+            }
+        });
+    }
+    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
+}
+
+function LoadGridFromHateoas(grid, container, columns, route, selected, editMethod, deleteMethod, deleteMessage, data) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -103,72 +124,236 @@ function LoadGrid(grid, container, columns, route, selected, edit) {
 
     var datagrid = $('<div>').addClass(grid);
 
-    if (edit) {
+    if (editMethod) {
         columns.push({
             width: '100px',
             alignment: 'center',
             cellTemplate: function (container, options) {
-                $('<a/>').addClass('editthing')
+                $('<a/>')
+                    .addClass('editthing')
                     .text('Edit')
                     .click(function (e) {
                         e.preventDefault();
 
-                        edit($(this).parent().parent().find('td').first().text())
+                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
                     })
                     .appendTo(container);
             }
         });
     }
+    if (deleteMethod) {
+        columns.push({
+            width: '100px',
+            alignment: 'center',
+            cellTemplate: function (container, options) {
+                $('<a/>')
+                    .addClass('editthing')
+                    .text('Remove')
+                    .click(function (e) {
+                        e.preventDefault();
 
-    $.ajax({
-        url: route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            var actualData = data;
-
-            if (data.Data) {
-                actualData = data.Data;
+                        deleteMethod(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, deleteMessage + options.data.DisplayName + "?");
+                    })
+                    .appendTo(container);
             }
+        });
+    }
+    if (data) {
+        LoadGridData(data, datagrid, columns, container);
+    } else {
+        $.ajax({
+            url: route,
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                LoadGridData(data, datagrid, columns, container);
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error loading grid.');
+            }
+        });
+    }
+}
 
-            $(datagrid).dxDataGrid({
-                dataSource: actualData,
-                columns: columns,
-                paging: {
-                    pageSize: 25
-                },
-                pager: {
-                    showNavigationButtons: true,
-                    showPageSizeSelector: true,
-                    showInfo: true,
-                    allowedPageSizes: [15, 25, 50, 100]
-                },
-                groupPanel: {
-                    visible: false,
-                    allowColumnDragging: true
-                },
-                filterRow: {
-                    visible: true,
-                    showOperationChooser: false
-                },
-                onRowClick: function (info) {
+function LoadGridData(data, datagrid, columns, container) {
 
-                    if (selected) {
-                        selected(info);
-                    }
+    var actualData = data;
 
+    if (data.Data) {
+        actualData = data.Data;
+    }
+
+    if (actualData && Array.isArray(actualData)) {
+        actualData.forEach(function(eachItem) {
+            var links = [];
+            if (eachItem.Links) {
+                $.map(eachItem.Links,
+                    function(link) {
+
+                        links[link.Relationship] = {
+                            Href: link.Href,
+                            Method: link.Method
+                        };
+
+                    });
+                eachItem.FormattedLinks = links;
+            };
+        });
+    }
+
+    $(datagrid)
+        .dxDataGrid({
+            dataSource: actualData,
+            columns: columns,
+            paging: {
+                pageSize: 25
+            },
+            pager: {
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                showInfo: true,
+                allowedPageSizes: [15, 25, 50, 100]
+            },
+            groupPanel: {
+                visible: false,
+                allowColumnDragging: true
+            },
+            filterRow: {
+                visible: true,
+                showOperationChooser: false
+            },
+            onRowClick: function(info) {
+
+                if (selected) {
+                    selected(info);
                 }
-            });
 
-            $(datagrid).appendTo($(container));
+            }
+        });
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
-        }
+    $(datagrid).appendTo($(container));
+
+}
+
+function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClassName, modalWidth, loadEntityMethod, loadEntityGridMethod, getEntityToSave) {
+
+    var modal = $(modalClassName).dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: modalWidth,
+        resizable: false
+    });
+
+    loadEntityMethod(getUrl, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(saveButtonClassName).unbind('click');
+
+    $(saveButtonClassName).click(function () {
+
+        var item = getEntityToSave(modal, true);
+
+        $.ajax({
+            type: 'PATCH',
+            url: patchUrl,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage("Success", entityType + " saved successfully.");
+
+                CloseModal(modal);
+
+                loadEntityGridMethod();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityType + ".");
+            }
+        });
+
     });
 
 }
+
+function NewEntityModal(entityName, newEntityModalClassName, entityModalClassName, entityModalWidth, prePopulateNewModal, saveEntityClassName, getEntityToSave, ajaxMethod, ajaxUrl, loadEntityGrid) {
+
+    $(newEntityModalClassName)
+        .click(function (e) {
+
+            e.preventDefault();
+
+            var modal = $(entityModalClassName)
+                .dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: entityModalWidth,
+                    resizable: false
+                });
+            if (prePopulateNewModal) {
+                prePopulateNewModal(modal);
+            }
+
+            $('.cancelmodal')
+                .click(function (e) {
+                    e.preventDefault();
+                    CloseModal(modal);
+                });
+
+            $(saveEntityClassName).unbind('click');
+
+            $(saveEntityClassName)
+                .click(function () {
+
+                    var item = getEntityToSave(modal, false);
+
+                    $.ajax({
+                        type: ajaxMethod,
+                        url: ajaxUrl,
+                        data: item,
+                        contentType: 'application/x-www-form-urlencoded',
+                        crossDomain: true,
+                        success: function () {
+
+                            DisplaySuccessMessage("Success", entityName + " saved successfully.");
+
+                            CloseModal(modal);
+
+                            loadEntityGrid();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                        }
+                    });
+
+                });
+        });
+}
+
+function LoadEntity(url, modal, ajaxMethod, loadEntityData, entityName) {
+
+    $.ajax({
+        type: ajaxMethod,
+        url: url,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            loadEntityData(data, modal);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage("Error", "An error occurred during the loading of the " + entityName + ".");
+        }
+    });
+}
+
