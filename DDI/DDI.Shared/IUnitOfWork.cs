@@ -43,11 +43,15 @@ namespace DDI.Shared
 
         void Insert<T>(T entity) where T : class;
 
+        void Update<T>(T entity) where T : class;
+
         void Delete<T>(T entity) where T : class;
 
         void AddBusinessLogic(object blObj);
 
         T GetBusinessLogic<T>() where T : class;
+
+        object GetBusinessLogic(Type blType);
 
         T GetById<T>(Guid id) where T : class;
 
