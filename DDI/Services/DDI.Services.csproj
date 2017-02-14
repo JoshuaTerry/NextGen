@@ -74,7 +74,6 @@
     <Compile Include="CustomFieldService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
     <Compile Include="ServiceInterfaces\IContactInfoService.cs" />
-    <Compile Include="ILocationService.cs" />
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
