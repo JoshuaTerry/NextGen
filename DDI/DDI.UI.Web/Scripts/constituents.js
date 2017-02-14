@@ -906,36 +906,32 @@ function GenerateContactInfoSection() {
         var categoryData = data.Data;
 
         categoryData.forEach(function (category) {
+
             $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text(category.SectionTitle));
-            // categoryTitles.push(category.SectionTitle);
-            // instead of tossing them in a variable, I can just make the damn accordions right here!
 
         });
 
+        ContactInfoNewModalButtons();
+
     });
 
-
-    //categoryHeaders.forEach(function (title) {
-    //    $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text(title));
-    //});
-    //  need the accordions div after addresses
-   // $("h1:contains('Addresses')").next('div').after($('<h1></h1>').text('Phone Numbers')); // this is backwards (should start with inserting h1 and go back)
-   
-    //$("h1:contains('Phone Numbers')").next('div').after($('<h1></h1>').text('Emails'));
-    //...and the content in the accordions 
-
-    // ...then add the AddModal buttons
-    //$("h1:contains('Phone Numbers')").append('<a href="#" title="New" class="newphonenumbermodallink newbutton"></a>');
-    //NewPhoneNumberModal();
-    //$("h1:contains('Emails')").append('<a href="#" title="New" class="newemailmodallink newbutton"></a>');
-    //$("h1:contains('Web Sites')").append('<a href="#" title="New" class="newwebsitesmodallink newbutton"></a>');
-    //$("h1:contains('Point of Contact')").append('<a href="#" title="New" class="newpocmodallink newbutton"></a>');
-    //$("h1:contains('Social Media')").append('<a href="#" title="New" class="newsocmedmodallink newbutton"></a>');
-    //$("h1:contains('Other Contacts')").append('<a href="#" title="New" class="newothermodallink newbutton"></a>');
-    
-    
-   
 }
+
+function ContactInfoNewModalButtons() {
+
+    var modalClassNames = ['newphonenumbermodallink', 'newwebsitemodallink', 'newpocmodallink', 'newsocmedmodallink', 'newothermodallink'];
+
+    $('h1:contains("Contact Information") ~ div div.accordions h1').each(function () {
+
+        $(this).append($('<a>', { title: 'New', class: 'newbutton', href: '#' }));
+
+        $(this).after('<div></div>');
+
+        // $('div', { class: 'grid' })
+
+    });
+}
+
 
 function LoadCategories(CategoryTitles) {
 
