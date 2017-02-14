@@ -5,6 +5,7 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
@@ -12,6 +13,7 @@ namespace DDI.WebApi.Controllers
 {
     public class DenominationsController : ControllerBase<Denomination>
     {
+        private IConstituentService _constituentService = new ConstituentService();
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
         public DenominationsController()
             :base(new DenominationsService())
@@ -77,7 +79,13 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var response = Service.AddDenominationsToConstituent(id, denominations);
+                var constituent = _constituentService.GetById(id).Data;
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.AddDenominationsToConstituent(constituent, denominations);
                 return Ok(response);
             }
             catch (Exception ex)

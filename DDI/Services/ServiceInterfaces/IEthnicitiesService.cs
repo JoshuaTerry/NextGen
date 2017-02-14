@@ -7,6 +7,6 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface IEthnicitiesService : IService<Ethnicity>
     {
-        IDataResponse<Constituent> AddEthnicitiesToConstituent(Guid id, JObject ethnicityIds);
+        IDataResponse<Constituent> AddEthnicitiesToConstituent(Constituent constituent, JObject ethnicityIds);
     }
 }

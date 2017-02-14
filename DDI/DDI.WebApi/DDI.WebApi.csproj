@@ -255,7 +255,7 @@
     <Compile Include="Controllers\PaymentPreferencesController.cs" />
     <Compile Include="Controllers\EducationsController.cs" />
     <Compile Include="Controllers\EducationLevelsController.cs" />
-    <Compile Include="Controllers\EthnicityController.cs" />
+    <Compile Include="Controllers\EthnicitiesController.cs" />
     <Compile Include="Controllers\GendersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncomeLevelsController.cs" />

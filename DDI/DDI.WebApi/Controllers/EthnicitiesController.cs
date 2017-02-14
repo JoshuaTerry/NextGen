@@ -1,20 +1,25 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.UI.WebControls;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Statics;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class EthnicityController : ControllerBase<Ethnicity>
+    public class EthnicitiesController : ControllerBase<Ethnicity>
     {
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
-        public EthnicityController()
+        private IConstituentService _constituentService = new ConstituentService();
+        public EthnicitiesController()
             :base(new EthnicitiesService())
         {
         }
@@ -78,7 +83,13 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var response = Service.AddEthnicitiesToConstituent(id, ethnicityIds);
+                var constituent = _constituentService.GetById(id).Data;
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.AddEthnicitiesToConstituent(constituent, ethnicityIds);
                 return Ok(response);
             }
             catch (Exception ex)
