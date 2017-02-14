@@ -804,20 +804,6 @@
 
                 </div>
 
-                <div class="twocolumn">
-
-                    <div class="fieldblock">
-                        <label>Account Type</label>
-                        <select class="AccountTypeId"></select>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Status</label>
-                        <select class="StatusId"></select>
-                    </div>
-
-                </div>
-
                 <div class="modalbuttons">
                     <input type="button" class="savedba" value="Save" />
                     <a href="#" class="cancelmodal">Cancel</a>

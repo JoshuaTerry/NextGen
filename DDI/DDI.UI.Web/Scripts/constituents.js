@@ -100,8 +100,6 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-    PopulateDropDown('.AccountTypeId', 'paymentpreferences/accounttypes', '', '');
-    // PopulateDropDown('.PreferredPaymentMethod', 'paymentpreferences/paymentmethods', '', '');
 }
 
 function GetConstituentData(id) {

@@ -28,21 +28,21 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference)]
+        [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.PaymentPreference + RouteNames.EFT, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.PaymentMethod + RouteNames.EFT, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/paymentpreferences/{id}", Name = RouteNames.PaymentPreference + RouteVerbs.Get)]
+        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/paymentpreferences", Name = RouteNames.PaymentPreference + RouteVerbs.Post)]
+        [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
             if (entityToSave.ConstituentId.HasValue)
@@ -70,29 +70,29 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPatch]
-        [Route("api/v1/paymentpreferences/{id}", Name = RouteNames.PaymentPreference + RouteVerbs.Patch)]
+        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/paymentpreferences/{id}", Name = RouteNames.PaymentPreference + RouteVerbs.Delete)]
+        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
         }
 
         [HttpGet]
-        [Route("api/v1/paymentpreferences/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/paymentpreferences", Name = RouteNames.Constituent + RouteNames.PaymentPreference)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/paymentmethods/constituents/{id}")]
+        [Route("api/v1/constituents/{id}/paymentmethods", Name = RouteNames.Constituent + RouteNames.PaymentMethod)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentPreference, search, fields);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, fields);
             }
             catch (Exception ex)
             {
