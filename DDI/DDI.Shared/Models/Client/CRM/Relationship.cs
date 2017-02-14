@@ -27,7 +27,7 @@ namespace DDI.Shared.Models.Client.CRM
         public Guid? Constituent2Id { get; set; }
 
         public Constituent Constituent2 { get; set; }
-        public override string DisplayName => $"{Constituent1.FormattedName} is the {RelationshipType.Name} of {Constituent2.FormattedName}";
+        public override string DisplayName => $"{Constituent1?.FormattedName} is the {RelationshipType?.Name} of {Constituent2?.FormattedName}";
 
         #endregion Public Properties
 
