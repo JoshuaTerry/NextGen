@@ -22,9 +22,9 @@ namespace DDI.Search
         /// <summary>
         /// Get a specific page (0 based) of results.
         /// </summary>
-        public void GetPage(int page)
+        public void GetPage(int offset)
         {
-            Request.From = page * Request.Size;
+            Request.From = offset * Request.Size;
             var response = ElasticClient.Search<T>(Request);
 
             Documents = response.Documents;

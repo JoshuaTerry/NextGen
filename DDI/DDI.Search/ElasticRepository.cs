@@ -81,14 +81,14 @@ namespace DDI.Search
         /// Perform a document search, returning strongly typed search results.
         /// </summary>
         /// <param name="query">The ElasticQuery  </param>
-        /// <param name="pageSize"></param>
-        /// <param name="page"></param>
+        /// <param name="limit">Number of results to return per page</param>
+        /// <param name="offset">Page number (zero-based)</param>
         /// <returns></returns>
-        public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int pageSize, int page)
+        public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
         {
             ISearchRequest request = query.BuildSearchRequest();
-            request.Size = pageSize;
-            request.From = page * pageSize;
+            request.Size = limit;
+            request.From = offset * limit;
             var response = _client.ElasticClient.Search<T>(request);
 
             var result = new DocumentSearchResult<T>();
