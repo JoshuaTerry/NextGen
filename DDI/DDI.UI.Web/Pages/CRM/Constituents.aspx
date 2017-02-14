@@ -445,7 +445,7 @@
 
                         <div class="accordions">
 
-                            <h1>Addresses</h1> <!-- <a href="#" title="New" class="newaddressmodallink newbutton"></a> -->
+                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
@@ -772,15 +772,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="pn-PhoneNumberType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="pn-PhoneNumberType ContactTypeId"></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>Phone:</label>
-                    <input type="text"  class="pn-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>Phone:</label>
+                <input type="text"  class="pn-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -805,15 +805,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="e-EmailType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="e-EmailType ContactTypeId"></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>Email:</label>
-                    <input type="text"  class="e-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>Email:</label>
+                <input type="text"  class="e-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -838,15 +838,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="ws-WebSiteType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="ws-WebSiteType ContactTypeId" ></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>Web Site:</label>
-                    <input type="text"  class="ws-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>Web Site:</label>
+                <input type="text"  class="ws-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -871,15 +871,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="poc-PocType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="poc-PocType ContactTypeId"></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>Info:</label>
-                    <input type="text"  class="poc-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>Info:</label>
+                <input type="text"  class="poc-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -904,15 +904,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="sm-SocialMediaType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="sm-SocialMediaType ContactTypeId"></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>URL:</label>
-                    <input type="text"  class="sm-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>URL:</label>
+                <input type="text"  class="sm-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
@@ -937,15 +937,15 @@
 
         <div class="modalcontent">
             
-                <div class="fieldblock">
-                    <label>Type:</label>
-                    <select class="o-OtherType ContactTypeId" />
-                </div>
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="o-OtherType ContactTypeId"></select>
+            </div>
 
-                <div class="fieldblock">
-                    <label>Info:</label>
-                    <input type="text"  class="o-Info" />
-                </div>
+            <div class="fieldblock">
+                <label>Info:</label>
+                <input type="text"  class="o-Info" />
+            </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
