@@ -6,6 +6,7 @@
     
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\data.js"></script>
 
 </asp:Content>
 
@@ -59,7 +60,7 @@
                     <li><a href="#" class="LoadProfessional">Professional</a></li>
                     <li><a href="#" class="LoadRegions">Regions</a></li>
                     <li><a href="#" class="LoadRelationship">Relationship</a></li>
-                    <li><a href="#" class="LoadTags">Tags</a></li>
+                    <li><a href="#" class="LoadTagGroupGrid">Tags</a></li>
                 </ul>
             </div>
 
@@ -202,6 +203,44 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submitcf" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="taggroupmodal" title="Tag Group" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtaggroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="tg-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="tg-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Multi/Single Select</label>
+                <select class="tg-Select">  
+                   <option value="0">Single</option>
+                   <option value="1">Multiple</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="tg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetaggroup" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

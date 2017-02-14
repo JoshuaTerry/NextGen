@@ -135,7 +135,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
+                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateTagGroup.Href);
                     })
                     .appendTo(container);
             }
@@ -152,7 +152,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, deleteMessage + options.data.DisplayName + "?");
+                        deleteMethod(options.data.FormattedLinks.DeleteTagGroup.Href, options.data.FormattedLinks.DeleteTagGroup.Method, deleteMessage + options.data.DisplayName + "?");
                     })
                     .appendTo(container);
             }

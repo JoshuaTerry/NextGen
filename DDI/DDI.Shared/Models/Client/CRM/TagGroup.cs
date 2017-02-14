@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("TagGroup")]
+    [Hateoas(RouteNames.TagGroup)]
     public class TagGroup : EntityBase
     {
         #region Public Properties
@@ -24,6 +27,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
 
+        [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
 
         #endregion Public Properties

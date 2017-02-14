@@ -1,4 +1,6 @@
-﻿
+﻿var SystemSettingsLinks = [];
+SystemSettingsLinks["NewTagGroup"] = { Href: WEB_API_ADDRESS + "taggroups", Method: "Get" };
+
 $(document).ready(function () {
 
     $('.systemsettings a').click(function (e) {
@@ -302,12 +304,81 @@ function LoadRelationship() {
 
 }
 
-function LoadTags() {
-
-
+function LoadTagGroupGrid() {
+    var selectOptions = [
+        { Id: 0, Description: "Single" },
+        { Id: 1, Description: "Multiple" }
+    ];
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'Order', caption: 'Order' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'TagSelectionType', caption: 'Multi/Single Select', lookup: { dataSource: selectOptions, valueExpr: 'Id', displayExpr: 'Description' } },
+        { dataField: 'IsActive', caption: 'Active' },
+    ];
+    LoadGridFromHateoas("tagsgrid",
+        "contentcontainer",
+        columns,
+        WEB_API_ADDRESS + "taggroups?OrderBy=Order",
+        null,
+        EditTagGroup,
+        DeleteEntity,
+        "Delete tag group: ",
+        null);
+    CreateNewModalLink("New Tag Group", NewTagGroupModal, '.tagsgrid');
 
 }
 /* END CRM SETTINGS */
+
+function EditTagGroup(getUrl, patchUrl) {
+    EditEntity(getUrl, patchUrl, "Tag Group", ".taggroupmodal", ".savetaggroup", 250, LoadTagGroup, LoadTagGroupGrid, GetTagGroupToSave);
+}
+
+function LoadTagGroup(url, modal) {
+    LoadEntity(url, modal, "GET", LoadTagGroupData, "Tag Group");
+}
+
+function LoadTagGroupData(data, modal) {
+    $(modal).find('.hidtaggroupid').val(data.Data.Id);
+    $(modal).find('.tg-Order').val(data.Data.Order);
+    $(modal).find('.tg-Name').val(data.Data.Name);
+    $(modal).find('.tg-Select').val(data.Data.TagSelectionType);
+    $(modal).find('.tg-IsActive').prop('checked', data.Data.IsActive);
+}
+
+function GetTagGroupToSave(modal, isUpdate) {
+    var item = {
+        Order: $(modal).find('.tg-Order').val(),
+        Name: $(modal).find('.tg-Name').val(),
+        IsActive: $(modal).find('.tg-IsActive').prop('checked'),
+        TagSelectionType: $(modal).find('.tg-Select').val(),
+    }
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidtaggroupid').val();
+    }
+    return item;
+}
+
+function NewTagGroupModal() {
+    NewEntityModal("Tag Group", ".newmodallink", ".taggroupmodal", 250, null, ".savetaggroup", GetTagGroupToSave, SystemSettingsLinks.NewTagGroup.Method, SystemSettingsLinks.NewTagGroup.Href, LoadTagGroupGrid);
+}
+
+function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass) {
+
+    var modallink = $('<a>').attr('href', '#').addClass('newmodallink').text(linkText).appendTo($('.contentcontainer'));
+    $(prependToClass).before($(modallink));
+//
+//    $(modallink).unbind('click');
+//
+//    $(modallink).click(function (e) {
+//
+//        e.preventDefault();
+//
+        newEntityModalMethod();
+//
+//    });
+
+}
 
 
 /* DONATIONS SETTINGS */
