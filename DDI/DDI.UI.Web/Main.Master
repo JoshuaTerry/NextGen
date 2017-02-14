@@ -29,6 +29,7 @@
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\additional-methods.min.js"></script>
     <link rel="stylesheet" href="CSS\globalstyles.css" />
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
@@ -38,10 +39,17 @@
     <form id="form1" runat="server">
 
         <header>
-            <div class="globalnav">
+            <div class="globalnav"> 
                 <ul>
                     <li><a href="#" class="addconstituent">Add Constituent</a></li>
                     <li><a href="#" class="logout">Logout</a></li>
+                </ul>
+            </div>
+            <div class="info">
+                <ul>
+                    <li title="Business Unit"><a href="#" >BU</a> </li>
+                    <li title="Business Date"><a href="#" class="businessdate"></a> </li>
+                    <li title="Environment"><span class="environment"></span> </li>
                 </ul>
             </div>
             <div class="logo">

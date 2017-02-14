@@ -115,7 +115,7 @@ namespace DDI.Shared.Models.Client.CRM
         [Column(TypeName = "date")]
         public DateTime? OrdinationDate { get; set; }
 
-        public PaymentMethod PreferredPaymentMethod { get; set; }
+        public PaymentMethodType PreferredPaymentMethod { get; set; }
 
         [MaxLength(128)]
         public string PlaceOfOrdination { get; set; }
@@ -181,8 +181,9 @@ namespace DDI.Shared.Models.Client.CRM
         [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
         [HateoasCollectionLink(RouteNames.PaymentPreference)]
-        public ICollection<PaymentMethodBase> PaymentMethods { get; set; }
+        public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
+        [HateoasCollectionLink(RouteNames.Relationship)] //both relationships are handled with the same route
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
 

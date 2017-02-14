@@ -9,6 +9,9 @@ namespace DDI.Shared.Statics
         public const string Address = "Address";
         public const string AddressType = "AddressType";
         public const string AlternateId = "AlternateId";
+        public const string BusinessDate = "BusinessDate";
+        public const string BusinessUnit = "BusinessUnit";
+        public const string Card = "Card";
         public const string ClergyStatus = "ClergyStatus";
         public const string ClergyType = "ClergyType";
         public const string Constituent = "Constituent";
@@ -23,6 +26,9 @@ namespace DDI.Shared.Statics
         public const string County = "County";
         public const string CustomField = "CustomField";
         public const string Entity = "Entity";
+        public const string Environment = "Environment";
+        public const string EFT = "EFT";
+        public const string Degree = "Degree";
         public const string Denomination = "Denomination";
         public const string DoingBusinessAs = "DoingBusinessAs";
         public const string Education = "Education";
@@ -39,6 +45,9 @@ namespace DDI.Shared.Statics
         public const string Region = "Region";
         public const string RegionLevel = "RegionLevels";
         public const string RegionChildren = "ChildrenRegion";
+        public const string Relationship = "Relationship";
+        public const string RelationshipTypes = "RelationshipTypes";
+        public const string School = "School";
         public const string SectionPreference = "SectionPreference";
         public const string State = "State";
         public const string Tag = "Tag";

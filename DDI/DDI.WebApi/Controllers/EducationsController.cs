@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
@@ -11,6 +12,15 @@ namespace DDI.WebApi.Controllers
 {
     public class EducationsController : ControllerBase<Education>
     {
+        protected override Expression<Func<Education, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<Education, object>>[]
+            {
+                e => e.School,
+                e => e.Degree
+            };
+        }
+
         [HttpGet]
         [Route("api/v1/educations", Name = RouteNames.Education)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

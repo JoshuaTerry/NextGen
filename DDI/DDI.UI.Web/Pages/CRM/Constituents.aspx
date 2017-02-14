@@ -34,7 +34,7 @@
             </div>
 
             <h1>Relationships</h1>
-            <div class="editable Realtionships">
+            <div class="editable relationshipsQuickView">
 
             </div>
         </div>
@@ -85,66 +85,98 @@
                     
                     <h1>Name</h1>
                     <div class="editcontainer">
+                        <div class="individualConstituent">
+                            <div class="fivecolumn">
+                                <div class="fieldblock">
+                                    <label>Prefix</label>
+                                    <select class="editable PrefixId"></select>
+                                </div>
 
-                        <div class="fivecolumn">
-                            <div class="fieldblock">
-                                <label>Prefix</label>
-                                <select class="editable PrefixId"></select>
+                                <div class="fieldblock">
+                                    <label>First</label>
+                                    <input type="text" class="editable FirstName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Middle</label>
+                                    <input type="text" class="editable MiddleName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Last</label>
+                                    <input type="text" class="editable LastName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Suffix</label>
+                                    <input type="text" class="editable Suffix" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>First</label>
-                                <input type="text" class="editable FirstName" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="editable Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Nickname</label>
+                                <input type="text" class="editable Nickname" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="editable Salutation" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Middle</label>
-                                <input type="text" class="editable MiddleName" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Last</label>
-                                <input type="text" class="editable LastName" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Suffix</label>
-                                <input type="text" class="editable Suffix" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" class="editable TaxId" />
+                                </div>
+                                <div class="fieldblock">
+                                    <label>Gender</label>
+                                    <select class="editable GenderId"></select>
+                                </div>
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="editable Source" />
+                                </div>
                             </div>
                         </div>
+                        <div class="organizationConstituent" style="display: none;">
 
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Name 2</label>
-                                <input type="text" class="editable Name2" />
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text" class="editable Name" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="editable Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="editable Salutation" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Nickname</label>
-                            <input type="text" class="editable Nickname" />
+                            <div class="twocolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" name="taxIdOrganization" class="editable TaxId" pattern="^\d{2}-?\d{7}$" title="Must be in format: 12-3456789" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="editable Source" />
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Salutation</label>
-                                <input type="text" class="editable Salutation" />
-                            </div>
                         </div>
-
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Tax ID</label>
-                                <input type="text" class="editable TaxId" />
-                            </div>
-                            <div class="fieldblock">
-                                <label>Gender</label>
-                                <select class="editable GenderId"></select>
-                            </div>
-                            <div class="fieldblock">
-                                <label>Source</label>
-                                <input type="text" class="editable Source" />
-                            </div>
-                        </div>
-
                     </div>
 
                     <%-- MAY BE INTRODUCED LATER --%>
@@ -201,12 +233,12 @@
                         <div class="threecolumn">
                             <div class="fieldblock">
                                 <label>Denomination</label>
-                                <select class="editable DenominationId"></select>
+                                <div class="editable tagDenominationsContainer"></div>
                             </div>
 
                             <div class="fieldblock">
                                 <label>Ethnicity</label>
-                                <select class="editable EthnicityId"></select>
+                                <div class="editable tagEthnicitiesContainer"></div>
                             </div>
 
                             <div class="fieldblock">
@@ -221,18 +253,20 @@
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1>Education (Not Implemented Yet)</h1>
+                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
                     <div class="editcontainer">
+
                         <div class="fieldblock">
                             <label>Education Level</label>
                             <select class="editable EducationLevelId"></select>
                         </div>
 
-                        <div class="educationleveltable"></div>
+                        <div class="educationgridcontainer"></div>
+
                     </div>
 
-                    <h1 class="organization">Organization</h1>
-                    <div class="editcontainer organization">
+                    <h1>Organization</h1>
+                    <div class="editcontainer">
 
                         <div class="inline">
                             <div class="fieldblock">
@@ -505,9 +539,8 @@
             
             <!-- Relationships Tab -->
             <div id="tab-relationships" class="scrollable">
-
-
-
+                <h1>Relationships<a href="#" class="newrelationshipmodal newbutton"></a></h1>
+                <div class="relationshipstable"></div>
             </div>
             
             <!-- Donor Tab -->
@@ -609,7 +642,7 @@
 
         </div>
 
-        <div class="dashboard">
+        <div class="dashboard" style="display: none;">
 
             <h1>Dashboard</h1>
 
@@ -711,8 +744,8 @@
     <div class="dbamodal" title="Doing Business As" style="display: none;">
 
         <div class="modalcontent">
-
             <input type="hidden" class="hiddbaid" />
+
 
             <div class="fieldblock">
                 <label>DBA Name:</label>
@@ -722,11 +755,14 @@
             <div class="fieldblock">
                 <label>From:</label>
                 <input type="text" class="StartDate datepicker" />
+
             </div>
+
 
             <div class="fieldblock">
                 <label>To:</label>
                 <input type="text" class="EndDate datepicker" />
+
             </div>
 
             <div class="modalbuttons">
@@ -935,4 +971,81 @@
         </div>
 
     </div>
+	
+	<div class="relationshipmodal" title="Relationship" style="display: none;">
+
+        <div class="modalcontent">
+            <input type="hidden" class="hidrelationshipid" />
+
+            <div class="fieldblock">
+                <label>Constituent</label>
+                <input type="text" class="FormattedName1" />
+            </div>
+
+            <div class="fieldblock">
+                <label>is the</label>
+                <select class="RelationshipTypeId"></select>
+
+            </div>
+
+            <div class="fieldblock">
+                <label>of</label>
+                <input type="text" class="FormattedName2" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="saverelationship" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+	
+	<div class="educationmodal" title="Education" style="display: none;"">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Major</label>
+                <input type="text" class="ed-Major" />
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Start Date</label>
+                    <input type="text" class="ed-StartDate datepicker" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>End Date</label>
+                    <input type="text" class="ed-EndDate datepicker" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>School</label>
+                    <select class="ed-School"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Degree</label>
+                    <select class="ed-Degree"></select>
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="saveeducation" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </asp:Content>

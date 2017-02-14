@@ -14,6 +14,8 @@ $(document).ready(function () {
 
     LoadDatePair();
 
+    LoadHeaderInfo();
+
     LoadTabs();
 
     LoadAccordions();
@@ -26,7 +28,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        modal = $('.addconstituentmodal').dialog({
+        var modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 900,
@@ -36,7 +38,7 @@ $(document).ready(function () {
 
         $('.savenewconstituent').click(function () {
 
-            SaveNewConstituent();
+            SaveNewConstituent(modal);
 
         });
 
@@ -44,7 +46,7 @@ $(document).ready(function () {
 
             e.preventDefault();
 
-            CloseModal();
+            CloseModal(modal);
 
         });
 
@@ -66,6 +68,71 @@ $(document).ready(function () {
 
 });
 
+function LoadHeaderInfo() {
+    LoadBusinessDate();
+    LoadBusinessUnit();
+    LoadEnvironment();
+}
+
+function LoadBusinessDate() {
+
+    if (sessionStorage.getItem('businessdate')) {
+        $('.businessdate').text(sessionStorage.getItem('businessdate'));
+    }
+    else {
+
+        $.ajax({
+            url: WEB_API_ADDRESS + 'businessdate',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                
+                var date = FormatJSONDate(data.Data);
+
+                if (date) {
+                    sessionStorage.setItem('businessdate', date);
+                }
+
+                $('.businessdate').text(date);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+}
+
+function LoadBusinessUnit() {
+    /* Will be implemented with Business Unit */
+}
+
+function LoadEnvironment() {
+    if (sessionStorage.getItem('environment')) {
+        $('.environment').text(sessionStorage.getItem('environment'));
+    }
+    else {
+        $.ajax({
+            url: WEB_API_ADDRESS + 'environment',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+
+                if (data.Data.length > 0) {
+                    sessionStorage.setItem('environment', data.Data);
+                }
+
+                $('.environment').text(data.Data);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+}
 function LoadNewConstituentModalDropDowns() {
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
@@ -111,7 +178,7 @@ function GetQueryString() {
     return vars;
 }
 
-function SaveNewConstituent() {
+function SaveNewConstituent(modal) {
 
     // Get the fields
     var fields = GetNewFields();
@@ -132,8 +199,8 @@ function SaveNewConstituent() {
             
             ClearFields();
 
-            CloseModal();
-
+            CloseModal(modal);
+            
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
@@ -170,7 +237,7 @@ function GetNewFields() {
 
 }
 
-function CloseModal() {
+function CloseModal(modal) {
 
     ClearFields('.modalcontent');
     
@@ -271,8 +338,7 @@ function FormatJSONDate(jsonDate) {
     var date = '';
 
     if (jsonDate) {
-        date = new Date(parseInt(jsonDate.substr(6)));
-        date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+        date = new Date(jsonDate).toDateString();
     }
     
     return date;
@@ -321,16 +387,16 @@ function GetAutoZipData(container) {
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
-                '&addressLine2=' + $(container).find('.autoaddress2').val() +
-                '&city=' + $(container).find('.autocity').val() +
-                '&countryId=' + $(container).find('.autocountry').val() +
-                '&countyId=' + $(container).find('.autocounty').val() +
-                '&stateId=' + $(container).find('.autostate').val() +
+        var fields = 'addressLine1=' +
+                '&addressLine2=' +
+                '&city=' +
+                '&countryId=' +
+                '&countyId=' +
+                '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
         $.ajax({
-            url: WEB_API_ADDRESS + 'locations/?' + fields,
+            url: WEB_API_ADDRESS + 'addresses/zip/?' + fields,
             method: 'GET',
             contentType: 'application/json; charset-utf-8',
             dataType: 'json',
@@ -445,13 +511,13 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-
-        var editcontainer = $(this).closest('.editcontainer');
-
-        StopEdit(editcontainer);
-
-        SaveEdit(editcontainer);
-
+        if ($('#form1').valid()) {
+            var editcontainer = $(this).closest('.editcontainer');
+            StopEdit(editcontainer);
+            SaveEdit(editcontainer);
+        } else {
+            DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
+        }
     });
 
     $('.cancelbutton').click(function (e) {
@@ -461,7 +527,7 @@ function SetupEditControls() {
         var editcontainer = $(this).closest('.editcontainer');
 
         StopEdit(editcontainer);
-
+        $('#form1').validate().resetForm();
         CancelEdit();
 
     });
@@ -593,6 +659,33 @@ function CancelEdit() {
 //
 // END EDITING
 
+// DELETING
+//
+
+function DeleteEntity(url, method, confirmationMessage) {
+    var okToDelete = confirm(confirmationMessage);
+    if (okToDelete === true) {
+        // delete the entity
+        $.ajax({
+            url: url,
+            method: method,
+            headers: GetApiHeaders(),
+            contentType: 'application/json; charset-utf-8',
+            crossDomain: true,
+            success: function() {
+                // Display success
+                DisplaySuccessMessage('Success', 'The item was deleted.');
+            },
+            error: function(xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during delete. It was unsuccessful');
+            }
+        });
+    };
+
+}
+
+//
+// END DELETING
 
 // MESSAGING
 //

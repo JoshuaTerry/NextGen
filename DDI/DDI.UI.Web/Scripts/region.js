@@ -15,7 +15,6 @@ function LoadRegions(container, prefix) {
     $.ajax({
         type: 'GET',
         url: WEB_API_ADDRESS + 'regionlevels',
-        data: item,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -69,17 +68,15 @@ function CreateRegionControl(container, prefix, index) {
 
 function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
 
-    var route = 'regions/' + level;
+    var route = 'regionlevels/' + level + '/regions/';
 
-    if (parentid)
-        route = route + '/' + parentid;
-    else
-        route = route + '/null';
+    if (parentid) {
+        route = route + parentid;
+    }
 
     $.ajax({
         type: 'GET',
         url: WEB_API_ADDRESS + route,
-        data: item,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {

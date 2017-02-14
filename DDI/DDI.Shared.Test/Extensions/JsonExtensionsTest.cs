@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Extensions;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 
-namespace DDI.Services.Test.Extensions
+namespace DDI.Shared.Test.Extensions
 {
     [TestClass]
-    public class ConvertToTypeTest
+    public class JsonExtensionsTest
     {
         public class TestObject
         {
@@ -20,19 +16,21 @@ namespace DDI.Services.Test.Extensions
             public int? Test3 { get; set; }
             public DateTime? Test4 { get; set; }
             public DateTime? Test5 { get; set; }
+            public int[] Test6 { get; set; }
         }
          
         [TestMethod]
-        public void TestMethod1()
+        public void When_ConvertToObject_Is_Called_Should_Create_Dictionary_Of_Changed_Properties()
         {
             // Arrange2
-            var item = new TestObject()
+            var item = new 
             {
                 Test1 = "Test1",
                 Test2 = string.Empty,
                 Test3 = 5,
                 Test4 = new DateTime(2017, 1, 31),
-                Test5 = null
+                Test5 = "",
+                Test6 = new int[] {}
             };
             JObject jObject = JObject.FromObject(item);
 
@@ -40,11 +38,12 @@ namespace DDI.Services.Test.Extensions
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
             foreach (var pair in jObject)
             {
-                changedProperties.Add(JsonExtensions.ConvertToType<TestObject>(pair).Key, JsonExtensions.ConvertToType<TestObject>(pair).Value);
+                var convertedPair = JsonExtensions.ConvertToType<TestObject>(pair);
+                changedProperties.Add(convertedPair.Key, convertedPair.Value);
             }
 
             //Assert
-            Assert.AreEqual(5, changedProperties.Count);
+            Assert.AreEqual(6, changedProperties.Count);
 
             var one = changedProperties.GetValueOrDefault("Test1");
             Assert.IsTrue(one is string);
@@ -62,9 +61,11 @@ namespace DDI.Services.Test.Extensions
             Assert.IsTrue(four is DateTime?);
             Assert.AreEqual(new DateTime(2017, 1, 31), changedProperties.GetValueOrDefault("Test4"));
 
-            //var five = changedProperties.GetValueOrDefault("Test5");
-            //Assert.IsTrue(five is DateTime?);
-            //Assert.AreEqual(null, changedProperties.GetValueOrDefault("Test5"));
+            var five = changedProperties.GetValueOrDefault("Test5");
+            Assert.IsNull(five);
+
+            var six = changedProperties.GetValueOrDefault("Test6");
+            Assert.AreEqual(((int[]) six).Length, 0);
         }
     }
 }

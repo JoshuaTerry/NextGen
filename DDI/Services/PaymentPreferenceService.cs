@@ -10,10 +10,11 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CP;
 using Newtonsoft.Json.Linq;
+using DDI.Shared.Models;
 
 namespace DDI.Services
 {
-    public class PaymentPreferenceService : ServiceBase<PaymentMethodBase>, IPaymentPreferenceService
+    public class PaymentPreferenceService : ServiceBase<PaymentMethod>, IPaymentPreferenceService
     {
         public IDataResponse GetPaymentMethods()
         {
@@ -35,6 +36,24 @@ namespace DDI.Services
         {
             var response = GetDataResponse(EnumHelper.GetDescriptions<PaymentMethodStatus>);
             response.TotalResults = response.Data.Count;
+
+            return response;
+        }
+
+        public IDataResponse<T> Save<T>(T entityToSave) where T : EntityBase
+        {
+            var response = new DataResponse<T>();
+            try
+            {
+                UnitOfWork.GetRepository<T>().Insert(entityToSave);
+                UnitOfWork.SaveChanges();
+                response.Data = UnitOfWork.GetRepository<T>().GetById(entityToSave.Id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
 
             return response;
         }
