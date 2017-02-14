@@ -450,36 +450,6 @@
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
 
-                           <%-- <h1>Phone Numbers</h1>
-                            <div>
-                                <div class="constituentphonegridcontainer"></div>
-                            </div>
-
-                            <h1>Emails</h1>
-                            <div>
-                                <div class="constituentemailgridcontainer"></div>
-                            </div>
-
-                            <h1>Web Sites</h1>
-                            <div>
-                                <div class="constituentwebsitegridcontainer"></div>
-                            </div>
-
-                            <h1>Point of Contact</h1>
-                            <div>
-                                <div class="constituentpocgridcontainer"></div>
-                            </div>
-
-                            <h1>Social Media</h1>
-                            <div>
-                                <div class="constituentsocmedgridcontainer"></div>
-                            </div>
-
-                            <h1>Other Contacts</h1>
-                            <div>
-                                <div class="constituentothergridcontainer"></div>
-                            </div>--%>
-
                         </div>
 
                     </div>
