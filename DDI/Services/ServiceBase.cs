@@ -132,7 +132,8 @@ namespace DDI.Services
             {
                 foreach (var pair in changes)
                 {
-                    changedProperties.Add(JsonExtensions.ConvertToType<T>(pair).Key, JsonExtensions.ConvertToType<T>(pair).Value);
+                    var convertedPair = JsonExtensions.ConvertToType<T>(pair);
+                    changedProperties.Add(convertedPair.Key, convertedPair.Value);
                 }
 
                 _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
@@ -155,7 +156,7 @@ namespace DDI.Services
             {
                 _unitOfWork.GetRepository<T>().Insert(entity);
                 _unitOfWork.SaveChanges();
-                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id);
+                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {

@@ -233,12 +233,12 @@
                         <div class="threecolumn">
                             <div class="fieldblock">
                                 <label>Denomination</label>
-                                <select class="editable DenominationId"></select>
+                                <div class="editable tagDenominationsContainer"></div>
                             </div>
 
                             <div class="fieldblock">
                                 <label>Ethnicity</label>
-                                <select class="editable EthnicityId"></select>
+                                <div class="editable tagEthnicitiesContainer"></div>
                             </div>
 
                             <div class="fieldblock">
