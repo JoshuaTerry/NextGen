@@ -75,7 +75,6 @@
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
-    <Compile Include="PaymentPreferenceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ConstituentSearch.cs" />
     <Compile Include="Search\PageableSearch.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
-    <Compile Include="ServiceInterfaces\IPaymentPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
