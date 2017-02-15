@@ -267,9 +267,9 @@ function LoadAccordions() {
         heightStyle: "content",
         collapsible: true,
         beforeActivate: function (event, ui) {
-            var newbutton = $(event.originalEvent.target).is('.ui-accordion-header > .newbutton');
-            if (newbutton)
+            if (event.originalEvent && $(event.originalEvent.target).is('.ui-accordion-header > .newbutton')) {
                 return false;
+            }
         }
     });
 

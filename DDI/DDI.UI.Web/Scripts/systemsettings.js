@@ -1,7 +1,16 @@
-﻿var SystemSettings = {
-    AlternateId: 'AlternateIdSettings'
+﻿SettingsCategories = {
+    CashProcessing: 'Cash Processing',
+    Common: 'Common',
+    CRM: 'CRM',
+    Donations: 'Donations',
+    GeneralLedger: 'General Ledger',
+    Reports: 'Reports',
+    CustomFields: 'Custom Fields'
 }
 
+var SystemSettings = {
+    AlternateId: 'AlternateIdSettings'
+}
 
 $(document).ready(function () {
 
@@ -25,7 +34,7 @@ $(document).ready(function () {
 
 });
 
-function LoadGrid(grid, container, columns, route) {
+function LoadSettingsGrid(grid, container, columns, route) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -67,6 +76,30 @@ function LoadGrid(grid, container, columns, route) {
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error loading Grid.');
+        }
+    });
+
+}
+
+function GetSystemSettings(category, callback) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'sectionpreferences/' + category + '/settings',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.IsSuccessful && callback) {
+
+                callback(data.Data);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error getting the system settings.');
         }
     });
 
@@ -282,7 +315,7 @@ function LoadTransactionCodesSectionSettings() {
 /* CRM SETTINGS */
 function LoadAlternateIDSectionSettings() {
 
-    LoadSectionSettings('CRM', 'Alternate ID', 'sectionpreferences', SystemSettings.AlternateId);
+    LoadSectionSettings(SettingsCategories.CRM, 'Alternate ID', 'sectionpreferences', SystemSettings.AlternateId);
 
 }
 

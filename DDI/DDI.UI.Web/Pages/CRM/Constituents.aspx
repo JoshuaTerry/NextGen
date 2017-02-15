@@ -1,8 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Constituents.aspx.cs" Inherits="DDI.UI.Web.Constituents" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+    
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -179,7 +180,7 @@
                         </div>
                     </div>
 
-                    <%-- MAY BE INTRODUCED LATER --%>
+                    <%-- MAY BE INTRODUCED LATER w/ Custom Fields --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -200,7 +201,7 @@
 
                     </div>--%>
 
-                    <h1>Clergy Section</h1>
+                    <h1 class="clergySection"><span class="clergySectionLabel">Clergy Section</span></h1>
                     <div class="editcontainer">
                         
                         <div class="fourcolumn">
@@ -450,7 +451,7 @@
 
                     </div>
 
-                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
+                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span> <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
                         
                         <div class="alternateidgridcontainer"></div>

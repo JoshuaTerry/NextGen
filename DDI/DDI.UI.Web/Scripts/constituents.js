@@ -3,7 +3,10 @@ var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
 $(document).ready(function () {
+
     $('#form1').validate();
+
+    ApplySystemSettings();
 
     Resize();
 
@@ -20,12 +23,36 @@ $(document).ready(function () {
     }
 
     GetConstituentData($('.hidconstituentid').val());
+
     LoadYears();
 
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
+    
+
 });
+
+function ApplySystemSettings() {
+    
+    GetSystemSettings(SettingsCategories.CRM, function (settings) {
+
+        $.map(settings, function (item) {
+
+            if (item.IsShown) {
+                $('.' + item.Name + 'Section').show();
+                $('.' + item.Name + 'SectionLabel').text(item.Value);
+            }
+            else {
+                $('.' + item.Name + 'Section').hide();
+            }
+
+
+        });
+
+    });
+
+}
 
 function LoadYears()
 {
@@ -35,6 +62,7 @@ function LoadYears()
         $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
     }
 }
+
 function PopulateMonthDays()
 {
     var arrayLookup = {
@@ -763,6 +791,15 @@ function NewAlternateIdModal() {
             width: 250,
             resizable: false
         });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
         $('.submitaltid').unbind('click');
 
         $('.submitaltid').click(function () {
@@ -794,16 +831,6 @@ function NewAlternateIdModal() {
 
         });
     });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-   
 
 }
 
