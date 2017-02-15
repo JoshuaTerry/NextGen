@@ -123,6 +123,10 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
+    <Compile Include="Models\Client\Core\Note.cs" />
+    <Compile Include="Models\Client\Core\NoteCategory.cs" />
+    <Compile Include="Models\Client\Core\NoteContactMethod.cs" />
+    <Compile Include="Models\Client\Core\NoteTopic.cs" />
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
