@@ -38,6 +38,10 @@ namespace DDI.Shared.Statics
         public const string Language = "Language";
         public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
+        public const string Note = "Note";
+        public const string NoteCategory = "NoteCategory";
+        public const string NoteContactCode = "NoteContactCode";
+        public const string NoteTopic = "NoteTopic";
         public const string PaymentMethod = "PaymentMethod";
         public const string Prefix = "Prefix";
         public const string Profession = "Profession";
