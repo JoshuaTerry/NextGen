@@ -14,18 +14,20 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-        public int LegacyId { get; set; }
-        [MaxLength(64)]
+        [MaxLength(256)]
         public string Title { get; set; }
-        [MaxLength(4000)]
         public string Text { get; set; }
         public DateTime? AlertStartDate { get; set; }
         public DateTime? AlertEndDate { get; set; }
         public DateTime? ContactDate { get; set; }
-        public NoteCategory NoteCategory { get; set; }
+        public Guid? CategoryId { get; set; }
+        public NoteCategory Category { get; set; }
+        [MaxLength(32)]
         public string NoteCode { get; set; }
+        public Guid? PrimaryContactId { get; set; }
         public Constituent PrimaryContact { get; set; }
-        public NoteContactCode ContactCode { get; set; }
+        public Guid? ContactMethodId { get; set; }
+        public NoteContactMethod ContactMethod { get; set; }
 
         public ICollection<NoteTopic> NoteTopics { get; set; } 
     }
