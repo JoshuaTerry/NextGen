@@ -4,14 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using DDI.Data;
-using DDI.Conversion;
-using DDI.Shared.Models.Client;
-using System.Data.Entity.Migrations;
-using log4net;
 using DDI.Conversion.Statics;
-using DDI.Shared.Models.Client.CRM;
+using log4net;
 
 namespace DDI.Conversion
 {
@@ -36,7 +30,7 @@ namespace DDI.Conversion
                 organization = "NG";
             }
 
-            log4net.Config.XmlConfigurator.Configure();            
+            log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
 
@@ -61,7 +55,11 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
 
             //Run<CP.SettingsLoader>();
-            Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+            //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+
+            // Post-conversion tasks
+
+            //Run<CRM.ConstituentSearchIndexer>();
 
         }
 

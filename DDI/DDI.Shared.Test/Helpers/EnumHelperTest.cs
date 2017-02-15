@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 using System.Text;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Extensions;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web.UI.WebControls;
+
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-using System.Linq;
 
 namespace DDI.Shared.Test.Helpers
 {
