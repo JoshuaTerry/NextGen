@@ -15,8 +15,8 @@ namespace DDI.Search.Models
         [Keyword(IncludeInAll = false)]
         public Guid Id { get; set; }
 
-        [Number]
-        public int ConstituentNumber { get; set; }
+        [Keyword]
+        public string ConstituentNumber { get; set; }
 
         [Keyword(IncludeInAll = false)]
         public Guid ConstituentStatusId { get; set; }

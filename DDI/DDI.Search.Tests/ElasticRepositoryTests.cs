@@ -27,7 +27,7 @@ namespace DDI.Search.Tests
         {
             var repo = new ElasticRepository<ConstituentDocument>(_client);
             var query = repo.CreateQuery();
-            query.Must.Match(p => p.Name, "Smith");
+            query.Must.Match("Smith", p => p.Name);
 
             JObject result = JObject.Parse(repo.GetQueryJsonBody(query));
 

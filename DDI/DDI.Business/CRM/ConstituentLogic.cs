@@ -204,7 +204,7 @@ namespace DDI.Business.CRM
             var addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
 
             document.Id = entity.Id;
-            document.ConstituentNumber = entity.ConstituentNumber;
+            document.ConstituentNumber = entity.ConstituentNumber.ToString();
             document.Name = entity.FormattedName ?? string.Empty;
             document.ConstituentStatusId = entity.ConstituentStatusId ?? Guid.Empty;
             document.ConstituentTypeId = entity.ConstituentTypeId ?? Guid.Empty;
