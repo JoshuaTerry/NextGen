@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class NoteContactCodesController : ControllerBase<NoteContactCode>
+    public class NoteContactCodesController : ControllerBase<NoteContactMethod>
     {
         [HttpGet]
         [Route("api/v1/notecontactcodes", Name = RouteNames.NoteContactCode)]
@@ -28,7 +28,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpPost]
         [Route("api/v1/notecontactcodes", Name = RouteNames.NoteContactCode + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] NoteContactCode entityToSave)
+        public IHttpActionResult Post([FromBody] NoteContactMethod entityToSave)
         {
             return base.Post(entityToSave);
         }
