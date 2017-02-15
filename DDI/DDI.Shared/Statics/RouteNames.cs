@@ -38,6 +38,7 @@ namespace DDI.Shared.Statics
         public const string Language = "Language";
         public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
+        public const string SectionName = "SectionName";
         public const string PaymentPreference = "PaymentPreference";
         public const string Prefix = "Prefix";
         public const string Profession = "Profession";

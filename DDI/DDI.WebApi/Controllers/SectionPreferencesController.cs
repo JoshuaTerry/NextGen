@@ -1,13 +1,13 @@
-﻿using System.Web.Http;
-using System.Web.Http.Cors; 
-using DDI.Services;
+﻿using System;
+using System.Web.Http;
 using DDI.Shared.Models.Client.Core;
+using DDI.Services;
+using DDI.Services.Search;
 using DDI.Shared.Statics;
-using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
         private ISectionPreferenceService _service;
@@ -23,7 +23,42 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/preferences/constituent", Name = RouteNames.SectionPreference + RouteNames.Constituent)]
+        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
+            return base.GetAll(RouteNames.SectionPreference, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
+        }
+
+        [HttpPost]
+        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] SectionPreference entityToSave)
+        {
+            return base.Post(entityToSave);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpDelete]
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/sectionpreferences/{sectionname}", Name = RouteNames.SectionPreference + RouteNames.SectionName)]
         public IHttpActionResult GetSectionPreferences(string sectionName)
         {
             try

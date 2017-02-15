@@ -68,6 +68,36 @@ function LoadGrid(grid, container, columns, route) {
 
 }
 
+function LoadSectionSettings(category, section) {
+
+    var container = $('<div>').addClass('twocolumn');
+    
+    var activeSection = $('<div>').addClass('fieldblock');
+    $('<input>').attr('type', 'checkbox').addClass('sectionLabel').appendTo(activeSection);
+    $('<label>').text('Activate ' + section + ' of ' + category + ' : ').appendTo(sectionLabel);
+
+    var sectionLabel = $('<div>').addClass('fieldblock');
+    $('<label>').text('Section Label: ').appendTo(sectionLabel);
+    $('<input>').addClass('sectionLabel').appendTo(sectionLabel);
+
+    $(sectionLabel).appendTo(container);
+
+    $('<input>').addClass('saveEntity')
+        .click(function () {
+
+        })
+        .appendTo(container);
+
+    $('<a>').addClass('cancel')
+        .click(function () {
+
+        })
+        .appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+}
+
 /* CASH PROCESSING */
 function LoadBankAccounts() {
 
@@ -96,7 +126,7 @@ function LoadReceiptItems() {
 
 
 /* COMMON SETTINGS */
-function LoadAlternateIDTypes() {
+function LoadAlternateID() {
 
 
 
