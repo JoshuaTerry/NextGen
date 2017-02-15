@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class NoteContactCodesController : ControllerBase<NoteContactMethod>
+    public class NoteContactMethodsController : ControllerBase<NoteContactMethod>
     {
         [HttpGet]
         [Route("api/v1/notecontactcodes", Name = RouteNames.NoteContactCode)]
