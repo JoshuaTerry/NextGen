@@ -704,7 +704,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentPreference.Href,
+        Links.GetPaymentMethod.Href,
         null,
         EditPaymentPreference);
     
@@ -751,8 +751,8 @@ function NewPaymentPreference() {
         };
 
         $.ajax({
-            type: Links.NewPaymentPreference.Method,
-            url: Links.NewPaymentPreference.Href,
+            type: Links.NewPaymentMethod.Method,
+            url: Links.NewPaymentMethod.Href,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
