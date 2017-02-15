@@ -305,6 +305,7 @@ function LoadRelationshipsTab(data) {
         columns,
         Links.GetRelationship.Href,
         null,
+        "Relationship",
         EditRelationship,
         DeleteEntity,
         "Delete that ",

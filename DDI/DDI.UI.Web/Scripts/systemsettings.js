@@ -321,6 +321,7 @@ function LoadTagGroupGrid() {
         columns,
         WEB_API_ADDRESS + "taggroups?OrderBy=Order",
         null,
+        "TagGroup",
         EditTagGroup,
         DeleteEntity,
         "Delete tag group: ",
