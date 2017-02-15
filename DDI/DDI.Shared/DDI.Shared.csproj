@@ -126,7 +126,7 @@
     <Compile Include="Models\Client\Core\Interfaces\INotable.cs" />
     <Compile Include="Models\Client\Core\Note.cs" />
     <Compile Include="Models\Client\Core\NoteCategory.cs" />
-    <Compile Include="Models\Client\Core\NoteContactCode.cs" />
+    <Compile Include="Models\Client\Core\NoteContactMethod.cs" />
     <Compile Include="Models\Client\Core\NoteTopic.cs" />
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />

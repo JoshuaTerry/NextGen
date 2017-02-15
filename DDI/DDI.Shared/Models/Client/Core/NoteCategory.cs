@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(64)]
         public string Label { get; set; }
         [MaxLength(128)]
-        public string Description { get; set; }
+        public string Name { get; set; }
 
         public ICollection<Note> Notes { get; set; } 
     }

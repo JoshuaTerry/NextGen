@@ -28,7 +28,7 @@ namespace DDI.Data
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
-        public DbSet<NoteContactCode> NoteContactCodes { get; set; }
+        public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
 

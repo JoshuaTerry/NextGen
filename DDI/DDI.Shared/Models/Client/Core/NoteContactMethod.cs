@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    public class NoteContactCode : EntityBase
+    public class NoteContactMethod : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(64)]
         public string Code { get; set; }
         [MaxLength(128)]
-        public string Description { get; set; }
+        public string Name { get; set; }
         public bool IsActive { get; set; }
 
         public ICollection<Note> Notes { get; set; }
