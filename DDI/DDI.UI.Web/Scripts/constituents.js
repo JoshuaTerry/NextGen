@@ -1257,7 +1257,8 @@ function LoadPhoneNumbersTable() {
     LoadGrid('constituentphonegrid',
        'constituentphonegridcontainer',
        columns,
-       'contactinfo/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1/' + currentEntity.Id,
+       Links.GetDoingBusinessAs.Href,
+       // 'contactinfo/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1/' + currentEntity.Id,
        null,
        EditPhoneNumber);
 }
@@ -1416,7 +1417,8 @@ function LoadEmailTable() {
     LoadGrid('constituentemailgrid',
         'constituentemailgridcontainer',
         columns,
-        'constituents/' + currentEntity.Id + '/contactinfo',
+        Links.GetAlternateId.Href,
+        //'constituents/' + currentEntity.Id + '/contactinfo',
         null,
         EditEmail);
 }
