@@ -12,6 +12,7 @@ namespace DDI.Shared.Statics
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
         public const string Card = "Card";
+        public const string CategoryName = "CategoryName";
         public const string ClergyStatus = "ClergyStatus";
         public const string ClergyType = "ClergyType";
         public const string Constituent = "Constituent";

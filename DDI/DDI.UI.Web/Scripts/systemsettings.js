@@ -1,4 +1,8 @@
-﻿
+﻿var SystemSettings = {
+    AlternateId: 'AlternateIdSettings'
+}
+
+
 $(document).ready(function () {
 
     $('.systemsettings a').click(function (e) {
@@ -9,7 +13,7 @@ $(document).ready(function () {
 
         $('.systemsettings a').removeClass('selected');
 
-        var functionToCall = $(this).attr('class');
+        var functionToCall = $(this).attr('class') + 'SectionSettings';
 
         $(this).addClass('selected');
 
@@ -68,56 +72,149 @@ function LoadGrid(grid, container, columns, route) {
 
 }
 
-function LoadSectionSettings(category, section) {
+
+/* SECTION SETTINGS */
+function LoadSectionSettings(category, section, route, sectionKey) {
 
     var container = $('<div>').addClass('twocolumn');
     
     var activeSection = $('<div>').addClass('fieldblock');
-    $('<input>').attr('type', 'checkbox').addClass('sectionLabel').appendTo(activeSection);
-    $('<label>').text('Activate ' + section + ' of ' + category + ' : ').appendTo(sectionLabel);
+    var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
+    $('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
+    $(activeSection).appendTo(container);
 
     var sectionLabel = $('<div>').addClass('fieldblock');
     $('<label>').text('Section Label: ').appendTo(sectionLabel);
-    $('<input>').addClass('sectionLabel').appendTo(sectionLabel);
-
+    var label = $('<input>').attr('type', 'text').addClass('sectionLabel').appendTo(sectionLabel);
     $(sectionLabel).appendTo(container);
 
-    $('<input>').addClass('saveEntity')
+    var id = $('<input>').attr('type', 'hidden').addClass('hidSettingId').appendTo(container);
+
+    GetSetting(category, sectionKey, route, id, checkbox, label);
+
+    var controlContainer = $('<div>').addClass('controlContainer');
+
+    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
         .click(function () {
-
+            SaveSetting($('.hidSettingId'), route, category, sectionKey, $('.sectionLabel').val(), $('.sectionAvailable').prop('checked'));
         })
-        .appendTo(container);
+        .appendTo(controlContainer);
 
-    $('<a>').addClass('cancel')
-        .click(function () {
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+        .click(function (e) {
+            e.preventDefault();
 
+            GetSetting(category, sectionKey, route, id, checkbox, label);
         })
-        .appendTo(container);
+        .appendTo(controlContainer);
+
+    $(controlContainer).appendTo(container);
 
     $(container).appendTo($('.contentcontainer'));
 
 }
 
+function GetSetting(category, key, route, id, checkbox, label) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route + '/' + category + '/settings/' + key,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.IsSuccessful) {
+                
+                $(id).val(data.Data.Id);
+                $(checkbox).prop('checked', data.Data.IsShown);
+                $(label).val(data.Data.Value);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error getting the section label.');
+        }
+    });
+
+}
+
+function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
+
+    var id = $(idContainer).val();
+    var method = 'POST';
+    var item = null;
+
+    if (id) {
+        method = 'PATCH';
+        route = route + '/' + id;
+
+        item = {
+            Id: id,
+            SectionName: categoryName,
+            Name: name,
+            Value: value,
+            IsShown: isShown
+        }
+    }
+    else {
+        method = 'POST';
+
+        item = {
+            SectionName: categoryName,
+            Name: name,
+            Value: value,
+            IsShown: isShown
+        }
+    }
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: method,
+        data: JSON.stringify(item),
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.IsSuccessful) {
+                DisplaySuccessMessage('Success', 'Setting saved successfully.');
+
+                $(idContainer).val(data.Data.Id);
+            }
+            
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error getting the section label.');
+        }
+    });
+
+}
+/* END SECTION SETTINGS */
+
+
 /* CASH PROCESSING */
-function LoadBankAccounts() {
+function LoadBankAccountsSectionSettings() {
 
 
 
 }
 
-function LoadBatchGroups() {
+function LoadBatchGroupsSectionSettings() {
 
 
 
 }
 
-function LoadGeneralSettings() {
+function LoadGeneralSettingsSectionSettings() {
 
 
 
 }
 
-function LoadReceiptItems() {
+function LoadReceiptItemsSectionSettings() {
 
 
 
@@ -126,55 +223,55 @@ function LoadReceiptItems() {
 
 
 /* COMMON SETTINGS */
-function LoadAlternateID() {
+function LoadAlternateIDTypesSectionSettings() {
+
+    
+
+}
+
+function LoadBusinessDateSectionSettings() {
 
 
 
 }
 
-function LoadBusinessDate() {
+function LoadCalendarDatesSectionSettings() {
 
 
 
 }
 
-function LoadCalendarDates() {
+function LoadDocumentTypesSectionSettings() {
 
 
 
 }
 
-function LoadDocumentTypes() {
+function LoadCommonHomeSreenSectionSettings() {
 
 
 
 }
 
-function LoadCommonHomeSreen() {
+function LoadMergeFormSystemSectionSettings() {
 
 
 
 }
 
-function LoadMergeFormSystem() {
+function LoadNotesSettingsSectionSettings() {
 
 
 
 }
 
-function LoadNotesSettings() {
+function LoadStatusCodesSectionSettings() {
 
 
 
 }
 
-function LoadStatusCodes() {
-
-
-
-}
-
-function LoadTransactionCodes() {
+function LoadTransactionCodesSectionSettings() {
 
 
 
@@ -183,18 +280,13 @@ function LoadTransactionCodes() {
 
 
 /* CRM SETTINGS */
-function LoadAlternateID() {
+function LoadAlternateIDSectionSettings() {
 
-    var columns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'AlternateId', caption: 'Alternate ID' }
-    ];
-
-    LoadGrid('alternateidgrid', 'contentcontainer', columns, 'alternateid');
+    LoadSectionSettings('CRM', 'Alternate ID', 'sectionpreferences', SystemSettings.AlternateId);
 
 }
 
-function LoadClergy() {
+function LoadClergySectionSettings() {
 
     var accordion = $('<div>').addClass('accordions');
     var status = $('<div>').addClass('clergystatuscontainer');
@@ -226,31 +318,31 @@ function LoadClergy() {
 
 }
 
-function LoadConstituentTypes() {
+function LoadConstituentTypesSectionSettings() {
 
 
 
 }
 
-function LoadContactInformation() {
+function LoadContactInformationSectionSettings() {
 
 
 
 }
 
-function LoadDemographics() {
+function LoadDemographicsSectionSettings() {
 
 
 
 }
 
-function LoadDBA() {
+function LoadDBASectionSettings() {
 
 
 
 }
 
-function LoadEducation() {
+function LoadEducationSectionSettings() {
 
     var accordion = $('<div>').addClass('accordions');
     var degrees = $('<div>').addClass('degreecontainer');
@@ -274,7 +366,7 @@ function LoadEducation() {
     LoadAccordions();
 }
 
-function LoadGender() {
+function LoadGenderSectionSettings() {
 
     var columns = [
         { dataField: 'Code', caption: 'Code' },
@@ -284,55 +376,55 @@ function LoadGender() {
     LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders');
 }
 
-function LoadHubSearch() {
+function LoadHubSearchSectionSettings() {
 
 
 
 }
 
-function LoadOrganization() {
+function LoadOrganizationSectionSettings() {
 
 
 
 }
 
-function LoadPaymentPreferences() {
+function LoadPaymentPreferencesSectionSettings() {
 
 
 
 }
 
-function LoadPersonal() {
+function LoadPersonalSectionSettings() {
 
 
 
 }
 
-function LoadPrefix() {
+function LoadPrefixSectionSettings() {
 
 
 
 }
 
-function LoadProfessional() {
+function LoadProfessionalSectionSettings() {
 
 
 
 }
 
-function LoadRegions() {
+function LoadRegionsSectionSettings() {
 
 
 
 }
 
-function LoadRelationship() {
+function LoadRelationshipSectionSettings() {
 
 
 
 }
 
-function LoadTags() {
+function LoadTagsSectionSettings() {
 
 
 
@@ -341,25 +433,25 @@ function LoadTags() {
 
 
 /* DONATIONS SETTINGS */
-function LoadDonationSettings() {
+function LoadDonationSettingsSectionSettings() {
 
 
 
 }
 
-function LoadDonorSettings() {
+function LoadDonorSettingsSectionSettings() {
 
 
 
 }
 
-function LoadGLAccountAutoAssign() {
+function LoadGLAccountAutoAssignSectionSettings() {
 
 
 
 }
 
-function LoadDonationHomeScreen() {
+function LoadDonationHomeScreenSectionSettings() {
 
 
 
@@ -368,55 +460,55 @@ function LoadDonationHomeScreen() {
 
 
 /* GENERAL LEDGER SETTINGS */
-function LoadAccountingSettings() {
+function LoadAccountingSettingsSectionSettings() {
 
 
 
 }
 
-function LoadBudgetSettings() {
+function LoadBudgetSettingsSectionSettings() {
 
 
 
 }
 
-function LoadChartAccountsSettings() {
+function LoadChartAccountsSettingsSectionSettings() {
 
 
 
 }
 
-function LoadEntities() {
+function LoadEntitiesSectionSettings() {
 
 
 
 }
 
-function LoadFiscalYearSettings() {
+function LoadFiscalYearSectionSettings() {
 
 
 
 }
 
-function LoadFundAccountingSettings() {
+function LoadFundAccountingSectionSettings() {
 
 
 
 }
 
-function LoadGLFormatSettings() {
+function LoadGLFormatSectionSettings() {
 
 
 
 }
 
-function LoadJournalSettings() {
+function LoadJournalSectionSettings() {
 
 
 
 }
 
-function LoadUtilities() {
+function LoadUtilitiesSectionSettings() {
 
 
 
@@ -425,25 +517,25 @@ function LoadUtilities() {
 
 
 /* REPORTS SETTINGS */
-function LoadPageFooters() {
+function LoadPageFootersSectionSettings() {
 
 
 
 }
 
-function LoadPageHeaders() {
+function LoadPageHeadersSectionSettings() {
 
 
 
 }
 
-function LoadReportFooters() {
+function LoadReportFootersSectionSettings() {
 
 
 
 }
 
-function LoadReportHeaders() {
+function LoadReportHeadersSectionSettings() {
 
 
 
@@ -455,7 +547,7 @@ function LoadReportHeaders() {
 var modalLeft = 0;
 var options = [];
 
-function LoadCRMClientCustomFields() {
+function LoadCRMClientCustomFieldsSectionSettings() {
 
     DisplayCustomFieldsGrid('contentcontainer', customfieldentity.CRM); // CRM = 19
 
@@ -463,7 +555,7 @@ function LoadCRMClientCustomFields() {
 
 }
 
-function LoadDonationClientCustomFields() {
+function LoadDonationClientCustomFieldsSectionSettings() {
 
     DisplayCustomFieldsGrid('contentcontainer', customfieldentity.Gifts); // Gifts = 9
 
@@ -471,7 +563,7 @@ function LoadDonationClientCustomFields() {
 
 }
 
-function LoadGLClientCustomFields() {
+function LoadGLClientCustomFieldsSectionSettings() {
 
     DisplayCustomFieldsGrid('contentcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
 

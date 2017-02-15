@@ -58,12 +58,12 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/sectionpreferences/{sectionname}", Name = RouteNames.SectionPreference + RouteNames.SectionName)]
-        public IHttpActionResult GetSectionPreferences(string sectionName)
+        [Route("api/v1/sectionpreferences/{categoryName}/settings", Name = RouteNames.SectionPreference + RouteNames.CategoryName)]
+        public IHttpActionResult GetSectionPreferences(string categoryName)
         {
             try
             {
-                var response = _service.GetPreferencesBySectionName(sectionName);
+                var response = _service.GetPreferencesByCategoryName(categoryName);
 
                 if (response == null)
                 {
@@ -83,6 +83,34 @@ namespace DDI.WebApi.Controllers
             {
                 return InternalServerError();
             }
-        }         
+        }
+
+        [HttpGet]
+        [Route("api/v1/sectionpreferences/{categoryName}/settings/{sectionName}", Name = RouteNames.SectionPreference + RouteNames.CategoryName + RouteNames.SectionName)]
+        public IHttpActionResult GetSectionPreferenceByName(string categoryName, string sectionName)
+        {
+            try
+            {
+                var response = _service.GetPreferenceBySectionName(categoryName, sectionName);
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+                if (!response.IsSuccessful)
+                {
+                    return InternalServerError();
+                }
+
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
+
+                return Ok(dynamicResponse);
+
+            }
+            catch (System.Exception)
+            {
+                return InternalServerError();
+            }
+        }
     }
 }

@@ -27,9 +27,15 @@ namespace DDI.Services
             _unitOfWork = uow; 
             _repository = _unitOfWork.GetRepository<SectionPreference>();
         }
-        public IDataResponse<List<SectionPreference>> GetPreferencesBySectionName(string sectionName)
+        public IDataResponse<List<SectionPreference>> GetPreferencesByCategoryName(string categoryName)
         {
-            var results = _unitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == sectionName).ToList();
+            var results = _unitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == categoryName).ToList();
+            return GetIDataResponse(() => results);
+        }
+
+        public IDataResponse<SectionPreference> GetPreferenceBySectionName(string categoryName, string sectionName)
+        {
+            var results = _unitOfWork.GetRepository<SectionPreference>().Entities.Where(p => p.SectionName == categoryName && p.Name == sectionName).FirstOrDefault();
             return GetIDataResponse(() => results);
         }
     }
