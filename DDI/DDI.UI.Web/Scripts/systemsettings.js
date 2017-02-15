@@ -1,5 +1,13 @@
 ﻿var SystemSettingsLinks = [];
-SystemSettingsLinks["NewTagGroup"] = { Href: WEB_API_ADDRESS + "taggroups", Method: "Get" };
+SystemSettingsLinks["AlternateId"] = { Href: WEB_API_ADDRESS + "alternateids", Method: "Get" };
+SystemSettingsLinks["ClergyStatus"] = { Href: WEB_API_ADDRESS + "clergystatuses", Method: "Get" };
+SystemSettingsLinks["ClergyType"] = { Href: WEB_API_ADDRESS + "clergytypes", Method: "Get" };
+SystemSettingsLinks["Degree"] = { Href: WEB_API_ADDRESS + "degrees", Method: "Get" };
+SystemSettingsLinks["EducationLevel"] = { Href: WEB_API_ADDRESS + "educationlevels", Method: "Get" };
+SystemSettingsLinks["Gender"] = { Href: WEB_API_ADDRESS + "genders", Method: "Get" };
+SystemSettingsLinks["NewTagGroup"] = { Href: WEB_API_ADDRESS + "taggroups", Method: "Post" };
+SystemSettingsLinks["School"] = { Href: WEB_API_ADDRESS + "schools", Method: "Get" };
+SystemSettingsLinks["TagGroup"] = { Href: WEB_API_ADDRESS + "taggroups?OrderBy=Order", Method: "Get" };
 
 $(document).ready(function () {
 
@@ -23,7 +31,7 @@ $(document).ready(function () {
 
 });
 
-function LoadGrid(grid, container, columns, route) {
+function LoadSystemSettingGrid(grid, container, columns, routeUrl) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -31,7 +39,7 @@ function LoadGrid(grid, container, columns, route) {
     var datagrid = $('<div>').addClass(grid);
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
+        url: routeUrl,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -162,7 +170,7 @@ function LoadAlternateID() {
         { dataField: 'AlternateId', caption: 'Alternate ID' }
     ];
 
-    LoadGrid('alternateidgrid', 'contentcontainer', columns, 'alternateid');
+    LoadSystemSettingGrid('alternateidgrid', 'contentcontainer', columns, SystemSettingsLinks.AlternateId.Href);
 
 }
 
@@ -179,7 +187,7 @@ function LoadClergy() {
     ];
 
     $('<h1>').text('Clergy Status').appendTo($(accordion));
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
+    LoadSystemSettingGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, SystemSettingsLinks.ClergyStatus.Href);
     $(status).appendTo($(accordion));
 
     var typecolumns = [
@@ -189,7 +197,7 @@ function LoadClergy() {
     ];
 
     $('<h1>').text('Clergy Type').appendTo($(accordion));
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
+    LoadSystemSettingGrid('clergytypegrid', 'clergytypecontainer', typecolumns, SystemSettingsLinks.ClergyType.Href);
     $(types).appendTo($(accordion));
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -230,15 +238,15 @@ function LoadEducation() {
     var schools = $('<div>').addClass('schoolscontainer');
 
     $('<h1>').text('Degrees').appendTo($(accordion));
-    LoadGrid('degreegrid', 'degreecontainer', null, 'degrees');
+    LoadSystemSettingGrid('degreegrid', 'degreecontainer', null, SystemSettingsLinks.Degree.Href);
     $(degrees).appendTo($(accordion));
 
     $('<h1>').text('Education Level').appendTo($(accordion));
-    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', null, 'educationlevels');
+    LoadSystemSettingGrid('educationlevelsgrid', 'educationlevelscontainer', null, SystemSettingsLinks.EducationLevel.Href);
     $(levels).appendTo($(accordion));
 
     $('<h1>').text('Schools').appendTo($(accordion));
-    LoadGrid('schoolsgrid', 'schoolscontainer', null, 'schools');
+    LoadSystemSettingGrid('schoolsgrid', 'schoolscontainer', null, SystemSettingsLinks.School.Href);
     $(schools).appendTo($(accordion));
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -253,7 +261,7 @@ function LoadGender() {
         { dataField: 'Name', caption: 'Gender' }
     ];
 
-    LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders');
+    LoadSystemSettingGrid('gendergridcontainer', 'contentcontainer', columns, SystemSettingsLinks.Gender.Href);
 }
 
 function LoadHubSearch() {
@@ -319,7 +327,7 @@ function LoadTagGroupGrid() {
     LoadGridFromHateoas("tagsgrid",
         "contentcontainer",
         columns,
-        WEB_API_ADDRESS + "taggroups?OrderBy=Order",
+        SystemSettingsLinks.TagGroup.Href,
         null,
         "TagGroup",
         EditTagGroup,
@@ -368,16 +376,7 @@ function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass) {
 
     var modallink = $('<a>').attr('href', '#').addClass('newmodallink').text(linkText).appendTo($('.contentcontainer'));
     $(prependToClass).before($(modallink));
-//
-//    $(modallink).unbind('click');
-//
-//    $(modallink).click(function (e) {
-//
-//        e.preventDefault();
-//
-        newEntityModalMethod();
-//
-//    });
+    newEntityModalMethod();
 
 }
 
