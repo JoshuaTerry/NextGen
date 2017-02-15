@@ -200,12 +200,13 @@ namespace DDI.Data
             return GetEntities<T>().ToList();
         }
 
-        public void Attach<T>(T entity) where T : class
+        public T Attach<T>(T entity) where T : class
         {
             if (entity != null)
             {
-                GetRepository<T>().Attach(entity);
+                return GetRepository<T>().Attach(entity);
             }
+            return null;
         }
 
         public T Create<T>() where T : class

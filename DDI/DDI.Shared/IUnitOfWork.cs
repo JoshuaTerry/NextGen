@@ -37,7 +37,7 @@ namespace DDI.Shared
         
         ICollection<T> GetLocal<T>() where T : class;
 
-        void Attach<T>(T entity) where T : class;
+        T Attach<T>(T entity) where T : class;
 
         T Create<T>() where T : class;
 

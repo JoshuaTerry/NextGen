@@ -139,12 +139,13 @@ namespace DDI.Data
         /// <summary>
         /// Attach an entity (which may belong to another context) to the repository.
         /// </summary>
-        public void Attach(T entity)
+        public T Attach(T entity)
         {
             if (entity != null && !_entities.Contains(entity))
             {
                 _entities.Add(entity);
             }
+            return entity;
         }
 
         public T Find(params object[] keyValues)

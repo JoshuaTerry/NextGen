@@ -147,12 +147,13 @@ namespace DDI.Data
         /// <summary>
         /// Attach an entity (which may belong to another context) to the unit of work.
         /// </summary>
-        public void Attach<T>(T entity) where T : class
+        public T Attach<T>(T entity) where T : class
         {
             if (entity != null)
             {
-                GetRepository<T>().Attach(entity);
+                return GetRepository<T>().Attach(entity);
             }
+            return null;
         }
 
         public T Create<T>() where T : class
