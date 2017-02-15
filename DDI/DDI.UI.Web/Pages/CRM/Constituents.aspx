@@ -179,26 +179,8 @@
                         </div>
                     </div>
 
-                    <%-- MAY BE INTRODUCED LATER --%>
-                    <%--<h1>Addional Data</h1>
-                    <div class="editcontainer">
-
-                        <div class="fieldblock">
-                            <label class="inline">Is Conditional</label>
-                            <input type="checkbox" class="editable IsConditional" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Number of pets</label>
-                            <input type="text" class="editable NumberOfPets" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Income Prod Assets</label>
-                            <input type="text" class="editable IncomeProdAssets" />
-                        </div>
-
-                    </div>--%>
+                    <h1>Additional Data</h1>
+                    <div class="editcontainer customFieldContainer"></div>
 
                     <h1>Clergy Section</h1>
                     <div class="editcontainer">

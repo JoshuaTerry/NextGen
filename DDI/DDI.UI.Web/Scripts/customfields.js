@@ -1,13 +1,13 @@
 ﻿
 var route = 'customfields/';
-var customfieldtype = { 'Number': 0, 'TextBox': 1, 'TextArea': 2, 'DropDown': 3, 'Radio': 4, 'CheckBox': 5, 'Date': 6, 'DateTime': 7 };
-var customfieldentity = {
+var CustomFieldType = { 'Number': 0, 'TextBox': 1, 'TextArea': 2, 'DropDown': 3, 'Radio': 4, 'CheckBox': 5, 'Date': 6, 'DateTime': 7 };
+var CustomFieldEntity = {
     'Accounting': 0, 'GeneralLedger': 1, 'AccountsPayable': 2, 'AccountsReceivable': 3, 'FixedAssets': 4,
     'Inventory': 5, 'CashProcessing': 6, 'CashDisbursements': 7, 'CashReceipting': 8, 'Gifts': 9,
     'NamedFunds': 10, 'CropEvents': 11, 'PlannedGiving': 12, 'Campaigns': 13, 'Investments': 14,
     'LineOfCredit': 15, 'Loans': 16, 'Portfolio': 17, 'Pools': 18, 'CRM': 19,
     'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25 };
-var currentcustomfieldentity = 0;
+var currentCustomFieldEntity = 0;
 
 $(document).ready(function () {
 
@@ -17,7 +17,7 @@ $(document).ready(function () {
 
 function DisplayCustomFieldsGrid(container, entity) {
 
-    currentcustomfieldentity = entity;
+    currentCustomFieldEntity = entity;
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -120,28 +120,28 @@ function CreateCustomField(item) {
     $('<label>').text(item.LabelText).appendTo($(div));
 
     switch (item.FieldType) {
-        case customfieldtype.Number:
+        case CustomFieldType.Number:
             CreateNumberField(item);
             break;
-        case customfieldtype.TextBox:
+        case CustomFieldType.TextBox:
             CreateTextField(item);
             break;
-        case customfieldtype.TextArea:
+        case CustomFieldType.TextArea:
             CreateTextAreaField(item);
             break;
-        case customfieldtype.DropDown:
+        case CustomFieldType.DropDown:
             CreateDropDownField(item);
             break;
-        case customfieldtype.Radio:
+        case CustomFieldType.Radio:
             CreateRadioField(item);
             break;
-        case customfieldtype.CheckBox:
+        case CustomFieldType.CheckBox:
             CreateCheckBoxField(item);
             break;
-        case customfieldtype.Date:
+        case CustomFieldType.Date:
             CreateDateField(item);
             break;
-        case customfieldtype.DateTime:
+        case CustomFieldType.DateTime:
             CreateDateTimeField(item);
             break;
     }

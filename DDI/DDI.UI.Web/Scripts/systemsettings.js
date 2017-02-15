@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     });
 
-    // CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+    // CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
 
 });
 
@@ -427,25 +427,25 @@ var options = [];
 
 function LoadCRMClientCustomFields() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.CRM); // CRM = 19
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.CRM); // CRM = 19
 
-    CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+    CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
 
 }
 
 function LoadDonationClientCustomFields() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.Gifts); // Gifts = 9
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.Gifts); // Gifts = 9
 
-    CreateNewCustomFieldModalLink(customfieldentity.Gifts, 'New Donations Custom Field');
+    CreateNewCustomFieldModalLink(CustomFieldEntity.Gifts, 'New Donations Custom Field');
 
 }
 
 function LoadGLClientCustomFields() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.GeneralLedger); // GeneralLedger = 1
 
-    CreateNewCustomFieldModalLink(customfieldentity.GeneralLedger, 'New General Ledger Custom Field');
+    CreateNewCustomFieldModalLink(CustomFieldEntity.GeneralLedger, 'New General Ledger Custom Field');
     
 }
 
@@ -453,7 +453,7 @@ function RefreshCustomFieldsGrid() {
 
     $('.contentcontainer').html('');
 
-    DisplayCustomFieldsGrid('contentcontainer', currentcustomfieldentity);
+    DisplayCustomFieldsGrid('contentcontainer', currentCustomFieldEntity);
 
 }
 
@@ -493,7 +493,7 @@ function CreateNewCustomFieldModal(entity, title) {
     var save = $(modal).find('.submitcf');
 
     $('<option>').text('').val('').appendTo($(type));
-    $.each(customfieldtype, function (key, value) {
+    $.each(CustomFieldType, function (key, value) {
 
         $('<option>').text(key).val(value).appendTo($(type));
 
@@ -578,24 +578,24 @@ function CustomFieldTypeSelected(selectedvalue) {
 
     if (selectedvalue)
     {
-        if (selectedvalue == customfieldtype.Number ||
-        selectedvalue == customfieldtype.Date ||
-        selectedvalue == customfieldtype.DateTime) {
+        if (selectedvalue == CustomFieldType.Number ||
+        selectedvalue == CustomFieldType.Date ||
+        selectedvalue == CustomFieldType.DateTime) {
             $('.minmaxvalues').show()
         }
         else {
             $('.minmaxvalues').hide()
         }
 
-        if (selectedvalue && selectedvalue == customfieldtype.Number) {
+        if (selectedvalue && selectedvalue == CustomFieldType.Number) {
             $('.decimalplacecontainer').show();
         }
         else {
             $('.decimalplacecontainer').hide();
         }
     
-        if (selectedvalue == customfieldtype.Radio ||
-            selectedvalue == customfieldtype.DropDown) {
+        if (selectedvalue == CustomFieldType.Radio ||
+            selectedvalue == CustomFieldType.DropDown) {
 
             var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
@@ -669,7 +669,7 @@ function SaveCustomField(modal) {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: currentcustomfieldentity,
+            Entity: currentCustomFieldEntity,
             Options: []
         }
 
@@ -687,7 +687,7 @@ function SaveCustomField(modal) {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: currentcustomfieldentity,
+            Entity: currentCustomFieldEntity,
             Options: []
         }
 
@@ -721,7 +721,7 @@ function SendCustomField(route, action, data, modal) {
 
             RefreshCustomFieldsGrid();
 
-            CreateNewCustomFieldModalLink(currentcustomfieldentity, '');
+            CreateNewCustomFieldModalLink(currentCustomFieldEntity, '');
             
         },
         error: function (xhr, status, err) {
