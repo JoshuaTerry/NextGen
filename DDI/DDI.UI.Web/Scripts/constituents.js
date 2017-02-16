@@ -180,7 +180,7 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
-        // This is where I should add my new function
+        LoadConstituentSideBar(); // This is where I should add my new function
 
         DisplayConstituentType();
 
@@ -217,6 +217,7 @@ function DisplayConstituentData() {
         PopulateUserIdDropDown();
 
         LoadRelationshipsGrid();
+
         NewRelationshipModal();
 
         NewAddressModal();
@@ -225,7 +226,31 @@ function DisplayConstituentData() {
 
 function LoadConstituentSideBar() {
 
+    $('.FormattedName').text('Constituent Name: ' + currentEntity.FormattedName);
+    LoadConstituentPrimaryAddress(currentEntity.Id);
 
+   
+
+}
+
+function LoadConstituentPrimaryAddress(id) {
+    var url = WEB_API_ADDRESS + 'constituentaddresses/' + id
+    var otherurl = Links.GetConstituentAddress + id;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        // url: Links.GetConstituentAddress + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentaddress = data.Data;
+            $('.Address').text('Constituent Address: ' + currentaddress.Address);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the sidebar address.');
+        }
+    });
 
 }
 
