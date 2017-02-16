@@ -54,5 +54,6 @@ namespace DDI.Shared.Statics
         public const string SectionPreference = "SectionPreference";
         public const string State = "State";
         public const string Tag = "Tag";
+        public const string TagGroup = "TagGroup";
     }
 }

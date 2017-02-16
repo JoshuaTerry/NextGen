@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     if (sessionStorage.getItem('constituentid')) {
 
-        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
 
     }
 
@@ -259,11 +259,11 @@ function DisplayConstituentPrimaryAddress() {
 /* Demograpics Section */
 
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
 }
 
 /* End Demographics Section */
@@ -704,7 +704,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentPreference.Href,
+        Links.GetPaymentMethod.Href,
         null,
         EditPaymentPreference);
     
@@ -751,8 +751,8 @@ function NewPaymentPreference() {
         };
 
         $.ajax({
-            type: Links.NewPaymentPreference.Method,
-            url: Links.NewPaymentPreference.Href,
+            type: Links.NewPaymentMethod.Method,
+            url: Links.NewPaymentMethod.Href,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,

@@ -71,6 +71,8 @@
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
+    <Compile Include="DenominationsService.cs" />
+    <Compile Include="EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ICustomFieldService.cs" />
@@ -82,6 +84,8 @@
     <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IDenominationsService.cs" />
+    <Compile Include="ServiceInterfaces\IEthnicitiesService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />

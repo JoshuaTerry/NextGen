@@ -62,26 +62,45 @@ function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, c
 
 }
 
-function LoadTagBoxes(tagBox, container, route) {
+function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
     if (container.indexOf('.') != 0)
         container = '.' + container;
 
     $(container).html('');
 
     var tagBoxControl = $('<div>').addClass(tagBox);
+    var selectedItems = [];
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
+        url: routeForSelectedOptions,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            data.Data.forEach(function (item) {
+                selectedItems.push(item);
+            });
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
+    $.ajax({
+        url: WEB_API_ADDRESS + routeForAllOptions,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
             $(tagBoxControl).dxTagBox({
-                dataSource: data.Data,
+                items: data.Data,
+                value: selectedItems,
                 displayExpr: 'DisplayName',
                 valueExpr: 'Id',
                 showClearButton: true,
+                disabled: true
             });
 
             $(tagBoxControl).appendTo(container);
@@ -90,8 +109,6 @@ function LoadTagBoxes(tagBox, container, route) {
             alert(response);
         }
     });
-
-
 }
 
 function LoadGrid(grid, container, columns, route, selected, edit, data) {
