@@ -248,4 +248,40 @@
 
     </div>
 
+    <div class="tagmodal" title="Tag" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtagid" />
+            <input type="hidden" class="hidtagparentgroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="t-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="t-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="t-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="t-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetag" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </asp:Content>

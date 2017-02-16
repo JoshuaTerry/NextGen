@@ -224,6 +224,10 @@ function LoadGridData(data, datagrid, columns, container, selected) {
                 visible: true,
                 showOperationChooser: false
             },
+            selection: {
+                mode: 'single',
+                allowSelectAll: false
+            },
             onRowClick: function(info) {
 
                 if (selected) {
@@ -287,6 +291,8 @@ function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClas
 }
 
 function NewEntityModal(entityName, newEntityModalClassName, entityModalClassName, entityModalWidth, prePopulateNewModal, saveEntityClassName, getEntityToSave, ajaxMethod, ajaxUrl, loadEntityGrid) {
+    if (newEntityModalClassName.indexOf('.') != 0)
+        newEntityModalClassName = '.' + newEntityModalClassName;
 
     $(newEntityModalClassName)
         .click(function (e) {
