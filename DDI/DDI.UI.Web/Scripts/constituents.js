@@ -180,6 +180,8 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
+        // This is where I should add my new function
+
         DisplayConstituentType();
 
         DisplayConstituentPrimaryAddress();
@@ -219,6 +221,12 @@ function DisplayConstituentData() {
 
         NewAddressModal();
     }
+}
+
+function LoadConstituentSideBar() {
+
+
+
 }
 
 function DisplayConstituentType() {
