@@ -228,10 +228,10 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
-        public void AddBusinessLogic(object blObj)
+        public void AddBusinessLogic(object logic)
         {
-            if (!_businessLogic.Contains(blObj))
-                _businessLogic.Add(blObj);
+            if (!_businessLogic.Contains(logic))
+                _businessLogic.Add(logic);
         }
 
         /// <summary>
@@ -246,16 +246,16 @@ namespace DDI.Data
         /// <summary>
         /// Get (or create) a business logic instance associated with this unit of work.
         /// </summary>
-        /// <param name="blType">Business logic type</param>
-        public object GetBusinessLogic(Type blType)
+        /// <param name="logicType">Business logic type</param>
+        public object GetBusinessLogic(Type logicType)
         {
-            object blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType);
-            if (blObj == null)
+            object logic = _businessLogic.FirstOrDefault(p => p.GetType() == logicType);
+            if (logic == null)
             {
-                blObj = Activator.CreateInstance(blType, this);
-                AddBusinessLogic(blObj);
+                logic = Activator.CreateInstance(logicType, this);
+                AddBusinessLogic(logic);
             }
-            return blObj;
+            return logic;
         }
 
         public T GetById<T>(Guid id) where T : class

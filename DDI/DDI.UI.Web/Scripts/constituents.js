@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     if (sessionStorage.getItem('constituentid')) {
 
-        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
 
     }
 
@@ -198,6 +198,8 @@ function DisplayConstituentData() {
 
         LoadPaymentPreferencesTable();
 
+        NewPaymentPreference();
+
         LoadContactInfo();
 
         LoadAlternateIDTable();
@@ -257,11 +259,11 @@ function DisplayConstituentPrimaryAddress() {
 /* Demograpics Section */
 
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
 }
 
 /* End Demographics Section */
@@ -677,42 +679,197 @@ function LoadEducation(id) {
 }
 /* End Education Section */
 
+
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
-    $('.paymentpreferencestable').dxDataGrid({
-        dataSource: currentEntity.PaymentPreferences,
-        columns: [
-            { dataField: 'Name', caption: 'Description', },
-            { dataField: 'ABANumber', caption: 'ABA Number' },
-            { dataField: 'AccountNumber', caption: 'Account Number' },
-            { dataField: '', caption: 'Ch/S' },
-            { dataField: '', caption: 'Notes' }
-        ],
-        paging: {
-            pageSize: 15
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Description', caption: 'Description' },
+            { dataField: 'RoutingNumber', caption: 'Routing Number' },
+            { dataField: 'BankAccount', caption: 'Account Number' },
+            {
+                caption: 'Ch/S', cellTemplate: function (container, options) {
+                    var type = 'Ch';
+
+                    if (options.data.AccountType == '1') {
+                        type = 'S';
+                    }
+
+                    $('<label>').text(type).appendTo(container);
+                }
+            }
+    ];
+
+    LoadGrid('paymentpreferencesgrid',
+        'paymentpreferencesgridcontainer',
+        columns,
+        Links.GetPaymentMethod.Href,
+        null,
+        EditPaymentPreference);
+    
+}
+
+function NewPaymentPreference() {
+
+    $('.newppmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.paymentpreferencemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 600,
+            resizable: false
+        });
+
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savepaymentpreference').unbind('click');
+
+    $('.savepaymentpreference').click(function () {
+
+        var date = new Date();
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
+            StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
+        };
+
+        $.ajax({
+            type: Links.NewPaymentMethod.Method,
+            url: Links.NewPaymentMethod.Href,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+            }
+        });
+
+    });
+
+}
+
+function EditPaymentPreference(id) {
+
+    modal = $('.paymentpreferencemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 600,
+        resizable: false
+    });
+
+    LoadPaymentPreference(id);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savepaymentpreference').unbind('click');
+
+    $('.savepaymentpreference').click(function () {
+
+        var date = '';
+        var prevStatus = $(modal).find('.pp-PreviousStatus').val();
+        var selectedStatus = $(modal).find('.pp-Status').val();
+        
+        if (prevStatus != selectedStatus) {
+
+            var newDate = new Date();
+
+            date = newDate.getMonth() + 1 + '/' + newDate.getDate() + '/' + newDate.getFullYear();
+
+        }
+
+        var item = {
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
+            StatusDate: date
+        };
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPaymentPreference(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pp-Description').val(data.Data.Description);
+            $(modal).find('.pp-BankName').val(data.Data.BankName);
+            $(modal).find('.pp-RoutingNumber').val(data.Data.RoutingNumber);
+            $(modal).find('.pp-AccountNumber').val(data.Data.BankAccount);
+            $(modal).find('.pp-AccountType').val(data.Data.AccountType);
+            $(modal).find('.pp-Status').val(data.Data.Status);
+            $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
+            $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
+
         },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
         }
     });
 
 }
 /* End Payment Preference Section */
+
 
 /* Professional Section */
 function PopulateUserIdDropDown() {

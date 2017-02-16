@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using DDI.Shared;
 using DDI.Shared.Models;
 
@@ -18,11 +19,6 @@ namespace DDI.Business
     
         #endregion
 
-        #region Public Properties
-
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -30,7 +26,11 @@ namespace DDI.Business
         /// </summary>
         public virtual void Validate(T entity) { }
 
-        /// <summary>
+        public virtual ISearchDocument BuildSearchDocument(T entity)
+        {
+            return null;
+        }
+
         /// Validate an entity.
         /// </summary>
         public override void Validate(IEntity entity)
@@ -41,6 +41,7 @@ namespace DDI.Business
                 Validate(typedEntity);
             }
         }
+
         #endregion
 
     }
@@ -48,7 +49,7 @@ namespace DDI.Business
     /// <summary>
     /// Non-generic, non-strongly-typed base class for entity business logic.
     /// </summary>
-    public class EntityLogicBase : IEntityLogic
+    public class EntityLogicBase : IEntityLogic, IDisposable
     {
         public IUnitOfWork UnitOfWork { get; private set; }
 
@@ -62,6 +63,34 @@ namespace DDI.Business
         /// Validate an entity.
         /// </summary>
         public virtual void Validate(IEntity entity) { }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    UnitOfWork?.Dispose();
+                }
+
+                UnitOfWork = null;
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+
+        #endregion
 
     }
 }

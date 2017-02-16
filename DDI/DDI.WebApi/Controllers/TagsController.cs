@@ -64,5 +64,23 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError();
             }
         }
+
+        [HttpGet]
+        [Route("api/v1/tags/taggroups/{id}")]
+        [Route("api/v1/taggroups/{id}/tags", Name = RouteNames.TagGroup + RouteNames.Tag)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByTagGroupId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.TagGroupId == id, search);
+                return FinalizeResponse(response, RouteNames.TagGroup + RouteNames.Tag, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
     }
 }

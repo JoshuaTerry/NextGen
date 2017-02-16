@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchUnitOfWork.cs" />
     <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
@@ -63,6 +64,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201702152150014_AddNotesObjectsAndTables.cs" />
+    <Compile Include="Migrations\201702152150014_AddNotesObjectsAndTables.Designer.cs">
+      <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.cs" />
     <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.Designer.cs">
       <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
@@ -227,6 +232,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702152150014_AddNotesObjectsAndTables.resx">
+      <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.resx">
       <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
     </EmbeddedResource>

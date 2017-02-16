@@ -170,17 +170,17 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<AlternateId> AlternateIds { get; set; }
         [HateoasCollectionLink(RouteNames.ContactInfo)]
         public ICollection<ContactInfo> ContactInfo { get; set; }
-        [HateoasCollectionLink(RouteNames.Denomination)]
+        [HATEOASLookupCollection(RouteNames.Denomination)]
         public ICollection<Denomination> Denominations { get; set; }
         [HateoasCollectionLink(RouteNames.DoingBusinessAs)]
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
         [HateoasCollectionLink(RouteNames.Education)]
         public ICollection<Education> Educations { get; set; }
-        [HateoasCollectionLink(RouteNames.Ethnicity)]
+        [HATEOASLookupCollection(RouteNames.Ethnicity)]
         public ICollection<Ethnicity> Ethnicities { get; set; }
         [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
-        [HateoasCollectionLink(RouteNames.PaymentPreference)]
+        [HateoasCollectionLink(RouteNames.PaymentMethod)]
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
         [HateoasCollectionLink(RouteNames.Relationship)] //both relationships are handled with the same route

@@ -138,7 +138,7 @@ namespace DDI.Business.CRM
         /// <param name="expand">TRUE to expand all abbreviations</param>
         /// <param name="maxLength">Maximum line length (0 for no maximum)</param>
         /// <returns></returns>
-        public string FormatAddress(Address address, bool caps, bool expand, int maxLength)
+        public string FormatAddress(Address address, bool caps = false, bool expand = false, int maxLength = 0)
         {
             StringBuilder sb = new StringBuilder();
             string text;
@@ -184,6 +184,15 @@ namespace DDI.Business.CRM
             }
 
             return sb.ToString().Trim('\n');
+        }
+
+        /// <summary>
+        /// Format a city, state, postal code, and country.  Multiple lines are separated by newline characters.
+        /// </summary>
+        public string FormatCityStatePostalCode(Address address)
+        {
+            LoadAllProperties(address);   
+            return FormatCityStatePostalCode(address.City, address.State?.StateCode, address.PostalCode, address.Country);
         }
 
         /// <summary>
