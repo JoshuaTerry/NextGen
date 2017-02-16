@@ -21,7 +21,7 @@ $(document).ready(function () {
 
     if (sessionStorage.getItem('constituentid')) {
 
-        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
 
     }
 
@@ -265,11 +265,11 @@ function DisplayConstituentPrimaryAddress() {
 
 /* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
 }
 /* End Demographics Section */
 

@@ -1,16 +1,35 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Statics;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class EthnicityController : ControllerBase<Ethnicity>
+    public class EthnicitiesController : ControllerBase<Ethnicity>
     {
+        protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
+        private IConstituentService _constituentService;
+        public EthnicitiesController()
+            :this(new EthnicitiesService(), new ConstituentService())
+        {
+        }
+
+        internal EthnicitiesController(IEthnicitiesService ethnicitiesService, IConstituentService constituentService)
+            :base(ethnicitiesService)
+        {
+            _constituentService = constituentService;
+        }
+
         [HttpGet]
         [Route("api/v1/ethnicities", Name = RouteNames.Ethnicity)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -56,6 +75,28 @@ namespace DDI.WebApi.Controllers
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
                 return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Ethnicity, search, fields);
+            }
+            catch (Exception ex)
+            {
+                LoggerBase.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+        [HttpPost]
+        [Route("api/v1/constituents/{id}/etnicities", Name = RouteNames.Constituent + RouteNames.Ethnicity + RouteVerbs.Post)]
+        public IHttpActionResult AddEthnicitiesToConstituent(Guid id, [FromBody] JObject ethnicityIds)
+        {
+            try
+            {
+                var constituent = _constituentService.GetById(id).Data;
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.AddEthnicitiesToConstituent(constituent, ethnicityIds);
+                return Ok(response);
             }
             catch (Exception ex)
             {

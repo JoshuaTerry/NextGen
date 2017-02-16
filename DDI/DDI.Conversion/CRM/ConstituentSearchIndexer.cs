@@ -46,8 +46,10 @@ namespace DDI.Conversion.CRM
                                                          p => p.ContactInfo,
                                                          p => p.ContactInfo.First().ContactType.ContactCategory,
                                                          p => p.AlternateIds,
-                                                         p => p.ConstituentType);
-
+                                                         p => p.ConstituentType,
+                                                         p => p.Denominations,
+                                                         p => p.Ethnicities,
+                                                         p => p.Tags);            
             query.OnNextBatch = (count, batch) =>
             {
                 bl = query.UnitOfWork.GetBusinessLogic<ConstituentLogic>();
