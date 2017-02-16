@@ -252,6 +252,7 @@
     <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\PaymentMethodController.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
+    <Compile Include="Controllers\TagGroupsController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\EducationsController.cs" />
     <Compile Include="Controllers\EducationLevelsController.cs" />
