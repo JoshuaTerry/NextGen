@@ -13,11 +13,17 @@ namespace DDI.WebApi.Controllers
 {
     public class DenominationsController : ControllerBase<Denomination>
     {
-        private IConstituentService _constituentService = new ConstituentService();
+        private IConstituentService _constituentService;
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
         public DenominationsController()
-            :base(new DenominationsService())
+            :this(new DenominationsService(), new ConstituentService())
         {
+        }
+
+        internal DenominationsController(IDenominationsService denominationsService, IConstituentService constituentService)
+            :base(denominationsService)
+        {
+            _constituentService = constituentService;
         }
 
         [HttpGet]

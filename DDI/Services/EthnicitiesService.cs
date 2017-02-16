@@ -29,8 +29,7 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> AddEthnicitiesToConstituent(Constituent constituent, JObject ethnicityIds)
         {
-            var constituentRepo = UnitOfWork.GetRepository<Constituent>();
-            var constituentToUpdate = constituentRepo.Entities.Include("Ethnicities").SingleOrDefault(c => c.Id == constituent.Id);
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, p => p.Ethnicities);
             IDataResponse<Constituent> response = null;
             List<Ethnicity> passedEthnicities = new List<Ethnicity>();
             List<Ethnicity> constituentEthnicities = new List<Ethnicity>();
@@ -43,7 +42,7 @@ namespace DDI.Services
                 }
             }
 
-            constituentEthnicities = constituentRepo.Entities.Single(c => c.Id == constituentToUpdate.Id).Ethnicities.ToList();
+            constituentEthnicities = constituentToUpdate.Ethnicities.ToList();
 
             var removes = constituentEthnicities.Except(passedEthnicities);
             var adds = passedEthnicities.Except(constituentEthnicities);

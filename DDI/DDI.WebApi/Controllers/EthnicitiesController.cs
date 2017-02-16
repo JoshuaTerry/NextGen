@@ -18,10 +18,16 @@ namespace DDI.WebApi.Controllers
     public class EthnicitiesController : ControllerBase<Ethnicity>
     {
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
-        private IConstituentService _constituentService = new ConstituentService();
+        private IConstituentService _constituentService;
         public EthnicitiesController()
-            :base(new EthnicitiesService())
+            :this(new EthnicitiesService(), new ConstituentService())
         {
+        }
+
+        internal EthnicitiesController(IEthnicitiesService ethnicitiesService, IConstituentService constituentService)
+            :base(ethnicitiesService)
+        {
+            _constituentService = constituentService;
         }
 
         [HttpGet]

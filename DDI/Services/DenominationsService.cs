@@ -29,8 +29,7 @@ namespace DDI.Services
 
         public IDataResponse<Constituent> AddDenominationsToConstituent(Constituent constituent, JObject denominationIds)
         {
-            var constituentRepo = UnitOfWork.GetRepository<Constituent>();
-            var constituentToUpdate = constituentRepo.Entities.Include("Denominations").SingleOrDefault(c => c.Id == constituent.Id);
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id);
             IDataResponse<Constituent> response = null;
             List<Denomination> passedDenominations = new List<Denomination>();
             List<Denomination> constituentDenominations = new List<Denomination>();
@@ -43,7 +42,7 @@ namespace DDI.Services
                 }
             }
 
-            constituentDenominations = constituentRepo.Entities.Single(c => c.Id == constituentToUpdate.Id).Denominations.ToList();
+            constituentDenominations = constituentToUpdate.Denominations.ToList();
 
             var removes = constituentDenominations.Except(passedDenominations);
             var adds = passedDenominations.Except(constituentDenominations);

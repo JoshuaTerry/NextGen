@@ -180,58 +180,19 @@ namespace DDI.WebApi.Helpers
         private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath, List<string> fieldsToInclude) where T : ICanTransmogrify
         {
             List<HateoasLink> hateoasLinks = new List<HateoasLink>();
-            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
+            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)) || Attribute.IsDefined(prop, typeof(HATEOASLookupCollectionAttribute)));
             bool doesIncludeAllLinks = (fieldsToInclude?.Count == 0) || fieldsToInclude.Contains("LINKS");
             foreach (var propertyInfo in properties)
             {
-                string propertyRoute = propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
+                bool isLookup = propertyInfo.IsDefined(typeof (HATEOASLookupCollectionAttribute));
+                string propertyRoute = isLookup ? propertyInfo.GetAttribute<HATEOASLookupCollectionAttribute>().RouteName : propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
                 if (doesIncludeAllLinks || fieldsToInclude.Contains($"LINKS.{propertyRoute.ToUpper()}"))
                 {
                     try
                     {
                         hateoasLinks.Add(new HateoasLink
                         {
-                            Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
-                            Relationship = $"{RouteRelationships.New}{propertyRoute}",
-                            Method = RouteVerbs.Post
-                        });
-                    }
-                    catch (ArgumentException)
-                    {
-                        //Ignore the error if the route doesn't exist
-                    }
-                    try
-                    {
-                        hateoasLinks.Add(new HateoasLink
-                        {
-                            // For speeds sake, try and just use the id. If that returns null, that means there are other values that are needed. In that case use the whole data object.
-                            Href = urlHelper.Link($"{routePath}{propertyRoute}", new
-                            {
-                                id = data.Id
-                            })
-                                   ?? urlHelper.Link($"{routePath}{propertyRoute}", data).SubstringUpToFirst('?'),
-                            Relationship = $"{RouteRelationships.Get}{propertyRoute}",
-                            Method = RouteVerbs.Get
-                        });
-                    }
-                    catch (ArgumentException)
-                    {
-                        //Ignore the error if the route doesn't exist
-                    }
-                }
-            }
-
-            properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HATEOASLookupCollectionAttribute)));
-            foreach (var propertyInfo in properties)
-            {
-                string propertyRoute = propertyInfo.GetAttribute<HATEOASLookupCollectionAttribute>().RouteName;
-                if (doesIncludeAllLinks || fieldsToInclude.Contains($"LINKS.{propertyRoute.ToUpper()}"))
-                {
-                    try
-                    {
-                        hateoasLinks.Add(new HateoasLink
-                        {
-                            Href = urlHelper.Link($"{routePath}{propertyRoute}{RouteVerbs.Post}", new {id = data.Id}),
+                            Href = isLookup ? urlHelper.Link($"{routePath}{propertyRoute}{RouteVerbs.Post}", new { id = data.Id }) : urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
                             Relationship = $"{RouteRelationships.New}{propertyRoute}",
                             Method = RouteVerbs.Post
                         });
