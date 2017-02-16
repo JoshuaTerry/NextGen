@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers
     {
         [HttpGet]
         [Route("api/v1/taggroups", Name = RouteNames.TagGroup)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
             return base.GetAll(RouteNames.Tag, limit, offset, orderBy, fields);
         }

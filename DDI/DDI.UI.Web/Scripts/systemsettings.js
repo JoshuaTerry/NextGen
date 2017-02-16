@@ -7,7 +7,7 @@ SystemSettingsLinks["EducationLevel"] = { Href: WEB_API_ADDRESS + "educationleve
 SystemSettingsLinks["Gender"] = { Href: WEB_API_ADDRESS + "genders", Method: "Get" };
 SystemSettingsLinks["NewTagGroup"] = { Href: WEB_API_ADDRESS + "taggroups", Method: "Post" };
 SystemSettingsLinks["School"] = { Href: WEB_API_ADDRESS + "schools", Method: "Get" };
-SystemSettingsLinks["TagGroup"] = { Href: WEB_API_ADDRESS + "taggroups?OrderBy=Order", Method: "Get" };
+SystemSettingsLinks["TagGroup"] = { Href: WEB_API_ADDRESS + "taggroups", Method: "Get" };
 
 $(document).ready(function () {
 
@@ -324,21 +324,42 @@ function LoadTagGroupGrid() {
         { dataField: 'TagSelectionType', caption: 'Multi/Single Select', lookup: { dataSource: selectOptions, valueExpr: 'Id', displayExpr: 'Description' } },
         { dataField: 'IsActive', caption: 'Active' },
     ];
-    LoadGridFromHateoas("tagsgrid",
+    LoadGridFromHateoas("taggroupsgrid",
         "contentcontainer",
         columns,
         SystemSettingsLinks.TagGroup.Href,
-        null,
+        TagGroupSelected,
         "TagGroup",
         EditTagGroup,
         DeleteEntity,
         "Delete tag group: ",
         null);
-    CreateNewModalLink("New Tag Group", NewTagGroupModal, '.tagsgrid');
-
+    CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid');
 }
 /* END CRM SETTINGS */
 
+function TagGroupSelected(info) {
+    var taggrid = $('<div>').addClass('tagscontainer');
+    $(taggrid).insertAfter($('.taggroupsgrid'));
+
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'Order', caption: 'Order' },
+        { dataField: 'Code', caption: "Code" },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' },
+    ];
+    LoadGridFromHateoas("tagsgrid",
+        "tagscontainer",
+        columns,
+        info.data.FormattedLinks.GetTag.Href,
+        TagGroupSelected,
+        "Tag",
+        EditTagGroup,
+        DeleteEntity,
+        "Delete tag: ",
+        null);
+}
 function EditTagGroup(getUrl, patchUrl) {
     EditEntity(getUrl, patchUrl, "Tag Group", ".taggroupmodal", ".savetaggroup", 250, LoadTagGroup, LoadTagGroupGrid, GetTagGroupToSave);
 }

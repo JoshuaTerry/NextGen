@@ -159,7 +159,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, hateoasR
         });
     }
     if (data) {
-        LoadGridData(data, datagrid, columns, container);
+        LoadGridData(data, datagrid, columns, container, selected);
     } else {
         $.ajax({
             url: route,
@@ -168,7 +168,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, hateoasR
             dataType: 'json',
             crossDomain: true,
             success: function (data) {
-                LoadGridData(data, datagrid, columns, container);
+                LoadGridData(data, datagrid, columns, container, selected);
             },
             error: function (xhr, status, err) {
                 DisplayErrorMessage('Error', 'An error loading grid.');
@@ -177,7 +177,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, hateoasR
     }
 }
 
-function LoadGridData(data, datagrid, columns, container) {
+function LoadGridData(data, datagrid, columns, container, selected) {
 
     var actualData = data;
 
