@@ -1163,6 +1163,7 @@ function LoadAddress(id) {
 
 function GenerateContactInfoSection() {
    
+    // Grab all the contact categories, then dynamically create the accordions
     LoadCategories(function(data) {
 
         var categoryData = data.Data;
@@ -1178,46 +1179,37 @@ function GenerateContactInfoSection() {
 
         $('.accordions').accordion('refresh');
 
-        // Everything below needs to be put in its own method, or if possible ripped out into a loop
-        // See if you can condense the loadtables and edit methods into a loop - generate dynamically
-        // load modals might even work that way too
-        // then, implement using hateoas links
-
-        LoadPhoneNumbersTable();
-
-        NewPhoneNumberModal();
-
-        LoadEmailTable();
-
-        NewEmailModal();
-
-        LoadWebsiteTable();
-
-        NewWebsiteModal();
-
-        LoadPointOfContactTable();
-
-        NewPointOfContactModal();
-
-        LoadSocialMediaTable();
-
-        NewSocialMediaModal();
-
-        LoadOtherContactsTable();
-
-        NewOtherContactsModal();
+        ContactInfoLoadAndAddModals();
 
     });
 
 }
 
-function LoadContactInfoTables(data) {
+function ContactInfoLoadAndAddModals() {
 
-    data.Data.forEach(function () {
+    LoadPhoneNumbersTable();
 
-        var modalClassNames = ['website', 'socmed', 'phone', 'poc', 'other', 'email'];
+    NewPhoneNumberModal();
 
-    })
+    LoadEmailTable();
+
+    NewEmailModal();
+
+    LoadWebsiteTable();
+
+    NewWebsiteModal();
+
+    LoadPointOfContactTable();
+
+    NewPointOfContactModal();
+
+    LoadSocialMediaTable();
+
+    NewSocialMediaModal();
+
+    LoadOtherContactsTable();
+
+    NewOtherContactsModal();
 }
 
 function ContactInfoNewModalButtonsAndDivs() {
@@ -1254,29 +1246,6 @@ function LoadCategories(CategoryTitles) {
             DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
         }
     });
-}
-
-function ContactTypeLookup(contactType) {
-    
-    var contactTypeIds = {
-        'Church leader': 'AAFE7189-188D-49C9-A363-0F7603F12D05',
-        'Alternate phone': '895F269C-49C8-42DB-976A-1137CFFA2388',
-        'Mailing address': '2CBAFB6A-8EE7-4994-8B72-55F4AE26FBA9',
-        'Home email': '994CDE48-D166-4B5F-9D3B-59106BE75F1A',
-        'Vacation phone': '9363990A-3674-4141-9EFB-6C79EF36146C',
-        'Contact person': '7C4898A6-1A85-41D3-9211-6CB49D4A8FFF',
-        'Contact phone': '7436FF5C-20A2-475F-BF6F-6F16BE7EB9F5',
-        'Contact email': 'D8F8877E-4E1C-4225-A2E2-6F531EDC7CDB',
-        'Church phone': 'B76CDFAB-FBBC-46A2-AAD4-A0EAEC636E18',
-        'Home phone': '4521B26B-AC84-415E-ABD0-A77AA019436B',
-        'Home page': '56B6BFD4-1E55-479A-8651-B4F03C5E5CC6',
-        'Work email': '1EB53C15-127D-4F77-8E63-BD92391364C8',
-        'Fax': 'B885A1B8-E821-4388-8118-CA9961F722D2',
-        'Mobile phone': 'DE7F0043-CC6B-494B-A16C-DEB0DD64D7AB',
-        'Work phone': 'E9BE6B84-1CE1-496C-B5BA-E2E29FDF006D'
-    };
-
-    return contactTypeIds[contactType];
 }
 
 // Phone # Subsection
@@ -1369,7 +1338,7 @@ function EditPhoneNumber(id) {
         resizable: false
     });
 
-    LoadPhoneNumber(modal);
+    LoadPhoneNumber(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1417,19 +1386,18 @@ function EditPhoneNumber(id) {
 
 }
 
-function LoadPhoneNumber(modal) {
+function LoadPhoneNumber(id, modal) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1/' + currentEntity.Id, 
+        url: WEB_API_ADDRESS + 'contactinfo/' + id, 
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
 
-            $(modal).find('.pn-Info').val(data.Data[0].Info);
-            $(modal).find('.pn-PhoneNumberType').val(data.Data[0].ContactTypeId);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data[0].IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data[0].Comment);
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
 
             PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1');
 
@@ -1529,7 +1497,7 @@ function EditEmail(id) {
         resizable: false
     });
 
-    LoadEmail(id);
+    LoadEmail(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1577,7 +1545,7 @@ function EditEmail(id) {
 
 }
 
-function LoadEmail(id) {
+function LoadEmail(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -1587,7 +1555,6 @@ function LoadEmail(id) {
         success: function (data) {
 
             $(modal).find('.e-Info').val(data.Data.Info);
-            $(modal).find('e-EmailType').val(data.Data.ContactType);
             $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.e-Comment').val(data.Data.Comment);
 
@@ -1658,7 +1625,7 @@ function NewWebsiteModal() {
 
                     DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadWebsiteTable();
 
@@ -1675,7 +1642,7 @@ function NewWebsiteModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1685,20 +1652,20 @@ function NewWebsiteModal() {
 
 function EditWebsite(id) {
 
-    modal = $('.websitemodal').dialog({
+    var modal = $('.websitemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadWebsite(id);
+    LoadWebsite(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1726,7 +1693,7 @@ function EditWebsite(id) {
 
                 DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadWebsiteTable();
 
@@ -1740,7 +1707,7 @@ function EditWebsite(id) {
 
 }
 
-function LoadWebsite(id) {
+function LoadWebsite(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -1819,7 +1786,7 @@ function NewPointOfContactModal() {
 
                     DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadPointOfContactTable();
 
@@ -1836,7 +1803,7 @@ function NewPointOfContactModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1846,20 +1813,20 @@ function NewPointOfContactModal() {
 
 function EditPointOfContact(id) {
 
-    modal = $('.pocmodal').dialog({
+    var modal = $('.pocmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadPointOfContact(id);
+    LoadPointOfContact(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1887,7 +1854,7 @@ function EditPointOfContact(id) {
 
                 DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPointOfContactTable();
 
@@ -1901,7 +1868,7 @@ function EditPointOfContact(id) {
 
 }
 
-function LoadPointOfContact(id) {
+function LoadPointOfContact(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -2141,7 +2108,7 @@ function NewOtherContactsModal() {
 
                     DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
                     LoadOtherContactsTable();
 
@@ -2158,7 +2125,7 @@ function NewOtherContactsModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -2168,20 +2135,20 @@ function NewOtherContactsModal() {
 
 function EditOtherContacts(id) {
 
-    modal = $('.othermodal').dialog({
+    var modal = $('.othermodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
         resizable: false
     });
 
-    LoadOtherContacts(id);
+    LoadOtherContacts(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -2209,7 +2176,7 @@ function EditOtherContacts(id) {
 
                 DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadOtherContactsTable();
 
@@ -2223,7 +2190,7 @@ function EditOtherContacts(id) {
 
 }
 
-function LoadOtherContacts(id) {
+function LoadOtherContacts(id, modal) {
 
     $.ajax({
         type: 'GET',
