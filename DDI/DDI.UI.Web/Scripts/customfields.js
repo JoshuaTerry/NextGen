@@ -121,28 +121,28 @@ function CreateCustomField(item) {
 
     switch (item.FieldType) {
         case CustomFieldType.Number:
-            CreateNumberField(item);
+            $(div).append(CreateNumberField(item));
             break;
         case CustomFieldType.TextBox:
-            CreateTextField(item);
+            $(div).append(CreateTextField(item));
             break;
         case CustomFieldType.TextArea:
-            CreateTextAreaField(item);
+            $(div).append(CreateTextAreaField(item));
             break;
         case CustomFieldType.DropDown:
-            CreateDropDownField(item);
+            $(div).append(CreateDropDownField(item));
             break;
         case CustomFieldType.Radio:
-            CreateRadioField(item);
+            $(div).append(CreateRadioField(item));
             break;
         case CustomFieldType.CheckBox:
-            CreateCheckBoxField(item);
+            $(div).append(CreateCheckBoxField(item));
             break;
         case CustomFieldType.Date:
-            CreateDateField(item);
+            $(div).append(CreateDateField(item));
             break;
         case CustomFieldType.DateTime:
-            CreateDateTimeField(item);
+            $(div).append(CreateDateTimeField(item));
             break;
     }
 

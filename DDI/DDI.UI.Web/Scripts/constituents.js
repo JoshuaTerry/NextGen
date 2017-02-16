@@ -13,6 +13,12 @@ $(document).ready(function () {
         Resize();
     });
 
+    DisplayConstituentCustomFields();
+
+    CreateEditControls();
+
+    SetupEditControls();
+
     if (sessionStorage.getItem('constituentid')) {
 
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))

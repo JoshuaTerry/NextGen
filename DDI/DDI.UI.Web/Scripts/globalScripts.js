@@ -20,10 +20,6 @@ $(document).ready(function () {
 
     LoadAccordions();
 
-    CreateEditControls();
-
-    SetupEditControls();
-
     $('.addconstituent').click(function (e) {
 
         e.preventDefault();
