@@ -101,6 +101,12 @@ namespace DDI.Services
             return GetIDataResponse(() => result);
         }
 
+        public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
+        {
+            var response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            return response;
+        }
+
         public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
         {
             var queryable = UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression);

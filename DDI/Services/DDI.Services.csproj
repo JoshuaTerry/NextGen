@@ -80,12 +80,10 @@
     <Compile Include="Search\ConstituentSearch.cs" />
     <Compile Include="Search\PageableSearch.cs" />
     <Compile Include="Search\ForeignKeySearch.cs" />
-    <Compile Include="SectionPreferenceService.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="ServiceInterfaces\IPaymentPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
-    <Compile Include="ServiceInterfaces\ISectionPreferenceService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
     <Compile Include="AddressService.cs" />
     <Compile Include="StateService.cs" />
