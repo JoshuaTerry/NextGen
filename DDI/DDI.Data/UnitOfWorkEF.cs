@@ -166,6 +166,11 @@ namespace DDI.Data
             GetRepository<T>().Insert(entity);
         }
 
+        public void Update<T>(T entity) where T : class
+        {
+            GetRepository<T>().Update(entity);
+        }
+
         public void Delete<T>(T entity) where T : class
         {
             GetRepository<T>().Delete(entity);
@@ -267,24 +272,36 @@ namespace DDI.Data
                    (_commonContext?.SaveChanges() ?? 0);
         }
 
-        public void AddBusinessLogic(object blObj)
+        public void AddBusinessLogic(object logic)
         {
-            if (!_businessLogic.Contains(blObj))
-                _businessLogic.Add(blObj);
+            if (!_businessLogic.Contains(logic))
+                _businessLogic.Add(logic);
         }
 
+        /// <summary>
+        /// Get (or create) a business logic instance associated with this unit of work.
+        /// </summary>
+        /// <typeparam name="T">Business logic type</typeparam>
         public T GetBusinessLogic<T>() where T : class
         {
-            Type blType = typeof(T);
-            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
-            if (blObj == null)
-            {
-                blObj = (T)Activator.CreateInstance(blType, this);
-                AddBusinessLogic(blObj);
-            }
-
-            return blObj;
+            return GetBusinessLogic(typeof(T)) as T;
         }
+
+        /// <summary>
+        /// Get (or create) a business logic instance associated with this unit of work.
+        /// </summary>
+        /// <param name="logicType">Business logic type</param>
+        public object GetBusinessLogic(Type logicType)
+        {
+            object logic = _businessLogic.FirstOrDefault(p => p.GetType() == logicType);
+            if (logic == null)
+            {
+                logic = Activator.CreateInstance(logicType, this);
+                AddBusinessLogic(logic);
+            }
+            return logic;
+        }
+
 
         #endregion Public Methods
 
