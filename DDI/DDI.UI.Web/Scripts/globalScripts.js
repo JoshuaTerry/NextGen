@@ -577,6 +577,9 @@ function SaveEdit(editcontainer) {
     // Get just the fields that have been edited
     var fields = GetEditedFields(editcontainer);
 
+    //SaveTagBoxes
+    SaveTagBoxes(editcontainer);
+
     // Save the entity
     $.ajax({
         url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
@@ -650,22 +653,30 @@ function GetEditedFields(editcontainer) {
         }
     });
 
-    var denominations = [];
-    $('.tagBoxDenominations').dxTagBox('instance').option('selectedItems').forEach(function(denomItem) {
-        denominations.push(denomItem.Id);
-    });
-    SaveChildCollection(denominations, Links.NewDenomination.Href);
-
-    var ethnicities = [];
-    $('.tagBoxEthnicities').dxTagBox('instance').option('selectedItems').forEach(function (ethnItem) {
-        ethnicities.push(ethnItem.Id);
-    });
-    SaveChildCollection(ethnicities, Links.NewEthnicity.Href);
-
     p = '{' + p + '}';
 
     return p;
 
+}
+
+function SaveTagBoxes(editcontainer) {
+    var denominations = [];
+    var denominationClass = $(editcontainer).find('.tagBoxDenominations');
+    if (denominationClass.length === 1) {
+        $('.tagBoxDenominations').dxTagBox('instance').option('selectedItems').forEach(function (denomItem) {
+            denominations.push(denomItem.Id);
+        });
+        SaveChildCollection(denominations, Links.NewDenomination.Href);
+    }
+
+    var ethnicities = [];
+    var ethnicitiesClass = $(editcontainer).find('.tagBoxEthnicities');
+    if (ethnicitiesClass.length === 1) {
+        $('.tagBoxEthnicities').dxTagBox('instance').option('selectedItems').forEach(function (ethnItem) {
+            ethnicities.push(ethnItem.Id);
+        });
+        SaveChildCollection(ethnicities, Links.NewEthnicity.Href);
+    }
 }
 
 function SaveChildCollection(children, route) {
@@ -682,10 +693,6 @@ function SaveChildCollection(children, route) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-            // Display updated entity data
-            currentEntity = data.Data;
-
-            RefreshEntity();
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
