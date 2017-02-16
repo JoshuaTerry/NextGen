@@ -610,7 +610,6 @@ function EditEducationModal(id) {
         resizable: false
     });
 
-
     LoadEducation(id);
 
     $('.cancelmodal').click(function (e) {
@@ -1218,7 +1217,6 @@ function LoadContactInfoTables(data) {
 
         var modalClassNames = ['website', 'socmed', 'phone', 'poc', 'other', 'email'];
 
-
     })
 }
 
@@ -1256,6 +1254,29 @@ function LoadCategories(CategoryTitles) {
             DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
         }
     });
+}
+
+function ContactTypeLookup(contactType) {
+    
+    var contactTypeIds = {
+        'Church leader': 'AAFE7189-188D-49C9-A363-0F7603F12D05',
+        'Alternate phone': '895F269C-49C8-42DB-976A-1137CFFA2388',
+        'Mailing address': '2CBAFB6A-8EE7-4994-8B72-55F4AE26FBA9',
+        'Home email': '994CDE48-D166-4B5F-9D3B-59106BE75F1A',
+        'Vacation phone': '9363990A-3674-4141-9EFB-6C79EF36146C',
+        'Contact person': '7C4898A6-1A85-41D3-9211-6CB49D4A8FFF',
+        'Contact phone': '7436FF5C-20A2-475F-BF6F-6F16BE7EB9F5',
+        'Contact email': 'D8F8877E-4E1C-4225-A2E2-6F531EDC7CDB',
+        'Church phone': 'B76CDFAB-FBBC-46A2-AAD4-A0EAEC636E18',
+        'Home phone': '4521B26B-AC84-415E-ABD0-A77AA019436B',
+        'Home page': '56B6BFD4-1E55-479A-8651-B4F03C5E5CC6',
+        'Work email': '1EB53C15-127D-4F77-8E63-BD92391364C8',
+        'Fax': 'B885A1B8-E821-4388-8118-CA9961F722D2',
+        'Mobile phone': 'DE7F0043-CC6B-494B-A16C-DEB0DD64D7AB',
+        'Work phone': 'E9BE6B84-1CE1-496C-B5BA-E2E29FDF006D'
+    };
+
+    return contactTypeIds[contactType];
 }
 
 // Phone # Subsection
@@ -1298,7 +1319,7 @@ function NewPhoneNumberModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: 'E9BE6B84-1CE1-496C-B5BA-E2E29FDF006D', //$(modal).find('.pn-PhoneNumberType').val(),
+                ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
                 Info: $(modal).find('.pn-Info').val(),
                 IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
                 Comment: $(modal).find('.pn-Comment').val()
@@ -1331,7 +1352,7 @@ function NewPhoneNumberModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1354,7 +1375,7 @@ function EditPhoneNumber(id) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1382,7 +1403,7 @@ function EditPhoneNumber(id) {
 
                 DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPhoneNumbersTable();
 
@@ -1410,7 +1431,7 @@ function LoadPhoneNumber(modal) {
             $(modal).find('.pn-IsPreferred').prop('checked', data.Data[0].IsPreferred);
             $(modal).find('.pn-Comment').val(data.Data[0].Comment);
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1', '', '');
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1');
 
         },
         error: function (xhr, status, err) {
@@ -1435,7 +1456,6 @@ function LoadEmailTable() {
     LoadGrid('constituentemailgrid',
         'constituentemailgridcontainer',
         columns,
-        // Links.GetAlternateId.Href,
         'http://localhost:49490/api/v1/contactinfo/A4BBF374-4C47-45D7-AF2E-92C81F3BADFA/' + currentEntity.Id,
         null,
         EditEmail);
@@ -1447,7 +1467,7 @@ function NewEmailModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.e-EmailType', 'contacttypes/A4BBF374-4C47-45D7-AF2E-92C81F3BADFA', '', '');
+        PopulateDropDown('.e-EmailType', 'contacttypes/A4BBF374-4C47-45D7-AF2E-92C81F3BADFA/', '', '');
 
         modal = $('.emailmodal').dialog({
             closeOnEscape: false,
@@ -1461,7 +1481,7 @@ function NewEmailModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.e-EmailType').val(),
+                ContactTypeId: $(modal).find('.e-EmailType').val(),
                 Info: $(modal).find('.e-Info').val(),
                 IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.e-Comment').val()
@@ -1477,9 +1497,9 @@ function NewEmailModal() {
 
                     DisplaySuccessMessage('Success', 'Email saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
-                    LoadAlternateIDTable();
+                    LoadEmailTable();
 
                 },
                 error: function (xhr, status, err) {
@@ -1494,17 +1514,15 @@ function NewEmailModal() {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
-
-
 
 }
 
 function EditEmail(id) {
 
-    modal = $('.emailmodal').dialog({
+   var modal = $('.emailmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
@@ -1517,7 +1535,7 @@ function EditEmail(id) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -1545,7 +1563,7 @@ function EditEmail(id) {
 
                 DisplaySuccessMessage('Success', 'Email saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadEmailTable();
 
@@ -1569,6 +1587,7 @@ function LoadEmail(id) {
         success: function (data) {
 
             $(modal).find('.e-Info').val(data.Data.Info);
+            $(modal).find('e-EmailType').val(data.Data.ContactType);
             $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.e-Comment').val(data.Data.Comment);
 
@@ -1610,20 +1629,20 @@ function NewWebsiteModal() {
 
         PopulateDropDown('.ws-WebSiteType', 'contacttypes/D6595D53-2A76-4E8A-A1F1-61E766564349', '', '');
 
-        modal = $('.websitesmodal').dialog({
+        modal = $('.websitemodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false
         });
 
-        $('.submitwebsites').unbind('click');
+        $('.submitwebsite').unbind('click');
 
-        $('.submitwebsites').click(function () {
+        $('.submitwebsite').click(function () {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.ws-WebSiteType').val(),
+                ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
                 Info: $(modal).find('.ws-Info').val(),
                 IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.ws-Comment').val()
@@ -1683,9 +1702,9 @@ function EditWebsite(id) {
 
     });
 
-    $('.submitwebsites').unbind('click');
+    $('.submitwebsite').unbind('click');
 
-    $('.submitwebsites').click(function () {
+    $('.submitwebsite').click(function () {
 
         var item = {
 
@@ -1784,7 +1803,7 @@ function NewPointOfContactModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.poc-PocType').val(),
+                ContactTypeId: $(modal).find('.poc-PocType').val(),
                 Info: $(modal).find('.poc-Info').val(),
                 IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.poc-Comment').val()
@@ -1802,7 +1821,7 @@ function NewPointOfContactModal() {
 
                     CloseModal();
 
-                    LoadAlternateIDTable();
+                    LoadPointOfContactTable();
 
                 },
                 error: function (xhr, status, err) {
@@ -1834,7 +1853,7 @@ function EditPointOfContact(id) {
         resizable: false
     });
 
-    LoadPhoneNumber(id);
+    LoadPointOfContact(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1851,7 +1870,7 @@ function EditPointOfContact(id) {
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            ContactType: $(modal).find('.poc-PocType').val(),
+            ContactTypeId: $(modal).find('.poc-PocType').val(),
             Info: $(modal).find('.poc-Info').val(),
             IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
             Comment: $(modal).find('.poc-Comment').val()
@@ -1945,7 +1964,7 @@ function NewSocialMediaModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.sm-SocialMediaType').val(),
+                ContactTypeId: $(modal).find('.sm-SocialMediaType').val(),
                 Info: $(modal).find('.sm-Info').val(),
                 IsPreferred: $(modal).find('.sm-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.sm-Comment').val()
@@ -2106,7 +2125,7 @@ function NewOtherContactsModal() {
 
             var item = {
                 ConstituentId: $('.hidconstituentid').val(),
-                ContactType: $(modal).find('.o-OtherType').val(),
+                ContactTypeId: $(modal).find('.o-OtherType').val(),
                 Info: $(modal).find('.o-Info').val(),
                 IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.o-Comment').val()
@@ -2173,7 +2192,7 @@ function EditOtherContacts(id) {
         var item = {
 
             ConstituentId: $('.hidconstituentid').val(),
-            ContactType: $(modal).find('.o-OtherType').val(),
+            ContactTypeId: $(modal).find('.o-OtherType').val(),
             Info: $(modal).find('.o-Info').val(),
             IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
             Comment: $(modal).find('.o-Comment').val()

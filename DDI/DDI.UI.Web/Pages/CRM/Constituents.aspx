@@ -840,7 +840,7 @@
 
     </div>
 
-    <div class="websitesmodal" title="Web Sites" style="display: none;">
+    <div class="websitemodal" title="Web Sites" style="display: none;">
 
         <div class="modalcontent">
             
@@ -865,7 +865,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitwebsites" value="Save" />
+                <input type="button" class="submitwebsite" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
