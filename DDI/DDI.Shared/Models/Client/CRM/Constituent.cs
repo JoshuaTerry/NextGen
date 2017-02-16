@@ -180,7 +180,7 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<Ethnicity> Ethnicities { get; set; }
         [HateoasCollectionLink(RouteNames.Tag)]
         public ICollection<Tag> Tags { get; set; }
-        [HateoasCollectionLink(RouteNames.PaymentPreference)]
+        [HateoasCollectionLink(RouteNames.PaymentMethod)]
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
         [HateoasCollectionLink(RouteNames.Relationship)] //both relationships are handled with the same route
