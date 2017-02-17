@@ -12,6 +12,7 @@ using DDI.Business.Core;
 using DDI.Shared.Statics.CRM;
 using DDI.Search.Models;
 using DDI.Shared.Models;
+using DDI.Search;
 
 namespace DDI.Business.CRM
 {
@@ -124,6 +125,14 @@ namespace DDI.Business.CRM
                 constituent.FormattedName = GetFormattedName(constituent);
                 constituent.Name = GetSortName(constituent);
             }
+
+            UpdateSearchDocumentBackground(constituent);
+        }
+
+        public override void UpdateSearchDocument(Constituent constituent)
+        {
+            var repo = new ElasticRepository<ConstituentDocument>();
+            repo.Update((ConstituentDocument)BuildSearchDocument(constituent));
         }
 
         public int GetNextConstituentNumber()
@@ -227,10 +236,10 @@ namespace DDI.Business.CRM
             }
 
             // Primary address            
-            ConstituentAddress constituentAddress = entity.ConstituentAddresses.FirstOrDefault(p => p.IsPrimary);
+            ConstituentAddress constituentAddress = UnitOfWork.GetReference(entity, p => p.ConstituentAddresses).FirstOrDefault(p => p.IsPrimary);
             if (constituentAddress != null)
             {
-                document.PrimaryAddress = addressLogic.FormatAddress(constituentAddress.Address).Replace("\n", ", ");
+                document.PrimaryAddress = addressLogic.FormatAddress(UnitOfWork.GetReference(constituentAddress, p => p.Address)).Replace("\n", ", ");
             }
 
             // Load alternate IDs

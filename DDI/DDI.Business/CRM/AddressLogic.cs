@@ -445,7 +445,22 @@ namespace DDI.Business.CRM
 
         public override void Validate(Address address)
         {
-            base.Validate(address);           
+            base.Validate(address);
+
+            // Process logic for each constituent linked to this address.
+            var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
+            var constituentIdsVisited = new List<Guid>();
+            foreach (var constituentAddress in UnitOfWork.GetReference(address, p => p.ConstituentAddresses).Where(p => p.ConstituentId != null))
+            {
+                if (!constituentIdsVisited.Contains(constituentAddress.ConstituentId.Value))
+                {
+                    // Update the constituent search document
+                    constituentLogic.UpdateSearchDocumentBackground(constituentAddress.ConstituentId);
+
+                    // Ensure this constituent is processed only once.
+                    constituentIdsVisited.Add(constituentAddress.ConstituentId.Value);
+                }
+            }
         }
 
         #endregion

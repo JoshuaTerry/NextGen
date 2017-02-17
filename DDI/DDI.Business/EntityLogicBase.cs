@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System;
 using DDI.Shared;
 using DDI.Shared.Models;
+using System.Threading.Tasks;
+using DDI.Business.Helpers;
+using DDI.Data;
 
 namespace DDI.Business
 {
@@ -16,7 +19,7 @@ namespace DDI.Business
         #region Constructors 
 
         public EntityLogicBase(IUnitOfWork uow) : base(uow) { }
-    
+
         #endregion
 
         #region Public Methods
@@ -31,6 +34,30 @@ namespace DDI.Business
             return null;
         }
 
+        public virtual void UpdateSearchDocument(T entity) { }
+
+        public void UpdateSearchDocumentBackground(T entity)
+        {
+            UpdateSearchDocumentBackground(entity.Id);
+        }
+
+        public void UpdateSearchDocumentBackground(Guid? id)
+        {
+            if (!id.HasValue)
+            {
+                return;
+            }
+            Task.Delay(2000).ContinueWith(task =>
+            {
+                using (var unitOfWork = new UnitOfWorkEF())
+                {
+                    T entityToUpdate = unitOfWork.GetById<T>(id.Value);
+                    BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                }
+            });
+        }
+
+
         /// Validate an entity.
         /// </summary>
         public override void Validate(IEntity entity)
@@ -42,6 +69,15 @@ namespace DDI.Business
             }
         }
 
+
+        public override void UpdateSearchDocument(IEntity entity)
+        {
+            T typedEntity = entity as T;
+            if (typedEntity != null)
+            {
+                UpdateSearchDocument(typedEntity);
+            }
+        }
         #endregion
 
     }
@@ -63,6 +99,8 @@ namespace DDI.Business
         /// Validate an entity.
         /// </summary>
         public virtual void Validate(IEntity entity) { }
+
+        public virtual void UpdateSearchDocument(IEntity entity) { }
 
         #region IDisposable Support
 

@@ -10,5 +10,6 @@ namespace DDI.Business
     public interface IEntityLogic
     {
         void Validate(IEntity entity);
+        void UpdateSearchDocument(IEntity entity);
     }
 }
