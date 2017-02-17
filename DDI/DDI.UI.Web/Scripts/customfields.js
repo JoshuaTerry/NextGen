@@ -82,7 +82,7 @@ function EditCustomControl(id) {
 
 }
 
-function DisplayCustomFields(container, entity) {
+function DisplayCustomFields(container, entity, callback) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -102,6 +102,10 @@ function DisplayCustomFields(container, entity) {
                     $(container).append(CreateCustomField(item));
 
                 });
+
+                if (callback) {
+                    callback();
+                }
 
             }
 
@@ -153,7 +157,7 @@ function CreateCustomField(item) {
 
 function CreateNumberField(item) {
 
-    var number = $('<input>').addClass('number');
+    var number = $('<input>').addClass('number editable');
 
     if (item.Answer) {
         $(number).val(item.Answer.Value);
@@ -165,7 +169,7 @@ function CreateNumberField(item) {
 
 function CreateTextField(item) {
 
-    var text = $('<input>').attr('type', 'text');
+    var text = $('<input>').attr('type', 'text').addClass('editable');
 
     if (item.Answer) {
         $(text).val(item.Answer.Value);
@@ -177,7 +181,7 @@ function CreateTextField(item) {
 
 function CreateTextAreaField(item) {
 
-    var textarea = $('<textarea>');
+    var textarea = $('<textarea>').addClass('editable');
 
     if (item.Answer) {
         $(textarea).val(item.Answer.Value);
@@ -189,9 +193,11 @@ function CreateTextAreaField(item) {
 
 function CreateDropDownField(item) {
 
-    var dropdown = $('<select>');
+    var dropdown = $('<select>').addClass('editable');
     
     if (item.Options) {
+        AddDefaultOption(dropdown, '', '');
+
         $.map(item.Options, function (o) {
             $('<option>').val(o.Id).text(o.DisplayName).appendTo($(dropdown));
         });
@@ -207,7 +213,7 @@ function CreateDropDownField(item) {
 
 function CreateRadioField(item) {
 
-    var radio = $('<div>').addClass('radiobuttons');
+    var radio = $('<div>').addClass('radiobuttons editable');
 
     if (item.Options) {
         $.map(item.Options, function (o) {
@@ -230,7 +236,7 @@ function CreateRadioField(item) {
 
 function CreateCheckBoxField(item) {
 
-    var checkbox = $('<input>').attr('type', 'checkbox');
+    var checkbox = $('<input>').attr('type', 'checkbox').addClass('editable');
 
     if (item.Answer && item.Answer.Value == '1') {
         $(checkbox).attr('checked', 'checked');
@@ -242,7 +248,7 @@ function CreateCheckBoxField(item) {
 
 function CreateDateField(item) {
 
-    var date = $('<input>').attr('type', 'text').addClass('datepicker');
+    var date = $('<input>').attr('type', 'text').addClass('datepicker editable');
 
     if (item.Answer) {
         $(date).text(FormatJSONDate(item.Answer.Value));
@@ -254,7 +260,7 @@ function CreateDateField(item) {
 
 function CreateDateTimeField(item) {
 
-    var dt = $('<div>').addClass('datepair');
+    var dt = $('<div>').addClass('datepair editable');
     var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
     var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
 

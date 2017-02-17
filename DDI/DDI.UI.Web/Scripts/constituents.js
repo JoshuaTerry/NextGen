@@ -794,7 +794,11 @@ function LoadPaymentPreference(id) {
 /* Additional Information (Custom Fields) */
 function DisplayConstituentCustomFields() {
 
-    DisplayCustomFields('customFieldContainer', CustomFieldEntity.CRM);
+    DisplayCustomFields('customFieldContainer', CustomFieldEntity.CRM, function () {
+        $('.editable').prop('disabled', true);
+        LoadDatePickers();
+        LoadDatePair();
+    });
 
 }
 /* End Additional Information (Custom Fields) */

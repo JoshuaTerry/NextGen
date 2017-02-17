@@ -469,8 +469,6 @@ function SetupEditControls() {
 
     $('.editable').prop('disabled', true);
 
-
-
     $('.editbutton').click(function (e) {
         e.preventDefault();
 
