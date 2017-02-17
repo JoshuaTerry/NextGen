@@ -660,23 +660,24 @@ function GetEditedFields(editcontainer) {
 }
 
 function SaveTagBoxes(editcontainer) {
-    var denominations = [];
-    var denominationClass = $(editcontainer).find('.tagBoxDenominations');
-    if (denominationClass.length === 1) {
-        $('.tagBoxDenominations').dxTagBox('instance').option('selectedItems').forEach(function (denomItem) {
-            denominations.push(denomItem.Id);
-        });
-        SaveChildCollection(denominations, Links.NewDenomination.Href);
-    }
 
-    var ethnicities = [];
-    var ethnicitiesClass = $(editcontainer).find('.tagBoxEthnicities');
-    if (ethnicitiesClass.length === 1) {
-        $('.tagBoxEthnicities').dxTagBox('instance').option('selectedItems').forEach(function (ethnItem) {
-            ethnicities.push(ethnItem.Id);
+    $(editcontainer).find('.tagbox').each(function (item) {
+
+        var idCollection = [];
+        var route = $(this).attr('class').split(' ')[2];
+
+        var foo = $(this).first().attr('class');
+
+        $(this).find('.dx-tagbox').first().dxTagBox('instance').option('selectedItems').forEach(function (selectedItem) {
+
+            idCollection.push(selectedItem.Id);
+
         });
-        SaveChildCollection(ethnicities, Links.NewEthnicity.Href);
-    }
+
+        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+
+    });
+
 }
 
 function SaveChildCollection(children, route) {

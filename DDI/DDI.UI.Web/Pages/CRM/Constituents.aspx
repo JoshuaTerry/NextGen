@@ -231,12 +231,12 @@
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Denomination</label>
-                            <div class="editable tagDenominationsContainer"></div>
+                            <div class="editable tagbox denominations"></div>
                         </div>
 
                         <div class="fieldblock">
                             <label>Ethnicity</label>
-                            <div class="editable tagEthnicitiesContainer"></div>
+                            <div class="editable tagbox ethnicities"></div>
                         </div>
 
                         <div class="fieldblock">
