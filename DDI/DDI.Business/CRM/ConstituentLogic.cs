@@ -131,8 +131,8 @@ namespace DDI.Business.CRM
 
         public override void UpdateSearchDocument(Constituent constituent)
         {
-            var repo = new ElasticRepository<ConstituentDocument>();
-            repo.Update((ConstituentDocument)BuildSearchDocument(constituent));
+            var elasticRepository = new ElasticRepository<ConstituentDocument>();
+            elasticRepository.Update((ConstituentDocument)BuildSearchDocument(constituent));
         }
 
         public int GetNextConstituentNumber()

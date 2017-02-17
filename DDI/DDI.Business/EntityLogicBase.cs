@@ -15,6 +15,7 @@ namespace DDI.Business
     /// <typeparam name="T">Entity type</typeparam>
     public class EntityLogicBase<T> : EntityLogicBase where T : class, IEntity
     {
+        private const int BACKGROUND_TASK_DELAY = 2000; // Wait 2 seconds before starting background update tasks
 
         #region Constructors 
 
@@ -29,25 +30,37 @@ namespace DDI.Business
         /// </summary>
         public virtual void Validate(T entity) { }
 
+        /// <summary>
+        /// Build search document for Elasticsearch
+        /// </summary>
         public virtual ISearchDocument BuildSearchDocument(T entity)
         {
             return null;
         }
 
+        /// <summary>
+        /// Update an entity in Elasticsearch by building the search document and indexing it.
+        /// </summary>
         public virtual void UpdateSearchDocument(T entity) { }
 
+        /// <summary>
+        /// Create a background task to update an entity in Elasticsearch.
+        /// </summary>
         public void UpdateSearchDocumentBackground(T entity)
         {
             UpdateSearchDocumentBackground(entity.Id);
         }
 
+        /// <summary>
+        /// Create a background task to update an entity in Elasticsearch.
+        /// </summary>
         public void UpdateSearchDocumentBackground(Guid? id)
         {
             if (!id.HasValue)
             {
                 return;
             }
-            Task.Delay(2000).ContinueWith(task =>
+            Task.Delay(BACKGROUND_TASK_DELAY).ContinueWith(task =>
             {
                 using (var unitOfWork = new UnitOfWorkEF())
                 {
@@ -58,6 +71,7 @@ namespace DDI.Business
         }
 
 
+        /// <summary>
         /// Validate an entity.
         /// </summary>
         public override void Validate(IEntity entity)
@@ -69,7 +83,9 @@ namespace DDI.Business
             }
         }
 
-
+        /// <summary>
+        /// Update an entity in Elasticsearch by building the search document and indexing it.
+        /// </summary>
         public override void UpdateSearchDocument(IEntity entity)
         {
             T typedEntity = entity as T;
@@ -87,6 +103,9 @@ namespace DDI.Business
     /// </summary>
     public class EntityLogicBase : IEntityLogic, IDisposable
     {
+        /// <summary>
+        /// Unit of work used by the business logic.
+        /// </summary>
         public IUnitOfWork UnitOfWork { get; private set; }
 
         public EntityLogicBase(IUnitOfWork uow)
@@ -100,6 +119,9 @@ namespace DDI.Business
         /// </summary>
         public virtual void Validate(IEntity entity) { }
 
+        /// <summary>
+        /// Update an entity in Elasticsearch by building the search document and indexing it.
+        /// </summary>
         public virtual void UpdateSearchDocument(IEntity entity) { }
 
         #region IDisposable Support
