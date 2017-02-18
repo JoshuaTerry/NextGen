@@ -276,7 +276,6 @@
     </Compile>
     <Compile Include="Helpers\DynamicTransmogrifier.cs" />
     <Compile Include="Helpers\IPagination.cs" />
-    <Compile Include="Helpers\LinqQuery.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />

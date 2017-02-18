@@ -114,7 +114,6 @@
     <Compile Include="Helpers\NumericHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="IPageable.cs" />
