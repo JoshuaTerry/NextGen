@@ -2,7 +2,7 @@
 using System.Linq;
 using Expression = System.Linq.Expressions.Expression;
 
-namespace DDI.Shared
+namespace DDI.Shared.Extensions
 {
     public static class QueryableExtensions
     {

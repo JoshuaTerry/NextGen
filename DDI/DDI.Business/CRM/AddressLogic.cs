@@ -455,7 +455,7 @@ namespace DDI.Business.CRM
                 if (!constituentIdsVisited.Contains(constituentAddress.ConstituentId.Value))
                 {
                     // Update the constituent search document
-                    constituentLogic.UpdateSearchDocumentBackground(constituentAddress.ConstituentId);
+                    constituentLogic.ScheduleUpdateSearchDocument(constituentAddress.ConstituentId);
 
                     // Ensure this constituent is processed only once.
                     constituentIdsVisited.Add(constituentAddress.ConstituentId.Value);

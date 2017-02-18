@@ -126,7 +126,7 @@ namespace DDI.Business.CRM
                 constituent.Name = GetSortName(constituent);
             }
 
-            UpdateSearchDocumentBackground(constituent);
+            ScheduleUpdateSearchDocument(constituent);
         }
 
         public override void UpdateSearchDocument(Constituent constituent)

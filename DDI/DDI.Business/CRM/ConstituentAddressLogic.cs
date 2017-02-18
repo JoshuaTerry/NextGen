@@ -219,7 +219,7 @@ namespace DDI.Business.CRM
             base.Validate(entity);
 
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
-            constituentLogic.UpdateSearchDocumentBackground(entity.ConstituentId);
+            constituentLogic.ScheduleUpdateSearchDocument(entity.ConstituentId);
         }
 
         #endregion

@@ -15,7 +15,7 @@ namespace DDI.Business
     /// <typeparam name="T">Entity type</typeparam>
     public class EntityLogicBase<T> : EntityLogicBase where T : class, IEntity
     {
-        private const int BACKGROUND_TASK_DELAY = 2000; // Wait 2 seconds before starting background update tasks
+        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2000; // Wait 2 seconds after saving before updating search documents.
 
         #region Constructors 
 
@@ -44,30 +44,30 @@ namespace DDI.Business
         public virtual void UpdateSearchDocument(T entity) { }
 
         /// <summary>
-        /// Create a background task to update an entity in Elasticsearch.
+        /// Schedule an update of an entity in Elasticsearch.
         /// </summary>
-        public void UpdateSearchDocumentBackground(T entity)
+        public void ScheduleUpdateSearchDocument(T entity)
         {
-            UpdateSearchDocumentBackground(entity.Id);
+            ScheduleUpdateSearchDocument(entity.Id);
         }
 
         /// <summary>
-        /// Create a background task to update an entity in Elasticsearch.
+        /// Schedule an update of an entity in Elasticsearch.
         /// </summary>
-        public void UpdateSearchDocumentBackground(Guid? id)
+        public void ScheduleUpdateSearchDocument(Guid? id)
         {
             if (!id.HasValue)
             {
                 return;
             }
-            Task.Delay(BACKGROUND_TASK_DELAY).ContinueWith(task =>
+            Shared.TaskScheduler.ScheduleTask(() =>
             {
                 using (var unitOfWork = new UnitOfWorkEF())
                 {
                     T entityToUpdate = unitOfWork.GetById<T>(id.Value);
                     BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
                 }
-            });
+            }, UPDATE_SEARCH_DOCUMENT_DELAY);
         }
 
 
