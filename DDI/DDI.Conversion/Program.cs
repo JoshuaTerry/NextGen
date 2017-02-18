@@ -4,10 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
-using DDI.Data;
-using DDI.Shared.Models.Client.CRM;
 using log4net;
 
 namespace DDI.Conversion
@@ -63,24 +60,8 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
-            Console.WriteLine("Start");
-            Tester();
-            Console.WriteLine("Done");
-            Console.ReadLine();
-
         }
 
-        private static void Tester()
-        {
-            using (var uow = new UnitOfWorkEF())
-            {
-                var addr = uow.GetById<Address>(new Guid("aba05c81-324d-4a25-a4bd-3a4f7930e6af"));
-                //addr.AddressLine1 = "1253 Elmwood Ave";
-                addr.AddressLine1 = "31415926535 Schleicher Ave";
-                BusinessLogicHelper.GetBusinessLogic<Address>(uow).Validate(addr);
-                uow.SaveChanges();          
-            }
-        }
 
         /// <summary>
         /// Run all converion methods in a conversion class.
