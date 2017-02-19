@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace DDI.Shared.Models
         /// Entity type string value.
         /// </summary>
         [Index]
+        [MaxLength(128)]
         public string EntityType { get; set; }
 
  

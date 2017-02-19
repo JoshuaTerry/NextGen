@@ -1,8 +1,9 @@
 param (
     [string]$buildConfiguration = "Debug",
+    [string]$deployEnvironment = "Dev",
     [switch]$deploy = $false,
-	[switch]$ignoreTests = $false,
-	[switch]$runOnServer = $false
+    [switch]$ignoreTests = $false,
+    [switch]$runOnServer = $false
 )
 
 function ExitWithCode 
@@ -81,10 +82,12 @@ Function WereTestsSuccessful
 Function DeployProjects
 {
 	param (
-		[string]$buildConfiguration = "Debug"
+		[string]$buildConfiguration = "Debug",
+		[string]$deployEnvironment = "Dev"
 	)
- 	Write-Host "Deploying API..."
-	& $msbuildPath ..\DDI.sln /p:DeployOnBuild=true /p:PublishProfile='DevEnv' /p:Configuration=$buildConfiguration /p:Platform="Any CPU"
+	& ./Rake.ps1 -deployEnvironment:$deployEnvironment
+ 	Write-Host "Deploying API... $deployEnvironment"
+	& $msbuildPath ..\DDI.sln /p:DeployOnBuild=true /p:PublishProfile=$($deployEnvironment)Env /p:Configuration=$buildConfiguration /p:Platform="Any CPU"
 }
 
 ###############################################################
@@ -112,7 +115,7 @@ if ($LastExitCode -eq 0)
 		Write-Host "Tests Completed."
 		if ($deploy)
 		{
-			DeployProjects -buildConfiguration:$buildConfiguration
+			DeployProjects -buildConfiguration:$buildConfiguration -deployEnvironment:$deployEnvironment
 			if ($LastExitCode -eq 0)
 			{ 
 				Write-Host "Website and APIs have been published"		

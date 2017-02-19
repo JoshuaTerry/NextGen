@@ -24,6 +24,9 @@ namespace DDI.Shared.Models.Client.CP
 
         public DateTime? StatusDate { get; set; }
 
+        [NotMapped]
+        public Guid? ConstituentId { get; set; }
+
         public ICollection<Constituent> Constituents { get; set; }
 
         public override string DisplayName => Description;

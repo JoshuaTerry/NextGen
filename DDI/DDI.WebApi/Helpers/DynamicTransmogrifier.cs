@@ -180,18 +180,19 @@ namespace DDI.WebApi.Helpers
         private IEnumerable<HateoasLink> FindAllAddChildHateoasLinks<T>(T data, UrlHelper urlHelper, string routePath, List<string> fieldsToInclude) where T : ICanTransmogrify
         {
             List<HateoasLink> hateoasLinks = new List<HateoasLink>();
-            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)));
+            var properties = data.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(HateoasCollectionLinkAttribute)) || Attribute.IsDefined(prop, typeof(HATEOASLookupCollectionAttribute)));
             bool doesIncludeAllLinks = (fieldsToInclude?.Count == 0) || fieldsToInclude.Contains("LINKS");
             foreach (var propertyInfo in properties)
             {
-                string propertyRoute = propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
+                bool isLookup = propertyInfo.IsDefined(typeof (HATEOASLookupCollectionAttribute));
+                string propertyRoute = isLookup ? propertyInfo.GetAttribute<HATEOASLookupCollectionAttribute>().RouteName : propertyInfo.GetAttribute<HateoasCollectionLinkAttribute>().RouteName;
                 if (doesIncludeAllLinks || fieldsToInclude.Contains($"LINKS.{propertyRoute.ToUpper()}"))
                 {
                     try
                     {
                         hateoasLinks.Add(new HateoasLink
                         {
-                            Href = urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
+                            Href = isLookup ? urlHelper.Link($"{routePath}{propertyRoute}{RouteVerbs.Post}", new { id = data.Id }) : urlHelper.Link($"{propertyRoute}{RouteVerbs.Post}", null),
                             Relationship = $"{RouteRelationships.New}{propertyRoute}",
                             Method = RouteVerbs.Post
                         });
@@ -220,6 +221,7 @@ namespace DDI.WebApi.Helpers
                     }
                 }
             }
+
             return hateoasLinks;
         }
 

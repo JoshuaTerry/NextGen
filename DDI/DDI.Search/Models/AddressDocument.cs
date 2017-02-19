@@ -29,6 +29,18 @@ namespace DDI.Search.Models
         [Keyword(IncludeInAll = false)]
         public Guid StateId { get; set; }
 
+        [Keyword(IncludeInAll = false)]
+        public Guid Region1Id { get; set; }
+
+        [Keyword(IncludeInAll = false)]
+        public Guid Region2Id { get; set; }
+
+        [Keyword(IncludeInAll = false)]
+        public Guid Region3Id { get; set; }
+
+        [Keyword(IncludeInAll = false)]
+        public Guid Region4Id { get; set; }
+
         [Keyword]
         public string PostalCode { get; set; }
 
