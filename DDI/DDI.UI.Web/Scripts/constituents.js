@@ -35,6 +35,7 @@ function LoadYears()
         $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
     }
 }
+
 function PopulateMonthDays()
 {
     var arrayLookup = {
@@ -180,7 +181,7 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
-        LoadConstituentSideBar(); // This is where I should add my new function
+        LoadConstituentSideBar();
 
         DisplayConstituentType();
 
@@ -226,31 +227,16 @@ function DisplayConstituentData() {
 
 function LoadConstituentSideBar() {
 
+    // 1. This should probably bee DisplayConstituentSidebar
+    // 2. Since the logic for address and contactinfo will be basically the same,
+    // see if you can turn it into a callback method and pass in the necessary params
+    // 3. will also need city state zip
+
     $('.FormattedName').text('Constituent Name: ' + currentEntity.FormattedName);
-    LoadConstituentPrimaryAddress(currentEntity.Id);
 
-   
+    GetConstituentAddress();
 
-}
-
-function LoadConstituentPrimaryAddress(id) {
-    var url = WEB_API_ADDRESS + 'constituentaddresses/' + id
-    var otherurl = Links.GetConstituentAddress + id;
-    $.ajax({
-        type: 'GET',
-        url: url,
-        // url: Links.GetConstituentAddress + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            currentaddress = data.Data;
-            $('.Address').text('Constituent Address: ' + currentaddress.Address);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the sidebar address.');
-        }
-    });
+    GetConstituentContactInfo();
 
 }
 
@@ -286,6 +272,73 @@ function DisplayConstituentPrimaryAddress() {
         });
 
     }
+}
+
+function GetConstituentAddress() {
+    $.ajax({
+        type: 'GET',
+        url: Links.GetConstituentAddress.Href,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentaddress = data.Data;
+
+            for (i = 0; i < currentaddress.length; i++) { 
+
+                if (currentaddress[i].IsPrimary) {
+
+                    $('.Address').text('Constituent Address: ' + currentaddress[i].Address.AddressLine1);
+
+                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
+
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+        }
+    });
+}
+
+function GetConstituentContactInfo() {
+    $.ajax({
+        type: 'GET',
+        url: Links.GetContactInfo.Href,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentcontactinfo = data.Data;
+            // if empty, do text. If not, append.
+            // Also add spaces.
+
+            for (i = 0; i < currentcontactinfo.length; i++) {
+
+                if (currentcontactinfo[i].IsPreferred) {
+
+                    //if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
+                    //    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+                    //}
+
+                    // maybe want to add this dynamically instead of hardcoding, like primaryaddress function...
+                    // <label class="editable ContactInfo"></label>
+                    if ($('.contactinfo').text().length > 0) {
+                        $('.ContactInfo').text('Constituent Contact Info: ' + currentcontactinfo[i].Info);
+
+
+                    } else {
+                        $('.ContactInfo').append(' ' + currentcontactinfo[i].Info);
+
+                    }
+
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+        }
+    });
 
 }
 
@@ -992,8 +1045,6 @@ function NewAlternateIdModal() {
         CloseModal(modal);
 
     });
-
-   
 
 }
 
