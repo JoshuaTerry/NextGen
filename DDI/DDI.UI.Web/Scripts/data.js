@@ -71,7 +71,7 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
     var selectedItems = [];
 
     $.ajax({
-        url: routeForSelectedOptions,
+        url: WEB_API_ADDRESS + routeForSelectedOptions,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -118,30 +118,27 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 }
 
-function LoadGrid(grid, container, columns, route, selected, edit, data) {
+function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
 
-    if (edit) {
-        columns.push({
-            width: '100px',
-            alignment: 'center',
-            cellTemplate: function(container, options) {
-                $('<a/>')
-                    .addClass('editthing')
-                    .text('Edit')
-                    .click(function(e) {
-                        e.preventDefault();
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
 
-                        edit($(this).parent().parent().find('td').first().text());
-                    })
-                    .appendTo(container);
-            }
-        });
-    }
+            LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
+                        
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading grid.');
+        }
+    });
 
-    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
 }
 
-function LoadGridFromHateoas(grid, container, columns, route, selected, editMethod, deleteMethod, deleteMessage, data) {
+function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -154,19 +151,20 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
         columns.push({
             width: '100px',
             alignment: 'center',
-            cellTemplate: function (container, options) {
+            cellTemplate: function(container, options) {
                 $('<a/>')
                     .addClass('editthing')
                     .text('Edit')
-                    .click(function (e) {
+                    .click(function(e) {
                         e.preventDefault();
 
-                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
+                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
                     })
                     .appendTo(container);
             }
         });
     }
+
     if (deleteMethod) {
         columns.push({
             width: '100px',
@@ -174,36 +172,16 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
             cellTemplate: function (container, options) {
                 $('<a/>')
                     .addClass('editthing')
-                    .text('Remove')
+                    .text('Delete')
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, deleteMessage + options.data.DisplayName + "?");
+                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
                     })
                     .appendTo(container);
             }
         });
     }
-    if (data) {
-        LoadGridData(data, datagrid, columns, container);
-    } else {
-        $.ajax({
-            url: route,
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
-                LoadGridData(data, datagrid, columns, container);
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error loading grid.');
-            }
-        });
-    }
-}
-
-function LoadGridData(data, datagrid, columns, container) {
 
     var actualData = data;
 
@@ -211,68 +189,48 @@ function LoadGridData(data, datagrid, columns, container) {
         actualData = data.Data;
     }
 
-    if (actualData && Array.isArray(actualData)) {
-        actualData.forEach(function(eachItem) {
-            var links = [];
-            if (eachItem.Links) {
-                $.map(eachItem.Links,
-                    function(link) {
+    $(datagrid).dxDataGrid({
+        dataSource: actualData,
+        columns: columns,
+        paging: {
+            pageSize: 25
+        },
+        pager: {
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            showInfo: true,
+            allowedPageSizes: [15, 25, 50, 100]
+        },
+        groupPanel: {
+            visible: false,
+            allowColumnDragging: true
+        },
+        filterRow: {
+            visible: true,
+            showOperationChooser: false
+        },
+        onRowClick: function (info) {
 
-                        links[link.Relationship] = {
-                            Href: link.Href,
-                            Method: link.Method
-                        };
-
-                    });
-                eachItem.FormattedLinks = links;
-            };
-        });
-    }
-
-    $(datagrid)
-        .dxDataGrid({
-            dataSource: actualData,
-            columns: columns,
-            paging: {
-                pageSize: 25
-            },
-            pager: {
-                showNavigationButtons: true,
-                showPageSizeSelector: true,
-                showInfo: true,
-                allowedPageSizes: [15, 25, 50, 100]
-            },
-            groupPanel: {
-                visible: false,
-                allowColumnDragging: true
-            },
-            filterRow: {
-                visible: true,
-                showOperationChooser: false
-            },
-            onRowClick: function(info) {
-
-                if (selected) {
-                    selected(info);
-                }
-
+            if (selected) {
+                selected(info);
             }
-        });
+
+        }
+    });
 
     $(datagrid).appendTo($(container));
-
 }
 
-function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClassName, modalWidth, loadEntityMethod, loadEntityGridMethod, getEntityToSave) {
+function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, loadEntityGrid, getEntityToSave, entityName, route, id) {
 
-    var modal = $(modalClassName).dialog({
+    var modal = $(modalClass).dialog({
         closeOnEscape: false,
         modal: true,
         width: modalWidth,
         resizable: false
     });
 
-    loadEntityMethod(getUrl, modal);
+    LoadEntity(route, id, modal, loadEntityMethod, entityName);
 
     $('.cancelmodal').click(function (e) {
 
@@ -282,21 +240,21 @@ function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClas
 
     });
 
-    $(saveButtonClassName).unbind('click');
+    $(saveButtonClass).unbind('click');
 
-    $(saveButtonClassName).click(function () {
+    $(saveButtonClass).click(function () {
 
         var item = getEntityToSave(modal, true);
 
         $.ajax({
             type: 'PATCH',
-            url: patchUrl,
+            url: WEB_API_ADDRESS + route + '/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
             success: function () {
 
-                DisplaySuccessMessage("Success", entityType + " saved successfully.");
+                DisplaySuccessMessage("Success", entityName + " saved successfully.");
 
                 CloseModal(modal);
 
@@ -304,7 +262,7 @@ function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClas
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityType + ".");
+                DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
             }
         });
 
@@ -312,66 +270,64 @@ function EditEntity(getUrl, patchUrl, entityType, modalClassName, saveButtonClas
 
 }
 
-function NewEntityModal(entityName, newEntityModalClassName, entityModalClassName, entityModalWidth, prePopulateNewModal, saveEntityClassName, getEntityToSave, ajaxMethod, ajaxUrl, loadEntityGrid) {
+function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, prePopulateNewModal, loadEntityGrid, getEntityToSave, entityName, route) {
 
-    $(newEntityModalClassName)
-        .click(function (e) {
+    $(newModalLink).click(function (e) {
 
-            e.preventDefault();
+        e.preventDefault();
 
-            var modal = $(entityModalClassName)
-                .dialog({
-                    closeOnEscape: false,
-                    modal: true,
-                    width: entityModalWidth,
-                    resizable: false
-                });
-            if (prePopulateNewModal) {
-                prePopulateNewModal(modal);
-            }
-
-            $('.cancelmodal')
-                .click(function (e) {
-                    e.preventDefault();
-                    CloseModal(modal);
-                });
-
-            $(saveEntityClassName).unbind('click');
-
-            $(saveEntityClassName)
-                .click(function () {
-
-                    var item = getEntityToSave(modal, false);
-
-                    $.ajax({
-                        type: ajaxMethod,
-                        url: ajaxUrl,
-                        data: item,
-                        contentType: 'application/x-www-form-urlencoded',
-                        crossDomain: true,
-                        success: function () {
-
-                            DisplaySuccessMessage("Success", entityName + " saved successfully.");
-
-                            CloseModal(modal);
-
-                            loadEntityGrid();
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
-                        }
-                    });
-
-                });
+        var modal = $(modalClass).dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: modalWidth,
+            resizable: false
         });
+
+        if (prePopulateNewModal) {
+            prePopulateNewModal(modal);
+        }
+
+        $('.cancelmodal')
+            .click(function (e) {
+                e.preventDefault();
+                CloseModal(modal);
+            });
+
+        $(saveButtonClass).unbind('click');
+
+        $(saveButtonClass).click(function () {
+
+            var item = getEntityToSave(modal, false);
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + route,
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage("Success", entityName + " saved successfully.");
+
+                    CloseModal(modal);
+
+                    loadEntityGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                }
+            });
+
+        });
+    });
 }
 
-function LoadEntity(url, modal, ajaxMethod, loadEntityData, entityName) {
+function LoadEntity(route, id, modal, loadEntityData, entityName) {
 
     $.ajax({
-        type: ajaxMethod,
-        url: url,
+        type: 'GET',
+        url: WEB_API_ADDRESS + route + '/' + id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {

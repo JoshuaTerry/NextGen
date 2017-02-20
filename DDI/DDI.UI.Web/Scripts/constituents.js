@@ -116,8 +116,6 @@ function GetConstituentData(id) {
 
             currentEntity = data.Data;
 
-            LoadLinks(currentEntity);
-
             DisplayConstituentData();
             
         },
@@ -214,7 +212,7 @@ function DisplayConstituentData() {
 	
         PopulateUserIdDropDown();
 
-        LoadRelationshipsGrid();
+        LoadRelationshipsData();
 
         NewRelationshipModal();
 
@@ -257,22 +255,24 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
-/* Demograpics Section */
 
+/* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', WEB_API_ADDRESS + '/constituents/' + currentEntity.Id + '/denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', WEB_API_ADDRESS + '/constituents/' + currentEntity.Id + '/ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
 }
-
 /* End Demographics Section */
 
+
+/* Relationships Tab */
 function LoadRelationshipsData() {
+
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'relationships',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -283,77 +283,91 @@ function LoadRelationshipsData() {
             DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
         }
     });
+
 }
 
 function LoadRelationshipsQuickView(data) {
-    var formattedData = "<ul>";
-    if (data.Data && Array.isArray(data.Data)) {
-        data.Data.forEach(function (eachItem) {
-            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
-            };
+
+    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+    if (data.Data) {
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                $('<li>').text(item.DisplayName).appendTo($(formattedData));
+            }
+
         });
+
     }
-    formattedData = formattedData + "</ul>";
-    $('.relationshipsQuickView').html(formattedData);
+
+    $(formattedData).appendTo($('.relationshipsQuickView'));
+
 }
 
 function LoadRelationshipsTab(data) {
+
     var columns = [
+        { dataField: 'Id', width: '0px' },
         { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
         { dataField: 'DisplayName', caption: 'Relationship' },
     ];
-    LoadGridFromHateoas("relationshipsgrid",
-        "relationshipstable",
+
+    LoadGridWithData('relationshipsgrid',
+        'relationshipstable',
         columns,
-        WEB_API_ADDRESS + 'relationships',
+        'relationships',
         null,
         EditRelationship,
-        DeleteEntity,
-        "Delete that ",
+        null,
         data);
 
 }
 
-function LoadRelationshipsGrid() {
+function EditRelationship(id) {
 
-    LoadRelationshipsData();
-}
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
 
-function EditRelationship(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
 }
 
 function NewRelationshipModal() {
-    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, 'POST', WEB_API_ADDRESS + 'relationships', LoadRelationshipsGrid);
-}
 
-function LoadRelationship(url, modal) {
-    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+
 }
 
 function GetRelationshipToSave(modal, isUpdate) {
+
     var item = {
         Constituent1Id: $('.FormattedName1').val(),
         Constituent2Id: $(modal).find('.FormattedName2').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
+
     if (isUpdate === true) {
         item.Id = $(modal).find('.hidrelationshipid').val();
     }
+
     return item;
 }
 
 function PrePopulateNewRelationshipModal(modal) {
+
     $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
     $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+
 }
+/* End Relationships Tab */
+
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
@@ -368,9 +382,10 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        WEB_API_ADDRESS + 'doingbusinessas',
+        'doingbusinessas',
         null,
-        EditDBA);
+        EditDBA,
+        null);
 
 }
 
@@ -526,7 +541,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        WEB_API_ADDRESS + 'educations',
+        'educations',
         null,
         EditEducationModal);
 
@@ -705,7 +720,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        WEB_API_ADDRESS + 'paymenthods',
+        'paymentmethods/constituents/' + currentEntity.Id,
         null,
         EditPaymentPreference);
     
@@ -893,7 +908,6 @@ function PopulateUserIdDropDown() {
 
 
 /* Alternate Id Section */
-
 function LoadAlternateIDTable() {
 
     var columns = [
@@ -904,7 +918,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       WEB_API_ADDRESS + 'alternateids',
+       'alternateids',
        null,
        EditAlternateId);
 }
@@ -1036,7 +1050,6 @@ function LoadAlternateId(id, modal) {
     });
 
 }
-
 /* End Alternate Id Section */
 
 
@@ -1059,7 +1072,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        WEB_API_ADDRESS + 'constituentaddresses',
+        'constituentaddresses',
         null,
         EditAddressModal);
 
