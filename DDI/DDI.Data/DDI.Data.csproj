@@ -64,9 +64,13 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201702152150014_AddNotesObjectsAndTables.cs" />
-    <Compile Include="Migrations\201702152150014_AddNotesObjectsAndTables.Designer.cs">
+    <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
+    <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201702171526564_Notes_v2.cs" />
+    <Compile Include="Migrations\Client\201702171526564_Notes_v2.Designer.cs">
+      <DependentUpon>201702171526564_Notes_v2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.cs" />
     <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.Designer.cs">
@@ -232,8 +236,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702152150014_AddNotesObjectsAndTables.resx">
+    <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201702171526564_Notes_v2.resx">
+      <DependentUpon>201702171526564_Notes_v2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.resx">
       <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
