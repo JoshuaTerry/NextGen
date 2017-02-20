@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
@@ -11,7 +9,7 @@ using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Constituent"), Hateoas(RouteNames.Constituent)]
+    [Table("Constituent")]
     public class Constituent : EntityBase, IEntity
     {
         #region Public Properties        
@@ -165,26 +163,25 @@ namespace DDI.Shared.Models.Client.CRM
         public Profession Profession { get; set; }
 
 
-        [HateoasCollectionLink(RouteNames.ConstituentAddress)]
+        
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
-        [HateoasCollectionLink(RouteNames.AlternateId)]
+        
         public ICollection<AlternateId> AlternateIds { get; set; }
-        [HateoasCollectionLink(RouteNames.ContactInfo)]
+        
         public ICollection<ContactInfo> ContactInfo { get; set; }
-        [HATEOASLookupCollection(RouteNames.Denomination)]
+        
         public ICollection<Denomination> Denominations { get; set; }
-        [HateoasCollectionLink(RouteNames.DoingBusinessAs)]
+        
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
-        [HateoasCollectionLink(RouteNames.Education)]
+       
         public ICollection<Education> Educations { get; set; }
-        [HATEOASLookupCollection(RouteNames.Ethnicity)]
+        
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        [HateoasCollectionLink(RouteNames.Tag)]
+        
         public ICollection<Tag> Tags { get; set; }
-        [HateoasCollectionLink(RouteNames.PaymentMethod)]
+        
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
-
-        [HateoasCollectionLink(RouteNames.Relationship)] //both relationships are handled with the same route
+        
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
 
