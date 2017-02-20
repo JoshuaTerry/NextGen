@@ -215,6 +215,7 @@ function DisplayConstituentData() {
         PopulateUserIdDropDown();
 
         LoadRelationshipsGrid();
+
         NewRelationshipModal();
 
         NewAddressModal();

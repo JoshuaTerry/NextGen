@@ -18,9 +18,7 @@ namespace DDI.WebApi.Tests.Controllers
         public void GetAllGenders_ReturnsGenderCollection()
         {
             var uow = new Mock<IUnitOfWork>();
-            var repo = new Mock<IRepository<Gender>>();  
-            repo.Setup(r => r.GetEntities(null)).Returns(SetupRepo());
-            uow.Setup(m => m.GetRepository<Gender>()).Returns(repo.Object);
+            uow.Setup(m => m.GetEntities<Gender>(null)).Returns(SetupRepo());
             var service = new ServiceBase<Gender>(uow.Object);
             var result = service.GetAll();
 
