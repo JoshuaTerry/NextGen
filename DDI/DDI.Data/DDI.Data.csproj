@@ -47,6 +47,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,6 +62,8 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="DomainContextAdapter.cs" />
+    <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
@@ -350,6 +353,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>

@@ -121,9 +121,14 @@
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Models\Client\Audit\ChangeSet.cs" />
+    <Compile Include="Models\Client\Audit\ChangeSetFactory.cs" />
+    <Compile Include="Models\Client\Audit\ObjectChange.cs" />
+    <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
+    <Compile Include="Models\Client\Core\DDIUser.cs" />
     <Compile Include="Models\Client\Core\Note.cs" />
     <Compile Include="Models\Client\Core\NoteCategory.cs" />
     <Compile Include="Models\Client\Core\NoteContactMethod.cs" />
@@ -207,7 +212,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
