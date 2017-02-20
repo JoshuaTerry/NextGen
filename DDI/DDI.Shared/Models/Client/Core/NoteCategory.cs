@@ -13,8 +13,10 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         [MaxLength(64)]
         public string Label { get; set; }
+
         [MaxLength(128)]
         public string Name { get; set; }
 

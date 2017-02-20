@@ -13,10 +13,13 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         [MaxLength(64)]
         public string Code { get; set; }
+
         [MaxLength(128)]
         public string Name { get; set; }
+
         public bool IsActive { get; set; }
 
         public ICollection<Note> Notes { get; set; }
