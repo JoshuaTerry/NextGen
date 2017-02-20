@@ -259,19 +259,19 @@ function DisplayConstituentPrimaryAddress() {
 /* Demograpics Section */
 
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', WEB_API_ADDRESS + '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', WEB_API_ADDRESS + '/constituents/' + currentEntity.Id + '/ethnicities');
 }
 
 /* End Demographics Section */
 
 function LoadRelationshipsData() {
     $.ajax({
-        type: Links.GetRelationship.method,
-        url: Links.GetRelationship.Href,
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'relationships',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -305,7 +305,7 @@ function LoadRelationshipsTab(data) {
     LoadGridFromHateoas("relationshipsgrid",
         "relationshipstable",
         columns,
-        Links.GetRelationship.Href,
+        WEB_API_ADDRESS + 'relationships',
         null,
         EditRelationship,
         DeleteEntity,
@@ -324,7 +324,7 @@ function EditRelationship(getUrl, patchUrl) {
 }
 
 function NewRelationshipModal() {
-    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, Links.NewRelationship.Method, Links.NewRelationship.Href, LoadRelationshipsGrid);
+    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, 'POST', WEB_API_ADDRESS + 'relationships', LoadRelationshipsGrid);
 }
 
 function LoadRelationship(url, modal) {
@@ -367,7 +367,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        Links.GetDoingBusinessAs.Href,
+        WEB_API_ADDRESS + 'doingbusinessas',
         null,
         EditDBA);
 
@@ -406,8 +406,8 @@ function NewDBAModal() {
             }
 
             $.ajax({
-                type: Links.NewDoingBusinessAs.Method,
-                url: Links.NewDoingBusinessAs.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'doingbusinessas',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -525,7 +525,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        Links.GetEducation.Href,
+        WEB_API_ADDRESS + 'educations',
         null,
         EditEducationModal);
 
@@ -574,8 +574,8 @@ function NewEducationModal() {
             }
 
             $.ajax({
-                type: Links.NewEducation.Method,
-                url: Links.NewEducation.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'educations',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -704,7 +704,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentMethod.Href,
+        WEB_API_ADDRESS + 'paymenthods',
         null,
         EditPaymentPreference);
     
@@ -751,8 +751,8 @@ function NewPaymentPreference() {
         };
 
         $.ajax({
-            type: Links.NewPaymentMethod.Method,
-            url: Links.NewPaymentMethod.Href,
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'paymentmethods',
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -903,7 +903,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       Links.GetAlternateId.Href,
+       WEB_API_ADDRESS + 'alternateids',
        null,
        EditAlternateId);
 }
@@ -930,8 +930,8 @@ function NewAlternateIdModal() {
             }
 
             $.ajax({
-                type: Links.NewAlternateId.Method,
-                url: Links.NewAlternateId.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'alternateids',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -1058,7 +1058,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        Links.GetConstituentAddress.Href,
+        WEB_API_ADDRESS + 'constituentaddresses',
         null,
         EditAddressModal);
 
@@ -1115,8 +1115,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: Links.NewConstituentAddress.Method,
-                url: Links.NewConstituentAddress.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'constituentaddresses',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,

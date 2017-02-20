@@ -112,6 +112,7 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
 }
 
 function LoadGrid(grid, container, columns, route, selected, edit, data) {
+
     if (edit) {
         columns.push({
             width: '100px',
@@ -129,6 +130,7 @@ function LoadGrid(grid, container, columns, route, selected, edit, data) {
             }
         });
     }
+
     LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
 }
 
