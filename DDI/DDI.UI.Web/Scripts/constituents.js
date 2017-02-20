@@ -1333,8 +1333,10 @@ function GenerateContactInfoSection() {
 
         categoryData.forEach(function (category) {
 
-            $("h1:contains('Addresses')").next('div').after($('<h3>').text(category.SectionTitle)); // changed to h1...
+            $("h1:contains('Addresses')").next('div').after($('<h3>').text(category.SectionTitle)); 
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
+
+            LoadContactCategory(category.Id, category.TextBoxLabel, category.Name);
 
         });
 
@@ -1345,38 +1347,36 @@ function GenerateContactInfoSection() {
         $('.accordions').accordion('refresh');
         // LoadAccordions will not work here
 
-        
-
     });
 
 }
 
 function ContactInfoLoadAndAddModals() {
 
-    LoadPhoneNumbersTable();
+   // LoadPhoneNumbersTable();
 
     NewPhoneNumberModal();
 
-    LoadEmailTable();
+   // LoadEmailTable();
 
     NewEmailModal();
 
-    LoadWebsiteTable();
+   // LoadWebsiteTable();
 
-    NewWebsiteModal();
+    NewWebModal();
 
-    LoadPointOfContactTable();
+   // LoadPointOfContactTable();
 
-    NewPointOfContactModal();
+    NewPersonModal();
 
-    LoadOtherContactsTable();
+   // LoadOtherContactsTable();
 
-    NewOtherContactsModal();
+    NewOtherModal();
 }
 
 function ContactInfoNewModalButtonsAndDivs() {
 
-    var modalClassNames = ['website', 'phone', 'poc', 'other', 'email'];
+    var modalClassNames = ['web', 'phone', 'person', 'other', 'email'];
 
     var classNamesIndex = 0;
 
@@ -1410,24 +1410,42 @@ function LoadCategories(CategoryTitles) {
     });
 }
 
-// Phone # Subsection
-function LoadPhoneNumbersTable() {
+function LoadContactCategory(id, displayText, name) {
 
-    var columns = [ 
-        { dataField: 'Id', width: '0px' },
+    var columns = [
+        { dataField:  'Id', width: '0px' }, // may need to change this back
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Phone' },
+        { dataField: 'Info', caption: displayText },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituentphonegrid',
-       'constituentphonegridcontainer',
-       columns,
-       WEB_API_ADDRESS + 'contactinfo/' + PHONE_CATEGORY + currentEntity.Id,
-       null,
-       EditPhoneNumber);
+    LoadGrid('constituent' + name.toLowerCase() + 'grid',
+        'constituent' + name.toLowerCase() + 'gridcontainer',
+        columns,
+        WEB_API_ADDRESS + 'contactinfo/' + id + currentEntity.Id,
+        null,
+        EditEmail); // Edit + name
 }
+
+// Phone # Subsection
+//function LoadPhoneNumbersTable() {
+
+//    var columns = [ 
+//        { dataField: 'Id', width: '0px' },
+//        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+//        { dataField: 'ContactType', caption: 'Type' },
+//        { dataField: 'Info', caption: 'Phone' },
+//        { dataField: 'Comment', caption: 'Comment' }
+//    ];
+
+//    LoadGrid('constituentphonegrid',
+//       'constituentphonegridcontainer',
+//       columns,
+//       WEB_API_ADDRESS + 'contactinfo/' + PHONE_CATEGORY + currentEntity.Id,
+//       null,
+//       EditPhoneNumber);
+//}
 
 function NewPhoneNumberModal() {
 
@@ -1468,7 +1486,7 @@ function NewPhoneNumberModal() {
 
                     CloseModal();
 
-                    LoadPhoneNumbersTable();
+                    LoadPhoneTable();
 
                 },
                 error: function (xhr, status, err) {
@@ -1732,7 +1750,7 @@ function LoadEmail(id, modal) {
 // End Emails Subsection
 
 // Websites Subsection
-function LoadWebsiteTable() {
+function LoadWebTable() {
 
     var columns = [ 
         { dataField: 'Id', width: '0px' },
@@ -1750,7 +1768,7 @@ function LoadWebsiteTable() {
         EditWebsite);
 }
 
-function NewWebsiteModal() {
+function NewWebModal() {
 
     $('.newwebsitemodallink').click(function (e) {
 
@@ -1812,7 +1830,7 @@ function NewWebsiteModal() {
 
 }
 
-function EditWebsite(id) {
+function EditWeb(id) {
 
     var modal = $('.websitemodal').dialog({
         closeOnEscape: false,
@@ -1869,7 +1887,7 @@ function EditWebsite(id) {
 
 }
 
-function LoadWebsite(id, modal) {
+function LoadWeb(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -1894,7 +1912,7 @@ function LoadWebsite(id, modal) {
 // End Websites Subsection
 
 // Point Of Contact Subsection
-function LoadPointOfContactTable() {
+function LoadPersonTable() {
 
     var columns = [ 
         { dataField: 'Id', width: '0px' },
@@ -1912,7 +1930,7 @@ function LoadPointOfContactTable() {
         EditPointOfContact);
 }
 
-function NewPointOfContactModal() {
+function NewPersonModal() {
 
     $('.newpocmodallink').click(function (e) {
 
@@ -1973,7 +1991,7 @@ function NewPointOfContactModal() {
 
 }
 
-function EditPointOfContact(id) {
+function EditPerson(id) {
 
     var modal = $('.pocmodal').dialog({
         closeOnEscape: false,
@@ -2030,7 +2048,7 @@ function EditPointOfContact(id) {
 
 }
 
-function LoadPointOfContact(id, modal) {
+function LoadPerson(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -2055,7 +2073,7 @@ function LoadPointOfContact(id, modal) {
 // End Point Of Contact Subsection
 
 // Other Contacts Subsection
-function LoadOtherContactsTable() {
+function LoadOtherTable() {
 
     var columns = [ 
         { dataField: 'Id', width: '0px' },
@@ -2073,7 +2091,7 @@ function LoadOtherContactsTable() {
         EditOtherContacts);
 }
 
-function NewOtherContactsModal() {
+function NewOtherModal() {
 
     $('.newothermodallink').click(function (e) {
 
@@ -2134,7 +2152,7 @@ function NewOtherContactsModal() {
 
 }
 
-function EditOtherContacts(id) {
+function EditOther(id) {
 
     var modal = $('.othermodal').dialog({
         closeOnEscape: false,
@@ -2191,7 +2209,7 @@ function EditOtherContacts(id) {
 
 }
 
-function LoadOtherContacts(id, modal) {
+function LoadOther(id, modal) {
 
     $.ajax({
         type: 'GET',
