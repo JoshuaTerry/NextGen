@@ -40,24 +40,6 @@ namespace DDI.Services
             _repository = repository;
         }
 
-        /// <summary>
-        /// Get all entities
-        /// </summary>
-        /// <param name="fields"></param>
-        /// <param name="search"></param>
-        /// <returns></returns>
-        public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
-        {
-            if (!VerifyFieldList<ConstituentDocument>(fields))
-            {
-                return null;
-            }
-
-            IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search);
-
-            return new DataResponse<List<ICanTransmogrify>>(results.Documents.ToList<ICanTransmogrify>()) { TotalResults = results.TotalCount };
-        }
-
         private IDocumentSearchResult<ConstituentDocument> PerformElasticSearch(IPageable search)
         {
             var repo = new ElasticRepository<ConstituentDocument>();
@@ -68,6 +50,13 @@ namespace DDI.Services
             if (criteria.ConstituentNumber.HasValue && criteria.ConstituentNumber.Value > 0)
             {
                 query.Must.Equal(criteria.ConstituentNumber.Value, p => p.ConstituentNumber);
+            }
+            else if (!string.IsNullOrWhiteSpace(criteria.QuickSearch))
+            {
+                query.Should.Boost(10).Equal(criteria.QuickSearch, p => p.ConstituentNumber);
+                query.Should.Boost(7).Equal(criteria.QuickSearch, p => p.AlternateIds);
+                query.Should.Boost(5).Match(criteria.QuickSearch, p => p.Name);
+                query.Should.Boost(2).Match(criteria.QuickSearch, p => p.Name2, p => p.Nickname, p => p.PrimaryAddress);
             }
             else
             {
@@ -81,6 +70,92 @@ namespace DDI.Services
                     query.Must.Equal(criteria.ConstituentTypeId.Value, p => p.ConstituentTypeId);
                 }
 
+                if (!string.IsNullOrWhiteSpace(criteria.AlternateId))
+                {
+                    query.Must.Equal(criteria.AlternateId, p => p.AlternateIds);
+                }
+
+                if (!string.IsNullOrWhiteSpace(criteria.IncludeTags))
+                {
+                    query.Must.BeInList(criteria.IncludeTags, p => p.Tags);
+                }
+
+                if (!string.IsNullOrWhiteSpace(criteria.ExcludeTags))
+                {
+                    query.MustNot.BeInList(criteria.ExcludeTags, p => p.Tags);
+                }
+                
+                if (!string.IsNullOrWhiteSpace(criteria.Address) ||
+                    !string.IsNullOrWhiteSpace(criteria.City) || 
+                    !string.IsNullOrWhiteSpace(criteria.StateId) ||
+                    !string.IsNullOrWhiteSpace(criteria.PostalCodeFrom) || 
+                    !string.IsNullOrWhiteSpace(criteria.PostalCodeTo) ||
+                    !string.IsNullOrWhiteSpace(criteria.CountryId) ||
+                    !string.IsNullOrWhiteSpace(criteria.RegionId1) ||
+                    !string.IsNullOrWhiteSpace(criteria.RegionId2) ||
+                    !string.IsNullOrWhiteSpace(criteria.RegionId3) ||
+                    !string.IsNullOrWhiteSpace(criteria.RegionId4)
+                    )
+                {
+                    var addressQuery = new ElasticQuery<ConstituentDocument>();
+                    if (!string.IsNullOrWhiteSpace(criteria.PostalCodeFrom) || !string.IsNullOrWhiteSpace(criteria.PostalCodeTo))
+                    {
+                        if (string.IsNullOrWhiteSpace(criteria.PostalCodeTo))
+                        {
+                            addressQuery.Must.Prefix(criteria.PostalCodeFrom, p => p.Addresses[0].PostalCode);
+                        }
+                        else if (string.IsNullOrWhiteSpace(criteria.PostalCodeFrom))
+                        {
+                            addressQuery.Must.Prefix(criteria.PostalCodeTo, p => p.Addresses[0].PostalCode);
+                        }
+                        else
+                        {
+                            addressQuery.Must.Range(criteria.PostalCodeFrom, criteria.PostalCodeTo + "~", p => p.Addresses[0].PostalCode);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.Address))
+                    {
+                        addressQuery.Must.Match(criteria.Address, p => p.Addresses[0].StreetAddress);
+                    }
+                    
+                    if (!string.IsNullOrWhiteSpace(criteria.City))
+                    {
+                        addressQuery.Must.Match(criteria.City, p => p.Addresses[0].City);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.StateId))
+                    {
+                        addressQuery.Must.Equal(criteria.StateId, p => p.Addresses[0].StateId);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.CountryId))
+                    {
+                        addressQuery.Must.Equal(criteria.CountryId, p => p.Addresses[0].CountryId);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.RegionId1))
+                    {
+                        addressQuery.Must.Equal(criteria.RegionId1, p => p.Addresses[0].Region1Id);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.RegionId2))
+                    {
+                        addressQuery.Must.Equal(criteria.RegionId2, p => p.Addresses[0].Region1Id);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.RegionId3))
+                    {
+                        addressQuery.Must.Equal(criteria.RegionId3, p => p.Addresses[0].Region1Id);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(criteria.RegionId4))
+                    {
+                        addressQuery.Must.Equal(criteria.RegionId4, p => p.Addresses[0].Region1Id);
+                    }
+
+                    query.Must.Nested(p => p.Addresses, addressQuery);
+                }
             }
 
             switch (search.OrderBy)
@@ -93,14 +168,28 @@ namespace DDI.Services
             return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
         }
 
-        public override IDataResponse<List<Constituent>> GetAll(IPageable search)
+        public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
+            var criteria = (ConstituentSearch)search;
+
+            if (criteria.ConstituentNumber > 0)
+            {
+                var constituents = UnitOfWork.GetEntities(IncludesForList).Where(p => p.ConstituentNumber == criteria.ConstituentNumber.Value);
+                return new DataResponse<List<ICanTransmogrify>>(constituents.ToList<ICanTransmogrify>()) { TotalResults = constituents.Count() };
+            }
+
             IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search);
+
+            if (VerifyFieldList<ConstituentDocument>(fields))
+            {
+                return new DataResponse<List<ICanTransmogrify>>(results.Documents.ToList<ICanTransmogrify>()) { TotalResults = results.TotalCount };
+            }
+
             List<Guid> ids = results.Documents.Select(p => p.Id).ToList();
-            List<Constituent> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), outer => outer, inner => inner.Id,
-                (id, constituent) => constituent).ToList();
+            List<ICanTransmogrify> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), outer => outer, inner => inner.Id,
+                (id, constituent) => constituent).ToList<ICanTransmogrify>();
                
-            return new DataResponse<List<Constituent>>(constituentsFound) { TotalResults = results.TotalCount };
+            return new DataResponse<List<ICanTransmogrify>>(constituentsFound) { TotalResults = results.TotalCount };
         }
 
         public IDataResponse<List<Constituent>> GetAllOld(IPageable search)
@@ -156,19 +245,19 @@ namespace DDI.Services
 
         private void ApplyZipFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
         {
-            if (!search.ZipFrom.IsNullOrWhiteSpace() || !search.ZipTo.IsNullOrWhiteSpace())
+            if (!search.PostalCodeFrom.IsNullOrWhiteSpace() || !search.PostalCodeTo.IsNullOrWhiteSpace())
             {
-                if (search.ZipFrom.IsNullOrWhiteSpace())
+                if (search.PostalCodeFrom.IsNullOrWhiteSpace())
                 {
-                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.ZipTo)));
+                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.PostalCodeTo)));
                 }
-                else if (search.ZipTo.IsNullOrWhiteSpace())
+                else if (search.PostalCodeTo.IsNullOrWhiteSpace())
                 {
-                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.ZipFrom)));
+                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.PostalCodeFrom)));
                 }
                 else
                 {
-                    query.And(c => (c.ConstituentAddresses.Any(a => a.Address.PostalCode.CompareTo(search.ZipFrom) >= 0 && a.Address.PostalCode.CompareTo(search.ZipTo + "~") <= 0)));
+                    query.And(c => (c.ConstituentAddresses.Any(a => a.Address.PostalCode.CompareTo(search.PostalCodeFrom) >= 0 && a.Address.PostalCode.CompareTo(search.PostalCodeTo + "~") <= 0)));
                 }
             }
         }

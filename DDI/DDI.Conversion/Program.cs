@@ -98,8 +98,6 @@ namespace DDI.Conversion
 
         }
 
-        public static void PerformSearch2()
-
         /// <summary>
         /// Run all converion methods in a conversion class.
         /// </summary>

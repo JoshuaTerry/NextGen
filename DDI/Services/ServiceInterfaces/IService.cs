@@ -12,7 +12,7 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface IService<T>
     {
-        IDataResponse<List<T>> GetAll(IPageable search = null);
+        IDataResponse<List<ICanTransmogrify>> GetAll();
         IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null);
         IDataResponse<T> GetById(Guid id);
         IDataResponse Update(T entity);
@@ -20,7 +20,7 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
         IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression);
-        IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null);
+        IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null);
         Expression<Func<T, object>>[] IncludesForSingle { set; }
         Expression<Func<T, object>>[] IncludesForList { set; }
 
