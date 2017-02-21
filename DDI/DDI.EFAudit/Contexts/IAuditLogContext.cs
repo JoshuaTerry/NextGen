@@ -1,4 +1,4 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Data.Entity.Core;
 using System.Data.Entity.Core.Metadata.Edm;

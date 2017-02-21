@@ -17,13 +17,13 @@ namespace DDI.EFAudit.Translation
     /// </remarks>
     public partial class ValueTranslationManager : ISerializationManager, IBindManager
     {
-        protected List<IValueTranslator> translators;
-        private IHistoryContext db;
+        protected List<IValueTranslator> _translators;
+        private IHistoryContext _db;
 
         public ValueTranslationManager(IHistoryContext db)
         {
-            this.db = db;
-            translators = new List<IValueTranslator>()
+            this._db = db;
+            _translators = new List<IValueTranslator>()
             {
                 new PrimitiveTranslator(),
                 new GuidTranslator(),
@@ -46,12 +46,12 @@ namespace DDI.EFAudit.Translation
             if (raw == null)
                 return null;
             
-            foreach (var binder in translators.OfType<IBinder>())
+            foreach (var binder in _translators.OfType<IBinder>())
             {
                 if (binder.Supports(type))
                     return binder.Bind(raw, type, existingValue);
             }
-            return db.GetObjectByReference(type, raw);
+            return _db.GetObjectByReference(type, raw);
         }
         public string Serialize(object obj)
         {
@@ -59,7 +59,7 @@ namespace DDI.EFAudit.Translation
                 return null;
 
             var type = obj.GetType();
-            foreach (var serializer in translators.OfType<ISerializer>())
+            foreach (var serializer in _translators.OfType<ISerializer>())
             {
                 if (serializer.Supports(type))
                     return serializer.Serialize(obj);

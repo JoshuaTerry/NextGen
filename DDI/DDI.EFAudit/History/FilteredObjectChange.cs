@@ -1,4 +1,4 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,43 +12,44 @@ namespace DDI.EFAudit.History
     /// </summary>
     public class FilteredObjectChange<TPrincipal> : IObjectChange<TPrincipal>
     {
-        private IObjectChange<TPrincipal> objectChange;
-        private IEnumerable<IPropertyChange<TPrincipal>> propertyChanges;
+        private IObjectChange<TPrincipal> _objectChange;
+        private IEnumerable<IPropertyChange<TPrincipal>> _propertyChanges;
 
         public FilteredObjectChange(IObjectChange<TPrincipal> objectChange, IEnumerable<IPropertyChange<TPrincipal>> propertyChanges)
         {
-            this.objectChange = objectChange;
-            this.propertyChanges = propertyChanges;
+            this._objectChange = objectChange;
+            this._propertyChanges = propertyChanges;
         }
 
         public IChangeSet<TPrincipal> ChangeSet
         {
-            get { return objectChange.ChangeSet; }
-            set { objectChange.ChangeSet = value; }
+            get { return _objectChange.ChangeSet; }
+            set { _objectChange.ChangeSet = value; }
         }
 
         public IEnumerable<IPropertyChange<TPrincipal>> PropertyChanges
         {
-            get { return propertyChanges; }
+            get { return _propertyChanges; }
         }
 
         public void Add(IPropertyChange<TPrincipal> propertyChange)
         {
             throw new NotImplementedException();
         }
-
+        public Guid Id { get; set; }
+        public Guid ChangeSetId { get; set; }
         public string TypeName
         {
-            get { return objectChange.TypeName; }
-            set { objectChange.TypeName = value; }
+            get { return _objectChange.TypeName; }
+            set { _objectChange.TypeName = value; }
         }
 
         public string ObjectReference
         {
-            get { return objectChange.ObjectReference; }
-            set { objectChange.ObjectReference = value; }
+            get { return _objectChange.ObjectReference; }
+            set { _objectChange.ObjectReference = value; }
         }
-
+        public string ChangeType { get; set; }
         public string DisplayName { get; set; }
     }
 }

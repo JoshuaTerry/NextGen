@@ -1,5 +1,4 @@
-﻿using DDI.EFAudit.Contexts;
-using DDI.EFAudit.Models;
+﻿using DDI.EFAudit.Contexts; 
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using System;

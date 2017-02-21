@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.EFAudit.Exceptions;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.History
 {
@@ -25,11 +25,11 @@ namespace DDI.EFAudit.History
                 { return ObjectChange.ChangeSet.Timestamp; }
             }
         }
-        public TPrincipal Author
+        public TPrincipal User
         {
             get
             {
-                return ObjectChange.ChangeSet.Author;
+                return ObjectChange.ChangeSet.User;
             }
         }
         
@@ -49,7 +49,7 @@ namespace DDI.EFAudit.History
             if (other == null)
                 return false;
 
-            return object.Equals(Author, other.Author)
+            return object.Equals(User, other.User)
                 && object.Equals(Timestamp, other.Timestamp)
                 && object.Equals(Value, other.Value);                
         }
@@ -59,7 +59,7 @@ namespace DDI.EFAudit.History
         }
         public override string ToString()
         {
-            return string.Format("{0}:{1}:{2}", Author, Timestamp, Value);
+            return string.Format("{0}:{1}:{2}", User, Timestamp, Value);
         }
     }
 

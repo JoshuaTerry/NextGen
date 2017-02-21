@@ -1,7 +1,7 @@
 ﻿using DDI.EFAudit.Contexts;
 using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Helpers;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

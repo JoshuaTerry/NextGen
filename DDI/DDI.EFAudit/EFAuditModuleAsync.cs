@@ -1,6 +1,6 @@
 ﻿using System;
 using DDI.EFAudit.Exceptions;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Transactions;
 using System.Data.Entity.Core.Objects;
 using System.Threading;
@@ -43,7 +43,7 @@ namespace DDI.EFAudit
         protected async Task<ISaveResult<TChangeSet>> saveChangesAsync(TPrincipal principal, ITransactionProvider transactionProvider, CancellationToken cancellationToken)
         {
             if (!Enabled)
-                return new SaveResult<TChangeSet, TPrincipal>(await context.SaveAndAcceptChangesAsync(cancellationToken: cancellationToken));
+                return new SaveResult<TChangeSet, TPrincipal>(await _context.SaveAndAcceptChangesAsync(cancellationToken: cancellationToken));
 
             var result = new SaveResult<TChangeSet, TPrincipal>();
             
@@ -51,18 +51,18 @@ namespace DDI.EFAudit
 
             await transactionProvider.InTransactionAsync(async () =>
             {
-                var logger = new ChangeLogger<TChangeSet, TPrincipal>(context, factory, filter, serializer);
+                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _factory, _filter, _serializer);
                 var oven = (IOven<TChangeSet, TPrincipal>)null;
                  
                 cancellationToken.ThrowIfCancellationRequested(); 
-                context.DetectChanges(); 
+                _context.DetectChanges(); 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                result.AffectedObjectCount = await context.SaveAndAcceptChangesAsync(cancellationToken: cancellationToken, onSavingChanges:
+                result.AffectedObjectCount = await _context.SaveAndAcceptChangesAsync(cancellationToken: cancellationToken, onSavingChanges:
                     (sender, args) =>
                     {                        
                         cancellationToken.ThrowIfCancellationRequested();
-                        oven = logger.Log(context.ObjectStateManager);
+                        oven = logger.Log(_context.ObjectStateManager);
 
                         // NOTE: This is the last chance to cancel the save.
                         cancellationToken.ThrowIfCancellationRequested();
@@ -75,10 +75,10 @@ namespace DDI.EFAudit
                 if (oven.HasChangeSet)
                 {                  
                     result.ChangeSet = oven.Bake(DateTime.Now, principal);
-                    context.AddChangeSet(result.ChangeSet);
-                    context.DetectChanges();
+                    _context.AddChangeSet(result.ChangeSet);
+                    _context.DetectChanges();
                     
-                    await context.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave);
+                    await _context.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave);
                 }
             });
 

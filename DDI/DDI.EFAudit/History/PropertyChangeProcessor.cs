@@ -1,6 +1,6 @@
 ﻿using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Helpers;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Binders;
 using System;
 using System.Collections.Generic;

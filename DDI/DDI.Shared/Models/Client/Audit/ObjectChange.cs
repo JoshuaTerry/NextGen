@@ -1,19 +1,29 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit; 
 using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
     public class ObjectChange : IObjectChange<DDIUser>
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        [MaxLength(128)]
         public string TypeName { get; set; }
+        [MaxLength(128)]
         public string DisplayName { get; set; }
+        [MaxLength(64)]
+        public string ChangeType { get; set; }
+        [MaxLength(128)]
         public string ObjectReference { get; set; }
+        public Guid ChangeSetId { get; set; }
         public virtual ChangeSet ChangeSet { get; set; }
         public virtual List<PropertyChange> PropertyChanges { get; set; }
 

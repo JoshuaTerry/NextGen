@@ -2,7 +2,7 @@
 using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Filter;
 using DDI.EFAudit.Logging;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Transactions;
 using System;
 using System.Data.Entity.Core.Objects;
@@ -17,20 +17,20 @@ namespace DDI.EFAudit
         where TChangeSet : IChangeSet<TPrincipal>
     {
         public bool Enabled { get; set; }
-        private IChangeSetFactory<TChangeSet, TPrincipal> factory;
-        private IAuditLogContext<TChangeSet, TPrincipal> context;        
-        private ILoggingFilter filter;
-        private ISerializationManager serializer;
+        private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
+        private IAuditLogContext<TChangeSet, TPrincipal> _context;        
+        private ILoggingFilter _filter;
+        private ISerializationManager _serializer;
 
         public EFAuditModule(IChangeSetFactory<TChangeSet, TPrincipal> factory,
             IAuditLogContext<TChangeSet, TPrincipal> context,
             ILoggingFilterProvider filter = null,
             ISerializationManager serializer = null)
         {
-            this.factory = factory;
-            this.context = context;
-            this.filter = (filter ?? Filters.Default).Get(context);
-            this.serializer = (serializer ?? new ValueTranslationManager(context));
+            this._factory = factory;
+            this._context = context;
+            this._filter = (filter ?? Filters.Default).Get(context);
+            this._serializer = (serializer ?? new ValueTranslationManager(context));
             Enabled = true;
         }
 
@@ -60,20 +60,20 @@ namespace DDI.EFAudit
         protected ISaveResult<TChangeSet> SaveChanges(TPrincipal principal, ITransactionProvider transactionProvider)
         {
             if (!Enabled)
-                return new SaveResult<TChangeSet, TPrincipal>(context.SaveAndAcceptChanges());
+                return new SaveResult<TChangeSet, TPrincipal>(_context.SaveAndAcceptChanges());
 
             var result = new SaveResult<TChangeSet,TPrincipal>();
             
             transactionProvider.InTransaction(() =>
             {
-                var logger = new ChangeLogger<TChangeSet, TPrincipal>(context, factory, filter, serializer);
+                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _factory, _filter, _serializer);
                 var oven = (IOven<TChangeSet, TPrincipal>) null;
                  
-                context.DetectChanges();
+                _context.DetectChanges();
                  
-                result.AffectedObjectCount = context.SaveAndAcceptChanges((sender, args) =>
+                result.AffectedObjectCount = _context.SaveAndAcceptChanges((sender, args) =>
                 { 
-                    oven = logger.Log(context.ObjectStateManager);                
+                    oven = logger.Log(_context.ObjectStateManager);                
                 });
                  
                 if (oven == null)
@@ -82,10 +82,10 @@ namespace DDI.EFAudit
                 if (oven.HasChangeSet)
                 { 
                     result.ChangeSet = oven.Bake(DateTime.Now, principal);
-                    context.AddChangeSet(result.ChangeSet);
-                    context.DetectChanges();
+                    _context.AddChangeSet(result.ChangeSet);
+                    _context.DetectChanges();
                      
-                    context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+                    _context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
                 }
             });
 

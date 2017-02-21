@@ -1,5 +1,5 @@
 ﻿using System;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.Exceptions
 {

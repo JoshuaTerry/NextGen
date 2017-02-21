@@ -62,7 +62,7 @@ namespace DDI.EFAudit.Helpers
             if (typeToReflect.IsCollection())
             {
                 var collectionType = typeToReflect.GetCollectionElementType();
-                var collectionClone = typeof(ObjectExtensions).GetMethod("copyCollection", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
+                var collectionClone = typeof(ObjectExtensions).GetMethod("CopyCollection", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
                     .MakeGenericMethod(new Type[] { collectionType })
                     .Invoke(null, new object[] { original, visited, typeToReflect });
 

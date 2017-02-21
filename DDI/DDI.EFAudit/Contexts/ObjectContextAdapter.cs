@@ -1,6 +1,6 @@
 ﻿using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Helpers;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Data.Entity.Core;
 using System.Data.Entity.Core.Metadata.Edm;
@@ -16,16 +16,16 @@ namespace DDI.EFAudit.Contexts
     {
         private const string ID = "Id";
         private const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.IgnoreCase;
-        private ObjectContext context;
+        private ObjectContext _context;
 
         public ObjectContextAdapter(ObjectContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public virtual object GetObjectByKey(EntityKey key)
         {
-            return context.GetObjectByKey(key);
+            return _context.GetObjectByKey(key);
         }
 
         public virtual string KeyPropertyName
@@ -53,7 +53,7 @@ namespace DDI.EFAudit.Contexts
         {
             try
             {
-                var container = context.MetadataWorkspace.GetEntityContainer(context.DefaultContainerName, DataSpace.CSpace);
+                var container = _context.MetadataWorkspace.GetEntityContainer(_context.DefaultContainerName, DataSpace.CSpace);
                 var set = container.BaseEntitySets.FirstOrDefault(meta => meta.ElementType.Name == type.Name);
                 if (set == null)
                     throw new ObjectTypeDoesNotExistInDataModelException(type);
@@ -101,7 +101,7 @@ namespace DDI.EFAudit.Contexts
                 return keyProperty.GetGetMethod().Invoke(entity, null).ToString();
 
             ObjectStateEntry entry = null;
-            if (context.ObjectStateManager.TryGetObjectStateEntry(entity, out entry))
+            if (_context.ObjectStateManager.TryGetObjectStateEntry(entity, out entry))
             {
                 var keyMember = entry.EntityKey.EntityKeyValues.FirstOrDefault();
 
@@ -119,42 +119,42 @@ namespace DDI.EFAudit.Contexts
 
         public ObjectStateManager ObjectStateManager
         {
-            get { return context.ObjectStateManager; }
+            get { return _context.ObjectStateManager; }
         }
         public MetadataWorkspace Workspace
         {
-            get { return context.MetadataWorkspace; }
+            get { return _context.MetadataWorkspace; }
         }
         public abstract Type UnderlyingContextType { get; }
 
         public virtual void DetectChanges()
         {
-            context.DetectChanges();
+            _context.DetectChanges();
         }
 
         public virtual int SaveChanges(SaveOptions saveOptions)
         {
-            return context.SaveChanges(saveOptions);
+            return _context.SaveChanges(saveOptions);
         }
 
         public virtual int SaveAndAcceptChanges(EventHandler onSavingChanges = null)
         {  
-            using (new DisposableSavingChangesListener(context, onSavingChanges))
+            using (new DisposableSavingChangesListener(_context, onSavingChanges))
             {
-                return context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+                return _context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
             }
         }
 
         public async virtual Task<int> SaveChangesAsync(SaveOptions saveOptions)
         {
-            return await context.SaveChangesAsync(saveOptions);
+            return await _context.SaveChangesAsync(saveOptions);
         }
 
         public async virtual Task<int> SaveAndAcceptChangesAsync(EventHandler onSavingChanges = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (new DisposableSavingChangesListener(context, onSavingChanges))
+            using (new DisposableSavingChangesListener(_context, onSavingChanges))
             {
-                return await context.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
+                return await _context.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
             }
         }
 

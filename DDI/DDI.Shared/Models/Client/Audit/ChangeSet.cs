@@ -1,21 +1,28 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
     public class ChangeSet : IChangeSet<DDIUser>
     {
-        public int Id { get; set; }
-        public DateTime Timestamp { get; set; }
-        public DDIUser Author { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public DateTime Timestamp { get; set; }        
         public virtual List<ObjectChange> ObjectChanges { get; set; }
 
         IEnumerable<IObjectChange<DDIUser>> IChangeSet<DDIUser>.ObjectChanges
         {
             get { return ObjectChanges; }
         }
+         
+        public Guid UserId { get; set; }
+
+        public DDIUser User { get; set; }
 
         void IChangeSet<DDIUser>.Add(IObjectChange<DDIUser> objectChange)
         {
@@ -24,7 +31,7 @@ namespace DDI.Shared.Models.Client.Audit
 
         public override string ToString()
         {
-            return string.Format("By {0} on {1}, with {2} ObjectChanges", Author, Timestamp, ObjectChanges.Count);
+            return string.Format("By {0} on {1}, with {2} ObjectChanges", User, Timestamp, ObjectChanges.Count);
         }
     }
 }

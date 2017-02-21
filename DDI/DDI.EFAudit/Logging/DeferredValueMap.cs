@@ -6,23 +6,23 @@ namespace DDI.EFAudit.Logging
 {
     public class DeferredValueMap
     {
-        private Dictionary<string, DeferredValue> map;
-        private object container;
+        private Dictionary<string, DeferredValue> _map;
+        private object _container;
 
         public DeferredValueMap(object container = null)
         {
-            this.map = new Dictionary<string, DeferredValue>();
-            this.container = container;
+            this._map = new Dictionary<string, DeferredValue>();
+            this._container = container;
         }
 
         public void Store(string key, Func<object> futureValue)
         {
-            map[key] = new DeferredValue(futureValue);
+            _map[key] = new DeferredValue(futureValue);
         }
         public IDictionary<string, object> CalculateAndRetrieve()
         {
             var result = new Dictionary<string, object>();
-            foreach (var kv in map)
+            foreach (var kv in _map)
             {
                 try
                 {
@@ -30,7 +30,7 @@ namespace DDI.EFAudit.Logging
                 }
                 catch (Exception e)
                 {
-                    throw new ErrorInDeferredCalculation(container, kv.Key, e);
+                    throw new ErrorInDeferredCalculation(_container, kv.Key, e);
                 }
             }
 

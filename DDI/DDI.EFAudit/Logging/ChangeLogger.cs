@@ -1,7 +1,7 @@
 ﻿using DDI.EFAudit.Contexts;
 using DDI.EFAudit.Filter;
 using DDI.EFAudit.Logging.ValuePairs;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,19 +18,19 @@ namespace DDI.EFAudit.Logging
     internal class ChangeLogger<TChangeSet, TPrincipal>
         where TChangeSet : IChangeSet<TPrincipal>
     {
-        private IAuditLogContext<TChangeSet, TPrincipal> context;
-        private IChangeSetFactory<TChangeSet, TPrincipal> factory;
-        private Recorder<TChangeSet, TPrincipal> recorder;
-        private ILoggingFilter filter;
+        private IAuditLogContext<TChangeSet, TPrincipal> _context;
+        private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
+        private Recorder<TChangeSet, TPrincipal> _recorder;
+        private ILoggingFilter _filter;
 
         public ChangeLogger(IAuditLogContext<TChangeSet, TPrincipal> context, 
             IChangeSetFactory<TChangeSet, TPrincipal> factory,
             ILoggingFilter filter, ISerializationManager serializer)
         {
-            this.context = context;
-            this.factory = factory;
-            this.recorder = new Recorder<TChangeSet, TPrincipal>(factory, serializer);
-            this.filter = filter;
+            this._context = context;
+            this._factory = factory;
+            this._recorder = new Recorder<TChangeSet, TPrincipal>(factory, serializer);
+            this._filter = filter;
         }
 
         // This is where you can get State (Add, Edit, Delete)
@@ -43,7 +43,7 @@ namespace DDI.EFAudit.Logging
                 Process(entry);
             }
 
-            return recorder;
+            return _recorder;
         }
 
         private void Process(ObjectStateEntry entry)
@@ -61,12 +61,12 @@ namespace DDI.EFAudit.Logging
         private void LogScalarChanges(ObjectStateEntry entry)
         {
             // If this class shouldn't be logged, give up at this point
-            if (!filter.ShouldLog(entry.Entity.GetType()))
+            if (!_filter.ShouldLog(entry.Entity.GetType()))
                 return; 
            
             foreach (string propertyName in GetChangedProperties(entry))
             {
-                if (filter.ShouldLog(entry.Entity.GetType(), propertyName))
+                if (_filter.ShouldLog(entry.Entity.GetType(), propertyName))
                 {
                     // We can have multiple changes for the same property if its a complex type
                     var valuePairs = ValuePairSource.Get(entry, propertyName).Where(p => p.HasChanged);
@@ -74,11 +74,11 @@ namespace DDI.EFAudit.Logging
 
                     foreach (var valuePair in valuePairs)
                     {
-                        var pair = valuePair;
-                        recorder.Record(entry.Entity,
-                            () => context.GetReferenceForObject(entity),
+                        var pair = valuePair;                        
+                        _recorder.Record(entry, entry.Entity,
+                            () => _context.GetReferenceForObject(entity),
                             valuePair.PropertyName,
-                            pair.NewValue, entry);
+                            pair.NewValue);
                     }
                 }
             }
@@ -110,20 +110,20 @@ namespace DDI.EFAudit.Logging
             var key = GetEndEntityKey(entry, localEnd);
 
             // Get the object identified by the local key
-            object entity = context.GetObjectByKey(key);
-            if (!filter.ShouldLog(entity.GetType()))
+            object entity = _context.GetObjectByKey(key);
+            if (!_filter.ShouldLog(entity.GetType()))
                 return;
 
             // The property on the "local" object that navigates to the "foreign" object
             var property = GetProperty(entry, localEnd, foreignEnd, key);
              
-            if (property == null || !filter.ShouldLog(property))
+            if (property == null || !_filter.ShouldLog(property))
                 return;
 
             // Generate the change
             var value = GetForeignValue(entry, entity, foreignEnd, property.Name);
 
-            recorder.Record(entity, () => context.GetReferenceForObject(entity), property.Name, value, entry);
+            _recorder.Record(entry, entity, () => _context.GetReferenceForObject(entity), property.Name, value);
         }
 
         private Func<object> GetForeignValue(ObjectStateEntry entry, object entity, AssociationEndMember foreignEnd, string propertyName)
@@ -170,7 +170,7 @@ namespace DDI.EFAudit.Logging
                 }
 
                 IEnumerable<string> current = ((IEnumerable<object>)value)
-                    .Select(e => context.GetReferenceForObject(e))
+                    .Select(e => _context.GetReferenceForObject(e))
                     .Distinct()
                     .OrderBy(reference => reference);
 
@@ -184,8 +184,8 @@ namespace DDI.EFAudit.Logging
 
         private string GetKeyReference(EntityKey key)
         {
-            var entity = context.GetObjectByKey(key);
-            return context.GetReferenceForObject(entity);
+            var entity = _context.GetObjectByKey(key);
+            return _context.GetReferenceForObject(entity);
         }
 
         private IEnumerable<string> GetChangedProperties(ObjectStateEntry entry)

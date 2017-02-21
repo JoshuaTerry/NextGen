@@ -7,7 +7,7 @@ namespace DDI.EFAudit.Models
     {
         IEnumerable<IObjectChange<TPrincipal>> ObjectChanges { get; }
         void Add(IObjectChange<TPrincipal> objectChange);
-        DateTime Timestamp { get; set; }
+        //DateTime Timestamp { get; set; }
         TPrincipal Author { get; set; }
     }
 }

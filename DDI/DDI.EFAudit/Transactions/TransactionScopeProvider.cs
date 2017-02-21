@@ -11,18 +11,18 @@ namespace DDI.EFAudit.Transactions
     /// </summary>
     public partial class TransactionScopeProvider : ITransactionProvider
     {
-        private readonly TransactionOptions options;
+        private readonly TransactionOptions _options;
 
         public TransactionScopeProvider(TransactionOptions options)
         {
-            this.options = options;
+            this._options = options;
         }
 
         public void InTransaction(Action action)
         {
             try
             {
-                using (var scope = new TransactionScope(TransactionScopeOption.Required, options))
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, _options))
                 {
                     action();
                     scope.Complete();
@@ -45,7 +45,7 @@ namespace DDI.EFAudit.Transactions
 
             try
             {
-                using (var scope = new TransactionScope(TransactionScopeOption.Required, options, TransactionScopeAsyncFlowOption.Enabled))
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, _options, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     await taskAction();
                     scope.Complete();

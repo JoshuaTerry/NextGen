@@ -14,15 +14,8 @@ namespace DDI.EFAudit.History
 
             try
             {
-                var parameterlessConstructor = type
-                    .GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(c => !c.GetParameters().Any())
-                    .FirstOrDefault();
-
-                if (parameterlessConstructor != null)
-                    return parameterlessConstructor.Invoke(null);
-
-                throw new UnableToInstantiateObjectException(type);
+                var instance = Activator.CreateInstance(type);
+                return instance;
             }
             catch (Exception ex)
             {

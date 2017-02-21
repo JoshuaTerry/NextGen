@@ -5,17 +5,17 @@ namespace DDI.EFAudit.Logging.ValuePairs
 {
     internal class ValuePair : IValuePair
     {
-        protected readonly Func<object> originalValue;
-        protected readonly Func<object> newValue;
-        protected readonly string propertyName;
-        protected readonly EntityState state;
+        protected readonly Func<object> _originalValue;
+        protected readonly Func<object> _newValue;
+        protected readonly string _propertyName;
+        protected readonly EntityState _state;
 
         internal ValuePair(Func<object> originalValue, Func<object> newValue, string propertyName, EntityState state)
         {
-            this.originalValue = checkDbNull(originalValue);
-            this.newValue = checkDbNull(newValue);
-            this.propertyName = propertyName;
-            this.state = state;
+            this._originalValue = checkDbNull(originalValue);
+            this._newValue = checkDbNull(newValue);
+            this._propertyName = propertyName;
+            this._state = state;
         }
 
         private Func<object> checkDbNull(Func<object> value)
@@ -33,7 +33,7 @@ namespace DDI.EFAudit.Logging.ValuePairs
         {
             get
             {
-                var value = originalValue() ?? newValue();
+                var value = _originalValue() ?? _newValue();
                 return value.GetChangeType();
             }
         }
@@ -42,30 +42,30 @@ namespace DDI.EFAudit.Logging.ValuePairs
         {
             get
             {
-                return state == EntityState.Added
-                    || state == EntityState.Deleted
-                    || !object.Equals(newValue(), originalValue());
+                return _state == EntityState.Added
+                    || _state == EntityState.Deleted
+                    || !object.Equals(_newValue(), _originalValue());
             }
         }
 
         public string PropertyName
         {
-            get { return propertyName; }
+            get { return _propertyName; }
         }
 
         public Func<object> NewValue
         {
-            get { return newValue; }
+            get { return _newValue; }
         }
 
         public Func<object> OriginalValue
         {
-            get { return originalValue; }
+            get { return _originalValue; }
         }
 
         public EntityState State
         {
-            get { return state; }
+            get { return _state; }
         }
     }
 }

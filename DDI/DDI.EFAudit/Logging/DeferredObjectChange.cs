@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Serializers;
 
 namespace DDI.EFAudit.Logging
 {
     public class DeferredObjectChange<TPrincipal>
     {
-        private readonly IObjectChange<TPrincipal> objectChange;
-        private readonly DeferredValue futureReference;
-        private readonly DeferredValueMap futureValues;
-        private readonly ISerializationManager serializer;
+        private readonly IObjectChange<TPrincipal> _objectChange;
+        private readonly DeferredValue _futureReference;
+        private readonly DeferredValueMap _futureValues;
+        private readonly ISerializationManager _serializer;
 
         public DeferredObjectChange(IObjectChange<TPrincipal> objectChange, Func<string> deferredReference, ISerializationManager serializer)
         {
-            this.objectChange = objectChange;
-            this.futureReference = new DeferredValue(deferredReference);
-            this.futureValues = new DeferredValueMap(objectChange);
-            this.serializer = serializer;
+            this._objectChange = objectChange;
+            this._futureReference = new DeferredValue(deferredReference);
+            this._futureValues = new DeferredValueMap(objectChange);
+            this._serializer = serializer;
         }
 
         // "Bake" is a term used for setting up for values that aren't finished yet, like an Identity Field
         public void Bake()
         {
-            objectChange.ObjectReference = (string)futureReference.CalculateAndRetrieve();
+            _objectChange.ObjectReference = (string)_futureReference.CalculateAndRetrieve();
 
-            var bakedValues = futureValues.CalculateAndRetrieve();
+            var bakedValues = _futureValues.CalculateAndRetrieve();
             foreach (KeyValuePair<string, object> kv in bakedValues)
             {
-                var propertyChange = objectChange.PropertyChanges.SingleOrDefault(pc => pc.PropertyName == kv.Key);
+                var propertyChange = _objectChange.PropertyChanges.SingleOrDefault(pc => pc.PropertyName == kv.Key);
                 setValue(propertyChange, kv.Value);
             }
         }
@@ -42,23 +42,23 @@ namespace DDI.EFAudit.Logging
         {
             if (value == null)
                 return null;
-            else if (serializer != null)
-                return serializer.Serialize(value);
+            else if (_serializer != null)
+                return _serializer.Serialize(value);
             else
                 return value.ToString();
         }
 
         public IObjectChange<TPrincipal> ObjectChange
         {
-            get { return objectChange; }
+            get { return _objectChange; }
         }
         public DeferredValue FutureReference
         {
-            get { return futureReference; }
+            get { return _futureReference; }
         }
         public DeferredValueMap FutureValues
         {
-            get { return futureValues; }
+            get { return _futureValues; }
         }
     }
 }

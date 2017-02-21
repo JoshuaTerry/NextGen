@@ -11,16 +11,16 @@ namespace DDI.EFAudit.Translation.ValueTranslators
 {
     public class CollectionTranslator :  IBinder, ISerializer
     {
-        private IBindManager bindManager;
-        private ISerializationManager serializationManager;
-        private IHistoryContext db;
+        private IBindManager _bindManager;
+        private ISerializationManager _serializationManager;
+        private IHistoryContext _db;
 
         public CollectionTranslator(IBindManager bindManager, 
             ISerializationManager serializationManager, IHistoryContext db)
         {
-            this.bindManager = bindManager;
-            this.serializationManager = serializationManager;
-            this.db = db;
+            this._bindManager = bindManager;
+            this._serializationManager = serializationManager;
+            this._db = db;
         }
 
         public bool Supports(Type type)
@@ -32,8 +32,8 @@ namespace DDI.EFAudit.Translation.ValueTranslators
         public virtual object Bind(string raw, Type type, object existingValue)
         {
             var itemType = type.GetGenericArguments().First();
-            object collection = existingValue ?? createCollection(type, itemType);
-            GetType().GetMethod("fillCollection", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
+            object collection = existingValue ?? CreateCollection(type, itemType);
+            GetType().GetMethod("FillCollection", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
                 .MakeGenericMethod(new Type[] { itemType })
                 .Invoke(this, new object[] { collection, raw });
             return collection;
@@ -45,14 +45,14 @@ namespace DDI.EFAudit.Translation.ValueTranslators
                 return null;
 
             var items = ((ICollection) obj).OfType<object>();
-            var raw = (serializationManager != null)
-                ? items.Select(x => serializationManager.Serialize(x))
+            var raw = (_serializationManager != null)
+                ? items.Select(x => _serializationManager.Serialize(x))
                 : items.Select(x => x.ToString());
 
             return String.Join(",", raw);
         }
 
-        protected virtual object createCollection(Type type, Type itemType)
+        protected virtual object CreateCollection(Type type, Type itemType)
         {
             if (type.IsInterface)
             {
@@ -65,20 +65,20 @@ namespace DDI.EFAudit.Translation.ValueTranslators
             }
         }
 
-        protected virtual void fillCollection<ItemType>(ICollection<ItemType> collection, string raw)
+        protected virtual void FillCollection<ItemType>(ICollection<ItemType> collection, string raw)
         {
             foreach (var reference in raw.Split(new char[] { ',' }).Where(r => !string.IsNullOrEmpty(r)))
             {
-                var item = bindManager.Bind<ItemType>(reference);
-                if (collection.All(i => !equalCollectionItems(i, item)))
+                var item = _bindManager.Bind<ItemType>(reference);
+                if (collection.All(i => !EqualCollectionItems(i, item)))
                     collection.Add(item);
             }
         }
         
-        protected virtual bool equalCollectionItems(object a, object b)
+        protected virtual bool EqualCollectionItems(object a, object b)
         {
-            return (db.ObjectHasReference(a))
-                ? (db.GetReferenceForObject(a) == db.GetReferenceForObject(b))
+            return (_db.ObjectHasReference(a))
+                ? (_db.GetReferenceForObject(a) == _db.GetReferenceForObject(b))
                 : Equals(a, b);
         }
     }

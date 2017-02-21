@@ -27,9 +27,9 @@ namespace DDI.EFAudit.Logging.ValuePairs
                 {
                     var o = getOrNull(originalRecord, fieldName);
                     var n = getOrNull(newRecord, fieldName);
-                    string name = string.Format("{0}.{1}", propertyName, fieldName);
+                    string name = string.Format("{0}.{1}", _propertyName, fieldName);
 
-                    foreach (var child in ValuePairSource.Get(o, n, name, state))
+                    foreach (var child in ValuePairSource.Get(o, n, name, _state))
                     {
                         yield return child;
                     }

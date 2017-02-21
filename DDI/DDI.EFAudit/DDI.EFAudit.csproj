@@ -107,11 +107,6 @@
     <Compile Include="Logging\ValuePairs\IValuePair.cs" />
     <Compile Include="Logging\ValuePairs\ValuePair.cs" />
     <Compile Include="Logging\ValuePairs\ValuePairSource.cs" />
-    <Compile Include="Models\IChangeSet.cs" />
-    <Compile Include="Models\IChangeSetFactory.cs" />
-    <Compile Include="Models\IEntityBase.cs" />
-    <Compile Include="Models\IObjectChange.cs" />
-    <Compile Include="Models\IPropertyChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transactions\ITransactionProvider.cs" />
     <Compile Include="Transactions\NullTransactionProvider.cs" />
@@ -135,6 +130,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

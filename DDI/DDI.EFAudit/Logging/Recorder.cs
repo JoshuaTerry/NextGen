@@ -3,47 +3,51 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using DDI.EFAudit.Helpers;
-using DDI.EFAudit.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Serializers;
-using System.Data.Entity;
+using System.Data.Entity; 
 
 namespace DDI.EFAudit.Logging
 {
     public class Recorder<TChangeSet, TPrincipal> : IOven<TChangeSet, TPrincipal>
-        where TChangeSet : IChangeSet<TPrincipal>
+         where TChangeSet : IChangeSet<TPrincipal>
     {
-        private TChangeSet set;
-        private IChangeSetFactory<TChangeSet, TPrincipal> factory;
-        private IDictionary<object, DeferredObjectChange<TPrincipal>> deferredObjectChanges;
-        private ISerializationManager serializer;
+        private TChangeSet _set;
+        private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
+        private IDictionary<object, DeferredObjectChange<TPrincipal>> _deferredObjectChanges;
+        private ISerializationManager _serializer;
 
         public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory)
         {
-            this.deferredObjectChanges = new Dictionary<object, DeferredObjectChange<TPrincipal>>(new ReferenceEqualityComparer());
-            this.factory = factory;
-            this.serializer = null;
+            this._deferredObjectChanges = new Dictionary<object, DeferredObjectChange<TPrincipal>>(new ReferenceEqualityComparer());
+            this._factory = factory;
+            this._serializer = null;
         }
 
         public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory, ISerializationManager serializer)
             : this(factory)
         {
-            this.serializer = serializer;
+            this._serializer = serializer;
         }
 
-        public bool HasChangeSet { get { return set != null; } }
+        public bool HasChangeSet { get { return _set != null; } }
 
-        public void Record(object entity, Func<string> deferredReference, string propertyName, Func<object> deferredValue, ObjectStateEntry entry)
+        // You have to pass both the ObjectStateEntry entry AND object entity.  For scalar changes the entity is available off of 
+        // entry.Entity, but for non-scalar changes the entry.Entity is null and is instead retreived by the caller using a GetById        
+        public void Record(ObjectStateEntry entry, object entity, Func<string> deferredReference, string propertyName, Func<object> deferredValue)
         {
             EnsureChangeSetExists();
 
             var typeName = ObjectContext.GetObjectType(entity.GetType()).Name;
-            var deferredObjectChange = CreateOrRetreiveDeferredObjectChange(set, entity, typeName, deferredReference, entry);
-            Record(deferredObjectChange, propertyName, deferredValue, entry);
+            var deferredObjectChange = CreateOrRetreiveDeferredObjectChange(_set, entry, entity, typeName, deferredReference);
+
+            if (entry.State != EntityState.Deleted)
+                Record(entry, deferredObjectChange, propertyName, deferredValue);
         }
-        private void Record(DeferredObjectChange<TPrincipal> deferredObjectChange, string propertyName, Func<object> deferredValue, ObjectStateEntry entry)
+        private void Record(ObjectStateEntry entry, DeferredObjectChange<TPrincipal> deferredObjectChange, string propertyName, Func<object> deferredValue)
         {
             var deferredValues = deferredObjectChange.FutureValues;
-            var propertyChange = CreateOrRetrievePropertChange(deferredObjectChange.ObjectChange, propertyName, entry);
+            var propertyChange = CreateOrRetrievePropertyChange(deferredObjectChange.ObjectChange, propertyName, entry);
             if (deferredValue != null)
             {
                 deferredValues.Store(propertyName, deferredValue);
@@ -58,26 +62,26 @@ namespace DDI.EFAudit.Logging
         /// 
         /// The timing for these types of changes was difficult to figure out.
         /// </summary>
-        public TChangeSet Bake(DateTime timestamp, TPrincipal author)
+        public TChangeSet Bake(DateTime timestamp, TPrincipal user)
         {
-            set.Author = author;
-            set.Timestamp = timestamp;
+            _set.User = user;
+            _set.Timestamp = timestamp;
 
-            foreach (var deferredObjectChange in deferredObjectChanges.Values)
+            foreach (var deferredObjectChange in _deferredObjectChanges.Values)
             {
                 deferredObjectChange.Bake();
             }
 
-            return set;
+            return _set;
         }
 
-        private DeferredObjectChange<TPrincipal> CreateOrRetreiveDeferredObjectChange(TChangeSet set, object entity, string typeName, Func<string> deferredReference, ObjectStateEntry entry)
+        private DeferredObjectChange<TPrincipal> CreateOrRetreiveDeferredObjectChange(TChangeSet set, ObjectStateEntry entry, object entity, string typeName, Func<string> deferredReference)
         {
-            var deferredObjectChange = deferredObjectChanges.SingleOrDefault(doc => ReferenceEquals(doc.Key, entity)).Value;
+            var deferredObjectChange = _deferredObjectChanges.FirstOrDefault(doc => ReferenceEquals(doc.Key, entity)).Value;
             if (deferredObjectChange != null)
                 return deferredObjectChange;
 
-            var result = factory.ObjectChange();
+            var result = _factory.ObjectChange();
             result.TypeName = typeName;
             result.ObjectReference = null;
 
@@ -85,27 +89,27 @@ namespace DDI.EFAudit.Logging
             {
                 result.DisplayName = (entity as IEntityBase).DisplayName;
             }
-            
+            result.ChangeType = entry.State.ToString();
             result.ChangeSet = set;
             set.Add(result);
 
-            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, serializer);
-            deferredObjectChanges.Add(entity, deferredObjectChange);
+            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer);
+            _deferredObjectChanges.Add(entity, deferredObjectChange);
 
             return deferredObjectChange;
         }
-        private IPropertyChange<TPrincipal> CreateOrRetrievePropertChange(IObjectChange<TPrincipal> objectChange, string propertyName, ObjectStateEntry entry)
+        private IPropertyChange<TPrincipal> CreateOrRetrievePropertyChange(IObjectChange<TPrincipal> objectChange, string propertyName, ObjectStateEntry entry)
         {
-            var result = objectChange.PropertyChanges.SingleOrDefault(pc => pc.PropertyName == propertyName);
+            var result = objectChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == propertyName);
 
             if (result == null)
             {
-                result = factory.PropertyChange();
+                result = _factory.PropertyChange();
                 result.ChangeType = entry.State.ToString();
                 result.ObjectChange = objectChange;
                 result.PropertyName = propertyName;
+                // Deletes for Complex entities will not have the propertyName in the OriginalValues
 
-                // Although Deleted Entities have an original value, the value is already in the EntityId
                 if (entry.State != EntityState.Added && entry.State != EntityState.Deleted)
                     result.OriginalValue = Convert.ToString(entry.OriginalValues[propertyName]);
 
@@ -117,8 +121,8 @@ namespace DDI.EFAudit.Logging
         }
         private void EnsureChangeSetExists()
         {
-            if (set == null)
-                set = factory.ChangeSet();
+            if (_set == null)
+                _set = _factory.ChangeSet();
         }
     }
 }

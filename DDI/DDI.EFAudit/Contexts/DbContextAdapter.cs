@@ -1,4 +1,4 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,21 +11,21 @@ namespace DDI.EFAudit.Contexts
 {
     public abstract class DbContextAdapter<TChangeSet, TPrincipal> : ObjectContextAdapter<TChangeSet, TPrincipal> where TChangeSet : IChangeSet<TPrincipal>
     {
-        private readonly DbContext context;
+        private readonly DbContext _context;
 
         public DbContextAdapter(DbContext context)
             : base(((System.Data.Entity.Infrastructure.IObjectContextAdapter)context).ObjectContext)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public override int SaveAndAcceptChanges(EventHandler onSavingChanges = null)
         {
             // Save is wrapped in disposable listener for SaveChanges.  
             // Handler is invoked AFTER saving but BEFORE accepting changes!!!
-            using (new DisposableSavingChangesListener(context, onSavingChanges))
+            using (new DisposableSavingChangesListener(_context, onSavingChanges))
             {
-                return context.SaveChanges();
+                return _context.SaveChanges();
             }
         }
 

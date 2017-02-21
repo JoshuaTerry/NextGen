@@ -1,4 +1,4 @@
-﻿using DDI.EFAudit.Models;
+﻿using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +7,7 @@ namespace DDI.EFAudit.History
     public interface IChange<TValue, TPrincipal>
     {
         DateTime Timestamp { get; }
-        TPrincipal Author { get; }
+        TPrincipal User { get; }
         TValue Value { get; }
         IObjectChange<TPrincipal> ObjectChange { get; }        
         IEnumerable<Exception> Errors { get; }
