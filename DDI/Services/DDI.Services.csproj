@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="ConstituentAddressService.cs" />
     <Compile Include="ConstituentService.cs" />
-    <Compile Include="ContactInfoService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="DenominationsService.cs" />
     <Compile Include="EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
-    <Compile Include="ServiceInterfaces\IContactInfoService.cs" />
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />

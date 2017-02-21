@@ -1326,8 +1326,6 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
-            // $("h1:contains('Addresses')").next('div').after($(header));
-
             var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
             $('<a>', { 
                 title: 'New', 
@@ -2033,7 +2031,7 @@ function NewOtherModal() {
 
                     CloseModal(modal);
 
-                    LLoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
+                    LoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
 
                    // LoadContactCategoryGrid(data.Data.Id, data.Data.TextBoxLabel, data.Data.Name);
 

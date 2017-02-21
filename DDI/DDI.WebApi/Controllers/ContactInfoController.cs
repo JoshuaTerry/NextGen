@@ -11,12 +11,6 @@ namespace DDI.WebApi.Controllers
 {
     public class ContactInfoController : ControllerBase<ContactInfo>
     {
-        protected new IContactInfoService Service => (IContactInfoService)base.Service;
-
-        public ContactInfoController()
-            : base(new ContactInfoService())
-        {
-        }
 
         protected override Expression<Func<ContactInfo, object>>[] GetDataIncludesForSingle()
         {
@@ -52,7 +46,8 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/contactinfo/{categoryid}/{constituentid}", Name = RouteNames.ContactCategory + RouteNames.ContactInfo)]
         public IHttpActionResult GetContactInfoByContactCategoryForConstituent(Guid? categoryId, Guid? constituentId)
         {
-            var result = Service.GetContactInfoByContactCategoryForConstituent(categoryId, constituentId);
+
+            var result = Service.GetAllWhereExpression(c => c.ConstituentId == constituentId && c.ContactType.ContactCategoryId == categoryId);
 
             if (result == null)
             {
