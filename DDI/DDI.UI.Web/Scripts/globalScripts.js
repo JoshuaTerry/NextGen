@@ -312,21 +312,20 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    if ($.timpicker) {
-
+    if ($.timepicker) {
         $('.datepair .time').timepicker({
             'showDuration': true,
             'timeFormat': 'g:ia'
         });
 
-        $('datepair .date').datepicker({
+        $('.datepair .date').datepicker({
             'format': 'm/d/yyyy',
             'autoclose': true
         });
 
         $('.datepair').datepair();
-
     }
+    
 }
 
 function FormatJSONDate(jsonDate) {
