@@ -16,7 +16,7 @@
                 <legend>Quick Search</legend>
 
                 <div class="fieldblock">
-                    <input type="text" class="quicksearch" />
+                    <input type="text" class="searchquicksearch" />
                 </div>
 
             </fieldset>

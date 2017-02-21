@@ -10,7 +10,7 @@ namespace DDI.Shared.Models.Client.CRM
 {
     
 	[Table("Region"), Hateoas(RouteNames.Region)]
-	public class Region : EntityBase
+	public class Region : EntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]

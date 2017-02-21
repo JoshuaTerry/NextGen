@@ -83,6 +83,11 @@ namespace DDI.Search
             _sortFields.Add(new SortField() { Field = new Field(predicate), Order = SortOrder.Ascending });
         }
 
+        public void OrderByScore()
+        {
+            _sortFields.Add(new SortField() { Field = "_score", Order = SortOrder.Descending });
+        }
+
         /// <summary>
         /// Add a sort field to the query with descending sort order.
         /// </summary>
@@ -248,7 +253,7 @@ namespace DDI.Search
                 }
             }
 
-            public BoolQueryTerm Boost(int boost)
+            public BoolQueryTerm Boost(double boost)
             {
                 _boost = boost;
                 return this;

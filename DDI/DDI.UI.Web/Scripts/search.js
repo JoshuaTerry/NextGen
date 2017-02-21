@@ -148,7 +148,7 @@ function GetSearchParameters() {
         var value = $(this).val();
 
         if (value) {
-            p += property + '=' + value + '&';
+            p += property + '=' + encodeURIComponent(value) + '&';
         }
     });
 
@@ -157,7 +157,7 @@ function GetSearchParameters() {
         var value = $(this).val();
 
         if (value && value !== 'null') {
-            p += property + '=' + value + '&';
+            p += property + '=' + encodeURIComponent(value) + '&';
         }
     });
 

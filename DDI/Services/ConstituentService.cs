@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using DDI.Business.CRM;
+using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
@@ -20,9 +23,16 @@ namespace DDI.Services
 {
     public class ConstituentService : ServiceBase<Constituent>, IConstituentService
     {
+        #region Private Fields
+
         private readonly IRepository<Constituent> _repository;
         private readonly ConstituentLogic _constituentlogic;
         private readonly Logger _logger;
+
+        #endregion
+
+        #region Constructors
+
         public ConstituentService()
             : this(new UnitOfWorkEF())
         {
@@ -40,133 +50,10 @@ namespace DDI.Services
             _repository = repository;
         }
 
-        private IDocumentSearchResult<ConstituentDocument> PerformElasticSearch(IPageable search)
-        {
-            var repo = new ElasticRepository<ConstituentDocument>();
-            var query = repo.CreateQuery();
+        #endregion
 
-            var criteria = (ConstituentSearch)search;
+        #region Public Methods
 
-            if (criteria.ConstituentNumber.HasValue && criteria.ConstituentNumber.Value > 0)
-            {
-                query.Must.Equal(criteria.ConstituentNumber.Value, p => p.ConstituentNumber);
-            }
-            else if (!string.IsNullOrWhiteSpace(criteria.QuickSearch))
-            {
-                query.Should.Boost(10).Equal(criteria.QuickSearch, p => p.ConstituentNumber);
-                query.Should.Boost(7).Equal(criteria.QuickSearch, p => p.AlternateIds);
-                query.Should.Boost(5).Match(criteria.QuickSearch, p => p.Name);
-                query.Should.Boost(2).Match(criteria.QuickSearch, p => p.Name2, p => p.Nickname, p => p.PrimaryAddress);
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(criteria.Name))
-                {
-                    query.Must.Match(criteria.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
-                }
-
-                if (!criteria.ConstituentTypeId.IsNullOrEmpty())
-                {
-                    query.Must.Equal(criteria.ConstituentTypeId.Value, p => p.ConstituentTypeId);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.AlternateId))
-                {
-                    query.Must.Equal(criteria.AlternateId, p => p.AlternateIds);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.IncludeTags))
-                {
-                    query.Must.BeInList(criteria.IncludeTags, p => p.Tags);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.ExcludeTags))
-                {
-                    query.MustNot.BeInList(criteria.ExcludeTags, p => p.Tags);
-                }
-                
-                if (!string.IsNullOrWhiteSpace(criteria.Address) ||
-                    !string.IsNullOrWhiteSpace(criteria.City) || 
-                    !string.IsNullOrWhiteSpace(criteria.StateId) ||
-                    !string.IsNullOrWhiteSpace(criteria.PostalCodeFrom) || 
-                    !string.IsNullOrWhiteSpace(criteria.PostalCodeTo) ||
-                    !string.IsNullOrWhiteSpace(criteria.CountryId) ||
-                    !string.IsNullOrWhiteSpace(criteria.RegionId1) ||
-                    !string.IsNullOrWhiteSpace(criteria.RegionId2) ||
-                    !string.IsNullOrWhiteSpace(criteria.RegionId3) ||
-                    !string.IsNullOrWhiteSpace(criteria.RegionId4)
-                    )
-                {
-                    var addressQuery = new ElasticQuery<ConstituentDocument>();
-                    if (!string.IsNullOrWhiteSpace(criteria.PostalCodeFrom) || !string.IsNullOrWhiteSpace(criteria.PostalCodeTo))
-                    {
-                        if (string.IsNullOrWhiteSpace(criteria.PostalCodeTo))
-                        {
-                            addressQuery.Must.Prefix(criteria.PostalCodeFrom, p => p.Addresses[0].PostalCode);
-                        }
-                        else if (string.IsNullOrWhiteSpace(criteria.PostalCodeFrom))
-                        {
-                            addressQuery.Must.Prefix(criteria.PostalCodeTo, p => p.Addresses[0].PostalCode);
-                        }
-                        else
-                        {
-                            addressQuery.Must.Range(criteria.PostalCodeFrom, criteria.PostalCodeTo + "~", p => p.Addresses[0].PostalCode);
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.Address))
-                    {
-                        addressQuery.Must.Match(criteria.Address, p => p.Addresses[0].StreetAddress);
-                    }
-                    
-                    if (!string.IsNullOrWhiteSpace(criteria.City))
-                    {
-                        addressQuery.Must.Match(criteria.City, p => p.Addresses[0].City);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.StateId))
-                    {
-                        addressQuery.Must.Equal(criteria.StateId, p => p.Addresses[0].StateId);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.CountryId))
-                    {
-                        addressQuery.Must.Equal(criteria.CountryId, p => p.Addresses[0].CountryId);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.RegionId1))
-                    {
-                        addressQuery.Must.Equal(criteria.RegionId1, p => p.Addresses[0].Region1Id);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.RegionId2))
-                    {
-                        addressQuery.Must.Equal(criteria.RegionId2, p => p.Addresses[0].Region1Id);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.RegionId3))
-                    {
-                        addressQuery.Must.Equal(criteria.RegionId3, p => p.Addresses[0].Region1Id);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(criteria.RegionId4))
-                    {
-                        addressQuery.Must.Equal(criteria.RegionId4, p => p.Addresses[0].Region1Id);
-                    }
-
-                    query.Must.Nested(p => p.Addresses, addressQuery);
-                }
-            }
-
-            switch (search.OrderBy)
-            {
-                case OrderByProperties.DisplayName:
-                    query.OrderBy(p => p.SortableName);
-                    break;
-            }
-
-            return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
-        }
 
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
@@ -178,7 +65,7 @@ namespace DDI.Services
                 return new DataResponse<List<ICanTransmogrify>>(constituents.ToList<ICanTransmogrify>()) { TotalResults = constituents.Count() };
             }
 
-            IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search);
+            IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search as ConstituentSearch);
 
             if (VerifyFieldList<ConstituentDocument>(fields))
             {
@@ -192,7 +79,8 @@ namespace DDI.Services
             return new DataResponse<List<ICanTransmogrify>>(constituentsFound) { TotalResults = results.TotalCount };
         }
 
-        public IDataResponse<List<Constituent>> GetAllOld(IPageable search)
+        /*
+        public IDataResponse<List<Constituent>> GetAll(IPageable search)
         { 
             var constituentSearch = (ConstituentSearch) search;
             IQueryable<Constituent> constituents = _repository.GetEntities(IncludesForList);
@@ -261,6 +149,7 @@ namespace DDI.Services
                 }
             }
         }
+        */
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
@@ -320,5 +209,204 @@ namespace DDI.Services
             }
             return base.Update(id, changes);
         }
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Use ElasticSearch to search for constituents.
+        /// </summary>
+        /// <param name="search">ConstituentSearch instance.</param>
+        private IDocumentSearchResult<ConstituentDocument> PerformElasticSearch(ConstituentSearch search)
+        {
+            bool isScoring = false;
+
+            if (search == null)
+            {
+                return new DocumentSearchResult<ConstituentDocument>();
+            }
+
+            var repo = new ElasticRepository<ConstituentDocument>();
+            var query = repo.CreateQuery();
+
+            if (search.ConstituentNumber.HasValue && search.ConstituentNumber.Value > 0)
+            {
+                query.Must.Equal(search.ConstituentNumber.Value, p => p.ConstituentNumber);
+            }
+            else if (!string.IsNullOrWhiteSpace(search.QuickSearch))
+            {
+                query.Should.Boost(5).Equal(search.QuickSearch, p => p.AlternateIds);
+                query.Should.Boost(1.5).Match(search.QuickSearch, p => p.Name);
+                query.Should.Boost(1).Match(search.QuickSearch, p => p.Name2, p => p.Nickname, p => p.PrimaryAddress);
+                isScoring = true;
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(search.Name))
+                {
+                    query.Must.Match(search.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
+                }
+
+                if (!search.ConstituentTypeId.IsNullOrEmpty())
+                {
+                    query.Must.Equal(search.ConstituentTypeId.Value, p => p.ConstituentTypeId);
+                }
+
+                if (!string.IsNullOrWhiteSpace(search.AlternateId))
+                {
+                    query.Must.Equal(search.AlternateId, p => p.AlternateIds);
+                }
+
+                string includeTags = CodeEntityHelper.ConvertCodeListToGuidList<Tag>(UnitOfWork, search.IncludeTags);
+                if (includeTags != null)
+                {
+                    query.Must.BeInList(includeTags, p => p.Tags);
+                }
+
+                string excludeTags = CodeEntityHelper.ConvertCodeListToGuidList<Tag>(UnitOfWork, search.ExcludeTags);
+                if (!string.IsNullOrWhiteSpace(excludeTags))
+                {
+                    query.MustNot.BeInList(excludeTags, p => p.Tags);
+                }
+
+                if (search.CreatedDateFrom.HasValue || search.CreatedDateTo.HasValue)
+                {
+                    DateTime from = search.CreatedDateFrom ?? new DateTime(1800, 1, 1);
+                    DateTime to = search.CreatedDateTo ?? new DateTime(2999, 12, 31);
+                    if (from > to)
+                    {
+                        DateTime temp = from;
+                        from = to;
+                        to = temp;
+                    }
+
+                    query.Must.Range(from, to, p => p.CreationDate);
+                }
+
+                if (search.AgeFrom > 0 || search.AgeTo > 0)
+                {
+                    // Age range: 12-16
+                    // Year: 2017
+                    // Year range: 2001 - 2005
+                    int year = DateTime.Now.Year;
+                    if (search.AgeTo > 0)
+                    {
+                        query.Must.Range(year - search.AgeTo.Value, year, p => p.BirthYearFrom);
+                    }
+
+                    if (search.AgeFrom > 0)
+                    {
+                        query.Must.Range(1, year - search.AgeFrom.Value, p => p.BirthYearTo);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(search.Address) ||
+                    !string.IsNullOrWhiteSpace(search.City) ||
+                    !string.IsNullOrWhiteSpace(search.StateId) ||
+                    !string.IsNullOrWhiteSpace(search.PostalCodeFrom) ||
+                    !string.IsNullOrWhiteSpace(search.PostalCodeTo) ||
+                    !string.IsNullOrWhiteSpace(search.CountryId) ||
+                    !string.IsNullOrWhiteSpace(search.RegionId1) ||
+                    !string.IsNullOrWhiteSpace(search.RegionId2) ||
+                    !string.IsNullOrWhiteSpace(search.RegionId3) ||
+                    !string.IsNullOrWhiteSpace(search.RegionId4)
+                    )
+                {
+                    var addressQuery = new ElasticQuery<ConstituentDocument>();
+                    if (!string.IsNullOrWhiteSpace(search.PostalCodeFrom) || !string.IsNullOrWhiteSpace(search.PostalCodeTo))
+                    {
+                        if (string.IsNullOrWhiteSpace(search.PostalCodeTo))
+                        {
+                            addressQuery.Must.Prefix(search.PostalCodeFrom, p => p.Addresses[0].PostalCode);
+                        }
+                        else if (string.IsNullOrWhiteSpace(search.PostalCodeFrom))
+                        {
+                            addressQuery.Must.Prefix(search.PostalCodeTo, p => p.Addresses[0].PostalCode);
+                        }
+                        else
+                        {
+                            addressQuery.Must.Range(search.PostalCodeFrom, search.PostalCodeTo + "~", p => p.Addresses[0].PostalCode);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.Address))
+                    {
+                        addressQuery.Must.Match(search.Address, p => p.Addresses[0].StreetAddress);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.City))
+                    {
+                        addressQuery.Must.Match(search.City, p => p.Addresses[0].City);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.StateId))
+                    {
+                        addressQuery.Must.Equal(search.StateId, p => p.Addresses[0].StateId);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.CountryId))
+                    {
+                        addressQuery.Must.Equal(search.CountryId, p => p.Addresses[0].CountryId);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.RegionId1))
+                    {
+                        Guid? id = CodeEntityHelper.ConvertToGuid<Region>(UnitOfWork, search.RegionId1, p => p.Level == 1);
+                        if (id != null)
+                        {
+                            addressQuery.Must.Equal(id.Value, p => p.Addresses[0].Region1Id);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.RegionId2))
+                    {
+                        Guid? id = CodeEntityHelper.ConvertToGuid<Region>(UnitOfWork, search.RegionId2, p => p.Level == 2);
+                        if (id != null)
+                        {
+                            addressQuery.Must.Equal(id.Value, p => p.Addresses[0].Region2Id);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.RegionId3))
+                    {
+                        Guid? id = CodeEntityHelper.ConvertToGuid<Region>(UnitOfWork, search.RegionId3, p => p.Level == 3);
+                        if (id != null)
+                        {
+                            addressQuery.Must.Equal(id.Value, p => p.Addresses[0].Region3Id);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(search.RegionId4))
+                    {
+                        Guid? id = CodeEntityHelper.ConvertToGuid<Region>(UnitOfWork, search.RegionId4, p => p.Level == 4);
+                        if (id != null)
+                        {
+                            addressQuery.Must.Equal(id.Value, p => p.Addresses[0].Region4Id);
+                        }
+                    }
+
+                    query.Must.Nested(p => p.Addresses, addressQuery);
+                }
+            }
+
+            if (isScoring)
+            {
+                query.OrderByScore();
+            }
+
+            switch (search.OrderBy)
+            {
+                case OrderByProperties.DisplayName:
+                    query.OrderBy(p => p.SortableName);
+                    break;
+            }
+            
+
+            return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
+        }
+
+
+
+        #endregion
     }
 }
