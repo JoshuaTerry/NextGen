@@ -19,6 +19,7 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime? BirthDate { get; set; }
          
         public BirthDateType BirthDateType { get; set; }
