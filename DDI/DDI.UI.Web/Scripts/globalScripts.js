@@ -549,7 +549,11 @@ function StartEdit(editcontainer) {
         $(this).prop('disabled', false);
 
     });
-
+    $(editcontainer).find('.dx-tagbox').each(function() {
+        $(this).dxTagBox({
+            disabled: false
+        });
+    });
 }
 
 function StopEdit(editcontainer) {
@@ -572,6 +576,9 @@ function SaveEdit(editcontainer) {
 
     // Get just the fields that have been edited
     var fields = GetEditedFields(editcontainer);
+
+    //SaveTagBoxes
+    SaveTagBoxes(editcontainer);
 
     // Save the entity
     $.ajax({
@@ -650,6 +657,48 @@ function GetEditedFields(editcontainer) {
 
     return p;
 
+}
+
+function SaveTagBoxes(editcontainer) {
+
+    $(editcontainer).find('.tagbox').each(function (item) {
+
+        var idCollection = [];
+        var route = $(this).attr('class').split(' ')[2];
+
+        var foo = $(this).first().attr('class');
+
+        $(this).find('.dx-tagbox').first().dxTagBox('instance').option('selectedItems').forEach(function (selectedItem) {
+
+            idCollection.push(selectedItem.Id);
+
+        });
+
+        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+
+    });
+
+}
+
+function SaveChildCollection(children, route) {
+    $.ajax({
+        url: route,
+        method: 'POST',
+        headers: GetApiHeaders(),
+        data: JSON.stringify({ChildIds: children}),
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+        }
+    });
 }
 
 function CancelEdit() {

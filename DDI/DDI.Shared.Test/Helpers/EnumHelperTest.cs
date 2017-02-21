@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 using System.Text;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Extensions;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web.UI.WebControls;
+
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-using System.Linq;
 
 namespace DDI.Shared.Test.Helpers
 {
@@ -99,32 +98,6 @@ namespace DDI.Shared.Test.Helpers
             Assert.AreEqual(2, dictionary.GetValueOrDefault("Number Two"));
             Assert.AreEqual(3, dictionary.GetValueOrDefault("Number Three"));
             Assert.AreEqual(4, dictionary.GetValueOrDefault("Number Four"));
-        }
-
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void WebControlTest()
-        {
-            //Arrange
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
-
-            //Act
-            dictionary = EnumHelper.GetDescriptions<PaymentMethodType>();
-
-            var service = new DDI.Services.PaymentPreferenceService();
-            var response = service.GetDataResponse(EnumHelper.GetDescriptions<PaymentMethodType>);
-            response.TotalResults = response.Data.Count;
-
-            DropDownList ddl = new DropDownList();
-
-            response.Data.ToList().ForEach(i => ddl.Items.Add(new ListItem(i.Key, i.Value.ToString())));
-
-            //Assert
-            Assert.AreEqual(5, dictionary.Count);
-            Assert.AreEqual(0, dictionary.GetValueOrDefault("None"));
-            Assert.AreEqual(1, dictionary.GetValueOrDefault("Check"));
-            Assert.AreEqual(2, dictionary.GetValueOrDefault("ACH Transfer"));
-            Assert.AreEqual(3, dictionary.GetValueOrDefault("Wire Transfer"));
-            Assert.AreEqual(4, dictionary.GetValueOrDefault("SWIFT Transfer"));
         }
 
     }

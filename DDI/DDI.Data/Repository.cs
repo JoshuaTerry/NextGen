@@ -188,9 +188,9 @@ namespace DDI.Data
         /// <summary>
         /// Attach an entity (which may belong to another context) to the repository.
         /// </summary>
-        public void Attach(T entity)
+        public T Attach(T entity)
         {
-            Attach(entity, EntityState.Unchanged);
+            return Attach(entity, EntityState.Unchanged);
         }
         
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
@@ -321,14 +321,32 @@ namespace DDI.Data
 
         #region Private Methods
 
-        private void Attach(T entity, EntityState entityState)
+        /// <summary>
+        /// Attach an entity to the context.  If it's already loaded, return the loaded entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="entityState"></param>
+        /// <returns></returns>
+        private T Attach(T entity, EntityState entityState)
         {
             if (entity != null && _context.Entry(entity).State == EntityState.Detached)
             {
-                // Attach throws exceptions if parts of the entity graph are already in the context.  Instead, use Add and adjust the entity state.
-                EntitySet.Add(entity);
-                _context.Entry(entity).State = entityState;
+                if (entity is IEntity)
+                {
+                    // Get the entity's Id and look for an already loaded instance in EntitySet.Local.  If found, return the loaded entity.
+                    Guid id = ((IEntity)entity).Id;
+                    IEntity existing = EntitySet.Local.Cast<IEntity>().FirstOrDefault(p => p.Id == id);
+                    if (existing != null)
+                    {
+                        return existing as T;
+                    }
+                }
             }
+
+            // Attach throws exceptions if parts of the entity graph are already in the context.  Instead, use Add and adjust the entity state.
+            EntitySet.Add(entity);
+            _context.Entry(entity).State = entityState;
+            return entity;
         }
 
         #endregion

@@ -230,22 +230,19 @@
 
                     <h1>Demographics</h1>
                     <div class="editcontainer">
+                        <div class="fieldblock">
+                            <label>Denomination</label>
+                            <div class="editable tagbox denominations"></div>
+                        </div>
 
-                        <div class="threecolumn">
-                            <div class="fieldblock">
-                                <label>Denomination</label>
-                                <div class="editable tagDenominationsContainer"></div>
-                            </div>
+                        <div class="fieldblock">
+                            <label>Ethnicity</label>
+                            <div class="editable tagbox ethnicities"></div>
+                        </div>
 
-                            <div class="fieldblock">
-                                <label>Ethnicity</label>
-                                <div class="editable tagEthnicitiesContainer"></div>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Language</label>
-                                <select class="editable LanguageId"></select>
-                            </div>
+                        <div class="fieldblock">
+                            <label>Language</label>
+                            <select class="editable LanguageId"></select>
                         </div>
                     </div>
 
@@ -305,16 +302,22 @@
 
                     </div>
 
-                    <h1>Payment Preferences (Not Implemented Yet)</h1>
+                    <h1>Payment Preferences<a href="#" title="New" class="newppmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
                             <label>Method</label>
-                            <select class="editable PaymentMethodId"></select>
+                            <select class="editable PreferredPaymentMethod">
+                                <option value="0">None</option>
+                                <option value="1">Check</option>
+                                <option value="2">ACH Transfer</option>
+                                <option value="3">Wire Transfer</option>
+                                <option value="4">SWIFT Transfer</option>
+                            </select>
                         </div>
 
                         <label>ETF Information</label>
-                        <div class="paymentpreferencestable"></div>
+                        <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
@@ -783,21 +786,91 @@
                 <input type="text" class="DBAName" />
             </div>
 
-            <div class="fieldblock">
-                <label>From:</label>
-                <input type="text" class="StartDate datepicker" />
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>From:</label>
+                    <input type="text" class="StartDate datepicker" />
+
+                </div>
+
+
+                <div class="fieldblock">
+                    <label>To:</label>
+                    <input type="text" class="EndDate datepicker" />
+
+                </div>
+
+                <div class="modalbuttons">
+                    <input type="button" class="savedba" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
 
             </div>
 
+        </div>
+
+    </div>
+	
+	<div class="paymentpreferencemodal" title="Payment Preference" style="display: none;">
+
+        <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>To:</label>
-                <input type="text" class="EndDate datepicker" />
+                <label>Description</label>
+                <input type="text" class="pp-Description" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Bank Name</label>
+                <input type="text" class="pp-BankName" />
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Rounting Number</label>
+                    <input type="text" class="pp-RoutingNumber" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Account Number</label>
+                    <input type="text" class="pp-AccountNumber" />
+                </div>
 
             </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Account Type</label>
+                    <select class="pp-AccountType">
+                        <option value=""></option>
+                        <option value="0">Checking Account</option>
+                        <option value="1">Savings Account</option>
+                    </select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Status</label>
+                    <select class="pp-Status">
+                        <option value=""></option>
+                        <option value="0">Active</option>
+                        <option value="1">Inactive</option>
+                        <option value="2">Pre-note Required</option>
+                        <option value="3">Pre-Note Sent</option>
+                        <option value="4">Expired</option>
+                        <option value="5">Not Valid</option>
+                    </select>
+                </div>
+
+            </div>
+            
+            <input type="hidden" class="pp-StatusDate" />
+            <input type="hidden" class="pp-PreviousStatus" />
 
             <div class="modalbuttons">
-                <input type="button" class="savedba" value="Save" />
+                <input type="button" class="savepaymentpreference" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
