@@ -12,6 +12,7 @@ namespace DDI.Shared.Statics
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
         public const string Card = "Card";
+        public const string CategoryName = "CategoryName";
         public const string ClergyStatus = "ClergyStatus";
         public const string ClergyType = "ClergyType";
         public const string Constituent = "Constituent";
@@ -38,6 +39,11 @@ namespace DDI.Shared.Statics
         public const string Language = "Language";
         public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
+		public const string SectionName = "SectionName";
+        public const string Note = "Note";
+        public const string NoteCategory = "NoteCategory";
+        public const string NoteContactCode = "NoteContactCode";
+        public const string NoteTopic = "NoteTopic";
         public const string PaymentMethod = "PaymentMethod";
         public const string Prefix = "Prefix";
         public const string Profession = "Profession";
