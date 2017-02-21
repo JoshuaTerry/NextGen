@@ -1,18 +1,19 @@
-﻿using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Logger;
-using DDI.Shared.Models;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using DDI.Business;
+using DDI.Business.Helpers;
+using DDI.Data;
 using DDI.Services.Search;
-using DDI.Shared.Statics;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Extensions;
-using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Logger;
+using DDI.Shared.Models;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
 {
@@ -50,7 +51,7 @@ namespace DDI.Services
 
         public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
         {
-            var queryable = _unitOfWork.GetRepository<T>().GetEntities(_includesForList);
+            var queryable = _unitOfWork.GetEntities(_includesForList);
             return GetPagedResults(queryable, search);
         }
 
@@ -97,7 +98,7 @@ namespace DDI.Services
 
         public virtual IDataResponse<T> GetById(Guid id)
         {
-            var result = _unitOfWork.GetRepository<T>().GetById(id, _includesForSingle); 
+            var result = _unitOfWork.GetById(id, _includesForSingle); 
             return GetIDataResponse(() => result);
         }
 
@@ -109,7 +110,7 @@ namespace DDI.Services
 
         public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
         {
-            var queryable = UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression);
+            var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
             return GetPagedResults(queryable, search);
         }
 
@@ -118,9 +119,10 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                _unitOfWork.GetRepository<T>().Update(entity);
+                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork).Validate(entity);
+                _unitOfWork.Update(entity);
                 _unitOfWork.SaveChanges();
-                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
+                response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -142,10 +144,11 @@ namespace DDI.Services
                     changedProperties.Add(convertedPair.Key, convertedPair.Value);
                 }
 
-                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties);
+                IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork);
+                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties, p => logic.Validate(p));
             	_unitOfWork.SaveChanges();
 
-                response.Data = _unitOfWork.GetRepository<T>().GetById(id, IncludesForSingle);
+                response.Data = _unitOfWork.GetById(id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -160,9 +163,10 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                _unitOfWork.GetRepository<T>().Insert(entity);
+                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork).Validate(entity);
+                _unitOfWork.Insert(entity);
                 _unitOfWork.SaveChanges();
-                response.Data = _unitOfWork.GetRepository<T>().GetById(entity.Id, IncludesForSingle);
+                response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
             }
             catch (Exception ex)
             {
@@ -177,7 +181,7 @@ namespace DDI.Services
             var response = new DataResponse();
             try
             {
-                _unitOfWork.GetRepository<T>().Delete(entity);
+                _unitOfWork.Delete(entity);
                 _unitOfWork.SaveChanges();
             }
             catch (Exception ex)

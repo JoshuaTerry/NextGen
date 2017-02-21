@@ -90,23 +90,12 @@ namespace DDI.Business.CRM
 
         public override void Attach(IUnitOfWork uow)
         {
-            foreach (var row in HomeAddressTypes)
-            {
-                uow.Attach(row);
-            }
+            HomeAddressTypes = HomeAddressTypes.Select(p => uow.Attach(p)).ToList();
+            MailAddressTypes = MailAddressTypes.Select(p => uow.Attach(p)).ToList();
+            DeceasedTags = DeceasedTags.Select(p => uow.Attach(p)).ToList();
 
-            foreach (var row in MailAddressTypes)
-            {
-                uow.Attach(row);
-            }
-
-            foreach (var row in DeceasedTags)
-            {
-                uow.Attach(row);
-            }
-
-            uow.Attach(this.DeceasedStatus);
-            uow.Attach(this.DefaultAddressType);
+            DeceasedStatus = uow.Attach(this.DeceasedStatus);
+            DefaultAddressType = uow.Attach(this.DefaultAddressType);
             
         }
 

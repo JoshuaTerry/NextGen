@@ -19,7 +19,7 @@ namespace DDI.Business.CRM
     /// <summary>
     /// Constituent Address business logic
     /// </summary>
-    public class ConstituentAddressLogic : EntityLogicBase<Address>
+    public class ConstituentAddressLogic : EntityLogicBase<ConstituentAddress>
     {
 
         #region Constructors 
@@ -214,7 +214,7 @@ namespace DDI.Business.CRM
 
 
 
-        public override void Validate(Address address)
+        public override void Validate(ConstituentAddress address)
         {
             base.Validate(address);           
         }

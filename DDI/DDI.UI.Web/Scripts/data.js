@@ -62,35 +62,59 @@ function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, c
 
 }
 
-function LoadTagBoxes(tagBox, container, route) {
+function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
     if (container.indexOf('.') != 0)
         container = '.' + container;
 
     $(container).html('');
 
+    var selectedItems = [];
+
+    $.ajax({
+        url: routeForSelectedOptions,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            data.Data.forEach(function (item) {
+                selectedItems.push(item.Id);
+            });
+            DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
+}
+
+function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+
     var tagBoxControl = $('<div>').addClass(tagBox);
 
     $.ajax({
-        url: WEB_API_ADDRESS + route,
+        url: WEB_API_ADDRESS + routeForAllOptions,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
             $(tagBoxControl).dxTagBox({
-                dataSource: data.Data,
+                items: data.Data,
+                value: selectedItems,
                 displayExpr: 'DisplayName',
                 valueExpr: 'Id',
                 showClearButton: true,
+                disabled: true
             });
 
             $(tagBoxControl).appendTo(container);
         },
-        failure: function(response) {
+        failure: function (response) {
             alert(response);
         }
     });
-
 
 }
 
