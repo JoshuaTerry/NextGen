@@ -19,10 +19,13 @@ namespace DDI.Search.Models
         public string ConstituentNumber { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid ConstituentStatusId { get; set; }
+        public string SortableName { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid ConstituentTypeId { get; set; }
+        public Guid? ConstituentStatusId { get; set; }
+
+        [Keyword(IncludeInAll = false)]
+        public Guid? ConstituentTypeId { get; set; }
 
         [Text]
         public string Name { get; set; }
@@ -43,10 +46,10 @@ namespace DDI.Search.Models
         public string Name2 { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid LanguageId { get; set; }
+        public Guid? LanguageId { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid GenderId { get; set; }
+        public Guid? GenderId { get; set; }
 
         [Nested] 
         public IList<ContactInfoDocument> ContactInfo { get; set; }

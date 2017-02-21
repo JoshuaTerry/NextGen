@@ -22,6 +22,7 @@ namespace DDI.Search
         private List<QueryContainer> _must, _should, _mustNot;
         private Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>> _nestedQueryDict;
         private bool _isFinalized = false;
+        private List<SortField> _sortFields;
 
         #endregion
 
@@ -34,6 +35,7 @@ namespace DDI.Search
             _should = new List<QueryContainer>();
             _mustNot = new List<QueryContainer>();
             _nestedQueryDict = new Dictionary<ElasticQuery<T>, NestedQueryDescriptor<T>>();
+            _sortFields = new List<SortField>();
         }
 
         #endregion
@@ -73,6 +75,22 @@ namespace DDI.Search
             }
         }
 
+        /// <summary>
+        /// Add a sort field to the query with ascending sort order.
+        /// </summary>
+        public void OrderBy(Expression<Func<T,object>> predicate)
+        {
+            _sortFields.Add(new SortField() { Field = new Field(predicate), Order = SortOrder.Ascending });
+        }
+
+        /// <summary>
+        /// Add a sort field to the query with descending sort order.
+        /// </summary>
+        public void OrderByDescending(Expression<Func<T, object>> predicate)
+        {
+            _sortFields.Add(new SortField() { Field = new Field(predicate), Order = SortOrder.Descending });
+        }
+
         #endregion
 
         #region Public Methods
@@ -86,7 +104,7 @@ namespace DDI.Search
 
             FinalizeQuery();           
 
-            return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery)).Index(IndexHelper.GetIndexName<T>());
+            return new SearchDescriptor<T>().Query(q => q.Bool(b => _boolQuery)).Index(IndexHelper.GetIndexName<T>()).Sort(p => ApplySorting(p));
         }
 
         public QueryContainer GetQuery()
@@ -117,8 +135,21 @@ namespace DDI.Search
                 _boolQuery.Should = _should;
                 _boolQuery.MustNot = _mustNot;
             }
-
+            
             _isFinalized = true;
+        }
+
+        /// <summary>
+        /// Apply all sorting entries to a SortDescriptor.
+        /// </summary>
+        /// <param name="sortDescriptor"></param>
+        private SortDescriptor<T> ApplySorting(SortDescriptor<T> sortDescriptor)
+        {
+            foreach (var entry in _sortFields)
+            {
+                sortDescriptor = sortDescriptor.Field(entry.Field, entry.Order.Value);
+            }
+            return sortDescriptor;
         }
 
         /// <summary>

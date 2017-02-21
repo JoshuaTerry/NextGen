@@ -19,6 +19,8 @@ namespace DDI.Search
     {
         #region Private Fields
 
+        private const int DEFAULT_SEARCH_LIMIT = 15;
+
         private NestClient _client;
 
         #endregion
@@ -87,8 +89,15 @@ namespace DDI.Search
         public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
         {
             ISearchRequest request = query.BuildSearchRequest();
+
+            if (limit <= 0)
+            {
+                limit = DEFAULT_SEARCH_LIMIT;
+            }
+
             request.Size = limit;
             request.From = offset * limit;
+
             var response = _client.ElasticClient.Search<T>(request);
 
             var result = new DocumentSearchResult<T>();

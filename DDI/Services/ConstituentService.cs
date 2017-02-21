@@ -13,6 +13,8 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using DDI.Shared.Logger;
+using DDI.Search;
+using DDI.Search.Models;
 
 namespace DDI.Services
 {
@@ -37,9 +39,47 @@ namespace DDI.Services
             _constituentlogic = constituentLogic;
             _repository = repository;
         }
-        
+
         public override IDataResponse<List<Constituent>> GetAll(IPageable search)
         {
+            var repo = new ElasticRepository<ConstituentDocument>();
+            var query = repo.CreateQuery();
+
+            var criteria = (ConstituentSearch)search;
+            
+            if (criteria.ConstituentNumber.HasValue && criteria.ConstituentNumber.Value > 0)
+            {
+                query.Must.Equal(criteria.ConstituentNumber.Value, p => p.ConstituentNumber);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(criteria.Name))
+                {
+                    query.Must.Match(criteria.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
+                }
+
+                if (!criteria.ConstituentTypeId.IsNullOrEmpty())
+                {
+                    query.Must.Equal(criteria.ConstituentTypeId.Value, p => p.ConstituentTypeId);
+                }
+
+            }
+
+            switch(search.OrderBy)
+            {
+                case OrderByProperties.DisplayName:
+                    query.OrderBy(p => p.SortableName);
+                    break;
+            }
+
+            var results = repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);            
+            List<Guid> ids = results.Documents.Select(p => p.Id).ToList();
+            List<Constituent>  constituentsFound = UnitOfWork.GetEntities<Constituent>(IncludesForList).Where(p => ids.Contains(p.Id)).ToList();
+            return new DataResponse<List<Constituent>>(constituentsFound) { TotalResults = results.TotalCount };
+        }
+
+        public IDataResponse<List<Constituent>> GetAllOld(IPageable search)
+        { 
             var constituentSearch = (ConstituentSearch) search;
             IQueryable<Constituent> constituents = _repository.GetEntities(IncludesForList);
             var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, constituentSearch)

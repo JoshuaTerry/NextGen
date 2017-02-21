@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Conversion.Statics;
+using DDI.Search;
+using DDI.Search.Models;
 using log4net;
 
 namespace DDI.Conversion
@@ -60,8 +62,43 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
+
+            PerformSearch();
         }
 
+        /// <summary>
+        /// This class will go away with DC-367 (POC Cleanup).
+        /// For now it demonstrates search functionality and can be called from DDI.Conversion.Program.cs.
+        /// </summary>
+        public static void PerformSearch()
+        {
+            var repo = new ElasticRepository<ConstituentDocument>();
+            var query = repo.CreateQuery();
+            string text = "hammer";
+
+            //query.Should.Boost(10).Equal(text, p => p.ConstituentNumber);
+            query.Should.Boost(5).Match(text, p => p.Name);
+            //query.Should.Boost(2).Match(text, p => p.Name2, p => p.Nickname, p => p.PrimaryAddress);
+            query.OrderBy(p => p.SortableName);
+
+            //string body = repo.GetQueryJsonBody(query);
+            //Uri uri = repo.GetSearchUri();
+
+            var results = repo.DocumentSearch(query, 150, 0);
+            if (results.TotalCount == 0)
+            {
+                Console.WriteLine("Not found.");
+            }
+            foreach (var item in results.Documents)
+            {
+                Console.WriteLine($"{item.ConstituentNumber}: {item.Name}, {item.PrimaryAddress}");
+            }
+
+            Console.ReadLine();
+
+        }
+
+        public static void PerformSearch2()
 
         /// <summary>
         /// Run all converion methods in a conversion class.
