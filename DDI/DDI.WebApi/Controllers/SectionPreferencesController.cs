@@ -10,18 +10,6 @@ namespace DDI.WebApi.Controllers
 {
     public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
-        private ISectionPreferenceService _service;
-
-        public SectionPreferencesController()
-            :this(new SectionPreferenceService())
-        {            
-        }
-
-        internal SectionPreferencesController(ISectionPreferenceService service)
-        {
-            _service = service;
-        }
-
         [HttpGet]
         [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -63,24 +51,14 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var response = _service.GetPreferencesByCategoryName(categoryName);
-
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
-
+                var search = new PageableSearch(0, int.MaxValue, null);
+                var response = Service.GetAllWhereExpression(s => s.SectionName == categoryName, search);
+                return FinalizeResponse(response, RouteNames.SectionPreference + RouteNames.CategoryName, search, null, null);
+                
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }
@@ -91,24 +69,14 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var response = _service.GetPreferenceBySectionName(categoryName, sectionName);
-
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
+                var search = new PageableSearch(0, int.MaxValue, null);
+                var response = Service.GetWhereExpression(s => s.SectionName == categoryName && s.Name == sectionName);
+                return FinalizeResponse(response);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                LoggerBase.Error(ex);
                 return InternalServerError();
             }
         }

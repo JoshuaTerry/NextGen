@@ -363,6 +363,21 @@ namespace DDI.WebApi.Tests.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        public void When_IsNull_Should_ReturnNull()
+        {
+            var urlHelperMock = new Mock<UrlHelper>();
+            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, It.IsAny<object>())).Returns("api/v1/constituents/").Verifiable();
+            
+            Constituent constituent = null;
+            IDataResponse<Constituent> response = new DataResponse<Constituent>(constituent);
+
+            var target = new DynamicTransmogrifier();
+            DataResponse<dynamic> result = target.ToDynamicResponse<Constituent>(response, urlHelperMock.Object, null, true) as DataResponse<dynamic>;
+
+            Assert.IsNull(result.Data);
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnLinksWithHateoasActionsForEveryObjectWithAnAttribute()
         {
             var urlHelperMock = new Mock<UrlHelper>();
