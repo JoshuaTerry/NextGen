@@ -480,7 +480,7 @@
                     <h1>Contact Information</h1>
                     <div>
 
-                        <div class="accordions">
+                        <div class="accordions contactinfocontainer">
 
                             <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
                             <div>

@@ -1,10 +1,5 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
-var PHONE_CATEGORY = 'A7FDB5B3-6ED2-4D3B-8EB8-B551809DA5B1/';
-var EMAIL_CATEGORY = 'A4BBF374-4C47-45D7-AF2E-92C81F3BADFA/';
-var WEBSITE_CATEGORY = 'D6595D53-2A76-4E8A-A1F1-61E766564349/';
-var POC_CATEGORY = '0A613EF8-A432-459D-9158-04E6D2C11F7B/';
-var OTHER_CATEGORY = 'DD0417C2-66EC-4F2F-8A43-AF1D90AC5791/';
 var currentaddress = null;
 
 
@@ -1329,20 +1324,30 @@ function GenerateContactInfoSection() {
     // Grab all the contact categories, then dynamically create the accordions
     LoadCategories(function(data) {
 
-        var categoryData = data.Data;
+        $.map(data.Data, function (category) {
 
-        categoryData.forEach(function (category) {
+            // $("h1:contains('Addresses')").next('div').after($(header));
 
-            $("h1:contains('Addresses')").next('div').after($('<h3>').text(category.SectionTitle)); 
+            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            $('<a>', { 
+                title: 'New', 
+                class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
+                href: '#'
+            }).appendTo($(header));
+
+            $('<div>', {
+                class: 'constituent' + category.Name + 'gridcontainer'
+            }).appendTo($('.contactinfocontainer'));
+
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
 
-            LoadContactCategory(category.Id, category.TextBoxLabel, category.Name);
+            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            $('<input>').addClass('hidContactCategory' + category.Name).attr('type', 'hidden').val(category.Id).appendTo($('.' + 'constituent' + category.Name + 'gridcontainer'));
 
         });
-
-        ContactInfoNewModalButtonsAndDivs();
-
-        ContactInfoLoadAndAddModals();
+        
+        ContactInfoAddModals();
 
         $('.accordions').accordion('refresh');
         // LoadAccordions will not work here
@@ -1351,45 +1356,17 @@ function GenerateContactInfoSection() {
 
 }
 
-function ContactInfoLoadAndAddModals() {
+function ContactInfoAddModals() {
 
-   // LoadPhoneNumbersTable();
-
-    NewPhoneNumberModal();
-
-   // LoadEmailTable();
+    NewPhoneModal();
 
     NewEmailModal();
 
-   // LoadWebsiteTable();
-
     NewWebModal();
-
-   // LoadPointOfContactTable();
 
     NewPersonModal();
 
-   // LoadOtherContactsTable();
-
     NewOtherModal();
-}
-
-function ContactInfoNewModalButtonsAndDivs() {
-
-    var modalClassNames = ['web', 'phone', 'person', 'other', 'email'];
-
-    var classNamesIndex = 0;
-
-    $('h1:contains("Contact Information") ~ div div.accordions h3').each(function () {
-        // most of our accordions use h1, but for some reason accordion.refresh only works with h3.
-
-        $(this).append($('<a>', { title: 'New', class: 'new' + modalClassNames[classNamesIndex] + 'modallink'+ ' newbutton', href: '#' }));
-
-        $(this).after($('<div>', { class: 'constituent' + modalClassNames[classNamesIndex] + 'gridcontainer' }));
-
-        classNamesIndex++;
-
-    }); 
 }
 
 function LoadCategories(CategoryTitles) {
@@ -1410,50 +1387,33 @@ function LoadCategories(CategoryTitles) {
     });
 }
 
-function LoadContactCategory(id, displayText, name) {
+function LoadContactCategoryGrid(categoryid, displayText, name) {
 
     var columns = [
-        { dataField:  'Id', width: '0px' }, // may need to change this back
+        { dataField:  'Id', width: '0px' }, 
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'ContactType', caption: 'Type' },
+        { dataField: 'ContactType.Name', caption: 'Type' },
         { dataField: 'Info', caption: displayText },
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituent' + name.toLowerCase() + 'grid',
-        'constituent' + name.toLowerCase() + 'gridcontainer',
+    LoadGrid('constituent' + name + 'grid',
+        'constituent' + name + 'gridcontainer',
         columns,
-        WEB_API_ADDRESS + 'contactinfo/' + id + currentEntity.Id,
+        WEB_API_ADDRESS + 'contactinfo/' + categoryid + '/' + currentEntity.Id,
         null,
-        EditEmail); // Edit + name
+        function (id) { ExecuteFunction('Edit' + name, window, id) }); 
 }
 
 // Phone # Subsection
-//function LoadPhoneNumbersTable() {
 
-//    var columns = [ 
-//        { dataField: 'Id', width: '0px' },
-//        { dataField: 'IsPreferred', caption: 'Is Preferred' },
-//        { dataField: 'ContactType', caption: 'Type' },
-//        { dataField: 'Info', caption: 'Phone' },
-//        { dataField: 'Comment', caption: 'Comment' }
-//    ];
-
-//    LoadGrid('constituentphonegrid',
-//       'constituentphonegridcontainer',
-//       columns,
-//       WEB_API_ADDRESS + 'contactinfo/' + PHONE_CATEGORY + currentEntity.Id,
-//       null,
-//       EditPhoneNumber);
-//}
-
-function NewPhoneNumberModal() {
+function NewPhoneModal() {
 
     $('.newphonemodallink').click(function (e) {
 
         e.preventDefault();
 
-        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + PHONE_CATEGORY, '', '');
+        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '');
 
          modal = $('.phonenumbermodal').dialog({
             closeOnEscape: false,
@@ -1480,13 +1440,13 @@ function NewPhoneNumberModal() {
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
-                success: function () {
+                success: function (data) {
 
                     DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
 
-                    CloseModal();
+                    CloseModal(modal);
 
-                    LoadPhoneTable();
+                    LoadContactCategoryGrid($('.hidContactCategoryPhone').val(), 'Phone', 'Phone');
 
                 },
                 error: function (xhr, status, err) {
@@ -1509,7 +1469,7 @@ function NewPhoneNumberModal() {
 
 }
 
-function EditPhoneNumber(id) {
+function EditPhone(id) {
 
     var modal = $('.phonenumbermodal').dialog({
         closeOnEscape: false,
@@ -1518,7 +1478,7 @@ function EditPhoneNumber(id) {
         resizable: false
     });
 
-    LoadPhoneNumber(id, modal);
+    LoadPhone(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1548,13 +1508,15 @@ function EditPhoneNumber(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) { 
 
                 DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
 
                 CloseModal(modal);
 
-                LoadPhoneNumbersTable();
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
 
             },
             error: function (xhr, status, err) {
@@ -1566,7 +1528,7 @@ function EditPhoneNumber(id) {
 
 }
 
-function LoadPhoneNumber(id, modal) {
+function LoadPhone(id, modal) {
 
     $.ajax({
         type: 'GET',
@@ -1575,11 +1537,12 @@ function LoadPhoneNumber(id, modal) {
         crossDomain: true,
         success: function (data) {
 
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '', data.Data.ContactTypeId);
+
             $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-PhoneNumberType').val(data.Data.ContactTypeId);
             $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.pn-Comment').val(data.Data.Comment);
-
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + PHONE_CATEGORY);
 
         },
         error: function (xhr, status, err) {
@@ -1591,23 +1554,6 @@ function LoadPhoneNumber(id, modal) {
 // End Phone # Subsection
 
 // Emails Subsection
-function LoadEmailTable() {
-
-    var columns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Email' },
-        { dataField: 'Comment', caption: 'Comment' }
-    ];
-
-    LoadGrid('constituentemailgrid',
-        'constituentemailgridcontainer',
-        columns,
-        WEB_API_ADDRESS + 'contactinfo/' + EMAIL_CATEGORY + currentEntity.Id,
-        null,
-        EditEmail);
-}
 
 function NewEmailModal() {
 
@@ -1615,7 +1561,7 @@ function NewEmailModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.e-EmailType', 'contacttypes/' + EMAIL_CATEGORY, '', '');
+        PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '');
 
         modal = $('.emailmodal').dialog({
             closeOnEscape: false,
@@ -1647,7 +1593,7 @@ function NewEmailModal() {
 
                     CloseModal(modal);
 
-                    LoadEmailTable();
+                    LoadContactCategoryGrid($('.hidContactCategoryEmail').val(), 'Email', 'Email');
 
                 },
                 error: function (xhr, status, err) {
@@ -1707,13 +1653,15 @@ function EditEmail(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) {
 
                 DisplaySuccessMessage('Success', 'Email saved successfully.');
 
                 CloseModal(modal);
 
-                LoadEmailTable();
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
 
             },
             error: function (xhr, status, err) {
@@ -1734,11 +1682,13 @@ function LoadEmail(id, modal) {
         crossDomain: true,
         success: function (data) {
 
+            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '', data.Data.ContactTypeId);
+
             $(modal).find('.e-Info').val(data.Data.Info);
+            $(modal).find('.e-EmailType').val(data.Data.ContactTypeId);
             $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.e-Comment').val(data.Data.Comment);
 
-            PopulateDropDown('.e-EmailType', 'contacttypes/' + EMAIL_CATEGORY, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -1750,31 +1700,13 @@ function LoadEmail(id, modal) {
 // End Emails Subsection
 
 // Websites Subsection
-function LoadWebTable() {
-
-    var columns = [ 
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'URL' },
-        { dataField: 'Comment', caption: 'Comment' }
-    ];
-
-    LoadGrid('constituentwebsitegrid',
-        'constituentwebsitegridcontainer',
-        columns,
-        WEB_API_ADDRESS + 'contactinfo/' + WEBSITE_CATEGORY + currentEntity.Id,
-        null,
-        EditWebsite);
-}
-
 function NewWebModal() {
 
-    $('.newwebsitemodallink').click(function (e) {
+    $('.newwebmodallink').click(function (e) {
 
         e.preventDefault();
 
-        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + WEBSITE_CATEGORY, '', '');
+        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '');
 
         modal = $('.websitemodal').dialog({
             closeOnEscape: false,
@@ -1801,13 +1733,13 @@ function NewWebModal() {
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
-                success: function () {
+                success: function (data) {
 
                     DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
                     CloseModal(modal);
 
-                    LoadWebsiteTable();
+                    LoadContactCategoryGrid($('.hidContactCategoryWeb').val(), 'URL', 'Web');
 
                 },
                 error: function (xhr, status, err) {
@@ -1816,7 +1748,7 @@ function NewWebModal() {
             });
 
         });
-    });
+    }); 
 
     $('.cancelmodal').click(function (e) {
 
@@ -1839,7 +1771,7 @@ function EditWeb(id) {
         resizable: false
     });
 
-    LoadWebsite(id, modal);
+    LoadWeb(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -1869,13 +1801,15 @@ function EditWeb(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) {
 
                 DisplaySuccessMessage('Success', 'Web Site saved successfully.');
 
                 CloseModal(modal);
 
-                LoadWebsiteTable();
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
 
             },
             error: function (xhr, status, err) {
@@ -1896,11 +1830,12 @@ function LoadWeb(id, modal) {
         crossDomain: true,
         success: function (data) {
 
+            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '', data.Data.ContactTypeId);
+
             $(modal).find('.ws-Info').val(data.Data.Info);
+            $(modal).find('.ws-WebSiteType').val(data.Data.ContactTypeId);
             $(modal).find('.ws-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.ws-Comment').val(data.Data.Comment);
-
-            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + WEBSITE_CATEGORY, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -1912,31 +1847,13 @@ function LoadWeb(id, modal) {
 // End Websites Subsection
 
 // Point Of Contact Subsection
-function LoadPersonTable() {
-
-    var columns = [ 
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Name' },
-        { dataField: 'Comment', caption: 'Comment' }
-    ];
-
-    LoadGrid('constituentpocgrid',
-        'constituentpocgridcontainer',
-        columns,
-        WEB_API_ADDRESS + 'contactinfo/'+ POC_CATEGORY + currentEntity.Id,
-        null,
-        EditPointOfContact);
-}
-
 function NewPersonModal() {
 
-    $('.newpocmodallink').click(function (e) {
+    $('.newpersonmodallink').click(function (e) {
 
         e.preventDefault();
 
-        PopulateDropDown('.poc-PocType', 'contacttypes/' + POC_CATEGORY, '', '');
+        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '');
 
         modal = $('.pocmodal').dialog({
             closeOnEscape: false,
@@ -1962,13 +1879,15 @@ function NewPersonModal() {
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
-                success: function () {
+                success: function (data) {
 
                     DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
                     CloseModal(modal);
 
-                    LoadPointOfContactTable();
+                    LoadContactCategoryGrid($('.hidContactCategoryPerson').val(), 'Person', 'Name');
+
+
 
                 },
                 error: function (xhr, status, err) {
@@ -2000,7 +1919,7 @@ function EditPerson(id) {
         resizable: false
     });
 
-    LoadPointOfContact(id, modal);
+    LoadPerson(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -2030,13 +1949,15 @@ function EditPerson(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) {
 
                 DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
 
                 CloseModal(modal);
 
-                LoadPointOfContactTable();
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
 
             },
             error: function (xhr, status, err) {
@@ -2057,11 +1978,12 @@ function LoadPerson(id, modal) {
         crossDomain: true,
         success: function (data) {
 
+            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '', data.Data.ContactTypeId);
+
             $(modal).find('.poc-Info').val(data.Data.Info);
+            $(modal).find('.poc-PocType').val(data.Data.ContactTypeId)
             $(modal).find('.poc-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.poc-Comment').val(data.Data.Comment);
-
-            PopulateDropDown('.poc-PocType', 'contacttypes/' + POC_CATEGORY, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -2073,29 +1995,11 @@ function LoadPerson(id, modal) {
 // End Point Of Contact Subsection
 
 // Other Contacts Subsection
-function LoadOtherTable() {
-
-    var columns = [ 
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'IsPreferred', caption: 'Is Preferred' },
-        { dataField: 'ContactType', caption: 'Type' },
-        { dataField: 'Info', caption: 'Info' },
-        { dataField: 'Comment', caption: 'Comment' }
-    ];
-
-    LoadGrid('constituentothergrid',
-        'constituentothergridcontainer',
-        columns,
-        WEB_API_ADDRESS + 'contactinfo/'+ OTHER_CATEGORY + currentEntity.Id,
-        null,
-        EditOtherContacts);
-}
-
 function NewOtherModal() {
 
     $('.newothermodallink').click(function (e) {
 
-        PopulateDropDown('.o-OtherType', 'contacttypes/' + OTHER_CATEGORY, '', '');
+        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '');
 
         e.preventDefault();
 
@@ -2123,13 +2027,15 @@ function NewOtherModal() {
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
-                success: function () {
+                success: function (data) {
 
                     DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
                     CloseModal(modal);
 
-                    LoadOtherContactsTable();
+                    LLoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
+
+                   // LoadContactCategoryGrid(data.Data.Id, data.Data.TextBoxLabel, data.Data.Name);
 
                 },
                 error: function (xhr, status, err) {
@@ -2161,7 +2067,7 @@ function EditOther(id) {
         resizable: false
     });
 
-    LoadOtherContacts(id, modal);
+    LoadOther(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
@@ -2191,13 +2097,13 @@ function EditOther(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) {
 
                 DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
 
                 CloseModal(modal);
 
-                LoadOtherContactsTable();
+                LoadContactCategoryGrid(data.Data.Id, 'Info', 'Other');
 
             },
             error: function (xhr, status, err) {
@@ -2218,11 +2124,12 @@ function LoadOther(id, modal) {
         crossDomain: true,
         success: function (data) {
 
+            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '', data.Data.ContactTypeId);
+
             $(modal).find('.o-Info').val(data.Data.Info);
+            $(modal).find('o-OtherType').val(data.Data.ContactTypeId);
             $(modal).find('.o-IsPreferred').prop('checked', data.Data.IsPreferred);
             $(modal).find('.o-Comment').val(data.Data.Comment);
-
-            PopulateDropDown('.o-OtherType', 'contacttypes/' + OTHER_CATEGORY, '', '');
 
         },
         error: function (xhr, status, err) {
@@ -2232,6 +2139,5 @@ function LoadOther(id, modal) {
 
 }
 // End Other Contacts Subsection
-
 
 /* End Contact Information Section */

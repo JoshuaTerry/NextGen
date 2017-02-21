@@ -38,9 +38,9 @@ namespace DDI.Services
 
         public IDataResponse<List<ContactInfo>> GetContactInfoByContactCategoryForConstituent(Guid? categoryId, Guid? constituentId)
         {
-            var results = _unitOfWork.GetRepository<ContactInfo>().Entities.Where(c => c.ConstituentId == constituentId && c.ContactType.ContactCategoryId == categoryId).ToList();
+            var results = _unitOfWork.GetEntities<ContactInfo>(base.IncludesForList).Where(c => c.ConstituentId == constituentId && c.ContactType.ContactCategoryId == categoryId).ToList();
             var response = GetIDataResponse(() => results);
-            
+
             response.TotalResults = results.Count;
 
             return response;

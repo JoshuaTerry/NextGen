@@ -18,6 +18,22 @@ namespace DDI.WebApi.Controllers
         {
         }
 
+        protected override Expression<Func<ContactInfo, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<ContactInfo, object>>[]
+            {
+                c => c.ContactType
+            };
+        }
+
+        protected override Expression<Func<ContactInfo, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<ContactInfo, object>>[]
+            {
+               c => c.ContactType
+            };
+        }
+
         [HttpGet]
         [Route("api/v1/contactinfo", Name = RouteNames.ContactInfo)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
