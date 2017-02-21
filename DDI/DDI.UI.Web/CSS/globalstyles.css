@@ -71,6 +71,16 @@ div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; dis
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
 
+.datepair {  }
+.datepair input.date { width: auto; display: inline-block; }
+.datepair input.time { width: auto; display: inline-block; }
+.datepicker {  }
+
+.customField textarea { width: 100%; }
+.customField div.radiobutton label { vertical-align: middle; }
+.customField input[type="radio"] { width: auto; vertical-align: middle; }
+
+
 .tabscontainer { width: 73%; display: inline-block; background-color: white; vertical-align: top; }
 .tabscontainer.inner { width: 100%; }
 

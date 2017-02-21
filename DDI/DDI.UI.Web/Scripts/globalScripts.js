@@ -312,7 +312,7 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    if ($.timepicker) {
+    // if ($.timepicker) {
         $('.datepair .time').timepicker({
             'showDuration': true,
             'timeFormat': 'g:ia'
@@ -323,8 +323,8 @@ function LoadDatePair() {
             'autoclose': true
         });
 
-        $('.datepair').datepair();
-    }
+        // $('.datepair').datepair();
+    // }
     
 }
 

@@ -119,7 +119,7 @@ function DisplayCustomFields(container, entity, callback) {
 
 function CreateCustomField(item) {
 
-    var div = $('<div>').addClass('fieldblock');
+    var div = $('<div>').addClass('fieldblock customField');
 
     $('<label>').text(item.LabelText).appendTo($(div));
 
@@ -219,9 +219,9 @@ function CreateRadioField(item) {
         $.map(item.Options, function (o) {
             var rd = $('<div>').addClass('radiobutton');
 
-            $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
             var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
-
+            $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
+            
             if (item.Answer && item.Answer.Value == $(i).val()) {
                 $(i).attr('checked', 'checked');
             }
