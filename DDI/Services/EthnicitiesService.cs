@@ -27,10 +27,10 @@ namespace DDI.Services
             _constituentService = constituentService;
         }
 
-        public IDataResponse<Constituent> AddEthnicitiesToConstituent(Constituent constituent, JObject ethnicityIds)
+        public IDataResponse AddEthnicitiesToConstituent(Constituent constituent, JObject ethnicityIds)
         {
             var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, p => p.Ethnicities);
-            IDataResponse<Constituent> response = null;
+            IDataResponse response = null;
             List<Ethnicity> passedEthnicities = new List<Ethnicity>();
             List<Ethnicity> constituentEthnicities = new List<Ethnicity>();
 
@@ -55,7 +55,10 @@ namespace DDI.Services
 
             UnitOfWork.SaveChanges();
 
-            response = GetIDataResponse(() => constituentToUpdate);
+            response = new DataResponse()
+            {
+                IsSuccessful = true
+            };
 
             return response;
         }

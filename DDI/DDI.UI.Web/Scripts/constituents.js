@@ -264,11 +264,11 @@ function DisplayConstituentPrimaryAddress() {
 /* Demograpics Section */
 
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
+    LoadTagBoxes('tagBoxDenominations', 'denominations', 'denominations', Links.GetDenomination.Href);
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
+    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', Links.GetEthnicity.Href);
 }
 
 /* End Demographics Section */

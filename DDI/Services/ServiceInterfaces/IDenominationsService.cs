@@ -7,6 +7,6 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface IDenominationsService : IService<Denomination>
     {
-        IDataResponse<Constituent> AddDenominationsToConstituent(Constituent constituent, JObject denominationIds);
+        IDataResponse AddDenominationsToConstituent(Constituent constituent, JObject denominationIds);
     }
 }
