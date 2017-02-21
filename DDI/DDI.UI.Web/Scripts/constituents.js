@@ -258,9 +258,11 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
+        $('.OrganizationSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
+        $('.PersonalSection').hide();
     }
 }
 

@@ -263,7 +263,7 @@
 
                     </div>
 
-                    <h1>Organization</h1>
+                    <h1 class="OrganizationSection">Organization</h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -321,7 +321,7 @@
 
                     </div>
 
-                    <h1>Personal</h1>
+                    <h1 class="PersonalSection">Personal</h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
