@@ -144,7 +144,7 @@ function GetSearchParameters() {
     var p = '';
 
     $('.searchcriteria div.fieldblock input').each(function () {
-        var property = $(this).attr('class').replace('search', '');
+        var property = $(this).attr('class').split(' ')[0].replace('search', '');
         var value = $(this).val();
 
         if (value) {
@@ -153,7 +153,7 @@ function GetSearchParameters() {
     });
 
     $('.searchcriteria div.fieldblock select').each(function () {
-        var property = $(this).attr('class').replace('search', '');
+        var property = $(this).attr('class').split(' ')[0].replace('search', '');
         var value = $(this).val();
 
         if (value) {
