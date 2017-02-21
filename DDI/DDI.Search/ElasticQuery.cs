@@ -289,6 +289,24 @@ namespace DDI.Search
                 return _query;
             }
 
+            public ElasticQuery<T> Range(string lowValue, string highValue, Expression<Func<T, object>> predicate)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().TermRange(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
+                return _query;
+            }
+
+            public ElasticQuery<T> Range(double lowValue, double highValue, Expression<Func<T, object>> predicate)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Range(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
+                return _query;
+            }
+
+            public ElasticQuery<T> Range(DateTime lowValue, DateTime highValue, Expression<Func<T, object>> predicate)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().DateRange(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
+                return _query;
+            }
+
             public ElasticQuery<T> Nested(Expression<Func<T, object>> predicate, ElasticQuery<T> nestedQuery)
             {
                 NestedQueryDescriptor<T> nested = new NestedQueryDescriptor<T>().Path(predicate);

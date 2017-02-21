@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     $(document).keypress(function (e) {
-        if (e.which == 13) {
+        if (e.which === 13) {
             DoSearch();
         }
     });
@@ -93,7 +93,7 @@ function DoSearch() {
         crossDomain: true,
         success: function (data) {
 
-            if (data.Data.length == 1) {
+            if (data.Data.length === 1) {
                 DisplayConstituent(data.Data[0].ConstituentNumber);
             }
             else {
@@ -156,7 +156,7 @@ function GetSearchParameters() {
         var property = $(this).attr('class').split(' ')[0].replace('search', '');
         var value = $(this).val();
 
-        if (value) {
+        if (value && value !== 'null') {
             p += property + '=' + value + '&';
         }
     });

@@ -62,32 +62,32 @@
 
                         <div class="fieldblock">
                             <label>Zip From</label>
-                            <input type="number" class="searchzipfrom" />
+                            <input type="text" class="searchzipfrom" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Zip To</label>
-                            <input type="number" class="searchzipto" />
+                            <input type="text" class="searchzipto" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 1</label>
-                            <input type="number" class="searchregion1" />
+                            <input type="text" class="searchregion1" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 2</label>
-                            <input type="number" class="searchregion2" />
+                            <input type="text" class="searchregion2" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 3</label>
-                            <input type="number" class="searchregion3" />
+                            <input type="text" class="searchregion3" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 4</label>
-                            <input type="number" class="searchregion4" />
+                            <input type="text" class="searchregion4" />
                         </div>
 
                         <div class="fieldblock">
@@ -102,27 +102,27 @@
 
                         <div class="fieldblock">
                             <label>Include Tags</label>
-                            <input type="number" class="searchincludetags" />
+                            <input type="text" class="searchincludetags" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Exclude Tags</label>
-                            <input type="number" class="searchexcludetags" />
+                            <input type="text" class="searchexcludetags" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Alternate Id</label>
-                            <input type="number" class="searchaltid" />
+                            <input type="text" class="searchaltid" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Created From</label>
-                            <input type="number" class="searchcreatedfrom datepicker" />
+                            <input type="text" class="searchcreatedfrom datepicker" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Created To</label>
-                            <input type="number" class="searchcreatedto datepicker" />
+                            <input type="text" class="searchcreatedto datepicker" />
                         </div>
                     </div>
 

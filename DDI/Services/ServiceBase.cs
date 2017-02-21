@@ -49,18 +49,18 @@ namespace DDI.Services
             set { _includesForList = value; }
         }
 
-        public virtual IDataResponse<List<T>> GetAll(IPageable search = null)
+        public virtual IDataResponse<List<ICanTransmogrify>> GetAll()
+        {
+            return GetAll(null, null);
+        }
+
+        public virtual IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
         {
             var queryable = _unitOfWork.GetEntities(_includesForList);
             return GetPagedResults(queryable, search);
         }
 
-        public virtual IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
-        {
-            return null;
-        }
-
-        private IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
+        private IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
@@ -84,12 +84,14 @@ namespace DDI.Services
                          .SetOffset(search.Offset);
 
             //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            var response = GetIDataResponse(() => query.GetQueryable().ToList());
+            var queryData = query.GetQueryable().AsEnumerable(); // AsEnumerable() runs the SQL query.
+
             if (search.OrderBy == OrderByProperties.DisplayName)
             {
-                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
+                queryData = queryData.OrderBy(a => a.DisplayName);
             }
-            response.Data = ModifySortOrder(response.Data);
+            
+            var response = GetIDataResponse(() => ModifySortOrder(queryData.ToList()).ToList<ICanTransmogrify>());
 
             response.TotalResults = totalCount;
 
@@ -106,6 +108,11 @@ namespace DDI.Services
         /// </summary>
         protected bool VerifyFieldList<T1>(string fields)
         {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                return false;
+            }
+
             var properties = typeof(T1).GetProperties().Select(p => p.Name);
             return fields.Split(',').All(f => properties.Contains(f));
         }
@@ -122,7 +129,7 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
+        public IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
         {
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
             return GetPagedResults(queryable, search);
@@ -207,7 +214,7 @@ namespace DDI.Services
         }
 
         public IDataResponse<T1> GetIDataResponse<T1>(Func<T1> funcToExecute, string fieldList = null, bool shouldAddLinks = false)
-        {
+        {   
             return GetDataResponse(funcToExecute, fieldList, shouldAddLinks);
         }
 
