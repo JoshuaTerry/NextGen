@@ -17,6 +17,7 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse<T> Update(Guid id, JObject changes);
         IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
+        IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression);
         IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null);
         Expression<Func<T, object>>[] IncludesForSingle { set; }
         Expression<Func<T, object>>[] IncludesForList { set; }

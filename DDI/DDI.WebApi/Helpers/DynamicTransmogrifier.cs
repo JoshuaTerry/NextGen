@@ -34,7 +34,7 @@ namespace DDI.WebApi.Helpers
             {
                 dynamicResponse.Data = ToDynamicObject((response.Data as ICanTransmogrify), urlHelper, fields, shouldAddHateoasLinks);
             }
-            else if (IsSimple(response.Data.GetType()))
+            else if (response.Data == null || IsSimple(response.Data.GetType()))
             {
                 dynamicResponse.Data = response.Data;
             }

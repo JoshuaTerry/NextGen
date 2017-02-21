@@ -64,7 +64,15 @@ namespace DDI.Search
             IndexHelper.Initialize(_indexName);
 
             _connectionSettings = new ConnectionSettings(_uri);
-            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type, string>(IndexHelper.IndexAliases));
+
+            _connectionSettings.MapDefaultTypeIndices(ms =>
+            {
+                foreach (var kvp in IndexHelper.IndexAliases)
+                {
+                    ms.Add(kvp.Key, kvp.Value);
+                }
+            });
+            
             _client = new ElasticClient(_connectionSettings);
         }
 
@@ -155,7 +163,14 @@ namespace DDI.Search
             }
             else
             {
-                _client.Index(document);
+                try
+                {
+                    _client.Index(document);
+                }
+                catch (Exception ex)
+                {
+                    Shared.Logger.Logger.Error(typeof(NestClient), ex.Message);
+                }
             }
         }
 

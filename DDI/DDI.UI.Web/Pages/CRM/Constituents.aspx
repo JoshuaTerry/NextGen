@@ -1,8 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Constituents.aspx.cs" Inherits="DDI.UI.Web.Constituents" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+    
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -213,12 +214,12 @@
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Denomination</label>
-                            <div class="editable tagDenominationsContainer"></div>
+                            <div class="editable tagbox denominations"></div>
                         </div>
 
                         <div class="fieldblock">
                             <label>Ethnicity</label>
-                            <div class="editable tagEthnicitiesContainer"></div>
+                            <div class="editable tagbox ethnicities"></div>
                         </div>
 
                         <div class="fieldblock">
@@ -435,7 +436,7 @@
 
                     </div>
 
-                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
+                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span> <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
                         
                         <div class="alternateidgridcontainer"></div>
