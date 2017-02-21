@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using DDI.Data;
-using DDI.Shared;
-using Newtonsoft.Json.Linq;
+using System.Reflection;
 using DDI.Business.CRM;
-using Microsoft.Ajax.Utilities;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Services.Search;
-using DDI.Shared.Statics;
-using DDI.Shared.Logger;
+using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
+using DDI.Services.Search;
+using DDI.Shared;
+using DDI.Shared.Logger;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
 {
@@ -33,20 +33,38 @@ namespace DDI.Services
         {
         }
 
-        private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository )
-            :base(uow)
+        private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository)
+            : base(uow)
         {
             _constituentlogic = constituentLogic;
             _repository = repository;
         }
 
-        public override IDataResponse<List<Constituent>> GetAll(IPageable search)
+        /// <summary>
+        /// Get all entities
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
+        {
+            if (!VerifyFieldList<ConstituentDocument>(fields))
+            {
+                return null;
+            }
+
+            IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search);
+
+            return new DataResponse<List<ICanTransmogrify>>(results.Documents.ToList<ICanTransmogrify>()) { TotalResults = results.TotalCount };
+        }
+
+        private IDocumentSearchResult<ConstituentDocument> PerformElasticSearch(IPageable search)
         {
             var repo = new ElasticRepository<ConstituentDocument>();
             var query = repo.CreateQuery();
 
             var criteria = (ConstituentSearch)search;
-            
+
             if (criteria.ConstituentNumber.HasValue && criteria.ConstituentNumber.Value > 0)
             {
                 query.Must.Equal(criteria.ConstituentNumber.Value, p => p.ConstituentNumber);
@@ -65,16 +83,23 @@ namespace DDI.Services
 
             }
 
-            switch(search.OrderBy)
+            switch (search.OrderBy)
             {
                 case OrderByProperties.DisplayName:
                     query.OrderBy(p => p.SortableName);
                     break;
             }
 
-            var results = repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);            
+            return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
+        }
+
+        public override IDataResponse<List<Constituent>> GetAll(IPageable search)
+        {
+            IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search);
             List<Guid> ids = results.Documents.Select(p => p.Id).ToList();
-            List<Constituent>  constituentsFound = UnitOfWork.GetEntities<Constituent>(IncludesForList).Where(p => ids.Contains(p.Id)).ToList();
+            List<Constituent> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), outer => outer, inner => inner.Id,
+                (id, constituent) => constituent).ToList();
+               
             return new DataResponse<List<Constituent>>(constituentsFound) { TotalResults = results.TotalCount };
         }
 

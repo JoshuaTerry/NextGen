@@ -81,6 +81,9 @@ namespace DDI.Search.Models
         [Date]
         public DateTime? CreationDate { get; set; }
 
+        [Text(Ignore = true)]
+        public string FormattedName => Name;        
+
         public void AutoMap(MappingsDescriptor mappings)
         {
             mappings.Map<ConstituentDocument>(p => p.AutoMap());

@@ -97,9 +97,20 @@ namespace DDI.WebApi.Controllers
             try
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
-                var response = _service.GetAll(search);
+
+                // If there's a fieldlist, first try the fieldlist-specific GetAll.
+                if (!string.IsNullOrWhiteSpace(fields))
+                {
+                    var response = _service.GetAll(fields, search);
+
+                    if (response != null)
+                    {
+                        return FinalizeResponse(response, routeName, search, fields, urlHelper);
+                    }
+                }                
                
-                return FinalizeResponse(response, routeName, search, fields, urlHelper);
+                // Call the entity-specific GetAll.
+                return FinalizeResponse(_service.GetAll(search), routeName, search, fields, urlHelper);
             }
             catch (Exception ex)
             {
@@ -125,7 +136,7 @@ namespace DDI.WebApi.Controllers
         }
 
         public IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
-            where T1 : class, IEntity
+            where T1 : class
         {
             try
             {

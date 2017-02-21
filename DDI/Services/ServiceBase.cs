@@ -55,6 +55,11 @@ namespace DDI.Services
             return GetPagedResults(queryable, search);
         }
 
+        public virtual IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
+        {
+            return null;
+        }
+
         private IDataResponse<List<T>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
@@ -96,6 +101,15 @@ namespace DDI.Services
             return data;
         }
 
+        /// <summary>
+        /// Determine if every field in a field list can be mapped to a property in the specified type.
+        /// </summary>
+        protected bool VerifyFieldList<T1>(string fields)
+        {
+            var properties = typeof(T1).GetProperties().Select(p => p.Name);
+            return fields.Split(',').All(f => properties.Contains(f));
+        }
+        
         public virtual IDataResponse<T> GetById(Guid id)
         {
             var result = _unitOfWork.GetById(id, _includesForSingle); 

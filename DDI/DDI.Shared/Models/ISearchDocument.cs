@@ -9,8 +9,8 @@ namespace DDI.Shared.Models
     /// <summary>
     /// Interface for Elasticsearch documents.
     /// </summary>
-    public interface ISearchDocument
+    public interface ISearchDocument : ICanTransmogrify
     {
-        Guid Id { get; set; }
+
     }
 }

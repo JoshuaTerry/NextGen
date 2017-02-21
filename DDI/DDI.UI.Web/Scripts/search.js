@@ -162,6 +162,7 @@ function GetSearchParameters() {
     });
 
     p += 'limit=100&';
+    p += 'fields=ConstituentNumber,FormattedName,PrimaryAddress&';
 
     p = p.substring(0, p.length - 1);
 

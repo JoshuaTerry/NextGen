@@ -86,7 +86,7 @@ namespace DDI.Search
         /// <param name="limit">Number of results to return per page</param>
         /// <param name="offset">Page number (zero-based)</param>
         /// <returns></returns>
-        public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
+        public IDocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
         {
             ISearchRequest request = query.BuildSearchRequest();
 
