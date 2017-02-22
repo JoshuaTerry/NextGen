@@ -209,6 +209,18 @@ namespace DDI.Services
             }
             return base.Update(id, changes);
         }
+
+        public void RunTest()
+        {
+            using (var uow = new UnitOfWorkEF())
+            {
+                var name = uow.FirstOrDefault<Constituent>(p => p.ConstituentNumber == 1000048);
+                name.CreatedOn = DateTime.Parse("2/17/2017");
+                BusinessLogicHelper.GetBusinessLogic(uow, typeof(Constituent)).Validate(name);
+                uow.SaveChanges();
+            }
+        }
+
         #endregion
 
         #region Private Methods

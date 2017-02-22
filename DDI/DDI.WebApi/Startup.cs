@@ -1,6 +1,4 @@
-﻿using DDI.Services;
-using DDI.Services.Search;
-using DDI.WebApi;
+﻿using DDI.WebApi;
 using Microsoft.Owin;
 using Owin;
 
@@ -17,8 +15,6 @@ namespace DDI.WebApi
             // Set the CacheHelper's cache provider
             Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
 
-            //var cs = new ConstituentService();
-            //var result = cs.GetAll(new ConstituentSearch() { Name = "Hammer", Limit = 10, Offset = 0 });
         }
     }
 }

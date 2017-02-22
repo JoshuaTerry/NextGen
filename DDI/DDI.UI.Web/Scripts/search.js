@@ -102,7 +102,7 @@ function DoSearch() {
                     dataSource: data.Data,
                     columns: [
                         { dataField: 'Id', width: '0px' },
-                        { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
+                        { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'right', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
                         { dataField: 'PrimaryAddress', caption: 'Primary Address' },
                         'Contact Information'
@@ -125,7 +125,7 @@ function DoSearch() {
                         showOperationChooser: false
                     },
                     onRowClick: function (info) {
-                        DisplayConstituent(info.values[0]);
+                        DisplayConstituent(info.values[1]);
                     }
                 });
 
