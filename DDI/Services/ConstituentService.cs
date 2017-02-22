@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using DDI.Business.CRM;
 using DDI.Business.Helpers;
 using DDI.Data;
@@ -16,7 +14,6 @@ using DDI.Shared.Logger;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
@@ -48,6 +45,7 @@ namespace DDI.Services
         {
             _constituentlogic = constituentLogic;
             _repository = repository;
+            _logger = Logger.GetLogger(typeof(ConstituentService));
         }
 
         #endregion
@@ -59,97 +57,32 @@ namespace DDI.Services
         {
             var criteria = (ConstituentSearch)search;
 
+            // If constituent number specified, bypass all other search criteria and retrieve single constituent.
             if (criteria.ConstituentNumber > 0)
             {
                 var constituents = UnitOfWork.GetEntities(IncludesForList).Where(p => p.ConstituentNumber == criteria.ConstituentNumber.Value);
                 return new DataResponse<List<ICanTransmogrify>>(constituents.ToList<ICanTransmogrify>()) { TotalResults = constituents.Count() };
             }
 
+            // Using Elasticsearch to retrieve documents.
             IDocumentSearchResult<ConstituentDocument> results = PerformElasticSearch(search as ConstituentSearch);
 
+            // If the field list can be satisfied via the search documents, return them.
             if (VerifyFieldList<ConstituentDocument>(fields))
             {
                 return new DataResponse<List<ICanTransmogrify>>(results.Documents.ToList<ICanTransmogrify>()) { TotalResults = results.TotalCount };
             }
 
-            List<Guid> ids = results.Documents.Select(p => p.Id).ToList();
-            List<ICanTransmogrify> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), outer => outer, inner => inner.Id,
-                (id, constituent) => constituent).ToList<ICanTransmogrify>();
+            // Otherwise, convert the search documents to constituents via a join.
+            List<Guid> ids = results.Documents.Select(p => p.Id).ToList(); // This is the list of Ids to retrieve.  See the Where method below that filters constituents via this list.
+            List<ICanTransmogrify> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), 
+                                                                outer => outer, 
+                                                                inner => inner.Id,
+                                                                (id, constituent) => constituent)
+                                                          .ToList<ICanTransmogrify>();
                
             return new DataResponse<List<ICanTransmogrify>>(constituentsFound) { TotalResults = results.TotalCount };
         }
-
-        /*
-        public IDataResponse<List<Constituent>> GetAll(IPageable search)
-        { 
-            var constituentSearch = (ConstituentSearch) search;
-            IQueryable<Constituent> constituents = _repository.GetEntities(IncludesForList);
-            var query = new CriteriaQuery<Constituent, ConstituentSearch>(constituents, constituentSearch)
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentNumber, c => c.ConstituentNumber)
-                .IfModelPropertyIsNotBlankAndDatabaseContainsIt(m => m.Name, c => c.FormattedName)
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.City, c => c.ConstituentAddresses.Any(a => a.Address.City.StartsWith(constituentSearch.City)))
-                .IfModelPropertyIsNotBlankThenAndTheExpression(m => m.AlternateId, c => c.AlternateIds.Any(a => a.Name.Contains(constituentSearch.AlternateId)))
-                .IfModelPropertyIsNotBlankAndItEqualsDatabaseField(m => m.ConstituentTypeId, c => c.ConstituentTypeId);
-            
-            // Created Range
-            ApplyZipFilter(query, constituentSearch);
-            ApplyQuickFilter(query, constituentSearch);
-
-            if (!string.IsNullOrWhiteSpace(search.OrderBy) && search.OrderBy != OrderByProperties.DisplayName)
-            {
-                query = query.SetOrderBy(search.OrderBy);
-            }
-
-            var totalCount = query.GetQueryable().ToList().Count;
-
-            query = query.SetLimit(search.Limit)
-                         .SetOffset(search.Offset);
-
-            //var sql = query.GetQueryable().ToString();  //This shows the SQL that is generated
-            var response = GetIDataResponse(() => query.GetQueryable().ToList());
-            if (search.OrderBy == OrderByProperties.DisplayName)
-            {
-                response.Data = response.Data.OrderBy(a => a.DisplayName).ToList();
-            }
-
-            response.TotalResults = totalCount;
-
-            return response;
-        }
-
-        private void ApplyQuickFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
-        {
-            if (!search.QuickSearch.IsNullOrWhiteSpace())
-            {
-                query.Or(c => c.FormattedName.Contains(search.QuickSearch));
-                query.Or(c => c.AlternateIds.Any(a => a.Name.Contains(search.QuickSearch)));
-                int quickSearchNumber;
-                if (int.TryParse(search.QuickSearch, out quickSearchNumber))
-                {
-                    query.Or(c => c.ConstituentNumber.Equals(quickSearchNumber));
-                }
-            }
-        }
-
-        private void ApplyZipFilter(CriteriaQuery<Constituent, ConstituentSearch> query, ConstituentSearch search)
-        {
-            if (!search.PostalCodeFrom.IsNullOrWhiteSpace() || !search.PostalCodeTo.IsNullOrWhiteSpace())
-            {
-                if (search.PostalCodeFrom.IsNullOrWhiteSpace())
-                {
-                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.PostalCodeTo)));
-                }
-                else if (search.PostalCodeTo.IsNullOrWhiteSpace())
-                {
-                    query.And(c => c.ConstituentAddresses.Any(a => a.Address.PostalCode.StartsWith(search.PostalCodeFrom)));
-                }
-                else
-                {
-                    query.And(c => (c.ConstituentAddresses.Any(a => a.Address.PostalCode.CompareTo(search.PostalCodeFrom) >= 0 && a.Address.PostalCode.CompareTo(search.PostalCodeTo + "~") <= 0)));
-                }
-            }
-        }
-        */
 
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
@@ -202,23 +135,12 @@ namespace DDI.Services
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.Error(ex.Message, ex);
                         }
                     }
                 }
             }
             return base.Update(id, changes);
-        }
-
-        public void RunTest()
-        {
-            using (var uow = new UnitOfWorkEF())
-            {
-                var name = uow.FirstOrDefault<Constituent>(p => p.ConstituentNumber == 1000048);
-                name.CreatedOn = DateTime.Parse("2/17/2017");
-                BusinessLogicHelper.GetBusinessLogic(uow, typeof(Constituent)).Validate(name);
-                uow.SaveChanges();
-            }
         }
 
         #endregion

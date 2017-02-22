@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Conversion.Statics;
-using DDI.Search;
-using DDI.Search.Models;
 using log4net;
 
 namespace DDI.Conversion
