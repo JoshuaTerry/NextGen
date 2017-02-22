@@ -67,7 +67,7 @@ namespace DDI.Business.Helpers
             StringBuilder result = new StringBuilder();
             foreach (var token in Regex.Split(text, "([ ,+&|])"))
             {
-                if (string.IsNullOrWhiteSpace(token))
+                if (string.IsNullOrEmpty(token))
                 {
                     continue;
                 }

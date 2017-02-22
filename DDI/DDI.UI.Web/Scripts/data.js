@@ -136,10 +136,10 @@ function LoadGrid(grid, container, columns, route, selected, edit, data) {
             }
         });
     }
-    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
+    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null, null);
 }
 
-function LoadGridFromHateoas(grid, container, columns, route, selected, editMethod, deleteMethod, deleteMessage, data) {
+function LoadGridFromHateoas(grid, container, columns, route, selected, hateoasRouteNameBase, editMethod, deleteMethod, deleteMessage, data) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -159,7 +159,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
+                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks["Update" + hateoasRouteNameBase].Href);
                     })
                     .appendTo(container);
             }
@@ -176,7 +176,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, deleteMessage + options.data.DisplayName + "?");
+                        deleteMethod(options.data.FormattedLinks["Delete" + hateoasRouteNameBase].Href, options.data.FormattedLinks["Delete" + hateoasRouteNameBase].Method, deleteMessage + options.data.DisplayName + "?");
                     })
                     .appendTo(container);
             }
