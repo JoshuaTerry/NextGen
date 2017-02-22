@@ -312,7 +312,7 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    // if ($.timepicker) {
+    if ($.timepicker) {
         $('.datepair .time').timepicker({
             'showDuration': true,
             'timeFormat': 'g:ia'
@@ -324,7 +324,7 @@ function LoadDatePair() {
         });
 
         // $('.datepair').datepair();
-    // }
+    }
     
 }
 
@@ -567,36 +567,44 @@ function StopEdit(editcontainer) {
 
 function SaveEdit(editcontainer) {
 
-    // Get just the fields that have been edited
-    var fields = GetEditedFields(editcontainer);
+    if ($(editcontainer).hasClass('customFieldContainer')) {
 
-    //SaveTagBoxes
-    SaveTagBoxes(editcontainer);
+        SaveCustomFields(editcontainer);
 
-    // Save the entity
-    $.ajax({
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
-        method: 'PATCH',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    }
+    else {
 
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+        // Get just the fields that have been edited
+        var fields = GetEditedFields(editcontainer);
 
-            // Display updated entity data
-            currentEntity = data.Data;
+        // Save the entity
+        $.ajax({
+            url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
+            method: 'PATCH',
+            headers: GetApiHeaders(),
+            data: fields,
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
 
-            RefreshEntity();
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
-        }
-    });
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
+                // Display updated entity data
+                currentEntity = data.Data;
+
+                RefreshEntity();
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            }
+        });
+
+        //SaveTagBoxes
+        SaveTagBoxes(editcontainer);
+    }
+    
 }
 
 function GetEditedFields(editcontainer) {
@@ -673,6 +681,19 @@ function SaveTagBoxes(editcontainer) {
 
 }
 
+function SaveCustomFields(editcontainer) {
+
+    $(editcontainer).find('div.fieldblock').each(function () {
+
+        var customFieldId = $(this).attr('id');
+        var cf = currentCustomFields[customFieldId];
+
+        var foo = 'bar';
+
+    });
+
+}
+
 function SaveChildCollection(children, route) {
     $.ajax({
         url: route,
@@ -683,9 +704,6 @@ function SaveChildCollection(children, route) {
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
-
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
         },
         error: function (xhr, status, err) {

@@ -12,15 +12,13 @@ $(document).ready(function () {
 
     LoadDropDowns();
 
-    $(window).resize(function () {
-        Resize();
-    });
-
-    DisplayConstituentCustomFields();
-
     CreateEditControls();
 
     SetupEditControls();
+
+    $(window).resize(function () {
+        Resize();
+    });
 
     if (sessionStorage.getItem('constituentid')) {
 
@@ -253,6 +251,8 @@ function DisplayConstituentData() {
         NewRelationshipModal();
 
         NewAddressModal();
+
+        DisplayConstituentCustomFields();
     }
 }
 

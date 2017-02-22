@@ -71,7 +71,26 @@ namespace DDI.WebApi.Controllers
             }
 
             var response = _service.Add(item);
-            return Ok();
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public IHttpActionResult Post([FromBody] List<CustomFieldData> items)
+        {
+            try
+            {
+                if (items != null && items.Count > 0)
+                {
+                    items.ForEach(i => _service.Add(i));
+                }
+
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
 
         [HttpPatch]

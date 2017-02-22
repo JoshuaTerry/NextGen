@@ -42,10 +42,10 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/entity/{entityId}", Name = RouteNames.CustomField + RouteNames.Entity)]
-        public IHttpActionResult GetByEntity(int entityId)
+        [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}", Name = RouteNames.CustomField + RouteNames.Entity)]
+        public IHttpActionResult GetByEntity(int entityId, Guid constituentId)
         {
-            var result = Service.GetByEntityId(entityId);
+            var result = Service.GetByEntityId(entityId, constituentId);
 
             if (result == null)
             {

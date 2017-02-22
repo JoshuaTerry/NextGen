@@ -8,6 +8,7 @@ var CustomFieldEntity = {
     'LineOfCredit': 15, 'Loans': 16, 'Portfolio': 17, 'Pools': 18, 'CRM': 19,
     'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25 };
 var currentCustomFieldEntity = 0;
+var currentCustomFields = [];
 
 $(document).ready(function () {
 
@@ -88,7 +89,7 @@ function DisplayCustomFields(container, entity, callback) {
         container = '.' + container;
 
     $.ajax({
-        url: WEB_API_ADDRESS + route + 'entity/' + entity,
+        url: WEB_API_ADDRESS + route + 'entity/' + entity + '/constituent/' + currentEntity.Id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -98,6 +99,8 @@ function DisplayCustomFields(container, entity, callback) {
             if (data && data.IsSuccessful) {
 
                 $.map(data.Data, function (item) {
+
+                    currentCustomFields[item.Id] = item;
 
                     $(container).append(CreateCustomField(item));
 
@@ -119,7 +122,7 @@ function DisplayCustomFields(container, entity, callback) {
 
 function CreateCustomField(item) {
 
-    var div = $('<div>').addClass('fieldblock customField');
+    var div = $('<div>').attr('id', item.Id).addClass('fieldblock customField');
 
     $('<label>').text(item.LabelText).appendTo($(div));
 
@@ -150,7 +153,6 @@ function CreateCustomField(item) {
             break;
     }
 
-
     return div;
 
 }
@@ -159,8 +161,8 @@ function CreateNumberField(item) {
 
     var number = $('<input>').addClass('number editable');
 
-    if (item.Answer) {
-        $(number).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(number).val(item.Data[0].Value);
     }
 
     return number;
@@ -171,8 +173,8 @@ function CreateTextField(item) {
 
     var text = $('<input>').attr('type', 'text').addClass('editable');
 
-    if (item.Answer) {
-        $(text).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(text).val(item.Data[0].Value);
     }
 
     return text;
@@ -183,8 +185,8 @@ function CreateTextAreaField(item) {
 
     var textarea = $('<textarea>').addClass('editable');
 
-    if (item.Answer) {
-        $(textarea).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(textarea).val(item.Data[0].Value);
     }
 
     return textarea;
@@ -203,8 +205,8 @@ function CreateDropDownField(item) {
         });
     }
 
-    if (item.Answer) {
-        $(dropdown).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(dropdown).val(item.Data[0].Value);
     }
 
     return dropdown;
@@ -222,7 +224,7 @@ function CreateRadioField(item) {
             var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
             $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
             
-            if (item.Answer && item.Answer.Value == $(i).val()) {
+            if (item.Data[0] && item.Data[0].Value == $(i).val()) {
                 $(i).attr('checked', 'checked');
             }
 
@@ -238,7 +240,7 @@ function CreateCheckBoxField(item) {
 
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('editable');
 
-    if (item.Answer && item.Answer.Value == '1') {
+    if (item.Data[0] && item.Data[0].Value == '1') {
         $(checkbox).attr('checked', 'checked');
     }
 
@@ -250,8 +252,8 @@ function CreateDateField(item) {
 
     var date = $('<input>').attr('type', 'text').addClass('datepicker editable');
 
-    if (item.Answer) {
-        $(date).text(FormatJSONDate(item.Answer.Value));
+    if (item.Data[0]) {
+        $(date).val(item.Data[0].Value);
     }
 
     return date;
@@ -264,9 +266,9 @@ function CreateDateTimeField(item) {
     var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
     var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
 
-    if (item.Answer) {
-        $(date).text(FormatJSONDate(item.Answer.Value));
-        $(time).text(FormatJOSNTime(item.Answer.Value));
+    if (item.Data[0]) {
+        $(date).val(item.Data[0].Value);
+        $(time).val(FormatJOSNTime(item.Data[0].Value));
     }
 
     return dt;
