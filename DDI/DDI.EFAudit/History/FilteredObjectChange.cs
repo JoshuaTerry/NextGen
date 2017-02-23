@@ -36,8 +36,8 @@ namespace DDI.EFAudit.History
         {
             throw new NotImplementedException();
         }
-        public Guid Id { get; set; }
-        public Guid ChangeSetId { get; set; }
+        public long Id { get; set; }
+        public long ChangeSetId { get; set; }
         public string TypeName
         {
             get { return _objectChange.TypeName; }

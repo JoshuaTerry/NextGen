@@ -14,7 +14,7 @@ namespace DDI.Shared.Models.Client.Audit
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         [MaxLength(128)]
         public string TypeName { get; set; }
         [MaxLength(128)]
@@ -23,9 +23,9 @@ namespace DDI.Shared.Models.Client.Audit
         public string ChangeType { get; set; }
         [MaxLength(128)]
         public string ObjectReference { get; set; }
-        public Guid ChangeSetId { get; set; }
-        public virtual ChangeSet ChangeSet { get; set; }
-        public virtual List<PropertyChange> PropertyChanges { get; set; }
+        public long ChangeSetId { get; set; }
+        public ChangeSet ChangeSet { get; set; }
+        public List<PropertyChange> PropertyChanges { get; set; }
 
         IEnumerable<IPropertyChange<DDIUser>> IObjectChange<DDIUser>.PropertyChanges
         {

@@ -9,8 +9,8 @@ namespace DDI.Shared.Models.Client.Audit
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        Guid Id { get; set; }
-        Guid ChangeSetId { get; set; }
+        long Id { get; set; }
+        long ChangeSetId { get; set; }
         IChangeSet<TPrincipal> ChangeSet { get; set; }
         IEnumerable<IPropertyChange<TPrincipal>> PropertyChanges { get; }
         void Add(IPropertyChange<TPrincipal> propertyChange);

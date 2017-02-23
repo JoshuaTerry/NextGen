@@ -8,8 +8,8 @@ namespace DDI.Shared.Models.Client.Audit
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        Guid Id { get; set; }
-        Guid ObjectChangeId { get; set; }
+        long Id { get; set; }
+        long ObjectChangeId { get; set; }
         IObjectChange<TPrincipal> ObjectChange { get; set; }
         string PropertyName { get; set; }
         string OriginalValue { get; set; }

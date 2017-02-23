@@ -9,7 +9,7 @@ namespace DDI.Shared.Models.Client.Audit
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        Guid Id { get; set; }
+        long Id { get; set; }
         IEnumerable<IObjectChange<TPrincipal>> ObjectChanges { get; }
         void Add(IObjectChange<TPrincipal> objectChange);
         DateTime Timestamp { get; set; }

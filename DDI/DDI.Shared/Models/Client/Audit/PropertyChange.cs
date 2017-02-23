@@ -14,8 +14,8 @@ namespace DDI.Shared.Models.Client.Audit
         public string ChangeType { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-        public Guid ObjectChangeId { get; set; }
+        public long Id { get; set; }
+        public long ObjectChangeId { get; set; }
         public ObjectChange ObjectChange { get; set; }
         [MaxLength(128)]
         public string PropertyName { get; set; }
