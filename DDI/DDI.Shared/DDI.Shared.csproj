@@ -122,9 +122,7 @@
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Models\Client\Audit\ChangeSet.cs" />
-    <Compile Include="Models\Client\Audit\ChangeSetFactory.cs" />
     <Compile Include="Models\Client\Audit\IChangeSet.cs" />
-    <Compile Include="Models\Client\Audit\IChangeSetFactory.cs" />
     <Compile Include="Models\Client\Audit\IObjectChange.cs" />
     <Compile Include="Models\Client\Audit\IPropertyChange.cs" />
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />

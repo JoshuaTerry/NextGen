@@ -9,12 +9,13 @@ using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
 using DDI.EFAudit.Filter;
-using DDI.Shared.Models.Client.Audit; 
+using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Contexts;
 using DDI.EFAudit.History;
 using DDI.EFAudit;
 using System.Threading.Tasks;
 using System.Threading;
+using DDI.EFAudit.Logging;
 
 namespace DDI.Data
 {

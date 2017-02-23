@@ -95,10 +95,12 @@
     <Compile Include="IHasLoggingReference.cs" />
     <Compile Include="ISaveResult.cs" />
     <Compile Include="Logging\ChangeLogger.cs" />
+    <Compile Include="Logging\ChangeSetFactory.cs" />
     <Compile Include="Logging\ChangeType.cs" />
     <Compile Include="Logging\DeferredObjectChange.cs" />
     <Compile Include="Logging\DeferredValue.cs" />
     <Compile Include="Logging\DeferredValueMap.cs" />
+    <Compile Include="Logging\IChangeSetFactory.cs" />
     <Compile Include="Logging\IOven.cs" />
     <Compile Include="Logging\Recorder.cs" />
     <Compile Include="Logging\SaveResult.cs" />

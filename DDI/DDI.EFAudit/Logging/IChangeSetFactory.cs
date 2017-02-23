@@ -1,5 +1,7 @@
 ﻿
-namespace DDI.Shared.Models.Client.Audit
+using DDI.Shared.Models.Client.Audit;
+
+namespace DDI.EFAudit.Logging
 {
     public interface IChangeSetFactory<TChangeSet, TPrincipal> where TChangeSet : IChangeSet<TPrincipal>
     {
