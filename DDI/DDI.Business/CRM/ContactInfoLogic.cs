@@ -58,6 +58,22 @@ namespace DDI.Business.CRM
                 ValidatePhoneNumber(contactInfo);                
             }
 
+            // check for preferred contactinfos, one per category
+            
+        }
+
+        private void ValidateIsPreferred(ContactInfo contactInfo)
+        {
+            // list of contact categories
+            if (contactInfo.IsPreferred)
+            {
+                var existingPrimaryAddress = UnitOfWork.GetRepository<ConstituentAddress>().Entities.FirstOrDefault(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary);
+                if (existingPrimaryAddress != null)
+                {
+                    existingPrimaryAddress.IsPrimary = false;
+                    UnitOfWork.GetRepository<ConstituentAddress>().Update(existingPrimaryAddress);
+                }
+            }
         }
 
         /// <summary>
