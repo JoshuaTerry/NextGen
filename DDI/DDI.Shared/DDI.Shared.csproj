@@ -120,7 +120,6 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="Logger\Logger.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />

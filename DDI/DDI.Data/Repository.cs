@@ -9,8 +9,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using DDI.Shared.Models;
+using DDI.Logger;
 
 namespace DDI.Data
 {
@@ -33,10 +34,11 @@ namespace DDI.Data
         private SQLUtilities _utilities = null;
         private bool _isUOW = false;
         private ICollection<T> _local = null;
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(Repository<T>));
         #endregion Private Fields
 
         #region Public Properties
+        protected ILogger Logger => _logger;
 
         public virtual IQueryable<T> Entities => EntitySet;
 

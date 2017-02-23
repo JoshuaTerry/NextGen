@@ -1,7 +1,7 @@
 ﻿using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
-using DDI.Shared.Logger;
+
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -106,7 +106,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }
@@ -135,7 +135,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }
