@@ -24,7 +24,6 @@
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
-    <script type="text/javascript" src="..\..\Scripts\links.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
