@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -92,7 +93,89 @@ namespace DDI.Shared.Extensions
         {
             return self.IsDefined(attributeType, inherit);
         }
+        /// <summary>
+        /// Returns CustomAttributes for the MemberInfo specified
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static T GetAttribute<T>(this MemberInfo member)
+        {
+            return member.GetCustomAttributes(typeof(T), true).Cast<T>().SingleOrDefault();
+        }
+        /// <summary>
+        /// Gets Attributes of Type T from a PropertyInfo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetAttributes<T>(this PropertyInfo property)
+        {
+            return property.GetAttributes<T>(GetMetadataTypes(property.DeclaringType));
+        }
+         /// <summary>
+         /// Returns a collection of Attributes Type T from the collection types.
+         /// </summary>
+         /// <typeparam name="T"></typeparam>
+         /// <param name="property"></param>
+         /// <param name="types"></param>
+         /// <returns></returns>
+        private static IEnumerable<T> GetAttributes<T>(this PropertyInfo property, IEnumerable<Type> types)
+        {
+            List<T> attributes = new List<T>();
+            foreach (Type type in types)
+            {
+                PropertyInfo metaProperty = type.GetProperty(property.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
+                if (metaProperty != null)
+                {
+                    attributes.AddRange(Attribute.GetCustomAttributes(metaProperty, true).Where(a => a is T).Cast<T>());
+                }
+            }
+
+            return attributes;
+        }
+        /// <summary>
+        /// Returns collection of Attributes of type T for the type specified.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetAttributes<T>(this Type type)
+        {
+            return GetMetadataTypes(type).GetAttributes<T>();
+        }
+        /// <summary>
+        /// Returns collection of attributes of Type T for the collection of types passed in
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        private static IEnumerable<T> GetAttributes<T>(this IEnumerable<Type> types)
+        {
+            List<T> attributes = new List<T>();
+
+            foreach (Type type in types)
+            {
+                attributes.AddRange(type.GetCustomAttributes(true).Where(a => a is T).Cast<T>());
+            }
+
+            return attributes;
+        }
+        /// <summary>
+        /// Returns collection of Types 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static IEnumerable<Type> GetMetadataTypes(Type type)
+        {
+            yield return type;
+
+            var meta = type.GetAttribute<MetadataTypeAttribute>();
+
+            if (meta != null)
+                yield return meta.MetadataClassType;
+        }
         #endregion Public Methods
     }
 }

@@ -79,7 +79,6 @@
     <Compile Include="Filter\WhitelistLoggingFilter.cs" />
     <Compile Include="EFAuditModule.cs" />
     <Compile Include="EFAuditModuleAsync.cs" />
-    <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\DisposableSavingChangesListener.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\MetadataSpaceMapper.cs" />
@@ -128,7 +127,6 @@
     <Compile Include="Translation\ValueTranslators\TimeSpanTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,8 @@ using System.Linq;
 using DDI.EFAudit.Helpers;
 using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Serializers;
-using System.Data.Entity; 
+using System.Data.Entity;
+using DDI.Shared.Models;
 
 namespace DDI.EFAudit.Logging
 {
@@ -85,9 +86,9 @@ namespace DDI.EFAudit.Logging
             result.TypeName = typeName;
             result.ObjectReference = null;
 
-            if (entity != null && entity is IEntityBase)
+            if (entity != null && entity is IEntity)
             {
-                result.DisplayName = (entity as IEntityBase).DisplayName;
+                result.DisplayName = (entity as IEntity).DisplayName;
             }
             result.ChangeType = entry.State.ToString();
             result.ChangeSet = set;
