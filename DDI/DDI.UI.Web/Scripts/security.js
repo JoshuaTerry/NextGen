@@ -33,7 +33,7 @@ function SetupNewUserModal() {
 
             $.ajax({
                 type: 'POST',
-                url: WEB_API_ADDRESS + 'Register',
+                url: WEB_API_ADDRESS + 'users',
                 data: model,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,

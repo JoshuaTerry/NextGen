@@ -94,13 +94,14 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 /* TAG BOX CONTROL */
 
 .dx-texteditor { border-radius: 0px; border-color:rgb(169, 169, 169) }
-.dx-texteditor.dx-state-disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #ddd; color: #333333; }
+.dx-texteditor.dx-state-disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #eee; color: #000000; }
 .dx-texteditor-input { padding: 0px;}
 .dx-placeholder { margin: 0px; padding: 0px; }
 .dx-placeholder:before { padding: 0 0 5px 4px; }
 
 .dx-tag-content { padding: 0 25px 5px 6px; margin: 3px 0 3px 4px; height: 19px; }
 .dx-tag-content span { font-size: 12px; font-family: Arial, Helvetica, sans-serif; }
+.dx-state-disabled.dx-widget, .dx-state-disabled .dx-widget { opacity: 1; }
 
 /* END TAG BOX CONTROL */
 

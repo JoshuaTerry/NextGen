@@ -222,21 +222,27 @@ namespace DDI.Search
                 _boost = boost;
                 return this;
             }
-
-           
-            public ElasticQuery<T> Match(Expression<Func<T, object>> predicate, string value)
+                       
+            public ElasticQuery<T> Match(string value, params Expression<Func<T, object>>[] predicates)
             {
-                GetQueryContainer().Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicate).Query(value).Boost(_boost)));
+                if (predicates.Length == 1)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicates[0]).Query(value).Lenient(true).Boost(_boost)));
+                }
+                else if (predicates.Length > 1)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().MultiMatch(m => m.Fields(predicates).Query(value).Lenient(true).Boost(_boost)));
+                }
                 return _query;
             }
 
-            public ElasticQuery<T> Equal(Expression<Func<T, object>> predicate, object value)
+            public ElasticQuery<T> Equal(object value, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value).Boost(_boost)));
                 return _query;
             }
 
-            public ElasticQuery<T> BeInList(Expression<Func<T, object>> predicate, string list)
+            public ElasticQuery<T> BeInList(string list, Expression<Func<T, object>> predicate)
             {
                 list = _query.ConvertListToQueryString(list);
                 if (!string.IsNullOrWhiteSpace(list))
@@ -246,7 +252,7 @@ namespace DDI.Search
                 return _query;
             }
 
-            public ElasticQuery<T> Prefix(Expression<Func<T, object>> predicate, string value)
+            public ElasticQuery<T> Prefix(string value, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Prefix(m => m.Field(predicate).Value(value).Boost(_boost)));
                 return _query;

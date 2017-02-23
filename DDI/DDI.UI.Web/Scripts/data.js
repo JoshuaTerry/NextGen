@@ -68,7 +68,6 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
 
     $(container).html('');
 
-    var tagBoxControl = $('<div>').addClass(tagBox);
     var selectedItems = [];
 
     $.ajax({
@@ -79,13 +78,20 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
         crossDomain: true,
         success: function (data) {
             data.Data.forEach(function (item) {
-                selectedItems.push(item);
+                selectedItems.push(item.Id);
             });
+            DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
         },
         failure: function (response) {
             alert(response);
         }
     });
+
+}
+
+function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+
+    var tagBoxControl = $('<div>').addClass(tagBox);
 
     $.ajax({
         url: WEB_API_ADDRESS + routeForAllOptions,
@@ -105,10 +111,11 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
 
             $(tagBoxControl).appendTo(container);
         },
-        failure: function(response) {
+        failure: function (response) {
             alert(response);
         }
     });
+
 }
 
 function LoadGrid(grid, container, columns, route, selected, edit, data) {
@@ -129,10 +136,10 @@ function LoadGrid(grid, container, columns, route, selected, edit, data) {
             }
         });
     }
-    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
+    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null, null);
 }
 
-function LoadGridFromHateoas(grid, container, columns, route, selected, editMethod, deleteMethod, deleteMessage, data) {
+function LoadGridFromHateoas(grid, container, columns, route, selected, hateoasRouteNameBase, editMethod, deleteMethod, deleteMessage, data) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -152,7 +159,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks.UpdateRelationship.Href);
+                        editMethod(options.data.FormattedLinks.Self.Href, options.data.FormattedLinks["Update" + hateoasRouteNameBase].Href);
                     })
                     .appendTo(container);
             }
@@ -169,7 +176,7 @@ function LoadGridFromHateoas(grid, container, columns, route, selected, editMeth
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod(options.data.FormattedLinks.DeleteRelationship.Href, options.data.FormattedLinks.DeleteRelationship.Method, deleteMessage + options.data.DisplayName + "?");
+                        deleteMethod(options.data.FormattedLinks["Delete" + hateoasRouteNameBase].Href, options.data.FormattedLinks["Delete" + hateoasRouteNameBase].Method, deleteMessage + options.data.DisplayName + "?");
                     })
                     .appendTo(container);
             }

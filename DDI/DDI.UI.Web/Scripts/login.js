@@ -73,20 +73,13 @@
 
 function Login() {
 
-    // var loginData = 'grant_type=password&username=' + $('.username').val() + '&password=' + $('.password').val();
-
-    var loginData = {
-        grant_type: 'password',
-        username: $('.username').val(),
-        password: $('.password').val()
-    }
+    var loginData = 'grant_type=password&username=' + $('.username').val() + '&password=' + $('.password').val();
 
     $.ajax({
         type: 'POST',
         url: WEB_API_ADDRESS + 'Login',
         data: loginData,
         contentType: 'application/x-www-form-urlencoded',
-        dataType: 'json',
         crossDomain: true,
         success: function (data) {
 

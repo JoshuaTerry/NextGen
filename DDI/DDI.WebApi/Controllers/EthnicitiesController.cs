@@ -84,7 +84,7 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/constituents/{id}/etnicities", Name = RouteNames.Constituent + RouteNames.Ethnicity + RouteVerbs.Post)]
+        [Route("api/v1/constituents/{id}/ethnicities", Name = RouteNames.Constituent + RouteNames.Ethnicity + RouteVerbs.Post)]
         public IHttpActionResult AddEthnicitiesToConstituent(Guid id, [FromBody] JObject ethnicityIds)
         {
             try
