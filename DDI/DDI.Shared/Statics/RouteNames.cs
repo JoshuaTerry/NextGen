@@ -25,6 +25,7 @@ namespace DDI.Shared.Statics
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";
+        public const string CustomFieldData = "CustomFieldData";
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";

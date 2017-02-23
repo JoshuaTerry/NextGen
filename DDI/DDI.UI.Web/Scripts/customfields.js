@@ -275,3 +275,92 @@ function CreateDateTimeField(item) {
 
 }
 
+function SaveCustomFields(container) {
+
+    $(container).find('div.fieldblock').each(function () {
+
+        var customFieldId = $(this).attr('id');
+        var cf = currentCustomFields[customFieldId];
+        var data = null;
+        var cfDataRoute = 'customfielddata';
+        var method = '';
+
+        var value = GetCustomFieldValue(container, cf);
+
+        if (cf.Data && cf.Data[0] && cf.Data[0].Id) {
+            // Update
+            data = {
+                Value: value
+            }
+            method = 'PATCH';
+            cfDataRoute = cfDataRoute + '/' + cf.Data[0].Id;
+        }
+        else {
+            if (value) {
+                // Insert
+                data = {
+                    CustomFieldId: customFieldId,
+                    EntityType: cf.Entity,
+                    ParentEntityId: currentEntity.Id,
+                    Value: value
+                }
+                method = 'POST';
+            }
+        }
+
+        if (data) {
+            $.ajax({
+                url: WEB_API_ADDRESS + cfDataRoute,
+                method: method,
+                data: data,
+                headers: GetApiHeaders(),
+                contentType: 'application/json; charset-utf-8',
+                crossDomain: true,
+                success: function () {
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving a custom field.');
+                }
+            });
+        }
+
+    });
+
+}
+
+function GetCustomFieldValue(container, customField) {
+
+    var value = '';
+
+    switch (customField.FieldType) {
+        case CustomFieldType.Number:
+            value = $(this).find('input').val();
+            break;
+        case CustomFieldType.TextBox:
+            value = $(this).find('input').val();
+            break;
+        case CustomFieldType.TextArea:
+            value = $(this).find('input').text();
+            break;
+        case CustomFieldType.DropDown:
+            value = $(this).find('select').val();
+            break;
+        case CustomFieldType.Radio:
+            value = $('input[name=' + customField.Id + ']:checked').val();
+            break;
+        case CustomFieldType.CheckBox:
+            value = $(this).find('input').prop('checked');
+            break;
+        case CustomFieldType.Date:
+            value = $(this).find('input').val();
+            break;
+        case CustomFieldType.DateTime:
+            value = $(this).find('input').val();
+            break;
+    }
+
+return value;
+
+}
+

@@ -681,19 +681,6 @@ function SaveTagBoxes(editcontainer) {
 
 }
 
-function SaveCustomFields(editcontainer) {
-
-    $(editcontainer).find('div.fieldblock').each(function () {
-
-        var customFieldId = $(this).attr('id');
-        var cf = currentCustomFields[customFieldId];
-
-        var foo = 'bar';
-
-    });
-
-}
-
 function SaveChildCollection(children, route) {
     $.ajax({
         url: route,

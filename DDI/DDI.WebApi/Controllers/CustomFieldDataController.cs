@@ -1,64 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using DDI.Services;
 using DDI.Shared.Models.Client.Core;
+using DDI.Services.Search;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class CustomFieldDataController : ApiController
+    public class CustomFieldDataController : ControllerBase<CustomFieldData>
     {
-        ServiceBase<CustomFieldData> _service;
-
-        #region Constructors
-
-        public CustomFieldDataController()
-            :this(new ServiceBase<CustomFieldData>())
-        {
-        }
-
-        internal CustomFieldDataController(ServiceBase<CustomFieldData> service)
-        {
-            _service = service;
-        }
-
-        #endregion Constructors
-
         [HttpGet]
         [Route("api/v1/customfielddata")]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = _service.GetAll();
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return Service.GetAll(RouteNames.CustomFieldData, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/customfielddata/{id}")]
-        public IHttpActionResult GetById(Guid id)
+        public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            var result = _service.GetById(id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+            return Service.GetById(id, fields);
         }
 
         [HttpPost]
