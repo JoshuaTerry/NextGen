@@ -59,19 +59,19 @@ namespace DDI.Business.CRM
             }
 
             // check for preferred contactinfos, one per category
+            ValidateIsPreferred(contactInfo);
             
         }
 
         private void ValidateIsPreferred(ContactInfo contactInfo)
         {
-            // list of contact categories
             if (contactInfo.IsPreferred)
             {
-                var existingPrimaryAddress = UnitOfWork.GetRepository<ConstituentAddress>().Entities.FirstOrDefault(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary);
-                if (existingPrimaryAddress != null)
+                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.Id != contactInfo.Id && ci.IsPreferred && GetContactCategoryCode(ci) != GetContactCategoryCode(contactInfo));
+                if (existingPreferredContactInfo != null)
                 {
-                    existingPrimaryAddress.IsPrimary = false;
-                    UnitOfWork.GetRepository<ConstituentAddress>().Update(existingPrimaryAddress);
+                    existingPreferredContactInfo.IsPreferred = false;
+                    UnitOfWork.GetRepository<ContactInfo>().Update(existingPreferredContactInfo);
                 }
             }
         }
