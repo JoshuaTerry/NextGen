@@ -5,8 +5,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Logger;
+using System.Threading.Tasks; 
+using DDI.Logger;
 
 namespace DDI.Data
 {
@@ -16,7 +16,7 @@ namespace DDI.Data
     public class UnitOfWorkEF : IUnitOfWork, IDisposable
     {
         #region Private Fields
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(UnitOfWorkEF));
         private DbContext _clientContext;
         private DbContext _commonContext;
         private bool _isDisposed = false;
@@ -131,7 +131,7 @@ namespace DDI.Data
             }
             catch
             {
-                Logger.Error(typeof(UnitOfWorkEF), $"GetReference on type {typeof(T).Name} failed for {property.Name}.");
+                _logger.LogError($"GetReference on type {typeof(T).Name} failed for {property.Name}.");
                 return null;
             }
         }

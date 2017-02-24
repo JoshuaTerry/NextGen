@@ -263,7 +263,7 @@
 
                     </div>
 
-                    <h1>Organization</h1>
+                    <h1 class="OrganizationSection">Organization</h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -316,12 +316,12 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
-                    <h1>Personal</h1>
+                    <h1 class="PersonalSection">Personal</h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -799,7 +799,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
@@ -1076,7 +1076,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             

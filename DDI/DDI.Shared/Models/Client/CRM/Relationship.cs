@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes;
+using System.Linq; 
 using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Relationsihp"), Hateoas(RouteNames.Relationship)]
+    [Table("Relationsihp")]
     public class Relationship : EntityBase
     {
         #region Public Properties   
