@@ -2,8 +2,12 @@
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
+
 $(document).ready(function () {
+
     $('#form1').validate();
+
+    ApplySystemSettings();
 
     Resize();
 
@@ -26,12 +30,36 @@ $(document).ready(function () {
     }
 
     GetConstituentData($('.hidconstituentid').val());
+
     LoadYears();
 
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
+    
+
 });
+
+function ApplySystemSettings() {
+    
+    GetSystemSettings(SettingsCategories.CRM, function (settings) {
+
+        $.map(settings, function (item) {
+
+            if (item.IsShown) {
+                $('.' + item.Name + 'Section').show();
+                $('.' + item.Name + 'SectionLabel').text(item.Value);
+            }
+            else {
+                $('.' + item.Name + 'Section').hide();
+            }
+
+
+        });
+
+    });
+
+}
 
 function LoadYears()
 {
@@ -41,6 +69,7 @@ function LoadYears()
         $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
     }
 }
+
 function PopulateMonthDays()
 {
     var arrayLookup = {
@@ -122,8 +151,6 @@ function GetConstituentData(id) {
 
             currentEntity = data.Data;
 
-            LoadLinks(currentEntity);
-
             DisplayConstituentData();
             
         },
@@ -190,7 +217,9 @@ function DisplayConstituentData() {
 
         DisplayConstituentPrimaryAddress();
 
-        LoadDenominationsTagBox();
+        GenerateContactInfoSection();
+
+	    LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
@@ -220,7 +249,8 @@ function DisplayConstituentData() {
 	
         PopulateUserIdDropDown();
 
-        LoadRelationshipsGrid();
+        LoadRelationshipsData();
+
         NewRelationshipModal();
 
         NewAddressModal();
@@ -232,9 +262,11 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
+        $('.OrganizationSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
+        $('.PersonalSection').hide();
     }
 }
 
@@ -265,13 +297,111 @@ function DisplayConstituentPrimaryAddress() {
 
 /* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', Links.GetDenomination.Href);
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', Links.GetEthnicity.Href);
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
 }
 /* End Demographics Section */
+
+
+/* Relationships Tab */
+function LoadRelationshipsData() {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            LoadRelationshipsQuickView(data);
+            LoadRelationshipsTab(data);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
+        }
+    });
+
+}
+
+function LoadRelationshipsQuickView(data) {
+
+    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+    if (data.Data) {
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                $('<li>').text(item.DisplayName).appendTo($(formattedData));
+            }
+
+        });
+
+    }
+
+    $(formattedData).appendTo($('.relationshipsQuickView'));
+
+}
+
+function LoadRelationshipsTab(data) {
+
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
+        { dataField: 'DisplayName', caption: 'Relationship' },
+    ];
+
+    LoadGridWithData('relationshipsgrid',
+        'relationshipstable',
+        columns,
+        'relationships',
+        null,
+        EditRelationship,
+        null,
+        data);
+
+}
+
+function EditRelationship(id) {
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
+}
+
+function NewRelationshipModal() {
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+}
+
+function GetRelationshipToSave(modal, isUpdate) {
+
+    var item = {
+        Constituent1Id: $('.FormattedName1').val(),
+        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+    }
+
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidrelationshipid').val();
+    }
+
+    return item;
+}
+
+function PrePopulateNewRelationshipModal(modal) {
+
+    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+
+}
+
+function LoadRelationshipData(data, modal) {
+
+    $(modal).find('.hidrelationshipid').val(data.Data.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+
+}
+/* End Relationships Tab */
 
 
 /* Doing Business As Section */
@@ -287,9 +417,10 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        Links.GetDoingBusinessAs.Href,
+        'doingbusinessas',
         null,
-        EditDBA);
+        EditDBA,
+        null);
 
 }
 
@@ -326,8 +457,8 @@ function NewDBAModal() {
             }
 
             $.ajax({
-                type: Links.NewDoingBusinessAs.Method,
-                url: Links.NewDoingBusinessAs.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'doingbusinessas',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -445,7 +576,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        Links.GetEducation.Href,
+        'educations',
         null,
         EditEducationModal);
 
@@ -494,8 +625,8 @@ function NewEducationModal() {
             }
 
             $.ajax({
-                type: Links.NewEducation.Method,
-                url: Links.NewEducation.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'educations',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -527,7 +658,6 @@ function EditEducationModal(id) {
         width: 600,
         resizable: false
     });
-
 
     LoadEducation(id);
 
@@ -624,7 +754,7 @@ function LoadPaymentPreferencesTable() {
     LoadGrid('paymentpreferencesgrid',
         'paymentpreferencesgridcontainer',
         columns,
-        Links.GetPaymentMethod.Href,
+        'paymentmethods/constituents/' + currentEntity.Id,
         null,
         EditPaymentPreference);
     
@@ -671,8 +801,8 @@ function NewPaymentPreference() {
         };
 
         $.ajax({
-            type: Links.NewPaymentMethod.Method,
-            url: Links.NewPaymentMethod.Href,
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'paymentmethods',
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -824,7 +954,6 @@ function PopulateUserIdDropDown() {
 
 
 /* Alternate Id Section */
-
 function LoadAlternateIDTable() {
 
     var columns = [
@@ -835,7 +964,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       Links.GetAlternateId.Href,
+       'alternateids',
        null,
        EditAlternateId);
 }
@@ -852,6 +981,15 @@ function NewAlternateIdModal() {
             width: 250,
             resizable: false
         });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
         $('.submitaltid').unbind('click');
 
         $('.submitaltid').click(function () {
@@ -862,8 +1000,8 @@ function NewAlternateIdModal() {
             }
 
             $.ajax({
-                type: Links.NewAlternateId.Method,
-                url: Links.NewAlternateId.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'alternateids',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -883,16 +1021,6 @@ function NewAlternateIdModal() {
 
         });
     });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-   
 
 }
 
@@ -967,7 +1095,6 @@ function LoadAlternateId(id, modal) {
     });
 
 }
-
 /* End Alternate Id Section */
 
 
@@ -990,7 +1117,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        Links.GetConstituentAddress.Href,
+        'constituentaddresses',
         null,
         EditAddressModal);
 
@@ -1047,8 +1174,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: Links.NewConstituentAddress.Method,
-                url: Links.NewConstituentAddress.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'constituentaddresses',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -1246,9 +1373,834 @@ function LoadAddress(id) {
     });
 
 }
+
+function GenerateContactInfoSection() {
+   
+    // Grab all the contact categories, then dynamically create the accordions
+    LoadCategories(function(data) {
+
+        $.map(data.Data, function (category) {
+
+            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            $('<a>', { 
+                title: 'New', 
+                class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
+                href: '#'
+            }).appendTo($(header));
+
+            $('<div>', {
+                class: 'constituent' + category.Name + 'gridcontainer'
+            }).appendTo($('.contactinfocontainer'));
+
+            // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
+
+            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            $('<input>').addClass('hidContactCategory' + category.Name).attr('type', 'hidden').val(category.Id).appendTo($('.' + 'constituent' + category.Name + 'gridcontainer'));
+
+        });
+        
+        ContactInfoAddModals();
+
+        $('.accordions').accordion('refresh');
+        // LoadAccordions will not work here
+
+    });
+
+}
+
+function ContactInfoAddModals() {
+
+    NewPhoneModal();
+
+    NewEmailModal();
+
+    NewWebModal();
+
+    NewPersonModal();
+
+    NewOtherModal();
+}
+
+function LoadCategories(CategoryTitles) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactcategory',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            CategoryTitles(data);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
+        }
+    });
+}
+
+function LoadContactCategoryGrid(categoryid, displayText, name) {
+
+    var columns = [
+        { dataField:  'Id', width: '0px' }, 
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType.Name', caption: 'Type' }, 
+        { dataField: 'Info', caption: displayText },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituent' + name + 'grid',
+        'constituent' + name + 'gridcontainer',
+        columns,
+        WEB_API_ADDRESS + 'contactinfo/' + categoryid + '/' + currentEntity.Id,
+        null,
+        function (id) { ExecuteFunction('Edit' + name, window, id) }); 
+}
+
+// Phone # Subsection
+function NewPhoneModal() {
+
+    $('.newphonemodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '');
+
+         modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/', 
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.hidContactCategoryPhone').val();
+
+                    LoadContactCategoryGrid($('.hidContactCategoryPhone').val(), 'Phone', 'Phone');
+
+                    $('<input>').addClass('hidContactCategory' + 'Phone').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Phone' + 'gridcontainer'));
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditPhone(id) {
+
+    var modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhone(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) { 
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhone(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id, 
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-PhoneNumberType').val(data.Data.ContactTypeId);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Phone # Subsection
+
+// Emails Subsection
+function NewEmailModal() {
+
+    $('.newemailmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '');
+
+        modal = $('.emailmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitemail').unbind('click');
+
+        $('.submitemail').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.e-EmailType').val(),
+                Info: $(modal).find('.e-Info').val(),
+                IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.e-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Email saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.hidContactCategoryEmail').val();
+
+                    LoadContactCategoryGrid($('.hidContactCategoryEmail').val(), 'Email', 'Email');
+
+                    $('<input>').addClass('hidContactCategory' + 'Email').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Email' + 'gridcontainer'));
+
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Email');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditEmail(id) {
+
+   var modal = $('.emailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadEmail(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitemail').unbind('click');
+
+    $('.submitemail').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.e-EmailType').val(),
+            Info: $(modal).find('.e-Info').val(),
+            IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.e-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Email saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Email.');
+            }
+        });
+
+    });
+
+}
+
+function LoadEmail(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.e-Info').val(data.Data.Info);
+            $(modal).find('.e-EmailType').val(data.Data.ContactTypeId);
+            $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.e-Comment').val(data.Data.Comment);
+
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Email.');
+        }
+    });
+
+}
+// End Emails Subsection
+
+// Websites Subsection
+function NewWebModal() {
+
+    $('.newwebmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '');
+
+        modal = $('.websitemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.submitwebsite').unbind('click');
+
+        $('.submitwebsite').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
+                Info: $(modal).find('.ws-Info').val(),
+                IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.ws-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Web Site saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.hidContactCategoryWeb').val();
+
+                    LoadContactCategoryGrid($('.hidContactCategoryWeb').val(), 'URL', 'Web');
+
+                    $('<input>').addClass('hidContactCategory' + 'Web').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Web' + 'gridcontainer'));
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Web Site');
+                }
+            });
+
+        });
+    }); 
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditWeb(id) {
+
+    var modal = $('.websitemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadWeb(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitwebsite').unbind('click');
+
+    $('.submitwebsite').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
+            Info: $(modal).find('.ws-Info').val(),
+            IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.ws-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Web Site saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Web Site.');
+            }
+        });
+
+    });
+
+}
+
+function LoadWeb(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.ws-Info').val(data.Data.Info);
+            $(modal).find('.ws-WebSiteType').val(data.Data.ContactTypeId);
+            $(modal).find('.ws-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.ws-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Web Site.');
+        }
+    });
+
+}
+// End Websites Subsection
+
+// Point Of Contact Subsection
+function NewPersonModal() {
+
+    $('.newpersonmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '');
+
+        modal = $('.pocmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitpoc').unbind('click');
+
+        $('.submitpoc').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.poc-PocType').val(),
+                Info: $(modal).find('.poc-Info').val(),
+                IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.poc-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.hidContactCategoryPerson').val();
+
+                    LoadContactCategoryGrid($('.hidContactCategoryPerson').val(), 'Name', 'Person');
+
+                    $('<input>').addClass('hidContactCategory' + 'Person').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Person' + 'gridcontainer'));
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditPerson(id) {
+
+    var modal = $('.pocmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPerson(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitpoc').unbind('click');
+
+    $('.submitpoc').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.poc-PocType').val(),
+            Info: $(modal).find('.poc-Info').val(),
+            IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.poc-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPerson(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.poc-Info').val(data.Data.Info);
+            $(modal).find('.poc-PocType').val(data.Data.ContactTypeId)
+            $(modal).find('.poc-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.poc-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Point of Contact.');
+        }
+    });
+
+}
+// End Point Of Contact Subsection
+
+// Other Contacts Subsection
+function NewOtherModal() {
+
+    $('.newothermodallink').click(function (e) {
+
+        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '');
+
+        e.preventDefault();
+
+        modal = $('.othermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitother').unbind('click');
+
+        $('.submitother').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.o-OtherType').val(),
+                Info: $(modal).find('.o-Info').val(),
+                IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.o-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.hidContactCategoryOther').val();
+
+                    LoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
+
+                    $('<input>').addClass('hidContactCategory' + 'Other').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Other' + 'gridcontainer'));
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Other Contact');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditOther(id) {
+
+    var modal = $('.othermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadOther(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitother').unbind('click');
+
+    $('.submitother').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.o-OtherType').val(),
+            Info: $(modal).find('.o-Info').val(),
+            IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.o-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
+
+                CloseModal(modal);
+
+                LoadContactCategoryGrid(data.Data.Id, 'Info', 'Other');
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Other Contacts.');
+            }
+        });
+
+    });
+
+}
+
+function LoadOther(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.o-Info').val(data.Data.Info);
+            $(modal).find('o-OtherType').val(data.Data.ContactTypeId);
+            $(modal).find('.o-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.o-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Other Contact.');
+        }
+    });
+
+}
+// End Other Contacts Subsection
+
 /* End Contact Information Section */
-
-
 /* Relationships Tab */
 function LoadRelationshipsData() {
     $.ajax({
@@ -1265,7 +2217,6 @@ function LoadRelationshipsData() {
         }
     });
 }
-
 function LoadRelationshipsQuickView(data) {
     var formattedData = "<ul>";
     if (data.Data && Array.isArray(data.Data)) {
@@ -1278,7 +2229,6 @@ function LoadRelationshipsQuickView(data) {
     formattedData = formattedData + "</ul>";
     $('.relationshipsQuickView').html(formattedData);
 }
-
 function LoadRelationshipsTab(data) {
     var columns = [
         { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },

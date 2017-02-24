@@ -3,10 +3,10 @@ using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using System.Web.Http.Cors; 
 
 namespace DDI.WebApi
 {
@@ -24,7 +24,7 @@ namespace DDI.WebApi
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
 
-            // app.UseCors(CorsOptions.AllowAll);
+            app.UseCors(CorsOptions.AllowAll);
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider

@@ -31,7 +31,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.PaymentMethod + RouteNames.EFT, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.PaymentMethod, limit, offset, orderBy, fields);
         }
 
         [HttpGet]

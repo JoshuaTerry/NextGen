@@ -27,10 +27,10 @@ namespace DDI.Services
             _constituentService = constituentService;
         }
 
-        public IDataResponse<Constituent> AddDenominationsToConstituent(Constituent constituent, JObject denominationIds)
+        public IDataResponse AddDenominationsToConstituent(Constituent constituent, JObject denominationIds)
         {
-            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id);
-            IDataResponse<Constituent> response = null;
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, c => c.Denominations);
+            IDataResponse response = null;
             List<Denomination> passedDenominations = new List<Denomination>();
             List<Denomination> constituentDenominations = new List<Denomination>();
 
@@ -55,7 +55,10 @@ namespace DDI.Services
 
             UnitOfWork.SaveChanges();
 
-            response = GetIDataResponse(() => constituentToUpdate);
+            response = new DataResponse()
+            {
+                IsSuccessful = true
+            };
 
             return response;
         }

@@ -214,9 +214,12 @@ namespace DDI.Business.CRM
 
 
 
-        public override void Validate(ConstituentAddress address)
+        public override void Validate(ConstituentAddress entity)
         {
-            base.Validate(address);           
+            base.Validate(entity);
+
+            var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
+            constituentLogic.ScheduleUpdateSearchDocument(entity.ConstituentId);
         }
 
         #endregion
