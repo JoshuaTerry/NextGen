@@ -1367,6 +1367,7 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
+            // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
             var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
             $('<a>', { 
                 title: 'New', 
@@ -1374,15 +1375,9 @@ function GenerateContactInfoSection() {
                 href: '#'
             }).appendTo($(header));
 
-            $('<div>', {
-                class: 'constituent' + category.Name + 'gridcontainer'
-            }).appendTo($('.contactinfocontainer'));
-
-            // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
+            $('<div>').attr('id', category.Id).addClass('constituent' + category.Name + 'gridcontainer').appendTo($('.contactinfocontainer'));
 
             LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
-
-            $('<input>').addClass('hidContactCategory' + category.Name).attr('type', 'hidden').val(category.Id).appendTo($('.' + 'constituent' + category.Name + 'gridcontainer'));
 
         });
         
@@ -1426,7 +1421,7 @@ function LoadCategories(CategoryTitles) {
     });
 }
 
-function LoadContactCategoryGrid(categoryid, displayText, name) {
+function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 
     var columns = [
         { dataField:  'Id', width: '0px' }, 
@@ -1439,7 +1434,7 @@ function LoadContactCategoryGrid(categoryid, displayText, name) {
     LoadGrid('constituent' + name + 'grid',
         'constituent' + name + 'gridcontainer',
         columns,
-        WEB_API_ADDRESS + 'contactinfo/' + categoryid + '/' + currentEntity.Id,
+        'contactinfo/' + categoryid + '/' + currentEntity.Id,
         null,
         function (id) { ExecuteFunction('Edit' + name, window, id) }); 
 }
@@ -1451,7 +1446,9 @@ function NewPhoneModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '');
+        var categoryId = $('.constituentPhonegridcontainer').attr('id');
+
+        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + categoryId, '', '');
 
          modal = $('.phonenumbermodal').dialog({
             closeOnEscape: false,
@@ -1484,11 +1481,9 @@ function NewPhoneModal() {
 
                     CloseModal(modal);
 
-                    var categoryid = $('.hidContactCategoryPhone').val();
+                    var categoryid = $('.constituentPhonegridcontainer').attr('id');
 
-                    LoadContactCategoryGrid($('.hidContactCategoryPhone').val(), 'Phone', 'Phone');
-
-                    $('<input>').addClass('hidContactCategory' + 'Phone').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Phone' + 'gridcontainer'));
+                    LoadContactCategoryGrid(categoryid, 'Phone', 'Phone');
 
                 },
                 error: function (xhr, status, err) {
@@ -1577,7 +1572,7 @@ function LoadPhone(id, modal) {
         crossDomain: true,
         success: function (data) {
 
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '', data.Data.ContactTypeId);
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.constituentPhonegridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
 
             $(modal).find('.pn-Info').val(data.Data.Info);
             $(modal).find('.pn-PhoneNumberType').val(data.Data.ContactTypeId);
@@ -1600,7 +1595,9 @@ function NewEmailModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '');
+        var categoryId = $('.constituentEmailgridcontainer').attr('id');
+
+        PopulateDropDown('.e-EmailType', 'contacttypes/' + categoryId, '', '');
 
         modal = $('.emailmodal').dialog({
             closeOnEscape: false,
@@ -1608,6 +1605,7 @@ function NewEmailModal() {
             width: 250,
             resizable: false
         });
+
         $('.submitemail').unbind('click');
 
         $('.submitemail').click(function () {
@@ -1632,11 +1630,9 @@ function NewEmailModal() {
 
                     CloseModal(modal);
 
-                    var categoryid = $('.hidContactCategoryEmail').val();
+                    var categoryid = $('.constituentEmailgridcontainer').attr('id');
 
-                    LoadContactCategoryGrid($('.hidContactCategoryEmail').val(), 'Email', 'Email');
-
-                    $('<input>').addClass('hidContactCategory' + 'Email').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Email' + 'gridcontainer'));
+                    LoadContactCategoryGrid(categoryid, 'Email', 'Email');
 
 
                 },
@@ -1726,7 +1722,7 @@ function LoadEmail(id, modal) {
         crossDomain: true,
         success: function (data) {
 
-            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '', data.Data.ContactTypeId);
+            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.constituentEmailgridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
 
             $(modal).find('.e-Info').val(data.Data.Info);
             $(modal).find('.e-EmailType').val(data.Data.ContactTypeId);
@@ -1750,7 +1746,7 @@ function NewWebModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '');
+        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.constituentWebgridcontainer').attr('id'), '', '');
 
         modal = $('.websitemodal').dialog({
             closeOnEscape: false,
@@ -1783,11 +1779,7 @@ function NewWebModal() {
 
                     CloseModal(modal);
 
-                    var categoryid = $('.hidContactCategoryWeb').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryWeb').val(), 'URL', 'Web');
-
-                    $('<input>').addClass('hidContactCategory' + 'Web').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Web' + 'gridcontainer'));
+                    LoadContactCategoryGrid($('.constituentWebgridcontainer').attr('id'), 'URL', 'Web');
 
                 },
                 error: function (xhr, status, err) {
@@ -1876,7 +1868,7 @@ function LoadWeb(id, modal) {
         crossDomain: true,
         success: function (data) {
 
-            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '', data.Data.ContactTypeId);
+            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.constituentWebgridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
 
             $(modal).find('.ws-Info').val(data.Data.Info);
             $(modal).find('.ws-WebSiteType').val(data.Data.ContactTypeId);
@@ -1899,7 +1891,7 @@ function NewPersonModal() {
 
         e.preventDefault();
 
-        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '');
+        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.constituentPersongridcontainer').attr('id'), '', '');
 
         modal = $('.pocmodal').dialog({
             closeOnEscape: false,
@@ -1931,11 +1923,7 @@ function NewPersonModal() {
 
                     CloseModal(modal);
 
-                    var categoryid = $('.hidContactCategoryPerson').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryPerson').val(), 'Name', 'Person');
-
-                    $('<input>').addClass('hidContactCategory' + 'Person').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Person' + 'gridcontainer'));
+                    LoadContactCategoryGrid($('.constituentPersongridcontainer').attr('id'), 'Name', 'Person');
 
                 },
                 error: function (xhr, status, err) {
@@ -2024,7 +2012,7 @@ function LoadPerson(id, modal) {
         crossDomain: true,
         success: function (data) {
 
-            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '', data.Data.ContactTypeId);
+            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.constituentPersongridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
 
             $(modal).find('.poc-Info').val(data.Data.Info);
             $(modal).find('.poc-PocType').val(data.Data.ContactTypeId)
@@ -2045,7 +2033,7 @@ function NewOtherModal() {
 
     $('.newothermodallink').click(function (e) {
 
-        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '');
+        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.constituentOthergridcontainer').attr('id'), '', '');
 
         e.preventDefault();
 
@@ -2079,11 +2067,7 @@ function NewOtherModal() {
 
                     CloseModal(modal);
 
-                    var categoryid = $('.hidContactCategoryOther').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
-
-                    $('<input>').addClass('hidContactCategory' + 'Other').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Other' + 'gridcontainer'));
+                    LoadContactCategoryGrid($('.constituentOthergridcontainer').attr('id'), 'Info', 'Other');
 
                 },
                 error: function (xhr, status, err) {
@@ -2170,7 +2154,7 @@ function LoadOther(id, modal) {
         crossDomain: true,
         success: function (data) {
 
-            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '', data.Data.ContactTypeId);
+            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.constituentOthergridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
 
             $(modal).find('.o-Info').val(data.Data.Info);
             $(modal).find('o-OtherType').val(data.Data.ContactTypeId);

@@ -1076,7 +1076,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             
