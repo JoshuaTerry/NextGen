@@ -84,7 +84,7 @@ namespace DDI.EFAudit.Logging
 
             var result = _factory.ObjectChange();
             result.TypeName = typeName;
-            result.ObjectReference = null;
+            result.EntityId = null;
 
             if (entity != null && entity is IEntity)
             {

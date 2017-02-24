@@ -17,7 +17,7 @@ namespace DDI.Shared.Models.Client.Audit
         [MaxLength(64)]
         public string ChangeType { get; set; }
         [MaxLength(128)]
-        public string ObjectReference { get; set; }
+        public string EntityId { get; set; }
         public long ChangeSetId { get; set; }
         public ChangeSet ChangeSet { get; set; }
         public List<PropertyChange> PropertyChanges { get; set; }
@@ -26,7 +26,7 @@ namespace DDI.Shared.Models.Client.Audit
         {
             get { return PropertyChanges; }
         }
-        void IObjectChange<DDIUser>.Add(IPropertyChange<DDIUser> propertyChange)
+        public void Add(IPropertyChange<DDIUser> propertyChange)
         {
             PropertyChanges.Add((PropertyChange)propertyChange);
         }
@@ -38,7 +38,7 @@ namespace DDI.Shared.Models.Client.Audit
 
         public override string ToString()
         {
-            return string.Format("{0}:{1}", TypeName, ObjectReference);
+            return string.Format("{0}:{1}", TypeName, EntityId);
         }
     }
 }

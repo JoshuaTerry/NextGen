@@ -44,10 +44,10 @@ namespace DDI.EFAudit.History
             set { _objectChange.TypeName = value; }
         }
 
-        public string ObjectReference
+        public string EntityId
         {
-            get { return _objectChange.ObjectReference; }
-            set { _objectChange.ObjectReference = value; }
+            get { return _objectChange.EntityId; }
+            set { _objectChange.EntityId = value; }
         }
         public string ChangeType { get; set; }
         public string DisplayName { get; set; }

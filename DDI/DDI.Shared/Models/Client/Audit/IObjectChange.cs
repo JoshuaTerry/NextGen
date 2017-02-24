@@ -17,6 +17,6 @@ namespace DDI.Shared.Models.Client.Audit
         string DisplayName { get; set; }
         string ChangeType { get; set; }
         string TypeName { get; set; }
-        string ObjectReference { get; set; }        
+        string EntityId { get; set; }        
     }
 }

@@ -24,7 +24,7 @@ namespace DDI.EFAudit.Logging
         // "Bake" is a term used for setting up for values that aren't finished yet, like an Identity Field
         public void Bake()
         {
-            _objectChange.ObjectReference = (string)_futureReference.CalculateAndRetrieve();
+            _objectChange.EntityId = (string)_futureReference.CalculateAndRetrieve();
 
             var bakedValues = _futureValues.CalculateAndRetrieve();
             foreach (KeyValuePair<string, object> kv in bakedValues)

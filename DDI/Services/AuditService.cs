@@ -73,7 +73,7 @@ namespace DDI.Services
             {
                 var results = _uow.GetRepository<ChangeSet>().Entities
                                  .Where(c => c.Timestamp >= start && c.Timestamp <= end)
-                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => o.ObjectReference == id.ToString()),
+                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => o.EntityId == id.ToString()),
                                          cs => cs.Id,
                                          oc => oc.ChangeSetId,
                                          (cs, oc) => new { cs, oc })

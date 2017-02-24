@@ -139,11 +139,7 @@ namespace DDI.Data
         /// <summary>
         /// Attach an entity (which may belong to another context) to the repository.
         /// </summary>
-        public T Attach(T entity)
-        {
-            return Attach(entity, EntityState.Unchanged);
-        }
-
+       
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)

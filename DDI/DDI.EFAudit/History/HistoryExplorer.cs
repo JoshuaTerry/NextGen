@@ -113,7 +113,7 @@ namespace DDI.EFAudit.History
             string typeName = typeof(TModel).Name;
             var changes = db.ObjectChanges
                 .Where(o => o.TypeName == typeName)
-                .Where(o => o.ObjectReference == reference)
+                .Where(o => o.EntityId == reference)
                 .OrderBy(o => o.ChangeSet.Timestamp);
 
             return changes;
