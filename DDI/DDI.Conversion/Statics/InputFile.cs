@@ -40,6 +40,13 @@ namespace DDI.Conversion.Statics
         public static string CRM_Relationship => "Relationship.csv";
         public static string CRM_ConstituentTag => "ConstituentTag.csv";
         public static string CRM_CustomData => "CustomData.csv";
+
+        public static string CRM_NoteCategory => "MemoCategory.csv";
+        
+        #endregion
+
+        #region DDI Files
+        public static string DDI_User => "DDIUser.csv";
         #endregion
 
         #region GL Files
