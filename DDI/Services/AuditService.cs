@@ -13,40 +13,56 @@ using System.Threading.Tasks;
 namespace DDI.Services
 {
     public class AuditService
-    {
-        private readonly IReadOnlyRepository<ChangeSet> _csRepo;
-        private readonly IReadOnlyRepository<ObjectChange> _ocRepo;
-        private readonly IReadOnlyRepository<PropertyChange> _pcRepo;
-        private readonly IRepository<DDIUser> _uRepo;
+    { 
         private readonly IUnitOfWork _uow;
-        public AuditService() : this(new ReadOnlyRepository<ChangeSet>(), new ReadOnlyRepository<ObjectChange>(), new ReadOnlyRepository<PropertyChange>(), new Repository<DDIUser>())
+        public AuditService() : this(new UnitOfWorkEF())
         { }
-        public AuditService(IReadOnlyRepository<ChangeSet> crepo, IReadOnlyRepository<ObjectChange> orepo, IReadOnlyRepository<PropertyChange> prepo, IRepository<DDIUser> urepo)
+        public AuditService(IUnitOfWork uow)
         {
-            this._csRepo = crepo;
-            this._ocRepo = orepo;
-            this._pcRepo = prepo;
-            this._uRepo = urepo;
+            this._uow = uow;
         }
 
-        public IDataResponse<List<dynamic>> GetAll(Guid id, DateTime start, DateTime end, IPageable search = null)
+        private Expression<Func<ObjectChange, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<ObjectChange, object>>[]
+            {
+                o => o.ChangeSet,
+                o => o.PropertyChanges
+            };
+        }
+        private Expression<Func<ObjectChange, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<ObjectChange, object>>[]
+            {
+                o => o.ChangeSet,
+                o => o.ChangeSet.User,
+                o => o.PropertyChanges
+            };
+        }
+        public IDataResponse<List<ChangeSet>> GetAllWhereExpression(Expression<Func<ObjectChange, bool>> expression, IPageable search = null)
+        {
+          
+            var result = _uow.GetRepository<ObjectChange>().GetEntities(GetDataIncludesForList()).Where(expression).Select(o => o.ChangeSet).ToList();  //.GetEntities(_includesForList).Where(expression);
+            return null;
+        }
+        public IDataResponse<List<dynamic>> GetAllFlat(Guid id, DateTime start, DateTime end, IPageable search = null)
         {
             var response = new DataResponse<List<dynamic>>();
             try
             {
-                var results = _csRepo.Entities
+                var results = _uow.GetRepository<ChangeSet>().Entities
                                  .Where(c => c.Timestamp >= start && c.Timestamp <= end)
-                                 .Join(_ocRepo.Entities.Where(o => o.EntityId == id.ToString()),
+                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => o.EntityId == id.ToString()),
                                          cs => cs.Id,
                                          oc => oc.ChangeSetId,
                                          (cs, oc) => new { cs, oc })
-                                 .GroupJoin(_pcRepo.Entities,
+                                 .GroupJoin(_uow.GetRepository<PropertyChange>().Entities,
                                          outer => outer.oc.Id,
                                          pc => pc.ObjectChangeId,
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
-                                 .Join(_uRepo.Entities,
+                                 .Join(_uow.GetRepository<DDIUser>().Entities,
                                          outer => outer.cs.UserId,
                                          u => u.Id,
                                          (outer, u) => new

@@ -113,7 +113,6 @@
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="IPageable.cs" />
-    <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />

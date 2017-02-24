@@ -1,5 +1,4 @@
-﻿using DDI.Shared.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,9 +12,9 @@ namespace DDI.Shared
         #region Public Methods
 
         IRepository<T> GetRepository<T>() where T : class;
-        IReadOnlyRepository<T> GetReadOnlyRepository<T>() where T : class, IReadOnlyEntity;
+
         IRepository<T> GetCachedRepository<T>() where T : class;
-        void SetReadOnlyRepository<T>(IReadOnlyRepository<T> repository) where T : class, IReadOnlyEntity;
+
         void SetRepository<T>(IRepository<T> repository) where T : class;
 
         int SaveChanges();
@@ -40,13 +39,13 @@ namespace DDI.Shared
 
         T Attach<T>(T entity) where T : class;
 
-        T Create<T>() where T : class, IEntity;
+        T Create<T>() where T : class;
 
-        void Insert<T>(T entity) where T : class, IEntity;
+        void Insert<T>(T entity) where T : class;
 
-        void Update<T>(T entity) where T : class, IEntity;
+        void Update<T>(T entity) where T : class;
 
-        void Delete<T>(T entity) where T : class, IEntity;
+        void Delete<T>(T entity) where T : class;
 
         void AddBusinessLogic(object blObj);
 

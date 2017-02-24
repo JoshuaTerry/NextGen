@@ -1,6 +1,5 @@
 ﻿using DDI.Shared;
 using DDI.Shared.Extensions;
-using DDI.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -20,7 +19,6 @@ namespace DDI.Data
 
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
-        private Dictionary<Type, object> _readOnlyRepositories;
         private List<object> _businessLogic;
 
         #endregion Private Fields
@@ -53,11 +51,6 @@ namespace DDI.Data
             _repositories[typeof(T)] = repository;
         }
 
-        public void SetReadOnlyRepository<T>(IReadOnlyRepository<T> repository) where T : class, IReadOnlyEntity
-        {
-            _readOnlyRepositories[typeof(T)] = repository;
-        }
-
         /// <summary>
         /// Create a RepositoryNoDb for a data source.
         /// </summary>
@@ -87,35 +80,6 @@ namespace DDI.Data
             return CreateRepositoryForDataSource(dataSource.AsQueryable());
         }
 
-        public IReadOnlyRepository<T> GetReadOnlyRepository<T>() where T : class, IReadOnlyEntity
-        {
-            IReadOnlyRepository<T> roRepository = GetReadOnlyRepositoryOrNull<T>();
-
-            if (roRepository == null)
-            {
-                throw new InvalidOperationException($"Repository for type {typeof(T)} must be added via SetRepository() method.");
-            }
-
-            return roRepository;
-        }
-
-        public IReadOnlyRepository<T> GetReadOnlyRepositoryOrNull<T>() where T : class, IReadOnlyEntity
-        {
-            IReadOnlyRepository<T> repository = null;
-
-            var type = typeof(T);
-
-            if (!_readOnlyRepositories.ContainsKey(type))
-            {
-                return null;
-            }
-            else
-            {
-                repository = _readOnlyRepositories[type] as IReadOnlyRepository<T>;
-            }
-
-            return repository;
-        }
         public IRepository<T> GetRepository<T>() where T : class
         {
             IRepository<T> repository = GetRepositoryOrNull<T>();
@@ -245,22 +209,22 @@ namespace DDI.Data
             return null;
         }
 
-        public T Create<T>() where T : class, IEntity
+        public T Create<T>() where T : class
         {
             return GetRepository<T>().Create();
         }
 
-        public void Insert<T>(T entity) where T : class, IEntity
+        public void Insert<T>(T entity) where T : class
         {
             ((ICollection<T>)(GetRepository<T>().Entities)).Add(entity);
         }
 
-        public void Update<T>(T entity) where T : class, IEntity
+        public void Update<T>(T entity) where T : class
         {
             Attach(entity);
         }
 
-        public void Delete<T>(T entity) where T : class, IEntity
+        public void Delete<T>(T entity) where T : class
         {
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
