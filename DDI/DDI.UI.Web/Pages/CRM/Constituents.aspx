@@ -316,7 +316,7 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
