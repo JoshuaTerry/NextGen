@@ -1,53 +1,86 @@
-﻿using System.Web.Http;
-using System.Web.Http.Cors; 
-using DDI.Services;
+﻿using System;
+using System.Web.Http;
 using DDI.Shared.Models.Client.Core;
+using DDI.Services;
+using DDI.Services.Search;
 using DDI.Shared.Statics;
-using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
-        private ISectionPreferenceService _service;
-
-        public SectionPreferencesController()
-            :this(new SectionPreferenceService())
-        {            
-        }
-
-        internal SectionPreferencesController(ISectionPreferenceService service)
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(SectionPreferencesController));
+        [HttpGet]
+        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
+        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            _service = service;
+            return base.GetAll(RouteNames.SectionPreference, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/preferences/constituent", Name = RouteNames.SectionPreference + RouteNames.Constituent)]
-        public IHttpActionResult GetSectionPreferences(string sectionName)
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
+        }
+
+        [HttpPost]
+        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] SectionPreference entityToSave)
+        {
+            return base.Post(entityToSave);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpDelete]
+        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/sectionpreferences/{categoryName}/settings", Name = RouteNames.SectionPreference + RouteNames.CategoryName)]
+        public IHttpActionResult GetSectionPreferences(string categoryName)
         {
             try
             {
-                var response = _service.GetPreferencesBySectionName(sectionName);
-
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                if (!response.IsSuccessful)
-                {
-                    return InternalServerError();
-                }
-
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, GetUrlHelper());
-
-                return Ok(dynamicResponse);
-
+                var search = new PageableSearch(0, int.MaxValue, null);
+                var response = Service.GetAllWhereExpression(s => s.SectionName == categoryName, search);
+                return FinalizeResponse(response, RouteNames.SectionPreference + RouteNames.CategoryName, search, null, null);
+                
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
-        }         
+        }
+
+        [HttpGet]
+        [Route("api/v1/sectionpreferences/{categoryName}/settings/{sectionName}", Name = RouteNames.SectionPreference + RouteNames.CategoryName + RouteNames.SectionName)]
+        public IHttpActionResult GetSectionPreferenceByName(string categoryName, string sectionName)
+        {
+            try
+            {
+                var search = new PageableSearch(0, int.MaxValue, null);
+                var response = Service.GetWhereExpression(s => s.SectionName == categoryName && s.Name == sectionName);
+                return FinalizeResponse(response);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
+        }
     }
 }

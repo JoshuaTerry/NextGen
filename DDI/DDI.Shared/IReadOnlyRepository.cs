@@ -33,9 +33,7 @@ namespace DDI.Shared
         TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;
 
         ICollection<T> GetLocal();
-
-        T Attach(T entity);
-
+         
         IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes);
 
         #endregion Public Methods

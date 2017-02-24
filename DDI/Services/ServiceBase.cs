@@ -9,20 +9,22 @@ using DDI.Data;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
-using DDI.Shared.Extensions;
-using DDI.Shared.Logger;
+using DDI.Shared.Extensions; 
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Logger;
 
 namespace DDI.Services
 {
     public class ServiceBase<T> : IService<T> where T : class, IEntity
     {
-        private static readonly Logger _logger = Logger.GetLogger(typeof(ServiceBase<T>));
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ServiceBase<T>)); 
         private readonly IUnitOfWork _unitOfWork;
         private Expression<Func<T, object>>[] _includesForSingle = null;
         private Expression<Func<T, object>>[] _includesForList = null;
+
+        protected ILogger Logger => _logger;
 
         public ServiceBase() : this(new UnitOfWorkEF())
         {            
@@ -102,6 +104,12 @@ namespace DDI.Services
             return GetIDataResponse(() => result);
         }
 
+        public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
+        {
+            var response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            return response;
+        }
+
         public IDataResponse<List<T>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
         {
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
@@ -120,6 +128,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessIDataResponseException(ex);
             }
 
@@ -146,6 +155,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessIDataResponseException(ex);
             }
 
@@ -164,6 +174,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessIDataResponseException(ex);
             }
 
@@ -180,6 +191,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessIDataResponseException(ex);
             }
 
@@ -205,6 +217,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessDataResponseException<T1>(ex);
             }
         }
@@ -223,6 +236,7 @@ namespace DDI.Services
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex.ToString());
                 return ProcessIDataResponseException(ex);
             }
 
@@ -231,7 +245,7 @@ namespace DDI.Services
 
         public IDataResponse<T1> GetErrorResponse<T1>(string errorMessage, string verboseErrorMessage = null)
         {
-            _logger.Error($"Message: {errorMessage} | Verbose Message: {verboseErrorMessage}");
+            Logger.LogError($"Message: {errorMessage} | Verbose Message: {verboseErrorMessage}");
 
             return (verboseErrorMessage == null)
                 ? GetErrorResponse<T1>(new List<string> { errorMessage })
@@ -255,7 +269,7 @@ namespace DDI.Services
             response.IsSuccessful = false;
             response.ErrorMessages.Add(ex.Message);
             response.VerboseErrorMessages.Add(ex.ToString());
-            _logger.Error(ex);
+            Logger.LogError(ex.ToString());
 
             return response;
         }
@@ -266,7 +280,7 @@ namespace DDI.Services
             response.IsSuccessful = false;
             response.ErrorMessages.Add(ex.Message);
             response.VerboseErrorMessages.Add(ex.ToString());
-            _logger.Error(ex);
+            Logger.LogError(ex.ToString());
 
             return response;
 

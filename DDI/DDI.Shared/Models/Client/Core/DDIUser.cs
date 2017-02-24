@@ -18,11 +18,9 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(256)]
         public string MiddleName { get; set; }
         [MaxLength(256)]
-        public string LastName { get; set; }
-        [MaxLength(256)]
-        public string EmailAddress { get; set; }
-        public Guid? UserLoginId { get; set; }
-        public UserLogin UserLogin { get; set; }
+        public string LastName { get; set; }         
+        public bool IsActive { get; set; }
+        public DateTime? LastLogin { get; set; }         
         public override Guid? CreatedBy { get; set; } 
         public override DateTime? CreatedOn { get; set; } 
         public override Guid? LastModifiedBy { get; set; } 

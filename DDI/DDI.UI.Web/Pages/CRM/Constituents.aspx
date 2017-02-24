@@ -1,8 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Constituents.aspx.cs" Inherits="DDI.UI.Web.Constituents" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
+    
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -179,7 +180,7 @@
                         </div>
                     </div>
 
-                    <%-- MAY BE INTRODUCED LATER --%>
+                    <%-- MAY BE INTRODUCED LATER w/ Custom Fields --%>
                     <%--<h1>Addional Data</h1>
                     <div class="editcontainer">
 
@@ -200,7 +201,7 @@
 
                     </div>--%>
 
-                    <h1>Clergy Section</h1>
+                    <h1 class="clergySection"><span class="clergySectionLabel">Clergy Section</span></h1>
                     <div class="editcontainer">
                         
                         <div class="fourcolumn">
@@ -262,7 +263,7 @@
 
                     </div>
 
-                    <h1>Organization</h1>
+                    <h1 class="OrganizationSection">Organization</h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -315,12 +316,12 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
-                    <h1>Personal</h1>
+                    <h1 class="PersonalSection">Personal</h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -453,7 +454,7 @@
 
                     </div>
 
-                    <h1>Alternate ID <a href="#" class="newaltidmodal newbutton"></a></h1>
+                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span> <a href="#" class="newaltidmodal newbutton"></a></h1>
                     <div>
                         
                         <div class="alternateidgridcontainer"></div>
@@ -480,41 +481,11 @@
                     <h1>Contact Information</h1>
                     <div>
 
-                        <div class="accordions">
+                        <div class="accordions contactinfocontainer">
 
                             <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
                             <div>
                                 <div class="constituentaddressgridcontainer"></div>
-                            </div>
-
-                            <h1>Phone Numbers</h1>
-                            <div>
-                                <div class="constituentphonegridcontainer"></div>
-                            </div>
-
-                            <h1>Emails</h1>
-                            <div>
-                                <div class="constituentemailgridcontainer"></div>
-                            </div>
-
-                            <h1>Web Sites</h1>
-                            <div>
-                                <div class="constituentwebsitegridcontainer"></div>
-                            </div>
-
-                            <h1>Point of Contact</h1>
-                            <div>
-                                <div class="constituentpocgridcontainer"></div>
-                            </div>
-
-                            <h1>Social Media</h1>
-                            <div>
-                                <div class="constituentsocmedgridcontainer"></div>
-                            </div>
-
-                            <h1>Other Contacts</h1>
-                            <div>
-                                <div class="constituentothergridcontainer"></div>
                             </div>
 
                         </div>
@@ -828,7 +799,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
@@ -876,8 +847,206 @@
         </div>
 
     </div>
+                        
+    <div class="phonenumbermodal" title="Phone Number" style="display: none;">
 
-    <div class="relationshipmodal" title="Relationship" style="display: none;">
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="pn-PhoneNumberType ContactTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Phone:</label>
+                <input type="text"  class="pn-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="pn-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="pn-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitphonenumber" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="emailmodal" title="Email" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="e-EmailType ContactTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Email:</label>
+                <input type="text"  class="e-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="e-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="e-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitemail" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="websitemodal" title="Web Sites" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="ws-WebSiteType ContactTypeId" ></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Web Site:</label>
+                <input type="text"  class="ws-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="ws-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="ws-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitwebsite" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="pocmodal" title="Point Of Contact" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="poc-PocType ContactTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Info:</label>
+                <input type="text"  class="poc-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="poc-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="poc-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitpoc" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="socmedmodal" title="Social Media" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="sm-SocialMediaType ContactTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>URL:</label>
+                <input type="text"  class="sm-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="sm-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="sm-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitsocmed" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="othermodal" title="Other Contacts" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Type:</label>
+                <select class="o-OtherType ContactTypeId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Info:</label>
+                <input type="text"  class="o-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Preferred:</label>
+                <input type="checkbox"  class="o-IsPreferred" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="o-Comment" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitother" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+	
+	<div class="relationshipmodal" title="Relationship" style="display: none;">
 
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
@@ -907,7 +1076,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             

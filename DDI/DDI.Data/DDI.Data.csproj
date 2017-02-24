@@ -67,6 +67,14 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201702242028523_audit.cs" />
+    <Compile Include="Migrations\201702242028523_audit.Designer.cs">
+      <DependentUpon>201702242028523_audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.cs" />
+    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.Designer.cs">
+      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
@@ -240,6 +248,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702242028523_audit.resx">
+      <DependentUpon>201702242028523_audit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201702242027104_AddingSomeNewTables.resx">
+      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
     </EmbeddedResource>
@@ -354,9 +368,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
-      <Project>{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}</Project>
-      <Name>DDI.EFAudit</Name>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>

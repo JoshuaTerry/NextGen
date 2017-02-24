@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DDI.Search.Models;
 using DDI.Search.Statics;
 using Nest;
+using DDI.Logger;
 
 namespace DDI.Search
 {
@@ -15,7 +16,7 @@ namespace DDI.Search
     public class NestClient
     {
         #region Private Fields
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(NestClient));
         private ElasticClient _client;
         private Uri _uri;
         private ConnectionSettings _connectionSettings;
@@ -64,7 +65,15 @@ namespace DDI.Search
             IndexHelper.Initialize(_indexName);
 
             _connectionSettings = new ConnectionSettings(_uri);
-            _connectionSettings.MapDefaultTypeIndices(ms => new FluentDictionary<Type, string>(IndexHelper.IndexAliases));
+
+            _connectionSettings.MapDefaultTypeIndices(ms =>
+            {
+                foreach (var kvp in IndexHelper.IndexAliases)
+                {
+                    ms.Add(kvp.Key, kvp.Value);
+                }
+            });
+            
             _client = new ElasticClient(_connectionSettings);
         }
 
@@ -155,7 +164,14 @@ namespace DDI.Search
             }
             else
             {
-                _client.Index(document);
+                try
+                {
+                    _client.Index(document);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                }
             }
         }
 

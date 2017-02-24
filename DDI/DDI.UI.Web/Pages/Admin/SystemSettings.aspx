@@ -76,14 +76,14 @@
             <h1>General Ledger</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadAccountingSettings">Accounting Settings</a></li>
-                    <li><a href="#" class="LoadBudgetSettings">Budget Settings</a></li>
-                    <li><a href="#" class="LoadChartAccountsSettings">Chart of Accounts Settings</a></li>
+                    <li><a href="#" class="LoadAccounting">Accounting Settings</a></li>
+                    <li><a href="#" class="LoadBudget">Budget Settings</a></li>
+                    <li><a href="#" class="LoadChartAccounts">Chart of Accounts Settings</a></li>
                     <li><a href="#" class="LoadEntities">Entities</a></li>
-                    <li><a href="#" class="LoadFiscalYearSettings">Fiscal Year Settings</a></li>
-                    <li><a href="#" class="LoadFundAccountingSettings">Fund Accounting Settings</a></li>
-                    <li><a href="#" class="LoadGLFormatSettings">GL Format Settings</a></li>
-                    <li><a href="#" class="LoadJournalSettings">Journal Settings</a></li>
+                    <li><a href="#" class="LoadFiscalYear">Fiscal Year Settings</a></li>
+                    <li><a href="#" class="LoadFundAccounting">Fund Accounting Settings</a></li>
+                    <li><a href="#" class="LoadGLFormat">GL Format Settings</a></li>
+                    <li><a href="#" class="LoadJournal">Journal Settings</a></li>
                     <li><a href="#" class="LoadUtilities">Utilities</a></li>
                 </ul>
             </div>

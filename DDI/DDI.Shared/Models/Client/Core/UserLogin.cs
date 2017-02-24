@@ -21,6 +21,8 @@ namespace DDI.Shared.Models.Client.Core
         public DateTime? LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public DDIUser DDIUser { get; set; }
+        public Guid DDIUserId { get; set; }
         [MaxLength(256)]
         public string UserName { get; set; }
         [NotMapped]

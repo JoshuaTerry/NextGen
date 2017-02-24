@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Models;
+using DDI.Logger;
 
 namespace DDI.Data
 {
@@ -19,6 +20,7 @@ namespace DDI.Data
 
         private const int DEFAULT_BATCH_SIZE = 100;
 
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(BatchUnitOfWork<T>));
         private List<Guid> _ids;
         private Expression<Func<T, object>>[] _includes;
         private bool _loaded = false;
@@ -31,6 +33,7 @@ namespace DDI.Data
         #endregion
 
         #region Public Properties
+        protected ILogger Logger => _logger;
 
         /// <summary>
         /// UnitOfWork for the current batch.
@@ -124,7 +127,7 @@ namespace DDI.Data
         public IEnumerator<T> GetEnumerator()
         {
             if (BatchSize <= 0)
-            {
+            { 
                 throw new InvalidOperationException("Batch size must be greater than zero.");
             }
 

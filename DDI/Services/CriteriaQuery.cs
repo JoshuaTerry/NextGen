@@ -37,7 +37,7 @@ namespace DDI.Services
         {
             var testValue = GetTestValue(test);
 
-            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(default(TModelPropertyType))))
             {
                 var constantExpression = Expression.Constant(testValue, typeof(TModelPropertyType));
                 var compExpression = Expression.GreaterThanOrEqual(expression.Body, constantExpression);
@@ -53,7 +53,7 @@ namespace DDI.Services
         {
             var testValue = GetTestValue(test);
 
-            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(default(TModelPropertyType))))
             {
                 var constantExpression = Expression.Constant(testValue, typeof(TModelPropertyType));
                 var compExpression = Expression.LessThanOrEqual(expression.Body, constantExpression);
@@ -98,7 +98,7 @@ namespace DDI.Services
         public CriteriaQuery<TDatabaseType, TSearchModel> IfModelPropertyIsNotBlankThenAndTheExpression<TModelPropertyType>(Expression<Func<TSearchModel, TModelPropertyType>> test, Expression<Func<TDatabaseType, bool>> expression)
         {
             var testValue = test.Compile().Invoke(Model);
-            if (testValue != null && !(testValue.Equals(typeof(TModelPropertyType).DefaultValue())))
+            if (testValue != null && !(testValue.Equals(default(TModelPropertyType))))
             {
                 PredicateAnd(expression);
             }
@@ -183,7 +183,7 @@ namespace DDI.Services
         {
             if (testValue == null)
                 return true;
-            if (testValue.Equals(typeof(TType).DefaultValue()))
+            if (testValue.Equals(default(TType)))
                 return true;
             if (testValue is string && string.IsNullOrWhiteSpace((string)testValue))
                 return true;
