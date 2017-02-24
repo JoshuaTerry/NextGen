@@ -5,8 +5,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using DDI.Logger;
+using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -21,6 +22,7 @@ namespace DDI.Data
         private DbContext _commonContext;
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private Dictionary<Type, object> _readOnlyRepositories;
         private string _commonNamespace;
         private List<object> _businessLogic;
 
@@ -63,7 +65,10 @@ namespace DDI.Data
         {
             _repositories[typeof(T)] = repository;
         }
-
+        public void SetReadOnlyRepository<T>(IReadOnlyRepository<T> repository) where T : class, IReadOnlyEntity
+        {
+            _readOnlyRepositories[typeof(T)] = repository;
+        }
         /// <summary>
         /// Return a queryable collection of entities filtered by a predicate.
         /// </summary>
@@ -156,22 +161,22 @@ namespace DDI.Data
             return null;
         }
 
-        public T Create<T>() where T : class
+        public T Create<T>() where T : class, IEntity
         {
             return GetRepository<T>().Create();
         }
 
-        public void Insert<T>(T entity) where T : class
+        public void Insert<T>(T entity) where T : class, IEntity
         {
             GetRepository<T>().Insert(entity);
         }
 
-        public void Update<T>(T entity) where T : class
+        public void Update<T>(T entity) where T : class, IEntity
         {
             GetRepository<T>().Update(entity);
         }
 
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity) where T : class, IEntity
         {
             GetRepository<T>().Delete(entity);
         }
@@ -210,6 +215,29 @@ namespace DDI.Data
             return repository;
         }
 
+        public IReadOnlyRepository<T> GetReadOnlyRepository<T>() where T : class, IReadOnlyEntity
+        {
+            IReadOnlyRepository<T> roRepository = null;
+
+            var type = typeof(T);
+
+            if (!_readOnlyRepositories.ContainsKey(type))
+            {
+                DbContext context = GetContext(type);
+
+                // Create a read only repository, then add it to the dictionary.
+                roRepository = new ReadOnlyRepository<T>(context);
+
+                _readOnlyRepositories.Add(type, roRepository);
+            }
+            else
+            {
+                // Repository already exists...
+                roRepository = _readOnlyRepositories[type] as IReadOnlyRepository<T>;
+            }
+
+            return roRepository;
+        }
         public IRepository<T> GetCachedRepository<T>() where T : class 
         {
             IRepository<T> repository = null;
