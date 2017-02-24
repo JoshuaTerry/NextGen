@@ -824,20 +824,20 @@ function NewPaymentPreference() {
 
 function EditPaymentPreference(id) {
 
-    modal = $('.paymentpreferencemodal').dialog({
+    var modal = $('.paymentpreferencemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 600,
         resizable: false
     });
 
-    LoadPaymentPreference(id);
+    LoadPaymentPreference(id, modal);
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
-        CloseModal();
+        CloseModal(modal);
 
     });
 
@@ -869,7 +869,7 @@ function EditPaymentPreference(id) {
 
         $.ajax({
             type: 'PATCH',
-            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+            url: WEB_API_ADDRESS + 'paymentmethods/' + id,
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -891,11 +891,11 @@ function EditPaymentPreference(id) {
 
 }
 
-function LoadPaymentPreference(id) {
+function LoadPaymentPreference(id, modal) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
+        url: WEB_API_ADDRESS + 'paymentmethods/' + id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {

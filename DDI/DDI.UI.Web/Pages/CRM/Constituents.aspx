@@ -799,7 +799,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
