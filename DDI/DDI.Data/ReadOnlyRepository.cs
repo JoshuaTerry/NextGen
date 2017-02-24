@@ -1,4 +1,5 @@
-﻿using DDI.Shared.Models;
+﻿using DDI.Shared;
+using DDI.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,13 +10,12 @@ using System.Threading.Tasks;
 
 namespace DDI.Data
 {
-    public class ReadOnlyRepository<T> where T : class, IReadOnlyEntity 
+    public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : class, IReadOnlyEntity 
     {
         #region Private Fields
 
         private readonly DbContext _context = null;
         private IDbSet<T> _entities = null;
-        private SQLUtilities _utilities = null;
         private bool _isUOW = false;
         private ICollection<T> _local = null;
 

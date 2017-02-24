@@ -121,7 +121,6 @@
     <Compile Include="Models\Client\Audit\IChangeSet.cs" />
     <Compile Include="Models\Client\Audit\IObjectChange.cs" />
     <Compile Include="Models\Client\Audit\IPropertyChange.cs" />
-    <Compile Include="Models\Client\Audit\IReadOnlyEntity.cs" />
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />

@@ -368,6 +368,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7c3b147f-fd3e-4ca9-b405-af4d249bf5a5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
       <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
       <Name>DDI.Logger</Name>

@@ -16,7 +16,6 @@ using DDI.EFAudit;
 using System.Threading.Tasks;
 using System.Threading;
 using DDI.EFAudit.Logging;
-
 namespace DDI.Data
 {
     public class DomainContext : DbContext
@@ -105,7 +104,7 @@ namespace DDI.Data
         public Action<DbContext> CustomSaveChangesLogic { get; set; }
         #endregion
 
-        #endregion Public Properties
+         
 
 
         #region Public Constructors

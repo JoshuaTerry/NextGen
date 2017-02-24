@@ -267,7 +267,7 @@ namespace DDI.Data
         /// Saves all changes made to the unit of work to the database.
         /// </summary>
         public int SaveChanges()
-        {
+        { 
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
         }
