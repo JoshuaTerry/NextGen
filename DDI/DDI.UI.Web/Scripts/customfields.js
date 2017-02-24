@@ -240,7 +240,7 @@ function CreateCheckBoxField(item) {
 
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('editable');
 
-    if (item.Data[0] && item.Data[0].Value == '1') {
+    if (item.Data[0] && item.Data[0].Value == 'true') {
         $(checkbox).attr('checked', 'checked');
     }
 
@@ -266,9 +266,21 @@ function CreateDateTimeField(item) {
     var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
     var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
 
-    if (item.Data[0]) {
-        $(date).val(item.Data[0].Value);
-        $(time).val(FormatJOSNTime(item.Data[0].Value));
+    // Need to verify that the data is coming back appropriatly, then how to format it
+    // in a way that it goes into the text box....
+
+    if (item.Data[0] && item.Data[0].Value) {
+
+        var data = item.Data[0].Value.split(' ');
+
+        if (data[0]) {
+
+            $(date).val(data[0]);
+
+            if (data[1]) {
+                $(time).val(data[1]);
+            }
+        }
     }
 
     return dt;
@@ -285,15 +297,18 @@ function SaveCustomFields(container) {
         var cfDataRoute = 'customfielddata';
         var method = '';
 
-        var value = GetCustomFieldValue(container, cf);
+        var value = GetCustomFieldValue(this, cf);
 
         if (cf.Data && cf.Data[0] && cf.Data[0].Id) {
             // Update
-            data = {
-                Value: value
+            if (value != cf.Data[0].Value)
+            {
+                data = {
+                    Value: value
+                }
+                method = 'PATCH';
+                cfDataRoute = cfDataRoute + '/' + cf.Data[0].Id;
             }
-            method = 'PATCH';
-            cfDataRoute = cfDataRoute + '/' + cf.Data[0].Id;
         }
         else {
             if (value) {
@@ -312,7 +327,7 @@ function SaveCustomFields(container) {
             $.ajax({
                 url: WEB_API_ADDRESS + cfDataRoute,
                 method: method,
-                data: data,
+                data: JSON.stringify(data),
                 headers: GetApiHeaders(),
                 contentType: 'application/json; charset-utf-8',
                 crossDomain: true,
@@ -335,28 +350,30 @@ function GetCustomFieldValue(container, customField) {
 
     switch (customField.FieldType) {
         case CustomFieldType.Number:
-            value = $(this).find('input').val();
+            value = $(container).find('input').val();
             break;
         case CustomFieldType.TextBox:
-            value = $(this).find('input').val();
+            value = $(container).find('input').val();
             break;
         case CustomFieldType.TextArea:
-            value = $(this).find('input').text();
+            value = $(container).find('input').text();
             break;
         case CustomFieldType.DropDown:
-            value = $(this).find('select').val();
+            value = $(container).find('select').val();
             break;
         case CustomFieldType.Radio:
             value = $('input[name=' + customField.Id + ']:checked').val();
             break;
         case CustomFieldType.CheckBox:
-            value = $(this).find('input').prop('checked');
+            value = $(container).find('input').prop('checked');
             break;
         case CustomFieldType.Date:
-            value = $(this).find('input').val();
+            value = $(container).find('input').val();
             break;
         case CustomFieldType.DateTime:
-            value = $(this).find('input').val();
+            var d = $(container).find('input.date').val();
+            var t = $(container).find('input.time').val();
+            value = d + ' ' + t;
             break;
     }
 

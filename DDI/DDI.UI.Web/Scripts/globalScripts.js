@@ -312,7 +312,7 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    if ($.timepicker) {
+    
         $('.datepair .time').timepicker({
             'showDuration': true,
             'timeFormat': 'g:ia'
@@ -324,7 +324,7 @@ function LoadDatePair() {
         });
 
         // $('.datepair').datepair();
-    }
+    
     
 }
 
