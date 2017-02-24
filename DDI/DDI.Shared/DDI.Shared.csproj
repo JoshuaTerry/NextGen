@@ -75,9 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\HATEAOSPostLinkAttribute.cs" />
-    <Compile Include="Attributes\HATEAOSAttribute.cs" />
-    <Compile Include="Attributes\HATEOASLookupCollectionAttribute.cs" />
     <Compile Include="Caching\CacheHelper.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\MemoryCacheProvider.cs" />
@@ -108,7 +105,6 @@
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
-    <Compile Include="HATEOASLink.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
@@ -120,7 +116,6 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="Logger\Logger.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
@@ -207,7 +202,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

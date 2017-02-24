@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Search", "DDI.Search\DD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Search.Tests", "DDI.Search.Tests\DDI.Search.Tests.csproj", "{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Logger", "DDI.Logger\DDI.Logger.csproj", "{F31674BF-F62C-4753-AED2-9BA3C2160577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.EFAudit", "DDI.EFAudit\DDI.EFAudit.csproj", "{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1434224-8AFE-4C10-8662-F4F36BE8B3CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F31674BF-F62C-4753-AED2-9BA3C2160577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F31674BF-F62C-4753-AED2-9BA3C2160577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F31674BF-F62C-4753-AED2-9BA3C2160577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F31674BF-F62C-4753-AED2-9BA3C2160577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

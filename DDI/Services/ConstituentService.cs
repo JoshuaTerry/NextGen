@@ -10,7 +10,6 @@ using DDI.Search;
 using DDI.Search.Models;
 using DDI.Services.Search;
 using DDI.Shared;
-using DDI.Shared.Logger;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
@@ -23,8 +22,7 @@ namespace DDI.Services
         #region Private Fields
 
         private readonly IRepository<Constituent> _repository;
-        private readonly ConstituentLogic _constituentlogic;
-        private readonly Logger _logger;
+        private readonly ConstituentLogic _constituentlogic; 
 
         #endregion
 
@@ -45,7 +43,6 @@ namespace DDI.Services
         {
             _constituentlogic = constituentLogic;
             _repository = repository;
-            _logger = Logger.GetLogger(typeof(ConstituentService));
         }
 
         #endregion
@@ -135,7 +132,7 @@ namespace DDI.Services
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex.Message, ex);
+                            Logger.LogError(ex.ToString());
                         }
                     }
                 }
@@ -178,7 +175,7 @@ namespace DDI.Services
             {
                 if (!string.IsNullOrWhiteSpace(search.Name))
                 {
-                    query.Must.Match(search.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
+                    query.Must.MatchAll(search.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
                 }
 
                 if (!search.ConstituentTypeId.IsNullOrEmpty())

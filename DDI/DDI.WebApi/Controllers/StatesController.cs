@@ -1,6 +1,6 @@
 ﻿using DDI.Services;
 using DDI.Services.Search;
-using DDI.Shared.Logger;
+
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using System;

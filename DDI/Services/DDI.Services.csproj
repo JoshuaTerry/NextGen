@@ -103,6 +103,10 @@
       <Project>{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}</Project>
       <Name>DDI.Search</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>

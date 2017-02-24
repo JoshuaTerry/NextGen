@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}</ProjectGuid>
+    <ProjectGuid>{F31674BF-F62C-4753-AED2-9BA3C2160577}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDI.Search</RootNamespace>
-    <AssemblyName>DDI.Search</AssemblyName>
+    <RootNamespace>DDI.Logger</RootNamespace>
+    <AssemblyName>DDI.Logger</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,58 +28,31 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Elasticsearch.Net.5.0.1\lib\net45\Elasticsearch.Net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nest, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NEST.5.0.1\lib\net45\Nest.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.7\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DocumentSearchResult.cs" />
-    <Compile Include="ElasticQuery.cs" />
-    <Compile Include="ElasticRepository.cs" />
-    <Compile Include="IAutoMappable.cs" />
-    <Compile Include="IDocumentSearchResult.cs" />
-    <Compile Include="Models\AddressDocument.cs" />
-    <Compile Include="Models\ConstituentDocument.cs" />
-    <Compile Include="Models\ContactInfoDocument.cs" />
-    <Compile Include="NestClient.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Log4NetLogger.cs" />
+    <Compile Include="LoggerManager.cs" />
+    <Compile Include="LogLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IndexHelper.cs" />
-    <Compile Include="Statics\IndexSuffixes.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
-      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
-      <Name>DDI.Logger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
-      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
-      <Name>DDI.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

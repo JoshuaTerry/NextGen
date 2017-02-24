@@ -253,12 +253,38 @@ namespace DDI.Search
                 }
             }
 
+            /// <summary>
+            /// Specify a boost factor for calcuting the score for this term.
+            /// </summary>
             public BoolQueryTerm Boost(double boost)
             {
                 _boost = boost;
                 return this;
             }
                        
+            /// <summary>
+            /// Full text query term: Match all words
+            /// </summary>
+            /// <param name="value">Text to match</param>
+            /// <param name="predicates">Paths to properties to match.</param>
+            public ElasticQuery<T> MatchAll(string value, params Expression<Func<T, object>>[] predicates)
+            {
+                if (predicates.Length == 1)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().Match(m => m.Field(predicates[0]).Query(value).Lenient(true).Boost(_boost).Operator(Operator.And)));
+                }
+                else if (predicates.Length > 1)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().MultiMatch(m => m.Fields(predicates).Query(value).Lenient(true).Boost(_boost).Operator(Operator.And)));
+                }
+                return _query;
+            }
+
+            /// <summary>
+            /// Full text query term: Match any words
+            /// </summary>
+            /// <param name="value">Text to match</param>
+            /// <param name="predicates">Paths to properties to match.</param>
             public ElasticQuery<T> Match(string value, params Expression<Func<T, object>>[] predicates)
             {
                 if (predicates.Length == 1)
@@ -272,12 +298,22 @@ namespace DDI.Search
                 return _query;
             }
 
+            /// <summary>
+            /// Exact value query term.
+            /// </summary>
+            /// <param name="value">Value to match</param>
+            /// <param name="predicates">Path to property.</param>
             public ElasticQuery<T> Equal(object value, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Term(m => m.Field(predicate).Value(value).Boost(_boost)));
                 return _query;
             }
 
+            /// <summary>
+            /// Query term for a list of values. (Exact match).
+            /// </summary>
+            /// <param name="value">Values to match.  Values can be separated by | or &.</param>
+            /// <param name="predicates">Path to property.</param>
             public ElasticQuery<T> BeInList(string list, Expression<Func<T, object>> predicate)
             {
                 list = _query.ConvertListToQueryString(list);
@@ -288,30 +324,59 @@ namespace DDI.Search
                 return _query;
             }
 
+            /// <summary>
+            /// Prefix (starts with) query term.
+            /// </summary>
+            /// <param name="value">Prefix value.</param>
+            /// <param name="predicates">Path to property.</param>
             public ElasticQuery<T> Prefix(string value, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Prefix(m => m.Field(predicate).Value(value).Boost(_boost)));
                 return _query;
             }
 
+            /// <summary>
+            /// Range query term.
+            /// </summary>
+            /// <param name="lowValue">Lower end of range.</param>
+            /// <param name="highValue">Upper end of range.</param>
+            /// <param name="predicate">Path to property.</param>
             public ElasticQuery<T> Range(string lowValue, string highValue, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().TermRange(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
                 return _query;
             }
 
+            /// <summary>
+            /// Range query term.
+            /// </summary>
+            /// <param name="lowValue">Lower end of range.</param>
+            /// <param name="highValue">Upper end of range.</param>
+            /// <param name="predicate">Path to property.</param>
             public ElasticQuery<T> Range(double lowValue, double highValue, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().Range(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
                 return _query;
             }
 
+            /// <summary>
+            /// Range query term.
+            /// </summary>
+            /// <param name="lowValue">Lower end of range.</param>
+            /// <param name="highValue">Upper end of range.</param>
+            /// <param name="predicate">Path to property.</param>
             public ElasticQuery<T> Range(DateTime lowValue, DateTime highValue, Expression<Func<T, object>> predicate)
             {
                 GetQueryContainer().Add(new QueryContainerDescriptor<T>().DateRange(m => m.Field(predicate).GreaterThanOrEquals(lowValue).LessThanOrEquals(highValue).Boost(_boost)));
                 return _query;
             }
 
+            /// <summary>
+            /// Nested query term.
+            /// </summary>
+            /// <param name="predicate">Path to child object being queried.</param>
+            /// <param name="nestedQuery">Nested ElasticQuery object</param>
+            /// <returns></returns>
             public ElasticQuery<T> Nested(Expression<Func<T, object>> predicate, ElasticQuery<T> nestedQuery)
             {
                 NestedQueryDescriptor<T> nested = new NestedQueryDescriptor<T>().Path(predicate);
