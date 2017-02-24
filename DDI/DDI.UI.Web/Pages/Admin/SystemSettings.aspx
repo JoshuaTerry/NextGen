@@ -209,4 +209,34 @@
 
     </div>
 
+    <div class="ethnicitymodal" title="Ethnicity" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="ethnicityId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="eth-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="eth-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="eth-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submiteth" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </asp:Content>

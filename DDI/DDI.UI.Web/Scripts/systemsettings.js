@@ -10,6 +10,7 @@
 
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
+    Demographics: 'DemographicSettings'
     Education: 'Education'
 }
 
@@ -109,7 +110,7 @@ function GetSystemSettings(category, callback) {
 
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
-   // debugger;
+
     var container = $('<div>').addClass('twocolumn');
     
     var activeSection = $('<div>').addClass('fieldblock');
@@ -364,11 +365,222 @@ function LoadContactInformationSectionSettings() {
 
 }
 
+
+
+/* DEMOGRAPHICS SYSTEM SETTINGS */
 function LoadDemographicsSectionSettings() {
+
+    LoadSectionSettings(SettingsCategories.CRM, 'Demographics', 'sectionpreferences', SystemSettings.Demographics);
+
+    var accordion = $('<div>').addClass('accordions');
+    var denomination = $('<div>').addClass('denominationscontainer');
+    var ethnicity = $('<div>').addClass('ethnicitiescontainer');
+    var language = $('<div>').addClass('languagescontainer');
+
+
+    var header = $('<h1>').text('Denominations').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newdenominationmodallink modallink newbutton')
+        .appendTo($(header));
+    $(denomination).appendTo($(accordion));
+
+    LoadDenominationSettingsGrid();
+
+    header = $('<h1>').text('Ethnicities').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newEthnicitiesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.ethnicitymodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submiteth').unbind('click');
+
+            $('.submiteth').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.eth-Code').val(),
+                    Name: $(modal).find('.eth-Name').val(),
+                    IsActive: $(modal).find('.eth-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'ethnicities',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
+
+                        CloseModal();
+
+                        LoadEthnicitySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(ethnicity).appendTo($(accordion));
+
+    LoadEthnicitySettingsGrid();
+
+    header = $('<h1>').text('Languages').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newLanguagesmodallink modallink newbutton').appendTo($(header));
+    $(language).appendTo($(accordion));
+
+    LoadLanguageSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
+
+}
+
+function LoadDenominationSettingsGrid() {
+
+    var denominationcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations');
+
+}
+
+function LoadEthnicitySettingsGrid() {
+
+    var ethnicitycolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
+}
+
+function LoadLanguageSettingsGrid() {
+
+    var languagecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('languagesgrid', 'languagescontainer', languagecolumns, 'languages');
+
+}
+
+function EditEthnicity(id) {
+
+    LoadEthnicity(id);
+
+    modal = $('.ethnicitymodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submiteth').unbind('click');
+
+    $('.submiteth').click(function () {
+
+        var item = {
+            Code: $(modal).find('.eth-Code').val(),
+            Name: $(modal).find('.eth-Name').val(),
+            IsActive: $(modal).find('.eth-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'ethnicities/' + $(modal).find('.ethnicityId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
+
+                CloseModal(modal);
+
+                LoadEthnicitySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteEthnicity(id) {
 
 
 
 }
+
+function LoadEthnicity(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'ethnicities/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.ethnicityId').val(data.Data.Id);
+                $(modal).find('.eth-Code').val(data.Data.Code);
+                $(modal).find('.eth-Name').val(data.Data.Name);
+                $(modal).find('.eth-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading ethnicity.');
+        }
+    });
+
+}
+/* END DEMOGRAPHICS SYSTEM SETTINGS */
+
+
+
 
 function LoadDBASectionSettings() {
 
