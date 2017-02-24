@@ -39,14 +39,6 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.30\lib\net45\Moq.dll</HintPath>
@@ -81,6 +73,9 @@
     <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
     <Compile Include="CRM\DataSources\ContactTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\ContactCategoryDataSource.cs" />
+    <Compile Include="CRM\DataSources\RegionDataSource.cs" />
+    <Compile Include="CRM\DataSources\RegionLevelDataSource.cs" />
+    <Compile Include="CRM\DataSources\RegionAreaDataSource.cs" />
     <Compile Include="CRM\NameFormatterTest.cs" />
     <Compile Include="CRM\ConstituentLogicTest.cs" />
     <Compile Include="CRM\ContactInfoLogicTest.cs" />
@@ -118,7 +113,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
