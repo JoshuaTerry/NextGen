@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuditService.cs" />
     <Compile Include="ConstituentAddressService.cs" />
     <Compile Include="ConstituentService.cs" />
     <Compile Include="CountryService.cs" />

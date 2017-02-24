@@ -1,16 +1,11 @@
-﻿using DDI.Shared.Models.Client.Audit; 
-using DDI.Shared.Models.Client.Core;
-using System;
+﻿using DDI.Shared.Models.Client.Core;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ObjectChange : IObjectChange<DDIUser>
+    public class ObjectChange : IObjectChange<DDIUser>, IReadOnlyEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

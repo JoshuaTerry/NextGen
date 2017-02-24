@@ -1,15 +1,10 @@
 ﻿using DDI.Shared.Models.Client.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class PropertyChange : IPropertyChange<DDIUser>
+    public class PropertyChange : IPropertyChange<DDIUser>, IReadOnlyEntity
     {
         public string ChangeType { get; set; }
         [Key]

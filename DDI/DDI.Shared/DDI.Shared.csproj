@@ -117,6 +117,7 @@
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="IPageable.cs" />
+    <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="ISQLUtilities.cs" />
     <Compile Include="IUnitOfWork.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
+    <Compile Include="Models\IReadOnlyEntity.cs" />
     <Compile Include="Models\ISearchDocument.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
