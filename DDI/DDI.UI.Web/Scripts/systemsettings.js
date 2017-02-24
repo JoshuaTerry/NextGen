@@ -9,7 +9,8 @@
 }
 
 var SystemSettings = {
-    AlternateId: 'AlternateIdSettings'
+    AlternateId: 'AlternateIdSettings',
+    Education: 'Education'
 }
 
 $(document).ready(function () {
@@ -108,7 +109,7 @@ function GetSystemSettings(category, callback) {
 
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
-
+   // debugger;
     var container = $('<div>').addClass('twocolumn');
     
     var activeSection = $('<div>').addClass('fieldblock');
@@ -376,7 +377,7 @@ function LoadDBASectionSettings() {
 }
 
 function LoadEducationSectionSettings() {
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Education', 'sectionpreferences', SystemSettings.Education);
     var accordion = $('<div>').addClass('accordions');
     var degrees = $('<div>').addClass('degreecontainer');
     var levels = $('<div>').addClass('educationlevelscontainer');
