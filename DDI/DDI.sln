@@ -26,6 +26,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Services.Test", "DDI.Services.Test\DDI.Services.Test.csproj", "{27671E1D-CD33-4DD8-8201-D64592DAC560}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Conversion", "DDI.Conversion\DDI.Conversion.csproj", "{F08E542B-5CB5-478F-8247-B01C42A84E24}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E7D7E11-80B4-4751-8C21-B05A08A19473} = {0E7D7E11-80B4-4751-8C21-B05A08A19473}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Search", "DDI.Search\DDI.Search.csproj", "{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}"
 EndProject
