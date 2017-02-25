@@ -9,6 +9,12 @@
 .systemsettings div.left-accordions ul li a:hover { text-decoration: none; background-color: #999999; color: white; }
 .systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
 
+.systemsettings div.fieldblock label { display: inline-block; margin-right: 1%; }
+.systemsettings div.fieldblock input.sectionLabel { width: 50%; }
+
+.systemsettings div.controlContainer { width: 90%; text-align: right; }
+.systemsettings div.controlContainer a { margin-left: 10px; }
+
 div.options div.threecolumn > div { width: auto; }
 
 div.options { margin-left: 0px; }

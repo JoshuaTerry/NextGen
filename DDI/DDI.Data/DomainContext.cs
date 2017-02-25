@@ -8,6 +8,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.Data
 {
@@ -26,6 +27,10 @@ namespace DDI.Data
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Note> Notes { get; set; }
+        public DbSet<NoteCategory> NoteCategories { get; set; }
+        public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
+        public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
 
         #endregion
@@ -74,6 +79,11 @@ namespace DDI.Data
 
         #endregion
 
+        public DbSet<UserLogin> UserLogins { get; set; }
+        public DbSet<DDIUser> DDIUsers { get; set; }
+        public DbSet<ChangeSet> ChangeSets { get; set; }
+        public DbSet<ObjectChange> ObjectChanges { get; set; }
+        public DbSet<PropertyChange> PropertyChanges { get; set; }
         #endregion Public Properties
 
 

@@ -200,12 +200,13 @@ namespace DDI.Data
             return GetEntities<T>().ToList();
         }
 
-        public void Attach<T>(T entity) where T : class
+        public T Attach<T>(T entity) where T : class
         {
             if (entity != null)
             {
-                GetRepository<T>().Attach(entity);
+                return GetRepository<T>().Attach(entity);
             }
+            return null;
         }
 
         public T Create<T>() where T : class
@@ -218,30 +219,46 @@ namespace DDI.Data
             ((ICollection<T>)(GetRepository<T>().Entities)).Add(entity);
         }
 
+        public void Update<T>(T entity) where T : class
+        {
+            Attach(entity);
+        }
+
         public void Delete<T>(T entity) where T : class
         {
             ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
         }
 
-        public void AddBusinessLogic(object blObj)
+        public void AddBusinessLogic(object logic)
         {
-            if (!_businessLogic.Contains(blObj))
-                _businessLogic.Add(blObj);
+            if (!_businessLogic.Contains(logic))
+                _businessLogic.Add(logic);
         }
 
+        /// <summary>
+        /// Get (or create) a business logic instance associated with this unit of work.
+        /// </summary>
+        /// <typeparam name="T">Business logic type</typeparam>
         public T GetBusinessLogic<T>() where T : class
         {
-            Type blType = typeof(T);
-            T blObj = _businessLogic.FirstOrDefault(p => p.GetType() == blType) as T;
-            if (blObj == null)
-            {
-                blObj = (T)Activator.CreateInstance(blType, this);
-                AddBusinessLogic(blObj);
-            }
+            return GetBusinessLogic(typeof(T)) as T;
+        }
 
-            return blObj;
-		}
-		
+        /// <summary>
+        /// Get (or create) a business logic instance associated with this unit of work.
+        /// </summary>
+        /// <param name="logicType">Business logic type</param>
+        public object GetBusinessLogic(Type logicType)
+        {
+            object logic = _businessLogic.FirstOrDefault(p => p.GetType() == logicType);
+            if (logic == null)
+            {
+                logic = Activator.CreateInstance(logicType, this);
+                AddBusinessLogic(logic);
+            }
+            return logic;
+        }
+
         public T GetById<T>(Guid id) where T : class
         {
             return GetRepository<T>().GetById(id);

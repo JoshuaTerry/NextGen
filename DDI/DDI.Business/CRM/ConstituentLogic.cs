@@ -10,6 +10,9 @@ using System;
 using DDI.Shared.Enums.CRM;
 using DDI.Business.Core;
 using DDI.Shared.Statics.CRM;
+using DDI.Search.Models;
+using DDI.Shared.Models;
+using DDI.Search;
 
 namespace DDI.Business.CRM
 {
@@ -122,6 +125,14 @@ namespace DDI.Business.CRM
                 constituent.FormattedName = GetFormattedName(constituent);
                 constituent.Name = GetSortName(constituent);
             }
+
+            ScheduleUpdateSearchDocument(constituent);
+        }
+
+        public override void UpdateSearchDocument(Constituent constituent)
+        {
+            var elasticRepository = new ElasticRepository<ConstituentDocument>();
+            elasticRepository.Update((ConstituentDocument)BuildSearchDocument(constituent));
         }
 
         public int GetNextConstituentNumber()
@@ -189,6 +200,104 @@ namespace DDI.Business.CRM
         public List<Relationship> GetRelationships(Constituent constituent, RelationshipCategory category)
         {
             return GetRelationships(constituent, category, null);
+        }
+
+        /// <summary>
+        /// Build a ConstituentDocument for Elasticsearch indexing.
+        /// </summary>
+        public override ISearchDocument BuildSearchDocument(Constituent entity)
+        {
+            var document = new ConstituentDocument();
+
+            var constituentAddressLogic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
+            var addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
+
+            document.Id = entity.Id;
+            document.ConstituentNumber = entity.ConstituentNumber.ToString();
+            document.Name = entity.FormattedName ?? string.Empty;
+            document.ConstituentStatusId = entity.ConstituentStatusId ?? Guid.Empty;
+            document.ConstituentTypeId = entity.ConstituentTypeId ?? Guid.Empty;
+            document.Source = entity.Source ?? string.Empty;
+            document.Name2 = entity.Name2 ?? string.Empty;
+            document.Business = entity.Business ?? string.Empty;
+            document.Nickname = entity.Nickname ?? string.Empty;
+            document.CreationDate = entity.CreatedOn;
+            document.LanguageId = entity.LanguageId ?? Guid.Empty;
+            document.GenderId = entity.GenderId ?? Guid.Empty;
+
+            if (entity.BirthYear > 0)
+            {
+                document.BirthYearFrom = document.BirthYearTo = entity.BirthYear.Value;
+            }
+            else
+            {
+                document.BirthYearFrom = entity.BirthYearFrom ?? 0;
+                document.BirthYearTo = entity.BirthYearTo ?? 0;
+            }
+
+            // Primary address            
+            ConstituentAddress constituentAddress = UnitOfWork.GetReference(entity, p => p.ConstituentAddresses).FirstOrDefault(p => p.IsPrimary);
+            if (constituentAddress != null)
+            {
+                document.PrimaryAddress = addressLogic.FormatAddress(UnitOfWork.GetReference(constituentAddress, p => p.Address)).Replace("\n", ", ");
+            }
+
+            // Load alternate IDs
+            document.AlternateIds = UnitOfWork.GetReference(entity, p => p.AlternateIds).Select(p => p.Name).ToList();
+
+            // Load tags, denominations, ethnicities
+            document.Tags = UnitOfWork.GetReference(entity, p => p.Tags).Select(p => p.Id).ToList();
+            document.Denominations = UnitOfWork.GetReference(entity, p => p.Denominations).Select(p => p.Id).ToList();
+            document.Ethnicities = UnitOfWork.GetReference(entity, p => p.Ethnicities).Select(p => p.Id).ToList();
+            
+            // Load contact info
+            document.ContactInfo = new List<ContactInfoDocument>();
+            foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
+            {
+                Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
+
+                document.ContactInfo.Add(new ContactInfoDocument()
+                {
+                    Id = item.Id,
+                    Comment = item.Comment ?? string.Empty,
+                    Info = item.Info ?? string.Empty,
+                    ContactCategoryId = categoryId
+                });
+            }
+
+            // Load addresses
+            document.Addresses = new List<AddressDocument>();
+            foreach (var entry in UnitOfWork.GetReference(entity, p => p.ConstituentAddresses))
+            {
+                Address address = UnitOfWork.GetReference(entry, p => p.Address);
+                if (address != null)
+                {
+                    document.Addresses.Add(new AddressDocument()
+                    {
+                        Id = address.Id,
+                        StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),
+                        City = address.City ?? string.Empty,
+                        PostalCode = address.PostalCode ?? string.Empty,
+                        CountryId = address.CountryId ?? Guid.Empty,
+                        StateId = address.StateId ?? Guid.Empty,
+                        Region1Id = address.Region1Id ?? Guid.Empty,
+                        Region2Id = address.Region2Id ?? Guid.Empty,
+                        Region3Id = address.Region3Id ?? Guid.Empty,
+                        Region4Id = address.Region4Id ?? Guid.Empty
+                    });
+                }
+            }
+
+            if (UnitOfWork.GetReference(entity, p => p.ConstituentType)?.Category == ConstituentCategory.Organization)
+            {
+                document.DoingBusinessAs = UnitOfWork.GetReference(entity, p => p.DoingBusinessAs).Select(p => p.Name).ToList();
+            }
+            else
+            {
+                document.DoingBusinessAs = null;
+            } 
+
+            return document;
         }
 
         #endregion

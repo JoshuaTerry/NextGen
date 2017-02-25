@@ -2,8 +2,12 @@
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
+
 $(document).ready(function () {
+
     $('#form1').validate();
+
+    ApplySystemSettings();
 
     Resize();
 
@@ -15,17 +19,41 @@ $(document).ready(function () {
 
     if (sessionStorage.getItem('constituentid')) {
 
-        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'))
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
 
     }
 
     GetConstituentData($('.hidconstituentid').val());
+
     LoadYears();
 
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
+    
+
 });
+
+function ApplySystemSettings() {
+    
+    GetSystemSettings(SettingsCategories.CRM, function (settings) {
+
+        $.map(settings, function (item) {
+
+            if (item.IsShown) {
+                $('.' + item.Name + 'Section').show();
+                $('.' + item.Name + 'SectionLabel').text(item.Value);
+            }
+            else {
+                $('.' + item.Name + 'Section').hide();
+            }
+
+
+        });
+
+    });
+
+}
 
 function LoadYears()
 {
@@ -35,6 +63,7 @@ function LoadYears()
         $('.BirthYear').append('<option value=' + x + '>' + x + '</option>');
     }
 }
+
 function PopulateMonthDays()
 {
     var arrayLookup = {
@@ -116,8 +145,6 @@ function GetConstituentData(id) {
 
             currentEntity = data.Data;
 
-            LoadLinks(currentEntity);
-
             DisplayConstituentData();
             
         },
@@ -184,7 +211,9 @@ function DisplayConstituentData() {
 
         DisplayConstituentPrimaryAddress();
 
-        LoadDenominationsTagBox();
+        GenerateContactInfoSection();
+
+	    LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
@@ -197,6 +226,8 @@ function DisplayConstituentData() {
         LoadEthnicitiesTagBox();
 
         LoadPaymentPreferencesTable();
+
+        NewPaymentPreference();
 
         LoadContactInfo();
 
@@ -212,7 +243,8 @@ function DisplayConstituentData() {
 	
         PopulateUserIdDropDown();
 
-        LoadRelationshipsGrid();
+        LoadRelationshipsData();
+
         NewRelationshipModal();
 
         NewAddressModal();
@@ -224,9 +256,11 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
+        $('.OrganizationSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
+        $('.PersonalSection').hide();
     }
 }
 
@@ -254,22 +288,24 @@ function DisplayConstituentPrimaryAddress() {
 
 }
 
-/* Demograpics Section */
 
+/* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations');
+    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
 }
-
 /* End Demographics Section */
 
+
+/* Relationships Tab */
 function LoadRelationshipsData() {
+
     $.ajax({
-        type: Links.GetRelationship.method,
-        url: Links.GetRelationship.Href,
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -280,78 +316,92 @@ function LoadRelationshipsData() {
             DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
         }
     });
+
 }
 
 function LoadRelationshipsQuickView(data) {
-    var formattedData = "<ul>";
-    if (data.Data && Array.isArray(data.Data)) {
-        data.Data.forEach(function (eachItem) {
-            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
-            };
+
+    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+    if (data.Data) {
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                $('<li>').text(item.DisplayName).appendTo($(formattedData));
+            }
+
         });
+
     }
-    formattedData = formattedData + "</ul>";
-    $('.relationshipsQuickView').html(formattedData);
+
+    $(formattedData).appendTo($('.relationshipsQuickView'));
+
 }
 
 function LoadRelationshipsTab(data) {
+
     var columns = [
+        { dataField: 'Id', width: '0px' },
         { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
         { dataField: 'DisplayName', caption: 'Relationship' },
     ];
-    LoadGridFromHateoas("relationshipsgrid",
-        "relationshipstable",
+
+    LoadGridWithData('relationshipsgrid',
+        'relationshipstable',
         columns,
-        Links.GetRelationship.Href,
+        'relationships',
         null,
         "Relationship",
         EditRelationship,
-        DeleteEntity,
-        "Delete that ",
+        null,
         data);
 
 }
 
-function LoadRelationshipsGrid() {
+function EditRelationship(id) {
 
-    LoadRelationshipsData();
-}
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
 
-function EditRelationship(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
 }
 
 function NewRelationshipModal() {
-    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, Links.NewRelationship.Method, Links.NewRelationship.Href, LoadRelationshipsGrid);
-}
 
-function LoadRelationship(url, modal) {
-    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+
 }
 
 function GetRelationshipToSave(modal, isUpdate) {
+
     var item = {
         Constituent1Id: $('.FormattedName1').val(),
         Constituent2Id: $(modal).find('.FormattedName2').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
+
     if (isUpdate === true) {
         item.Id = $(modal).find('.hidrelationshipid').val();
     }
+
     return item;
 }
 
 function PrePopulateNewRelationshipModal(modal) {
+
     $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
     $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+
 }
+/* End Relationships Tab */
+
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
@@ -366,9 +416,10 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        Links.GetDoingBusinessAs.Href,
+        'doingbusinessas',
         null,
-        EditDBA);
+        EditDBA,
+        null);
 
 }
 
@@ -405,8 +456,8 @@ function NewDBAModal() {
             }
 
             $.ajax({
-                type: Links.NewDoingBusinessAs.Method,
-                url: Links.NewDoingBusinessAs.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'doingbusinessas',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -524,7 +575,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        Links.GetEducation.Href,
+        'educations',
         null,
         EditEducationModal);
 
@@ -573,8 +624,8 @@ function NewEducationModal() {
             }
 
             $.ajax({
-                type: Links.NewEducation.Method,
-                url: Links.NewEducation.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'educations',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -606,7 +657,6 @@ function EditEducationModal(id) {
         width: 600,
         resizable: false
     });
-
 
     LoadEducation(id);
 
@@ -678,42 +728,197 @@ function LoadEducation(id) {
 }
 /* End Education Section */
 
+
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
-    $('.paymentpreferencestable').dxDataGrid({
-        dataSource: currentEntity.PaymentPreferences,
-        columns: [
-            { dataField: 'Name', caption: 'Description', },
-            { dataField: 'ABANumber', caption: 'ABA Number' },
-            { dataField: 'AccountNumber', caption: 'Account Number' },
-            { dataField: '', caption: 'Ch/S' },
-            { dataField: '', caption: 'Notes' }
-        ],
-        paging: {
-            pageSize: 15
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Description', caption: 'Description' },
+            { dataField: 'RoutingNumber', caption: 'Routing Number' },
+            { dataField: 'BankAccount', caption: 'Account Number' },
+            {
+                caption: 'Ch/S', cellTemplate: function (container, options) {
+                    var type = 'Ch';
+
+                    if (options.data.AccountType == '1') {
+                        type = 'S';
+                    }
+
+                    $('<label>').text(type).appendTo(container);
+                }
+            }
+    ];
+
+    LoadGrid('paymentpreferencesgrid',
+        'paymentpreferencesgridcontainer',
+        columns,
+        'paymentmethods/constituents/' + currentEntity.Id,
+        null,
+        EditPaymentPreference);
+    
+}
+
+function NewPaymentPreference() {
+
+    $('.newppmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.paymentpreferencemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 600,
+            resizable: false
+        });
+
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal();
+
+    });
+
+    $('.savepaymentpreference').unbind('click');
+
+    $('.savepaymentpreference').click(function () {
+
+        var date = new Date();
+
+        var item = {
+            ConstituentId: $('.hidconstituentid').val(),
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
+            StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: WEB_API_ADDRESS + 'paymentmethods',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+            }
+        });
+
+    });
+
+}
+
+function EditPaymentPreference(id) {
+
+    var modal = $('.paymentpreferencemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 600,
+        resizable: false
+    });
+
+    LoadPaymentPreference(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.savepaymentpreference').unbind('click');
+
+    $('.savepaymentpreference').click(function () {
+
+        var date = '';
+        var prevStatus = $(modal).find('.pp-PreviousStatus').val();
+        var selectedStatus = $(modal).find('.pp-Status').val();
+        
+        if (prevStatus != selectedStatus) {
+
+            var newDate = new Date();
+
+            date = newDate.getMonth() + 1 + '/' + newDate.getDate() + '/' + newDate.getFullYear();
+
+        }
+
+        var item = {
+            Description: $(modal).find('.pp-Description').val(),
+            BankName: $(modal).find('.pp-BankName').val(),
+            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
+            BankAccount: $(modal).find('.pp-AccountNumber').val(),
+            AccountType: $(modal).find('.pp-AccountType').val(),
+            Status: $(modal).find('.pp-Status').val(),
+            StatusDate: date
+        };
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'paymentmethods/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
+
+                CloseModal();
+
+                LoadPaymentPreferencesTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPaymentPreference(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'paymentmethods/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $(modal).find('.pp-Description').val(data.Data.Description);
+            $(modal).find('.pp-BankName').val(data.Data.BankName);
+            $(modal).find('.pp-RoutingNumber').val(data.Data.RoutingNumber);
+            $(modal).find('.pp-AccountNumber').val(data.Data.BankAccount);
+            $(modal).find('.pp-AccountType').val(data.Data.AccountType);
+            $(modal).find('.pp-Status').val(data.Data.Status);
+            $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
+            $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
+
         },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: true,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: true,
-            showOperationChooser: false
-        },
-        onRowClick: function (info) {
-            DisplayConstituent(info.values[0]);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
         }
     });
 
 }
 /* End Payment Preference Section */
+
 
 /* Professional Section */
 function PopulateUserIdDropDown() {
@@ -736,7 +941,6 @@ function PopulateUserIdDropDown() {
 
 
 /* Alternate Id Section */
-
 function LoadAlternateIDTable() {
 
     var columns = [
@@ -747,7 +951,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       Links.GetAlternateId.Href,
+       'alternateids',
        null,
        EditAlternateId);
 }
@@ -764,6 +968,15 @@ function NewAlternateIdModal() {
             width: 250,
             resizable: false
         });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
         $('.submitaltid').unbind('click');
 
         $('.submitaltid').click(function () {
@@ -774,8 +987,8 @@ function NewAlternateIdModal() {
             }
 
             $.ajax({
-                type: Links.NewAlternateId.Method,
-                url: Links.NewAlternateId.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'alternateids',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -795,16 +1008,6 @@ function NewAlternateIdModal() {
 
         });
     });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-   
 
 }
 
@@ -879,7 +1082,6 @@ function LoadAlternateId(id, modal) {
     });
 
 }
-
 /* End Alternate Id Section */
 
 
@@ -902,7 +1104,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        Links.GetConstituentAddress.Href,
+        'constituentaddresses',
         null,
         EditAddressModal);
 
@@ -959,8 +1161,8 @@ function NewAddressModal() {
             }
 
             $.ajax({
-                type: Links.NewConstituentAddress.Method,
-                url: Links.NewConstituentAddress.Href,
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'constituentaddresses',
                 data: item,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
@@ -1158,8 +1360,815 @@ function LoadAddress(id) {
     });
 
 }
+
+function GenerateContactInfoSection() {
+   
+    // Grab all the contact categories, then dynamically create the accordions
+    LoadCategories(function(data) {
+
+        $.map(data.Data, function (category) {
+
+            // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
+            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            $('<a>', { 
+                title: 'New', 
+                class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
+                href: '#'
+            }).appendTo($(header));
+
+            $('<div>').attr('id', category.Id).addClass('constituent' + category.Name + 'gridcontainer').appendTo($('.contactinfocontainer'));
+
+            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+        });
+        
+        ContactInfoAddModals();
+
+        $('.accordions').accordion('refresh');
+        // LoadAccordions will not work here
+
+    });
+
+}
+
+function ContactInfoAddModals() {
+
+    NewPhoneModal();
+
+    NewEmailModal();
+
+    NewWebModal();
+
+    NewPersonModal();
+
+    NewOtherModal();
+}
+
+function LoadCategories(CategoryTitles) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactcategory',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            CategoryTitles(data);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
+        }
+    });
+}
+
+function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
+
+    var columns = [
+        { dataField:  'Id', width: '0px' }, 
+        { dataField: 'IsPreferred', caption: 'Is Preferred' },
+        { dataField: 'ContactType.Name', caption: 'Type' }, 
+        { dataField: 'Info', caption: displayText },
+        { dataField: 'Comment', caption: 'Comment' }
+    ];
+
+    LoadGrid('constituent' + name + 'grid',
+        'constituent' + name + 'gridcontainer',
+        columns,
+        'contactinfo/' + categoryid + '/' + currentEntity.Id,
+        null,
+        function (id) { ExecuteFunction('Edit' + name, window, id) }); 
+}
+
+// Phone # Subsection
+function NewPhoneModal() {
+
+    $('.newphonemodallink').click(function (e) {
+
+        e.preventDefault();
+
+        var categoryId = $('.constituentPhonegridcontainer').attr('id');
+
+        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + categoryId, '', '');
+
+         modal = $('.phonenumbermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.submitphonenumber').unbind('click');
+
+        $('.submitphonenumber').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
+                Info: $(modal).find('.pn-Info').val(),
+                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
+                Comment: $(modal).find('.pn-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/', 
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.constituentPhonegridcontainer').attr('id');
+
+                    LoadContactCategoryGrid(categoryid, 'Phone', 'Phone');
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditPhone(id) {
+
+    var modal = $('.phonenumbermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPhone(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitphonenumber').unbind('click');
+
+    $('.submitphonenumber').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
+            Info: $(modal).find('.pn-Info').val(),
+            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.pn-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) { 
+
+                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPhone(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id, 
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.constituentPhonegridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.pn-Info').val(data.Data.Info);
+            $(modal).find('.pn-PhoneNumberType').val(data.Data.ContactTypeId);
+            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.pn-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+        }
+    });
+
+}
+// End Phone # Subsection
+
+// Emails Subsection
+function NewEmailModal() {
+
+    $('.newemailmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        var categoryId = $('.constituentEmailgridcontainer').attr('id');
+
+        PopulateDropDown('.e-EmailType', 'contacttypes/' + categoryId, '', '');
+
+        modal = $('.emailmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.submitemail').unbind('click');
+
+        $('.submitemail').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.e-EmailType').val(),
+                Info: $(modal).find('.e-Info').val(),
+                IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.e-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Email saved successfully.');
+
+                    CloseModal(modal);
+
+                    var categoryid = $('.constituentEmailgridcontainer').attr('id');
+
+                    LoadContactCategoryGrid(categoryid, 'Email', 'Email');
+
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Email');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditEmail(id) {
+
+   var modal = $('.emailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadEmail(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitemail').unbind('click');
+
+    $('.submitemail').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.e-EmailType').val(),
+            Info: $(modal).find('.e-Info').val(),
+            IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.e-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Email saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Email.');
+            }
+        });
+
+    });
+
+}
+
+function LoadEmail(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.constituentEmailgridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.e-Info').val(data.Data.Info);
+            $(modal).find('.e-EmailType').val(data.Data.ContactTypeId);
+            $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.e-Comment').val(data.Data.Comment);
+
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Email.');
+        }
+    });
+
+}
+// End Emails Subsection
+
+// Websites Subsection
+function NewWebModal() {
+
+    $('.newwebmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.constituentWebgridcontainer').attr('id'), '', '');
+
+        modal = $('.websitemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+
+        $('.submitwebsite').unbind('click');
+
+        $('.submitwebsite').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
+                Info: $(modal).find('.ws-Info').val(),
+                IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.ws-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Web Site saved successfully.');
+
+                    CloseModal(modal);
+
+                    LoadContactCategoryGrid($('.constituentWebgridcontainer').attr('id'), 'URL', 'Web');
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Web Site');
+                }
+            });
+
+        });
+    }); 
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditWeb(id) {
+
+    var modal = $('.websitemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadWeb(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitwebsite').unbind('click');
+
+    $('.submitwebsite').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
+            Info: $(modal).find('.ws-Info').val(),
+            IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.ws-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Web Site saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Web Site.');
+            }
+        });
+
+    });
+
+}
+
+function LoadWeb(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.constituentWebgridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.ws-Info').val(data.Data.Info);
+            $(modal).find('.ws-WebSiteType').val(data.Data.ContactTypeId);
+            $(modal).find('.ws-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.ws-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Web Site.');
+        }
+    });
+
+}
+// End Websites Subsection
+
+// Point Of Contact Subsection
+function NewPersonModal() {
+
+    $('.newpersonmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.constituentPersongridcontainer').attr('id'), '', '');
+
+        modal = $('.pocmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitpoc').unbind('click');
+
+        $('.submitpoc').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.poc-PocType').val(),
+                Info: $(modal).find('.poc-Info').val(),
+                IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.poc-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
+
+                    CloseModal(modal);
+
+                    LoadContactCategoryGrid($('.constituentPersongridcontainer').attr('id'), 'Name', 'Person');
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditPerson(id) {
+
+    var modal = $('.pocmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadPerson(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitpoc').unbind('click');
+
+    $('.submitpoc').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.poc-PocType').val(),
+            Info: $(modal).find('.poc-Info').val(),
+            IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.poc-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
+
+                CloseModal(modal);
+
+                var category = data.Data.ContactType.ContactCategory;
+
+                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact.');
+            }
+        });
+
+    });
+
+}
+
+function LoadPerson(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.constituentPersongridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.poc-Info').val(data.Data.Info);
+            $(modal).find('.poc-PocType').val(data.Data.ContactTypeId)
+            $(modal).find('.poc-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.poc-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Point of Contact.');
+        }
+    });
+
+}
+// End Point Of Contact Subsection
+
+// Other Contacts Subsection
+function NewOtherModal() {
+
+    $('.newothermodallink').click(function (e) {
+
+        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.constituentOthergridcontainer').attr('id'), '', '');
+
+        e.preventDefault();
+
+        modal = $('.othermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false
+        });
+        $('.submitother').unbind('click');
+
+        $('.submitother').click(function () {
+
+            var item = {
+                ConstituentId: $('.hidconstituentid').val(),
+                ContactTypeId: $(modal).find('.o-OtherType').val(),
+                Info: $(modal).find('.o-Info').val(),
+                IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+                Comment: $(modal).find('.o-Comment').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'contactinfo/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
+
+                    CloseModal(modal);
+
+                    LoadContactCategoryGrid($('.constituentOthergridcontainer').attr('id'), 'Info', 'Other');
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Other Contact');
+                }
+            });
+
+        });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+
+function EditOther(id) {
+
+    var modal = $('.othermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadOther(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitother').unbind('click');
+
+    $('.submitother').click(function () {
+
+        var item = {
+
+            ConstituentId: $('.hidconstituentid').val(),
+            ContactTypeId: $(modal).find('.o-OtherType').val(),
+            Info: $(modal).find('.o-Info').val(),
+            IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
+            Comment: $(modal).find('.o-Comment').val()
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactinfo/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
+
+                CloseModal(modal);
+
+                LoadContactCategoryGrid(data.Data.Id, 'Info', 'Other');
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Other Contacts.');
+            }
+        });
+
+    });
+
+}
+
+function LoadOther(id, modal) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'contactinfo/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.constituentOthergridcontainer').attr('id'), '', '', data.Data.ContactTypeId);
+
+            $(modal).find('.o-Info').val(data.Data.Info);
+            $(modal).find('o-OtherType').val(data.Data.ContactTypeId);
+            $(modal).find('.o-IsPreferred').prop('checked', data.Data.IsPreferred);
+            $(modal).find('.o-Comment').val(data.Data.Comment);
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Other Contact.');
+        }
+    });
+
+}
+// End Other Contacts Subsection
+
 /* End Contact Information Section */
-
-
-
-

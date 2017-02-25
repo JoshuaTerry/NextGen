@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using DDI.Shared.Models.Common;
-using DDI.Shared.Attributes;
 using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("Address"), Hateoas(RouteNames.Address)]
+    [Table("Address")]
     public class Address : EntityBase
     {
         #region Public Properties

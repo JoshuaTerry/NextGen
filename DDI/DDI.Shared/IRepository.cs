@@ -53,7 +53,7 @@ namespace DDI.Shared
 
         ICollection<T> GetLocal();
 
-        void Attach(T entity);
+        T Attach(T entity);
 
         IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes);
 

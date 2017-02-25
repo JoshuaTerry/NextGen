@@ -11,16 +11,14 @@ using DDI.Business.CRM;
 using Microsoft.Ajax.Utilities;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Services.Search;
-using DDI.Shared.Statics;
-using DDI.Shared.Logger;
+using DDI.Shared.Statics; 
 
 namespace DDI.Services
 {
     public class ConstituentService : ServiceBase<Constituent>, IConstituentService
     {
         private readonly IRepository<Constituent> _repository;
-        private readonly ConstituentLogic _constituentlogic;
-        private readonly Logger _logger;
+        private readonly ConstituentLogic _constituentlogic; 
         public ConstituentService()
             : this(new UnitOfWorkEF())
         {
@@ -159,7 +157,7 @@ namespace DDI.Services
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            Logger.LogError(ex.ToString());
                         }
                     }
                 }
