@@ -67,6 +67,8 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -119,6 +121,7 @@
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
+    <Compile Include="Models\Client\Core\FileStorage.cs" />
     <Compile Include="Models\Client\Core\Note.cs" />
     <Compile Include="Models\Client\Core\NoteCategory.cs" />
     <Compile Include="Models\Client\Core\NoteContactMethod.cs" />

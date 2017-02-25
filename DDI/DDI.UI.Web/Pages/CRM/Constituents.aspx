@@ -80,6 +80,8 @@
                         Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
                     
+                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
+
                 </div>
 
                 <div class="accordions">
