@@ -86,19 +86,19 @@ namespace DDI.Data
 
         #endregion
 
-        public DbSet<DDIUser> DDIUsers { get; set; }
         public DbSet<ChangeSet> ChangeSets { get; set; }
         public DbSet<ObjectChange> ObjectChanges { get; set; }
         public DbSet<PropertyChange> PropertyChanges { get; set; }
+        public DbSet<UserLogin> UserLogins { get; set; }
 
-        public readonly EFAuditModule<ChangeSet, DDIUser> Logger;
-        public IAuditLogContext<ChangeSet, DDIUser> AuditLogContext
+        public readonly EFAuditModule<ChangeSet, UserLogin> Logger;
+        public IAuditLogContext<ChangeSet, UserLogin> AuditLogContext
         {
             get { return new DomainContextAdapter(this); }
         }
-        public HistoryExplorer<ChangeSet, DDIUser> HistoryExplorer
+        public HistoryExplorer<ChangeSet, UserLogin> HistoryExplorer
         {
-            get { return new HistoryExplorer<ChangeSet, DDIUser>(AuditLogContext); }
+            get { return new HistoryExplorer<ChangeSet, UserLogin>(AuditLogContext); }
         }
 
         public Action<DbContext> CustomSaveChangesLogic { get; set; }
@@ -112,8 +112,11 @@ namespace DDI.Data
         { }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
-            Database.SetInitializer<DomainContext>(new DomainContextInitializer());
-            Logger = new EFAuditModule<ChangeSet, DDIUser>(new ChangeSetFactory(), AuditLogContext, filterProvider);
+            // Commented this line out for now.  See http://stackoverflow.com/questions/14064434/ef5-getting-this-error-message-model-compatibility-cannot-be-checked-because-th
+            // Basically compatibility cannot be checked.
+            //Database.SetInitializer<DomainContext>(new DomainContextInitializer());
+
+            Logger = new EFAuditModule<ChangeSet, UserLogin>(new ChangeSetFactory(), AuditLogContext, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
@@ -135,7 +138,7 @@ namespace DDI.Data
 
             return base.ValidateEntity(entityEntry, items);
         }
-        public async Task<ISaveResult<ChangeSet>> SaveAsync(DDIUser author, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISaveResult<ChangeSet>> SaveAsync(UserLogin author, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await Logger.SaveChangesAsync(author, cancellationToken);
         }
@@ -146,7 +149,7 @@ namespace DDI.Data
 
             return base.SaveChanges();
         }
-        public ISaveResult<ChangeSet> Save(DDIUser author)
+        public ISaveResult<ChangeSet> Save(UserLogin author)
         {
             // NOTE: This will eventually circle back and call our overridden SaveChanges() later
             return Logger.SaveChanges(author);

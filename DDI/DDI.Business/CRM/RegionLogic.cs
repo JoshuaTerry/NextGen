@@ -16,6 +16,50 @@ namespace DDI.Business.CRM
         {
         }
 
+        /// <summary>
+        /// Load the Country, State, and County properties for a a region area.
+        /// </summary>
+        /// <param name="area"></param>
+        public void LoadAllPropertiesForRegionArea(RegionArea area, bool reload = false)
+        {
+            if (area.CountryId != null)
+            {
+                if (reload || area.Country == null)
+                {
+                    area.Country = UnitOfWork.GetCachedRepository<Country>().Entities.FirstOrDefault(p => p.Id == area.CountryId);
+                }
+            }
+            else
+            {
+                area.Country = null;
+            }
+
+            if (area.StateId != null)
+            {
+                if (reload || area.State == null)
+                {
+                    area.State = UnitOfWork.GetCachedRepository<State>().Entities.FirstOrDefault(p => p.Id == area.StateId);
+                }
+            }
+            else
+            {
+                area.State = null;
+            }
+
+            if (area.CountyId != null)
+            {
+                if (reload || area.County == null)
+                {
+                    area.County = UnitOfWork.GetCachedRepository<County>().Entities.FirstOrDefault(p => p.Id == area.CountyId);
+                }
+            }
+            else
+            {
+                area.County = null;
+            }
+
+        }
+
         public List<Region> GetRegionsByAddress(Guid? countryid, Guid? stateId, Guid? countyId, string city, string zipcode)
         {
             int minLevel = 1;
