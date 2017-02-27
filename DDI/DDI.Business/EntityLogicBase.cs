@@ -15,7 +15,7 @@ namespace DDI.Business
     /// <typeparam name="T">Entity type</typeparam>
     public class EntityLogicBase<T> : EntityLogicBase where T : class, IEntity
     {
-        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2000; // Wait 2 seconds after saving before updating search documents.
+        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2; // Wait 2 seconds after saving before updating search documents.
 
         #region Constructors 
 

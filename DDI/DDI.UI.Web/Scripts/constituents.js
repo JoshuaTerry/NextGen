@@ -30,9 +30,26 @@ $(document).ready(function () {
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
-    
+    $('.fileuploadlink').click(function (e) {
+        e.preventDefault();
+
+        UploadFiles();
+    });
 
 });
+
+function UploadFiles() {
+
+    var modal = $('.fileuploadmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload');
+
+}
 
 function ApplySystemSettings() {
     
@@ -134,9 +151,17 @@ function LoadDropDowns() {
 }
 
 function GetConstituentData(id) {
+    route = 'constituents/';
 
+    if (id.length > 9) {
+        route += 'id/'; // If length > 9, id is probably a GUID.
+    }
+    else {
+        route += 'number/'; // Otherwise it's likely a constituent number.
+    }
+    
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituents/' + id,
+        url: WEB_API_ADDRESS + route + id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',

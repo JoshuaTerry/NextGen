@@ -9,6 +9,7 @@ namespace DDI.Shared.Statics
         public const string Address = "Address";
         public const string AddressType = "AddressType";
         public const string AlternateId = "AlternateId";
+        public const string Audit = "Audit";
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
         public const string Card = "Card";
