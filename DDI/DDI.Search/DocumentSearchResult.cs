@@ -12,7 +12,7 @@ namespace DDI.Search
     /// Strongly typed Elasticsearch search results.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DocumentSearchResult<T> where T : class, ISearchDocument
+    public class DocumentSearchResult<T> : IDocumentSearchResult<T> where T : class, ISearchDocument
     {
         public ElasticClient ElasticClient { get; set; }
         public ISearchRequest Request { get; set; }
@@ -30,6 +30,5 @@ namespace DDI.Search
             Documents = response.Documents;
             TotalCount = (int)response.Total;
         }
-
     }
 }

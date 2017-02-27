@@ -134,9 +134,17 @@ function LoadDropDowns() {
 }
 
 function GetConstituentData(id) {
+    route = 'constituents/';
 
+    if (id.length > 9) {
+        route += 'id/'; // If length > 9, id is probably a GUID.
+    }
+    else {
+        route += 'number/'; // Otherwise it's likely a constituent number.
+    }
+    
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituents/' + id,
+        url: WEB_API_ADDRESS + route + id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
