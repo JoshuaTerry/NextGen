@@ -281,11 +281,15 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.OrganizationSection').hide();
+        $('.organizationSection').hide();
+        $('.dbaSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
-        $('.PersonalSection').hide();
+        $('.personalSection').hide();
+        $('.clergySection').hide();
+        $('.educationSection').hide();
+        $('.professionalSection').hide();
     }
 }
 
