@@ -224,7 +224,6 @@ namespace DDI.Business.CRM
                 }
             }
 
-
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
             constituentLogic.ScheduleUpdateSearchDocument(entity.ConstituentId);
         }

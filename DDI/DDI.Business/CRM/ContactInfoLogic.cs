@@ -360,7 +360,6 @@ namespace DDI.Business.CRM
                             sb.Append(' ').Append(phone.Substring(position));
                         }
                     }
-
                 }
             }
             else
@@ -427,10 +426,7 @@ namespace DDI.Business.CRM
         {
             if (contactInfo.IsPreferred)
             {
-                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == contactInfo.ConstituentId && categoryCode == ci.ContactType.ContactCategory.Code && ci.IsPreferred == true); //&& ci.Id != contactInfo.Id && ci.IsPreferred && categoryCode == contactInfo.ContactType.ContactCategory.Code
-                // changed from contactcategorycode != other...wascategorycode == other. may need to change it back, check from  test
-                // see how it behaves, it may return ispreferred for all other codes
-                // Also, it looks like contactinfo will have a contact category that I can grab the code from...
+                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.IsPreferred && ci.Id != contactInfo.Id);
                 if (existingPreferredContactInfo != null)
                 {
                     existingPreferredContactInfo.IsPreferred = false;

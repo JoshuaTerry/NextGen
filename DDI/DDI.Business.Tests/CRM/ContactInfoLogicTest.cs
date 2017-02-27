@@ -224,17 +224,12 @@ namespace DDI.Business.Tests.CRM
                 IsPreferred = true
             };
 
-            _contactInfo.Add(isPreferredContactInfo1);
             _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo1);
+            _bl.Validate(isPreferredContactInfo1);
+            var actualPreferredContactInfo = _uow.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == isPreferredContactInfo1.ConstituentId && ci.ContactType.ContactCategory.Code == isPreferredContactInfo1.ContactType.ContactCategory.Code && ci.IsPreferred); 
 
-            // call validate and assert ispreferred is equal to this one
-            var oldPreferredContactInfo = _contactInfo[_contactInfo.Count - 1];
-            _bl.Validate(oldPreferredContactInfo);
-            var preferredContactInfo = _contactInfo.FirstOrDefault(ci => ci.ConstituentId == oldPreferredContactInfo.ConstituentId && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
+            Assert.AreEqual(actualPreferredContactInfo, isPreferredContactInfo1, "Sets isPreferred ContactInfo"); 
 
-            Assert.AreEqual(preferredContactInfo, oldPreferredContactInfo, "Sets isPreferred ContactInfo"); // get ispreferred contact info for phone, make sure it's the same as the one you added
-
-            // add another preferred contactinfo
             ContactInfo isPreferredContactInfo2 = new ContactInfo()
             {
                 Id = GuidHelper.NextGuid(),
@@ -246,20 +241,11 @@ namespace DDI.Business.Tests.CRM
                 IsPreferred = true
             };
 
-            _contactInfo.Add(isPreferredContactInfo2);
             _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo2);
+            _bl.Validate(isPreferredContactInfo2);
+            actualPreferredContactInfo = _uow.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == isPreferredContactInfo2.ConstituentId && ci.ContactType.ContactCategory.Code == isPreferredContactInfo2.ContactType.ContactCategory.Code && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
 
-            var newPreferredContactInfo = _contactInfo[_contactInfo.Count - 1];
-            _bl.Validate(newPreferredContactInfo);
-            var preferredContactInfo2 = _contactInfo.FirstOrDefault(ci => ci.ConstituentId == oldPreferredContactInfo.ConstituentId && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
-
-            Assert.AreEqual(preferredContactInfo2, newPreferredContactInfo, "New IsPreferred contactinfo overrides old IsPreferred contactinfo");
-
-            // call validate
-
-            // check to see it was updated 
-
-            // do this for different categories
+            Assert.AreEqual(actualPreferredContactInfo, isPreferredContactInfo2, "Ensure previous isPreferred was overwritten");
         }
 
         private void BuildConstituentDataSource()

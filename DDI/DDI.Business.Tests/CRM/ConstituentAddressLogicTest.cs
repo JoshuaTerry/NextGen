@@ -151,6 +151,24 @@ namespace DDI.Business.Tests.CRM
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        public void ConstituentAddressLogic_Validate_IsPrimary()
+        {
+            _constituentAddresses.Add(new ConstituentAddress()
+            {
+                Address = _addresses[0],
+                Constituent = _constituents[0],
+                AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
+                IsPrimary = true,
+                ResidentType = ResidentType.Primary,
+                Id = GuidHelper.NextGuid()
+            });
+
+            // call validate
+
+            // make sure new primary is primary.
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void ConstituentAddressLogic_GetAddress()
         {
             var testRow = _constituentAddresses[0];
