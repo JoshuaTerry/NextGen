@@ -5,8 +5,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using DDI.Logger;
+using DDI.Shared.Caching;
+using System.Web.Configuration;
 
 namespace DDI.Data
 {
@@ -16,6 +18,7 @@ namespace DDI.Data
     public class UnitOfWorkEF : IUnitOfWork, IDisposable
     {
         #region Private Fields
+        private const string AuditEnabledTag = "AuditEnabled";
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(UnitOfWorkEF));
         private DbContext _clientContext;
         private DbContext _commonContext;
@@ -268,6 +271,7 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
+            //var auditEnabled = CacheHelper.GetEntry<string>(AuditEnabledTag, () => WebConfigurationManager.AppSettings["AuditEnabled"]);
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
         }

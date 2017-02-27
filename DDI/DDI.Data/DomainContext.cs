@@ -8,8 +8,14 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
+using DDI.EFAudit.Filter;
 using DDI.Shared.Models.Client.Audit;
-
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.History;
+using DDI.EFAudit;
+using System.Threading.Tasks;
+using System.Threading;
+using DDI.EFAudit.Logging;
 namespace DDI.Data
 {
     public class DomainContext : DbContext
@@ -85,18 +91,32 @@ namespace DDI.Data
         public DbSet<ChangeSet> ChangeSets { get; set; }
         public DbSet<ObjectChange> ObjectChanges { get; set; }
         public DbSet<PropertyChange> PropertyChanges { get; set; }
-        #endregion Public Properties
+
+        public readonly EFAuditModule<ChangeSet, DDIUser> Logger;
+        public IAuditLogContext<ChangeSet, DDIUser> AuditLogContext
+        {
+            get { return new DomainContextAdapter(this); }
+        }
+        public HistoryExplorer<ChangeSet, DDIUser> HistoryExplorer
+        {
+            get { return new HistoryExplorer<ChangeSet, DDIUser>(AuditLogContext); }
+        }
+
+        public Action<DbContext> CustomSaveChangesLogic { get; set; }
+        #endregion
+
+         
 
 
         #region Public Constructors
-
-        public DomainContext()
-            : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
+        public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
+            Database.SetInitializer<DomainContext>(new DomainContextInitializer());
+            Logger = new EFAuditModule<ChangeSet, DDIUser>(new ChangeSetFactory(), AuditLogContext, filterProvider);
+            CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
-        }
-
+        }       
         #endregion Public Constructors
 
         #region Method Overrides 
@@ -114,6 +134,24 @@ namespace DDI.Data
 
             return base.ValidateEntity(entityEntry, items);
         }
+        public async Task<ISaveResult<ChangeSet>> SaveAsync(DDIUser author, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Logger.SaveChangesAsync(author, cancellationToken);
+        }
+        public override int SaveChanges()
+        {
+            if (CustomSaveChangesLogic != null)
+                CustomSaveChangesLogic(this);
+
+            return base.SaveChanges();
+        }
+        public ISaveResult<ChangeSet> Save(DDIUser author)
+        {
+            // NOTE: This will eventually circle back and call our overridden SaveChanges() later
+            return Logger.SaveChanges(author);
+        }
+
+        
         #endregion
 
     }
