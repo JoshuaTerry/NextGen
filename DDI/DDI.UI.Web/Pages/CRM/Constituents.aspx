@@ -248,12 +248,12 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="dbaSection">Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
+                    <h1 class ="educationSection">Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -265,7 +265,7 @@
 
                     </div>
 
-                    <h1 class="OrganizationSection">Organization</h1>
+                    <h1 class="organizationSection">Organization</h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -323,7 +323,7 @@
 
                     </div>
 
-                    <h1 class="PersonalSection">Personal</h1>
+                    <h1 class="personalSection">Personal</h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -397,7 +397,7 @@
                         
                     </div>
 
-                    <h1>Professional</h1>
+                    <h1 class ="professionalSection">Professional</h1>
                     <div class="editcontainer">
 
                         <div class="threecolumn">
