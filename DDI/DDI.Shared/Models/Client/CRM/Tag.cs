@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using DDI.Shared.Attributes;
 using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Tag")]
-    [Hateoas(RouteNames.Tag)]
     public class Tag : EntityBase
     {
         #region Public Properties

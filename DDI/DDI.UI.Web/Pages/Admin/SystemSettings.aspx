@@ -60,7 +60,7 @@
                     <li><a href="#" class="LoadProfessional">Professional</a></li>
                     <li><a href="#" class="LoadRegions">Regions</a></li>
                     <li><a href="#" class="LoadRelationship">Relationship</a></li>
-                    <li><a href="#" class="LoadTagGroupGrid">Tags</a></li>
+                    <li><a href="#" class="LoadTagGroup">Tags</a></li>
                 </ul>
             </div>
 

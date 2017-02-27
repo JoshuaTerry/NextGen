@@ -457,11 +457,13 @@ function LoadRelationshipSectionSettings() {
 
 }
 
-function LoadTagGroupGrid() {
+function LoadTagGroupSectionSettings() {
+
     var selectOptions = [
         { Id: 0, Description: "Single" },
         { Id: 1, Description: "Multiple" }
     ];
+
     var columns = [
         { dataField: 'Id', width: "0px" },
         { dataField: 'Order', caption: 'Order' },
@@ -469,29 +471,30 @@ function LoadTagGroupGrid() {
         { dataField: 'TagSelectionType', caption: 'Multi/Single Select', lookup: { dataSource: selectOptions, valueExpr: 'Id', displayExpr: 'Description' } },
         { dataField: 'IsActive', caption: 'Active' },
     ];
-    LoadGridFromHateoas("taggroupsgrid",
-        "contentcontainer",
+
+    LoadGrid('taggroupsgrid',
+        'contentcontainer',
         columns,
-        SystemSettingsLinks.TagGroup.Href,
+        'taggroups',
         TagGroupSelected,
-        "TagGroup",
         EditTagGroup,
-        DeleteEntity,
-        "Delete tag group: ",
-        null);
+        DeleteEntity);
+
     CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.contentcontainer', 'newtaggroupmodal');
 }
-/* END CRM SETTINGS */
 
 function TagGroupSelected(info) {
+
     var taggrid;
     var selectedRow;
     var tagscontainers = $(".tagscontainer");
+
     if (tagscontainers.length === 0) {
         taggrid = $("<div>").addClass("tagscontainer");
     } else {
         taggrid = tagscontainers[0];
     }
+
     $(taggrid).insertAfter($('.taggroupsgrid'));
 
     if (!info) {
@@ -509,48 +512,54 @@ function TagGroupSelected(info) {
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' },
     ];
-    LoadGridFromHateoas("tagsgrid",
-        "tagscontainer",
+
+    LoadGrid('tagsgrid',
+        'tagscontainer',
         columns,
-        selectedRow.FormattedLinks.GetTag.Href,
+        'taggroups/' + selectedRow.Id + '/tags',
         TagGroupSelected,
-        "Tag",
         EditTag,
-        DeleteEntity,
-        "Delete tag: ",
-        null);
+        DeleteEntity);
+
     CreateNewModalLink("New Tag", NewTagModal, '.tagsgrid', '.tagscontainer', 'newtagmodal');
-}
-function EditTagGroup(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Tag Group", ".taggroupmodal", ".savetaggroup", 250, LoadTagGroup, LoadTagGroupGrid, GetTagGroupToSave);
-}
-function EditTag(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Tag", ".tagmodal", ".savetag", 250, LoadTag, TagGroupSelected, GetTagToSave);
+
 }
 
-function LoadTagGroup(url, modal) {
-    LoadEntity(url, modal, "GET", LoadTagGroupData, "Tag Group");
+function EditTagGroup(id) {
+
+    EditEntity('.taggroupmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Tag Group', 'taggroups', id);
+
 }
 
-function LoadTag(url, modal) {
-    LoadEntity(url, modal, "GET", LoadTagData, "Tag");
+function EditTag(id) {
+
+    EditEntity('.tagmodal', '.savetag', 250, LoadTagData, TagGroupSelected, GetTagToSave, 'Tag', 'tags', id);
+
 }
 
 function LoadTagGroupData(data, modal) {
-    $(modal).find('.hidtaggroupid').val(data.Data.Id);
-    $(modal).find('.tg-Order').val(data.Data.Order);
-    $(modal).find('.tg-Name').val(data.Data.Name);
-    $(modal).find('.tg-Select').val(data.Data.TagSelectionType);
-    $(modal).find('.tg-IsActive').prop('checked', data.Data.IsActive);
+
+    if (data.Data) {
+        $(modal).find('.hidtaggroupid').val(data.Data.Id);
+        $(modal).find('.tg-Order').val(data.Data.Order);
+        $(modal).find('.tg-Name').val(data.Data.Name);
+        $(modal).find('.tg-Select').val(data.Data.TagSelectionType);
+        $(modal).find('.tg-IsActive').prop('checked', data.Data.IsActive);
+    }
+    
 }
 
 function LoadTagData(data, modal) {
-    $(modal).find('.hidtagid').val(data.Data.Id);
-    $(modal).find('.hidtagparentgroupid').val(data.Data.TagGroupId);
-    $(modal).find('.t-Order').val(data.Data.Order);
-    $(modal).find('.t-Name').val(data.Data.Name);
-    $(modal).find('.t-Code').val(data.Data.Code);
-    $(modal).find('.t-IsActive').prop('checked', data.Data.IsActive);
+
+    if (data.Data) {
+        $(modal).find('.hidtagid').val(data.Data.Id);
+        $(modal).find('.hidtagparentgroupid').val(data.Data.TagGroupId);
+        $(modal).find('.t-Order').val(data.Data.Order);
+        $(modal).find('.t-Name').val(data.Data.Name);
+        $(modal).find('.t-Code').val(data.Data.Code);
+        $(modal).find('.t-IsActive').prop('checked', data.Data.IsActive);
+    }
+    
 }
 
 function GetTagToSave(modal, isUpdate) {
@@ -584,20 +593,30 @@ function GetTagGroupToSave(modal, isUpdate) {
 }
 
 function NewTagGroupModal(modalLinkClass) {
-    NewEntityModal("Tag Group", modalLinkClass, ".taggroupmodal", 250, null, ".savetaggroup", GetTagGroupToSave, SystemSettingsLinks.NewTagGroup.Method, SystemSettingsLinks.NewTagGroup.Href, LoadTagGroupGrid);
+
+    NewEntityModal(modalLinkClass, '.taggroupmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Tag Group', 'taggroups');
+
 }
 
 function NewTagModal(modalLinkClass) {
-    NewEntityModal("Tag", modalLinkClass, ".tagmodal", 250, null, ".savetag", GetTagToSave, SystemSettingsLinks.NewTag.Method, SystemSettingsLinks.NewTag.Href, TagGroupSelected);
+
+    NewEntityModal(modalLinkClass, '.tagmodal', '.savetag', 250, LoadTagData, TagGroupSelected, GetTagToSave, 'Tag', 'tags');
+
 }
 
 function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addToContainer, modalLinkClass) {
 
     var modallink = $('<a>').attr('href', '#').addClass('newmodallink').addClass(modalLinkClass).text(linkText).appendTo($(addToContainer));
+
     $(prependToClass).before($(modallink));
+
+    if (modalLinkClass.indexOf('.') != 0)
+        modalLinkClass = '.' + modalLinkClass;
+
     newEntityModalMethod(modalLinkClass);
 
 }
+/* END CRM SETTINGS */
 
 
 /* DONATIONS SETTINGS */

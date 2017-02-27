@@ -120,6 +120,11 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
 
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
+    $(container).html('');
+
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: 'GET',
@@ -136,15 +141,9 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
         }
     });
 
-    LoadGridFromHateoas(grid, container, columns, route, selected, null, null, null, null);
 }
 
 function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
-
-    if (container.indexOf('.') != 0)
-        container = '.' + container;
-
-    $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
 
@@ -263,7 +262,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
 
                 CloseModal(modal);
 
-                loadEntityGridMethod();
+                loadEntityGrid();
 
             },
             error: function (xhr, status, err) {
@@ -326,6 +325,7 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
 
         });
     });
+
 }
 
 function LoadEntity(route, id, modal, loadEntityData, entityName) {
