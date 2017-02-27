@@ -8,6 +8,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.Data
 {
@@ -79,6 +80,11 @@ namespace DDI.Data
 
         #endregion
 
+        public DbSet<UserLogin> UserLogins { get; set; }
+        public DbSet<DDIUser> DDIUsers { get; set; }
+        public DbSet<ChangeSet> ChangeSets { get; set; }
+        public DbSet<ObjectChange> ObjectChanges { get; set; }
+        public DbSet<PropertyChange> PropertyChanges { get; set; }
         #endregion Public Properties
 
 

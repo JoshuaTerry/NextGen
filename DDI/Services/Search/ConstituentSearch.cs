@@ -20,8 +20,18 @@ namespace DDI.Services.Search
         public string Fields { get; set; }
         public string Name { get; set; }
         public string QuickSearch { get; set; }
-        public string State { get; set; }
-        public string ZipFrom { get; set; }
-        public string ZipTo { get; set; }
+        public string StateId { get; set; }
+        public string CountryId { get; set; }
+        public string PostalCodeFrom { get; set; }
+        public string PostalCodeTo { get; set; }
+        public string RegionId1 { get; set; }
+        public string RegionId2 { get; set; }
+        public string RegionId3 { get; set; }
+        public string RegionId4 { get; set; }
+        public int? AgeFrom { get; set; }
+        public int? AgeTo { get; set; }
+        public string IncludeTags { get; set; }
+        public string ExcludeTags { get; set; }
     }
+
 }

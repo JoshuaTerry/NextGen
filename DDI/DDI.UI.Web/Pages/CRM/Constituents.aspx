@@ -318,7 +318,7 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
@@ -801,7 +801,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
