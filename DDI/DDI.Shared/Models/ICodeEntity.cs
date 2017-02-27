@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models
 {
-    /// <summary>
-    /// Interface for Elasticsearch documents.
-    /// </summary>
-    public interface ISearchDocument : ICanTransmogrify
+    public interface ICodeEntity : IEntity
     {
-
+        string Code { get; set; }
+        string Name { get; set; }
     }
 }
