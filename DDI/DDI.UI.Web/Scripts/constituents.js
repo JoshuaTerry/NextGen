@@ -30,9 +30,26 @@ $(document).ready(function () {
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
-    
+    $('.fileuploadlink').click(function (e) {
+        e.preventDefault();
+
+        UploadFiles();
+    });
 
 });
+
+function UploadFiles() {
+
+    var modal = $('.fileuploadmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload');
+
+}
 
 function ApplySystemSettings() {
     
