@@ -8,8 +8,10 @@ namespace DDI.Data.Tests
     [TestClass]
     public class RepositoryTests
     {
-        [TestMethod]
-        public void NameForTest()
+        private const string TESTDESCR = "Data";
+
+        [TestMethod,TestCategory(TESTDESCR)]
+        public void Repository_NameFor()
         {
             var result = Repository<Constituent>.NameFor<Constituent>(c => c.ConstituentAddresses, true);
             Assert.AreEqual("ConstituentAddresses", result);

@@ -1,7 +1,7 @@
 ﻿using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
-using DDI.Shared.Logger;
+
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -57,10 +57,21 @@ namespace DDI.WebApi.Controllers
                                                  string address = null, 
                                                  string city = null, 
                                                  string state = null,
+                                                 string country = null,
                                                  string zipFrom = null,
                                                  string zipTo = null,
-                                                 string alternateId = null,
-                                                 Guid? constituentTypeId = null,
+                                                 string altid = null,
+                                                 Guid? type = null,
+                                                 string region1 = null,
+                                                 string region2 = null,
+                                                 string region3 = null,
+                                                 string region4 = null,
+                                                 int? agefrom = null,
+                                                 int? ageto = null,
+                                                 string includetags = null,
+                                                 string excludetags = null,
+                                                 DateTime? createdfrom = null,
+                                                 DateTime? createdto = null,
                                                  string fields = null,
                                                  int? offset = SearchParameters.OffsetDefault, 
                                                  int? limit = SearchParameters.LimitDefault, 
@@ -71,17 +82,28 @@ namespace DDI.WebApi.Controllers
                 QuickSearch = quickSearch,
                 Name = name,
                 ConstituentNumber = constituentNumber,
+                ConstituentTypeId = type,
                 Address = address,
                 City = city,
-                State = state,
+                StateId = state,
+                PostalCodeFrom =  zipFrom,
+                PostalCodeTo = zipTo,
+                RegionId1 = region1,
+                RegionId2 = region2,
+                RegionId3 = region3,
+                RegionId4 = region4,
+                AlternateId = altid,
+                AgeFrom = agefrom,
+                AgeTo = ageto,
+                IncludeTags = includetags,
+                ExcludeTags = excludetags,
+                CreatedDateFrom = createdfrom,
+                CreatedDateTo = createdto,
+
+                OrderBy = orderBy,
                 Offset = offset,
                 Limit = limit,
-                OrderBy = orderBy,
-                AlternateId = alternateId,
-                ZipFrom =  zipFrom,
-                ZipTo = zipTo,
                 Fields = fields,
-                ConstituentTypeId = constituentTypeId
             };
 
             return base.GetAll(RouteNames.Constituent, search, fields);
@@ -106,7 +128,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }
@@ -135,7 +157,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }

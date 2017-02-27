@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes;
 using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     
-	[Table("Region"), Hateoas(RouteNames.Region)]
-	public class Region : EntityBase
+	[Table("Region")]
+	public class Region : EntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]
@@ -30,7 +28,6 @@ namespace DDI.Shared.Models.Client.CRM
 
         public Region ParentRegion { get; set; }
 
-        [HateoasCollectionLink(RouteNames.RegionLevel + RouteNames.RegionChildren)]
         [InverseProperty(nameof(ParentRegion))]
         public ICollection<Region> ChildRegions { get; set; }
 

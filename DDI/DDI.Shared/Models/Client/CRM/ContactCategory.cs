@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes;
-using DDI.Shared.Statics;
+using System.Linq; 
 
 namespace DDI.Shared.Models.Client.CRM
 {
-    [Table("ContactCategory"), Hateoas(RouteNames.ContactCategory)]
-    public class ContactCategory : EntityBase
+    [Table("ContactCategory")]
+    public class ContactCategory : EntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]

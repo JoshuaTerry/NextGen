@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuditService.cs" />
     <Compile Include="ConstituentAddressService.cs" />
     <Compile Include="ConstituentService.cs" />
     <Compile Include="CountryService.cs" />
@@ -98,6 +99,14 @@
     <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
       <Project>{7DD8C5F7-4F2D-4D54-B8B0-B4D136007663}</Project>
       <Name>DDI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Search\DDI.Search.csproj">
+      <Project>{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}</Project>
+      <Name>DDI.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
