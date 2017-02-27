@@ -22,12 +22,10 @@ namespace DDI.Business.CP
         public override void Validate(PaymentMethod entity)
         {
             base.Validate(entity);
-            if (entity is PaymentMethod)
-            {
-                PaymentMethod eftEntity = entity as PaymentMethod;
-                ValidateRoutingNumber(eftEntity.RoutingNumber);
 
-                if (eftEntity.EFTFormat == null)
+            if (entity.Category == Shared.Enums.CP.PaymentMethodCategory.EFT)
+            {
+                if (entity.EFTFormatId == null)
                 {
                     throw new ValidationException(UserMessagesCP.EFTFormatRequired);
                 }

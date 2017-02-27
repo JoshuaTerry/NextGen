@@ -825,7 +825,7 @@
 
                 <div class="fieldblock">
                     <label>EFT Format</label>
-                    <select class="pp-EFTFormat"></select>
+                    <select class="pp-EFTFormatId"></select>
                 </div>
 
             </div>

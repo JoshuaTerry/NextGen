@@ -798,7 +798,7 @@ function NewPaymentPreference() {
 
     });
 
-    PopulateDropDown('.pp-EFTFormat', 'eftformats', '', '');
+    PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '');
 
     $('.cancelmodal').click(function (e) {
 
@@ -836,7 +836,7 @@ function NewPaymentPreference() {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -858,8 +858,6 @@ function EditPaymentPreference(id) {
         width: 600,
         resizable: false
     });
-
-    PopulateDropDown('.pp-EFTFormat', 'eftformats', '', '');
 
     LoadPaymentPreference(id, modal);
 
@@ -908,7 +906,7 @@ function EditPaymentPreference(id) {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -939,6 +937,8 @@ function LoadPaymentPreference(id, modal) {
             $(modal).find('.pp-Status').val(data.Data.Status);
             $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
             $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
+
+            PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '', data.Data.EFTFormatId);
 
         },
         error: function (xhr, status, err) {
