@@ -8,11 +8,26 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("AspNetUsers")]
     public class DDIUser : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+        [MaxLength(256)]
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string PasswordHash { get; set; }
+        public string SecurityStamp { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnable { get; set; }
+        public DateTime? LockoutEndDateUtc { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
+        [MaxLength(256)]
+        public string UserName { get; set; }        
+        
         [MaxLength(256)]
         public string FirstName { get; set; }
         [MaxLength(256)]
@@ -29,7 +44,7 @@ namespace DDI.Shared.Models.Client.Core
         {
             get
             {
-                return $"{FirstName} {LastName}";
+                return string.IsNullOrEmpty(UserName) ? $"{FirstName} {LastName}" : UserName;
             }
         }
     }
