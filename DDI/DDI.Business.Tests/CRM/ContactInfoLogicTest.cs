@@ -207,7 +207,60 @@ namespace DDI.Business.Tests.CRM
             _usPhoneContactInfo.ConstituentId = null;
             AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
 
-        }      
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_Validate_IsPreferred()
+        {
+            BuildConstituentDataSource();
+            ContactInfo isPreferredContactInfo1 = new ContactInfo()
+            {
+                Id = GuidHelper.NextGuid(),
+                ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
+                ContactTypeId = _usPhoneContactInfo.ContactType.Id,
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                Info = "3175551235",
+                IsPreferred = true
+            };
+
+            _contactInfo.Add(isPreferredContactInfo1);
+            _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo1);
+
+            // call validate and assert ispreferred is equal to this one
+            var oldPreferredContactInfo = _contactInfo[_contactInfo.Count - 1];
+            _bl.Validate(oldPreferredContactInfo);
+            var preferredContactInfo = _contactInfo.FirstOrDefault(ci => ci.ConstituentId == oldPreferredContactInfo.ConstituentId && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
+
+            Assert.AreEqual(preferredContactInfo, oldPreferredContactInfo, "Sets isPreferred ContactInfo"); // get ispreferred contact info for phone, make sure it's the same as the one you added
+
+            // add another preferred contactinfo
+            ContactInfo isPreferredContactInfo2 = new ContactInfo()
+            {
+                Id = GuidHelper.NextGuid(),
+                ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
+                ContactTypeId = _usPhoneContactInfo.ContactType.Id,
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                Info = "3175554321",
+                IsPreferred = true
+            };
+
+            _contactInfo.Add(isPreferredContactInfo2);
+            _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo2);
+
+            var newPreferredContactInfo = _contactInfo[_contactInfo.Count - 1];
+            _bl.Validate(newPreferredContactInfo);
+            var preferredContactInfo2 = _contactInfo.FirstOrDefault(ci => ci.ConstituentId == oldPreferredContactInfo.ConstituentId && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
+
+            Assert.AreEqual(preferredContactInfo2, newPreferredContactInfo, "New IsPreferred contactinfo overrides old IsPreferred contactinfo");
+
+            // call validate
+
+            // check to see it was updated 
+
+            // do this for different categories
+        }
 
         private void BuildConstituentDataSource()
         {
