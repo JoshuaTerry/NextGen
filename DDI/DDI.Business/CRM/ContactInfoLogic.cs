@@ -58,7 +58,7 @@ namespace DDI.Business.CRM
                 ValidatePhoneNumber(contactInfo);                
             }
 
-            // check for preferred contactinfos, one per category
+            // check for preferred contactinfos, one allowed per category
             ValidateIsPreferred(contactInfo, categoryCode);
             
         }
