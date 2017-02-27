@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class PropertyChange : IPropertyChange<DDIUser>, IReadOnlyEntity
+    public class PropertyChange : IPropertyChange<DDIUser> 
     {
         public string ChangeType { get; set; }
         [Key]

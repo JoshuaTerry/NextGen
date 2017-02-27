@@ -86,7 +86,6 @@ namespace DDI.Data
 
         #endregion
 
-        public DbSet<UserLogin> UserLogins { get; set; }
         public DbSet<DDIUser> DDIUsers { get; set; }
         public DbSet<ChangeSet> ChangeSets { get; set; }
         public DbSet<ObjectChange> ObjectChanges { get; set; }
@@ -105,10 +104,12 @@ namespace DDI.Data
         public Action<DbContext> CustomSaveChangesLogic { get; set; }
         #endregion
 
-         
+
 
 
         #region Public Constructors
+        public DomainContext() : this(null, null)
+        { }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
             Database.SetInitializer<DomainContext>(new DomainContextInitializer());

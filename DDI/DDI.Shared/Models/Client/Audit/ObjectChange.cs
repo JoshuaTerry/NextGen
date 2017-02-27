@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ObjectChange : IObjectChange<DDIUser>, IReadOnlyEntity
+    public class ObjectChange : IObjectChange<DDIUser> 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
