@@ -824,6 +824,15 @@
                 </div>
 
                 <div class="fieldblock">
+                    <label>EFT Format</label>
+                    <select class="pp-EFTFormat"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
                     <label>Status</label>
                     <select class="pp-Status">
                         <option value=""></option>

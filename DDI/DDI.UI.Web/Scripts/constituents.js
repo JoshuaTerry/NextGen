@@ -798,6 +798,8 @@ function NewPaymentPreference() {
 
     });
 
+    PopulateDropDown('.pp-EFTFormat', 'eftformats', '', '');
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -820,6 +822,7 @@ function NewPaymentPreference() {
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
             Status: $(modal).find('.pp-Status').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
         };
 
@@ -856,6 +859,8 @@ function EditPaymentPreference(id) {
         resizable: false
     });
 
+    PopulateDropDown('.pp-EFTFormat', 'eftformats', '', '');
+
     LoadPaymentPreference(id, modal);
 
     $('.cancelmodal').click(function (e) {
@@ -888,6 +893,7 @@ function EditPaymentPreference(id) {
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             Status: $(modal).find('.pp-Status').val(),
             StatusDate: date
         };
