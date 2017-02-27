@@ -4,6 +4,8 @@ using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
+
 
 namespace DDI.WebApi.Controllers
 {
@@ -17,10 +19,31 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/languages/{id}")]
+        [Route("api/v1/languages/{id}", Name = RouteNames.Language + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpPost]
+        [Route("api/v1/languages", Name = RouteNames.Language + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] Language entityToSave)
+        {
+            return base.Post(entityToSave);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/languages/{id}", Name = RouteNames.Language + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpDelete]
+        [Route("api/v1/languages/{id}", Name = RouteNames.Language + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
         }
     }
 }
