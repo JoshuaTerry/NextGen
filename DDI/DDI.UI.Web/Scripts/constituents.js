@@ -280,8 +280,7 @@ function DisplayConstituentData() {
 function LoadConstituentSideBar() {
 
     // 1. This should probably bee DisplayConstituentSidebar
-    // 2. Since the logic for address and contactinfo will be basically the same,
-    // see if you can turn it into a callback method and pass in the necessary params
+    
     // 3. will also need city state zip
 
     $('.FormattedName').text('Constituent Name: ' + currentEntity.FormattedName);
@@ -335,8 +334,8 @@ function DisplayConstituentPrimaryAddress() {
 function GetConstituentAddress() {
     $.ajax({
         type: 'GET',
-        url: Links.GetConstituentAddress.Href,
-        contentType: 'application/x-www-form-urlencoded',
+        url: WEB_API_ADDRESS + 'constituentaddresses/' + SAVE_ROUTE + currentEntity.id,
+        contentType: 'application/json; charset=utf-8',
         crossDomain: true,
         success: function (data) {
 
@@ -354,7 +353,7 @@ function GetConstituentAddress() {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the primary address.');
         }
     });
 }
@@ -362,7 +361,7 @@ function GetConstituentAddress() {
 function GetConstituentContactInfo() {
     $.ajax({
         type: 'GET',
-        url: Links.GetContactInfo.Href,
+        url: WEB_API_ADDRESS + 'constituentaddresses/constituents/' + currentEntity.id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -394,7 +393,7 @@ function GetConstituentContactInfo() {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the preferred contact info.');
         }
     });
 
