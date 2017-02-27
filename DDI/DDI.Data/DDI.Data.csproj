@@ -67,13 +67,13 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201702271520580_ChangeUserTables.cs" />
-    <Compile Include="Migrations\201702271520580_ChangeUserTables.Designer.cs">
-      <DependentUpon>201702271520580_ChangeUserTables.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201702271742325_Auditing.cs" />
+    <Compile Include="Migrations\Client\201702271742325_Auditing.Designer.cs">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.cs" />
-    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.Designer.cs">
-      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.cs" />
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.Designer.cs">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
@@ -247,11 +247,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702271520580_ChangeUserTables.resx">
-      <DependentUpon>201702271520580_ChangeUserTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201702271742325_Auditing.resx">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702242027104_AddingSomeNewTables.resx">
-      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201702271744380_FileStorage.resx">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>

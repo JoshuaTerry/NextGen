@@ -7,13 +7,13 @@ namespace DDI.Data.Migrations.Client
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddingSomeNewTables : IMigrationMetadata
+    public sealed partial class Auditing : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddingSomeNewTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Auditing));
         
         string IMigrationMetadata.Id
         {
-            get { return "201702242027104_AddingSomeNewTables"; }
+            get { return "201702271742325_Auditing"; }
         }
         
         string IMigrationMetadata.Source

@@ -3,7 +3,7 @@ namespace DDI.Data.Migrations.Client
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddingSomeNewTables : DbMigration
+    public partial class Auditing : DbMigration
     {
         public override void Up()
         {
@@ -16,7 +16,7 @@ namespace DDI.Data.Migrations.Client
                         UserId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.DDIUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
             
             CreateTable(
@@ -50,10 +50,21 @@ namespace DDI.Data.Migrations.Client
                 .Index(t => t.ObjectChangeId);
             
             CreateTable(
-                "dbo.DDIUsers",
+                "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
+                        Email = c.String(maxLength: 256),
+                        EmailConfirmed = c.Boolean(nullable: false),
+                        PasswordHash = c.String(),
+                        SecurityStamp = c.String(),
+                        PhoneNumber = c.String(),
+                        PhoneNumberConfirmed = c.Boolean(nullable: false),
+                        TwoFactorEnable = c.Boolean(nullable: false),
+                        LockoutEndDateUtc = c.DateTime(),
+                        LockoutEnabled = c.Boolean(nullable: false),
+                        AccessFailedCount = c.Int(nullable: false),
+                        UserName = c.String(maxLength: 256),
                         FirstName = c.String(maxLength: 256),
                         MiddleName = c.String(maxLength: 256),
                         LastName = c.String(maxLength: 256),
@@ -66,20 +77,17 @@ namespace DDI.Data.Migrations.Client
                     })
                 .PrimaryKey(t => t.Id);
             
-            
-            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.ChangeSets", "UserId", "dbo.DDIUsers");
+            DropForeignKey("dbo.ChangeSets", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.PropertyChanges", "ObjectChangeId", "dbo.ObjectChanges");
             DropForeignKey("dbo.ObjectChanges", "ChangeSetId", "dbo.ChangeSets");
             DropIndex("dbo.PropertyChanges", new[] { "ObjectChangeId" });
             DropIndex("dbo.ObjectChanges", new[] { "ChangeSetId" });
             DropIndex("dbo.ChangeSets", new[] { "UserId" });
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.DDIUsers");
             DropTable("dbo.PropertyChanges");
             DropTable("dbo.ObjectChanges");
             DropTable("dbo.ChangeSets");

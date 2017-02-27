@@ -7,13 +7,13 @@ namespace DDI.Data.Migrations.Client
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ChangeUserTables : IMigrationMetadata
+    public sealed partial class FileStorage : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeUserTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FileStorage));
         
         string IMigrationMetadata.Id
         {
-            get { return "201702271520580_ChangeUserTables"; }
+            get { return "201702271744380_FileStorage"; }
         }
         
         string IMigrationMetadata.Source

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Data
 {
-    public class DomainContextAdapter : DbContextAdapter<ChangeSet, DDIUser>
+    public class DomainContextAdapter : DbContextAdapter<ChangeSet, UserLogin>
     {
         private DomainContext context;
 
@@ -18,15 +18,15 @@ namespace DDI.Data
             this.context = context;
         }
 
-        public override IQueryable<IChangeSet<DDIUser>> ChangeSets
+        public override IQueryable<IChangeSet<UserLogin>> ChangeSets
         {
             get { return context.ChangeSets; }
         }
-        public override IQueryable<IObjectChange<DDIUser>> ObjectChanges
+        public override IQueryable<IObjectChange<UserLogin>> ObjectChanges
         {
             get { return context.ObjectChanges; }
         }
-        public override IQueryable<IPropertyChange<DDIUser>> PropertyChanges
+        public override IQueryable<IPropertyChange<UserLogin>> PropertyChanges
         {
             get { return context.PropertyChanges; }
         }
