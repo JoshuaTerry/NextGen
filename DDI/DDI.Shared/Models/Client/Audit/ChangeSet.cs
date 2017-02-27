@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ChangeSet : IChangeSet<DDIUser>, IReadOnlyEntity
+    public class ChangeSet : IChangeSet<DDIUser> 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
