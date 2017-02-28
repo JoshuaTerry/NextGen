@@ -9,7 +9,7 @@ using DDI.Shared.Enums.CRM;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Denomination")]
-    public class Denomination : EntityBase
+    public class Denomination : EntityBase, ICodeEntity
     {
         #region Public Properties       
         [Key]

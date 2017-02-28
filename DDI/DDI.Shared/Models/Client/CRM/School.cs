@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("School")]
-    public class School : EntityBase
+    public class School : EntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]

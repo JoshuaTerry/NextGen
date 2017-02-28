@@ -60,8 +60,8 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
-        }
 
+        }
 
         /// <summary>
         /// Run all converion methods in a conversion class.
