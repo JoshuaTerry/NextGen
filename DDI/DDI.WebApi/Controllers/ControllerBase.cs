@@ -97,9 +97,7 @@ namespace DDI.WebApi.Controllers
             try
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
-                var response = _service.GetAll(search);
-               
-                return FinalizeResponse(response, routeName, search, fields, urlHelper);
+                return FinalizeResponse(_service.GetAll(fields, search), routeName, search, fields, urlHelper);
             }
             catch (Exception ex)
             {
@@ -125,7 +123,7 @@ namespace DDI.WebApi.Controllers
         }
 
         public IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
-            where T1 : class, IEntity
+            where T1 : class
         {
             try
             {

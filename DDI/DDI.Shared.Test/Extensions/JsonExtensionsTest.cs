@@ -9,6 +9,8 @@ namespace DDI.Shared.Test.Extensions
     [TestClass]
     public class JsonExtensionsTest
     {
+        private const string TESTDESCR = "Shared | Extensions";
+
         public class TestObject
         {
             public string Test1 { get; set; }
@@ -19,10 +21,10 @@ namespace DDI.Shared.Test.Extensions
             public int[] Test6 { get; set; }
         }
          
-        [TestMethod]
-        public void When_ConvertToObject_Is_Called_Should_Create_Dictionary_Of_Changed_Properties()
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void JsonExtensions_ConvertToType()
         {
-            // Arrange2
+            // Arrange
             var item = new 
             {
                 Test1 = "Test1",

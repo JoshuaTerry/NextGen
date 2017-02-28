@@ -214,16 +214,17 @@ namespace DDI.Business.CRM
 
             document.Id = entity.Id;
             document.ConstituentNumber = entity.ConstituentNumber.ToString();
+            document.SortableName = entity.Name;
             document.Name = entity.FormattedName ?? string.Empty;
-            document.ConstituentStatusId = entity.ConstituentStatusId ?? Guid.Empty;
-            document.ConstituentTypeId = entity.ConstituentTypeId ?? Guid.Empty;
+            document.ConstituentStatusId = entity.ConstituentStatusId;
+            document.ConstituentTypeId = entity.ConstituentTypeId;
             document.Source = entity.Source ?? string.Empty;
             document.Name2 = entity.Name2 ?? string.Empty;
             document.Business = entity.Business ?? string.Empty;
             document.Nickname = entity.Nickname ?? string.Empty;
             document.CreationDate = entity.CreatedOn;
-            document.LanguageId = entity.LanguageId ?? Guid.Empty;
-            document.GenderId = entity.GenderId ?? Guid.Empty;
+            document.LanguageId = entity.LanguageId;
+            document.GenderId = entity.GenderId;
 
             if (entity.BirthYear > 0)
             {
@@ -254,7 +255,7 @@ namespace DDI.Business.CRM
             document.ContactInfo = new List<ContactInfoDocument>();
             foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
             {
-                Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
+                Guid? categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId;
 
                 document.ContactInfo.Add(new ContactInfoDocument()
                 {
@@ -278,12 +279,12 @@ namespace DDI.Business.CRM
                         StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),
                         City = address.City ?? string.Empty,
                         PostalCode = address.PostalCode ?? string.Empty,
-                        CountryId = address.CountryId ?? Guid.Empty,
-                        StateId = address.StateId ?? Guid.Empty,
-                        Region1Id = address.Region1Id ?? Guid.Empty,
-                        Region2Id = address.Region2Id ?? Guid.Empty,
-                        Region3Id = address.Region3Id ?? Guid.Empty,
-                        Region4Id = address.Region4Id ?? Guid.Empty
+                        CountryId = address.CountryId,
+                        StateId = address.StateId,
+                        Region1Id = address.Region1Id,
+                        Region2Id = address.Region2Id,
+                        Region3Id = address.Region3Id,
+                        Region4Id = address.Region4Id
                     });
                 }
             }

@@ -47,6 +47,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,16 +62,18 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="DomainContextAdapter.cs" />
+    <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201702242028523_audit.cs" />
-    <Compile Include="Migrations\201702242028523_audit.Designer.cs">
-      <DependentUpon>201702242028523_audit.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201702271742325_Auditing.cs" />
+    <Compile Include="Migrations\Client\201702271742325_Auditing.Designer.cs">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.cs" />
-    <Compile Include="Migrations\Client\201702242027104_AddingSomeNewTables.Designer.cs">
-      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.cs" />
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.Designer.cs">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
@@ -244,11 +247,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702242028523_audit.resx">
-      <DependentUpon>201702242028523_audit.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201702271742325_Auditing.resx">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702242027104_AddingSomeNewTables.resx">
-      <DependentUpon>201702242027104_AddingSomeNewTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201702271744380_FileStorage.resx">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
@@ -364,6 +367,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7c3b147f-fd3e-4ca9-b405-af4d249bf5a5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
       <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
       <Name>DDI.Logger</Name>

@@ -6,7 +6,7 @@ namespace DDI.Shared.Test
     [TestClass]
     public class ConnectionManagerTests
     {
-        private const string TEST_DESCRIPTION = "SHARED";
+        private const string TEST_DESCRIPTION = "Shared | Encryption";
         [TestMethod] [TestCategory(TEST_DESCRIPTION)]
         public void Should_DecryptConnectionStringProperly()
         {

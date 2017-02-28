@@ -24,22 +24,22 @@ namespace DDI.Search.Models
         public string City { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid CountryId { get; set; }
+        public Guid? CountryId { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid StateId { get; set; }
+        public Guid? StateId { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid Region1Id { get; set; }
+        public Guid? Region1Id { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid Region2Id { get; set; }
+        public Guid? Region2Id { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid Region3Id { get; set; }
+        public Guid? Region3Id { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid Region4Id { get; set; }
+        public Guid? Region4Id { get; set; }
 
         [Keyword]
         public string PostalCode { get; set; }
