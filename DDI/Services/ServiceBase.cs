@@ -9,11 +9,12 @@ using DDI.Data;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
-using DDI.Shared.Extensions; 
+using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Logger;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -25,6 +26,11 @@ namespace DDI.Services
         private Expression<Func<T, object>>[] _includesForList = null;
 
         protected ILogger Logger => _logger;
+
+        /// <summary>
+        /// Formatting and other logic for an entity retrieved for a GET.
+        /// </summary>
+        protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
         public ServiceBase() : this(new UnitOfWorkEF())
         {            
@@ -141,16 +147,22 @@ namespace DDI.Services
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
             return GetPagedResults(queryable, search);
         }
-
+        
         /// <summary>
         /// Formatting and other logic for a single entity retrieved for a GET.
         /// </summary>
-        protected virtual void FormatEntityForGet(T entity) { }
+        private void DefaultFormatEntityForGet(T entity) { }
 
         /// <summary>
         /// Formatting and other logic for a list of entities retrieved for a GET.
         /// </summary>
-        protected virtual void FormatEntityListForGet(IList<T> list) { }
+        private void FormatEntityListForGet(IList<T> list)
+        {
+            if (FormatEntityForGet != DefaultFormatEntityForGet) // If overridden
+            {
+                list.ForEach(p => FormatEntityForGet(p));
+            }
+        }
 
         public virtual IDataResponse Update(T entity)
         {
