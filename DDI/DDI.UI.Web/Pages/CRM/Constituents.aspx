@@ -203,7 +203,7 @@
 
                     </div>--%>
 
-                    <h1 class="clergySection"><span class="clergySectionLabel">Clergy Section</span></h1>
+                    <h1 class="ClergySettingsSection"><span class="ClergySettingsSectionLabel">Clergy Section</span></h1>
                     <div class="editcontainer">
                         
                         <div class="fourcolumn">

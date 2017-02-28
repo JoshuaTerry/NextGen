@@ -17,6 +17,13 @@ namespace DDI.WebApi.Controllers
             return base.GetAll(RouteNames.ClergyStatus, limit, offset, orderBy, fields);
         }
 
+        [HttpGet]
+        [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
+        }
+
         [HttpPost]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ClergyStatus item)
