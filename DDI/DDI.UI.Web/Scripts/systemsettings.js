@@ -10,7 +10,7 @@
 
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
-    Demographics: 'DemographicSettings'
+    Demographics: 'DemographicSettings',
     Education: 'Education'
 }
 
@@ -112,7 +112,7 @@ function GetSystemSettings(category, callback) {
 function LoadSectionSettings(category, section, route, sectionKey) {
 
     var container = $('<div>').addClass('twocolumn');
-    
+
     var activeSection = $('<div>').addClass('fieldblock');
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
     $('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
@@ -160,7 +160,7 @@ function GetSetting(category, key, route, id, checkbox, label) {
         success: function (data) {
 
             if (data.IsSuccessful) {
-                
+
                 $(id).val(data.Data.Id);
                 $(checkbox).prop('checked', data.Data.IsShown);
                 $(label).val(data.Data.Value);
@@ -218,7 +218,7 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
 
                 $(idContainer).val(data.Data.Id);
             }
-            
+
 
         },
         error: function (xhr, status, err) {
@@ -260,7 +260,7 @@ function LoadReceiptItemsSectionSettings() {
 /* COMMON SETTINGS */
 function LoadAlternateIDTypesSectionSettings() {
 
-    
+
 
 }
 
@@ -321,38 +321,154 @@ function LoadAlternateIDSectionSettings() {
 
 }
 
+//function LoadClergySectionSettings() {
+
+//    var accordion = $('<div>').addClass('accordions');
+//    var status = $('<div>').addClass('clergystatuscontainer');
+//    var types = $('<div>').addClass('clergytypecontainer');
+
+//    var statuscolumns = [
+//        { dataField: 'Code', caption: 'Code' },
+//        { dataField: 'Name', caption: 'Description' },
+//        { dataField: 'IsActive', caption: 'Active' }
+//    ];
+
+//    $('<h1>').text('Clergy Status').appendTo($(accordion));
+//    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
+//    $(status).appendTo($(accordion));
+
+//    var typecolumns = [
+//        { dataField: 'Code', caption: 'Code' },
+//        { dataField: 'Name', caption: 'Description' },
+//        { dataField: 'IsActive', caption: 'Active' }
+//    ];
+
+//    $('<h1>').text('Clergy Type').appendTo($(accordion));
+//    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
+//    $(types).appendTo($(accordion));
+
+//    $(accordion).appendTo($('.contentcontainer'));
+
+//    LoadAccordions();
+
+//}
+
 function LoadClergySectionSettings() {
+
+    LoadSectionSettings(SettingsCategories.CRM, 'Clergy', 'sectionpreferences', SystemSettings.Clergy);
 
     var accordion = $('<div>').addClass('accordions');
     var status = $('<div>').addClass('clergystatuscontainer');
     var types = $('<div>').addClass('clergytypecontainer');
 
-    var statuscolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
+    var header = $('<h1>').text('Clergy Status').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newclergystatusmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
 
-    $('<h1>').text('Clergy Status').appendTo($(accordion));
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
+            modal = $('.clergystatusmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitcstat').unbind('click');
+
+            $('submitcstat').click(function () {
+                var item = {
+                    Code: $(modal).find('.cstat-Code').val(),
+                    Name: $(modal).find('.cstat-Name').val(),
+                    IsActive: $(modal).find('.cstat-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'clergystatus',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Clergy Status saved successfully.');
+
+                        CloseModal();
+
+                        LoadClergyStatusSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Status.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
     $(status).appendTo($(accordion));
 
-    var typecolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
+    LoadClergyStatusSettingsGrid();
 
-    $('<h1>').text('Clergy Type').appendTo($(accordion));
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
-    $(types).appendTo($(accordion));
+    header = $('<h1>').text('Clergy Type').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newclergytypemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.clergytypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitctype').unbind('click');
+
+            $('submitctype').click(function () {
+                var item = {
+                    Code: $(modal).find('.ctype-Code').val(),
+                    Name: $(modal).find('.ctype-Name').val(),
+                    IsActive: $(modal).find('.ctype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'clergytype',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Clergy Type saved successfully.');
+
+                        CloseModal();
+
+                        LoadClergyTypeSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Type.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(clergytype).appendTo($(accordion));
+
+    LoadClergyTypeSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
-
 }
-
 function LoadConstituentTypesSectionSettings() {
 
 
@@ -588,29 +704,453 @@ function LoadDBASectionSettings() {
 
 }
 
+/* EDUCATION SYSTEM SETTINGS */
 function LoadEducationSectionSettings() {
     LoadSectionSettings(SettingsCategories.CRM, 'Education', 'sectionpreferences', SystemSettings.Education);
+
     var accordion = $('<div>').addClass('accordions');
     var degrees = $('<div>').addClass('degreecontainer');
-    var levels = $('<div>').addClass('educationlevelscontainer');
+    var educationlevels = $('<div>').addClass('educationlevelscontainer');
     var schools = $('<div>').addClass('schoolscontainer');
 
-    $('<h1>').text('Degrees').appendTo($(accordion));
-    LoadGrid('degreegrid', 'degreecontainer', null, 'degrees');
+    var header = $('<h1>').text('Degrees').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newdegreemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.degreemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitdeg').unbind('click');
+
+            $('.submitdeg').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.deg-Code').val(),
+                    Name: $(modal).find('.deg-Name').val(),
+                    IsActive: $(modal).find('.deg-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'degrees',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Degree saved successfully.');
+
+                        CloseModal();
+
+                        LoadDegreeSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Degree.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
     $(degrees).appendTo($(accordion));
 
-    $('<h1>').text('Education Level').appendTo($(accordion));
-    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', null, 'educationlevels');
-    $(levels).appendTo($(accordion));
+    LoadDegreeSettingsGrid();
+        
+    header = $('<h1>').text('Education Level').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('neweducationlevelsmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
 
-    $('<h1>').text('Schools').appendTo($(accordion));
-    LoadGrid('schoolsgrid', 'schoolscontainer', null, 'schools');
+            modal = $('.educationLevelmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submiteduLev').unbind('click');
+
+            $('.submiteduLev').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.eduLev-Code').val(),
+                    Name: $(modal).find('.eduLev-Name').val(),
+                    IsActive: $(modal).find('.eduLev-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'educationlevels',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Education Level saved successfully.');
+
+                        CloseModal();
+
+                        LoadEducationLevelSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Education Level.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(educationlevels).appendTo($(accordion));
+
+    LoadEducationLevelSettingsGrid();
+
+    header = $('<h1>').text('Schools').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newschoolgridmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.schoolmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitsch').unbind('click');
+
+            $('.submitsch').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.sch-Code').val(),
+                    Name: $(modal).find('.sch-Name').val(),
+                    IsActive: $(modal).find('.sch-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'schools',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'School saved successfully.');
+
+                        CloseModal();
+
+                        LoadSchoolsSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the School.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
     $(schools).appendTo($(accordion));
+
+    LoadSchoolsSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
 }
+
+function LoadDegreeSettingsGrid() {
+
+    var degreecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('degreesgrid', 'degreecontainer', degreecolumns, 'degrees', null, EditDegree);
+
+}
+
+function LoadEducationLevelSettingsGrid() {
+
+    var educationLevelcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', educationLevelcolumns, 'educationlevels', null, EditEducationLevel);
+
+
+}
+
+function LoadSchoolsSettingsGrid() {
+
+    var schoolcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('schoolsgrid', 'schoolscontainer', schoolcolumns, 'schools', null, EditSchool);
+
+
+}
+
+function EditDegree(id) {
+
+    LoadDegree(id);
+
+    modal = $('.degreemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitdeg').unbind('click');
+
+    $('.submitdeg').click(function () {
+
+        var item = {
+            Code: $(modal).find('.deg-Code').val(),
+            Name: $(modal).find('.deg-Name').val(),
+            IsActive: $(modal).find('.deg-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'degrees/' + $(modal).find('.degreeId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Degree saved successfully.');
+
+                CloseModal(modal);
+
+                LoadDegreeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Degree.');
+            }
+        });
+
+    });
+
+}
+
+function LoadDegree(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'degrees/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.degreeId').val(data.Data.Id);
+                $(modal).find('.deg-Code').val(data.Data.Code);
+                $(modal).find('.deg-Name').val(data.Data.Name);
+                $(modal).find('.deg-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading degree.');
+        }
+    });
+
+}
+
+function EditEducationLevel(id) {
+    LoadEducationLevel(id);
+
+    modal = $('.educationLevelmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submiteduLev').unbind('click');
+
+    $('.submiteduLev').click(function () {
+
+        var item = {
+            Code: $(modal).find('.eduLev-Code').val(),
+            Name: $(modal).find('.eduLev-Name').val(),
+            IsActive: $(modal).find('.eduLev-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'educationlevels/' + $(modal).find('.educationLevelId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Education Level saved successfully.');
+
+                CloseModal(modal);
+
+                LoadEducationLevelSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Education Level.');
+            }
+        });
+
+    });
+
+}
+
+function LoadEducationLevel(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'educationlevels/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.educationLevelId').val(data.Data.Id);
+                $(modal).find('.eduLev-Code').val(data.Data.Code);
+                $(modal).find('.eduLev-Name').val(data.Data.Name);
+                $(modal).find('.eduLev-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading education level.');
+        }
+    });
+
+}
+
+function EditSchool(id) {
+    LoadSchool(id);
+
+    modal = $('.schoolmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitsch').unbind('click');
+
+    $('.submitsch').click(function () {
+
+        var item = {
+            Code: $(modal).find('.sch-Code').val(),
+            Name: $(modal).find('.sch-Name').val(),
+            IsActive: $(modal).find('.sch-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'schools/' + $(modal).find('.schoolId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'School saved successfully.');
+
+                CloseModal(modal);
+
+                LoadSchoolsSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the School.');
+            }
+        });
+
+    });
+
+}
+
+function LoadSchool(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'schools/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.schoolId').val(data.Data.Id);
+                $(modal).find('.sch-Code').val(data.Data.Code);
+                $(modal).find('.sch-Name').val(data.Data.Name);
+                $(modal).find('.sch-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading school.');
+        }
+    });
+
+}
+
+/* END EDUCATION SYSTEM SETTINGS */
 
 function LoadGenderSectionSettings() {
 
@@ -814,7 +1354,7 @@ function LoadGLClientCustomFieldsSectionSettings() {
     DisplayCustomFieldsGrid('contentcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
 
     CreateNewCustomFieldModalLink(customfieldentity.GeneralLedger, 'New General Ledger Custom Field');
-    
+
 }
 
 function RefreshCustomFieldsGrid() {
@@ -893,7 +1433,7 @@ function CreateNewCustomFieldModal(entity, title) {
 
         $('.ui-dialog').css('width', '300px');
         $('.fieldproperties').attr('style', 'width: 100%');
-        
+
         $(modal).dialog('close');
 
     });
@@ -920,7 +1460,7 @@ function AddOption() {
     var tdorder = $('<td>').text(order).css('padding-left', '2px').css('width', '30px').appendTo($(tr));
 
     $(tr).appendTo($('.tempoptions'));
-    
+
     $('.cfoptioncode').val('').focus();
     $('.cfoptiondesc').val('');
     $('.cfoptionorder').val('');
@@ -944,8 +1484,7 @@ function ClearModal(modal) {
 
 function CustomFieldTypeSelected(selectedvalue) {
 
-    if (selectedvalue)
-    {
+    if (selectedvalue) {
         if (selectedvalue == customfieldtype.Number ||
         selectedvalue == customfieldtype.Date ||
         selectedvalue == customfieldtype.DateTime) {
@@ -961,7 +1500,7 @@ function CustomFieldTypeSelected(selectedvalue) {
         else {
             $('.decimalplacecontainer').hide();
         }
-    
+
         if (selectedvalue == customfieldtype.Radio ||
             selectedvalue == customfieldtype.DropDown) {
 
@@ -984,11 +1523,11 @@ function CustomFieldTypeSelected(selectedvalue) {
                     }
                 }
             , 500);
-            
-            
+
+
         }
         else {
-            
+
             var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
             if (left < modalLeft)
@@ -997,7 +1536,7 @@ function CustomFieldTypeSelected(selectedvalue) {
             $('.ui-dialog').stop().animate(
                 {
                     width: '300px',
-                    left: left 
+                    left: left
                 },
                 {
                     start: function () {
@@ -1005,7 +1544,7 @@ function CustomFieldTypeSelected(selectedvalue) {
                         $('.fieldproperties').attr('style', 'width: 100%');
                     },
                     complete: function () {
-                        
+
                     }
                 }
             , 500);
@@ -1045,7 +1584,7 @@ function SaveCustomField(modal) {
     }
     else {
         // Insert
-        
+
         var data = {
             LabelText: $('.cflabel').val(),
             MinValue: $('.cfminvalue').val(),
@@ -1090,7 +1629,7 @@ function SendCustomField(route, action, data, modal) {
             RefreshCustomFieldsGrid();
 
             CreateNewCustomFieldModalLink(currentcustomfieldentity, '');
-            
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error saving custom field.');

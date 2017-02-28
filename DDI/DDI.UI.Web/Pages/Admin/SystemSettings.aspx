@@ -239,4 +239,92 @@
 
     </div>
 
+
+    <div class="degreemodal" title="Degree" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="degreeId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="deg-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="deg-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="deg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitdeg" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+        <div class="educationLevelmodal" title="Education Level" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="educationLevelId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="eduLev-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="eduLev-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="eduLev-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submiteduLev" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+       <div class="schoolmodal" title="Schools" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="schoolId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="sch-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="sch-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="sch-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitsch" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>
