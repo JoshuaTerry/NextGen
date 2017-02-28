@@ -1,4 +1,5 @@
-﻿using DDI.WebApi.Helpers;
+﻿using DDI.Shared.Models.Client.Core;
+using DDI.WebApi.Helpers;
 using DDI.WebApi.Models;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
@@ -64,7 +65,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> GetById(string id)
+        public async Task<IHttpActionResult> GetById(Guid id)
         {
             ApplicationUser user;
             try
@@ -95,12 +96,21 @@ namespace DDI.WebApi.Controllers
             }
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            try
             {
-                return GetErrorResult(result);
+                var result = UserManager.Create(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
             }
+            catch(Exception ex)
+            {
+                string a = ex.Message;
+            }
+            //var result = await UserManager.CreateAsync(user, model.Password);
+            
 
             try
             {
@@ -125,7 +135,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpPatch]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(string id, [FromBody] JObject userPropertiesChanged)
+        public async Task<IHttpActionResult> Update(Guid id, [FromBody] JObject userPropertiesChanged)
         {
             ApplicationUser user = null;
             try
@@ -137,7 +147,7 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var patchUpdateUser = new PatchUpdateUser<ApplicationUser>();
-                patchUpdateUser.UpdateUser(Guid.Parse(id), userPropertiesChanged);
+                patchUpdateUser.UpdateUser(id, userPropertiesChanged);
             }
             catch (Exception)
             {
@@ -149,7 +159,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpDelete]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Delete(string id)
+        public async Task<IHttpActionResult> Delete(Guid id)
         {
             try
             {

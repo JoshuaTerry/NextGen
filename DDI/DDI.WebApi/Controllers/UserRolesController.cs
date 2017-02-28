@@ -57,7 +57,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/users/{id}/roles")]
-        public async Task<IHttpActionResult> Get(string id)
+        public async Task<IHttpActionResult> Get(Guid id)
         {
             IList<string> roles;
             try
@@ -147,7 +147,7 @@ namespace DDI.WebApi.Controllers
         {
             Tuple<bool, string> canRoleBeAddedToUser = null;
 
-            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == Guid.Parse(RoleManager.FindByNameAsync(role).Result.Id));
             if (userAlreadyHasRole)
             {
                 canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
@@ -184,7 +184,7 @@ namespace DDI.WebApi.Controllers
         {
             Tuple<bool, string> canRoleBeRemovedFromUser = null;
 
-            var userDoesNotHaveRole = !UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+            var userDoesNotHaveRole = !UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == Guid.Parse(RoleManager.FindByNameAsync(role).Result.Id));
             if (userDoesNotHaveRole)
             {
                 canRoleBeRemovedFromUser = new Tuple<bool, string>(false, $"User {email} is not currently in role {role}");

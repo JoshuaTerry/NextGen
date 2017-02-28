@@ -9,6 +9,7 @@ using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi.Controllers
 {
@@ -94,7 +95,7 @@ namespace DDI.WebApi.Controllers
             {
                 var role = await RoleManager.FindByIdAsync(roleId.ToString());
                 var userIds = role.Users.ToList().Select(u => u.UserId);
-                var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(id.ToString()).Result);
+                var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(Guid.Parse(id)).Result);
                 users.AddRange(usersToAdd);
             }
             catch (Exception)

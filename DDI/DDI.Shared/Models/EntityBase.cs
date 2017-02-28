@@ -1,3 +1,4 @@
+using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace DDI.Shared.Models
         public abstract Guid Id { get; set; }
 
         public virtual string DisplayName => string.Empty;
-
+       
         public virtual Guid? CreatedBy { get; set; }
 
         public virtual DateTime? CreatedOn { get; set; }

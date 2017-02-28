@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DDI.EFAudit.Logging
 {
-    public class ChangeSetFactory : IChangeSetFactory<ChangeSet, UserLogin>
+    public class ChangeSetFactory : IChangeSetFactory<ChangeSet, ApplicationUser>
     {
         public ChangeSet ChangeSet()
         {
@@ -13,14 +13,14 @@ namespace DDI.EFAudit.Logging
             return set;
         }
 
-        public IObjectChange<UserLogin> ObjectChange()
+        public IObjectChange<ApplicationUser> ObjectChange()
         {
             var o = new ObjectChange();
             o.PropertyChanges = new List<PropertyChange>();
             return o;
         }
 
-        public IPropertyChange<UserLogin> PropertyChange()
+        public IPropertyChange<ApplicationUser> PropertyChange()
         {
             return new PropertyChange();
         }

@@ -8,6 +8,7 @@ using System.Web;
 using DDI.Shared.Models.Client.CRM;
 using DDI.WebApi.Models;
 using Newtonsoft.Json.Linq;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi.Helpers
 {
@@ -35,7 +36,7 @@ namespace DDI.WebApi.Helpers
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
             }
 
-            var item = _context.Set<ApplicationUser>().Single(x => x.Id == id.ToString());
+            var item = _context.Set<ApplicationUser>().Single(x => x.Id == id);
 
             UpdateChangedProperties(item, changedProperties);
         }

@@ -1108,6 +1108,75 @@ function LoadAlternateId(id, modal) {
 }
 /* End Alternate Id Section */
 
+/* Audit Section */
+function ShowAuditData(id) {
+
+    var modal = $('.auditmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    LoadAuditTable(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        
+         
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'alternateids/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
+
+                CloseModal(modal);
+
+                LoadAlternateIDTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable() {
+    var id = currentEntity.Id;
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+
+    var columns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('auditgrid',
+       'auditgridcontainer',
+       columns,
+       'alternateids',
+       null,
+       EditAlternateId);
+}
+/* End Audit Section */
 
 /* Contact Information Section */
 function LoadContactInfo() {

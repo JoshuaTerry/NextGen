@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDI.WebApi.Models;
 using Microsoft.AspNet.Identity;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.WebApi
 {

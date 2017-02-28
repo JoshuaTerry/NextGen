@@ -62,7 +62,7 @@ namespace DDI.Services
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
-                                 .Join(_uow.GetRepository<UserLogin>().Entities,
+                                 .Join(_uow.GetRepository<ApplicationUser>().Entities,
                                          outer => outer.cs.UserId,
                                          u => u.Id,
                                          (outer, u) => new

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ObjectChange : IObjectChange<UserLogin> 
+    public class ObjectChange : IObjectChange<ApplicationUser> 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,15 +22,15 @@ namespace DDI.Shared.Models.Client.Audit
         public ChangeSet ChangeSet { get; set; }
         public List<PropertyChange> PropertyChanges { get; set; }
 
-        IEnumerable<IPropertyChange<UserLogin>> IObjectChange<UserLogin>.PropertyChanges
+        IEnumerable<IPropertyChange<ApplicationUser>> IObjectChange<ApplicationUser>.PropertyChanges
         {
             get { return PropertyChanges; }
         }
-        public void Add(IPropertyChange<UserLogin> propertyChange)
+        public void Add(IPropertyChange<ApplicationUser> propertyChange)
         {
             PropertyChanges.Add((PropertyChange)propertyChange);
         }
-        IChangeSet<UserLogin> IObjectChange<UserLogin>.ChangeSet
+        IChangeSet<ApplicationUser> IObjectChange<ApplicationUser>.ChangeSet
         {
             get { return ChangeSet; }
             set { ChangeSet = (ChangeSet)value; }

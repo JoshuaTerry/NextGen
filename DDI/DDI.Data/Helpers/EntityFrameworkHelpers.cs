@@ -4,11 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using DDI.Shared.Models.Client.Core;
+using System.Threading;
 
 namespace DDI.Data.Helpers
 {
     public static class EntityFrameworkHelpers
     {
+        public static ApplicationUser GetCurrentUser()
+        {
+            ApplicationUser user = null;
+            var userId = Thread.CurrentPrincipal?.Identity.Name;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var repo = new Repository<ApplicationUser>();
+                user = repo.Entities.FirstOrDefault(u => u.UserName == userId);
+            }
+
+            return user;
+        }
         /// <summary>
         /// Specifies the related objects to include in query results.
         /// </summary>
