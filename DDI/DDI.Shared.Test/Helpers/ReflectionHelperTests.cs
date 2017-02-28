@@ -13,16 +13,7 @@ namespace DDI.Shared.Test.Helpers
     {
         private const string TESTDESCR = "Shared | Helpers";
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void ReflectionHelper_FindTypeByName()
-        {
-            // Note - this test also tests ReflectionHelper.GetLocalAssemblies.
-
-            Assert.AreEqual(typeof(DDI.Shared.Logger.Logger), ReflectionHelper.FindTypeByName(typeof(DDI.Shared.Logger.Logger).FullName),
-                "FindTypeByName finds type by scanning assemblies.");
-            Assert.AreEqual(typeof(DDI.Shared.Logger.Logger), ReflectionHelper.FindTypeByName(typeof(DDI.Shared.Logger.Logger).FullName,
-                typeof(DDI.Shared.Logger.Logger).Assembly), "FindTypeByName finds type by scanning assemblies.");
-        }
+        
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void Reflectionhelper_GetDecoratedWith_NotNull()
@@ -62,13 +53,7 @@ namespace DDI.Shared.Test.Helpers
             CollectionAssert.Contains(types, typeof(MySubClass), "GetImplementingTypes contains MySubClass.");
         }
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void ReflectionHelper_GetEnums()
-        {
-            var types = ReflectionHelper.GetEnums(typeof(DDI.Shared.Logger.Logger).Assembly).ToList();
-            Assert.IsNotNull(types, "GetEnums returned non-null value.");           
-            CollectionAssert.Contains(types, typeof(DDI.Shared.Enums.ModuleType), "GetEnums contains ModuleType enumeration.");
-        }
+        
         [TestMethod, TestCategory(TESTDESCR)]
         public void ReflectionHelper_GetInstancesOf()
         {

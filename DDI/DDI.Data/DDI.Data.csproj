@@ -47,6 +47,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,9 +62,19 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="DomainContextAdapter.cs" />
+    <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201702271742325_Auditing.cs" />
+    <Compile Include="Migrations\Client\201702271742325_Auditing.Designer.cs">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.cs" />
+    <Compile Include="Migrations\Client\201702271744380_FileStorage.Designer.cs">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
     <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
@@ -236,6 +247,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201702271742325_Auditing.resx">
+      <DependentUpon>201702271742325_Auditing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201702271744380_FileStorage.resx">
+      <DependentUpon>201702271744380_FileStorage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
       <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
     </EmbeddedResource>
@@ -350,6 +367,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7c3b147f-fd3e-4ca9-b405-af4d249bf5a5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>

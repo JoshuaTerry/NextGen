@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DDI.Shared.Models;
 using Nest;
 using System.Web;
+using DDI.Shared.Extensions;
 
 namespace DDI.Search
 {
@@ -18,6 +19,8 @@ namespace DDI.Search
     public class ElasticRepository<T> where T : class, ISearchDocument
     {
         #region Private Fields
+
+        private const int DEFAULT_SEARCH_LIMIT = 15;
 
         private NestClient _client;
 
@@ -84,11 +87,18 @@ namespace DDI.Search
         /// <param name="limit">Number of results to return per page</param>
         /// <param name="offset">Page number (zero-based)</param>
         /// <returns></returns>
-        public DocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
+        public IDocumentSearchResult<T> DocumentSearch(ElasticQuery<T> query, int limit, int offset)
         {
             ISearchRequest request = query.BuildSearchRequest();
+
+            if (limit <= 0)
+            {
+                limit = DEFAULT_SEARCH_LIMIT;
+            }
+
             request.Size = limit;
             request.From = offset * limit;
+
             var response = _client.ElasticClient.Search<T>(request);
 
             var result = new DocumentSearchResult<T>();

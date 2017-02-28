@@ -80,6 +80,8 @@
                         Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
                     
+                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
+
                 </div>
 
                 <div class="accordions">
@@ -317,7 +319,7 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
@@ -800,7 +802,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
@@ -1077,7 +1079,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             

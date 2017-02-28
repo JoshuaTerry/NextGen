@@ -5,11 +5,13 @@ using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
     public class SectionPreferencesController : ControllerBase<SectionPreference>
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(SectionPreferencesController));
         [HttpGet]
         [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -58,7 +60,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }
@@ -76,7 +78,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                LoggerBase.Error(ex);
+                Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
         }

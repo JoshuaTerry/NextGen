@@ -5,7 +5,7 @@ namespace DDI.Shared.Test
     [TestClass]
     public class EncryptionTests
     {
-        private const string TESTDESCR = "Data | Encryption";
+        private const string TESTDESCR = "Shared | Encryption";
         [TestMethod, TestCategory(TESTDESCR)]
         public void Encrypt_ReturnsEncryptedText()
         {

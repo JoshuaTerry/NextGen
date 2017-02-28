@@ -5,6 +5,7 @@ using System.Reflection;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DDI.Shared.Extensions;
 
 namespace DDI.Shared.Test.Extensions
 {
