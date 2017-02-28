@@ -281,11 +281,15 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.OrganizationSection').hide();
+        $('.organizationSection').hide();
+        $('.dbaSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
-        $('.PersonalSection').hide();
+        $('.personalSection').hide();
+        $('.clergySection').hide();
+        $('.educationSection').hide();
+        $('.professionalSection').hide();
     }
 }
 
@@ -798,6 +802,8 @@ function NewPaymentPreference() {
 
     });
 
+    PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '');
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -820,6 +826,7 @@ function NewPaymentPreference() {
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
             Status: $(modal).find('.pp-Status').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
         };
 
@@ -833,7 +840,7 @@ function NewPaymentPreference() {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -888,6 +895,7 @@ function EditPaymentPreference(id) {
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             Status: $(modal).find('.pp-Status').val(),
             StatusDate: date
         };
@@ -902,7 +910,7 @@ function EditPaymentPreference(id) {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -933,6 +941,8 @@ function LoadPaymentPreference(id, modal) {
             $(modal).find('.pp-Status').val(data.Data.Status);
             $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
             $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
+
+            PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '', data.Data.EFTFormatId);
 
         },
         error: function (xhr, status, err) {
