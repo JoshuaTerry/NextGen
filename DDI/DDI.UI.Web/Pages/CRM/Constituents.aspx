@@ -63,6 +63,7 @@
                         </div>
 
                         <div class="fieldblock">
+                            <label>Name</label>
                             <label class="editable FormattedName"></label>
                         </div>
 
@@ -823,6 +824,15 @@
                         <option value="1">Savings Account</option>
                     </select>
                 </div>
+
+                <div class="fieldblock">
+                    <label>EFT Format</label>
+                    <select class="pp-EFTFormatId"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>Status</label>

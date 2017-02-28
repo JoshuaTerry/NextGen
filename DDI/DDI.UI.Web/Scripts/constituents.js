@@ -235,7 +235,7 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
-        DisplayConstituentPrimaryAddress();
+        // DisplayConstituentPrimaryAddress();
 
         GenerateContactInfoSection();
 
@@ -283,11 +283,11 @@ function LoadConstituentSideBar() {
     
     // 3. will also need city state zip
 
-    $('.FormattedName').text('Constituent Name: ' + currentEntity.FormattedName);
+    $('.FormattedName').text(currentEntity.FormattedName);
 
-    GetConstituentAddress();
+    GetConstituentPrimaryAddress();
 
-    GetConstituentContactInfo();
+    GetConstituentPreferredContactInfo();
 
 }
 
@@ -308,34 +308,34 @@ function DisplayConstituentType() {
     }
 }
 
-function DisplayConstituentPrimaryAddress() {
+//function DisplayConstituentPrimaryAddress() {
 
-    if (currentEntity.ConstituentAddresses) {
+//    if (currentEntity.ConstituentAddresses) {
 
-        $.map(currentEntity.ConstituentAddresses, function (item) {
+//        $.map(currentEntity.ConstituentAddresses, function (item) {
 
-            if (item.IsPrimary) {
+//            if (item.IsPrimary) {
 
-                $('.Address').text(item.Address.AddressLine1);
+//                $('.Address').text(item.Address.AddressLine1);
 
-                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
-                }
+//                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
+//                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+//                }
 
-             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+//             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
 
-            }
+//            }
 
-        });
+//        });
 
-    }
-}
+//    }
+//}
 
-function GetConstituentAddress() {
+function GetConstituentPrimaryAddress() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'constituentaddresses/' + SAVE_ROUTE + currentEntity.id,
-        contentType: 'application/json; charset=utf-8',
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        contentType: 'application/json',
         crossDomain: true,
         success: function (data) {
 
@@ -345,7 +345,13 @@ function GetConstituentAddress() {
 
                 if (currentaddress[i].IsPrimary) {
 
-                    $('.Address').text('Constituent Address: ' + currentaddress[i].Address.AddressLine1);
+                    $('.Address').text(currentaddress[i].Address.AddressLine1);
+
+                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
+
+                        $('.Address').append(currentaddress[i].Address.AddressLine2);
+
+                    }
 
                     $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
 
@@ -358,38 +364,28 @@ function GetConstituentAddress() {
     });
 }
 
-function GetConstituentContactInfo() {
+function GetConstituentPreferredContactInfo() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'constituentaddresses/constituents/' + currentEntity.id,
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
 
-            currentcontactinfo = data.Data;
-            // if empty, do text. If not, append.
-            // Also add spaces.
+            currentcontactinfo = data.Data.ContactInfo;
+
+            var preferredContactInfos = ''
 
             for (i = 0; i < currentcontactinfo.length; i++) {
 
                 if (currentcontactinfo[i].IsPreferred) {
 
-                    //if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-                    //    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
-                    //}
-
-                    // maybe want to add this dynamically instead of hardcoding, like primaryaddress function...
-                    // <label class="editable ContactInfo"></label>
-                    if ($('.contactinfo').text().length > 0) {
-                        $('.ContactInfo').text('Constituent Contact Info: ' + currentcontactinfo[i].Info);
-
-
-                    } else {
-                        $('.ContactInfo').append(' ' + currentcontactinfo[i].Info);
-
-                    }
+                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
 
                 }
+
+                $('.ContactInfo').text(preferredContactInfos);
+
             }
         },
         error: function (xhr, status, err) {
