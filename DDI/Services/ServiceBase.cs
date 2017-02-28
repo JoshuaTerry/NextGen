@@ -92,8 +92,11 @@ namespace DDI.Services
             {
                 queryData = queryData.OrderBy(a => a.DisplayName);
             }
-            
-            var response = GetIDataResponse(() => ModifySortOrder(queryData.ToList()).ToList<ICanTransmogrify>());
+
+            var queryDataList = queryData.ToList();
+            FormatEntityListForGet(queryDataList);
+
+            var response = GetIDataResponse(() => ModifySortOrder(queryDataList).ToList<ICanTransmogrify>());
 
             response.TotalResults = totalCount;
 
@@ -121,13 +124,15 @@ namespace DDI.Services
         
         public virtual IDataResponse<T> GetById(Guid id)
         {
-            var result = _unitOfWork.GetById(id, _includesForSingle); 
+            T result = _unitOfWork.GetById(id, _includesForSingle);
+            FormatEntityForGet(result);
             return GetIDataResponse(() => result);
         }
 
         public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
         {
-            var response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            IDataResponse<T> response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            FormatEntityForGet(response.Data);
             return response;
         }
 
@@ -136,6 +141,16 @@ namespace DDI.Services
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
             return GetPagedResults(queryable, search);
         }
+
+        /// <summary>
+        /// Formatting and other logic for a single entity retrieved for a GET.
+        /// </summary>
+        protected virtual void FormatEntityForGet(T entity) { }
+
+        /// <summary>
+        /// Formatting and other logic for a list of entities retrieved for a GET.
+        /// </summary>
+        protected virtual void FormatEntityListForGet(IList<T> list) { }
 
         public virtual IDataResponse Update(T entity)
         {

@@ -357,13 +357,14 @@ function LoadRelationshipsQuickView(data) {
         $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                $('<li>').text(item.DisplayName).appendTo($(formattedData));
+                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
+                $('<li>').text(rowText).appendTo($(formattedData));
             }
 
         });
 
     }
-
+    $('.relationshipsQuickView').empty();
     $(formattedData).appendTo($('.relationshipsQuickView'));
 
 }
