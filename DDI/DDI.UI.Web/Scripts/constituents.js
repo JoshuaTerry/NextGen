@@ -231,7 +231,7 @@ function DisplayConstituentData() {
 
         $(img).appendTo($('.constituentpic'));
 
-        LoadConstituentSideBar();
+        DisplayConstituentSideBar();
 
         DisplayConstituentType();
 
@@ -277,11 +277,7 @@ function DisplayConstituentData() {
     }
 }
 
-function LoadConstituentSideBar() {
-
-    // 1. This should probably bee DisplayConstituentSidebar
-    
-    // 3. will also need city state zip
+function DisplayConstituentSideBar() {
 
     $('.FormattedName').text(currentEntity.FormattedName);
 
@@ -307,29 +303,6 @@ function DisplayConstituentType() {
         $('.professionalSection').hide();
     }
 }
-
-//function DisplayConstituentPrimaryAddress() {
-
-//    if (currentEntity.ConstituentAddresses) {
-
-//        $.map(currentEntity.ConstituentAddresses, function (item) {
-
-//            if (item.IsPrimary) {
-
-//                $('.Address').text(item.Address.AddressLine1);
-
-//                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-//                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
-//                }
-
-//             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
-
-//            }
-
-//        });
-
-//    }
-//}
 
 function GetConstituentPrimaryAddress() {
     $.ajax({
