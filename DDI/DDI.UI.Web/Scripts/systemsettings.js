@@ -9,7 +9,8 @@
 }
 
 var SystemSettings = {
-    AlternateId: 'AlternateIdSettings'
+    AlternateId: 'AlternateIdSettings',
+    Demographics: 'DemographicSettings'
 }
 
 $(document).ready(function () {
@@ -363,11 +364,569 @@ function LoadContactInformationSectionSettings() {
 
 }
 
+
+
+/* DEMOGRAPHICS SYSTEM SETTINGS */
 function LoadDemographicsSectionSettings() {
+
+    LoadSectionSettings(SettingsCategories.CRM, 'Demographics', 'sectionpreferences', SystemSettings.Demographics);
+
+    var accordion = $('<div>').addClass('accordions');
+    var denomination = $('<div>').addClass('denominationscontainer');
+    var ethnicity = $('<div>').addClass('ethnicitiescontainer');
+    var language = $('<div>').addClass('languagescontainer');
+
+
+    var header = $('<h1>').text('Denominations').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newdenominationmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.denominationmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submitden').unbind('click');
+
+            $('.submitden').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.den-Code').val(),
+                    Name: $(modal).find('.den-Name').val(),
+                    Religion: $(modal).find('.den-Religion').val(),
+//                    ResidentType: $(modal).find('.na-ResidentType').val(),
+                    Affiliation: $(modal).find('.den-Affiliation').val(),
+                    IsActive: $(modal).find('.den-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'denominations',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Denomination saved successfully.');
+
+                        CloseModal();
+
+                        LoadDenominationSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(denomination).appendTo($(accordion));
+
+    LoadDenominationSettingsGrid();
+
+    header = $('<h1>').text('Ethnicities').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newEthnicitiesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.ethnicitymodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submiteth').unbind('click');
+
+            $('.submiteth').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.eth-Code').val(),
+                    Name: $(modal).find('.eth-Name').val(),
+                    IsActive: $(modal).find('.eth-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'ethnicities',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
+
+                        CloseModal();
+
+                        LoadEthnicitySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(ethnicity).appendTo($(accordion));
+
+    LoadEthnicitySettingsGrid();
+
+    header = $('<h1>').text('Languages').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newLanguagesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.languagemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submitlang').unbind('click');
+
+            $('.submitlang').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.lang-Code').val(),
+                    Name: $(modal).find('.lang-Name').val(),
+                    IsActive: $(modal).find('.lang-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'languages',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Language saved successfully.');
+
+                        CloseModal();
+
+                        LoadLanguageSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(language).appendTo($(accordion));
+
+    LoadLanguageSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
+
+}
+
+function LoadDenominationSettingsGrid() {
+
+    
+    var denominationcolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Denomination' },
+       {
+           caption: 'Religion', cellTemplate: function (container, options) {
+               var religion = 'None';
+
+               switch (options.data.Religion) {
+                   case 1:
+                       religion = "Catholic";
+                       break;
+                   case 2:
+                       religion = "Protestant";
+                       break;
+                   case 3:
+                       religion = "Orthodox";
+                       break;
+                   case 4:
+                       religion = "Jewish";
+                       break;
+                   case 5:
+                       religion = "Islam";
+                       break;
+                   case 6:
+                       religion = "Hindu";
+                       break;
+                   case 7:
+                       religion = "Buddhist";
+                       break;
+                   case 8:
+                       religion = "Taoist";
+                       break;
+                   case 9:
+                       religion = "Shinto";
+                       break;
+                   case 10:
+                       religion = "Sikh";
+                       break;
+                   case 11:
+                       religion = "Bahai";
+                       break;
+               }
+
+               $('<label>').text(religion).appendTo(container);
+           }
+       },
+       {
+           caption: 'Affiliation', cellTemplate: function (container, options) {
+               var affiliation = 'None';
+
+               switch (options.data.Affiliation) {
+                   case 1:
+                       affiliation = "Affiliated";
+                       break;
+                   case 2:
+                       affiliation = "Unaffiliated";
+                       break;
+               }
+
+               $('<label>').text(affiliation).appendTo(container);
+           }
+       },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+   
+    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations', null, EditDenomination, DeleteDenomination);
+
+}
+
+function LoadEthnicitySettingsGrid() {
+
+    var ethnicitycolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Ethnicity' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
+}
+
+function LoadLanguageSettingsGrid() {
+
+    var languagecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Language' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('languagesgrid', 'languagescontainer', languagecolumns, 'languages', null, EditLanguage, DeleteLanguage);
+
+}
+
+/* DENOMINATION SYSTEM SETTINGS */
+function EditDenomination(id) {
+
+    LoadDenomination(id);
+
+    modal = $('.denominationmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitden').unbind('click');
+
+    $('.submitden').click(function () {
+
+        var item = {
+            Code: $(modal).find('.den-Code').val(),
+            Name: $(modal).find('.den-Name').val(),
+            Religion: $(modal).find('.den-Religion').val(),
+            Affiliation: $(modal).find('.den-Affiliation').val(),
+            IsActive: $(modal).find('.den-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'denominations/' + $(modal).find('.den-Id').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Denomination saved successfully.');
+
+                CloseModal(modal);
+
+                LoadDenominationSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteDenomination(id) {
 
 
 
 }
+
+function LoadDenomination(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'denominations/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.den-Id').val(data.Data.Id);
+                $(modal).find('.den-Code').val(data.Data.Code);
+                $(modal).find('.den-Name').val(data.Data.Name);
+                $(modal).find('.den-Religion').val(data.Data.Religion);
+                $(modal).find('.den-Affiliation').val(data.Data.Affiliation);
+                $(modal).find('.den-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading denomination.');
+        }
+    });
+
+}
+/* END DENOMINATION SYSTEM SETTINGS */
+
+/* ETHNICITY SYSTEM SETTINGS */
+function EditEthnicity(id) {
+
+    LoadEthnicity(id);
+
+    modal = $('.ethnicitymodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submiteth').unbind('click');
+
+    $('.submiteth').click(function () {
+
+        var item = {
+            Code: $(modal).find('.eth-Code').val(),
+            Name: $(modal).find('.eth-Name').val(),
+            IsActive: $(modal).find('.eth-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'ethnicities/' + $(modal).find('.eth-Id').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
+
+                CloseModal(modal);
+
+                LoadEthnicitySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteEthnicity(id) {
+
+
+
+}
+
+function LoadEthnicity(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'ethnicities/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.eth-Id').val(data.Data.Id);
+                $(modal).find('.eth-Code').val(data.Data.Code);
+                $(modal).find('.eth-Name').val(data.Data.Name);
+                $(modal).find('.eth-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading ethnicity.');
+        }
+    });
+
+}
+/* END ETHNICITY SYSTEM SETTINGS */
+
+/* LANGUAGE SYSTEM SETTINGS */
+function EditLanguage(id) {
+
+    LoadLanguage(id);
+
+    modal = $('.languagemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitlang').unbind('click');
+
+    $('.submitlang').click(function () {
+
+        var item = {
+            Code: $(modal).find('.lang-Code').val(),
+            Name: $(modal).find('.lang-Name').val(),
+            IsActive: $(modal).find('.lang-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'languages/' + $(modal).find('.lang-Id').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Language saved successfully.');
+
+                CloseModal(modal);
+
+                LoadLanguageSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteLanguage(id) {
+
+
+
+}
+
+function LoadLanguage(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'languages/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.lang-Id').val(data.Data.Id);
+                $(modal).find('.lang-Code').val(data.Data.Code);
+                $(modal).find('.lang-Name').val(data.Data.Name);
+                $(modal).find('.lang-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading language.');
+        }
+    });
+
+}
+/* END LANGUAGE SYSTEM SETTINGS */
+
+/* END DEMOGRAPHICS SYSTEM SETTINGS */
+
+
+
 
 function LoadDBASectionSettings() {
 
