@@ -20,10 +20,6 @@ $(document).ready(function () {
 
     LoadAccordions();
 
-    CreateEditControls();
-
-    SetupEditControls();
-
     $('.addconstituent').click(function (e) {
 
         e.preventDefault();
@@ -316,21 +312,20 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    if ($.timpicker) {
-
+    // if ($.timepicker) {
         $('.datepair .time').timepicker({
             'showDuration': true,
             'timeFormat': 'g:ia'
         });
 
-        $('datepair .date').datepicker({
+        $('.datepair .date').datepicker({
             'format': 'm/d/yyyy',
             'autoclose': true
         });
 
-        $('.datepair').datepair();
-
-    }
+        // $('.datepair').datepair();
+    // }
+    
 }
 
 function FormatJSONDate(jsonDate) {
@@ -472,8 +467,6 @@ function CreateEditControls() {
 function SetupEditControls() {
 
     $('.editable').prop('disabled', true);
-
-
 
     $('.editbutton').click(function (e) {
         e.preventDefault();
