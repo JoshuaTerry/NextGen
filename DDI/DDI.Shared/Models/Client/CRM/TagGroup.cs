@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -23,7 +24,7 @@ namespace DDI.Shared.Models.Client.CRM
         public TagSelectionType TagSelectionType { get; set; }
 
         public bool IsActive { get; set; }
-
+        
         public ICollection<Tag> Tags { get; set; }
 
         #endregion Public Properties

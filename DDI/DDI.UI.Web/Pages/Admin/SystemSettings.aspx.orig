@@ -210,6 +210,7 @@
 
     </div>
 
+<<<<<<< HEAD
     <div class="taggroupmodal" title="Tag Group" style="display: none;">
 
         <div class="modalcontent">
@@ -231,59 +232,7 @@
                 <select class="tg-Select">  
                    <option value="0">Single</option>
                    <option value="1">Multiple</option>
-                </select>
-            </div>
-
-            <div class="fieldblock">
-                <label>Is Active</label>
-                <input type="checkbox" class="tg-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savetaggroup" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="tagmodal" title="Tag" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="hidtagid" />
-            <input type="hidden" class="hidtagparentgroupid" />
-
-            <div class="fieldblock">
-                <label>Order</label>
-                <input type="text" class="t-Order" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="t-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="t-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Is Active</label>
-                <input type="checkbox" class="t-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savetag" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
+=======
     <div class="denominationmodal" title="Denomination" style="display: none;">
 
         <div class="modalcontent">
@@ -315,10 +264,19 @@
                     <option value="9">Shinto</option>
                     <option value="10">Sikh</option>
                     <option value="11">Bahai</option>
+>>>>>>> develop
                 </select>
             </div>
 
             <div class="fieldblock">
+<<<<<<< HEAD
+                <label>Is Active</label>
+                <input type="checkbox" class="tg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetaggroup" value="Save" />
+=======
                 <label>Affiliation</label>
                 <select class="den-Affiliation">
                     <option value="0">None</option>
@@ -336,6 +294,7 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submitden" value="Save" />
+>>>>>>> develop
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -343,6 +302,37 @@
 
     </div>
 
+<<<<<<< HEAD
+    <div class="tagmodal" title="Tag" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtagid" />
+            <input type="hidden" class="hidtagparentgroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="t-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="t-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="t-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="t-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetag" value="Save" />
+=======
     <div class="ethnicitymodal" title="Ethnicity" style="display: none;">
 
         <div class="modalcontent">
@@ -401,6 +391,39 @@
         </div>
 
     </div>
+ <div class="languagemodal" title="Language" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="lang-Id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="lang-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="lang-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="lang-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitlang" value="Save" />
+>>>>>>> develop
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+<<<<<<< HEAD
+
+=======
     <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
@@ -413,7 +436,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
+                <label>Name</label>
                 <input type="text" class="deg-Name" />
             </div>
 
@@ -442,7 +465,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
+                <label>Name</label>
                 <input type="text" class="eduLev-Name" />
             </div>
 
@@ -471,7 +494,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
+                <label>Name</label>
                 <input type="text" class="sch-Name" />
             </div>
 
@@ -488,4 +511,5 @@
         </div>
 
     </div>
+>>>>>>> develop
 </asp:Content>

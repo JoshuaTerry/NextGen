@@ -12,6 +12,7 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.mask.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery-ui.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.toast.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\jquery.timepicker.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.datepair.min.js"></script>
 
     <!-- FileUpload Files -->
@@ -35,7 +36,9 @@
     <!-- DevExtreme Files -->
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/jquery.timepicker.css" />
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>

@@ -727,37 +727,6 @@ function LoadEthnicitySettingsGrid() {
     LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
 }
 
-function LoadClergySectionSettings() {
-
-    var accordion = $('<div>').addClass('accordions');
-    var status = $('<div>').addClass('clergystatuscontainer');
-    var types = $('<div>').addClass('clergytypecontainer');
-
-    var statuscolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    $('<h1>').text('Clergy Status').appendTo($(accordion));
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
-    $(status).appendTo($(accordion));
-
-    var typecolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    $('<h1>').text('Clergy Type').appendTo($(accordion));
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
-    $(types).appendTo($(accordion));
-
-    $(accordion).appendTo($('.contentcontainer'));
-
-    LoadAccordions();
-
-}
 function LoadLanguageSettingsGrid() {
 
     var languagecolumns = [
@@ -1259,10 +1228,22 @@ function LoadSchoolsSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
+<<<<<<< HEAD
+    $('<h1>').text('Clergy Status').appendTo($(accordion));
+    LoadSystemSettingGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, SystemSettingsLinks.ClergyStatus.Href);
+    $(status).appendTo($(accordion));
+=======
     LoadGrid('schoolsgrid', 'schoolscontainer', schoolcolumns, 'schools', null, EditSchool);
+>>>>>>> develop
 
 
+<<<<<<< HEAD
+    $('<h1>').text('Clergy Type').appendTo($(accordion));
+    LoadSystemSettingGrid('clergytypegrid', 'clergytypecontainer', typecolumns, SystemSettingsLinks.ClergyType.Href);
+    $(types).appendTo($(accordion));
+=======
 }
+>>>>>>> develop
 
 function EditDegree(id) {
 
@@ -1335,7 +1316,7 @@ function LoadDegree(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the degree.');
+            DisplayErrorMessage('Error', 'An error loading degree.');
         }
     });
 
@@ -1411,7 +1392,7 @@ function LoadEducationLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the education level.');
+            DisplayErrorMessage('Error', 'An error loading education level.');
         }
     });
 
@@ -1479,6 +1460,19 @@ function LoadSchool(id) {
         crossDomain: true,
         success: function (data) {
 
+<<<<<<< HEAD
+    $('<h1>').text('Degrees').appendTo($(accordion));
+    LoadSystemSettingGrid('degreegrid', 'degreecontainer', null, SystemSettingsLinks.Degree.Href);
+    $(degrees).appendTo($(accordion));
+
+    $('<h1>').text('Education Level').appendTo($(accordion));
+    LoadSystemSettingGrid('educationlevelsgrid', 'educationlevelscontainer', null, SystemSettingsLinks.EducationLevel.Href);
+    $(levels).appendTo($(accordion));
+
+    $('<h1>').text('Schools').appendTo($(accordion));
+    LoadSystemSettingGrid('schoolsgrid', 'schoolscontainer', null, SystemSettingsLinks.School.Href);
+    $(schools).appendTo($(accordion));
+=======
             if (data && data.Data && data.IsSuccessful) {
 
                 $(modal).find('.schoolId').val(data.Data.Id);
@@ -1487,10 +1481,11 @@ function LoadSchool(id) {
                 $(modal).find('.sch-IsActive').prop('checked', data.Data.IsActive);
 
             }
+>>>>>>> develop
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the school.');
+            DisplayErrorMessage('Error', 'An error loading school.');
         }
     });
 
