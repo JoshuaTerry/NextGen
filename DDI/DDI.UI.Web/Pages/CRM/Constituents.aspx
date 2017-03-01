@@ -230,7 +230,8 @@
 
                     </div>
 
-                    <h1>Demographics</h1>
+                   <h1 class="DemographicSettingsSection"><span class="DemographicSettingsSectionLabel">Demographics</span></h1>
+                    
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Denomination</label>
