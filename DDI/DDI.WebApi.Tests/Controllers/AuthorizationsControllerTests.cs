@@ -15,8 +15,10 @@ namespace DDI.WebApi.Tests.Controllers
     [TestClass]
     public class AuthorizationsControllerTests
     {
-        [TestMethod]
-        public async Task GetManageInfo()
+        private const string TESTDESCR = "WebApi | Controllers";
+
+        [TestMethod,TestCategory(TESTDESCR)]
+        public async Task AuthorizationsController_GetManageInfo()
         {
             var userId = "jtrick@myhouse.com";
             var claim = new Claim("test", userId);

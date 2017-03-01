@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DDI.Shared.Models;
 using Nest;
 using System.Web;
+using DDI.Shared.Extensions;
 
 namespace DDI.Search
 {

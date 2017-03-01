@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ChangeSet : IChangeSet<DDIUser>, IReadOnlyEntity
+    public class ChangeSet : IChangeSet<UserLogin> 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,16 +14,16 @@ namespace DDI.Shared.Models.Client.Audit
         public DateTime Timestamp { get; set; }        
         public List<ObjectChange> ObjectChanges { get; set; }
 
-        IEnumerable<IObjectChange<DDIUser>> IChangeSet<DDIUser>.ObjectChanges
+        IEnumerable<IObjectChange<UserLogin>> IChangeSet<UserLogin>.ObjectChanges
         {
             get { return ObjectChanges; }
         }
          
         public Guid UserId { get; set; }
 
-        public DDIUser User { get; set; }
+        public UserLogin User { get; set; }
 
-        void IChangeSet<DDIUser>.Add(IObjectChange<DDIUser> objectChange)
+        void IChangeSet<UserLogin>.Add(IObjectChange<UserLogin> objectChange)
         {
             ObjectChanges.Add((ObjectChange)objectChange);
         }

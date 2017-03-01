@@ -17,6 +17,12 @@ $(document).ready(function () {
         Resize();
     });
 
+    DisplayConstituentCustomFields();
+
+    CreateEditControls();
+
+    SetupEditControls();
+
     if (sessionStorage.getItem('constituentid')) {
 
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
@@ -30,9 +36,26 @@ $(document).ready(function () {
     $('.BirthMonth').change(function () { PopulateMonthDays(); });    
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
-    
+    $('.fileuploadlink').click(function (e) {
+        e.preventDefault();
+
+        UploadFiles();
+    });
 
 });
+
+function UploadFiles() {
+
+    var modal = $('.fileuploadmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload');
+
+}
 
 function ApplySystemSettings() {
     
@@ -264,11 +287,15 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.OrganizationSection').hide();
+        $('.organizationSection').hide();
+        $('.dbaSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
-        $('.PersonalSection').hide();
+        $('.personalSection').hide();
+        $('.clergySection').hide();
+        $('.educationSection').hide();
+        $('.professionalSection').hide();
     }
 }
 
@@ -368,15 +395,11 @@ function LoadRelationshipsTab(data) {
 }
 
 function EditRelationship(id) {
-
     EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
-
 }
 
 function NewRelationshipModal() {
-
     NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
-
 }
 
 function GetRelationshipToSave(modal, isUpdate) {
@@ -782,6 +805,8 @@ function NewPaymentPreference() {
 
     });
 
+    PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '');
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -804,6 +829,7 @@ function NewPaymentPreference() {
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
             Status: $(modal).find('.pp-Status').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
         };
 
@@ -817,7 +843,7 @@ function NewPaymentPreference() {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -872,6 +898,7 @@ function EditPaymentPreference(id) {
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             Status: $(modal).find('.pp-Status').val(),
             StatusDate: date
         };
@@ -886,7 +913,7 @@ function EditPaymentPreference(id) {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -918,6 +945,8 @@ function LoadPaymentPreference(id, modal) {
             $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
             $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
 
+            PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '', data.Data.EFTFormatId);
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
@@ -927,6 +956,18 @@ function LoadPaymentPreference(id, modal) {
 }
 /* End Payment Preference Section */
 
+
+/* Additional Information (Custom Fields) */
+function DisplayConstituentCustomFields() {
+
+    DisplayCustomFields('customFieldContainer', CustomFieldEntity.CRM, function () {
+        $('.editable').prop('disabled', true);
+        LoadDatePickers();
+        LoadDatePair();
+    });
+
+}
+/* End Additional Information (Custom Fields) */
 
 /* Professional Section */
 function PopulateUserIdDropDown() {
@@ -2180,3 +2221,91 @@ function LoadOther(id, modal) {
 // End Other Contacts Subsection
 
 /* End Contact Information Section */
+/* Relationships Tab */
+function LoadRelationshipsData() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            LoadRelationshipsQuickView(data);
+            LoadRelationshipsTab(data);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
+        }
+    });
+}
+function LoadRelationshipsQuickView(data) {
+    var formattedData = "<ul>";
+    if (data.Data && Array.isArray(data.Data)) {
+        data.Data.forEach(function (eachItem) {
+            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
+            };
+        });
+    }
+    formattedData = formattedData + "</ul>";
+    $('.relationshipsQuickView').html(formattedData);
+}
+function LoadRelationshipsTab(data) {
+    var columns = [
+        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
+        { dataField: 'DisplayName', caption: 'Relationship' },
+    ];
+    LoadGridWithData('relationshipsgrid',
+        'relationshipstable',
+        columns,
+        'relationships',
+        null,
+        EditRelationship,
+        null,
+        data);
+
+}
+
+function LoadRelationshipsGrid() {
+
+    LoadRelationshipsData();
+}
+
+function EditRelationship(getUrl, patchUrl) {
+    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
+}
+
+function NewRelationshipModal() {
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+}
+
+function LoadRelationship(url, modal) {
+    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
+}
+
+function GetRelationshipToSave(modal, isUpdate) {
+    var item = {
+        Constituent1Id: $('.FormattedName1').val(),
+        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+    }
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidrelationshipid').val();
+    }
+    return item;
+}
+
+function PrePopulateNewRelationshipModal(modal) {
+    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+}
+
+function LoadRelationshipData(data, modal) {
+    $(modal).find('.hidrelationshipid').val(data.Data.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+}
+/* End Relationships Tab */
+
+
+
+

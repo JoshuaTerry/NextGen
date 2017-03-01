@@ -1,0 +1,637 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{77317F25-549B-409F-A460-86E38B058BDD}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DDI.UI.Web</RootNamespace>
+    <AssemblyName>DDI.UI.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CSS\constituents.css" />
+<<<<<<< HEAD
+    <Content Include="CSS\jquery.timepicker.css" />
+=======
+    <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
+    <Content Include="CSS\fileupload\jquery.fileupload.css" />
+    <Content Include="CSS\fileupload\uploader.css" />
+>>>>>>> develop
+    <Content Include="CSS\login.css" />
+    <Content Include="CSS\registrationconfirmation.css" />
+    <Content Include="CSS\search.css" />
+    <Content Include="CSS\security.css" />
+    <Content Include="CSS\systemsettings.css" />
+    <Content Include="Pages\GL\Accounting.aspx" />
+    <Content Include="Pages\Reports\AccountingReports.aspx" />
+    <Content Include="Pages\GL\Accounts.aspx" />
+    <Content Include="Pages\GL\AccountsPayable.aspx" />
+    <Content Include="Pages\GL\AccountsReceivable.aspx" />
+    <Content Include="Pages\Admin\Admin.aspx" />
+    <Content Include="Pages\Reports\ArchivedReports.aspx" />
+    <Content Include="Pages\FR\BatchDeposits.aspx" />
+    <Content Include="Pages\Reports\ChartOfAccountListing.aspx" />
+    <Content Include="Connect.aspx" />
+    <Content Include="Pages\Reports\ConstituentReport.aspx" />
+    <Content Include="Pages\Reports\CRMReports.aspx" />
+    <Content Include="CSS\jquery.toast.min.css" />
+    <Content Include="CSS\jquery.validators.css" />
+    <Content Include="Dashboard.aspx" />
+    <Content Include="Pages\FR\Disbursements.aspx" />
+    <Content Include="Pages\Reports\DonationActivityGLAccount.aspx" />
+    <Content Include="Pages\FR\DonationInquiry.aspx" />
+    <Content Include="Pages\Reports\DonationReports.aspx" />
+    <Content Include="Pages\FR\Donations.aspx" />
+    <Content Include="Pages\FR\FinancialTransactions.aspx" />
+    <Content Include="Pages\GL\FixedAssets.aspx" />
+    <Content Include="Pages\GL\GeneralLedger.aspx" />
+    <Content Include="Pages\JP\JobProcessing.aspx" />
+    <Content Include="Pages\JP\JobQueues.aspx" />
+    <Content Include="Pages\JP\Jobs.aspx" />
+    <Content Include="Pages\GL\Journals.aspx" />
+    <Content Include="Pages\Reports\LetterAndStatementReport.aspx" />
+    <Content Include="Login.aspx" />
+    <Content Include="packages.config" />
+    <Content Include="Main.Master" />
+    <Content Include="CSS\icons\dxicons.eot" />
+    <Content Include="CSS\icons\dxicons.ttf" />
+    <Content Include="CSS\icons\dxicons.woff" />
+    <Content Include="CSS\icons\dxiconsios.eot" />
+    <Content Include="CSS\icons\dxiconsios.ttf" />
+    <Content Include="CSS\icons\dxiconsios.woff" />
+    <Content Include="Blank.Master" />
+    <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Pages\Reports\Reports.aspx" />
+    <Content Include="RegistrationConfirmation.aspx" />
+    <Content Include="Scripts\additional-methods.min.js" />
+    <Content Include="Scripts\configuration.js" />
+    <Content Include="Scripts\customfields.js" />
+    <Content Include="Scripts\data.js" />
+    <Content Include="Scripts\fileupload\canvas-to-blob.min.js" />
+    <Content Include="Scripts\fileupload\fileupload.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload-image.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload.js" />
+    <Content Include="Scripts\fileupload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\fileupload\load-image.all.min.js" />
+    <Content Include="Scripts\jquery.datepair.min.js" />
+    <Content Include="Scripts\jquery.timepicker.min.js" />
+    <Content Include="Scripts\jquery.toast.min.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\region.js" />
+    <Content Include="Scripts\registrationconfirmation.js" />
+    <Content Include="Scripts\security.js" />
+    <Content Include="Scripts\systemsettings.js" />
+    <Content Include="Pages\Admin\Security.aspx" />
+    <Content Include="Pages\Admin\SystemSettings.aspx" />
+    <Content Include="Pages\FR\TransactionInquireReversals.aspx" />
+    <Content Include="Pages\FR\Transactions.aspx" />
+    <Content Include="Pages\Reports\TrialBalanceReport.aspx" />
+    <Content Include="Web.sitemap" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Pages\CRM\Constituents.aspx" />
+    <Content Include="CSS\dx.common.css" />
+    <Content Include="CSS\generic.light.custom.css" />
+    <Content Include="CSS\globalstyles.css" />
+    <Content Include="Default.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\AccountMerge_64.png" />
+    <Content Include="Images\AccountRecalc_64.png" />
+    <Content Include="Images\Alerts_16.png" />
+    <Content Include="Images\Alerts_Mono_16.png" />
+    <Content Include="Images\AltID_16.png" />
+    <Content Include="Images\ApprHist_16.png" />
+    <Content Include="Images\Bank_16.png" />
+    <Content Include="Images\Calculator_16.png" />
+    <Content Include="Images\Calc_10.png" />
+    <Content Include="Images\Calendar1_16.png" />
+    <Content Include="Images\Calendar31_16.png" />
+    <Content Include="Images\Calendar5_16.png" />
+    <Content Include="Images\Calendar7_16.png" />
+    <Content Include="Images\CalendarButton_12.png" />
+    <Content Include="Images\CalendarGoToday_16.png" />
+    <Content Include="Images\CalendarNewDate_16.png" />
+    <Content Include="Images\CalendarNews_16.png" />
+    <Content Include="Images\CalendarToday_16.png" />
+    <Content Include="Images\CalendarView_16.png" />
+    <Content Include="Images\Calendar_16.png" />
+    <Content Include="Images\Calendar_Mono_16.png" />
+    <Content Include="Images\Checkmark_18.png" />
+    <Content Include="Images\Church.png" />
+    <Content Include="Images\CloseYear_64.png" />
+    <Content Include="Images\Contact_16.png" />
+    <Content Include="Images\Contact_Mono_16.png" />
+    <Content Include="Images\Continue_16.png" />
+    <Content Include="Images\Continue_32.png" />
+    <Content Include="Images\Copy_16.png" />
+    <Content Include="Images\CreateFiscalYear_64.png" />
+    <Content Include="Images\DDI-logo.png" />
+    <Content Include="Images\DDI-Logo_150x35.png" />
+    <Content Include="Images\Delete_11.png" />
+    <Content Include="Images\Delete_16.png" />
+    <Content Include="Images\Delete_Alt_16.png" />
+    <Content Include="Images\Design_16.png" />
+    <Content Include="Images\Design_32.png" />
+    <Content Include="Images\DragReorder_16.png" />
+    <Content Include="Images\DragReorder_32.png" />
+    <Content Include="Images\DragReorder_Mono_16.png" />
+    <Content Include="Images\DragReorder_Mono_32.png" />
+    <Content Include="Images\Edit2_16.png" />
+    <Content Include="Images\Edit_10.png" />
+    <Content Include="Images\Edit_11.png" />
+    <Content Include="Images\Edit_16.png" />
+    <Content Include="Images\Edit_16Old.png" />
+    <Content Include="Images\Edit_24.png" />
+    <Content Include="Images\Edit_Alt_16.png" />
+    <Content Include="Images\ExportCSV_16.png" />
+    <Content Include="Images\ExportDOC_16.png" />
+    <Content Include="Images\ExportPDF_16.png" />
+    <Content Include="Images\ExportXLSX_16.png" />
+    <Content Include="Images\ExportXLS_16.png" />
+    <Content Include="Images\Export_Common_16.png" />
+    <Content Include="Images\Export_Common_Mono_16.png" />
+    <Content Include="Images\Family.png" />
+    <Content Include="Images\Favorites_12.png" />
+    <Content Include="Images\Favorites_16.png" />
+    <Content Include="Images\Favorites_20.png" />
+    <Content Include="Images\Favorites_24.png" />
+    <Content Include="Images\Favorites_Add_16.png" />
+    <Content Include="Images\Favorites_Current_16.png" />
+    <Content Include="Images\Female.png" />
+    <Content Include="Images\Find_16.png" />
+    <Content Include="Images\FontUnderline_16.png" />
+    <Content Include="Images\GLPreview_16.png" />
+    <Content Include="Images\GLTrans_16.png" />
+    <Content Include="Images\Group_16.png" />
+    <Content Include="Images\Help_16.png" />
+    <Content Include="Images\Help_Blue_16.png" />
+    <Content Include="Images\History_16.png" />
+    <Content Include="Images\History_20.png" />
+    <Content Include="Images\History_24.png" />
+    <Content Include="Images\History_Mono_16.png" />
+    <Content Include="Images\Home_Mono_20.png" />
+    <Content Include="Images\ListBullets_16.png" />
+    <Content Include="Images\List_16.png" />
+    <Content Include="Images\List_24.png" />
+    <Content Include="Images\Male.png" />
+    <Content Include="Images\Money_16.png" />
+    <Content Include="Images\MoveDown_16.png" />
+    <Content Include="Images\MoveUp_16.png" />
+    <Content Include="Images\New_10.png" />
+    <Content Include="Images\New_11.png" />
+    <Content Include="Images\New_16.png" />
+    <Content Include="Images\New_24.png" />
+    <Content Include="Images\Note_16.png" />
+    <Content Include="Images\Note_24.png" />
+    <Content Include="Images\NotUsed_16.png" />
+    <Content Include="Images\Open_16.png" />
+    <Content Include="Images\Organization.png" />
+    <Content Include="Images\Pause-16.png" />
+    <Content Include="Images\Pause-32.png" />
+    <Content Include="Images\PayeeChange_16.png" />
+    <Content Include="Images\PieChart_16.png" />
+    <Content Include="Images\Print_16.png" />
+    <Content Include="Images\ProcessTran_16.png" />
+    <Content Include="Images\Reading_16.png" />
+    <Content Include="Images\Reading_32.png" />
+    <Content Include="Images\Refresh_16.png" />
+    <Content Include="Images\Refresh_24.png" />
+    <Content Include="Images\Refresh_32.png" />
+    <Content Include="Images\Reverse_16.png" />
+    <Content Include="Images\Save_16.png" />
+    <Content Include="Images\Save_24.png" />
+    <Content Include="Images\Schedule_16.png" />
+    <Content Include="Images\Search_16.png" />
+    <Content Include="Images\Search_Mono_16.png" />
+    <Content Include="Images\Settings_16.png" />
+    <Content Include="Images\Settings_Mono_16.png" />
+    <Content Include="Images\Sort_16.png" />
+    <Content Include="Images\Splash-People.jpg" />
+    <Content Include="Images\Start_16.png" />
+    <Content Include="Images\Start_32.png" />
+    <Content Include="Images\StatusChange_16.png" />
+    <Content Include="Images\Stop_16.png" />
+    <Content Include="Images\Stop_32.png" />
+    <Content Include="Images\Trans_16.png" />
+    <Content Include="Images\Undo_16.png" />
+    <Content Include="Images\View_16.png" />
+    <Content Include="Images\Widget_Favorites_48.png" />
+    <Content Include="Scripts\constituents.js" />
+    <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\globalScripts.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.mask.js" />
+    <Content Include="Scripts\search.js" />
+    <Content Include="Pages\CRM\Search.aspx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\Accounting.aspx.cs">
+      <DependentUpon>Accounting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\Accounting.aspx.designer.cs">
+      <DependentUpon>Accounting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\AccountingReports.aspx.cs">
+      <DependentUpon>AccountingReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\AccountingReports.aspx.designer.cs">
+      <DependentUpon>AccountingReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\Accounts.aspx.cs">
+      <DependentUpon>Accounts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\Accounts.aspx.designer.cs">
+      <DependentUpon>Accounts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\AccountsPayable.aspx.cs">
+      <DependentUpon>AccountsPayable.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\AccountsPayable.aspx.designer.cs">
+      <DependentUpon>AccountsPayable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\AccountsReceivable.aspx.cs">
+      <DependentUpon>AccountsReceivable.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\AccountsReceivable.aspx.designer.cs">
+      <DependentUpon>AccountsReceivable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Admin.aspx.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Admin.aspx.designer.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\ArchivedReports.aspx.cs">
+      <DependentUpon>ArchivedReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\ArchivedReports.aspx.designer.cs">
+      <DependentUpon>ArchivedReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\BatchDeposits.aspx.cs">
+      <DependentUpon>BatchDeposits.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\BatchDeposits.aspx.designer.cs">
+      <DependentUpon>BatchDeposits.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Blank.Master.cs">
+      <DependentUpon>Blank.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Blank.Master.designer.cs">
+      <DependentUpon>Blank.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\ChartOfAccountListing.aspx.cs">
+      <DependentUpon>ChartOfAccountListing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\ChartOfAccountListing.aspx.designer.cs">
+      <DependentUpon>ChartOfAccountListing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Connect.aspx.cs">
+      <DependentUpon>Connect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Connect.aspx.designer.cs">
+      <DependentUpon>Connect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\ConstituentReport.aspx.cs">
+      <DependentUpon>ConstituentReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\ConstituentReport.aspx.designer.cs">
+      <DependentUpon>ConstituentReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CRM\Constituents.aspx.cs">
+      <DependentUpon>Constituents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\CRM\Constituents.aspx.designer.cs">
+      <DependentUpon>Constituents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\CRMReports.aspx.cs">
+      <DependentUpon>CRMReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\CRMReports.aspx.designer.cs">
+      <DependentUpon>CRMReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\Disbursements.aspx.cs">
+      <DependentUpon>Disbursements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\Disbursements.aspx.designer.cs">
+      <DependentUpon>Disbursements.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\DonationActivityGLAccount.aspx.cs">
+      <DependentUpon>DonationActivityGLAccount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\DonationActivityGLAccount.aspx.designer.cs">
+      <DependentUpon>DonationActivityGLAccount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\DonationInquiry.aspx.cs">
+      <DependentUpon>DonationInquiry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\DonationInquiry.aspx.designer.cs">
+      <DependentUpon>DonationInquiry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\DonationReports.aspx.cs">
+      <DependentUpon>DonationReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\DonationReports.aspx.designer.cs">
+      <DependentUpon>DonationReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\Donations.aspx.cs">
+      <DependentUpon>Donations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\Donations.aspx.designer.cs">
+      <DependentUpon>Donations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\FinancialTransactions.aspx.cs">
+      <DependentUpon>FinancialTransactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\FinancialTransactions.aspx.designer.cs">
+      <DependentUpon>FinancialTransactions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\FixedAssets.aspx.cs">
+      <DependentUpon>FixedAssets.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\FixedAssets.aspx.designer.cs">
+      <DependentUpon>FixedAssets.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\GeneralLedger.aspx.cs">
+      <DependentUpon>GeneralLedger.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\GeneralLedger.aspx.designer.cs">
+      <DependentUpon>GeneralLedger.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\JP\JobProcessing.aspx.cs">
+      <DependentUpon>JobProcessing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\JP\JobProcessing.aspx.designer.cs">
+      <DependentUpon>JobProcessing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\JP\JobQueues.aspx.cs">
+      <DependentUpon>JobQueues.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\JP\JobQueues.aspx.designer.cs">
+      <DependentUpon>JobQueues.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\JP\Jobs.aspx.cs">
+      <DependentUpon>Jobs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\JP\Jobs.aspx.designer.cs">
+      <DependentUpon>Jobs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\Journals.aspx.cs">
+      <DependentUpon>Journals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\Journals.aspx.designer.cs">
+      <DependentUpon>Journals.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\LetterAndStatementReport.aspx.cs">
+      <DependentUpon>LetterAndStatementReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\LetterAndStatementReport.aspx.designer.cs">
+      <DependentUpon>LetterAndStatementReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Main.Master.cs">
+      <DependentUpon>Main.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Main.Master.designer.cs">
+      <DependentUpon>Main.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pages\Reports\Reports.aspx.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\Reports.aspx.designer.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CRM\Search.aspx.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\CRM\Search.aspx.designer.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Security.aspx.cs">
+      <DependentUpon>Security.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\Security.aspx.designer.cs">
+      <DependentUpon>Security.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\SystemSettings.aspx.cs">
+      <DependentUpon>SystemSettings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin\SystemSettings.aspx.designer.cs">
+      <DependentUpon>SystemSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\TransactionInquireReversals.aspx.cs">
+      <DependentUpon>TransactionInquireReversals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\TransactionInquireReversals.aspx.designer.cs">
+      <DependentUpon>TransactionInquireReversals.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FR\Transactions.aspx.cs">
+      <DependentUpon>Transactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\FR\Transactions.aspx.designer.cs">
+      <DependentUpon>Transactions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Reports\TrialBalanceReport.aspx.cs">
+      <DependentUpon>TrialBalanceReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Reports\TrialBalanceReport.aspx.designer.cs">
+      <DependentUpon>TrialBalanceReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RegistrationConfirmation.aspx.cs">
+      <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RegistrationConfirmation.aspx.designer.cs">
+      <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Pages\Common\" />
+    <Folder Include="Pages\CP\" />
+    <Folder Include="Pages\DDI\" />
+    <Folder Include="Pages\MM\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>33603</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:12345/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:12345/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
