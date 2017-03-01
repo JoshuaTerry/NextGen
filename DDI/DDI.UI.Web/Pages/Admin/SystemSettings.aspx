@@ -326,35 +326,6 @@
         </div>
 
     </div>
- <div class="languagemodal" title="Language" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="lang-Id" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="lang-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Name</label>
-                <input type="text" class="lang-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="lang-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitlang" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
     <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
@@ -367,7 +338,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="deg-Name" />
             </div>
 
@@ -396,7 +367,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="eduLev-Name" />
             </div>
 
@@ -425,7 +396,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="sch-Name" />
             </div>
 

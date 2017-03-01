@@ -1304,7 +1304,7 @@ function LoadDegree(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading degree.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the degree.');
         }
     });
 
@@ -1380,7 +1380,7 @@ function LoadEducationLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading education level.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the education level.');
         }
     });
 
@@ -1459,7 +1459,7 @@ function LoadSchool(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading school.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the school.');
         }
     });
 
