@@ -321,38 +321,6 @@ function LoadAlternateIDSectionSettings() {
 
 }
 
-//function LoadClergySectionSettings() {
-
-//    var accordion = $('<div>').addClass('accordions');
-//    var status = $('<div>').addClass('clergystatuscontainer');
-//    var types = $('<div>').addClass('clergytypecontainer');
-
-//    var statuscolumns = [
-//        { dataField: 'Code', caption: 'Code' },
-//        { dataField: 'Name', caption: 'Description' },
-//        { dataField: 'IsActive', caption: 'Active' }
-//    ];
-
-//    $('<h1>').text('Clergy Status').appendTo($(accordion));
-//    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
-//    $(status).appendTo($(accordion));
-
-//    var typecolumns = [
-//        { dataField: 'Code', caption: 'Code' },
-//        { dataField: 'Name', caption: 'Description' },
-//        { dataField: 'IsActive', caption: 'Active' }
-//    ];
-
-//    $('<h1>').text('Clergy Type').appendTo($(accordion));
-//    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
-//    $(types).appendTo($(accordion));
-
-//    $(accordion).appendTo($('.contentcontainer'));
-
-//    LoadAccordions();
-
-//}
-
 function LoadClergySectionSettings() {
 
     LoadSectionSettings(SettingsCategories.CRM, 'Clergy', 'sectionpreferences', SystemSettings.Clergy);
