@@ -79,7 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CSS\constituents.css" />
-    <Content Include="CSS\jquery.timepicker.css" />
+    <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
+    <Content Include="CSS\fileupload\jquery.fileupload.css" />
+    <Content Include="CSS\fileupload\uploader.css" />
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
     <Content Include="CSS\search.css" />
@@ -137,8 +139,15 @@
     <Content Include="Scripts\configuration.js" />
     <Content Include="Scripts\customfields.js" />
     <Content Include="Scripts\data.js" />
+    <Content Include="Scripts\fileupload\canvas-to-blob.min.js" />
+    <Content Include="Scripts\fileupload\fileupload.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload-image.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\fileupload\jquery.fileupload.js" />
+    <Content Include="Scripts\fileupload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\fileupload\load-image.all.min.js" />
     <Content Include="Scripts\jquery.datepair.min.js" />
-    <Content Include="Scripts\jquery.timepicker.min.js" />
+<Content Include="Scripts\jquery.timepicker.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />

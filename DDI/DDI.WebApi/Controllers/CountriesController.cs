@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
-using System.Web.Http;
+﻿using DDI.Services;
 using DDI.Shared.Models.Common;
-using DDI.Services;
-using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using DDI.Shared.Logger;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
@@ -26,7 +21,7 @@ namespace DDI.WebApi.Controllers
         [HttpGet]
         [Route("api/v1/countries", Name = RouteNames.Country)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
+        { 
             return base.GetAll(RouteNames.Country, limit, offset, orderBy, fields);
         }
 

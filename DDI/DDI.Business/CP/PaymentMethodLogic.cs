@@ -6,11 +6,13 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics.CP;
+using DDI.Logger;
 
 namespace DDI.Business.CP
 {
     public class PaymentMethodLogic : EntityLogicBase<PaymentMethod>
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(PaymentMethodLogic));
         public PaymentMethodLogic() : this(new UnitOfWorkEF()) { }
 
         public PaymentMethodLogic(IUnitOfWork uow) : base(uow)
@@ -20,12 +22,10 @@ namespace DDI.Business.CP
         public override void Validate(PaymentMethod entity)
         {
             base.Validate(entity);
-            if (entity is PaymentMethod)
-            {
-                PaymentMethod eftEntity = entity as PaymentMethod;
-                ValidateRoutingNumber(eftEntity.RoutingNumber);
 
-                if (eftEntity.EFTFormat == null)
+            if (entity.Category == Shared.Enums.CP.PaymentMethodCategory.EFT)
+            {
+                if (entity.EFTFormatId == null)
                 {
                     throw new ValidationException(UserMessagesCP.EFTFormatRequired);
                 }

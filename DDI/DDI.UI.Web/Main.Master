@@ -15,6 +15,20 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.timepicker.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.datepair.min.js"></script>
 
+    <!-- FileUpload Files -->
+    <script type="text/javascript" src="..\..\Scripts\fileupload\load-image.all.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\canvas-to-blob.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload-image.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\fileupload.js"></script>
+
+    <link rel="stylesheet" href="CSS/uploader.css" />
+    <link rel="stylesheet" href="CSS/jquery.fileupload.css" />
+    <link rel="stylesheet" href="CSS/jquery.fileupload-ui.css" />
+    <!-- FileUpload Files -->
+
     <!-- DevExtreme Files -->
     <script type="text/javascript" src="..\..\Scripts/dx.web.js"></script>
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
@@ -238,6 +252,34 @@
 
             </div>
             
+        </div>
+
+        <div class="fileuploadmodal" title="Add Files..." style="display: none;">
+
+            <div class="modalcontent">
+
+                <div class="fileuploadcontainer">
+
+                    <span class="btn btn-success fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Select files...</span>
+
+                        <input id="file_upload" type="file" name="files[]" multiple="multiple" />
+                    </span>
+        
+                    <div id="progress" class="progress">
+                        <div class="progress-bar progress-bar-success"></div>
+                    </div>
+
+                    <div id="file-upload-progress"></div>
+
+                    <label class="filemessage">Press 'Select Files' or Drag your files here to begin uploading.</label>
+                    <label class="totalfiles"></label>
+
+                </div>
+
+            </div>
+
         </div>
 
     </form>

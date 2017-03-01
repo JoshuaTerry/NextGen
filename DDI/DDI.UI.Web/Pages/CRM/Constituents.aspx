@@ -80,6 +80,8 @@
                         Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
                     
+                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
+
                 </div>
 
                 <div class="accordions">
@@ -210,7 +212,8 @@
 
                     </div>
 
-                    <h1>Demographics</h1>
+                   <h1 class="DemographicSettingsSection"><span class="DemographicSettingsSectionLabel">Demographics</span></h1>
+                    
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Denomination</label>
@@ -228,12 +231,12 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="dbaSection">Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
+                    <h1 class ="educationSection">Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -245,7 +248,7 @@
 
                     </div>
 
-                    <h1 class="OrganizationSection">Organization</h1>
+                    <h1 class="organizationSection">Organization</h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -298,12 +301,12 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
-                    <h1 class="PersonalSection">Personal</h1>
+                    <h1 class="personalSection">Personal</h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -377,7 +380,7 @@
                         
                     </div>
 
-                    <h1>Professional</h1>
+                    <h1 class ="professionalSection">Professional</h1>
                     <div class="editcontainer">
 
                         <div class="threecolumn">
@@ -781,7 +784,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
@@ -802,6 +805,15 @@
                         <option value="1">Savings Account</option>
                     </select>
                 </div>
+
+                <div class="fieldblock">
+                    <label>EFT Format</label>
+                    <select class="pp-EFTFormatId"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>Status</label>
@@ -1058,7 +1070,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             

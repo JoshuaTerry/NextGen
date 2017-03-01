@@ -6,7 +6,7 @@ using DDI.Shared.Models.Client;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("Language")]
-    public class Language : EntityBase
+    public class Language : EntityBase, ICodeEntity
     {
         #region Public Properties        
         [Key]

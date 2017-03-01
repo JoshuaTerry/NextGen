@@ -18,7 +18,7 @@ namespace DDI.Search.Models
         public Guid Id { get; set; }
 
         [Keyword(IncludeInAll = false)]
-        public Guid ContactCategoryId { get; set; }
+        public Guid? ContactCategoryId { get; set; }
 
         [Text]
         public string Info { get; set; }
