@@ -1062,6 +1062,7 @@
 
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
+            <input type="hidden" class="hidrelationshipisswapped" />
 
             <div class="fieldblock">
                 <label>Constituent</label>

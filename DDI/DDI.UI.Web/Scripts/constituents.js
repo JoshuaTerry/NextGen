@@ -2,7 +2,6 @@
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
-
 $(document).ready(function () {
 
     $('#form1').validate();
@@ -153,11 +152,8 @@ function LoadDropDowns() {
 function GetConstituentData(id) {
     route = 'constituents/';
 
-    if (id.length > 9) {
-        route += 'id/'; // If length > 9, id is probably a GUID.
-    }
-    else {
-        route += 'number/'; // Otherwise it's likely a constituent number.
+    if (id.length <= 9) {
+        route += 'number/'; // If id length is <= 9, assume the constituent ID is a constituent number.
     }
     
     $.ajax({
@@ -188,6 +184,10 @@ function RefreshEntity() {
 function DisplayConstituentData() {
 
     if (currentEntity) {
+
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
 
@@ -373,8 +373,10 @@ function LoadRelationshipsTab(data) {
 
     var columns = [
         { dataField: 'Id', width: '0px' },
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
+        { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
+        { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
+        { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
+        { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
     ];
 
     LoadGridWithData('relationshipsgrid',
@@ -389,14 +391,14 @@ function LoadRelationshipsTab(data) {
 }
 
 function EditRelationship(id) {
-
-    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
+    var constituentId = $('.hidconstituentid').val();
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
 
 }
 
 function NewRelationshipModal() {
 
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
 
 }
 
@@ -410,6 +412,7 @@ function GetRelationshipToSave(modal, isUpdate) {
 
     if (isUpdate === true) {
         item.Id = $(modal).find('.hidrelationshipid').val();
+        item.IsSwapped = $(modal).find('.hidrelationshipisswapped').val();
     }
 
     return item;
@@ -424,9 +427,10 @@ function PrePopulateNewRelationshipModal(modal) {
 function LoadRelationshipData(data, modal) {
 
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+    $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
 
 }
 /* End Relationships Tab */
@@ -445,7 +449,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'doingbusinessas',
+        'constituents/' + currentEntity.Id + '/doingbusinessas',
         null,
         EditDBA,
         null);
@@ -604,7 +608,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        'educations',
+        'constituents/' + currentEntity.Id + '/educations',
         null,
         EditEducationModal);
 
@@ -986,7 +990,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       'alternateids',
+       'constituents/' + currentEntity.Id + '/alternateids',
        null,
        EditAlternateId);
 }
@@ -1139,7 +1143,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituentaddresses',
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
         EditAddressModal);
 

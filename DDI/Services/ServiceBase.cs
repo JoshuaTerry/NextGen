@@ -158,7 +158,7 @@ namespace DDI.Services
         /// </summary>
         private void FormatEntityListForGet(IList<T> list)
         {
-            if (FormatEntityForGet != DefaultFormatEntityForGet) // If overridden
+            if (FormatEntityForGet != DefaultFormatEntityForGet && FormatEntityForGet != null) // If overridden
             {
                 list.ForEach(p => FormatEntityForGet(p));
             }
@@ -185,10 +185,21 @@ namespace DDI.Services
 
         public virtual IDataResponse<T> Update(Guid id, JObject changes)
         {
+            return Update(_unitOfWork.GetById<T>(id), changes);           
+        }
+                
+        public virtual IDataResponse<T> Update(T entity, JObject changes)
+        {
             var response = new DataResponse<T>();
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+
             try
             {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity));
+                }
+
                 foreach (var pair in changes)
                 {
                     var convertedPair = JsonExtensions.ConvertToType<T>(pair);
@@ -196,10 +207,14 @@ namespace DDI.Services
                 }
 
                 IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork);
-                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties, p => logic.Validate(p));
-            	_unitOfWork.SaveChanges();
+                Guid id = entity.Id;
+
+                _unitOfWork.GetRepository<T>().UpdateChangedProperties(entity, changedProperties, p => logic.Validate(p));
+
+                _unitOfWork.SaveChanges();
 
                 response.Data = _unitOfWork.GetById(id, IncludesForSingle);
+                FormatEntityForGet(response.Data);
             }
             catch (Exception ex)
             {
@@ -209,6 +224,7 @@ namespace DDI.Services
 
             return response;
         }
+        
 
         public virtual IDataResponse<T> Add(T entity)
         {
@@ -219,6 +235,7 @@ namespace DDI.Services
                 _unitOfWork.Insert(entity);
                 _unitOfWork.SaveChanges();
                 response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
+                FormatEntityForGet(response.Data);
             }
             catch (Exception ex)
             {

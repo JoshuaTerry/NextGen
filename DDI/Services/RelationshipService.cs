@@ -75,13 +75,14 @@ namespace DDI.Services
         {
             _logic = relationshipLogic;
         }
+
         #endregion
 
         #region Protected Methods
 
         private void FormatRelationshipForTarget(Relationship entity)
         {
-            if (entity != null)
+            if (entity != null && TargetConstituent != null)
             {
                 // Ensure target constituent is the "right side":  [left side] is the [relationship] of [right side].
                 RelationshipType relationshipType;
@@ -99,7 +100,14 @@ namespace DDI.Services
                 }
             }
         }
-        
+
+        public override IDataResponse<Relationship> Update(Relationship entity, JObject changes)
+        {
+            // Overriding Update in order to set the target constituent Id.  This is used during validation to ensure the target (right-side) constituent didn't change.
+            entity.TargetConstituentId = TargetConstituentId;
+
+            return base.Update(entity, changes);
+        }
         #endregion
 
     }

@@ -229,7 +229,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
         width: modalWidth,
         resizable: false
     });
-
+    
     LoadEntity(route, id, modal, loadEntityMethod, entityName);
 
     $('.cancelmodal').click(function (e) {
@@ -258,7 +258,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
 
                 CloseModal(modal);
 
-                loadEntityGridMethod();
+                loadEntityGrid();
 
             },
             error: function (xhr, status, err) {
@@ -334,7 +334,7 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
             loadEntityData(data, modal);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage("Error", "An error occurred during the loading of the " + entityName + ".");
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the ' + entityName + '.');
         }
     });
 }

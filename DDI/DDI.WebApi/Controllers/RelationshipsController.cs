@@ -29,9 +29,12 @@ namespace DDI.WebApi.Controllers
                     $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.Name)}",
                     $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.IsShownInQuickView)}",
                     $"{nameof(Relationship.Constituent1)}.Id",
+                    $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.ConstituentNumber)}",
                     $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.FormattedName)}",
                     $"{nameof(Relationship.Constituent2)}.Id",
-                    $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.FormattedName)}"
+                    $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.ConstituentNumber)}",
+                    $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.FormattedName)}",
+                    $"{nameof(Relationship.IsSwapped)}"
                 });
 
         protected override Expression<Func<Relationship, object>>[] GetDataIncludesForList()
@@ -52,7 +55,7 @@ namespace DDI.WebApi.Controllers
         
         [HttpGet]
         [Route("api/v1/relationships", Name = RouteNames.Relationship)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = "")
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
@@ -64,8 +67,18 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, Guid? constituentId = null, string fields = null)
         {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = DefaultFields;
+            }
+
+            if (constituentId != null)
+            {
+                Service.TargetConstituentId = constituentId;
+            }
+
             return base.GetById(id, fields);
         }
 
@@ -76,10 +89,28 @@ namespace DDI.WebApi.Controllers
             return base.Post(entityToSave);
         }
 
+        [HttpPost]
+        [Route("api/v1/constituents/{constituentId}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Post)]
+        public IHttpActionResult Post(Guid constituentId, [FromBody] Relationship entityToSave)
+        {
+            Service.TargetConstituentId = constituentId;
+
+            return base.Post(entityToSave);
+        }
+
         [HttpPatch]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid constituentId, Guid id, JObject entityChanges)
+        {
+            Service.TargetConstituentId = constituentId;
+
             return base.Patch(id, entityChanges);
         }
 
@@ -89,6 +120,20 @@ namespace DDI.WebApi.Controllers
         {
             return base.Delete(id);
         }
+
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid constituentId, Guid id, string fields = null)
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = DefaultFields;
+            }
+
+            Service.TargetConstituentId = constituentId;
+
+            return base.GetById(id, fields);
+        }
+
 
         [HttpGet]
         [Route("api/v1/relationships/constituents/{id}")]
