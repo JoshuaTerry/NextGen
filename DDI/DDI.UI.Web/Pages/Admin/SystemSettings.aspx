@@ -209,6 +209,62 @@
 
     </div>
 
+    <div class="constituenttypemodal" title="Constituent Type" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="consttype-Id" />
+            <input type="hidden" class="consttype-IsActive" />
+            <input type="hidden" class="consttype-IsRequired" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="consttype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="consttype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Category</label>
+                <select class="consttype-Category">
+                    <option value="0">Individual</option>
+                    <option value="1">Organization</option>
+                    <option value="2">Both</option>
+                </select>
+            </div>
+
+            <%--<div class="fieldblock">
+                <label>Default Tags</label>
+                <input type="text" class="consttype-Tags" />
+            </div>--%>
+
+            <div class="fieldblock">
+                <label>Name Format</label>
+                <input type="text" class="consttype-NameFormat" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Formal Salutation</label>
+                <input type="text" class="consttype-SalutationFormal" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Informal Salutation</label>
+                <input type="text" class="consttype-SalutationInformal" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitconsttype" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
     <div class="denominationmodal" title="Denomination" style="display: none;">
 
         <div class="modalcontent">

@@ -17,6 +17,13 @@ namespace DDI.WebApi.Controllers
             return base.GetAll(RouteNames.ConstituentType, limit, offset, orderBy, fields);
         }
 
+        [HttpGet]
+        [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
+        }
+
         [HttpPost]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentType item)

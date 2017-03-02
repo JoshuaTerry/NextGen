@@ -354,9 +354,217 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
+    var accordion = $('<div>').addClass('accordions');
+    var types = $('<div>').addClass('constituenttypescontainer');
+
+    
+    var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.constituenttypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submitconsttype').unbind('click');
+
+            $('.submitconsttype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.consttype-Code').val(),
+                    Name: $(modal).find('.consttype-Name').val(),
+                    Category: $(modal).find('.consttype-Category').val(),
+                    //Tags: $(modal).find('.consttype-Tags').val(),
+                    NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                    SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                    SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
+                    IsActive: true,
+                    IsRequired: true
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'constituenttypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
+
+                        CloseModal();
+
+                        LoadConstituentTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+
+    $(types).appendTo($(accordion));
+
+    LoadConstituentTypeSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
+
+}
+
+
+function LoadConstituentTypeSettingsGrid() {
+
+    var typecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        {
+            caption: 'Category', cellTemplate: function (container, options) {
+
+                var category;
+
+                switch (options.data.Category) {
+                    case 0:
+                        category = "Individual";
+                        break;
+                    case 1:
+                        category = "Organization";
+                        break;
+                    case 2:
+                        category = "Both";
+                        break;
+                }
+
+
+                $('<label>').text(category).appendTo(container);
+
+            }
+
+        },
+        { dataField: 'Tags', caption: 'Default Tags' },
+        { dataField: 'NameFormat', caption: 'Name Format' },
+        { dataField: 'SalutationFormal', caption: 'Formal Salutation' },
+        { dataField: 'SalutationInformal', caption: 'Informal Salutation' }
+    ];
+
+    
+    LoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes', null, EditConstituentType, DeleteConstituentType);
+
+}
+
+// CONSTITUENT TYPE SYSTEM SETTINGS 
+function EditConstituentType(id) {
+
+    LoadConstituentType(id);
+
+    modal = $('.constituenttypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitconsttype').unbind('click');
+
+    $('.submitconsttype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.consttype-Code').val(),
+            Name: $(modal).find('.consttype-Name').val(),
+            Category: $(modal).find('.consttype-Category').val(),
+            //Tags: $(modal).find('.consttype-Tags').val(),
+            NameFormat: $(modal).find('.consttype-NameFormat').val(),
+            SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+            SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadConstituentTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteConstituentType(id) {
+
 
 
 }
+
+function LoadConstituentType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.consttype-Id').val(data.Data.Id);
+                $(modal).find('.consttype-Code').val(data.Data.Code);
+                $(modal).find('.consttype-Name').val(data.Data.Name);
+                $(modal).find('.consttype-Category').val(data.Data.Category);
+                $(modal).find('.consttype-Tags').val(data.Data.Tags);
+                $(modal).find('.consttype-NameFormat').val(data.Data.NameFormat);
+                $(modal).find('.consttype-SalutationFormal').val(data.Data.SalutationFormal);
+                $(modal).find('.consttype-SalutationInformal').val(data.Data.SalutationInformal);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading constituent type.');
+        }
+    });
+
+}
+/* END CONSTITUENT TYPE SYSTEM SETTINGS */
+
 
 function LoadContactInformationSectionSettings() {
 
@@ -405,7 +613,6 @@ function LoadDemographicsSectionSettings() {
                     Code: $(modal).find('.den-Code').val(),
                     Name: $(modal).find('.den-Name').val(),
                     Religion: $(modal).find('.den-Religion').val(),
-//                    ResidentType: $(modal).find('.na-ResidentType').val(),
                     Affiliation: $(modal).find('.den-Affiliation').val(),
                     IsActive: $(modal).find('.den-IsActive').prop('checked')
                 }
