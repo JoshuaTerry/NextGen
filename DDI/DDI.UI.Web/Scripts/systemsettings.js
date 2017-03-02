@@ -12,7 +12,7 @@ var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Clergy: 'ClergySettings',
     Demographics: 'DemographicSettings',
-    Education: 'Education'
+    Education: 'EducationSettings'
 }
 
 $(document).ready(function () {
@@ -441,95 +441,191 @@ function LoadClergySectionSettings() {
 }
 
 function LoadClergyStatusSettingsGrid() {
-            $('submitcstat').click(function () {
-                var item = {
-                    Code: $(modal).find('.cstat-Code').val(),
-                    Name: $(modal).find('.cstat-Name').val(),
-                    IsActive: $(modal).find('.cstat-IsActive').prop('checked')
-                }
+    var statuscolumns = [
+          { dataField: 'Id', width: '0px' },
+          { dataField: 'Code', caption: 'Code' },
+          { dataField: 'Name', caption: 'Description' },
+          { dataField: 'IsActive', caption: 'Active' }
+    ];
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergystatus',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Clergy Status saved successfully.');
-
-                        CloseModal();
-
-                        LoadClergyStatusSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Status.')
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
-    $(status).appendTo($(accordion));
-
-    LoadClergyStatusSettingsGrid();
-
-    header = $('<h1>').text('Clergy Type').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newclergytypemodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.clergytypemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal();
-            });
-
-            $('.submitctype').unbind('click');
-
-            $('submitctype').click(function () {
-                var item = {
-                    Code: $(modal).find('.ctype-Code').val(),
-                    Name: $(modal).find('.ctype-Name').val(),
-                    IsActive: $(modal).find('.ctype-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergytype',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Clergy Type saved successfully.');
-
-                        CloseModal();
-
-                        LoadClergyTypeSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Type.')
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
-    $(clergytype).appendTo($(accordion));
-
-    LoadClergyTypeSettingsGrid();
-
-    $(accordion).appendTo($('.contentcontainer'));
-
-    LoadAccordions();
+    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
 }
+
+function LoadClergyTypeSettingsGrid() {
+    var typecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
+}
+
+// CLERGY STATUS SYSTEM SETTINGS
+function EditClergyStatus(id) {
+
+    LoadClergyStatus(id);
+
+    modal = $('.clergystatusmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitcstat').unbind('click');
+
+    $('.submitcstat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.cstat-Code').val(),
+            Name: $(modal).find('.cstat-Name').val(),
+            IsActive: $(modal).find('.cstat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Status saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyStatusSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyStatus(id) {
+
+}
+
+function LoadClergyStatus(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.cstat-Id').val(data.Data.Id);
+                $(modal).find('.cstat-Code').val(data.Data.Code);
+                $(modal).find('.cstat-Name').val(data.Data.Name);
+                $(modal).find('.cstat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
+        }
+
+    });
+}
+// END CLERGY STATUS SYSTEM SETTINGS
+
+// CLERGY TYPE SYSTEM SETTINGS
+function EditClergyType(id) {
+
+    LoadClergyType(id);
+
+    modal = $('.clergytypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitctype').unbind('click');
+
+    $('.submitctype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.ctype-Code').val(),
+            Name: $(modal).find('.ctype-Name').val(),
+            IsActive: $(modal).find('.ctype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergytypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyType(id) {
+
+}
+
+function LoadClergyType(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergytypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.ctype-Id').val(data.Data.Id);
+                $(modal).find('.ctype-Code').val(data.Data.Code);
+                $(modal).find('.ctype-Name').val(data.Data.Name);
+                $(modal).find('.ctype-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
+        }
+
+    });
+}
+// END CLERGY TYPE SYSTEM SETTINGS
+
 function LoadConstituentTypesSectionSettings() {
 
 
@@ -820,196 +916,7 @@ function LoadEthnicitySettingsGrid() {
     LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
 }
 
-function LoadClergySectionSettings() {
 
-    var accordion = $('<div>').addClass('accordions');
-    var status = $('<div>').addClass('clergystatuscontainer');
-    var types = $('<div>').addClass('clergytypecontainer');
-
-    var statuscolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
-}
-
-function LoadClergyTypeSettingsGrid() {
-    var typecolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
-}
-
-// CLERGY STATUS SYSTEM SETTINGS
-function EditClergyStatus(id) {
-
-    LoadClergyStatus(id);
-
-    modal = $('.clergystatusmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-        e.preventDefault();
-        CloseModal(modal);
-    })
-
-    $('.submitcstat').unbind('click');
-
-    $('.submitcstat').click(function () {
-
-        var item = {
-            Code: $(modal).find('.cstat-Code').val(),
-            Name: $(modal).find('.cstat-Name').val(),
-            IsActive: $(modal).find('.cstat-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'clergystatuses/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Clergy Status saved successfully.');
-
-                CloseModal(modal);
-
-                LoadClergyStatusSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
-
-            }
-        });
-    });
-}
-
-function DeleteClergyStatus(id) {
-
-}
-
-function LoadClergyStatus(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.cstat-Id').val(data.Data.Id);
-                $(modal).find('.cstat-Code').val(data.Data.Code);
-                $(modal).find('.cstat-Name').val(data.Data.Name);
-                $(modal).find('.cstat-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
-        }
-
-    });
-}
-// END CLERGY STATUS SYSTEM SETTINGS
-
-// CLERGY TYPE SYSTEM SETTINGS
-function EditClergyType(id) {
-
-    LoadClergyType(id);
-
-    modal = $('.clergytypemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-        e.preventDefault();
-        CloseModal(modal);
-    })
-
-    $('.submitctype').unbind('click');
-
-    $('.submitctype').click(function () {
-
-        var item = {
-            Code: $(modal).find('.ctype-Code').val(),
-            Name: $(modal).find('.ctype-Name').val(),
-            IsActive: $(modal).find('.ctype-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'clergytypes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Clergy Type saved successfully.');
-
-                CloseModal(modal);
-
-                LoadClergyTypeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
-
-            }
-        });
-    });
-}
-
-function DeleteClergyType(id) {
-
-}
-
-function LoadClergyType(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergytypes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.ctype-Id').val(data.Data.Id);
-                $(modal).find('.ctype-Code').val(data.Data.Code);
-                $(modal).find('.ctype-Name').val(data.Data.Name);
-                $(modal).find('.ctype-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
-        }
-
-    });
-}
-// END CLERGY TYPE SYSTEM SETTINGS
 function LoadLanguageSettingsGrid() {
 
     var languagecolumns = [
