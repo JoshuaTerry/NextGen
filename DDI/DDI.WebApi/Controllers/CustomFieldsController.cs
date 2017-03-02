@@ -5,12 +5,29 @@ using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers
 {
     public class CustomFieldsController : ControllerBase<CustomField>
     {
         protected new ICustomFieldService Service => (ICustomFieldService)base.Service;
+
+        protected override Expression<Func<CustomField, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<CustomField, object>>[]
+            {
+                o => o.Options
+            };
+        }
+
+        protected override Expression<Func<CustomField, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<CustomField, object>>[]
+            {
+                o => o.Options
+            };
+        }
 
         public CustomFieldsController() :base(new CustomFieldService())
         {
