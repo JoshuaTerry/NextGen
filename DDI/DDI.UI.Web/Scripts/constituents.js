@@ -383,7 +383,7 @@ function NewDBAModal() {
         $('.savedba').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Name: $(modal).find('.DBAName').val(),
                 StartDate: $(modal).find('.StartDate').val(),
                 EndDate: $(modal).find('.EndDate').val()
@@ -440,7 +440,7 @@ function EditDBA(id) {
 
         var item = {
             Id: $(modal).find('.hiddbaid').val(),
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Name: $(modal).find('.DBAName').val(),
             StartDate: $(modal).find('.StartDate').val(),
             EndDate: $(modal).find('.EndDate').val()
@@ -549,7 +549,7 @@ function NewEducationModal() {
         $('.saveeducation').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Major: $('.ed-Major').val(),
                 StartDate: $('.ed-StartDate').val(),
                 EndDate: $('.ed-EndDate').val(),
@@ -606,7 +606,7 @@ function EditEducationModal(id) {
     $('.saveeducation').click(function () {
 
         var item = {
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Major: $('.ed-Major').val(),
             StartDate: $('.ed-StartDate').val(),
             EndDate: $('.ed-EndDate').val(),
@@ -725,7 +725,7 @@ function NewPaymentPreference() {
         var date = new Date();
 
         var item = {
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Description: $(modal).find('.pp-Description').val(),
             BankName: $(modal).find('.pp-BankName').val(),
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
@@ -934,7 +934,7 @@ function NewAlternateIdModal() {
         $('.submitaltid').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Name: $(modal).find('.ai-Name').val()
             }
 
@@ -988,7 +988,7 @@ function EditAlternateId(id) {
 
         var item = {
             Id: id,
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Name: $(modal).find('.ai-Name').val()
         }
 
@@ -1088,7 +1088,7 @@ function NewAddressModal() {
         $('.saveaddress').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.na-Comment').val(),
                 StartDate: $(modal).find('.na-StartDate').val(),
@@ -1238,7 +1238,7 @@ function GetEditedAddressFields() {
 
     var item = {
         Id: $(modal).find('.hidconstituentaddressid').val(),
-        ConstituentId: $('.hidconstituentid').val(),
+        ConstituentId: currentEntity.Id,
         IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
         StartDate: $(modal).find('.na-StartDate').val(),
@@ -1415,7 +1415,7 @@ function NewPhoneModal() {
         $('.submitphonenumber').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
                 Info: $(modal).find('.pn-Info').val(),
                 IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
@@ -1482,7 +1482,7 @@ function EditPhone(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
             Info: $(modal).find('.pn-Info').val(),
             IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
@@ -1564,7 +1564,7 @@ function NewEmailModal() {
         $('.submitemail').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.e-EmailType').val(),
                 Info: $(modal).find('.e-Info').val(),
                 IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
@@ -1632,7 +1632,7 @@ function EditEmail(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.e-EmailType').val(),
             Info: $(modal).find('.e-Info').val(),
             IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
@@ -1713,7 +1713,7 @@ function NewWebModal() {
         $('.submitwebsite').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
                 Info: $(modal).find('.ws-Info').val(),
                 IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
@@ -1778,7 +1778,7 @@ function EditWeb(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
             Info: $(modal).find('.ws-Info').val(),
             IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
@@ -1857,7 +1857,7 @@ function NewPersonModal() {
         $('.submitpoc').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.poc-PocType').val(),
                 Info: $(modal).find('.poc-Info').val(),
                 IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
@@ -1922,7 +1922,7 @@ function EditPerson(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.poc-PocType').val(),
             Info: $(modal).find('.poc-Info').val(),
             IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
@@ -2001,7 +2001,7 @@ function NewOtherModal() {
         $('.submitother').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.o-OtherType').val(),
                 Info: $(modal).find('.o-Info').val(),
                 IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
@@ -2066,7 +2066,7 @@ function EditOther(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.o-OtherType').val(),
             Info: $(modal).find('.o-Info').val(),
             IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
@@ -2223,7 +2223,7 @@ function GetRelationshipToSave(modal, isUpdate) {
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+    $(modal).find('.FormattedName1').val(currentEntity.Id);
 }
 
 function LoadRelationshipData(data, modal) {

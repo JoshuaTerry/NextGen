@@ -210,6 +210,64 @@
 
     </div>
 
+
+    <div class="clergystatusmodal" title="Clergy Status" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="cstat-id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="cstat-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="cstat-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="cstat-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitcstat" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clergytypemodal" title="Clergy Type" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="ctype-id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="ctype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="ctype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="ctype-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitctype" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
     <div class="taggroupmodal" title="Tag Group" style="display: none;">
 
         <div class="modalcontent">
