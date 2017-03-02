@@ -10,12 +10,13 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Controllers
 {
     public class RolesController : ApiController
     {
-        private ApplicationUserManager _userManager;
+        private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
         public RolesController()
@@ -23,7 +24,7 @@ namespace DDI.WebApi.Controllers
             
         }
 
-        public RolesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        public RolesController(UserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
@@ -41,11 +42,11 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? Request.GetOwinContext().GetUserManager<UserManager>();
             }
             private set
             {
@@ -68,7 +69,7 @@ namespace DDI.WebApi.Controllers
             {
                 foreach (var role in model.Roles)
                 {
-                    await RoleManager.CreateAsync(new IdentityRole(role));
+                    await RoleManager.CreateAsync(new Role() { Name = role });
                 }
             }
             catch (Exception)
@@ -90,12 +91,12 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/roles/{roleId}/users")]
         public async Task<IHttpActionResult> GetUsersInRole(Guid roleId)
         {
-            List<ApplicationUser> users = new List<ApplicationUser>();
+            List<User> users = new List<User>();
             try
             {
-                var role = await RoleManager.FindByIdAsync(roleId.ToString());
+                var role = await RoleManager.FindByIdAsync(roleId);
                 var userIds = role.Users.ToList().Select(u => u.UserId);
-                var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(Guid.Parse(id)).Result);
+                var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(id).Result);
                 users.AddRange(usersToAdd);
             }
             catch (Exception)
@@ -108,7 +109,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpPatch]
         [Route("api/v1/roles/{id}/update")]
-        public async Task<IHttpActionResult> Update(string id, string newRoleName)
+        public async Task<IHttpActionResult> Update(Guid id, string newRoleName)
         {
             var roleToUpdate = RoleManager.FindByIdAsync(id).Result;
             if (roleToUpdate == null)

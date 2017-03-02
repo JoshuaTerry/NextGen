@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using DDI.Shared.Models.Client.Core;
 using System.Threading;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data.Helpers
 {
     public static class EntityFrameworkHelpers
     {
-        public static ApplicationUser GetCurrentUser()
+        public static User GetCurrentUser()
         {
-            ApplicationUser user = null;
+            User user = null;
             var userId = Thread.CurrentPrincipal?.Identity.Name;
             if (!string.IsNullOrEmpty(userId))
             {
-                var repo = new Repository<ApplicationUser>();
+                var repo = new Repository<User>();
                 user = repo.Entities.FirstOrDefault(u => u.UserName == userId);
             }
 

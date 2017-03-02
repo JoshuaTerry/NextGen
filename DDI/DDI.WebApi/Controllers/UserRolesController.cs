@@ -17,7 +17,7 @@ namespace DDI.WebApi.Controllers
 {
     public class UserRolesController : ApiController
     {
-        private ApplicationUserManager _userManager;
+        private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
         public UserRolesController()
@@ -25,17 +25,17 @@ namespace DDI.WebApi.Controllers
 
         }
 
-        internal UserRolesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        internal UserRolesController(UserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? Request.GetOwinContext().GetUserManager<UserManager>();
             }
             private set
             {
@@ -147,7 +147,7 @@ namespace DDI.WebApi.Controllers
         {
             Tuple<bool, string> canRoleBeAddedToUser = null;
 
-            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == Guid.Parse(RoleManager.FindByNameAsync(role).Result.Id));
+            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
             if (userAlreadyHasRole)
             {
                 canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
@@ -184,7 +184,7 @@ namespace DDI.WebApi.Controllers
         {
             Tuple<bool, string> canRoleBeRemovedFromUser = null;
 
-            var userDoesNotHaveRole = !UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == Guid.Parse(RoleManager.FindByNameAsync(role).Result.Id));
+            var userDoesNotHaveRole = !UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
             if (userDoesNotHaveRole)
             {
                 canRoleBeRemovedFromUser = new Tuple<bool, string>(false, $"User {email} is not currently in role {role}");

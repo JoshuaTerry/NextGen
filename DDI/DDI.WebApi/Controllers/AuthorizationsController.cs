@@ -22,6 +22,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using DDI.WebApi.Services;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Controllers
 {
@@ -29,24 +30,24 @@ namespace DDI.WebApi.Controllers
     public class AuthorizationsController : ApiController
     {
         private const string LOCAL_LOGIN_PROVIDER = "Local";
-        private ApplicationUserManager _userManager;
+        private UserManager _userManager;
 
         public AuthorizationsController()
         {
         }
 
-        public AuthorizationsController(ApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        public AuthorizationsController(UserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
                 if (_userManager == null)
-                    return Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                    return Request.GetOwinContext().GetUserManager<UserManager>();
                 else
                     return _userManager;
             }
@@ -208,7 +209,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(model.Email);
@@ -239,7 +240,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(email);
@@ -280,7 +281,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(model.Email);
@@ -347,7 +348,7 @@ namespace DDI.WebApi.Controllers
             return null;
         }
 
-        private ApplicationUser GetUserByEmail(string email)
+        private User GetUserByEmail(string email)
         {             
             var users = UserManager.Users.Where(u => u.Email == email);
             if (users.Count() == 1)

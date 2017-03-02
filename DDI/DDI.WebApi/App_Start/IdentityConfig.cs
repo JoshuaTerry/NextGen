@@ -1,4 +1,6 @@
-﻿using DDI.Shared.Models.Client.Core;
+﻿using DDI.Services;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models;
 using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
@@ -12,27 +14,23 @@ namespace DDI.WebApi
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
 
-    public class ApplicationUserManager : UserManager<ApplicationUser, Guid> //, IApplicationUserManager
-    {
-        public ApplicationUserManager(IUserStore<ApplicationUser, Guid> store)
+    public class UserManager : UserManager<User, Guid> //, IUserManager
+    { 
+        public UserManager(IUserStore<User, Guid> store)
             : base(store)
         {
         }
-        public override async Task<ApplicationUser> FindByIdAsync(Guid userId)
+        public override async Task<User> FindByIdAsync(Guid userId)
         {
-            await Task.Delay(1);
-            var user = new ApplicationUser
-            {
-                Id = userId
-            };
-            var returnObject = new Task<ApplicationUser>(() => user);
+            var user = await Store.FindByIdAsync(userId);
             return user;
         }
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
+
+        public static UserManager Create(IdentityFactoryOptions<UserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new CustomUserStore(context.Get<ApplicationDbContext>()));
+            var manager = new UserManager(new UserStore(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames 
-            manager.UserValidator = new UserValidator<ApplicationUser, Guid>(manager)
+            manager.UserValidator = new UserValidator<User, Guid>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -47,7 +45,7 @@ namespace DDI.WebApi
                 RequireUppercase = true,
             };
             
-            manager.RegisterTwoFactorProvider("EmailCode",  new EmailTokenProvider<ApplicationUser, Guid>
+            manager.RegisterTwoFactorProvider("EmailCode",  new EmailTokenProvider<User, Guid>
                 {
                     Subject = "Security Code",
                     BodyFormat = "Your security code is: {0}"
@@ -57,7 +55,7 @@ namespace DDI.WebApi
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
+                manager.UserTokenProvider = new DataProtectorTokenProvider<User, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }

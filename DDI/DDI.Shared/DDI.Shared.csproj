@@ -133,6 +133,7 @@
     <Compile Include="Models\Client\Audit\IReadOnlyEntity.cs" />
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
+    <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\ApplicationUser.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
@@ -144,6 +145,11 @@
     <Compile Include="Models\Client\Core\NoteTopic.cs" />
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />
+    <Compile Include="Models\Client\Security\Role.cs" />
+    <Compile Include="Models\Client\Security\User.cs" />
+    <Compile Include="Models\Client\Security\UserClaim.cs" />
+    <Compile Include="Models\Client\Security\UserLogin.cs" />
+    <Compile Include="Models\Client\Security\UserRole.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\ISearchDocument.cs" />
@@ -223,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Attributes\" />
+    <Folder Include="bin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

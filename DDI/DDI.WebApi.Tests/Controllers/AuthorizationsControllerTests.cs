@@ -26,7 +26,7 @@ namespace DDI.WebApi.Tests.Controllers
         //    var mockIdentity = new Mock<ClaimsIdentity>();
         //    mockIdentity.Setup(x => x.FindFirst(It.IsAny<string>())).Returns(claim);
         //    principal.SetupGet(p => p.Identity).Returns(mockIdentity.Object);
-        //    var accountManager = new FakeApplicationUserManager();
+        //    var accountManager = new FakeUserManager();
         //    var target = new AuthorizationsController(accountManager, null);
         //    target.User = principal.Object;
         //    var result = await target.GetManageInfo("", false);

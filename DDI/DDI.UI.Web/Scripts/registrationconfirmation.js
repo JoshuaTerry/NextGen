@@ -42,7 +42,7 @@ function ConfirmEmail(email, code) {
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'ConfirmEmail',
+        url: WEB_API_ADDRESS + 'authorizations/confirmemail',
         data: model,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,

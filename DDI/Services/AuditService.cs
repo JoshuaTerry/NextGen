@@ -2,6 +2,7 @@
 using DDI.Shared;
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -62,7 +63,7 @@ namespace DDI.Services
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
-                                 .Join(_uow.GetRepository<ApplicationUser>().Entities,
+                                 .Join(_uow.GetRepository<User>().Entities,
                                          outer => outer.cs.UserId,
                                          u => u.Id,
                                          (outer, u) => new
