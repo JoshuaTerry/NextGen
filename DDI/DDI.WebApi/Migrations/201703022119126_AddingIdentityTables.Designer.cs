@@ -13,7 +13,7 @@ namespace DDI.WebApi.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201703021652221_AddingIdentityTables"; }
+            get { return "201703022119126_AddingIdentityTables"; }
         }
         
         string IMigrationMetadata.Source

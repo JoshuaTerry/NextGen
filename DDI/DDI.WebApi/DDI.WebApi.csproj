@@ -285,9 +285,9 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
-    <Compile Include="Migrations\Identity\201703021652221_AddingIdentityTables.cs" />
-    <Compile Include="Migrations\Identity\201703021652221_AddingIdentityTables.Designer.cs">
-      <DependentUpon>201703021652221_AddingIdentityTables.cs</DependentUpon>
+    <Compile Include="Migrations\201703022119126_AddingIdentityTables.cs" />
+    <Compile Include="Migrations\201703022119126_AddingIdentityTables.Designer.cs">
+      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -379,14 +379,15 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Migrations\Identity\" />
     <Folder Include="Views\BusinessDate\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Identity\201703021652221_AddingIdentityTables.resx">
-      <DependentUpon>201703021652221_AddingIdentityTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703022119126_AddingIdentityTables.resx">
+      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

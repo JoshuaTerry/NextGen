@@ -25,8 +25,8 @@ namespace DDI.Data.Migrations.Client
                         Region3Id = c.Guid(),
                         Region4Id = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
-                        LastModifiedBy = c.Guid(),
+                    CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
+                    LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                         AddressType_Id = c.Guid(),
                     })
@@ -59,7 +59,7 @@ namespace DDI.Data.Migrations.Client
                         AddressTypeId = c.Guid(),
                         DuplicateKey = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -81,7 +81,7 @@ namespace DDI.Data.Migrations.Client
                         Code = c.String(maxLength: 4),
                         Name = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -146,7 +146,7 @@ namespace DDI.Data.Migrations.Client
                         TaxId = c.String(maxLength: 128),
                         YearEstablished = c.Int(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -182,7 +182,7 @@ namespace DDI.Data.Migrations.Client
                         ConstituentId = c.Guid(),
                         Name = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -199,7 +199,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -214,7 +214,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -231,7 +231,7 @@ namespace DDI.Data.Migrations.Client
                         BaseStatus = c.Int(nullable: false),
                         IsRequired = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -251,7 +251,7 @@ namespace DDI.Data.Migrations.Client
                         SalutationFormal = c.String(maxLength: 128),
                         SalutationInformal = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -269,7 +269,7 @@ namespace DDI.Data.Migrations.Client
                         ConstituentCategory = c.Int(nullable: false),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -287,7 +287,7 @@ namespace DDI.Data.Migrations.Client
                         TagSelectionType = c.Int(nullable: false),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -305,7 +305,7 @@ namespace DDI.Data.Migrations.Client
                         ContactTypeId = c.Guid(),
                         ParentContactId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -329,7 +329,7 @@ namespace DDI.Data.Migrations.Client
                         IsAlwaysShown = c.Boolean(nullable: false),
                         CanDelete = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -348,7 +348,7 @@ namespace DDI.Data.Migrations.Client
                         TextBoxLabel = c.String(maxLength: 128),
                         DefaultContactTypeID = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -367,7 +367,7 @@ namespace DDI.Data.Migrations.Client
                         Religion = c.Int(nullable: false),
                         Affiliation = c.Int(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -383,7 +383,7 @@ namespace DDI.Data.Migrations.Client
                         EndDate = c.DateTime(storeType: "date"),
                         ConstituentId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -400,7 +400,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -421,7 +421,7 @@ namespace DDI.Data.Migrations.Client
                         EndDate = c.DateTime(storeType: "date"),
                         ConstituentId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -442,7 +442,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -457,7 +457,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -472,7 +472,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -487,7 +487,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -502,7 +502,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -517,7 +517,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -532,7 +532,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -554,7 +554,7 @@ namespace DDI.Data.Migrations.Client
                         EFTFormatId = c.Guid(),
                         CardToken = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -571,7 +571,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -590,7 +590,7 @@ namespace DDI.Data.Migrations.Client
                         ShowOnline = c.Boolean(nullable: false),
                         GenderId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -607,7 +607,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Code = c.String(maxLength: 4),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -622,7 +622,7 @@ namespace DDI.Data.Migrations.Client
                         Constituent1Id = c.Guid(),
                         Constituent2Id = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -648,7 +648,7 @@ namespace DDI.Data.Migrations.Client
                         ConstituentCategory = c.Int(nullable: false),
                         RelationshipCategoryId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -670,7 +670,7 @@ namespace DDI.Data.Migrations.Client
                         IsActive = c.Boolean(nullable: false),
                         IsShownInQuickView = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -686,7 +686,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         ParentRegionId = c.Guid(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -709,7 +709,7 @@ namespace DDI.Data.Migrations.Client
                         PostalCodeHigh = c.String(maxLength: 128),
                         Priority = c.Int(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -766,7 +766,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         Value = c.String(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -787,7 +787,7 @@ namespace DDI.Data.Migrations.Client
                         Entity = c.Int(nullable: false),
                         FieldType = c.Int(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -803,7 +803,7 @@ namespace DDI.Data.Migrations.Client
                         ParentEntityId = c.Guid(),
                         Value = c.String(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -821,7 +821,7 @@ namespace DDI.Data.Migrations.Client
                         Description = c.String(),
                         SortOrder = c.Int(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -839,7 +839,7 @@ namespace DDI.Data.Migrations.Client
                         Size = c.Long(nullable: false),
                         Data = c.Binary(),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -857,7 +857,7 @@ namespace DDI.Data.Migrations.Client
                         Message = c.String(nullable: false, maxLength: 4000),
                         Thread = c.String(nullable: false, maxLength: 255),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -871,7 +871,7 @@ namespace DDI.Data.Migrations.Client
                         Label = c.String(maxLength: 64),
                         Name = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -894,7 +894,7 @@ namespace DDI.Data.Migrations.Client
                         ParentEntityId = c.Guid(),
                         EntityType = c.String(maxLength: 128),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -917,7 +917,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -932,7 +932,7 @@ namespace DDI.Data.Migrations.Client
                         Name = c.String(maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -949,7 +949,7 @@ namespace DDI.Data.Migrations.Client
                         IsRequired = c.Boolean(nullable: false),
                         IsChildLevel = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })
@@ -965,7 +965,7 @@ namespace DDI.Data.Migrations.Client
                         Value = c.String(maxLength: 256),
                         IsShown = c.Boolean(nullable: false),
                         CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
+                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
                         LastModifiedBy = c.Guid(),
                         LastModifiedOn = c.DateTime(),
                     })

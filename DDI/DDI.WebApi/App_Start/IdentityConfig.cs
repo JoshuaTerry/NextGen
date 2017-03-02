@@ -28,6 +28,7 @@ namespace DDI.WebApi
 
         public static UserManager Create(IdentityFactoryOptions<UserManager> options, IOwinContext context)
         {
+            //var manager = new UserManager(new UserStore(new ServiceBase<User>()));
             var manager = new UserManager(new UserStore(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames 
             manager.UserValidator = new UserValidator<User, Guid>(manager)

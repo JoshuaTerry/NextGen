@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
+    [Table("Roles")]
     public class Role : IdentityRole<Guid, UserRole>, IEntity
-    {                
+    {
+          
         public Guid? CreatedBy { get; set; }
 
         public DateTime? CreatedOn { get; set; }

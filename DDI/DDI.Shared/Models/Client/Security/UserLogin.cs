@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
+    [Table("UserLogins")]
     public class UserLogin : IdentityUserLogin<Guid>, IEntity
     {
         [Key]

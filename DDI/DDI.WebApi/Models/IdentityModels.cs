@@ -8,25 +8,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.WebApi.Models
 {
 
-    public class UserStore : UserStore<User, Role, Guid,
-        UserLogin, UserRole, UserClaim>
+    public class UserStore : UserStore<User, Role, Guid, UserLogin, UserRole, UserClaim>
     {
-        public UserStore(ApplicationDbContext context)
-            : base(context)
+        public UserStore(ApplicationDbContext context) : base(context)
         {
         }
     }
 
     public class RoleStore : RoleStore<Role, Guid, UserRole>
     {
-        public RoleStore(ApplicationDbContext context)
-            : base(context)
+        public RoleStore(ApplicationDbContext context) : base(context)
         {
         }
     }
-    // You can add profile data for the user by adding more properties to your User class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-   
-
+    
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, UserLogin, UserRole, UserClaim>
     {
         private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
