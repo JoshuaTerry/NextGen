@@ -254,6 +254,20 @@
             
         </div>
 
+        <div class="tagselectmodal" title="Select Tags..." style="display: none;">
+            
+            <div class="modalcontent">
+
+                <div class="tagselectgridcontainer"></div>
+
+                <div class="modalbuttons">
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
+
+            </div>
+            
+        </div>
+
         <div class="fileuploadmodal" title="Add Files..." style="display: none;">
 
             <div class="modalcontent">

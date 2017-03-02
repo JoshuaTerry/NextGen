@@ -20,6 +20,8 @@ $(document).ready(function () {
 
     LoadAccordions();
 
+    LoadTagSelector();
+
     $('.addconstituent').click(function (e) {
 
         e.preventDefault();
@@ -129,6 +131,7 @@ function LoadEnvironment() {
         });
     }
 }
+
 function LoadNewConstituentModalDropDowns() {
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
@@ -421,6 +424,21 @@ function GetAutoZipData(container) {
         });
 
     }
+
+}
+
+function LoadTagSelector() {
+
+    $('.tagselect').each(function () {
+
+        var img = $('<img>').addClass('tagSelectImage');
+
+        $(img).click(function () {
+
+        });
+
+        $(this).after($(img));
+    });
 
 }
 

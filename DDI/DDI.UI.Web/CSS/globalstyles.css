@@ -115,6 +115,9 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 /* END TAG BOX CONTROL */
 
+.tagSelectImage { display: inline-block; padding: 0px; margin: 0px; background: url('../Images/Search_Mono_16.png') no-repeat; }
+.tagSelectImage:hover { border-left: solid 1px #eeeeee; border-bottom: solid 1px #eeeeee; }
+
 
 /* MODAL CONTENT */
 .ui-dialog { box-shadow: -5px 5px 15px #999999; border: solid 2px #999999 !important; border-radius: 5px; }
