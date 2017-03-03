@@ -141,7 +141,7 @@ namespace DDI.Business.CRM
                 
         private void ValidateUniqueConstituentNumber(Constituent entity)
         {
-            var existing = UnitOfWork.GetRepository<Constituent>().Entities.FirstOrDefault();
+            var existing = UnitOfWork.GetRepository<Constituent>().Entities.FirstOrDefault(c => c.ConstituentNumber == entity.ConstituentNumber);
             if (existing != null)
             {
                 if (entity.Id == Guid.Empty || entity.Id == existing.Id)
