@@ -224,8 +224,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+<<<<<<< HEAD
     <Compile Include="Controllers\AuditController.cs" />
+=======
     <Compile Include="Controllers\EFTFormatsController.cs" />
+>>>>>>> develop
     <Compile Include="Controllers\FileStorageController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
     <Compile Include="Controllers\NoteContactMethodsController.cs" />
@@ -287,12 +290,12 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
-    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.cs" />
-    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.Designer.cs">
+    <Compile Include="Migrations\201703022119126_AddingIdentityTables.cs" />
+    <Compile Include="Migrations\201703022119126_AddingIdentityTables.Designer.cs">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.cs" />
-    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.Designer.cs">
+    <Compile Include="Migrations\201703030459149_CreatedOnChange.cs" />
+    <Compile Include="Migrations\201703030459149_CreatedOnChange.Designer.cs">
       <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
@@ -385,16 +388,17 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Migrations\Identity\" />
     <Folder Include="Views\BusinessDate\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Identity\201703022119126_AddingIdentityTables.resx">
+    <EmbeddedResource Include="Migrations\201703022119126_AddingIdentityTables.resx">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Identity\201703030459149_CreatedOnChange.resx">
+    <EmbeddedResource Include="Migrations\201703030459149_CreatedOnChange.resx">
       <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

@@ -75,12 +75,12 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201703022141401_Initial.cs" />
-    <Compile Include="Migrations\201703022141401_Initial.Designer.cs">
+    <Compile Include="Migrations\Client\201703022141401_Initial.cs" />
+    <Compile Include="Migrations\Client\201703022141401_Initial.Designer.cs">
       <DependentUpon>201703022141401_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201703030506257_ChangeCreatedOn.cs" />
-    <Compile Include="Migrations\201703030506257_ChangeCreatedOn.Designer.cs">
+    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.cs" />
+    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.Designer.cs">
       <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
@@ -116,10 +116,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703022141401_Initial.resx">
+    <EmbeddedResource Include="Migrations\Client\201703022141401_Initial.resx">
       <DependentUpon>201703022141401_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703030506257_ChangeCreatedOn.resx">
+    <EmbeddedResource Include="Migrations\Client\201703030506257_ChangeCreatedOn.resx">
       <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
