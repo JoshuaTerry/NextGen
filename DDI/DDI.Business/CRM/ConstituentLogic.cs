@@ -103,15 +103,9 @@ namespace DDI.Business.CRM
             return NameFormatter.FormatIndividualSortName(constituent);
         }
 
-        public override void Validate(Constituent constituent)
+        private List<string> GetFormattedNameFields()
         {
-            base.Validate(constituent);           
-
-            // Get list of modified properties
-            List<string> modifiedProperties = _constituentRepo.GetModifiedProperties(constituent);
-
-            // Update constituent formatted name and sort name only if name fields were updated.
-            if (modifiedProperties.Intersect(new string[]
+            return new string[]
             {
                 nameof(Constituent.FirstName),
                 nameof(Constituent.MiddleName),
@@ -120,12 +114,46 @@ namespace DDI.Business.CRM
                 nameof(Constituent.Nickname),
                 nameof(Constituent.Prefix),
                 nameof(Constituent.NameFormat)
-            }).Count() > 0)
+            }.ToList(); 
+        }
+        private Constituent CalculateConstituentNameProperties(Constituent constituent)
+        {
+            var formattedNameFields = GetFormattedNameFields();
+
+            List<string> modifiedProperties = null;
+            if (constituent.Id != Guid.Empty)
+            {
+                modifiedProperties = _constituentRepo.GetModifiedProperties(constituent);
+            }
+            else
+            {
+                modifiedProperties = typeof(Constituent).GetProperties().Where(p => formattedNameFields.Contains(p.Name) && p.GetValue(constituent) != null).Select(p => p.Name).ToList();
+            }
+            // Update constituent formatted name and sort name only if name fields were updated.
+            if (modifiedProperties?.Intersect(GetFormattedNameFields()).Count() > 0)
             {
                 constituent.FormattedName = GetFormattedName(constituent);
                 constituent.Name = GetSortName(constituent);
             }
 
+            return constituent;
+        }
+                
+        private void ValidateUniqueConstituentNumber(Constituent entity)
+        {
+            var existing = UnitOfWork.GetRepository<Constituent>().Entities.FirstOrDefault();
+            if (existing != null)
+            {
+                if (entity.Id == Guid.Empty || entity.Id == existing.Id)
+                {
+                    throw new ValidationException("The Constituent Number already exists.");
+                } 
+            } 
+        }
+        public override void Validate(Constituent constituent)
+        {
+            ValidateUniqueConstituentNumber(constituent);
+            constituent = CalculateConstituentNameProperties(constituent);
             ScheduleUpdateSearchDocument(constituent);
         }
 
