@@ -290,6 +290,10 @@
     <Compile Include="Migrations\201703022119126_AddingIdentityTables.Designer.cs">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703030459149_CreatedOnChange.cs" />
+    <Compile Include="Migrations\201703030459149_CreatedOnChange.Designer.cs">
+      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
@@ -389,6 +393,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703022119126_AddingIdentityTables.resx">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703030459149_CreatedOnChange.resx">
+      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

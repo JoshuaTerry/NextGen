@@ -15,7 +15,7 @@ namespace DDI.Shared.Models.Client.Security
         [Key]
         public Guid Id { get; set; }
         public Guid? CreatedBy { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
         public string DisplayName { get; set; } 

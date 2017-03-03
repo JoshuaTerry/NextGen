@@ -79,6 +79,10 @@
     <Compile Include="Migrations\201703022141401_Initial.Designer.cs">
       <DependentUpon>201703022141401_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703030506257_ChangeCreatedOn.cs" />
+    <Compile Include="Migrations\201703030506257_ChangeCreatedOn.Designer.cs">
+      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
@@ -114,6 +118,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703022141401_Initial.resx">
       <DependentUpon>201703022141401_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703030506257_ChangeCreatedOn.resx">
+      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>

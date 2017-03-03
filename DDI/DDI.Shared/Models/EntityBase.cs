@@ -1,6 +1,7 @@
 using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DDI.Shared.Models
@@ -24,7 +25,7 @@ namespace DDI.Shared.Models
         public virtual string DisplayName => string.Empty;
        
         public virtual Guid? CreatedBy { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public virtual DateTime? CreatedOn { get; set; }
 
         public virtual Guid? LastModifiedBy { get; set; }

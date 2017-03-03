@@ -134,7 +134,6 @@
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
-    <Compile Include="Models\Client\Core\ApplicationUser.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />

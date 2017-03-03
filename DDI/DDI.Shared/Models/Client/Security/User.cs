@@ -33,6 +33,7 @@ namespace DDI.Shared.Models.Client.Security
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
         public Guid? CreatedBy { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedOn { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
