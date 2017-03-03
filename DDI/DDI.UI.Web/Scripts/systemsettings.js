@@ -11,8 +11,8 @@
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Demographics: 'DemographicSettings',
-    Education: 'Education',
-    Professional: 'Professional'
+    Education: 'EducationSettings',
+    Professional: 'ProfessionalSettings'
 
 }
 
