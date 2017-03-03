@@ -244,7 +244,7 @@ function DisplayConstituentData() {
 
         GenerateContactInfoSection();
 
-	    LoadDenominationsTagBox();
+        LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
@@ -271,7 +271,7 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
-	
+    
         PopulateUserIdDropDown();
 
         LoadRelationshipsData();

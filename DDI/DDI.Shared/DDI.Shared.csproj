@@ -118,6 +118,7 @@
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
+    <Compile Include="Helpers\PathHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="IConfigurationManager.cs" />

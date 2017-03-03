@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Models;
 using DDI.Logger;
+using DDI.Shared.Helpers;
 
 namespace DDI.Data
 {
@@ -91,31 +92,7 @@ namespace DDI.Data
         }
         #endregion Public Constructors
          
-        #region Public Methods
-
-        public static string NameFor<T1>(Expression<Func<T1, object>> property, bool shouldContainObjectPath = false)
-        {
-            var member = property.Body as MemberExpression;
-            if (member == null)
-            {
-                var unary = property.Body as UnaryExpression;
-                if (unary != null)
-                {
-                    member = unary.Operand as MemberExpression;
-                }
-            }
-            if (shouldContainObjectPath && member != null)
-            {
-                var path = member.Expression.ToString();
-                var objectPath = member.Expression.ToString().Split('.').Where(a => !a.Equals("First()")).ToArray();
-                if (objectPath.Length >= 2)
-                {
-                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
-                    return $"{path}.{member.Member.Name}";
-                }
-            }
-            return member?.Member.Name ?? String.Empty;
-        }
+        #region Public Methods       
 
         public virtual void Delete(T entity)
         {
@@ -208,7 +185,7 @@ namespace DDI.Data
 
             foreach(Expression<Func<T, object>> include in includes)
             {
-                string name = NameFor(include, true);
+                string name = PathHelper.NameFor(include, true);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     query = query.Include(name);

@@ -136,7 +136,7 @@ namespace DDI.WebApi.Controllers
                 var totalCount = response.TotalResults;
 
                 Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper, fields);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
 
                 return Ok(dynamicResponse);
             }
@@ -161,7 +161,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
-                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, urlHelper, fields);
+                var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
 
                 return Ok(dynamicResponse);
             }
