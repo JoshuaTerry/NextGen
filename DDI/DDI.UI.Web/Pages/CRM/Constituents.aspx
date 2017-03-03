@@ -237,6 +237,7 @@
                     </div>
 
                     <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -380,7 +381,8 @@
                         
                     </div>
 
-                    <h1 class ="professionalSection">Professional</h1>
+                    <h1 class="ProfessionalSettingsSection"><span class="ProfessionalSettingsSectionLabel">Professional</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="threecolumn">

@@ -546,4 +546,62 @@
         </div>
 
     </div>
+           <div class="incomeLevelmodal" title="Income Level" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="incomeLevelId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="inc-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="inc-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="inc-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitinc" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+               <div class="professionmodal" title="Professions" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="professionId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="pro-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="pro-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="pro-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitpro" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>
