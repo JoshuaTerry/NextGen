@@ -166,9 +166,7 @@ namespace DDI.Data
         {
             // NOTE: This will eventually circle back and call our overridden SaveChanges() later
             return Logger.SaveChanges(author);
-        }
-
-        
+        } 
         #endregion
 
     }
