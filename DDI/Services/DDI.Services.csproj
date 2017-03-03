@@ -80,6 +80,7 @@
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
+    <Compile Include="RelationshipService.cs" />
     <Compile Include="DenominationsService.cs" />
     <Compile Include="EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
     <Compile Include="ServiceInterfaces\IDenominationsService.cs" />
     <Compile Include="ServiceInterfaces\IEthnicitiesService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />

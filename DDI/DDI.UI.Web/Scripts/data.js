@@ -120,6 +120,9 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
 
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: 'GET',
@@ -139,10 +142,7 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
 }
 
 function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
-
-    if (container.indexOf('.') != 0)
-        container = '.' + container;
-
+    
     $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
@@ -208,6 +208,10 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
         filterRow: {
             visible: true,
             showOperationChooser: false
+            },
+            selection: {
+                mode: 'single',
+                allowSelectAll: false
         },
         onRowClick: function (info) {
 
@@ -229,7 +233,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
         width: modalWidth,
         resizable: false
     });
-
+    
     LoadEntity(route, id, modal, loadEntityMethod, entityName);
 
     $('.cancelmodal').click(function (e) {
@@ -258,7 +262,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
 
                 CloseModal(modal);
 
-                loadEntityGridMethod();
+                loadEntityGrid();
 
             },
             error: function (xhr, status, err) {
@@ -321,6 +325,7 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
 
         });
     });
+
 }
 
 function LoadEntity(route, id, modal, loadEntityData, entityName) {
@@ -334,7 +339,7 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
             loadEntityData(data, modal);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage("Error", "An error occurred during the loading of the " + entityName + ".");
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the ' + entityName + '.');
         }
     });
 }

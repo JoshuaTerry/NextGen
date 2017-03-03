@@ -147,6 +147,7 @@
     <Content Include="Scripts\fileupload\jquery.iframe-transport.js" />
     <Content Include="Scripts\fileupload\load-image.all.min.js" />
     <Content Include="Scripts\jquery.datepair.min.js" />
+<Content Include="Scripts\jquery.timepicker.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
