@@ -8,6 +8,8 @@ using System.Web;
 using DDI.Shared.Models.Client.CRM;
 using DDI.WebApi.Models;
 using Newtonsoft.Json.Linq;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Helpers
 {
@@ -35,7 +37,7 @@ namespace DDI.WebApi.Helpers
                 changedProperties.Add(pair.Key, pair.Value.ToObject(ConvertToType<T>(pair.Key)));
             }
 
-            var item = _context.Set<ApplicationUser>().Single(x => x.Id == id.ToString());
+            var item = _context.Set<User>().Single(x => x.Id == id);
 
             UpdateChangedProperties(item, changedProperties);
         }
@@ -49,7 +51,7 @@ namespace DDI.WebApi.Helpers
             return propertyType;
         }
 
-        public virtual int UpdateChangedProperties(ApplicationUser entity, IDictionary<string, object> propertyValues)
+        public virtual int UpdateChangedProperties(User entity, IDictionary<string, object> propertyValues)
         {
             var entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;

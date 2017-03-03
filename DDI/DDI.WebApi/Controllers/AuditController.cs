@@ -21,8 +21,8 @@ namespace DDI.WebApi.Controllers
             _service = new AuditService();
         }
 
-        [HttpGet]         
-        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)] 
+        [HttpGet]
+        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
         public IHttpActionResult GetByConstituentId(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -31,14 +31,16 @@ namespace DDI.WebApi.Controllers
                 end = end ?? DateTime.Now;
 
                 var search = new PageableSearch(offset, limit, orderBy);
-                // JLT - I can't seem to make the expression query the sub-collections
+
                 //var response = _service.GetAllWhereExpression(a => a.ObjectChanges.Where(o => o.ObjectReference == id.ToString()), search);
 
-                var response = _service.GetAll(id, start.Value, end.Value, search);
-                return FinalizeResponse(response, RouteNames.Audit, search);
+                //var response = _service.GetAll(id, start.Value, end.Value, search);
+                //return FinalizeResponse(response, RouteNames.Audit, search);
+
+                return InternalServerError();
             }
             catch (Exception ex)
-            { 
+            {
                 return InternalServerError();
             }
         }

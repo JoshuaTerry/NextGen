@@ -809,6 +809,7 @@ namespace DDI.Conversion.CRM
                     rtype.Name = name;
                     rtype.IsSpouse = isSpouse;
                     rtype.ConstituentCategory = (isForIndividuals ? ConstituentCategory.Individual : ConstituentCategory.Both);
+                    rtype.IsActive = true;
 
                     if (!string.IsNullOrWhiteSpace(reciprocalMale))
                     {

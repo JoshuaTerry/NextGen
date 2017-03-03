@@ -6,6 +6,7 @@
     
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\data.js"></script>
 
 </asp:Content>
 
@@ -59,7 +60,7 @@
                     <li><a href="#" class="LoadProfessional">Professional</a></li>
                     <li><a href="#" class="LoadRegions">Regions</a></li>
                     <li><a href="#" class="LoadRelationship">Relationship</a></li>
-                    <li><a href="#" class="LoadTags">Tags</a></li>
+                    <li><a href="#" class="LoadTagGroup">Tags</a></li>
                 </ul>
             </div>
 
@@ -209,6 +210,138 @@
 
     </div>
 
+
+    <div class="clergystatusmodal" title="Clergy Status" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="cstat-id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="cstat-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="cstat-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="cstat-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitcstat" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clergytypemodal" title="Clergy Type" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="ctype-id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="ctype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="ctype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="ctype-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitctype" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+    <div class="taggroupmodal" title="Tag Group" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtaggroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="tg-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="tg-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Multi/Single Select</label>
+                <select class="tg-Select">  
+                   <option value="0">Single</option>
+                   <option value="1">Multiple</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="tg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetaggroup" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="tagmodal" title="Tag" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtagid" />
+            <input type="hidden" class="hidtagparentgroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="t-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="t-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="t-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="t-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetag" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
     <div class="denominationmodal" title="Denomination" style="display: none;">
 
         <div class="modalcontent">
@@ -326,35 +459,6 @@
         </div>
 
     </div>
- <div class="languagemodal" title="Language" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="lang-Id" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="lang-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Name</label>
-                <input type="text" class="lang-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="lang-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitlang" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
     <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
@@ -367,7 +471,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="deg-Name" />
             </div>
 
@@ -396,7 +500,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="eduLev-Name" />
             </div>
 
@@ -425,7 +529,7 @@
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
+                <label>Description</label>
                 <input type="text" class="sch-Name" />
             </div>
 

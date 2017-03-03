@@ -10,10 +10,10 @@
 
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
+    Clergy: 'ClergySettings',
     Demographics: 'DemographicSettings',
     Education: 'EducationSettings',
     Professional: 'ProfessionalSettings'
-
 }
 
 $(document).ready(function () {
@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     });
 
-    // CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+    // CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
 
 });
 
@@ -350,7 +350,7 @@ function LoadClergySectionSettings() {
 
             $('.submitcstat').unbind('click');
 
-            $('submitcstat').click(function () {
+            $('.submitcstat').click(function () {
                 var item = {
                     Code: $(modal).find('.cstat-Code').val(),
                     Name: $(modal).find('.cstat-Name').val(),
@@ -359,7 +359,7 @@ function LoadClergySectionSettings() {
 
                 $.ajax({
                     type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergystatus',
+                    url: WEB_API_ADDRESS + 'clergystatuses',
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
@@ -402,7 +402,7 @@ function LoadClergySectionSettings() {
 
             $('.submitctype').unbind('click');
 
-            $('submitctype').click(function () {
+            $('.submitctype').click(function () {
                 var item = {
                     Code: $(modal).find('.ctype-Code').val(),
                     Name: $(modal).find('.ctype-Name').val(),
@@ -411,7 +411,7 @@ function LoadClergySectionSettings() {
 
                 $.ajax({
                     type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergytype',
+                    url: WEB_API_ADDRESS + 'clergytypes',
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
@@ -431,14 +431,202 @@ function LoadClergySectionSettings() {
 
         })
         .appendTo($(header));
-    $(clergytype).appendTo($(accordion));
+    $(types).appendTo($(accordion));
 
     LoadClergyTypeSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
+
 }
+
+function LoadClergyStatusSettingsGrid() {
+    var statuscolumns = [
+          { dataField: 'Id', width: '0px' },
+          { dataField: 'Code', caption: 'Code' },
+          { dataField: 'Name', caption: 'Description' },
+          { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
+}
+
+function LoadClergyTypeSettingsGrid() {
+    var typecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
+}
+
+// CLERGY STATUS SYSTEM SETTINGS
+function EditClergyStatus(id) {
+
+    LoadClergyStatus(id);
+
+    modal = $('.clergystatusmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitcstat').unbind('click');
+
+    $('.submitcstat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.cstat-Code').val(),
+            Name: $(modal).find('.cstat-Name').val(),
+            IsActive: $(modal).find('.cstat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Status saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyStatusSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyStatus(id) {
+
+}
+
+function LoadClergyStatus(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.cstat-Id').val(data.Data.Id);
+                $(modal).find('.cstat-Code').val(data.Data.Code);
+                $(modal).find('.cstat-Name').val(data.Data.Name);
+                $(modal).find('.cstat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
+        }
+
+    });
+}
+// END CLERGY STATUS SYSTEM SETTINGS
+
+// CLERGY TYPE SYSTEM SETTINGS
+function EditClergyType(id) {
+
+    LoadClergyType(id);
+
+    modal = $('.clergytypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitctype').unbind('click');
+
+    $('.submitctype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.ctype-Code').val(),
+            Name: $(modal).find('.ctype-Name').val(),
+            IsActive: $(modal).find('.ctype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergytypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyType(id) {
+
+}
+
+function LoadClergyType(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergytypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.ctype-Id').val(data.Data.Id);
+                $(modal).find('.ctype-Code').val(data.Data.Code);
+                $(modal).find('.ctype-Name').val(data.Data.Name);
+                $(modal).find('.ctype-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
+        }
+
+    });
+}
+// END CLERGY TYPE SYSTEM SETTINGS
+
 function LoadConstituentTypesSectionSettings() {
 
 
@@ -728,6 +916,7 @@ function LoadEthnicitySettingsGrid() {
 
     LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
 }
+
 
 function LoadLanguageSettingsGrid() {
 
@@ -1307,7 +1496,7 @@ function LoadDegree(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading degree.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the degree.');
         }
     });
 
@@ -1383,7 +1572,7 @@ function LoadEducationLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading education level.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the education level.');
         }
     });
 
@@ -1462,7 +1651,7 @@ function LoadSchool(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading school.');
+            DisplayErrorMessage('Error', 'An error occurred when loading the school.');
         }
     });
 
@@ -1826,9 +2015,163 @@ function LoadRelationshipSectionSettings() {
 
 }
 
-function LoadTagsSectionSettings() {
+function LoadTagGroupSectionSettings() {
 
+    var selectOptions = [
+        { Id: 0, Description: "Single" },
+        { Id: 1, Description: "Multiple" }
+    ];
 
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'Order', caption: 'Order' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'TagSelectionType', caption: 'Multi/Single Select', lookup: { dataSource: selectOptions, valueExpr: 'Id', displayExpr: 'Description' } },
+        { dataField: 'IsActive', caption: 'Active' },
+    ];
+
+    LoadGrid('taggroupsgrid',
+        'contentcontainer',
+        columns,
+        'taggroups',
+        TagGroupSelected,
+        EditTagGroup,
+        DeleteEntity);
+
+    CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.contentcontainer', 'newtaggroupmodal');
+}
+
+function TagGroupSelected(info) {
+
+    var taggrid;
+    var selectedRow;
+    var tagscontainers = $(".tagscontainer");
+
+    if (tagscontainers.length === 0) {
+        taggrid = $("<div>").addClass("tagscontainer");
+    } else {
+        taggrid = tagscontainers[0];
+    }
+
+    $(taggrid).insertAfter($('.taggroupsgrid'));
+
+    if (!info) {
+        var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
+        info = dataGrid.getSelectedRowsData();
+        selectedRow = info[0];
+    } else {
+        selectedRow = info.data;
+    }
+
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'Order', caption: 'Order' },
+        { dataField: 'Code', caption: "Code" },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' },
+    ];
+
+    LoadGrid('tagsgrid',
+        'tagscontainer',
+        columns,
+        'taggroups/' + selectedRow.Id + '/tags',
+        TagGroupSelected,
+        EditTag,
+        DeleteEntity);
+
+    CreateNewModalLink("New Tag", NewTagModal, '.tagsgrid', '.tagscontainer', 'newtagmodal');
+
+}
+
+function EditTagGroup(id) {
+
+    EditEntity('.taggroupmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Tag Group', 'taggroups', id);
+
+}
+
+function EditTag(id) {
+
+    EditEntity('.tagmodal', '.savetag', 250, LoadTagData, TagGroupSelected, GetTagToSave, 'Tag', 'tags', id);
+
+}
+
+function LoadTagGroupData(data, modal) {
+
+    if (data.Data) {
+        $(modal).find('.hidtaggroupid').val(data.Data.Id);
+        $(modal).find('.tg-Order').val(data.Data.Order);
+        $(modal).find('.tg-Name').val(data.Data.Name);
+        $(modal).find('.tg-Select').val(data.Data.TagSelectionType);
+        $(modal).find('.tg-IsActive').prop('checked', data.Data.IsActive);
+    }
+    
+}
+
+function LoadTagData(data, modal) {
+
+    if (data.Data) {
+        $(modal).find('.hidtagid').val(data.Data.Id);
+        $(modal).find('.hidtagparentgroupid').val(data.Data.TagGroupId);
+        $(modal).find('.t-Order').val(data.Data.Order);
+        $(modal).find('.t-Name').val(data.Data.Name);
+        $(modal).find('.t-Code').val(data.Data.Code);
+        $(modal).find('.t-IsActive').prop('checked', data.Data.IsActive);
+    }
+    
+}
+
+function GetTagToSave(modal, isUpdate) {
+    var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
+    var info = dataGrid.getSelectedRowsData();
+
+    var item = {
+        TagGroupId: info[0].Id,
+        Order: $(modal).find('.t-Order').val(),
+        Code: $(modal).find('.t-Code').val(),
+        Name: $(modal).find('.t-Name').val(),
+        IsActive: $(modal).find('.t-IsActive').prop('checked'),
+    }
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidtagid').val();
+    }
+    return item;
+}
+
+function GetTagGroupToSave(modal, isUpdate) {
+    var item = {
+        Order: $(modal).find('.tg-Order').val(),
+        Name: $(modal).find('.tg-Name').val(),
+        IsActive: $(modal).find('.tg-IsActive').prop('checked'),
+        TagSelectionType: $(modal).find('.tg-Select').val(),
+    }
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidtaggroupid').val();
+    }
+    return item;
+}
+
+function NewTagGroupModal(modalLinkClass) {
+
+    NewEntityModal(modalLinkClass, '.taggroupmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Tag Group', 'taggroups');
+
+}
+
+function NewTagModal(modalLinkClass) {
+
+    NewEntityModal(modalLinkClass, '.tagmodal', '.savetag', 250, LoadTagData, TagGroupSelected, GetTagToSave, 'Tag', 'tags');
+
+}
+
+function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addToContainer, modalLinkClass) {
+
+    var modallink = $('<a>').attr('href', '#').addClass('newmodallink').addClass(modalLinkClass).text(linkText).appendTo($(addToContainer));
+
+    $(prependToClass).before($(modallink));
+
+    if (modalLinkClass.indexOf('.') != 0)
+        modalLinkClass = '.' + modalLinkClass;
+
+    newEntityModalMethod(modalLinkClass);
 
 }
 /* END CRM SETTINGS */
@@ -1951,33 +2294,33 @@ var options = [];
 
 function LoadCRMClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.CRM); // CRM = 19
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.CRM); // CRM = 19
 
-    CreateNewCustomFieldModalLink(customfieldentity.CRM, 'New CRM Custom Field');
+    CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
 
 }
 
 function LoadDonationClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.Gifts); // Gifts = 9
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.Gifts); // Gifts = 9
 
-    CreateNewCustomFieldModalLink(customfieldentity.Gifts, 'New Donations Custom Field');
+    CreateNewCustomFieldModalLink(CustomFieldEntity.Gifts, 'New Donations Custom Field');
 
 }
 
 function LoadGLClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', customfieldentity.GeneralLedger); // GeneralLedger = 1
+    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.GeneralLedger); // GeneralLedger = 1
 
-    CreateNewCustomFieldModalLink(customfieldentity.GeneralLedger, 'New General Ledger Custom Field');
-
+    CreateNewCustomFieldModalLink(CustomFieldEntity.GeneralLedger, 'New General Ledger Custom Field');
+    
 }
 
 function RefreshCustomFieldsGrid() {
 
     $('.contentcontainer').html('');
 
-    DisplayCustomFieldsGrid('contentcontainer', currentcustomfieldentity);
+    DisplayCustomFieldsGrid('contentcontainer', currentCustomFieldEntity);
 
 }
 
@@ -2017,7 +2360,7 @@ function CreateNewCustomFieldModal(entity, title) {
     var save = $(modal).find('.submitcf');
 
     $('<option>').text('').val('').appendTo($(type));
-    $.each(customfieldtype, function (key, value) {
+    $.each(CustomFieldType, function (key, value) {
 
         $('<option>').text(key).val(value).appendTo($(type));
 
@@ -2100,25 +2443,26 @@ function ClearModal(modal) {
 
 function CustomFieldTypeSelected(selectedvalue) {
 
-    if (selectedvalue) {
-        if (selectedvalue == customfieldtype.Number ||
-        selectedvalue == customfieldtype.Date ||
-        selectedvalue == customfieldtype.DateTime) {
+    if (selectedvalue)
+    {
+        if (selectedvalue == CustomFieldType.Number ||
+        selectedvalue == CustomFieldType.Date ||
+        selectedvalue == CustomFieldType.DateTime) {
             $('.minmaxvalues').show()
         }
         else {
             $('.minmaxvalues').hide()
         }
 
-        if (selectedvalue && selectedvalue == customfieldtype.Number) {
+        if (selectedvalue && selectedvalue == CustomFieldType.Number) {
             $('.decimalplacecontainer').show();
         }
         else {
             $('.decimalplacecontainer').hide();
         }
-
-        if (selectedvalue == customfieldtype.Radio ||
-            selectedvalue == customfieldtype.DropDown) {
+    
+        if (selectedvalue == CustomFieldType.Radio ||
+            selectedvalue == CustomFieldType.DropDown) {
 
             var left = parseInt($('.ui-dialog').css('left').replace('px', ''));
 
@@ -2192,7 +2536,7 @@ function SaveCustomField(modal) {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: currentcustomfieldentity,
+            Entity: currentCustomFieldEntity,
             Options: []
         }
 
@@ -2210,7 +2554,7 @@ function SaveCustomField(modal) {
             IsRequired: $('.cfisrequired').prop('checked'),
             DisplayOrder: 1,
             FieldType: $('.cftype').val(),
-            Entity: currentcustomfieldentity,
+            Entity: currentCustomFieldEntity,
             Options: []
         }
 
@@ -2244,8 +2588,8 @@ function SendCustomField(route, action, data, modal) {
 
             RefreshCustomFieldsGrid();
 
-            CreateNewCustomFieldModalLink(currentcustomfieldentity, '');
-
+            CreateNewCustomFieldModalLink(currentCustomFieldEntity, '');
+            
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error saving custom field.');
