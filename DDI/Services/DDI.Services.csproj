@@ -46,6 +46,14 @@
       <HintPath>..\packages\LinqKit.1.1.8.0\lib\net452\LinqKit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +80,7 @@
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
+    <Compile Include="RelationshipService.cs" />
     <Compile Include="DenominationsService.cs" />
     <Compile Include="EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
@@ -84,6 +93,7 @@
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
     <Compile Include="ServiceInterfaces\IDenominationsService.cs" />
     <Compile Include="ServiceInterfaces\IEthnicitiesService.cs" />
     <Compile Include="ServiceInterfaces\IRegionService.cs" />

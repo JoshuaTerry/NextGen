@@ -12,6 +12,11 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/relationshiptypes", Name = RouteNames.RelationshipTypes)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = "Id,Code,Name,DisplayName";
+            }
+
             return base.GetAll(RouteNames.RelationshipTypes, limit, offset, orderBy, fields);
         }
     }

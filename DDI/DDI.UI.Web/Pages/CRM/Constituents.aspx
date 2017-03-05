@@ -185,7 +185,7 @@
                     <h1>Additional Data</h1>
                     <div class="editcontainer customFieldContainer"></div>
 
-                    <h1 class="clergySection"><span class="clergySectionLabel">Clergy Section</span></h1>
+                    <h1 class="ClergySettingsSection"><span class="ClergySettingsSectionLabel">Clergy Section</span></h1>
                     <div class="editcontainer">
                         
                         <div class="fourcolumn">
@@ -236,7 +236,8 @@
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1 class ="educationSection">Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
+                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -380,7 +381,8 @@
                         
                     </div>
 
-                    <h1 class ="professionalSection">Professional</h1>
+                    <h1 class="ProfessionalSettingsSection"><span class="ProfessionalSettingsSectionLabel">Professional</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="threecolumn">
@@ -1044,6 +1046,7 @@
 
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
+            <input type="hidden" class="hidrelationshipisswapped" />
 
             <div class="fieldblock">
                 <label>Constituent</label>

@@ -10,8 +10,10 @@
 
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
+    Clergy: 'ClergySettings',
     Demographics: 'DemographicSettings',
-    Education: 'Education'
+    Education: 'EducationSettings',
+    Professional: 'ProfessionalSettings'
 }
 
 $(document).ready(function () {
@@ -44,7 +46,7 @@ function LoadSettingsGrid(grid, container, columns, route) {
     var datagrid = $('<div>').addClass(grid);
 
     $.ajax({
-        url: routeUrl,
+        url: WEB_API_ADDRESS + route,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -348,7 +350,7 @@ function LoadClergySectionSettings() {
 
             $('.submitcstat').unbind('click');
 
-            $('submitcstat').click(function () {
+            $('.submitcstat').click(function () {
                 var item = {
                     Code: $(modal).find('.cstat-Code').val(),
                     Name: $(modal).find('.cstat-Name').val(),
@@ -357,7 +359,7 @@ function LoadClergySectionSettings() {
 
                 $.ajax({
                     type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergystatus',
+                    url: WEB_API_ADDRESS + 'clergystatuses',
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
@@ -400,7 +402,7 @@ function LoadClergySectionSettings() {
 
             $('.submitctype').unbind('click');
 
-            $('submitctype').click(function () {
+            $('.submitctype').click(function () {
                 var item = {
                     Code: $(modal).find('.ctype-Code').val(),
                     Name: $(modal).find('.ctype-Name').val(),
@@ -409,7 +411,7 @@ function LoadClergySectionSettings() {
 
                 $.ajax({
                     type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergytype',
+                    url: WEB_API_ADDRESS + 'clergytypes',
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
@@ -429,14 +431,202 @@ function LoadClergySectionSettings() {
 
         })
         .appendTo($(header));
-    $(clergytype).appendTo($(accordion));
+    $(types).appendTo($(accordion));
 
     LoadClergyTypeSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
+
 }
+
+function LoadClergyStatusSettingsGrid() {
+    var statuscolumns = [
+          { dataField: 'Id', width: '0px' },
+          { dataField: 'Code', caption: 'Code' },
+          { dataField: 'Name', caption: 'Description' },
+          { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
+}
+
+function LoadClergyTypeSettingsGrid() {
+    var typecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
+}
+
+// CLERGY STATUS SYSTEM SETTINGS
+function EditClergyStatus(id) {
+
+    LoadClergyStatus(id);
+
+    modal = $('.clergystatusmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitcstat').unbind('click');
+
+    $('.submitcstat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.cstat-Code').val(),
+            Name: $(modal).find('.cstat-Name').val(),
+            IsActive: $(modal).find('.cstat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Status saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyStatusSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyStatus(id) {
+
+}
+
+function LoadClergyStatus(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.cstat-Id').val(data.Data.Id);
+                $(modal).find('.cstat-Code').val(data.Data.Code);
+                $(modal).find('.cstat-Name').val(data.Data.Name);
+                $(modal).find('.cstat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
+        }
+
+    });
+}
+// END CLERGY STATUS SYSTEM SETTINGS
+
+// CLERGY TYPE SYSTEM SETTINGS
+function EditClergyType(id) {
+
+    LoadClergyType(id);
+
+    modal = $('.clergytypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+        e.preventDefault();
+        CloseModal(modal);
+    })
+
+    $('.submitctype').unbind('click');
+
+    $('.submitctype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.ctype-Code').val(),
+            Name: $(modal).find('.ctype-Name').val(),
+            IsActive: $(modal).find('.ctype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'clergytypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Clergy Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadClergyTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
+
+            }
+        });
+    });
+}
+
+function DeleteClergyType(id) {
+
+}
+
+function LoadClergyType(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergytypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.ctype-Id').val(data.Data.Id);
+                $(modal).find('.ctype-Code').val(data.Data.Code);
+                $(modal).find('.ctype-Name').val(data.Data.Name);
+                $(modal).find('.ctype-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
+        }
+
+    });
+}
+// END CLERGY TYPE SYSTEM SETTINGS
+
 function LoadConstituentTypesSectionSettings() {
 
 
@@ -727,37 +917,7 @@ function LoadEthnicitySettingsGrid() {
     LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
 }
 
-function LoadClergySectionSettings() {
 
-    var accordion = $('<div>').addClass('accordions');
-    var status = $('<div>').addClass('clergystatuscontainer');
-    var types = $('<div>').addClass('clergytypecontainer');
-
-    var statuscolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    $('<h1>').text('Clergy Status').appendTo($(accordion));
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses');
-    $(status).appendTo($(accordion));
-
-    var typecolumns = [
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    $('<h1>').text('Clergy Type').appendTo($(accordion));
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes');
-    $(types).appendTo($(accordion));
-
-    $(accordion).appendTo($('.contentcontainer'));
-
-    LoadAccordions();
-
-}
 function LoadLanguageSettingsGrid() {
 
     var languagecolumns = [
@@ -772,6 +932,7 @@ function LoadLanguageSettingsGrid() {
 }
 
 /* DENOMINATION SYSTEM SETTINGS */
+
 function EditDenomination(id) {
 
     LoadDenomination(id);
@@ -1498,6 +1659,8 @@ function LoadSchool(id) {
 
 /* END EDUCATION SYSTEM SETTINGS */
 
+
+
 function LoadGenderSectionSettings() {
 
     var columns = [
@@ -1505,7 +1668,7 @@ function LoadGenderSectionSettings() {
         { dataField: 'Name', caption: 'Gender' }
     ];
 
-    LoadSystemSettingGrid('gendergridcontainer', 'contentcontainer', columns, SystemSettingsLinks.Gender.Href);
+    LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders');
 }
 
 function LoadHubSearchSectionSettings() {
@@ -1538,11 +1701,307 @@ function LoadPrefixSectionSettings() {
 
 }
 
+/* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
+    LoadSectionSettings(SettingsCategories.CRM, 'Professional', 'sectionpreferences', SystemSettings.Professional);
 
+    var accordion = $('<div>').addClass('accordions');
+    var incomeLevels = $('<div>').addClass('incomeLevelcontainer');
+    var professions = $('<div>').addClass('professioncontainer');
 
+    var header = $('<h1>').text('Income Level').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newincomeLevelmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.incomeLevelmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitinc').unbind('click');
+
+            $('.submitinc').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.inc-Code').val(),
+                    Name: $(modal).find('.inc-Name').val(),
+                    IsActive: $(modal).find('.inc-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'incomelevels',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Income Levels saved successfully.');
+
+                        CloseModal();
+
+                        LoadIncomeLevelSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Income Level.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(incomeLevels).appendTo($(accordion));
+
+    LoadIncomeLevelSettingsGrid();
+
+    header = $('<h1>').text('Professions').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newprofessionsmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.professionmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitpro').unbind('click');
+
+            $('.submitpro').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.pro-Code').val(),
+                    Name: $(modal).find('.pro-Name').val(),
+                    IsActive: $(modal).find('.pro-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'professions',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Profession saved successfully.');
+
+                        CloseModal();
+
+                        LoadProfessionSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Profession.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(professions).appendTo($(accordion));
+
+    LoadProfessionSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
+}
+
+function LoadIncomeLevelSettingsGrid() {
+
+    var incomeLevelcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('incomeLevelgrid', 'incomeLevelcontainer', incomeLevelcolumns, 'incomelevels', null, EditIncomeLevel);
 
 }
+
+function LoadProfessionSettingsGrid() {
+
+    var professioncolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('professiongrid', 'professioncontainer', professioncolumns, 'professions', null, Editprofession);
+
+}
+
+function EditIncomeLevel(id) {
+
+    LoadIncomeLevel(id);
+
+    modal = $('.incomeLevelmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitinc').unbind('click');
+
+    $('.submitinc').click(function () {
+
+        var item = {
+            Code: $(modal).find('.inc-Code').val(),
+            Name: $(modal).find('.inc-Name').val(),
+            IsActive: $(modal).find('.inc-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'incomelevels/' + $(modal).find('.incomeLevelId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Income Level saved successfully.');
+
+                CloseModal(modal);
+
+                LoadIncomeLevelSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Income Level.');
+            }
+        });
+
+    });
+
+}
+
+function LoadIncomeLevel(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'incomelevels/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.incomeLevelId').val(data.Data.Id);
+                $(modal).find('.inc-Code').val(data.Data.Code);
+                $(modal).find('.inc-Name').val(data.Data.Name);
+                $(modal).find('.inc-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Income Level.');
+        }
+    });
+
+}
+
+function Editprofession(id) {
+
+    LoadProfession(id);
+
+    modal = $('.professionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitpro').unbind('click');
+
+    $('.submitpro').click(function () {
+
+        var item = {
+            Code: $(modal).find('.pro-Code').val(),
+            Name: $(modal).find('.pro-Name').val(),
+            IsActive: $(modal).find('.pro-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'professions/' + $(modal).find('.professionId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Profession saved successfully.');
+
+                CloseModal(modal);
+
+                LoadProfessionSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Profession.');
+            }
+        });
+
+    });
+
+}
+
+function LoadProfession(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'professions/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.professionId').val(data.Data.Id);
+                $(modal).find('.pro-Code').val(data.Data.Code);
+                $(modal).find('.pro-Name').val(data.Data.Name);
+                $(modal).find('.pro-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Profession.');
+        }
+    });
+
+}
+
+
+/* END PROFESSIONAL SYSTEM SETTINGS */
 
 function LoadRegionsSectionSettings() {
 

@@ -10,15 +10,50 @@ using System.Threading;
 using System.Transactions;
 using DDI.EFAudit.Translation;
 using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Caching;
+using System.Web.Configuration;
+using DDI.Logger;
 
 namespace DDI.EFAudit
 {
+    public static class EFAuditModule
+    {
+        private static ILogger _logger = LoggerManager.GetLogger(typeof(EFAuditModule));
+        private const string AuditEnabledTag = "AuditEnabled";
+        private static object _syncRoot = new object();
+        private static bool? isAuditEnabled = null;
+        public static bool IsAuditEnabled
+        {
+            get
+            {
+                if (!isAuditEnabled.HasValue)
+                {
+                    lock(_syncRoot)
+                    {
+                        try
+                        {
+                            var auditTag = CacheHelper.GetEntry<string>(AuditEnabledTag, () => WebConfigurationManager.AppSettings["AuditEnabled"]);
+                            isAuditEnabled = auditTag.ToLower() == "true";
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex.Message);
+                            isAuditEnabled = false;
+                        }
+                    }
+                }
+                
+                return isAuditEnabled.Value;
+            }
+        }
+
+    }
     public partial class EFAuditModule<TChangeSet, TPrincipal>
         where TChangeSet : IChangeSet<TPrincipal>
     {
         public bool Enabled { get; set; }
         private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
-        private IAuditLogContext<TChangeSet, TPrincipal> _context;        
+        private IAuditLogContext<TChangeSet, TPrincipal> _context;
         private ILoggingFilter _filter;
         private ISerializationManager _serializer;
 
@@ -43,13 +78,13 @@ namespace DDI.EFAudit
         public ISaveResult<TChangeSet> SaveChanges(TPrincipal principal)
         {
             return SaveChanges(principal, new TransactionOptions());
-        }        
-        
+        }
+
         public ISaveResult<TChangeSet> SaveChanges(TPrincipal principal, TransactionOptions transactionOptions)
         {
             return SaveChanges(principal, new TransactionScopeProvider(transactionOptions));
         }
-        
+
         public ISaveResult<TChangeSet> SaveChangesWithinExplicitTransaction(TPrincipal principal)
         {
             // If there is already an explicit transaction in use, we don't need to do anything
@@ -62,29 +97,29 @@ namespace DDI.EFAudit
             if (!Enabled)
                 return new SaveResult<TChangeSet, TPrincipal>(_context.SaveAndAcceptChanges());
 
-            var result = new SaveResult<TChangeSet,TPrincipal>();
-            
+            var result = new SaveResult<TChangeSet, TPrincipal>();
+
             transactionProvider.InTransaction(() =>
             {
                 var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _factory, _filter, _serializer);
-                var oven = (IOven<TChangeSet, TPrincipal>) null;
-                 
+                var oven = (IOven<TChangeSet, TPrincipal>)null;
+
                 _context.DetectChanges();
-                 
+
                 result.AffectedObjectCount = _context.SaveAndAcceptChanges((sender, args) =>
-                { 
-                    oven = logger.Log(_context.ObjectStateManager);                
+                {
+                    oven = logger.Log(_context.ObjectStateManager);
                 });
-                 
+
                 if (oven == null)
                     throw new ChangesNotDetectedException();
-                 
+
                 if (oven.HasChangeSet)
-                { 
+                {
                     result.ChangeSet = oven.Bake(DateTime.Now, principal);
                     _context.AddChangeSet(result.ChangeSet);
                     _context.DetectChanges();
-                     
+
                     _context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
                 }
             });
@@ -92,4 +127,5 @@ namespace DDI.EFAudit
             return result;
         }
     }
+
 }
