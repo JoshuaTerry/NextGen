@@ -14,6 +14,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -138,6 +139,66 @@ namespace DDI.Services
                 }
             }
             return base.Update(id, changes);
+        }
+
+        public IDataResponse AddTagsToConstituent(Constituent constituent, JObject tagIds)
+        {
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, c => c.Tags);
+            IDataResponse response = null;
+            List<Tag> passedTags = new List<Tag>();
+            List<Tag> constituentTags = new List<Tag>();
+
+            foreach (var pair in tagIds)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    passedTags.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<Tag>(id));
+                }
+            }
+
+            constituentTags = constituentToUpdate.Tags.ToList();
+
+            var removes = constituentTags.Except(passedTags);
+            var adds = passedTags.Except(constituentTags);
+
+            if (constituentToUpdate != null)
+            {
+                removes.ForEach(r => constituentToUpdate.Tags.Remove(r));
+                adds.ForEach(a => constituentToUpdate.Tags.Add(a));
+            }
+
+            UnitOfWork.SaveChanges();
+            
+            response = new DataResponse<Constituent>()
+            {
+                Data = UnitOfWork.GetById<Constituent>(constituent.Id),
+                IsSuccessful = true
+                
+            };
+
+            return response;
+        }
+
+        public IDataResponse RemoveTagFromConstituent(Constituent constituent, Guid tagId)
+        {
+            IDataResponse response = null;
+            var tagToRemove = constituent.Tags.Where(t => t.Id == tagId).FirstOrDefault();
+
+            if (tagToRemove != null)
+            {
+                constituent.Tags.Remove(tagToRemove);
+            }
+
+            UnitOfWork.SaveChanges();
+
+            response = new DataResponse<Constituent>()
+            {
+                Data = UnitOfWork.GetById<Constituent>(constituent.Id),
+                IsSuccessful = true
+
+            };
+
+            return response;
         }
 
         #endregion

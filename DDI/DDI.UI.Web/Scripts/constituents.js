@@ -33,7 +33,8 @@ $(document).ready(function () {
 
     LoadYears();
 
-    $('.BirthMonth').change(function () { PopulateMonthDays(); });    
+    $('.BirthMonth').change(function () { PopulateMonthDays(); });
+
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
     $('.fileuploadlink').click(function (e) {
@@ -279,11 +280,17 @@ function DisplayConstituentData() {
         NewRelationshipModal();
 
         NewAddressModal();
+
+        DisplaySelectedTags();
     }
 }
 
 function DisplayConstituentType() {
+
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
+
+    LoadTagSelector(currentEntity.Category);
+
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
@@ -297,6 +304,7 @@ function DisplayConstituentType() {
         $('.educationSection').hide();
         $('.professionalSection').hide();
     }
+
 }
 
 function DisplayConstituentPrimaryAddress() {

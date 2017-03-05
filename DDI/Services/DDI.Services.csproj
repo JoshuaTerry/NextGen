@@ -89,7 +89,9 @@
     <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="ServiceInterfaces\IService.cs" />
     <Compile Include="AddressService.cs" />
+    <Compile Include="ServiceInterfaces\ITagGroupService.cs" />
     <Compile Include="StateService.cs" />
+    <Compile Include="TagGroupService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">

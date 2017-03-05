@@ -73,7 +73,7 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <input type="text" class="editable Tags tagselect" />
+                        <div class="tagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">

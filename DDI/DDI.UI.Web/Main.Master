@@ -261,6 +261,7 @@
                 <div class="tagselectgridcontainer"></div>
 
                 <div class="modalbuttons">
+                    <input type="button" class="saveselectedtags" value="Save" />
                     <a href="#" class="cancelmodal">Cancel</a>
                 </div>
 
