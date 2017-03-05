@@ -99,7 +99,11 @@ namespace DDI.Conversion.CRM
                     string text2 = importer.GetString(6);
                     string security = importer.GetString(7);
                     bool active = importer.GetBool(8);
-                    string baseType = importer.GetString(9);
+                    string createdBy = importer.GetString(9);
+                    DateTime? createdOn = importer.GetDateTime(10);
+                    string modifiedBy = importer.GetString(11);
+                    DateTime? modifiedOn = importer.GetDateTime(12);
+
                     bool masculine = true;
 
                     switch (codeSet)
@@ -630,6 +634,7 @@ namespace DDI.Conversion.CRM
                         reg = context.Regions.Create();
                         reg.Level = level;
                         reg.Code = code;
+                        reg.IsActive = true;
                         context.Regions.Add(reg);
                     }
                     reg.Name = name;
@@ -974,6 +979,7 @@ namespace DDI.Conversion.CRM
                     prefix.Gender = g1;
                     prefix.GenderId = g1?.Id;
                     prefix.ShowOnline = showOnline;
+                    prefix.IsActive = true;
 
                     context.Prefixes.AddOrUpdate(
                         p => p.Code,
