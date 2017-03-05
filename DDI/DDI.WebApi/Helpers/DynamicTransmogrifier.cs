@@ -108,8 +108,13 @@ namespace DDI.WebApi.Helpers
             Type type = data.GetType();
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             PropertyInfo[] properties = type.GetProperties(flags);
-            bool includeEverything = (fieldsToInclude == null || fieldsToInclude.Count == 0 || fieldsToInclude.All(p => p.Contains(PathHelper.FieldExcludePrefix)));
-            bool hasExcludes = fieldsToInclude.Any(p => p.StartsWith(PathHelper.FieldExcludePrefix));
+
+            // Determine if there are any fields being excluded.
+            int excludesCount = fieldsToInclude.Count(p => p.Contains(PathHelper.FieldExcludePrefix));
+            bool hasExcludes = (excludesCount > 0);
+
+            // Include all fields if field list is empty, or field list contains only fields to exclude.
+            bool includeEverything = (fieldsToInclude == null || fieldsToInclude.Count == 0 || excludesCount == fieldsToInclude.Count);
 
             foreach (PropertyInfo property in properties)
             {
