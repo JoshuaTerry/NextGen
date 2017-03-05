@@ -13,35 +13,35 @@ namespace DDI.WebApi.Controllers
     public class TagGroupsController : ControllerBase<TagGroup>
     {
         [HttpGet]
-        [Route("api/v1/taggroups", Name = RouteNames.TagGroup)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        [Route("api/v1/taggroups")]
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
-            return base.GetAll(RouteNames.Tag, limit, offset, orderBy, fields);
+            return base.GetAll(null, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/taggroups/{id}", Name = RouteNames.TagGroup + RouteVerbs.Get)]
+        [Route("api/v1/taggroups/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/taggroups", Name = RouteNames.TagGroup + RouteVerbs.Post)]
+        [Route("api/v1/taggroups")]
         public IHttpActionResult Post([FromBody] TagGroup entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/taggroups/{id}", Name = RouteNames.TagGroup + RouteVerbs.Patch)]
+        [Route("api/v1/taggroups/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/taggroups/{id}", Name = RouteNames.TagGroup + RouteVerbs.Delete)]
+        [Route("api/v1/taggroups/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

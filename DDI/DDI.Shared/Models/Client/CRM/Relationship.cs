@@ -26,7 +26,14 @@ namespace DDI.Shared.Models.Client.CRM
         public Guid? Constituent2Id { get; set; }
 
         public Constituent Constituent2 { get; set; }
-        public override string DisplayName => $"{Constituent1?.FormattedName} is the {RelationshipType?.Name} of {Constituent2?.FormattedName}";
+
+        [NotMapped]
+        public bool IsSwapped { get; set; }
+
+        [NotMapped]
+        public Guid? TargetConstituentId { get; set; }
+
+        public override string DisplayName => $"{Constituent1?.ConstituentNumber} is the {RelationshipType?.Name} of {Constituent2?.ConstituentNumber}";
 
         #endregion Public Properties
 

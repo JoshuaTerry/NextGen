@@ -10,5 +10,6 @@ namespace DDI.Shared.Models
     {
         string Code { get; set; }
         string Name { get; set; }
+        bool IsActive { get; set; }
     }
 }

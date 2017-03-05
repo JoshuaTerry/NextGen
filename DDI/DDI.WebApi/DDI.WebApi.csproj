@@ -224,6 +224,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\EFTFormatsController.cs" />
     <Compile Include="Controllers\FileStorageController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
@@ -286,6 +287,15 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
+    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.cs" />
+    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.Designer.cs">
+      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.cs" />
+    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.Designer.cs">
+      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -379,6 +389,14 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\Identity\201703022119126_AddingIdentityTables.resx">
+      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201703030459149_CreatedOnChange.resx">
+      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
