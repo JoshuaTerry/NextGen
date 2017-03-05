@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -8,9 +7,7 @@ using Newtonsoft.Json.Linq;
 namespace DDI.WebApi.Controllers
 {
     public class SchoolsController : ControllerBase<School>
-    {
-        private string _defaultFields = null;
-
+    {        
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]
