@@ -11,18 +11,20 @@ namespace DDI.WebApi.Controllers
     {
         private string _defaultFields = null;
 
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/schools", Name = RouteNames.School)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.School, limit, offset, orderBy, ConvertFieldList(fields));
+            return base.GetAll(RouteNames.School, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/schools/{id}", Name = RouteNames.School + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = "all")
+        public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(id, ConvertFieldList(fields));
+            return base.GetById(id, fields);
         }
 
         [HttpPost]
@@ -45,28 +47,5 @@ namespace DDI.WebApi.Controllers
         {
             return base.Delete(id);
         }
-
-        private string ConvertFieldList(string fields)
-        {
-            if (string.IsNullOrWhiteSpace(fields))
-            {
-                if (_defaultFields == null)
-                {
-                    _defaultFields = new PathHelper.FieldListBuilder<School>()
-                        .Include(p => p.Id)
-                        .Include(p => p.DisplayName)
-                        .Include(p => p.IsActive);
-                }
-                return _defaultFields;
-            }
-            else if (string.Compare(fields, "all", true) == 0)
-            {
-                return string.Empty;
-            }
-
-            return fields;
-        }
-
-
     }
 }

@@ -30,6 +30,10 @@ namespace DDI.WebApi.Controllers
         protected IService<T> Service => _service;
         protected ILogger Logger => _logger;
 
+        protected virtual string FieldsForList => string.Empty;
+        protected virtual string FieldsForSingle => "all";
+        protected virtual string FieldsForAll => string.Empty;
+
         public ControllerBase()
             :this(new ServiceBase<T>())
         {
@@ -60,6 +64,26 @@ namespace DDI.WebApi.Controllers
             //Each controller should implement this if they need specific children populated
             return null;
         }
+
+        /// <summary>
+        /// Convert a comma delimited list of fields for GET.  "all" specifies all fields, blank or null specifies default fields.
+        /// </summary>
+        /// <param name="fields">List of fields from API call.</param>
+        /// <param name="defaultFields">Default fields list.</param>
+        protected virtual string ConvertFieldList(string fields, string defaultFields = "")
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = defaultFields;
+            }
+            if (string.Compare(fields, "all", true) == 0)
+            {
+                fields = FieldsForAll;
+            }
+
+            return fields;
+        }
+
 
         public IPagination Pagination
         {
@@ -95,9 +119,9 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetAll(string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
         {
             try
-            {
+            {                
                 urlHelper = urlHelper ?? GetUrlHelper();
-                return FinalizeResponse(_service.GetAll(fields, search), routeName, search, fields, urlHelper);
+                return FinalizeResponse(_service.GetAll(fields, search), routeName, search, ConvertFieldList(fields, FieldsForList), urlHelper);
             }
             catch (Exception ex)
             {
@@ -110,10 +134,10 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)
         {
             try
-            {
+            {                
                 urlHelper = urlHelper ?? GetUrlHelper();
                 var response = _service.GetById(id);
-                return FinalizeResponse(response, fields, urlHelper);
+                return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle), urlHelper);
             }
             catch (Exception ex)
             {
