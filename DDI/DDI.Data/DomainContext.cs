@@ -39,6 +39,8 @@ namespace DDI.Data
         public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<NoteContactMethod> NoteContactMethods { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
+        public DbSet<MemoCode> MemoCodes { get; set; }
+        public DbSet<MemoCategory> MemoCategories { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
 
@@ -154,11 +156,11 @@ namespace DDI.Data
         public DbSet<UserClaim> UserClaims { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<User>();
-            modelBuilder.Ignore<UserLogin>();
-            modelBuilder.Ignore<Role>();
-            modelBuilder.Ignore<UserRole>();
-            modelBuilder.Ignore<UserClaim>();
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins"); ;
+            modelBuilder.Entity<Role>().ToTable("Roles"); ;
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles"); ;
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims"); ;
             modelBuilder.Ignore<Claim>();
         }
 

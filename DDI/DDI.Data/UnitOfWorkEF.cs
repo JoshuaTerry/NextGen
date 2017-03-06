@@ -31,6 +31,7 @@ namespace DDI.Data
         private List<object> _businessLogic;
 
         #endregion Private Fields
+         
 
         #region Public Constructors
 
@@ -274,17 +275,18 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
-            if (EFAuditModule.IsAuditEnabled)
+            var user = EntityFrameworkHelpers.GetCurrentUser();
+            if (EFAuditModule.IsAuditEnabled && user != null)
             {
-                var user = EntityFrameworkHelpers.GetCurrentUser();
-                if (user == null)
-                    throw new Exception("Audit Enabled, changes by Unauthenticated Users are not permitted.");
-                
+
                 return (_clientContext.Save(user).AffectedObjectCount) + 
+                _clientContext.Save(user);
+            }
+            else
+            {
+                return (_clientContext?.SaveChanges() ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
-            return (_clientContext?.SaveChanges() ?? 0) +
-                   (_commonContext?.SaveChanges() ?? 0);
         }
 
         public void AddBusinessLogic(object logic)
