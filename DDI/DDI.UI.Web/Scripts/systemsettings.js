@@ -347,7 +347,7 @@ function LoadClergySectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitcstat').unbind('click');
@@ -369,7 +369,7 @@ function LoadClergySectionSettings() {
 
                         DisplaySuccessMessage('success', 'Clergy Status saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadClergyStatusSettingsGrid();
                     },
@@ -399,7 +399,7 @@ function LoadClergySectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitctype').unbind('click');
@@ -421,7 +421,7 @@ function LoadClergySectionSettings() {
 
                         DisplaySuccessMessage('success', 'Clergy Type saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadClergyTypeSettingsGrid();
                     },
@@ -670,7 +670,7 @@ function LoadDemographicsSectionSettings() {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
 
@@ -696,7 +696,7 @@ function LoadDemographicsSectionSettings() {
 
                         DisplaySuccessMessage('Success', 'Denomination saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadDenominationSettingsGrid();
 
@@ -729,7 +729,7 @@ function LoadDemographicsSectionSettings() {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
 
@@ -753,7 +753,7 @@ function LoadDemographicsSectionSettings() {
 
                         DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadEthnicitySettingsGrid();
 
@@ -786,7 +786,7 @@ function LoadDemographicsSectionSettings() {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
 
@@ -810,7 +810,7 @@ function LoadDemographicsSectionSettings() {
 
                         DisplaySuccessMessage('Success', 'Language saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadLanguageSettingsGrid();
 
@@ -1235,7 +1235,7 @@ function LoadEducationSectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitdeg').unbind('click');
@@ -1258,7 +1258,7 @@ function LoadEducationSectionSettings() {
 
                         DisplaySuccessMessage('success', 'Degree saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadDegreeSettingsGrid();
                     },
@@ -1288,7 +1288,7 @@ function LoadEducationSectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submiteduLev').unbind('click');
@@ -1311,7 +1311,7 @@ function LoadEducationSectionSettings() {
 
                         DisplaySuccessMessage('success', 'Education Level saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadEducationLevelSettingsGrid();
                     },
@@ -1341,7 +1341,7 @@ function LoadEducationSectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitsch').unbind('click');
@@ -1364,7 +1364,7 @@ function LoadEducationSectionSettings() {
 
                         DisplaySuccessMessage('success', 'School saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadSchoolsSettingsGrid();
                     },
@@ -1718,17 +1718,15 @@ function LoadPrefixSectionSettings() {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
-
-            PopulateDropDown('.prefix-GenderId', 'genders', '', '');
 
             $('.cancelmodal').click(function (e) {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
 
@@ -1741,8 +1739,7 @@ function LoadPrefixSectionSettings() {
                     Name: $(modal).find('.prefix-Name').val(),
                     Salutation: $(modal).find('.prefix-Salutation').val(),
                     LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
-                    LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val(),
-                    GenderId: $(modal).find('.prefix-GenderId').val()
+                    LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val()
                 }
 
                 $.ajax({
@@ -1755,7 +1752,7 @@ function LoadPrefixSectionSettings() {
 
                         DisplaySuccessMessage('Success', 'Prefix saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadPrefixSettingsGrid();
 
@@ -1788,8 +1785,7 @@ function LoadPrefixSettingsGrid() {
        { dataField: 'Name', caption: 'Description' },
        { dataField: 'Salutation', caption: 'Salutation Prefix' },
        { dataField: 'LabelPrefix', caption: 'Label Prefix' },
-       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' },
-       { dataField: 'Gender.DisplayName', caption: 'Gender' }
+       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
     LoadGrid('prefixesgrid', 'prefixescontainer', prefixcolumns, 'prefixes', null, EditPrefix, DeletePrefix);
@@ -1824,8 +1820,7 @@ function EditPrefix(id) {
             Name: $(modal).find('.prefix-Name').val(),
             Salutation: $(modal).find('.prefix-Salutation').val(),
             LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
-            LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val(),
-            GenderId: $(modal).find('.prefix-GenderId').val()
+            LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val()
         }
 
         $.ajax({
@@ -1876,9 +1871,6 @@ function LoadPrefix(id) {
                 $(modal).find('.prefix-Salutation').val(data.Data.Salutation);
                 $(modal).find('.prefix-LabelPrefix').val(data.Data.LabelPrefix);
                 $(modal).find('.prefix-LabelAbbreviation').val(data.Data.LabelAbbreviation);
-                $(modal).find('.prefix-Gender').val(data.Data.GenderId);
-
-                PopulateDropDown('.prefix-Gender', 'genders', '', '', data.Data.Gender);
 
             }
         },
@@ -1912,7 +1904,7 @@ function LoadProfessionalSectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitinc').unbind('click');
@@ -1935,7 +1927,7 @@ function LoadProfessionalSectionSettings() {
 
                         DisplaySuccessMessage('success', 'Income Levels saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadIncomeLevelSettingsGrid();
                     },
@@ -1965,7 +1957,7 @@ function LoadProfessionalSectionSettings() {
 
             $('.cancelmodal').click(function (e) {
                 e.preventDefault();
-                CloseModal();
+                CloseModal(modal);
             });
 
             $('.submitpro').unbind('click');
@@ -1988,7 +1980,7 @@ function LoadProfessionalSectionSettings() {
 
                         DisplaySuccessMessage('success', 'Profession saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadProfessionSettingsGrid();
                     },

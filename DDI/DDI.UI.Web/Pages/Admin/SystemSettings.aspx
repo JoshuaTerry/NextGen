@@ -577,12 +577,7 @@
                 <label>Label Prefix Short</label>
                 <input type="text" class="prefix-LabelAbbreviation" />
             </div>
-
-            <div class="fieldblock">
-                <label>Gender</label>
-                <select class="prefix-GenderId"></select>
-            </div>
-
+            
             <div class="modalbuttons">
                 <input type="button" class="submitprefix" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
