@@ -2208,8 +2208,8 @@ function NewRelationshipModal() {
 function GetRelationshipToSave(modal, isUpdate) {
 
     var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        Constituent1Id: currentEntity.Id,
+        Constituent2Id: $(modal).find('.hidconstituentlookupid').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
 
@@ -2222,7 +2222,7 @@ function GetRelationshipToSave(modal, isUpdate) {
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val(currentEntity.Id);
+    $(modal).find('.FormattedName1').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {

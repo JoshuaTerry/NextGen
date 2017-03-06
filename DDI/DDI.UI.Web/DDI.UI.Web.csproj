@@ -78,6 +78,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\autocomplete.css" />
     <Content Include="CSS\constituents.css" />
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
     <Content Include="CSS\fileupload\jquery.fileupload.css" />
@@ -136,6 +137,7 @@
     <Content Include="Pages\Reports\Reports.aspx" />
     <Content Include="RegistrationConfirmation.aspx" />
     <Content Include="Scripts\additional-methods.min.js" />
+    <Content Include="Scripts\autocomplete.js" />
     <Content Include="Scripts\configuration.js" />
     <Content Include="Scripts\customfields.js" />
     <Content Include="Scripts\data.js" />
@@ -147,7 +149,7 @@
     <Content Include="Scripts\fileupload\jquery.iframe-transport.js" />
     <Content Include="Scripts\fileupload\load-image.all.min.js" />
     <Content Include="Scripts\jquery.datepair.min.js" />
-<Content Include="Scripts\jquery.timepicker.min.js" />
+    <Content Include="Scripts\jquery.timepicker.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
