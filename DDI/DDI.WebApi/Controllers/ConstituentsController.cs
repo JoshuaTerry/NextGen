@@ -110,6 +110,24 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("api/v1/constituents/lookup/{name}")]
+        public IHttpActionResult ConstituentLookup(string name)
+        {
+            string fields = "Id,Name";
+
+            var search = new ConstituentSearch()
+            {
+                Name = name,
+                OrderBy = OrderByProperties.DisplayName,
+                Offset = SearchParameters.OffsetDefault,
+                Limit = SearchParameters.LimitDefault,
+                Fields = fields,
+            };
+
+            return base.GetAll(null, search, fields);
+        }
+
+        [HttpGet]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Get)]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
