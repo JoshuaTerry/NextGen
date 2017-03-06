@@ -42,6 +42,14 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -125,6 +133,9 @@
     <Compile Include="Models\Client\Audit\IReadOnlyEntity.cs" />
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
+    <Compile Include="Models\Client\CRM\MemoCategory.cs" />
+    <Compile Include="Models\Client\CRM\MemoCode.cs" />
+    <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
     <Compile Include="Models\Client\Core\CustomFieldOption.cs" />
@@ -133,9 +144,13 @@
     <Compile Include="Models\Client\Core\NoteCategory.cs" />
     <Compile Include="Models\Client\Core\NoteContactMethod.cs" />
     <Compile Include="Models\Client\Core\NoteTopic.cs" />
-    <Compile Include="Models\Client\Core\UserLogin.cs" />
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />
+    <Compile Include="Models\Client\Security\Role.cs" />
+    <Compile Include="Models\Client\Security\User.cs" />
+    <Compile Include="Models\Client\Security\UserClaim.cs" />
+    <Compile Include="Models\Client\Security\UserLogin.cs" />
+    <Compile Include="Models\Client\Security\UserRole.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\ISearchDocument.cs" />
@@ -215,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Attributes\" />
+    <Folder Include="bin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

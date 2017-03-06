@@ -1,6 +1,7 @@
-﻿using DDI.EFAudit.Contexts; 
+﻿using DDI.EFAudit.Contexts;
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Data
 {
-    public class DomainContextAdapter : DbContextAdapter<ChangeSet, UserLogin>
+    public class DomainContextAdapter : DbContextAdapter<ChangeSet, User>
     {
         private DomainContext context;
 
@@ -18,15 +19,15 @@ namespace DDI.Data
             this.context = context;
         }
 
-        public override IQueryable<IChangeSet<UserLogin>> ChangeSets
+        public override IQueryable<IChangeSet<User>> ChangeSets
         {
             get { return context.ChangeSets; }
         }
-        public override IQueryable<IObjectChange<UserLogin>> ObjectChanges
+        public override IQueryable<IObjectChange<User>> ObjectChanges
         {
             get { return context.ObjectChanges; }
         }
-        public override IQueryable<IPropertyChange<UserLogin>> PropertyChanges
+        public override IQueryable<IPropertyChange<User>> PropertyChanges
         {
             get { return context.PropertyChanges; }
         }

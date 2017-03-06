@@ -1,4 +1,6 @@
-﻿using DDI.WebApi.Helpers;
+﻿using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
+using DDI.WebApi.Helpers;
 using DDI.WebApi.Models;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
@@ -17,7 +19,7 @@ namespace DDI.WebApi.Controllers
 {
     public class UsersController : ApiController
     {
-        private ApplicationUserManager _userManager;
+        private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
         public UsersController()
@@ -25,17 +27,17 @@ namespace DDI.WebApi.Controllers
             
         }
 
-        public UsersController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        public UsersController(UserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? Request.GetOwinContext().GetUserManager<UserManager>();
             }
             private set
             {
@@ -64,9 +66,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> GetById(string id)
+        public async Task<IHttpActionResult> GetById(Guid id)
         {
-            ApplicationUser user;
+            User user;
             try
             {
                 user = await UserManager.FindByIdAsync(id);
@@ -94,13 +96,22 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            var user = new User() { UserName = model.Email, Email = model.Email };
+            try
             {
-                return GetErrorResult(result);
+                var result = UserManager.Create(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
             }
+            catch(Exception ex)
+            {
+                // LOG ERRORS
+            }
+            //var result = await UserManager.CreateAsync(user, model.Password);
+            
 
             try
             {
@@ -125,9 +136,9 @@ namespace DDI.WebApi.Controllers
 
         [HttpPatch]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(string id, [FromBody] JObject userPropertiesChanged)
+        public async Task<IHttpActionResult> Update(Guid id, [FromBody] JObject userPropertiesChanged)
         {
-            ApplicationUser user = null;
+            User user = null;
             try
             {
                 user = await  UserManager.FindByIdAsync(id);
@@ -136,8 +147,8 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
 
-                var patchUpdateUser = new PatchUpdateUser<ApplicationUser>();
-                patchUpdateUser.UpdateUser(Guid.Parse(id), userPropertiesChanged);
+                var patchUpdateUser = new PatchUpdateUser<User>();
+                patchUpdateUser.UpdateUser(id, userPropertiesChanged);
             }
             catch (Exception)
             {
@@ -149,7 +160,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpDelete]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Delete(string id)
+        public async Task<IHttpActionResult> Delete(Guid id)
         {
             try
             {
