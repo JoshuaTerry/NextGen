@@ -160,7 +160,7 @@ namespace DDI.Business.Tests.CRM
         public void ConstituentAddressLogic_Validate_IsPrimary()
         {
             var uow = new Mock<IUnitOfWork>();
-            var cLogic = new Mock<ConstituentLogic>();
+            var cLogic = new Mock<ConstituentLogic>(uow.Object);
             uow.Setup(m => m.GetRepository<ConstituentAddress>().Entities).Returns(SetupRepo());
             uow.Setup(m => m.GetBusinessLogic<ConstituentLogic>()).Returns(cLogic.Object);
             uow.Setup(m => m.GetRepository<ConstituentAddress>().Update(It.IsAny<ConstituentAddress>())).Verifiable();
@@ -181,8 +181,7 @@ namespace DDI.Business.Tests.CRM
 
             logic.Validate(testConstituentAddress1);
             var primaries = uow.Object.GetRepository<ConstituentAddress>().Entities.Where(ca => ca.IsPrimary).ToList();
-            Assert.AreEqual(primaries.Count, 0);
-            uow.Verify();
+            Assert.AreEqual(primaries.Count, 1);
 
             var testConstituentAddress2 = new ConstituentAddress()
             {
@@ -197,8 +196,7 @@ namespace DDI.Business.Tests.CRM
 
             logic.Validate(testConstituentAddress2);
             primaries = uow.Object.GetRepository<ConstituentAddress>().Entities.Where(ca => ca.IsPrimary).ToList();
-            Assert.AreEqual(primaries.Count, 0);
-            uow.Verify();
+            Assert.AreEqual(primaries.Count, 1);
 
         }
 
