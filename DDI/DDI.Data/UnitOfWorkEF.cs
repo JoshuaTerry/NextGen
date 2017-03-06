@@ -279,8 +279,8 @@ namespace DDI.Data
             if (EFAuditModule.IsAuditEnabled && user != null)
             {
 
-                return (_clientContext.Save(user).AffectedObjectCount) + 
-                _clientContext.Save(user);
+                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) + 
+                       (_commonContext?.SaveChanges() ?? 0);
             }
             else
             {
