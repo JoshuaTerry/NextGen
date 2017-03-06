@@ -9,7 +9,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Tag")]
-    public class Tag : EntityBase, ICodeEntity
+    public class Tag : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]

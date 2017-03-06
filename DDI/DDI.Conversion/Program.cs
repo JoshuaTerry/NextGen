@@ -4,7 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
+using DDI.Data;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using log4net;
 
 namespace DDI.Conversion
@@ -33,6 +37,22 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
+            
+            using (var uow = new UnitOfWorkEF())
+            {
+                var rel = new Relationship();
+                rel.RelationshipType = uow.FirstOrDefault<RelationshipType>(p => p.Code == "FATH");
+                rel.Constituent1Id = Guid.Parse("78d2b093-bd89-4836-905b-0000300c9d8d");
+                rel.Constituent2Id = Guid.Parse("ac765f31-b60a-48ff-8d2a-00005cdca759");
+                uow.Attach(rel);
+                BusinessLogicHelper.GetBusinessLogic<Relationship>(uow).Validate(rel);
+
+                //var gender = uow.FirstOrDefault<Gender>(p => p.Code == "M");
+                //gender.Name = "Manly";
+                //uow.SaveChanges();
+            }
+            Console.ReadLine();
+            return;
 
             // These can be uncommented to run individual conversions.
 

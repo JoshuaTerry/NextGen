@@ -8,7 +8,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("RelationshipType")]
-    public class RelationshipType : EntityBase, ICodeEntity
+    public class RelationshipType : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]

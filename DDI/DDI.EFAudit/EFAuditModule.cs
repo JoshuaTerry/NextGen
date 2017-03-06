@@ -11,8 +11,8 @@ using System.Transactions;
 using DDI.EFAudit.Translation;
 using DDI.EFAudit.Translation.Serializers;
 using DDI.Shared.Caching;
-using System.Web.Configuration;
 using DDI.Logger;
+using DDI.Shared;
 
 namespace DDI.EFAudit
 {
@@ -32,8 +32,8 @@ namespace DDI.EFAudit
                     {
                         try
                         {
-                            var auditTag = CacheHelper.GetEntry<string>(AuditEnabledTag, () => WebConfigurationManager.AppSettings["AuditEnabled"]);
-                            isAuditEnabled = auditTag.ToLower() == "true";
+                            string auditTag = CacheHelper.GetEntry<string>(AuditEnabledTag, () => new DDIConfigurationManager().AppSettings["AuditEnabled"] ?? "false");
+                            isAuditEnabled = string.Compare(auditTag, "true", true) == 0;
                         }
                         catch (Exception ex)
                         {

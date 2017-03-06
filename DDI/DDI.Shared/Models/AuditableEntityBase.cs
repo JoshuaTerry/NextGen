@@ -3,13 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DDI.Shared.Attributes.Logging;
 
 namespace DDI.Shared.Models
 {
+
     /// <summary>
-    /// Base class for all entity model classes.
+    /// Base class for all entity model classes that are audited and have changed/modified properties.
     /// </summary>
-    public abstract class EntityBase : IEntity
+    [DoLog]        
+    public abstract class AuditableEntityBase : EntityBase, IAuditableEntity
     {
         #region Fields
 
@@ -20,10 +23,15 @@ namespace DDI.Shared.Models
 
         #region Properties 
 
-        public abstract Guid Id { get; set; }
+        public virtual Guid? CreatedBy { get; set; }
 
-        public virtual string DisplayName => string.Empty;
-       
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public virtual DateTime? CreatedOn { get; set; }
+
+        public virtual Guid? LastModifiedBy { get; set; }
+
+        public virtual DateTime? LastModifiedOn { get; set; }
+
         #endregion
 
         #region Constructors 

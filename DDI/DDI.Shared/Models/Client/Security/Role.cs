@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace DDI.Shared.Models.Client.Security
 {
     [Table("Roles")]
-    public class Role : IdentityRole<Guid, UserRole>, IEntity
+    public class Role : IdentityRole<Guid, UserRole>, IEntity, IAuditableEntity
     {
           
         public Guid? CreatedBy { get; set; }

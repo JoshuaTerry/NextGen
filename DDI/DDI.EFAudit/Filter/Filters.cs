@@ -11,6 +11,6 @@ namespace DDI.EFAudit.Filter
         public static readonly ILoggingFilterProvider Sparse = new DDI.EFAudit.Filter.WhitelistLoggingFilter.Provider();
         
         // By default, logs everything. A property or type is not logged only if it has at least one IFilterAttribute that returns "false".
-        public static ILoggingFilterProvider Default { get { return Greedy; } }
+        public static ILoggingFilterProvider Default { get { return Sparse; } }
     }
 }

@@ -65,7 +65,10 @@ namespace DDI.Business
                 using (var unitOfWork = new UnitOfWorkEF())
                 {
                     T entityToUpdate = unitOfWork.GetById<T>(id.Value);
-                    BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                    if (entityToUpdate != null)
+                    {
+                        BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                    }
                 }
             }, UPDATE_SEARCH_DOCUMENT_DELAY);
         }

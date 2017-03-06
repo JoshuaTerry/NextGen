@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    public class NoteContactMethod : EntityBase, ICodeEntity
+    public class NoteContactMethod : AuditableEntityBase, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

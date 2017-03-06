@@ -1,6 +1,7 @@
-﻿using DDI.EFAudit.Contexts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DDI.EFAudit.Contexts;
+using DDI.Shared.Attributes.Logging;
 
 namespace DDI.EFAudit.Filter
 {

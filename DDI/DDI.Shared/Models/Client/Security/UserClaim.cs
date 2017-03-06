@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DDI.Shared.Models.Client.Security
 {
     [Table("UserClaims")]
-    public class UserClaim : IdentityUserClaim<Guid>, IEntity
+    public class UserClaim : IdentityUserClaim<Guid>, IEntity, IAuditableEntity
     {
         [Key]
         public Guid Id { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    public class NoteCategory : EntityBase
+    public class NoteCategory : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

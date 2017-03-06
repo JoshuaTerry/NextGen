@@ -8,7 +8,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Relationsihp")]
-    public class Relationship : EntityBase
+    public class Relationship : AuditableEntityBase
     {
         #region Public Properties   
         [Key]

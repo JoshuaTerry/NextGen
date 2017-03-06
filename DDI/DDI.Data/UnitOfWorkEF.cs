@@ -279,8 +279,9 @@ namespace DDI.Data
                 var user = EntityFrameworkHelpers.GetCurrentUser();
                 if (user == null)
                     throw new Exception("Audit Enabled, changes by Unauthenticated Users are not permitted.");
-
-                _clientContext.Save(user);
+                
+                return (_clientContext.Save(user).AffectedObjectCount) + 
+                       (_commonContext?.SaveChanges() ?? 0);
             }
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);

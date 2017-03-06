@@ -7,7 +7,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("RegionLevel")]
-    public class RegionLevel : EntityBase
+    public class RegionLevel : AuditableEntityBase
     {
         #region Public Properties 
         [Key]

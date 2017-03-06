@@ -9,7 +9,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentAddress")]
-    public class ConstituentAddress : EntityBase
+    public class ConstituentAddress : AuditableEntityBase
     {
         #region Public Properties
         [Key]
