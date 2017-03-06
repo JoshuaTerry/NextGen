@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var modal = $('.addconstituentmodal').dialog({
+        modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 900,

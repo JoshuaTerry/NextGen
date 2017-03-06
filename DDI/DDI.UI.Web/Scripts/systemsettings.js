@@ -12,7 +12,8 @@ var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Clergy: 'ClergySettings',
     Demographics: 'DemographicSettings',
-    Education: 'EducationSettings'
+    Education: 'EducationSettings',
+    Professional: 'ProfessionalSettings'
 }
 
 $(document).ready(function () {
@@ -45,7 +46,7 @@ function LoadSettingsGrid(grid, container, columns, route) {
     var datagrid = $('<div>').addClass(grid);
 
     $.ajax({
-        url: routeUrl,
+        url: WEB_API_ADDRESS + route,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -931,6 +932,7 @@ function LoadLanguageSettingsGrid() {
 }
 
 /* DENOMINATION SYSTEM SETTINGS */
+
 function EditDenomination(id) {
 
     LoadDenomination(id);
@@ -1657,6 +1659,8 @@ function LoadSchool(id) {
 
 /* END EDUCATION SYSTEM SETTINGS */
 
+
+
 function LoadGenderSectionSettings() {
 
     var columns = [
@@ -1697,11 +1701,307 @@ function LoadPrefixSectionSettings() {
 
 }
 
+/* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
+    LoadSectionSettings(SettingsCategories.CRM, 'Professional', 'sectionpreferences', SystemSettings.Professional);
 
+    var accordion = $('<div>').addClass('accordions');
+    var incomeLevels = $('<div>').addClass('incomeLevelcontainer');
+    var professions = $('<div>').addClass('professioncontainer');
 
+    var header = $('<h1>').text('Income Level').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newincomeLevelmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.incomeLevelmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitinc').unbind('click');
+
+            $('.submitinc').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.inc-Code').val(),
+                    Name: $(modal).find('.inc-Name').val(),
+                    IsActive: $(modal).find('.inc-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'incomelevels',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Income Levels saved successfully.');
+
+                        CloseModal();
+
+                        LoadIncomeLevelSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Income Level.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(incomeLevels).appendTo($(accordion));
+
+    LoadIncomeLevelSettingsGrid();
+
+    header = $('<h1>').text('Professions').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newprofessionsmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.professionmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal();
+            });
+
+            $('.submitpro').unbind('click');
+
+            $('.submitpro').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.pro-Code').val(),
+                    Name: $(modal).find('.pro-Name').val(),
+                    IsActive: $(modal).find('.pro-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'professions',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Profession saved successfully.');
+
+                        CloseModal();
+
+                        LoadProfessionSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Profession.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(professions).appendTo($(accordion));
+
+    LoadProfessionSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
+}
+
+function LoadIncomeLevelSettingsGrid() {
+
+    var incomeLevelcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('incomeLevelgrid', 'incomeLevelcontainer', incomeLevelcolumns, 'incomelevels', null, EditIncomeLevel);
 
 }
+
+function LoadProfessionSettingsGrid() {
+
+    var professioncolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('professiongrid', 'professioncontainer', professioncolumns, 'professions', null, Editprofession);
+
+}
+
+function EditIncomeLevel(id) {
+
+    LoadIncomeLevel(id);
+
+    modal = $('.incomeLevelmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitinc').unbind('click');
+
+    $('.submitinc').click(function () {
+
+        var item = {
+            Code: $(modal).find('.inc-Code').val(),
+            Name: $(modal).find('.inc-Name').val(),
+            IsActive: $(modal).find('.inc-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'incomelevels/' + $(modal).find('.incomeLevelId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Income Level saved successfully.');
+
+                CloseModal(modal);
+
+                LoadIncomeLevelSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Income Level.');
+            }
+        });
+
+    });
+
+}
+
+function LoadIncomeLevel(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'incomelevels/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.incomeLevelId').val(data.Data.Id);
+                $(modal).find('.inc-Code').val(data.Data.Code);
+                $(modal).find('.inc-Name').val(data.Data.Name);
+                $(modal).find('.inc-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Income Level.');
+        }
+    });
+
+}
+
+function Editprofession(id) {
+
+    LoadProfession(id);
+
+    modal = $('.professionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitpro').unbind('click');
+
+    $('.submitpro').click(function () {
+
+        var item = {
+            Code: $(modal).find('.pro-Code').val(),
+            Name: $(modal).find('.pro-Name').val(),
+            IsActive: $(modal).find('.pro-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'professions/' + $(modal).find('.professionId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Profession saved successfully.');
+
+                CloseModal(modal);
+
+                LoadProfessionSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Profession.');
+            }
+        });
+
+    });
+
+}
+
+function LoadProfession(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'professions/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.professionId').val(data.Data.Id);
+                $(modal).find('.pro-Code').val(data.Data.Code);
+                $(modal).find('.pro-Name').val(data.Data.Name);
+                $(modal).find('.pro-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Profession.');
+        }
+    });
+
+}
+
+
+/* END PROFESSIONAL SYSTEM SETTINGS */
 
 function LoadRegionsSectionSettings() {
 
