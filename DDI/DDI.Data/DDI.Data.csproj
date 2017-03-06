@@ -75,6 +75,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201703061608079_AddingMemoCodeTables.cs" />
+    <Compile Include="Migrations\201703061608079_AddingMemoCodeTables.Designer.cs">
+      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201703051400387_IsActive.cs" />
     <Compile Include="Migrations\Client\201703051400387_IsActive.Designer.cs">
       <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
@@ -120,6 +124,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703061608079_AddingMemoCodeTables.resx">
+      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201703051400387_IsActive.resx">
       <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
     </EmbeddedResource>
