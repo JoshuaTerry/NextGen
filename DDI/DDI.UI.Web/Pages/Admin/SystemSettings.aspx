@@ -546,4 +546,49 @@
         </div>
 
     </div>
+       
+    <div class="prefixmodal" title="Prefix" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="prefix-id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="prefix-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="prefix-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Salutation Prefix</label>
+                <input type="text" class="prefix-Salutation" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Label Prefix</label>
+                <input type="text" class="prefix-LabelPrefix" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Label Prefix Short</label>
+                <input type="text" class="prefix-LabelAbbreviation" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Gender</label>
+                <select class="prefix-GenderId"></select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitprefix" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>

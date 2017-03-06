@@ -11,8 +11,10 @@
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Clergy: 'ClergySettings',
+    DBA: 'DBASettings',
     Demographics: 'DemographicSettings',
-    Education: 'EducationSettings'
+    Education: 'EducationSettings',
+    Personal: 'PersonalSettings'
 }
 
 $(document).ready(function () {
@@ -679,7 +681,6 @@ function LoadDemographicsSectionSettings() {
                     Code: $(modal).find('.den-Code').val(),
                     Name: $(modal).find('.den-Name').val(),
                     Religion: $(modal).find('.den-Religion').val(),
-//                    ResidentType: $(modal).find('.na-ResidentType').val(),
                     Affiliation: $(modal).find('.den-Affiliation').val(),
                     IsActive: $(modal).find('.den-IsActive').prop('checked')
                 }
@@ -1205,7 +1206,7 @@ function LoadLanguage(id) {
 
 function LoadDBASectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Doing Business As', 'sectionpreferences', SystemSettings.DBA);
 
 }
 
@@ -1687,15 +1688,205 @@ function LoadPaymentPreferencesSectionSettings() {
 
 function LoadPersonalSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Personal', 'sectionpreferences', SystemSettings.Personal);
 
 }
 
+/* PREFIX SYSTEM SETTINGS */
 function LoadPrefixSectionSettings() {
 
+    var accordion = $('<div>').addClass('accordions');
+    var prefix = $('<div>').addClass('prefixescontainer');
+
+    var header = $('<h1>').text('Prefixes').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newprefixmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.prefixmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            PopulateDropDown('.prefix-GenderId', 'genders', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal();
+
+            });
+
+            $('.submitprefix').unbind('click');
+
+            $('.submitprefix').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.prefix-Code').val(),
+                    Name: $(modal).find('.prefix-Name').val(),
+                    Salutation: $(modal).find('.prefix-Salutation').val(),
+                    LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
+                    LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val(),
+                    GenderId: $(modal).find('.prefix-GenderId').val()
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'prefixes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Prefix saved successfully.');
+
+                        CloseModal();
+
+                        LoadPrefixSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+
+    $(prefix).appendTo($(accordion));
+
+    LoadPrefixSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 
 }
+
+function LoadPrefixSettingsGrid() {
+
+    var prefixcolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Description' },
+       { dataField: 'Salutation', caption: 'Salutation Prefix' },
+       { dataField: 'LabelPrefix', caption: 'Label Prefix' },
+       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' },
+       { dataField: 'Gender.DisplayName', caption: 'Gender' }
+    ];
+
+    LoadGrid('prefixesgrid', 'prefixescontainer', prefixcolumns, 'prefixes', null, EditPrefix, DeletePrefix);
+
+}
+
+function EditPrefix(id) {
+
+    LoadPrefix(id);
+
+    modal = $('.prefixmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitprefix').unbind('click');
+
+    $('.submitprefix').click(function () {
+
+        var item = {
+            Code: $(modal).find('.prefix-Code').val(),
+            Name: $(modal).find('.prefix-Name').val(),
+            Salutation: $(modal).find('.prefix-Salutation').val(),
+            LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
+            LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val(),
+            GenderId: $(modal).find('.prefix-GenderId').val()
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'prefixes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Prefix saved successfully.');
+
+                CloseModal(modal);
+
+                LoadPrefixSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+            }
+        });
+
+    });
+
+}
+
+function DeletePrefix(id) {
+
+
+
+}
+
+function LoadPrefix(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'prefixes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.prefix-Id').val(data.Data.Id);
+                $(modal).find('.prefix-Code').val(data.Data.Code);
+                $(modal).find('.prefix-Name').val(data.Data.Name);
+                $(modal).find('.prefix-Salutation').val(data.Data.Salutation);
+                $(modal).find('.prefix-LabelPrefix').val(data.Data.LabelPrefix);
+                $(modal).find('.prefix-LabelAbbreviation').val(data.Data.LabelAbbreviation);
+                $(modal).find('.prefix-Gender').val(data.Data.GenderId);
+
+                PopulateDropDown('.prefix-Gender', 'genders', '', '', data.Data.Gender);
+
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading prefix.');
+        }
+    });
+
+}
+/* END PREFIX SYSTEM SETTINGS */
+
+
 
 function LoadProfessionalSectionSettings() {
 
