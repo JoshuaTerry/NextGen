@@ -424,6 +424,17 @@ namespace DDI.Business.CRM
 
         private void ValidateIsPreferred(ContactInfo contactInfo, string categoryCode)
         {
+            if (string.IsNullOrEmpty(categoryCode))
+            {
+                var category = UnitOfWork.GetRepository<ContactType>().Entities.FirstOrDefault(ct => ct.Id == contactInfo.ContactTypeId);
+                if(category != null)
+                {
+                    categoryCode = category.Code;
+                } else
+                {
+                    throw new Exception("Could not find a valid Category Code");
+                }
+            }
             if (contactInfo.IsPreferred)
             {
                 var existingPreferredContactInfo = UnitOfWork.Where<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.Id != contactInfo.Id).ToList();
