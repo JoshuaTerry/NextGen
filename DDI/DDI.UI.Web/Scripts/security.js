@@ -206,7 +206,7 @@ function AddUsersToRoles(user, roles) {
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'UserRoles/AddMultiple',
+        url: WEB_API_ADDRESS + 'users/roles/add',
         data: data,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,

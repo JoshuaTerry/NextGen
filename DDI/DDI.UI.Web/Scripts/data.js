@@ -123,8 +123,6 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
     if (container.indexOf('.') != 0)
         container = '.' + container;
 
-    $(container).html('');
-
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: 'GET',
@@ -144,6 +142,8 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
 }
 
 function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
+    
+    $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
 
@@ -233,7 +233,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
         width: modalWidth,
         resizable: false
     });
-
+    
     LoadEntity(route, id, modal, loadEntityMethod, entityName);
 
     $('.cancelmodal').click(function (e) {
@@ -339,7 +339,7 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
             loadEntityData(data, modal);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage("Error", "An error occurred during the loading of the " + entityName + ".");
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the ' + entityName + '.');
         }
     });
 }

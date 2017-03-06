@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using DDI.Logger;
 using DDI.Shared.Caching;
 using System.Web.Configuration;
+using DDI.EFAudit;
+using System.Threading;
+using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
@@ -18,9 +21,9 @@ namespace DDI.Data
     public class UnitOfWorkEF : IUnitOfWork, IDisposable
     {
         #region Private Fields
-        private const string AuditEnabledTag = "AuditEnabled";
+        
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(UnitOfWorkEF));
-        private DbContext _clientContext;
+        private DomainContext _clientContext;
         private DbContext _commonContext;
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
@@ -44,7 +47,7 @@ namespace DDI.Data
             }
             else if (context is DomainContext)
             {
-                _clientContext = context;
+                _clientContext = (DomainContext)context;
             }
 
             _repositories = new Dictionary<Type, object>();
@@ -271,7 +274,14 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
-            //var auditEnabled = CacheHelper.GetEntry<string>(AuditEnabledTag, () => WebConfigurationManager.AppSettings["AuditEnabled"]);
+            if (EFAuditModule.IsAuditEnabled)
+            {
+                var user = EntityFrameworkHelpers.GetCurrentUser();
+                if (user == null)
+                    throw new Exception("Audit Enabled, changes by Unauthenticated Users are not permitted.");
+
+                _clientContext.Save(user);
+            }
             return (_clientContext?.SaveChanges() ?? 0) +
                    (_commonContext?.SaveChanges() ?? 0);
         }

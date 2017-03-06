@@ -17,7 +17,7 @@ namespace DDI.WebApi.Controllers
 {
     public class UserRolesController : ApiController
     {
-        private ApplicationUserManager _userManager;
+        private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
         public UserRolesController()
@@ -25,17 +25,17 @@ namespace DDI.WebApi.Controllers
 
         }
 
-        internal UserRolesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        internal UserRolesController(UserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? Request.GetOwinContext().GetUserManager<UserManager>();
             }
             private set
             {
@@ -57,7 +57,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/users/{id}/roles")]
-        public async Task<IHttpActionResult> Get(string id)
+        public async Task<IHttpActionResult> Get(Guid id)
         {
             IList<string> roles;
             try

@@ -9,11 +9,12 @@ using DDI.Data;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
-using DDI.Shared.Extensions; 
+using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Logger;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -25,6 +26,11 @@ namespace DDI.Services
         private Expression<Func<T, object>>[] _includesForList = null;
 
         protected ILogger Logger => _logger;
+
+        /// <summary>
+        /// Formatting and other logic for an entity retrieved for a GET.
+        /// </summary>
+        protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
         public ServiceBase() : this(new UnitOfWorkEF())
         {            
@@ -92,8 +98,11 @@ namespace DDI.Services
             {
                 queryData = queryData.OrderBy(a => a.DisplayName);
             }
-            
-            var response = GetIDataResponse(() => ModifySortOrder(queryData.ToList()).ToList<ICanTransmogrify>());
+
+            var queryDataList = queryData.ToList();
+            FormatEntityListForGet(queryDataList);
+
+            var response = GetIDataResponse(() => ModifySortOrder(queryDataList).ToList<ICanTransmogrify>());
 
             response.TotalResults = totalCount;
 
@@ -121,13 +130,15 @@ namespace DDI.Services
         
         public virtual IDataResponse<T> GetById(Guid id)
         {
-            var result = _unitOfWork.GetById(id, _includesForSingle); 
+            T result = _unitOfWork.GetById(id, _includesForSingle);
+            FormatEntityForGet(result);
             return GetIDataResponse(() => result);
         }
 
         public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
         {
-            var response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            IDataResponse<T> response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            FormatEntityForGet(response.Data);
             return response;
         }
 
@@ -135,6 +146,22 @@ namespace DDI.Services
         {
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
             return GetPagedResults(queryable, search);
+        }
+        
+        /// <summary>
+        /// Formatting and other logic for a single entity retrieved for a GET.
+        /// </summary>
+        private void DefaultFormatEntityForGet(T entity) { }
+
+        /// <summary>
+        /// Formatting and other logic for a list of entities retrieved for a GET.
+        /// </summary>
+        private void FormatEntityListForGet(IList<T> list)
+        {
+            if (FormatEntityForGet != DefaultFormatEntityForGet && FormatEntityForGet != null) // If overridden
+            {
+                list.ForEach(p => FormatEntityForGet(p));
+            }
         }
 
         public virtual IDataResponse Update(T entity)
@@ -158,10 +185,21 @@ namespace DDI.Services
 
         public virtual IDataResponse<T> Update(Guid id, JObject changes)
         {
+            return Update(_unitOfWork.GetById<T>(id), changes);           
+        }
+                
+        public virtual IDataResponse<T> Update(T entity, JObject changes)
+        {
             var response = new DataResponse<T>();
             Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+
             try
             {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity));
+                }
+
                 foreach (var pair in changes)
                 {
                     var convertedPair = JsonExtensions.ConvertToType<T>(pair);
@@ -169,10 +207,14 @@ namespace DDI.Services
                 }
 
                 IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork);
-                _unitOfWork.GetRepository<T>().UpdateChangedProperties(id, changedProperties, p => logic.Validate(p));
-            	_unitOfWork.SaveChanges();
+                Guid id = entity.Id;
+
+                _unitOfWork.GetRepository<T>().UpdateChangedProperties(entity, changedProperties, p => logic.Validate(p));
+
+                _unitOfWork.SaveChanges();
 
                 response.Data = _unitOfWork.GetById(id, IncludesForSingle);
+                FormatEntityForGet(response.Data);
             }
             catch (Exception ex)
             {
@@ -182,6 +224,7 @@ namespace DDI.Services
 
             return response;
         }
+        
 
         public virtual IDataResponse<T> Add(T entity)
         {
@@ -192,6 +235,7 @@ namespace DDI.Services
                 _unitOfWork.Insert(entity);
                 _unitOfWork.SaveChanges();
                 response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
+                FormatEntityForGet(response.Data);
             }
             catch (Exception ex)
             {

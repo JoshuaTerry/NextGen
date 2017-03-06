@@ -64,39 +64,6 @@ namespace DDI.Business.CRM
         }
 
         /// <summary>
-        /// Set the left-side constituent and relationship type in a relationship, where target is the right-side consituent.
-        ///    "(leftConstituent) is the (relation) of (target)".
-        /// </summary>
-        public void SetLeftSideConstituent(Relationship thisRelation, Constituent target, Constituent leftConstituent, RelationshipType relation)
-        {
-            if (target.Id == thisRelation.Constituent2Id)
-            {
-                thisRelation.RelationshipType = relation;
-                thisRelation.Constituent1 = leftConstituent;
-                return;
-            }
-
-            Gender gender = UnitOfWork.GetReference(leftConstituent, p => p.Gender);
-
-            relation = GetReciprocalRelationshipType(relation, gender);
-
-            thisRelation.RelationshipType = relation;
-            thisRelation.Constituent2 = leftConstituent;
-        }
-
-        /// <summary>
-        /// Set the left-side constituent, where target is the right-side consituent.
-        ///    "(leftConstituent) is the (relation) of (target)".
-        /// </summary>
-        public void SetLeftSideConstituent(Relationship thisRelation, Constituent target, Constituent leftConstituent)
-        {
-            if (target.Id == thisRelation.Constituent2Id)
-                thisRelation.Constituent1 = leftConstituent;
-            else
-                thisRelation.Constituent2 = leftConstituent;
-        }
-
-        /// <summary>
         /// Get a reciprocal relationship type, e.g. Aunt => Niece or Nephew
         /// </summary>
         /// <param name="relationType">Relationship type of person 1</param>
@@ -123,6 +90,73 @@ namespace DDI.Business.CRM
             return reciprocalType;
         }
 
+        public override void Validate(Relationship entity)
+        {
+            Constituent constituent1 = UnitOfWork.GetReference(entity, p => p.Constituent1);
+            Constituent constituent2 = UnitOfWork.GetReference(entity, p => p.Constituent2);
+            RelationshipType type = UnitOfWork.GetReference(entity, p => p.RelationshipType);
+
+            if (constituent1 == null || constituent2 == null)
+            {
+                throw new ValidationException("Both consitutents for a relationship are required.");
+            }
+
+            if (constituent1.Id == constituent2.Id)
+            {
+                throw new ValidationException("Constituents for a relationship must be different.");
+            }
+
+            if (type == null)
+            {
+                throw new ValidationException("Relationship type for a relationship is required.");
+            }
+
+            // Verify ConstiutentCategory
+            if (type.ConstituentCategory != Shared.Enums.CRM.ConstituentCategory.Both)
+            {
+                var constituentType1 = UnitOfWork.GetReference(constituent1, p => p.ConstituentType);
+                var constituentType2 = UnitOfWork.GetReference(constituent2, p => p.ConstituentType);
+
+                if (constituentType1.Category != type.ConstituentCategory ||
+                    constituentType2.Category != type.ConstituentCategory)
+                {
+                    throw new ValidationException($"Both constituents for this relationship must be {type.ConstituentCategory} constituents.");
+                }
+            }
+
+            // If TargetConstituent is specified, the right side must be the target.
+            if (entity.TargetConstituentId != null && 
+                constituent2.Id != entity.TargetConstituentId)
+            {
+                throw new InvalidOperationException($"Constituent 2 of this relationship must match the target constituent Id.");
+            }
+
+            // If swapped:
+            if (entity.IsSwapped)
+            {
+                // The target constituent was originally constituent 1.  We must convert it back to this format.
+                Gender gender = UnitOfWork.GetReference(constituent2, p => p.Gender);
+
+                type = GetReciprocalRelationshipType(type, gender);
+
+                entity.RelationshipType = type;
+                entity.RelationshipTypeId = type.Id;
+
+                // Swap the constituents
+                entity.Constituent2 = constituent1;
+                entity.Constituent2Id = constituent1.Id;
+
+                entity.Constituent1 = constituent2;
+                entity.Constituent1Id = constituent2.Id;
+
+                constituent1 = entity.Constituent1;
+                constituent2 = entity.Constituent2;
+
+                // Relationship is no longer swapped.
+                entity.IsSwapped = false;
+            }
+
+        }
 
         #endregion
 

@@ -13,28 +13,72 @@ namespace DDI.WebApi.Controllers
 {
     public class RelationshipsController : ControllerBase<Relationship>
     {
-        private const string DEFAULT_FIELDS = "Id,RelationshipType.RelationshipCategory.DisplayName,RelationshipType.RelationshipCategory.IsShownInQuickView,Constituent1.Id,Constituent1.Links.Self,Constituent2.Id,Constituent2.Links.Self,DisplayName,Links";
+        protected new IRelationshipService Service => (IRelationshipService)base.Service;
+
+        public RelationshipsController()
+            : base(new RelationshipService())
+        {
+        }
+
+        private string DefaultFields =>
+                string.Join(",", new string[]
+                {
+                    "Id",
+                    $"{nameof(Relationship.RelationshipType)}.Id",
+                    $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.Name)}",
+                    $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.Name)}",
+                    $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.IsShownInQuickView)}",
+                    $"{nameof(Relationship.Constituent1)}.Id",
+                    $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.ConstituentNumber)}",
+                    $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.FormattedName)}",
+                    $"{nameof(Relationship.Constituent2)}.Id",
+                    $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.ConstituentNumber)}",
+                    $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.FormattedName)}",
+                    $"{nameof(Relationship.IsSwapped)}"
+                });
+
         protected override Expression<Func<Relationship, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<Relationship, object>>[]
             {
+                r => r.RelationshipType,
                 r => r.RelationshipType.RelationshipCategory,
                 c => c.Constituent1,
                 c => c.Constituent2
             };
         }
-
+        
+        protected override Expression<Func<Relationship, object>>[] GetDataIncludesForSingle()
+        {
+            return GetDataIncludesForList();
+        }
+        
         [HttpGet]
         [Route("api/v1/relationships", Name = RouteNames.Relationship)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = DEFAULT_FIELDS)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = DefaultFields;
+            }
+
             return base.GetAll(RouteNames.Relationship, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, Guid? constituentId = null, string fields = null)
         {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = DefaultFields;
+            }
+
+            if (constituentId != null)
+            {
+                Service.TargetConstituentId = constituentId;
+            }
+
             return base.GetById(id, fields);
         }
 
@@ -45,10 +89,28 @@ namespace DDI.WebApi.Controllers
             return base.Post(entityToSave);
         }
 
+        [HttpPost]
+        [Route("api/v1/constituents/{constituentId}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Post)]
+        public IHttpActionResult Post(Guid constituentId, [FromBody] Relationship entityToSave)
+        {
+            Service.TargetConstituentId = constituentId;
+
+            return base.Post(entityToSave);
+        }
+
         [HttpPatch]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid constituentId, Guid id, JObject entityChanges)
+        {
+            Service.TargetConstituentId = constituentId;
+
             return base.Patch(id, entityChanges);
         }
 
@@ -59,13 +121,32 @@ namespace DDI.WebApi.Controllers
             return base.Delete(id);
         }
 
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid constituentId, Guid id, string fields = null)
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                fields = DefaultFields;
+            }
+
+            Service.TargetConstituentId = constituentId;
+
+            return base.GetById(id, fields);
+        }
+
+
         [HttpGet]
         [Route("api/v1/relationships/constituents/{id}")]
         [Route("api/v1/constituents/{id}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = DEFAULT_FIELDS, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = "", int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(fields))
+                {
+                    fields = DefaultFields;
+                }
+                Service.TargetConstituentId = id;
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response1 = Service.GetAllWhereExpression(a => a.Constituent1Id == id, search);
                 var response2 = Service.GetAllWhereExpression(a => a.Constituent2Id == id, search);

@@ -2,7 +2,6 @@
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
-
 $(document).ready(function () {
 
     $('#form1').validate();
@@ -159,11 +158,8 @@ function LoadDropDowns() {
 function GetConstituentData(id) {
     route = 'constituents/';
 
-    if (id.length > 9) {
-        route += 'id/'; // If length > 9, id is probably a GUID.
-    }
-    else {
-        route += 'number/'; // Otherwise it's likely a constituent number.
+    if (id.length <= 9) {
+        route += 'number/'; // If id length is <= 9, assume the constituent ID is a constituent number.
     }
     
     $.ajax({
@@ -194,6 +190,10 @@ function RefreshEntity() {
 function DisplayConstituentData() {
 
     if (currentEntity) {
+
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
 
@@ -335,103 +335,6 @@ function LoadEthnicitiesTagBox() {
 /* End Demographics Section */
 
 
-/* Relationships Tab */
-function LoadRelationshipsData() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            LoadRelationshipsQuickView(data);
-            LoadRelationshipsTab(data);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
-        }
-    });
-
-}
-
-function LoadRelationshipsQuickView(data) {
-
-    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
-
-    if (data.Data) {
-
-        $.map(data.Data, function (item) {
-
-            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                $('<li>').text(item.DisplayName).appendTo($(formattedData));
-            }
-
-        });
-
-    }
-
-    $(formattedData).appendTo($('.relationshipsQuickView'));
-
-}
-
-function LoadRelationshipsTab(data) {
-
-    var columns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
-    ];
-
-    LoadGridWithData('relationshipsgrid',
-        'relationshipstable',
-        columns,
-        'relationships',
-        null,
-        "Relationship",
-        EditRelationship,
-        null,
-        data);
-
-}
-
-function EditRelationship(id) {
-    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
-}
-
-function NewRelationshipModal() {
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
-}
-
-function GetRelationshipToSave(modal, isUpdate) {
-
-    var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
-
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-    }
-
-    return item;
-}
-
-function PrePopulateNewRelationshipModal(modal) {
-
-    $(modal).find('.FormattedName1').val(currentEntity.Id);
-
-}
-
-function LoadRelationshipData(data, modal) {
-
-    $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
-
-}
-/* End Relationships Tab */
 
 
 /* Doing Business As Section */
@@ -447,7 +350,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'doingbusinessas',
+        'constituents/' + currentEntity.Id + '/doingbusinessas',
         null,
         EditDBA,
         null);
@@ -606,7 +509,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        'educations',
+        'constituents/' + currentEntity.Id + '/educations',
         null,
         EditEducationModal);
 
@@ -1000,7 +903,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       'alternateids',
+       'constituents/' + currentEntity.Id + '/alternateids',
        null,
        EditAlternateId);
 }
@@ -1133,7 +1036,6 @@ function LoadAlternateId(id, modal) {
 }
 /* End Alternate Id Section */
 
-
 /* Contact Information Section */
 function LoadContactInfo() {
 
@@ -1153,7 +1055,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituentaddresses',
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
         EditAddressModal);
 
@@ -2238,59 +2140,84 @@ function LoadRelationshipsData() {
     });
 }
 function LoadRelationshipsQuickView(data) {
-    var formattedData = "<ul>";
-    if (data.Data && Array.isArray(data.Data)) {
-        data.Data.forEach(function (eachItem) {
-            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
-            };
+
+    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+    if (data.Data) {
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
+                $('<li>').text(rowText).appendTo($(formattedData));
+            }
+
         });
+
     }
-    formattedData = formattedData + "</ul>";
-    $('.relationshipsQuickView').html(formattedData);
+    $('.relationshipsQuickView').empty();
+    $(formattedData).appendTo($('.relationshipsQuickView'));
+
 }
+
+
 function LoadRelationshipsTab(data) {
+
     var columns = [
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
+        { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
+        { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
+        { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
     ];
+
     LoadGridWithData('relationshipsgrid',
-        'relationshipstable',
+        '.relationshipstable',
         columns,
         'relationships',
-        null,
+        null,        
         EditRelationship,
         null,
         data);
-
 }
+
 
 function LoadRelationshipsGrid() {
 
     LoadRelationshipsData();
 }
 
+function EditRelationship(id) {
+    var constituentId = $('.hidconstituentid').val();
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
+}
+/*
 function EditRelationship(getUrl, patchUrl) {
     EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
 }
+*/
 
 function NewRelationshipModal() {
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
 }
 
-function LoadRelationship(url, modal) {
+/*function LoadRelationship(url, modal) {
     LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
-}
+}*/
 
 function GetRelationshipToSave(modal, isUpdate) {
+
     var item = {
         Constituent1Id: $('.FormattedName1').val(),
         Constituent2Id: $(modal).find('.FormattedName2').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
+
     if (isUpdate === true) {
         item.Id = $(modal).find('.hidrelationshipid').val();
+        item.IsSwapped = $(modal).find('.hidrelationshipisswapped').val();
     }
+
     return item;
 }
 
@@ -2300,9 +2227,10 @@ function PrePopulateNewRelationshipModal(modal) {
 
 function LoadRelationshipData(data, modal) {
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+    $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
 }
 /* End Relationships Tab */
 
