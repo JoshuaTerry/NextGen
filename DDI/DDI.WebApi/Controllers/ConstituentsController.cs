@@ -38,6 +38,7 @@ namespace DDI.WebApi.Controllers
                 c => c.Language,
                 c => c.MaritalStatus,
                 c => c.Prefix,
+                c => c.Profession
             };
         }
 

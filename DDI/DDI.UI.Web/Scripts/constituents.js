@@ -235,8 +235,6 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
-        // DisplayConstituentPrimaryAddress();
-
         GenerateContactInfoSection();
 
 	    LoadDenominationsTagBox();

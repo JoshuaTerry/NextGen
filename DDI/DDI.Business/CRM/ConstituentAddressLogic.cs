@@ -216,7 +216,7 @@ namespace DDI.Business.CRM
         {
             if (entity.IsPrimary)
             {
-                var existingPrimaryAddress = UnitOfWork.GetRepository<ConstituentAddress>().Entities.FirstOrDefault(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary);
+                var existingPrimaryAddress = UnitOfWork.FirstOrDefault<ConstituentAddress>(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary);
                 if (existingPrimaryAddress != null)
                 {
                     existingPrimaryAddress.IsPrimary = false;

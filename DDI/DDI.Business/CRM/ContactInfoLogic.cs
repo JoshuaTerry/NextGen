@@ -426,7 +426,7 @@ namespace DDI.Business.CRM
         {
             if (contactInfo.IsPreferred)
             {
-                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.IsPreferred && ci.Id != contactInfo.Id);
+                var existingPreferredContactInfo = UnitOfWork.FirstOrDefault<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.IsPreferred && ci.Id != contactInfo.Id);
                 if (existingPreferredContactInfo != null)
                 {
                     existingPreferredContactInfo.IsPreferred = false;
