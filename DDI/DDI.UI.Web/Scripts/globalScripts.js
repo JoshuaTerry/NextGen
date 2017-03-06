@@ -129,6 +129,7 @@ function LoadEnvironment() {
         });
     }
 }
+
 function LoadNewConstituentModalDropDowns() {
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
@@ -426,6 +427,221 @@ function GetAutoZipData(container) {
 
 }
 
+function LoadTagSelector(type) {
+
+    $('.tagselect').each(function () {
+
+        var img = $('.tagSelectImage');
+
+        if (img.length === 0) {
+            img = $('<div>').addClass('tagSelectImage');
+
+            $(img).click(function () {
+
+                modal = $('.tagselectmodal').dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: 450,
+                    resizable: false
+                });
+
+                LoadAvailableTags();
+
+                $('.saveselectedtags').unbind('click');
+
+                $('.saveselectedtags').click(function () {
+
+                    var tagIds = [];
+
+                    $('.tagselectgridcontainer').find('input').each(function (index, value) {
+
+                        if ($(value).prop('checked')) {
+                            tagIds.push($(value).val());
+                        }
+
+                    });
+
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/constituenttags',
+                        method: 'POST',
+                        headers: GetApiHeaders(),
+                        data: JSON.stringify({ tags: tagIds }),
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            // Display success
+                            DisplaySuccessMessage('Success', 'Tags saved successfully.');
+
+                            CloseModal(modal);
+
+                            currentEntity = data.Data;
+
+                            DisplaySelectedTags();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                        }
+                    });
+
+                });
+
+            });
+
+            $(this).after($(img));
+        }
+
+        $(img).hide();
+
+    });
+
+}
+
+function LoadAvailableTags() {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'taggroups',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data) {
+                if (data.IsSuccessful) {
+                    if (data.Data) {
+
+                        $(modal).find('.tagselectgridcontainer').html('');
+
+                        $.map(data.Data, function (group) {
+
+                            var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
+                            var tagsContainer = $('<div>').addClass('tagSelectorContainer');
+
+                            if (group.Tags) {
+
+                                switch (group.TagSelectionType) {
+
+                                    case 0:
+                                        CreateMultiSelectTags(group.Tags, tagsContainer);
+                                        break;
+                                    case 1:
+                                        CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                            }
+
+                            $(header).appendTo($(modal).find('.tagselectgridcontainer'));
+                            $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
+
+                        });
+
+                        RefreshTags();
+
+                    }
+                }
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+        }
+    });
+
+}
+
+function RefreshTags() {
+
+    if (currentEntity && currentEntity.Tags) {
+
+        $.map(currentEntity.Tags, function (item) {
+
+            $('input[value=' + item.Id + ']').prop('checked', true);
+
+        });
+
+    };
+
+}
+
+function DisplaySelectedTags() {
+
+    if (currentEntity && currentEntity.Tags) {
+
+        $('.tagselect').html('');
+
+        $.map(currentEntity.Tags, function (tag) {
+
+            var t = $('<div>').addClass('dx-tag-content').attr('id', tag.Id).appendTo($('.tagselect'));
+            $('<span>').text(tag.DisplayName).appendTo($(t));
+            $('<div>').addClass('dx-tag-remove-button')
+                .click(function () {
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/tag/' + tag.Id,
+                        method: 'DELETE',
+                        headers: GetApiHeaders(),
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            currentEntity = data.Data;
+
+                            DisplaySelectedTags();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                        }
+                    });
+                })
+                .appendTo($(t));
+
+        });
+
+    }
+}
+
+function CreateSingleSelectTags(tags, groupId, container) {
+
+    var ul = $('<ul>');
+
+    $.map(tags, function (tag) {
+
+        var li = $('<li>');
+
+        $('<input>').attr('type', 'radio').attr('name', groupId).val(tag.Id).appendTo($(li));
+        $('<span>').text(tag.DisplayName).appendTo($(li));
+
+        $(li).appendTo($(ul));
+
+    });
+
+    $(ul).appendTo($(container));
+
+}
+
+function CreateMultiSelectTags(tags, container) {
+
+    var ul = $('<ul>');
+
+    $.map(tags, function (tag) {
+
+        var li = $('<li>');
+
+        $('<input>').attr('type', 'checkbox').val(tag.Id).appendTo($(li));
+        $('<span>').text(tag.DisplayName).appendTo($(li));
+
+        $(li).appendTo($(ul));
+    });
+
+    $(ul).appendTo($(container));
+}
+
 function ExecuteFunction(functionName, context) {
 
     var args = [].slice.call(arguments).splice(2);
@@ -486,7 +702,7 @@ function SetupEditControls() {
                 // OK
 
                 // Cancel other edit
-                StopEdit($('.editcontainer.active'));
+                ($('.editcontainer.active'));
 
                 // Start new edit
                 StartEdit(editcontainer);
@@ -544,10 +760,16 @@ function StartEdit(editcontainer) {
         $(this).prop('disabled', false);
 
     });
+
     $(editcontainer).find('.dx-tagbox').each(function() {
         $(this).dxTagBox({
             disabled: false
         });
+    });
+
+    $(editcontainer).find('.tagselect').each(function () {
+        $(this).removeClass('disabled');
+        $('.tagSelectImage').show();
     });
 }
 
@@ -563,6 +785,11 @@ function StopEdit(editcontainer) {
 
         $(this).prop('disabled', true);
 
+    });
+
+    $(editcontainer).find('.tagselect').each(function () {
+        $(this).addClass('disabled');
+        $('.tagSelectImage').hide();
     });
 
 }

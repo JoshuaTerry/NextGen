@@ -38,7 +38,8 @@ namespace DDI.WebApi.Controllers
                 c => c.Language,
                 c => c.MaritalStatus,
                 c => c.Prefix,
-                c => c.Profession
+                c => c.Profession,
+                c => c.Tags
             };
         }
 
@@ -175,6 +176,54 @@ namespace DDI.WebApi.Controllers
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpPost]
+        [Route("api/v1/constituents/{id}/constituenttags")]
+        public IHttpActionResult AddTagsToConstituent(Guid id, [FromBody] JObject tags)
+        {
+            try
+            {
+                var constituent = Service.GetById(id).Data;
+
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.AddTagsToConstituent(constituent, tags);
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/v1/constituents/{id}/tag/{tagId}")]
+        public IHttpActionResult RemoveTagFromConstituent(Guid id, Guid tagId)
+        {
+            try
+            {
+                var constituent = Service.GetById(id).Data;
+
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.RemoveTagFromConstituent(constituent, tagId);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(ex);
+            }
         }
     }
 }
