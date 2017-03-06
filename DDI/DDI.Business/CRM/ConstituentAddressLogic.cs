@@ -216,12 +216,12 @@ namespace DDI.Business.CRM
         {
             if (entity.IsPrimary)
             {
-                var existingPrimaryAddress = UnitOfWork.FirstOrDefault<ConstituentAddress>(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary);
-                if (existingPrimaryAddress != null)
+                var existingPrimaryAddresses = UnitOfWork.Where<ConstituentAddress>(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary).ToList();
+                existingPrimaryAddresses.ForEach(a =>
                 {
-                    existingPrimaryAddress.IsPrimary = false;
-                    UnitOfWork.GetRepository<ConstituentAddress>().Update(existingPrimaryAddress);
-                }
+                    a.IsPrimary = false;
+                    UnitOfWork.GetRepository<ConstituentAddress>().Update(a);
+                });
             }
 
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();

@@ -426,12 +426,13 @@ namespace DDI.Business.CRM
         {
             if (contactInfo.IsPreferred)
             {
-                var existingPreferredContactInfo = UnitOfWork.FirstOrDefault<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.IsPreferred && ci.Id != contactInfo.Id);
-                if (existingPreferredContactInfo != null)
+                var existingPreferredContactInfo = UnitOfWork.Where<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.Id != contactInfo.Id).ToList();
+                existingPreferredContactInfo.ForEach(c =>
                 {
-                    existingPreferredContactInfo.IsPreferred = false;
-                    UnitOfWork.GetRepository<ContactInfo>().Update(existingPreferredContactInfo);
-                }
+                    c.IsPreferred = false;
+                    UnitOfWork.GetRepository<ContactInfo>().Update(c);
+                });
+               
             }
         }
 

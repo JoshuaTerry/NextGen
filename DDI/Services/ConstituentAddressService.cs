@@ -23,11 +23,12 @@ namespace DDI.Services
         public ConstituentAddressService()
             :this(new AddressService(), new UnitOfWorkEF(), new ConstituentAddressLogic())
         {
-            
+
         }
 
         internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork, ConstituentAddressLogic logic)
         {
+            _logic = logic;
             _addressService = addressService as AddressService;
             _unitOfWork = unitOfWork;
         }
