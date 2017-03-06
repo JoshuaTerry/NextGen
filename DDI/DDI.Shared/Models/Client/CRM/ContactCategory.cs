@@ -26,6 +26,8 @@ namespace DDI.Shared.Models.Client.CRM
         [MaxLength(128)]
         public string TextBoxLabel { get; set; }
 
+        public bool IsActive { get; set; }
+
         public Guid? DefaultContactTypeID { get; set; }
 
         public ContactType DefaultContactType { get; set; }
