@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Drawing;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Enums.CRM;
 using DDI.Services;
-using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
@@ -12,6 +12,21 @@ namespace DDI.WebApi.Controllers
 {
     public class TagGroupsController : ControllerBase<TagGroup>
     {
+        protected new ITagGroupService Service => (ITagGroupService)base.Service;
+
+        protected override Expression<Func<TagGroup, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<TagGroup, object>>[]
+            {
+                tg => tg.Tags
+            };
+        }
+
+        public TagGroupsController() : base(new TagGroupService())
+        {
+
+        }
+
         [HttpGet]
         [Route("api/v1/taggroups")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
@@ -24,6 +39,22 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/taggroups/constituentcategory/{category}")]
+        public IHttpActionResult GetByConstituentCategory(ConstituentCategory category)
+        {
+            try
+            {
+                var response = Service.GetByConstituentCategory(category);
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
