@@ -1,13 +1,13 @@
 ﻿
 var route = 'customfields/';
-var customfieldtype = { 'Number': 0, 'TextBox': 1, 'TextArea': 2, 'DropDown': 3, 'Radio': 4, 'CheckBox': 5, 'Date': 6, 'DateTime': 7 };
-var customfieldentity = {
+var CustomFieldType = { 'Number': 0, 'TextBox': 1, 'TextArea': 2, 'DropDown': 3, 'Radio': 4, 'CheckBox': 5, 'Date': 6, 'DateTime': 7 };
+var CustomFieldEntity = {
     'Accounting': 0, 'GeneralLedger': 1, 'AccountsPayable': 2, 'AccountsReceivable': 3, 'FixedAssets': 4,
     'Inventory': 5, 'CashProcessing': 6, 'CashDisbursements': 7, 'CashReceipting': 8, 'Gifts': 9,
     'NamedFunds': 10, 'CropEvents': 11, 'PlannedGiving': 12, 'Campaigns': 13, 'Investments': 14,
     'LineOfCredit': 15, 'Loans': 16, 'Portfolio': 17, 'Pools': 18, 'CRM': 19,
     'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25 };
-var currentcustomfieldentity = 0;
+var currentCustomFieldEntity = 0;
 
 $(document).ready(function () {
 
@@ -17,7 +17,7 @@ $(document).ready(function () {
 
 function DisplayCustomFieldsGrid(container, entity) {
 
-    currentcustomfieldentity = entity;
+    currentCustomFieldEntity = entity;
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -82,7 +82,7 @@ function EditCustomControl(id) {
 
 }
 
-function DisplayCustomFields(container, entity) {
+function DisplayCustomFields(container, entity, callback) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -103,6 +103,10 @@ function DisplayCustomFields(container, entity) {
 
                 });
 
+                if (callback) {
+                    callback();
+                }
+
             }
 
         },
@@ -115,34 +119,34 @@ function DisplayCustomFields(container, entity) {
 
 function CreateCustomField(item) {
 
-    var div = $('<div>').addClass('fieldblock');
+    var div = $('<div>').addClass('fieldblock customField');
 
     $('<label>').text(item.LabelText).appendTo($(div));
 
     switch (item.FieldType) {
-        case customfieldtype.Number:
-            CreateNumberField(item);
+        case CustomFieldType.Number:
+            $(div).append(CreateNumberField(item));
             break;
-        case customfieldtype.TextBox:
-            CreateTextField(item);
+        case CustomFieldType.TextBox:
+            $(div).append(CreateTextField(item));
             break;
-        case customfieldtype.TextArea:
-            CreateTextAreaField(item);
+        case CustomFieldType.TextArea:
+            $(div).append(CreateTextAreaField(item));
             break;
-        case customfieldtype.DropDown:
-            CreateDropDownField(item);
+        case CustomFieldType.DropDown:
+            $(div).append(CreateDropDownField(item));
             break;
-        case customfieldtype.Radio:
-            CreateRadioField(item);
+        case CustomFieldType.Radio:
+            $(div).append(CreateRadioField(item));
             break;
-        case customfieldtype.CheckBox:
-            CreateCheckBoxField(item);
+        case CustomFieldType.CheckBox:
+            $(div).append(CreateCheckBoxField(item));
             break;
-        case customfieldtype.Date:
-            CreateDateField(item);
+        case CustomFieldType.Date:
+            $(div).append(CreateDateField(item));
             break;
-        case customfieldtype.DateTime:
-            CreateDateTimeField(item);
+        case CustomFieldType.DateTime:
+            $(div).append(CreateDateTimeField(item));
             break;
     }
 
@@ -153,7 +157,7 @@ function CreateCustomField(item) {
 
 function CreateNumberField(item) {
 
-    var number = $('<input>').addClass('number');
+    var number = $('<input>').addClass('number editable');
 
     if (item.Answer) {
         $(number).val(item.Answer.Value);
@@ -165,7 +169,7 @@ function CreateNumberField(item) {
 
 function CreateTextField(item) {
 
-    var text = $('<input>').attr('type', 'text');
+    var text = $('<input>').attr('type', 'text').addClass('editable');
 
     if (item.Answer) {
         $(text).val(item.Answer.Value);
@@ -177,7 +181,7 @@ function CreateTextField(item) {
 
 function CreateTextAreaField(item) {
 
-    var textarea = $('<textarea>');
+    var textarea = $('<textarea>').addClass('editable');
 
     if (item.Answer) {
         $(textarea).val(item.Answer.Value);
@@ -189,9 +193,11 @@ function CreateTextAreaField(item) {
 
 function CreateDropDownField(item) {
 
-    var dropdown = $('<select>');
+    var dropdown = $('<select>').addClass('editable');
     
     if (item.Options) {
+        AddDefaultOption(dropdown, '', '');
+
         $.map(item.Options, function (o) {
             $('<option>').val(o.Id).text(o.DisplayName).appendTo($(dropdown));
         });
@@ -207,15 +213,15 @@ function CreateDropDownField(item) {
 
 function CreateRadioField(item) {
 
-    var radio = $('<div>').addClass('radiobuttons');
+    var radio = $('<div>').addClass('radiobuttons editable');
 
     if (item.Options) {
         $.map(item.Options, function (o) {
             var rd = $('<div>').addClass('radiobutton');
 
-            $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
             var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
-
+            $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
+            
             if (item.Answer && item.Answer.Value == $(i).val()) {
                 $(i).attr('checked', 'checked');
             }
@@ -230,7 +236,7 @@ function CreateRadioField(item) {
 
 function CreateCheckBoxField(item) {
 
-    var checkbox = $('<input>').attr('type', 'checkbox');
+    var checkbox = $('<input>').attr('type', 'checkbox').addClass('editable');
 
     if (item.Answer && item.Answer.Value == '1') {
         $(checkbox).attr('checked', 'checked');
@@ -242,7 +248,7 @@ function CreateCheckBoxField(item) {
 
 function CreateDateField(item) {
 
-    var date = $('<input>').attr('type', 'text').addClass('datepicker');
+    var date = $('<input>').attr('type', 'text').addClass('datepicker editable');
 
     if (item.Answer) {
         $(date).text(FormatJSONDate(item.Answer.Value));
@@ -254,7 +260,7 @@ function CreateDateField(item) {
 
 function CreateDateTimeField(item) {
 
-    var dt = $('<div>').addClass('datepair');
+    var dt = $('<div>').addClass('datepair editable');
     var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
     var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
 

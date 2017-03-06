@@ -1,10 +1,11 @@
 ﻿using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class PropertyChange : IPropertyChange<UserLogin> 
+    public class PropertyChange : IPropertyChange<User> 
     {
         public string ChangeType { get; set; }
         [Key]
@@ -18,7 +19,7 @@ namespace DDI.Shared.Models.Client.Audit
         public string OriginalValue { get; set; }
         [MaxLength(512)]
         public string Value { get; set; }
-        IObjectChange<UserLogin> IPropertyChange<UserLogin>.ObjectChange
+        IObjectChange<User> IPropertyChange<User>.ObjectChange
         {
             get { return ObjectChange; }
             set { ObjectChange = (ObjectChange)value; }

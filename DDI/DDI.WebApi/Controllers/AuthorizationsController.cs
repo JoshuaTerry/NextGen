@@ -21,6 +21,8 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using DDI.WebApi.Services;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Controllers
 {
@@ -28,23 +30,26 @@ namespace DDI.WebApi.Controllers
     public class AuthorizationsController : ApiController
     {
         private const string LOCAL_LOGIN_PROVIDER = "Local";
-        private IApplicationUserManager _userManager;
+        private UserManager _userManager;
 
         public AuthorizationsController()
         {
         }
 
-        public AuthorizationsController(IApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        public AuthorizationsController(UserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public IApplicationUserManager UserManager
+        public UserManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                if (_userManager == null)
+                    return Request.GetOwinContext().GetUserManager<UserManager>();
+                else
+                    return _userManager;
             }
             private set
             {
@@ -88,7 +93,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/authorizations/manageinfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(Guid.Parse(User.Identity.GetUserId())); //jlt
 
             if (user == null)
             {
@@ -97,7 +102,7 @@ namespace DDI.WebApi.Controllers
 
             List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
+            foreach (var linkedAccount in user.Logins)
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
@@ -131,7 +136,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+            IdentityResult result = await UserManager.ChangePasswordAsync(Guid.Parse(User.Identity.GetUserId()), model.OldPassword,
                 model.NewPassword);
             
             if (!result.Succeeded)
@@ -150,7 +155,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+            IdentityResult result = await UserManager.AddPasswordAsync(Guid.Parse(User.Identity.GetUserId()), model.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -173,12 +178,11 @@ namespace DDI.WebApi.Controllers
 
             if (model.LoginProvider == LOCAL_LOGIN_PROVIDER)
             {
-                result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
+                result = await UserManager.RemovePasswordAsync(Guid.Parse(User.Identity.GetUserId()));
             }
             else
             {
-                result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                result = await UserManager.RemoveLoginAsync(Guid.Parse(User.Identity.GetUserId()), new UserLoginInfo(model.LoginProvider, model.ProviderKey));
             }
 
             if (!result.Succeeded)
@@ -205,7 +209,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(model.Email);
@@ -236,7 +240,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(email);
@@ -277,7 +281,7 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user;
+            User user;
             try
             {
                 user = GetUserByEmail(model.Email);
@@ -344,7 +348,7 @@ namespace DDI.WebApi.Controllers
             return null;
         }
 
-        private ApplicationUser GetUserByEmail(string email)
+        private User GetUserByEmail(string email)
         {             
             var users = UserManager.Users.Where(u => u.Email == email);
             if (users.Count() == 1)

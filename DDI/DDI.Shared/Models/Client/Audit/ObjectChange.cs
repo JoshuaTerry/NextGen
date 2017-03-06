@@ -1,11 +1,12 @@
 ﻿using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.Audit
 {
-    public class ObjectChange : IObjectChange<UserLogin> 
+    public class ObjectChange : IObjectChange<User> 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,15 +23,15 @@ namespace DDI.Shared.Models.Client.Audit
         public ChangeSet ChangeSet { get; set; }
         public List<PropertyChange> PropertyChanges { get; set; }
 
-        IEnumerable<IPropertyChange<UserLogin>> IObjectChange<UserLogin>.PropertyChanges
+        IEnumerable<IPropertyChange<User>> IObjectChange<User>.PropertyChanges
         {
             get { return PropertyChanges; }
         }
-        public void Add(IPropertyChange<UserLogin> propertyChange)
+        public void Add(IPropertyChange<User> propertyChange)
         {
             PropertyChanges.Add((PropertyChange)propertyChange);
         }
-        IChangeSet<UserLogin> IObjectChange<UserLogin>.ChangeSet
+        IChangeSet<User> IObjectChange<User>.ChangeSet
         {
             get { return ChangeSet; }
             set { ChangeSet = (ChangeSet)value; }

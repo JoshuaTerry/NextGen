@@ -9,7 +9,7 @@ namespace DDI.Data.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(DDI.Data.DomainContext context)

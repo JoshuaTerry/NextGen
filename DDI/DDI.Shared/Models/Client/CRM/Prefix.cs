@@ -29,6 +29,8 @@ namespace DDI.Shared.Models.Client.CRM
         [MaxLength(128)]
         public string Salutation { get; set; }
 
+        public bool IsActive { get; set; }
+
         public bool ShowOnline { get; set; }
 
         public Gender Gender { get; set; }

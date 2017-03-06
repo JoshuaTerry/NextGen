@@ -16,6 +16,12 @@ $(document).ready(function () {
         Resize();
     });
 
+    DisplayConstituentCustomFields();
+
+    CreateEditControls();
+
+    SetupEditControls();
+
     if (sessionStorage.getItem('constituentid')) {
 
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
@@ -152,11 +158,8 @@ function LoadDropDowns() {
 function GetConstituentData(id) {
     route = 'constituents/';
 
-    if (id.length > 9) {
-        route += 'id/'; // If length > 9, id is probably a GUID.
-    }
-    else {
-        route += 'number/'; // Otherwise it's likely a constituent number.
+    if (id.length <= 9) {
+        route += 'number/'; // If id length is <= 9, assume the constituent ID is a constituent number.
     }
     
     $.ajax({
@@ -187,6 +190,10 @@ function RefreshEntity() {
 function DisplayConstituentData() {
 
     if (currentEntity) {
+
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
 
@@ -369,115 +376,15 @@ function GetConstituentPreferredContactInfo() {
 
 /* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
+    LoadTagBoxes('tagBoxDenominations', 'denominations', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
 }
 /* End Demographics Section */
 
 
-/* Relationships Tab */
-function LoadRelationshipsData() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            LoadRelationshipsQuickView(data);
-            LoadRelationshipsTab(data);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
-        }
-    });
-
-}
-
-function LoadRelationshipsQuickView(data) {
-
-    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
-
-    if (data.Data) {
-
-        $.map(data.Data, function (item) {
-
-            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                $('<li>').text(item.DisplayName).appendTo($(formattedData));
-            }
-
-        });
-
-    }
-
-    $(formattedData).appendTo($('.relationshipsQuickView'));
-
-}
-
-function LoadRelationshipsTab(data) {
-
-    var columns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
-    ];
-
-    LoadGridWithData('relationshipsgrid',
-        'relationshipstable',
-        columns,
-        'relationships',
-        null,
-        EditRelationship,
-        null,
-        data);
-
-}
-
-function EditRelationship(id) {
-
-    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
-
-}
-
-function NewRelationshipModal() {
-
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
-
-}
-
-function GetRelationshipToSave(modal, isUpdate) {
-
-    var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
-
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-    }
-
-    return item;
-}
-
-function PrePopulateNewRelationshipModal(modal) {
-
-    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
-
-}
-
-function LoadRelationshipData(data, modal) {
-
-    $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
-
-}
-/* End Relationships Tab */
 
 
 /* Doing Business As Section */
@@ -493,7 +400,7 @@ function LoadDBAGrid() {
     LoadGrid('dbagrid',
         'doingbusinessastable',
         columns,
-        'doingbusinessas',
+        'constituents/' + currentEntity.Id + '/doingbusinessas',
         null,
         EditDBA,
         null);
@@ -526,7 +433,7 @@ function NewDBAModal() {
         $('.savedba').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Name: $(modal).find('.DBAName').val(),
                 StartDate: $(modal).find('.StartDate').val(),
                 EndDate: $(modal).find('.EndDate').val()
@@ -583,7 +490,7 @@ function EditDBA(id) {
 
         var item = {
             Id: $(modal).find('.hiddbaid').val(),
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Name: $(modal).find('.DBAName').val(),
             StartDate: $(modal).find('.StartDate').val(),
             EndDate: $(modal).find('.EndDate').val()
@@ -652,7 +559,7 @@ function LoadEducationGrid() {
     LoadGrid('educationgrid',
         'educationgridcontainer',
         columns,
-        'educations',
+        'constituents/' + currentEntity.Id + '/educations',
         null,
         EditEducationModal);
 
@@ -692,7 +599,7 @@ function NewEducationModal() {
         $('.saveeducation').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Major: $('.ed-Major').val(),
                 StartDate: $('.ed-StartDate').val(),
                 EndDate: $('.ed-EndDate').val(),
@@ -749,7 +656,7 @@ function EditEducationModal(id) {
     $('.saveeducation').click(function () {
 
         var item = {
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Major: $('.ed-Major').val(),
             StartDate: $('.ed-StartDate').val(),
             EndDate: $('.ed-EndDate').val(),
@@ -851,6 +758,8 @@ function NewPaymentPreference() {
 
     });
 
+    PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '');
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -866,13 +775,14 @@ function NewPaymentPreference() {
         var date = new Date();
 
         var item = {
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Description: $(modal).find('.pp-Description').val(),
             BankName: $(modal).find('.pp-BankName').val(),
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
             Status: $(modal).find('.pp-Status').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
         };
 
@@ -886,7 +796,7 @@ function NewPaymentPreference() {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -941,6 +851,7 @@ function EditPaymentPreference(id) {
             RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
             BankAccount: $(modal).find('.pp-AccountNumber').val(),
             AccountType: $(modal).find('.pp-AccountType').val(),
+            EFTFormatId: $(modal).find('.pp-EFTFormatId').val(),
             Status: $(modal).find('.pp-Status').val(),
             StatusDate: date
         };
@@ -955,7 +866,7 @@ function EditPaymentPreference(id) {
 
                 DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
 
-                CloseModal();
+                CloseModal(modal);
 
                 LoadPaymentPreferencesTable();
 
@@ -987,6 +898,8 @@ function LoadPaymentPreference(id, modal) {
             $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
             $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
 
+            PopulateDropDown('.pp-EFTFormatId', 'eftformats', '', '', data.Data.EFTFormatId);
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
@@ -996,6 +909,18 @@ function LoadPaymentPreference(id, modal) {
 }
 /* End Payment Preference Section */
 
+
+/* Additional Information (Custom Fields) */
+function DisplayConstituentCustomFields() {
+
+    DisplayCustomFields('customFieldContainer', CustomFieldEntity.CRM, function () {
+        $('.editable').prop('disabled', true);
+        LoadDatePickers();
+        LoadDatePair();
+    });
+
+}
+/* End Additional Information (Custom Fields) */
 
 /* Professional Section */
 function PopulateUserIdDropDown() {
@@ -1028,7 +953,7 @@ function LoadAlternateIDTable() {
     LoadGrid('altidgrid',
        'alternateidgridcontainer',
        columns,
-       'alternateids',
+       'constituents/' + currentEntity.Id + '/alternateids',
        null,
        EditAlternateId);
 }
@@ -1059,7 +984,7 @@ function NewAlternateIdModal() {
         $('.submitaltid').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 Name: $(modal).find('.ai-Name').val()
             }
 
@@ -1121,7 +1046,7 @@ function EditAlternateId(id) {
 
         var item = {
             Id: id,
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             Name: $(modal).find('.ai-Name').val()
         }
 
@@ -1169,7 +1094,6 @@ function LoadAlternateId(id, modal) {
 }
 /* End Alternate Id Section */
 
-
 /* Contact Information Section */
 function LoadContactInfo() {
 
@@ -1189,7 +1113,7 @@ function LoadAddressesGrid() {
     LoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituentaddresses',
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
         EditAddressModal);
 
@@ -1221,7 +1145,7 @@ function NewAddressModal() {
         $('.saveaddress').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.na-Comment').val(),
                 StartDate: $(modal).find('.na-StartDate').val(),
@@ -1371,7 +1295,7 @@ function GetEditedAddressFields() {
 
     var item = {
         Id: $(modal).find('.hidconstituentaddressid').val(),
-        ConstituentId: $('.hidconstituentid').val(),
+        ConstituentId: currentEntity.Id,
         IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
         StartDate: $(modal).find('.na-StartDate').val(),
@@ -1548,7 +1472,7 @@ function NewPhoneModal() {
         $('.submitphonenumber').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
                 Info: $(modal).find('.pn-Info').val(),
                 IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
@@ -1615,7 +1539,7 @@ function EditPhone(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
             Info: $(modal).find('.pn-Info').val(),
             IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
@@ -1697,7 +1621,7 @@ function NewEmailModal() {
         $('.submitemail').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.e-EmailType').val(),
                 Info: $(modal).find('.e-Info').val(),
                 IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
@@ -1765,7 +1689,7 @@ function EditEmail(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.e-EmailType').val(),
             Info: $(modal).find('.e-Info').val(),
             IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
@@ -1846,7 +1770,7 @@ function NewWebModal() {
         $('.submitwebsite').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
                 Info: $(modal).find('.ws-Info').val(),
                 IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
@@ -1911,7 +1835,7 @@ function EditWeb(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
             Info: $(modal).find('.ws-Info').val(),
             IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
@@ -1990,7 +1914,7 @@ function NewPersonModal() {
         $('.submitpoc').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.poc-PocType').val(),
                 Info: $(modal).find('.poc-Info').val(),
                 IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
@@ -2055,7 +1979,7 @@ function EditPerson(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.poc-PocType').val(),
             Info: $(modal).find('.poc-Info').val(),
             IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
@@ -2134,7 +2058,7 @@ function NewOtherModal() {
         $('.submitother').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 ContactTypeId: $(modal).find('.o-OtherType').val(),
                 Info: $(modal).find('.o-Info').val(),
                 IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
@@ -2199,7 +2123,7 @@ function EditOther(id) {
 
         var item = {
 
-            ConstituentId: $('.hidconstituentid').val(),
+            ConstituentId: currentEntity.Id,
             ContactTypeId: $(modal).find('.o-OtherType').val(),
             Info: $(modal).find('.o-Info').val(),
             IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
@@ -2257,3 +2181,117 @@ function LoadOther(id, modal) {
 // End Other Contacts Subsection
 
 /* End Contact Information Section */
+/* Relationships Tab */
+function LoadRelationshipsData() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            LoadRelationshipsQuickView(data);
+            LoadRelationshipsTab(data);
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
+        }
+    });
+}
+function LoadRelationshipsQuickView(data) {
+
+    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+    if (data.Data) {
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
+                $('<li>').text(rowText).appendTo($(formattedData));
+            }
+
+        });
+
+    }
+    $('.relationshipsQuickView').empty();
+    $(formattedData).appendTo($('.relationshipsQuickView'));
+
+}
+
+
+function LoadRelationshipsTab(data) {
+
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
+        { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
+        { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
+        { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
+    ];
+
+    LoadGridWithData('relationshipsgrid',
+        '.relationshipstable',
+        columns,
+        'relationships',
+        null,        
+        EditRelationship,
+        null,
+        data);
+}
+
+
+function LoadRelationshipsGrid() {
+
+    LoadRelationshipsData();
+}
+
+function EditRelationship(id) {
+    var constituentId = $('.hidconstituentid').val();
+    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
+}
+/*
+function EditRelationship(getUrl, patchUrl) {
+    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
+}
+*/
+
+function NewRelationshipModal() {
+    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
+}
+
+/*function LoadRelationship(url, modal) {
+    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
+}*/
+
+function GetRelationshipToSave(modal, isUpdate) {
+
+    var item = {
+        Constituent1Id: $('.FormattedName1').val(),
+        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
+    }
+
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.hidrelationshipid').val();
+        item.IsSwapped = $(modal).find('.hidrelationshipisswapped').val();
+    }
+
+    return item;
+}
+
+function PrePopulateNewRelationshipModal(modal) {
+    $(modal).find('.FormattedName1').val(currentEntity.Id);
+}
+
+function LoadRelationshipData(data, modal) {
+    $(modal).find('.hidrelationshipid').val(data.Data.Id);
+    $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
+}
+/* End Relationships Tab */
+
+
+
+

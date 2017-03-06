@@ -26,3 +26,8 @@ div.fieldblock input.cfoptiondesc { width: 140px; }
 div.fieldblock input.cfoptionorder { width: 25px; }
 
 a.customfieldmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
+a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
+
+div.taggroupsgrid { height: 50vh }
+div.tagscontainer { height: 50vh }
+

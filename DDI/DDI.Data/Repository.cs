@@ -294,10 +294,19 @@ namespace DDI.Data
         {
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
+            IEnumerable<string> propertynames = currentValues.PropertyNames;
 
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
-                currentValues[keyValue.Key] = keyValue.Value;
+                if (propertynames.Contains(keyValue.Key))
+                {
+                    currentValues[keyValue.Key] = keyValue.Value;
+                }
+                else
+                {
+                    // NotMapped property: Use reflection to try and set the property in the entity.
+                    typeof(T).GetProperty(keyValue.Key)?.SetValue(entity, keyValue.Value);
+                }
             }
 
             action?.Invoke(entity); 
