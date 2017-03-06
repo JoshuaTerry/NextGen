@@ -231,7 +231,7 @@
                         </div>
                     </div>
 
-                    <h1 class ="dbaSection">Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="DBASettingsSection"><span class="DBASettingsSectionLabel">Doing Business As</span> <a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
@@ -307,7 +307,7 @@
 
                     </div>
 
-                    <h1 class="personalSection">Personal</h1>
+                    <h1 class ="PersonalSettingsSection"><span class="PersonalSettingsSectionLabel">Personal</span></h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">

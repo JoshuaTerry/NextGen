@@ -21,6 +21,9 @@ namespace DDI.Shared.Models.Client.CRM
 
         [MaxLength(4)]
         public string Code { get; set; }
+
+        public bool IsActive { get; set; }
+
         #endregion Public Properties
 
         #region Public Methods
