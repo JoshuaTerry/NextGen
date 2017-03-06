@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var modal = $('.addconstituentmodal').dialog({
+        modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 900,
@@ -315,15 +315,15 @@ function LoadDatePickers() {
 function LoadDatePair() {
 
     // if ($.timepicker) {
-        $('.datepair .time').timepicker({
-            'showDuration': true,
-            'timeFormat': 'g:ia'
-        });
+        //$('.datepair .time').timepicker({
+        //    'showDuration': true,
+        //    'timeFormat': 'g:ia'
+        //});
 
-        $('.datepair .date').datepicker({
-            'format': 'm/d/yyyy',
-            'autoclose': true
-        });
+        //$('.datepair .date').datepicker({
+        //    'format': 'm/d/yyyy',
+        //    'autoclose': true
+        //});
 
         // $('.datepair').datepair();
     // }

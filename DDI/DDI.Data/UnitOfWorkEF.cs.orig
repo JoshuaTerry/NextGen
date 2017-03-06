@@ -277,11 +277,19 @@ namespace DDI.Data
         {
             var user = EntityFrameworkHelpers.GetCurrentUser();
             if (EFAuditModule.IsAuditEnabled && user != null)
+<<<<<<< HEAD
+            { 
+                return _clientContext.Save(user).AffectedObjectCount;
+            }
+            else
+            {
+=======
             {
                 return _clientContext.Save(user).AffectedObjectCount;
             }
             else
             {
+>>>>>>> feature/DC-493_ConstituentSaveFixes
                 return (_clientContext?.SaveChanges() ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
