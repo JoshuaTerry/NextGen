@@ -2234,11 +2234,15 @@ function PrePopulateNewRelationshipModal(modal) {
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent2.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.FormattedName);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.FormattedName);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
+
 }
 /* End Relationships Tab */
 
