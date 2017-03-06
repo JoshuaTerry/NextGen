@@ -274,16 +274,16 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
-            if (EFAuditModule.IsAuditEnabled)
-            {
-                var user = EntityFrameworkHelpers.GetCurrentUser();
-                if (user == null)
-                    throw new Exception("Audit Enabled, changes by Unauthenticated Users are not permitted.");
-
-                _clientContext.Save(user);
+            var user = EntityFrameworkHelpers.GetCurrentUser();
+            if (EFAuditModule.IsAuditEnabled && user != null)
+            { 
+                return _clientContext.Save(user).AffectedObjectCount;
             }
-            return (_clientContext?.SaveChanges() ?? 0) +
-                   (_commonContext?.SaveChanges() ?? 0);
+            else
+            {
+                return (_clientContext?.SaveChanges() ?? 0) +
+                       (_commonContext?.SaveChanges() ?? 0);
+            }
         }
 
         public void AddBusinessLogic(object logic)
