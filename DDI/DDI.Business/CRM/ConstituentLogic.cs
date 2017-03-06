@@ -144,7 +144,7 @@ namespace DDI.Business.CRM
             var existing = UnitOfWork.GetRepository<Constituent>().Entities.FirstOrDefault(c => c.ConstituentNumber == entity.ConstituentNumber);
             if (existing != null)
             {
-                if (entity.Id == Guid.Empty || entity.Id == existing.Id)
+                if (entity.Id == Guid.Empty || entity.Id != existing.Id)
                 {
                     throw new ValidationException("The Constituent Number already exists.");
                 } 
