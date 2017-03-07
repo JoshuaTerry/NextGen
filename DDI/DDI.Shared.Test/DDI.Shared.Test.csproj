@@ -66,6 +66,7 @@
     <Compile Include="Extensions\JsonExtensionsTest.cs" />
     <Compile Include="Extensions\MemberInfoExtensionsTests.cs" />
     <Compile Include="FakeConnectionManager.cs" />
+    <Compile Include="Helpers\PathHelperTests.cs" />
     <Compile Include="Helpers\ReflectionHelperTests.cs" />
     <Compile Include="Helpers\EnumHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

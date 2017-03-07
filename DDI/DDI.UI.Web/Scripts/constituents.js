@@ -236,7 +236,7 @@ function DisplayConstituentData() {
 
         GenerateContactInfoSection();
 
-	    LoadDenominationsTagBox();
+        LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
@@ -263,7 +263,7 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
-	
+    
         PopulateUserIdDropDown();
 
         LoadRelationshipsData();
@@ -365,14 +365,14 @@ function DisplayConstituentType() {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
         $('.organizationSection').hide();
-        $('.dbaSection').hide();
+        $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
-        $('.personalSection').hide();
-        $('.clergySection').hide();
-        $('.educationSection').hide();
-        $('.professionalSection').hide();
+        $('.PersonalSettingsSection').hide();
+        $('.ClergySettingsSection').hide();
+        $('.EducationSettingsSection').hide();
+        $('.ProfessionalSettingsSection').hide();
     }
 
 }
