@@ -58,6 +58,9 @@ namespace DDI.Business.CRM
                 ValidatePhoneNumber(contactInfo);                
             }
 
+            // check for preferred contactinfos, one allowed per category
+            ValidateIsPreferred(contactInfo, categoryCode);
+            
         }
 
         /// <summary>
@@ -357,7 +360,6 @@ namespace DDI.Business.CRM
                             sb.Append(' ').Append(phone.Substring(position));
                         }
                     }
-
                 }
             }
             else
@@ -418,6 +420,33 @@ namespace DDI.Business.CRM
             }
 
             return resultCountry ?? addressLogic.GetDefaultCountry();
+        }
+
+        private void ValidateIsPreferred(ContactInfo contactInfo, string categoryCode)
+        {
+            if (string.IsNullOrEmpty(categoryCode))
+            {
+                var category = UnitOfWork.GetRepository<ContactType>().Entities.IncludePath(c => c.ContactCategory).FirstOrDefault(ct => ct.Id == contactInfo.ContactTypeId);
+                if(category != null)
+                {
+                    categoryCode = category.ContactCategory.Code;
+                } else
+                {
+                    throw new Exception("Could not find a valid Category Code");
+                }
+            }
+            if (contactInfo.IsPreferred)
+            {
+
+                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.IncludePath(c => c.ContactType.ContactCategory).Where<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.Id != contactInfo.Id).ToList();
+
+                existingPreferredContactInfo.ForEach(c =>
+                {
+                    c.IsPreferred = false;
+                    UnitOfWork.GetRepository<ContactInfo>().Update(c);
+                });
+               
+            }
         }
 
         #endregion
