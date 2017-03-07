@@ -282,6 +282,10 @@ function DisplayConstituentData() {
         NewAddressModal();
 
         DisplaySelectedTags();
+
+        LoadNoteDetailsGrid();
+
+        NewNoteDetailsModal();
     }
 }
 
@@ -392,8 +396,182 @@ function LoadEthnicitiesTagBox() {
 }
 /* End Demographics Section */
 
+/* Notes Tab */
+function LoadNoteDetailsGrid() {
+
+    var columns = [
+    { dataField: 'Id', width: '0px', },
+    { dataField: 'CreatedOn', caption: 'Created Date', dataType: 'date' },
+    { dataField: 'CreatedBy', caption: 'Created By' },
+    { dataField: 'Title', caption: 'Title' }
+    ];
+
+    LoadGrid('notedetailsgrid',
+        'notedetailsgridcontainer',
+        columns,
+        'notes',
+        null,
+        EditNoteDetails,
+        null);
+
+}
+
+function NewNoteDetailsModal() {
+
+    $('.newnotesdetailmodallink').click(function (e) {
+
+        PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+        PopulateDropDown('.nd-Topics', 'notetopics/', '', '');
+
+        e.preventDefault();
+
+        modal = $('.notesdetailmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 500,
+            resizable: false
+        });
 
 
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+        $('.savenotedetails').unbind('click');
+
+        $('.savenotedetails').click(function () {
+
+            var item = {
+
+                Title: $(modal).find('.nd-Title').val(),
+                AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
+                AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
+                Text: $(modal).find('.nd-Description').val(),
+                NoteTopicId: $(modal).find('.nd-Topics').val(),
+                ContactDate: $(modal).find('.nd-ContactDate').val(),
+                CreatedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
+                CreatedBy: currentEntity.Id,
+                LastModifiedBy: currentEntity.Id
+
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'notes/',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function () {
+
+                    DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+                    CloseModal(modal);
+
+                    LoadNoteDetailsGrid();
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+                }
+            });
+
+        });
+
+    });
+}
+
+function EditNoteDetails(id) {
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    LoadNoteDetails(id, modal);
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var item = {
+
+            Title: $(modal).find('.nd-Title').val(),
+            AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
+            AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
+            Text: $(modal).find('.nd-Description').val(),
+            CategoryId: $(modal).find('.nd-Category').val(),
+            ContactDate: $(modal).find('.nd-ContactDate').val(),
+            LastModifiedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
+            LastModifiedBy: currentEntity.Id
+
+        }
+
+        $.ajax({
+            type: 'PATCH',
+            url: WEB_API_ADDRESS + 'notes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+                CloseModal(modal);
+
+                LoadNoteDetailsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+            }
+        });
+
+    });
+}
+
+function LoadNoteDetails(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'notes/' + id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
+            PopulateDropDown('.nd-Topics', 'notetopics', '', '', data.Data.NoteTopicId);
+
+            $('.nd-Title').val(data.Data.Title),
+            $('.nd-Description').val(data.Data.Text),
+            $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
+            $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
+            $('.nd-ContactDate').val(data.Data.ContactDate),
+            $('.nd-ContactDate').val(data.Data.ContactDate),
+            $('.nd-CreatedBy').val(data.Data.CreatedBy),
+            $('.nd-UpdatedBy').val(data.Data.LastModifiedBy)
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+        }
+    });
+}
+/* End Notes Tab */
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
