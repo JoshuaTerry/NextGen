@@ -11,6 +11,8 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DDI.Shared;
+using Moq;
 
 namespace DDI.Business.Tests.CRM
 {
@@ -56,6 +58,7 @@ namespace DDI.Business.Tests.CRM
             {
                 Address = _addresses[0],
                 Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
                 IsPrimary = true,
                 ResidentType = ResidentType.Primary,
@@ -67,6 +70,7 @@ namespace DDI.Business.Tests.CRM
             {
                 Address = _addresses[1],
                 Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Work),
                 IsPrimary = false,
                 ResidentType = ResidentType.Primary,
@@ -78,6 +82,7 @@ namespace DDI.Business.Tests.CRM
             {
                 Address = _addresses[2],
                 Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Mailing),
                 IsPrimary = false,
                 ResidentType = ResidentType.Primary,
@@ -89,6 +94,7 @@ namespace DDI.Business.Tests.CRM
             {
                 Address = _addresses[3],
                 Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Vacation),
                 IsPrimary = false,
                 StartDay = new DateTime(2015, 10, 1).DayOfYear,
@@ -148,6 +154,56 @@ namespace DDI.Business.Tests.CRM
             Assert.IsFalse(_logic.IsCurrentAddress(testRow, new DateTime(2015, 4, 1)), "4/1 not current between 9/1 and 3/31.");
             Assert.IsTrue(_logic.IsCurrentAddress(testRow, new DateTime(2015, 9, 1)), "9/1 current between 9/1 and 3/31.");
             Assert.IsFalse(_logic.IsCurrentAddress(testRow, new DateTime(2015, 8, 31)), "8/31 not current between 9/1 and 3/31.");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ConstituentAddressLogic_Validate_IsPrimary()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            var cLogic = new Mock<ConstituentLogic>(uow.Object);
+            uow.Setup(m => m.GetRepository<ConstituentAddress>().Entities).Returns(SetupRepo());
+            uow.Setup(m => m.GetBusinessLogic<ConstituentLogic>()).Returns(cLogic.Object);
+            uow.Setup(m => m.GetRepository<ConstituentAddress>().Update(It.IsAny<ConstituentAddress>())).Verifiable();
+
+            var logic = new ConstituentAddressLogic(uow.Object);
+            var a = uow.Object.GetRepository<ConstituentAddress>().Entities.ToList();
+
+            var testConstituentAddress1 = new ConstituentAddress()
+            {
+                Address = _addresses[0],
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
+                IsPrimary = true,
+                ResidentType = ResidentType.Primary,
+                Id = GuidHelper.NextGuid()
+            };
+
+            logic.Validate(testConstituentAddress1);
+            var primaries = uow.Object.GetRepository<ConstituentAddress>().Entities.Where(ca => ca.IsPrimary).ToList();
+            Assert.AreEqual(primaries.Count, 1);
+
+            var testConstituentAddress2 = new ConstituentAddress()
+            {
+                Address = _addresses[0],
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
+                IsPrimary = true,
+                ResidentType = ResidentType.Primary,
+                Id = GuidHelper.NextGuid()
+            };
+
+            logic.Validate(testConstituentAddress2);
+            primaries = uow.Object.GetRepository<ConstituentAddress>().Entities.Where(ca => ca.IsPrimary).ToList();
+            Assert.AreEqual(primaries.Count, 1);
+
+        }
+
+        private IQueryable<ConstituentAddress> SetupRepo()
+        {
+        
+            return _constituentAddresses.AsQueryable<ConstituentAddress>();
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
