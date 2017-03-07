@@ -115,13 +115,10 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult ConstituentLookup(string name)
         {
             string fields = "Id,Name";
-            int constituentNumber = 0;
 
             var search = new ConstituentSearch()
             {
-                ConstituentNumber = int.TryParse(name, out constituentNumber) ? (int?)constituentNumber : null,
-                Name = constituentNumber == 0 ? name : null,
-                OrderBy = OrderByProperties.DisplayName,
+                QuickSearch = name,
                 Offset = SearchParameters.OffsetDefault,
                 Limit = 1000,
                 Fields = fields,
