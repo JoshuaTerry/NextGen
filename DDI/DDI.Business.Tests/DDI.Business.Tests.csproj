@@ -70,7 +70,6 @@
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="CP\PaymentMethodTest.cs" />
     <Compile Include="CRM\AddressLogicTest.cs" />
-    <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
     <Compile Include="CRM\DataSources\ContactTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\ContactCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\RegionDataSource.cs" />

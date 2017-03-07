@@ -40,6 +40,18 @@ namespace DDI.Services
                 o => o.PropertyChanges
             };
         }
+
+        public IDataResponse<List<ObjectChange>> GetChanges(Guid id, DateTime start, DateTime end, IPageable search = null)
+        {
+            var changes = _uow.GetRepository<ObjectChange>().Entities.IncludePath(o => o.ChangeSet)
+                                                                     .IncludePath(o => o.PropertyChanges)
+                                                                     .Where(o => o.EntityId == id.ToString() &&
+                                                                                 o.ChangeSet.Timestamp > start &&
+                                                                                 o.ChangeSet.Timestamp <= end).ToList();
+            var response = new DataResponse<List<ObjectChange>>();
+            response.Data = changes;
+            return response;
+        }
         public IDataResponse<List<ChangeSet>> GetAllWhereExpression(Expression<Func<ObjectChange, bool>> expression, IPageable search = null)
         {
           
