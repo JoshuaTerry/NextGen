@@ -834,8 +834,7 @@ function LoadDemographicsSectionSettings() {
 }
 
 function LoadDenominationSettingsGrid() {
-
-    
+        
     var denominationcolumns = [
        { dataField: 'Id', width: '0px' },
        { dataField: 'Code', caption: 'Code' },
