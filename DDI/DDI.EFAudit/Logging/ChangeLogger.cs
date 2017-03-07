@@ -1,8 +1,4 @@
-﻿using DDI.EFAudit.Contexts;
-using DDI.EFAudit.Filter;
-using DDI.EFAudit.Logging.ValuePairs;
-using DDI.Shared.Models.Client.Audit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core;
@@ -10,9 +6,12 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
-using DDI.EFAudit.History;
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Filter;
+using DDI.EFAudit.Logging.ValuePairs;
 using DDI.EFAudit.Translation.Serializers;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.Logging
 {
@@ -24,7 +23,7 @@ namespace DDI.EFAudit.Logging
         private Recorder<TChangeSet, TPrincipal> _recorder;
         private ILoggingFilter _filter;
 
-        public ChangeLogger(IAuditLogContext<TChangeSet, TPrincipal> context, 
+        public ChangeLogger(IAuditLogContext<TChangeSet, TPrincipal> context,
             IChangeSetFactory<TChangeSet, TPrincipal> factory,
             ILoggingFilter filter, ISerializationManager serializer)
         {
@@ -36,7 +35,7 @@ namespace DDI.EFAudit.Logging
 
         // This is where you can get State (Add, Edit, Delete)
         public IOven<TChangeSet, TPrincipal> Log(ObjectStateManager objectStateManager)
-        {  
+        {
             var entries = objectStateManager.GetObjectStateEntries(EntityState.Added | EntityState.Modified | EntityState.Deleted);
 
             foreach (var entry in entries)
@@ -48,44 +47,46 @@ namespace DDI.EFAudit.Logging
         }
 
         private void Process(ObjectStateEntry entry)
-        { 
+        {
             if (entry.IsRelationship)
             {
                 LogRelationshipChange(entry);
             }
             else
             {
-                 LogScalarChanges(entry);
+                LogScalarChanges(entry);
             }
         }
 
         private void LogScalarChanges(ObjectStateEntry entry)
         {
-            if (!(entry.Entity is IAuditableEntity))
+            object entity = entry.Entity;
+            if (!(entity is IAuditableEntity))
             {
                 return;
             }
 
-            Type type = entry.Entity.GetType();
+            Type type = entity.GetType();
+            bool isModifiedSet = false;
 
             // If this class shouldn't be logged, give up at this point
             if (!_filter.ShouldLog(type))
             {
                 return;
             }
-           
+
             foreach (string propertyName in GetChangedProperties(entry))
             {
                 if (_filter.ShouldLog(type, propertyName))
                 {
                     // We can have multiple changes for the same property if its a complex type
                     var valuePairs = ValuePairSource.Get(entry, propertyName).Where(p => p.HasChanged);
-                    var entity = entry.Entity;
 
                     foreach (var valuePair in valuePairs)
                     {
-                        var pair = valuePair;                        
-                        _recorder.Record(entry, entry.Entity,
+
+                        var pair = valuePair;
+                        _recorder.Record(entry, entity,
                             () => _context.GetReferenceForObject(entity),
                             valuePair.PropertyName,
                             pair.NewValue);
@@ -98,8 +99,8 @@ namespace DDI.EFAudit.Logging
         /// This is where Navigation Properties will get updated
         /// </summary> 
         private void LogRelationshipChange(ObjectStateEntry entry)
-        {         
-             
+        {
+
             if (entry.State == EntityState.Added || entry.State == EntityState.Deleted)
             {
                 // Each relationship has two ends. Log both directions.
@@ -114,7 +115,7 @@ namespace DDI.EFAudit.Logging
         }
 
         private void LogForeignKeyChange(ObjectStateEntry entry, AssociationEndMember localEnd, AssociationEndMember foreignEnd)
-        {  
+        {
             // These "keys" represent in-memory unique references to the objects at the ends of these associations.
             // This will give you the Entity Type and the Key you need
             var key = GetEndEntityKey(entry, localEnd);
@@ -126,7 +127,7 @@ namespace DDI.EFAudit.Logging
 
             // The property on the "local" object that navigates to the "foreign" object
             var property = GetProperty(entry, localEnd, foreignEnd, key);
-             
+
             if (property == null || !_filter.ShouldLog(property))
                 return;
 
