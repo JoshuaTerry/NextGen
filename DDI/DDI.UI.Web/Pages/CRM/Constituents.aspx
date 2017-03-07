@@ -28,6 +28,7 @@
                     <label class="editable FormattedName"></label>
                     <label class="editable Address"></label>
                     <label class="editable CityStateZip"></label>
+                    <label class="editable ContactInfo"></label>
                 </div>
                 <div>
                     <span class="editable PhoneNumber"></span>
@@ -62,6 +63,7 @@
                         </div>
 
                         <div class="fieldblock">
+                            <label>Name</label>
                             <label class="editable FormattedName"></label>
                         </div>
 
@@ -73,7 +75,7 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <input type="text" class="editable Tags" />
+                        <div class="tagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">
@@ -231,12 +233,13 @@
                         </div>
                     </div>
 
-                    <h1 class ="dbaSection">Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="DBASettingsSection"><span class="DBASettingsSectionLabel">Doing Business As</span> <a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
 
                     <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -306,7 +309,7 @@
 
                     </div>
 
-                    <h1 class="personalSection">Personal</h1>
+                    <h1 class ="PersonalSettingsSection"><span class="PersonalSettingsSectionLabel">Personal</span></h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -380,7 +383,8 @@
                         
                     </div>
 
-                    <h1 class ="professionalSection">Professional</h1>
+                    <h1 class="ProfessionalSettingsSection"><span class="ProfessionalSettingsSectionLabel">Professional</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="threecolumn">
@@ -1044,6 +1048,7 @@
 
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
+            <input type="hidden" class="hidrelationshipisswapped" />
 
             <div class="fieldblock">
                 <label>Constituent</label>

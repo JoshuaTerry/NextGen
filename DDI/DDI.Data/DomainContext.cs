@@ -16,6 +16,8 @@ using DDI.EFAudit;
 using System.Threading.Tasks;
 using System.Threading;
 using DDI.EFAudit.Logging;
+using DDI.Shared.Models.Client.Security;
+
 namespace DDI.Data
 {
     public class DomainContext : DbContext
@@ -37,6 +39,8 @@ namespace DDI.Data
         public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
+        public DbSet<MemoCode> MemoCodes { get; set; }
+        public DbSet<MemoCategory> MemoCategories { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
 
@@ -53,6 +57,7 @@ namespace DDI.Data
         public DbSet<ConstituentAddress> ConstituentAddresses { get; set; }         
         public DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
         public DbSet<ConstituentType> ConstituentTypes { get; set; }
+        public DbSet<ConstituentPicture> ConstituentPictures { get; set; }
         public DbSet<ContactInfo> ContactInfoes { get; set; }
         public DbSet<ContactCategory> ContactCategories { get; set; }
         public DbSet<ContactType> ContactTypes { get; set; }
@@ -88,25 +93,21 @@ namespace DDI.Data
 
         public DbSet<ChangeSet> ChangeSets { get; set; }
         public DbSet<ObjectChange> ObjectChanges { get; set; }
-        public DbSet<PropertyChange> PropertyChanges { get; set; }
-        public DbSet<UserLogin> UserLogins { get; set; }
+        public DbSet<PropertyChange> PropertyChanges { get; set; } 
 
-        public readonly EFAuditModule<ChangeSet, UserLogin> Logger;
-        public IAuditLogContext<ChangeSet, UserLogin> AuditLogContext
+        public readonly EFAuditModule<ChangeSet, User> Logger;
+        public IAuditLogContext<ChangeSet, User> AuditLogContext
         {
             get { return new DomainContextAdapter(this); }
         }
-        public HistoryExplorer<ChangeSet, UserLogin> HistoryExplorer
+        public HistoryExplorer<ChangeSet, User> HistoryExplorer
         {
-            get { return new HistoryExplorer<ChangeSet, UserLogin>(AuditLogContext); }
+            get { return new HistoryExplorer<ChangeSet, User>(AuditLogContext); }
         }
 
         public Action<DbContext> CustomSaveChangesLogic { get; set; }
         #endregion
-
-
-
-
+          
         #region Public Constructors
         public DomainContext() : this(null, null)
         { }
@@ -116,7 +117,7 @@ namespace DDI.Data
             // Basically compatibility cannot be checked.
             //Database.SetInitializer<DomainContext>(new DomainContextInitializer());
 
-            Logger = new EFAuditModule<ChangeSet, UserLogin>(new ChangeSetFactory(), AuditLogContext, filterProvider);
+            Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
@@ -138,7 +139,7 @@ namespace DDI.Data
 
             return base.ValidateEntity(entityEntry, items);
         }
-        public async Task<ISaveResult<ChangeSet>> SaveAsync(UserLogin author, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISaveResult<ChangeSet>> SaveAsync(User author, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await Logger.SaveChangesAsync(author, cancellationToken);
         }
@@ -149,13 +150,26 @@ namespace DDI.Data
 
             return base.SaveChanges();
         }
-        public ISaveResult<ChangeSet> Save(UserLogin author)
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserLogin> UserLogins { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserClaim> UserClaims { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins"); ;
+            modelBuilder.Entity<Role>().ToTable("Roles"); ;
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles"); ;
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims"); ;
+            modelBuilder.Ignore<Claim>();
+        }
+
+        public ISaveResult<ChangeSet> Save(User author)
         {
             // NOTE: This will eventually circle back and call our overridden SaveChanges() later
             return Logger.SaveChanges(author);
-        }
-
-        
+        } 
         #endregion
 
     }

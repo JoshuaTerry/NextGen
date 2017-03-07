@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
     public class SchoolsController : ControllerBase<School>
-    {
+    {        
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/schools", Name = RouteNames.School)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

@@ -13,7 +13,7 @@
 .constituentrealtionships { height: 175px; }
 .constituentname { font-weight: bold; text-align: center; }
 .constituenttags { width: 100%; }
-
+ul.relationshipQuickViewData { padding-left: 5px; }
 
 /* ADDRESS MODAL */
 .addressmodal div.modalcontent div.fieldblock label { display: inline-block; width: 100px; text-align: right; vertical-align: top; margin-top: 3px; }

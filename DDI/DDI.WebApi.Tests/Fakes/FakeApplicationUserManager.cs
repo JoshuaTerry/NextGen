@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.WebApi.Models;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Tests.Fakes
 {
-    public class FakeApplicationUserManager : IApplicationUserManager
+    public class FakeUserManager //: IUserManager
     {
-        public IQueryable<ApplicationUser> Users
+        public IQueryable<User> Users
         {
             get
             {
@@ -32,7 +34,7 @@ namespace DDI.WebApi.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public Task<Microsoft.AspNet.Identity.IdentityResult> CreateAsync(ApplicationUser user, string password)
+        public Task<Microsoft.AspNet.Identity.IdentityResult> CreateAsync(User user, string password)
         {
             throw new NotImplementedException();
         }
@@ -42,15 +44,14 @@ namespace DDI.WebApi.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        public async Task<User> FindByIdAsync(Guid userId)
         {
             await Task.Delay(1);
-            var user = new ApplicationUser
+            var user = new User
             {
-                Id = userId,
-                UserName = userId
+                Id = userId
             };
-            var returnObject = new Task<ApplicationUser>(() => user);
+            var returnObject = new Task<User>(() => user);
             return user;
         }
 

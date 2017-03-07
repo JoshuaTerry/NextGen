@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Models;
 using DDI.Logger;
+using DDI.Shared.Helpers;
 
 namespace DDI.Data
 {
@@ -91,31 +92,7 @@ namespace DDI.Data
         }
         #endregion Public Constructors
          
-        #region Public Methods
-
-        public static string NameFor<T1>(Expression<Func<T1, object>> property, bool shouldContainObjectPath = false)
-        {
-            var member = property.Body as MemberExpression;
-            if (member == null)
-            {
-                var unary = property.Body as UnaryExpression;
-                if (unary != null)
-                {
-                    member = unary.Operand as MemberExpression;
-                }
-            }
-            if (shouldContainObjectPath && member != null)
-            {
-                var path = member.Expression.ToString();
-                var objectPath = member.Expression.ToString().Split('.').Where(a => !a.Equals("First()")).ToArray();
-                if (objectPath.Length >= 2)
-                {
-                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
-                    return $"{path}.{member.Member.Name}";
-                }
-            }
-            return member?.Member.Name ?? String.Empty;
-        }
+        #region Public Methods       
 
         public virtual void Delete(T entity)
         {
@@ -208,7 +185,7 @@ namespace DDI.Data
 
             foreach(Expression<Func<T, object>> include in includes)
             {
-                string name = NameFor(include, true);
+                string name = PathHelper.NameFor(include, true);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     query = query.Include(name);
@@ -294,10 +271,19 @@ namespace DDI.Data
         {
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
+            IEnumerable<string> propertynames = currentValues.PropertyNames;
 
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
-                currentValues[keyValue.Key] = keyValue.Value;
+                if (propertynames.Contains(keyValue.Key))
+                {
+                    currentValues[keyValue.Key] = keyValue.Value;
+                }
+                else
+                {
+                    // NotMapped property: Use reflection to try and set the property in the entity.
+                    typeof(T).GetProperty(keyValue.Key)?.SetValue(entity, keyValue.Value);
+                }
             }
 
             action?.Invoke(entity); 
@@ -308,11 +294,14 @@ namespace DDI.Data
             var list = new List<string>();
             DbEntityEntry<T> entry = _context.Entry(entity);
 
-            foreach (string property in entry.OriginalValues.PropertyNames)
+            if (entry.State != EntityState.Detached)
             {
-                if (entry.Property(property).IsModified)
+                foreach (string property in entry.OriginalValues.PropertyNames)
                 {
-                    list.Add(property);
+                    if (entry.Property(property).IsModified)
+                    {
+                        list.Add(property);
+                    }
                 }
             }
 
