@@ -40,16 +40,9 @@ namespace DDI.Conversion
             
             using (var uow = new UnitOfWorkEF())
             {
-                var rel = new Relationship();
-                rel.RelationshipType = uow.FirstOrDefault<RelationshipType>(p => p.Code == "FATH");
-                rel.Constituent1Id = Guid.Parse("78d2b093-bd89-4836-905b-0000300c9d8d");
-                rel.Constituent2Id = Guid.Parse("ac765f31-b60a-48ff-8d2a-00005cdca759");
-                uow.Attach(rel);
-                BusinessLogicHelper.GetBusinessLogic<Relationship>(uow).Validate(rel);
-
-                //var gender = uow.FirstOrDefault<Gender>(p => p.Code == "M");
-                //gender.Name = "Manly";
-                //uow.SaveChanges();
+                var gender = uow.FirstOrDefault<Gender>(p => p.Code == "M");
+                gender.Name = "Male";
+                uow.SaveChanges();
             }
             Console.ReadLine();
             return;

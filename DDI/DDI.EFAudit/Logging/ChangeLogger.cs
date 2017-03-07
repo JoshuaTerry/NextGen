@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using DDI.EFAudit.History;
 using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Models;
 
 namespace DDI.EFAudit.Logging
 {
@@ -60,13 +61,22 @@ namespace DDI.EFAudit.Logging
 
         private void LogScalarChanges(ObjectStateEntry entry)
         {
+            if (!(entry.Entity is IAuditableEntity))
+            {
+                return;
+            }
+
+            Type type = entry.Entity.GetType();
+
             // If this class shouldn't be logged, give up at this point
-            if (!_filter.ShouldLog(entry.Entity.GetType()))
-                return; 
+            if (!_filter.ShouldLog(type))
+            {
+                return;
+            }
            
             foreach (string propertyName in GetChangedProperties(entry))
             {
-                if (_filter.ShouldLog(entry.Entity.GetType(), propertyName))
+                if (_filter.ShouldLog(type, propertyName))
                 {
                     // We can have multiple changes for the same property if its a complex type
                     var valuePairs = ValuePairSource.Get(entry, propertyName).Where(p => p.HasChanged);

@@ -15,6 +15,12 @@ namespace DDI.WebApi.Helpers
 {
     public class DynamicTransmogrifier
     {
+        /* Fields is a comma delimited list of property names or paths (e.g. State.County) that should be included in the response.
+         * Fields can be excluded:  This can be useful to exclude properties like Region.ParentRegion or Region.ChildRegions (because they are recursive.) 
+         * To exclude a field, prefix it with "^": "^ParentRegion,^ChildRegions". 
+         * If a field list is nothing but excludes, all other fields will be included.
+         * To exclude a field from a referenced entity: "ChildRegion.^ParentRegion"
+         */
         public IDataResponse ToDynamicResponse<T>(IDataResponse<T> response, UrlHelper urlHelper, string fields = null)
         {
             var dynamicResponse = new DataResponse<dynamic>
