@@ -7,6 +7,9 @@ using DDI.Shared;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CRM;
 using Newtonsoft.Json.Linq;
+using DDI.Business.CRM;
+using DDI.Business;
+using DDI.Business.Helpers;
 
 namespace DDI.Services
 {
@@ -14,15 +17,18 @@ namespace DDI.Services
     {
         private AddressService _addressService;
         private IUnitOfWork _unitOfWork;
+        private readonly ConstituentAddressLogic _logic;
+
 
         public ConstituentAddressService()
-            :this(new AddressService(), new UnitOfWorkEF())
+            :this(new AddressService(), new UnitOfWorkEF(), new ConstituentAddressLogic())
         {
-            
+
         }
 
-        internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork)
+        internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork, ConstituentAddressLogic logic)
         {
+            _logic = logic;
             _addressService = addressService as AddressService;
             _unitOfWork = unitOfWork;
         }
@@ -44,7 +50,8 @@ namespace DDI.Services
                         var convertedProperty = JsonExtensions.ConvertToType<ConstituentAddress>(property);
                         changedProperties.Add(convertedProperty.Key, convertedProperty.Value);
 
-                        _unitOfWork.GetRepository<ConstituentAddress>().UpdateChangedProperties(id, changedProperties);
+                        IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<ConstituentAddress>(_unitOfWork);
+                        _unitOfWork.GetRepository<ConstituentAddress>().UpdateChangedProperties(id, changedProperties, p => logic.Validate(p));
                         _unitOfWork.SaveChanges();
                     }
                 }
@@ -57,6 +64,12 @@ namespace DDI.Services
             {
                 return base.ProcessIDataResponseException(ex);
             }
+        }
+
+        public override IDataResponse<ConstituentAddress> Add(ConstituentAddress entity)
+        {
+            _logic.Validate(entity);
+            return base.Add(entity);
         }
     }
 }

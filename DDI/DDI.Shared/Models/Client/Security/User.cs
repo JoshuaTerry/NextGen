@@ -23,6 +23,7 @@ namespace DDI.Shared.Models.Client.Security
         }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+        [Column("UserId")]
         public override Guid Id { get; set; }
         [MaxLength(256)]
         public string FirstName { get; set; }

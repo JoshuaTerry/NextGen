@@ -212,11 +212,17 @@ namespace DDI.Business.CRM
             return resultAddress;
         }
 
-
-
         public override void Validate(ConstituentAddress entity)
         {
-            base.Validate(entity);
+            if (entity.IsPrimary)
+            {
+                var existingPrimaryAddresses = UnitOfWork.Where<ConstituentAddress>(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary).ToList();
+                existingPrimaryAddresses.ForEach(a =>
+                {
+                    a.IsPrimary = false;
+                    UnitOfWork.GetRepository<ConstituentAddress>().Update(a);
+                });
+            }
 
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
             constituentLogic.ScheduleUpdateSearchDocument(entity.ConstituentId);

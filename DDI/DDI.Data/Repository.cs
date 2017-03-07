@@ -294,11 +294,14 @@ namespace DDI.Data
             var list = new List<string>();
             DbEntityEntry<T> entry = _context.Entry(entity);
 
-            foreach (string property in entry.OriginalValues.PropertyNames)
+            if (entry.State != EntityState.Detached)
             {
-                if (entry.Property(property).IsModified)
+                foreach (string property in entry.OriginalValues.PropertyNames)
                 {
-                    list.Add(property);
+                    if (entry.Property(property).IsModified)
+                    {
+                        list.Add(property);
+                    }
                 }
             }
 

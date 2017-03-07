@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Enums.CRM;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Statics;
@@ -49,7 +51,7 @@ namespace DDI.WebApi.Controllers
 
         [HttpGet]
         [Route("api/v1/tags/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/tags")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag + RouteVerbs.Get)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try

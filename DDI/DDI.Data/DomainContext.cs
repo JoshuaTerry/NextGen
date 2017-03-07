@@ -39,6 +39,8 @@ namespace DDI.Data
         public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
+        public DbSet<MemoCode> MemoCodes { get; set; }
+        public DbSet<MemoCategory> MemoCategories { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
 
@@ -55,6 +57,7 @@ namespace DDI.Data
         public DbSet<ConstituentAddress> ConstituentAddresses { get; set; }         
         public DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
         public DbSet<ConstituentType> ConstituentTypes { get; set; }
+        public DbSet<ConstituentPicture> ConstituentPictures { get; set; }
         public DbSet<ContactInfo> ContactInfoes { get; set; }
         public DbSet<ContactCategory> ContactCategories { get; set; }
         public DbSet<ContactType> ContactTypes { get; set; }
@@ -154,11 +157,11 @@ namespace DDI.Data
         public DbSet<UserClaim> UserClaims { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<User>();
-            modelBuilder.Ignore<UserLogin>();
-            modelBuilder.Ignore<Role>();
-            modelBuilder.Ignore<UserRole>();
-            modelBuilder.Ignore<UserClaim>();
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins"); ;
+            modelBuilder.Entity<Role>().ToTable("Roles"); ;
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles"); ;
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims"); ;
             modelBuilder.Ignore<Claim>();
         }
 

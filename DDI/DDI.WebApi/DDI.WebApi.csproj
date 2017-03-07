@@ -227,6 +227,8 @@
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\EFTFormatsController.cs" />
     <Compile Include="Controllers\FileStorageController.cs" />
+    <Compile Include="Controllers\MemoCategoriesController.cs" />
+    <Compile Include="Controllers\MemoCodesController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
     <Compile Include="Controllers\NoteContactMethodsController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
@@ -386,6 +388,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\BusinessDate\" />
+    <Folder Include="Views\MemoCategories\" />
+    <Folder Include="Views\MemoCodes\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

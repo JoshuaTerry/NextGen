@@ -207,7 +207,46 @@ namespace DDI.Business.Tests.CRM
             _usPhoneContactInfo.ConstituentId = null;
             AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
 
-        }      
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_Validate_IsPreferred()
+        {
+            BuildConstituentDataSource();
+            ContactInfo isPreferredContactInfo1 = new ContactInfo()
+            {
+                Id = GuidHelper.NextGuid(),
+                ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
+                ContactTypeId = _usPhoneContactInfo.ContactType.Id,
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                Info = "3175551235",
+                IsPreferred = true
+            };
+
+            _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo1);
+            _bl.Validate(isPreferredContactInfo1);
+            var actualPreferredContactInfo = _uow.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == isPreferredContactInfo1.ConstituentId && ci.ContactType.ContactCategory.Code == isPreferredContactInfo1.ContactType.ContactCategory.Code && ci.IsPreferred); 
+
+            Assert.AreEqual(actualPreferredContactInfo, isPreferredContactInfo1, "Sets isPreferred ContactInfo"); 
+
+            ContactInfo isPreferredContactInfo2 = new ContactInfo()
+            {
+                Id = GuidHelper.NextGuid(),
+                ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
+                ContactTypeId = _usPhoneContactInfo.ContactType.Id,
+                Constituent = _constituents[0],
+                ConstituentId = _constituents[0].Id,
+                Info = "3175554321",
+                IsPreferred = true
+            };
+
+            _uow.GetRepository<ContactInfo>().Insert(isPreferredContactInfo2);
+            _bl.Validate(isPreferredContactInfo2);
+            actualPreferredContactInfo = _uow.GetRepository<ContactInfo>().Entities.FirstOrDefault(ci => ci.ConstituentId == isPreferredContactInfo2.ConstituentId && ci.ContactType.ContactCategory.Code == isPreferredContactInfo2.ContactType.ContactCategory.Code && ci.IsPreferred); // not picking up the preferred contact info... // && ci.Id != oldPreferredContactInfo.Id && ci.IsPreferred
+
+            Assert.AreEqual(actualPreferredContactInfo, isPreferredContactInfo2, "Ensure previous isPreferred was overwritten");
+        }
 
         private void BuildConstituentDataSource()
         {
