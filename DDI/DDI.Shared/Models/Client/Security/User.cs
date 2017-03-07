@@ -38,6 +38,7 @@ namespace DDI.Shared.Models.Client.Security
         public DateTime? CreatedOn { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
+
         public string DisplayName
         {
             get

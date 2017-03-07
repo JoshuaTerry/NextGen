@@ -19,6 +19,7 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion.Core
 {    
@@ -116,8 +117,10 @@ namespace DDI.Conversion.Core
         private void LoadUsers(string filename)
         {
 
-            DomainContext context = new DomainContext();
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            var context = new DomainContext();
+            var fixups = new Dictionary<string, string[]>();
+
+            using (var importer = CreateFileImporter(_ddiDirectory, filename, typeof(ConversionMethod)))
             {
                 int count = 1;
 
@@ -132,23 +135,52 @@ namespace DDI.Conversion.Core
 
                     string fullName = importer.GetString(1);
                     bool isActive = importer.GetBool(2);
+                    string createdBy = importer.GetString(3);
+                    DateTime? createdOn = importer.GetDateTime(4);
+                    string modifiedBy = importer.GetString(5);
+                    DateTime? modifiedOn = importer.GetDateTime(6);
                     DateTime? deletedOn = importer.GetDateTime(7);
                     string email = importer.GetString(8);
                     DateTime? lastLogin = importer.GetDateTime(9);
 
-
-                    /*
-                    var noteCategory = new NoteCategory()
+                    User user = new User()
                     {
-                        Label = screenLabel,
-                        Name = description
+                        UserName = userName,
+                        Email = email,
+                        LastName = fullName,
+                        IsActive = isActive,
+                        LastLogin = lastLogin,
+                        CreatedOn = createdOn,
+                        LastModifiedOn = modifiedOn
                     };
-
-                    context.NoteCategories.AddOrUpdate(p => p.Label, noteCategory);
-                    */
+                    context.Users.AddOrUpdate(p => p.UserName, user);
+                    
+                    if (!string.IsNullOrWhiteSpace(createdBy) || !string.IsNullOrWhiteSpace(modifiedBy))
+                    {
+                        fixups[userName] = new string[] { createdBy, modifiedBy };
+                    }
 
                     count++;
                 }
+                context.SaveChanges();
+
+                // Populate CreatedBy, ModifiedBy
+                foreach (var entry in fixups)
+                {
+                    var user = context.Users.FirstOrDefault(p => p.UserName == entry.Key);
+                    string createdBy = entry.Value[0];
+                    string modifiedBy = entry.Value[1];
+
+                    if (user != null && !string.IsNullOrWhiteSpace(createdBy))
+                    {
+                        user.CreatedBy = context.Users.FirstOrDefault(p => p.UserName == createdBy)?.Id;
+                    }
+                    if (user != null && !string.IsNullOrWhiteSpace(modifiedBy))
+                    {
+                        user.LastModifiedBy = context.Users.FirstOrDefault(p => p.UserName == modifiedBy)?.Id;
+                    }
+                }
+
                 context.SaveChanges();
             }
         }    

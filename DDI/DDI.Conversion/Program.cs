@@ -37,7 +37,7 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            
+            /*
             using (var uow = new UnitOfWorkEF())
             {
                 var gender = uow.FirstOrDefault<Gender>(p => p.Code == "M");
@@ -46,11 +46,13 @@ namespace DDI.Conversion
             }
             Console.ReadLine();
             return;
-
+            */
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
+            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
             //Run<CRM.Initialize>();
+
 
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
             //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
