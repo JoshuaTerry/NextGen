@@ -397,6 +397,11 @@ function LoadEthnicitiesTagBox() {
 /* End Demographics Section */
 
 /* Notes Tab */
+
+function LoadNoteDetailsTagoBox() {
+    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
+}
+
 function LoadNoteDetailsGrid() {
 
     var columns = [

@@ -1140,6 +1140,11 @@
 
             </div>
 
+            <div class="fieldblock">
+                <label>Note Topics</label>
+                <div class="tagselect disabled"></div>
+            </div>
+
             <div class="twocolumn">
 
                 <div class="fieldblock">
