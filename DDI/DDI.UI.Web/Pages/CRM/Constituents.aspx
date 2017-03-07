@@ -1148,8 +1148,8 @@
                 </div>
 
                 <div class="fieldblock">
-                    <label>Memo code</label>
-                    <select class="nd-MemoCode"></select>
+                    <label>Note code</label>
+                    <input type="text" class="nd-NoteCode" />
                 </div>
 
             </div>
@@ -1205,12 +1205,12 @@
 
                 <div class="fieldblock">
                     <label>On</label>
-                    <label type="text" class="nd-CreatedOn"></label>
+                    <label class="nd-CreatedOn"></label>
                 </div>
 
                 <div class="fieldblock">
                     <label>On</label>
-                    <label type="text" class="nd-UpdatedOn"></label>
+                    <label class="nd-UpdatedOn"></label>
                 </div>
 
             </div>

@@ -432,8 +432,6 @@ function NewNoteDetailsModal() {
             resizable: false
         });
 
-
-
         $('.cancelmodal').click(function (e) {
 
             e.preventDefault();
@@ -516,6 +514,7 @@ function EditNoteDetails(id) {
             Text: $(modal).find('.nd-Description').val(),
             CategoryId: $(modal).find('.nd-Category').val(),
             ContactDate: $(modal).find('.nd-ContactDate').val(),
+            NoteCode: $(modal).find('.nd-NoteCode').val(),
             LastModifiedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
             LastModifiedBy: currentEntity.Id
 
@@ -561,9 +560,12 @@ function LoadNoteDetails(id) {
             $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
             $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
             $('.nd-ContactDate').val(data.Data.ContactDate),
-            $('.nd-ContactDate').val(data.Data.ContactDate),
-            $('.nd-CreatedBy').val(data.Data.CreatedBy),
-            $('.nd-UpdatedBy').val(data.Data.LastModifiedBy)
+            $('.nd-ContactDate').val(data.Data.NoteCode),
+            $('.nd-CreatedBy').text(data.Data.CreatedBy),
+            $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
+            $('.nd-CreatedOn').text(data.Data.CreatedOn),
+            $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
+
 
         },
         error: function (xhr, status, err) {
