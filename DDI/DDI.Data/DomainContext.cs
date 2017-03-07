@@ -57,6 +57,7 @@ namespace DDI.Data
         public DbSet<ConstituentAddress> ConstituentAddresses { get; set; }         
         public DbSet<ConstituentStatus> ConstituentStatuses { get; set; }
         public DbSet<ConstituentType> ConstituentTypes { get; set; }
+        public DbSet<ConstituentPicture> ConstituentPictures { get; set; }
         public DbSet<ContactInfo> ContactInfoes { get; set; }
         public DbSet<ContactCategory> ContactCategories { get; set; }
         public DbSet<ContactType> ContactTypes { get; set; }

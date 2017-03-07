@@ -11,5 +11,7 @@ namespace DDI.Shared
     {
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);
         IDataResponse<Constituent> NewConstituent(Guid constituentTypeId);
+        IDataResponse AddTagsToConstituent(Constituent id, JObject tagIds);
+        IDataResponse RemoveTagFromConstituent(Constituent id, Guid tagId);
     }
 }
