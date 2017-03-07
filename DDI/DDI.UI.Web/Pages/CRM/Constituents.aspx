@@ -17,7 +17,10 @@
 
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
-            <div class="constituentpic"></div>
+            <div class="constituentpic">
+                <img />
+                <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
+            </div>
             
             <h1>Information</h1>
             <div class="constituentinformation">

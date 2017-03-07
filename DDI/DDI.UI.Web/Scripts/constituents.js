@@ -44,16 +44,16 @@ $(document).ready(function () {
 
 });
 
-function UploadFiles() {
+function UploadFiles(callback) {
 
-    var modal = $('.fileuploadmodal').dialog({
+    modal = $('.fileuploadmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 400,
         resizable: false
     });
 
-    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload');
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
 
 }
 
@@ -228,16 +228,7 @@ function DisplayConstituentData() {
             }
         });
 
-        $('.constituentpic').html('');
-        var img = $('<img>');
-
-        if (currentEntity.IsMasculine) {
-            $(img).attr('src', '../../Images/Male.png');
-        } else {
-            $(img).attr('src', '../../Images/Female.png');
-        }
-
-        $(img).appendTo($('.constituentpic'));
+        DisplayConstituentPicture();
 
         DisplayConstituentType();
 
@@ -283,6 +274,75 @@ function DisplayConstituentData() {
 
         DisplaySelectedTags();
     }
+}
+
+function DisplayConstituentPicture() {
+
+    var img = $('.constituentpic img');
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.Data && data.Data[0]) {
+
+                GetFile(data.Data[0].FileId, function (item) {
+
+                    $(img).attr('src', 'data:image/jpg;base64,' + item.Data).appendTo($('.constituentpic'));
+
+                });
+
+            }
+
+        },
+        failure: function (response) {
+            DisplayErrorMessage('Error', 'An error occurred during getting the constituent picture.');
+        }
+    });
+
+    $('.constituentpic').on('mouseenter', function () {
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+    }).on('mouseleave', function () {
+        $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
+    });
+
+    $('.constituentpic').unbind('click');
+    $('.constituentpic').click(function () {
+
+        UploadFiles(function (file) {
+
+            var data = {
+                ConstituentId: currentEntity.Id,
+                FileId: file.Id
+            }
+
+            $.ajax({
+                url: WEB_API_ADDRESS + 'constituentpicture',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset-utf-8',
+                dataType: 'json',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplayConstituentPicture();
+
+                    CloseModal(modal);
+
+                },
+                failure: function (response) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the constituent picture.');
+                }
+            });
+
+        });
+
+    });
+
 }
 
 function DisplayConstituentType() {
