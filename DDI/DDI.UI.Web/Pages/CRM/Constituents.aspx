@@ -1133,16 +1133,16 @@
                     <input type="text" class="nd-AlertStartDate datepicker" />
                 </div>
 
-                <div class="fieldblock">
-                    <label>Topics</label>
+         <%--       <div class="fieldblock">
+                    <label>Topics - dep</label>
                     <select class="nd-Topics Id"></select>
-                </div>
+                </div>--%>
 
             </div>
 
             <div class="fieldblock">
                 <label>Note Topics</label>
-                <div class="tagselect disabled"></div>
+                <div class="nd-Topics editable tagbox"></div>
             </div>
 
             <div class="twocolumn">

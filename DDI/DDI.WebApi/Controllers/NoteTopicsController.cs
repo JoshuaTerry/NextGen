@@ -7,6 +7,7 @@ using System.Web.Http;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers
 {
@@ -24,6 +25,23 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/notetopics/{noteid}/notes")]
+        public IHttpActionResult GetByNoteId(Guid noteId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, fields);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
         }
 
         [HttpPost]

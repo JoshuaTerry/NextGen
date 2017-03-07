@@ -398,8 +398,8 @@ function LoadEthnicitiesTagBox() {
 
 /* Notes Tab */
 
-function LoadNoteDetailsTagoBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
+function LoadNoteDetailsTagBox(id) {
+    LoadTagBoxes('tagBoxNoteDetails', 'nd-Topics', 'notetopics', '/notetopics/' + id + '/notes');
 }
 
 function LoadNoteDetailsGrid() {
