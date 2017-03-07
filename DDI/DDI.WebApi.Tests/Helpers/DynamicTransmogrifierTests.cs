@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Routing;
-using DDI.Shared; 
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
@@ -19,8 +20,6 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod, TestCategory(TESTDESCR)]
         public void Should_ReturnIdenticalDataResponseFieldsOtherThanData()
         {
-            var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             var peytonIsTheGreatest = "Peyton is the greatest!!!";
             var totalResults = 18;
             var theGreatest = "The Greatest";
@@ -45,7 +44,7 @@ namespace DDI.WebApi.Tests.Helpers
                 VerboseErrorMessages = verboseErrorMessages
             };
             var target = new DynamicTransmogrifier();
-            var results = target.ToDynamicResponse(initialResponse, urlHelperMock.Object);
+            var results = target.ToDynamicResponse(initialResponse);
             Assert.AreEqual(errorMessages, results.ErrorMessages);
             Assert.AreEqual(true, results.IsSuccessful);
             Assert.AreEqual(totalResults, results.TotalResults);
@@ -68,8 +67,6 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereDataIsNotTransmogrfiable_Should_ReturnFullObject()
         {
-            var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             var peytonIsTheGreatest = "Peyton is the greatest!!!";
             var totalResults = 18;
             var theGreatest = "The Greatest";
@@ -90,7 +87,7 @@ namespace DDI.WebApi.Tests.Helpers
                 VerboseErrorMessages = verboseErrorMessages
             };
             var target = new DynamicTransmogrifier();
-            var results = target.ToDynamicResponse(initialResponse, urlHelperMock.Object);
+            var results = target.ToDynamicResponse(initialResponse);
             Assert.AreEqual(errorMessages, results.ErrorMessages);
             Assert.AreEqual(true, results.IsSuccessful);
             Assert.AreEqual(totalResults, results.TotalResults);
@@ -101,15 +98,13 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsNoFields_Should_ReturnFullObject()
         {
-            var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
                 LastName = "Bob",
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "");
+            var result = target.ToDynamicObject(constituent, "");
             Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(result.LastName == "Bob");
             Assert.IsTrue(result.MiddleName == null);
@@ -118,8 +113,6 @@ namespace DDI.WebApi.Tests.Helpers
         [TestMethod, TestCategory(TESTDESCR)]
         public void When_ThereIsASubProperty_Should_ReturnIt()
         {
-            var urlHelperMock = new Mock<UrlHelper>();
-            urlHelperMock.Setup(m => m.Link(RouteNames.Constituent, null)).Returns("TEST").Verifiable();
             Constituent constituent = new Constituent
             {
                 FirstName = "Jim",
@@ -140,16 +133,52 @@ namespace DDI.WebApi.Tests.Helpers
                 Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
             };
             var target = new DynamicTransmogrifier();
-            var result = target.ToDynamicObject(constituent, urlHelperMock.Object, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode");
+            var result = target.ToDynamicObject(constituent, "FirstName,ConstituentAddresses.Address.City,ConstituentAddresses.Address.PostalCode");
             Assert.IsTrue(result.ConstituentAddresses[0].Address.City == "Bham");
             Assert.IsTrue(result.ConstituentAddresses[0].Address.PostalCode == "12345");
-            Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsTrue(DoesFieldExist(result, "FirstName"));
+            Assert.IsTrue(result.FirstName == "Jim");
             Assert.IsFalse(DoesFieldExist(result, "LastName"));
         }
-          
-              
-         
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void When_OnlyExcludes_Should_ReturnAllButExcluded()
+        {
+            Constituent constituent = new Constituent
+            {
+                FirstName = "Jim",
+                LastName = "Bob",
+                ConstituentAddresses = new List<ConstituentAddress>
+                {
+                    new ConstituentAddress
+                    {
+                        Address = new Address
+                        {
+                            City = "Bham",
+                            PostalCode = "12345",
+                            Id = new Guid("736D341E-B392-4D79-83B5-46D5E5A92581")
+                        },
+                        Id = new Guid("21A2A412-5620-48A8-80D8-9D10BC95E160")
+                    }
+                },
+                Id = new Guid("44EEB5B8-C2AC-4CCD-B0EE-296866DB8374")
+            };
+
+            var target = new DynamicTransmogrifier();
+            var result = target.ToDynamicObject(constituent, "^FirstName");
+            Assert.IsTrue(DoesFieldExist(result, "LastName"));
+            Assert.IsTrue(result.LastName == "Bob");
+            Assert.IsFalse(DoesFieldExist(result, "FirstName"));
+
+            result = target.ToDynamicObject(constituent, "LastName,ConstituentAddresses.Address,ConstituentAddresses.Address.^PostalCode");
+            Assert.IsTrue(DoesFieldExist(result, "LastName"));
+            Assert.IsTrue(result.LastName == "Bob");
+            Assert.IsFalse(DoesFieldExist(result, "FirstName"));
+            Assert.IsTrue(DoesFieldExist(result, "ConstituentAddresses.Address.City"));
+            Assert.IsFalse(DoesFieldExist(result, "ConstituentAddresses.Address.PostalCode"));
+            Assert.IsTrue(result.ConstituentAddresses[0].Address.City == "Bham");
+        }
+
         private bool DoesFieldExist(object objectToCheck, string fieldname)
         {
             if (fieldname.Contains("."))
@@ -157,6 +186,10 @@ namespace DDI.WebApi.Tests.Helpers
                 var property = fieldname.Substring(0, fieldname.IndexOf("."));
                 var newArray = fieldname.Substring(property.Length + 1);
                 var subObjectToCheck = ((IDictionary<string, object>) objectToCheck)[property];
+                if (subObjectToCheck is IList)
+                {
+                    subObjectToCheck = ((IList)subObjectToCheck)[0];
+                }
                 return DoesFieldExist(subObjectToCheck, newArray);
             }
             return ((IDictionary<string, object>) objectToCheck).ContainsKey(fieldname);

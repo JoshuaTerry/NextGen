@@ -59,7 +59,7 @@ namespace DDI.WebApi.Controllers
                 var pager = new Pagination();
                 var transform = new DynamicTransmogrifier();
                 pager.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
-                var dynamicResponse = transform.ToDynamicResponse(response, urlHelper, null);
+                var dynamicResponse = transform.ToDynamicResponse(response, null);
 
                 return Ok(dynamicResponse);
             }
