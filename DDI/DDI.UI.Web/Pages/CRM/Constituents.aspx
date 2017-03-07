@@ -31,6 +31,7 @@
                     <label class="editable FormattedName"></label>
                     <label class="editable Address"></label>
                     <label class="editable CityStateZip"></label>
+                    <label class="editable ContactInfo"></label>
                 </div>
                 <div>
                     <span class="editable PhoneNumber"></span>
@@ -65,6 +66,7 @@
                         </div>
 
                         <div class="fieldblock">
+                            <label>Name</label>
                             <label class="editable FormattedName"></label>
                         </div>
 

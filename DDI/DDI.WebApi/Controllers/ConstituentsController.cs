@@ -31,6 +31,7 @@ namespace DDI.WebApi.Controllers
                 c => c.ClergyType,
                 c => c.ConstituentStatus,
                 c => c.ConstituentType,
+                c => c.ContactInfo,
                 c => c.EducationLevel,
                 c => c.Gender,
                 c => c.IncomeLevel,

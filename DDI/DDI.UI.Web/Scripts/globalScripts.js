@@ -250,6 +250,8 @@ function ClearFields(container) {
 
     $(container + ' div.fieldblock select').val(0);
 
+    $(container + ' div.fieldblock input:checkbox').removeAttr('checked');
+
 }
 
 function LoadTabs() {

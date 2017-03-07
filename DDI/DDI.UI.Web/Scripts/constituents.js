@@ -230,9 +230,9 @@ function DisplayConstituentData() {
 
         DisplayConstituentPicture();
 
-        DisplayConstituentType();
+        DisplayConstituentSideBar();
 
-        DisplayConstituentPrimaryAddress();
+        DisplayConstituentType();
 
         GenerateContactInfoSection();
 
@@ -345,6 +345,16 @@ function DisplayConstituentPicture() {
 
 }
 
+function DisplayConstituentSideBar() {
+
+    $('.FormattedName').text(currentEntity.FormattedName);
+
+    GetConstituentPrimaryAddress();
+
+    GetConstituentPreferredContactInfo();
+
+}
+
 function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
@@ -367,27 +377,67 @@ function DisplayConstituentType() {
 
 }
 
-function DisplayConstituentPrimaryAddress() {
+function GetConstituentPrimaryAddress() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        contentType: 'application/json',
+        crossDomain: true,
+        success: function (data) {
 
-    if (currentEntity.ConstituentAddresses) {
+            currentaddress = data.Data;
 
-        $.map(currentEntity.ConstituentAddresses, function (item) {
+            for (i = 0; i < currentaddress.length; i++) { 
 
-            if (item.IsPrimary) {
+                if (currentaddress[i].IsPrimary) {
 
-                $('.Address').text(item.Address.AddressLine1);
+                    $('.Address').text(currentaddress[i].Address.AddressLine1);
 
-                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
+
+                        $('.Address').append(currentaddress[i].Address.AddressLine2);
+
+                    }
+
+                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
+
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the primary address.');
+        }
+    });
+}
+
+function GetConstituentPreferredContactInfo() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentcontactinfo = data.Data.ContactInfo;
+
+            var preferredContactInfos = ''
+
+            for (i = 0; i < currentcontactinfo.length; i++) {
+
+                if (currentcontactinfo[i].IsPreferred) {
+
+                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
+
                 }
 
-             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+                $('.ContactInfo').text(preferredContactInfos);
 
             }
-
-        });
-
-    }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the preferred contact info.');
+        }
+    });
 
 }
 
@@ -1027,6 +1077,14 @@ function NewAlternateIdModal() {
             });
 
         });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
     });
 
 }
