@@ -1149,7 +1149,7 @@
 
                 <div class="fieldblock">
                     <label>Note code</label>
-                    <input type="text" class="nd-NoteCode" />
+                    <select class="nd-NoteCode"></select>
                 </div>
 
             </div>

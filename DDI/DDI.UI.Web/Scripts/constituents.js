@@ -450,7 +450,7 @@ function NewNoteDetailsModal() {
                 AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
                 AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
                 Text: $(modal).find('.nd-Description').val(),
-                NoteTopicId: $(modal).find('.nd-Topics').val(),
+                CategoryId: $(modal).find('.nd-Category').val(),
                 ContactDate: $(modal).find('.nd-ContactDate').val(),
                 CreatedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
                 CreatedBy: currentEntity.Id,
