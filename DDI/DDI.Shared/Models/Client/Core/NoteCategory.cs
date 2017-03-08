@@ -20,6 +20,8 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public ICollection<Note> Notes { get; set; } 
+        public ICollection<Note> Notes { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

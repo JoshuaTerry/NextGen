@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Core;
-using DDI.Business.CRM;
 using DDI.Conversion.Statics;
 using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Enums.Common;
-using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Extensions;
-using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Models;
 
@@ -29,7 +18,7 @@ namespace DDI.Conversion.Core
         public enum ConversionMethod
         {
             Users = 990001,
-            Codes = 990002,
+            Codes,
             NoteCategories
         }
 
@@ -47,6 +36,8 @@ namespace DDI.Conversion.Core
 
             RunConversion(ConversionMethod.Users, () => LoadUsers(InputFile.DDI_User));
             RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.CRM_NACodes));
+            RunConversion(ConversionMethod.NoteCategories, () => LoadNoteCategories(InputFile.CRM_NoteCategory));
+
         }
 
         private void LoadLegacyCodes(string filename)

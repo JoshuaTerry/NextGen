@@ -195,7 +195,11 @@ namespace DDI.Conversion
             string modifiedBy = importer.GetString(modifiedByColumn);
 
             entity.CreatedOn = importer.GetDateTime(createdOnColumn);
-            entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);            
+            entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);
+            //entity.CreatedBy = importer.GetString(createdByColumn);
+            //entity.LastModifiedBy = importer.GetString(modifiedByColumn);         
+
+            // This goes away after migration to change created/modified by to string.
             if (!string.IsNullOrWhiteSpace(createdBy))
             {
                 entity.CreatedBy = UserRepository.Entities.Where(p => p.UserName == createdBy).Select(p => p.Id).FirstOrDefault();

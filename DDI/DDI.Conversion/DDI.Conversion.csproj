@@ -68,6 +68,7 @@
     <Compile Include="ConversionBase.cs" />
     <Compile Include="ConversionMethodArgs.cs" />
     <Compile Include="Core\Initialize.cs" />
+    <Compile Include="Core\NoteConverter.cs" />
     <Compile Include="Core\SettingsLoader.cs" />
     <Compile Include="CP\PaymentMethodConverter.cs" />
     <Compile Include="CP\SettingsLoader.cs" />

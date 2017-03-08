@@ -42,7 +42,8 @@ namespace DDI.Conversion.Statics
         public static string CRM_CustomData => "CustomData.csv";
 
         public static string CRM_NoteCategory => "MemoCategory.csv";
-        
+
+        public static string CRM_MemoConstituent => "Memo_Constituent.csv";
         #endregion
 
         #region DDI Files
