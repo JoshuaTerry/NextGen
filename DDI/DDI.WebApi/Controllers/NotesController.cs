@@ -30,6 +30,10 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/notes", Name = RouteNames.Note + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Note entityToSave)
         {
+
+            List<NoteTopic> topics = new List<NoteTopic>();
+            // entityToSave.NoteTopics.ForEach(n => base.Service.);
+
             return base.Post(entityToSave);
         }
 

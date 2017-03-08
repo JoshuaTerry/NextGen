@@ -1146,6 +1146,14 @@
             <div class="fieldblock">
                 <label>Note Topics</label>
                 <div class="nd-Topics tagselect"></div>
+                <div class="noteTopicSelectImage" style="display: inline-block;"></div>
+                <div class="tagdropdowncontainer" style="display:none;">
+                    <div class="tagdropdowndivcontainer"></div>
+                    <div class="modalbuttons">
+                    <input type="button" class="savenotetopics" value="Save" />
+                    <a href="#" class="cancelnotetopics">Cancel</a>
+                </div>
+                </div>
             </div>
 
             <div class="twocolumn">

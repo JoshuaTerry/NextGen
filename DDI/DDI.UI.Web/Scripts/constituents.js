@@ -458,8 +458,38 @@ function LoadEthnicitiesTagBox() {
 
 /* Notes Tab */
 
-function LoadNoteDetailsTagBox(id) {
-    LoadTagBoxes('tagBoxNoteDetails', 'nd-Topics', 'notetopics', '/notetopics/' + id + '/notes');
+function LoadNoteDetailsTagBox() {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'notetopics',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            CreateMultiSelectTags(data.Data, '.tagdropdowndivcontainer');
+            $(modal).find('.tagdropdowncontainer').show();
+
+            $('.savenotetopics').unbind('click');
+
+            $('savenotetopics').click(function () {
+                
+            });
+
+            $('.cancelnotetopics').click(function (e) {
+
+                e.preventDefault();
+
+                $(modal).find('.tagdropdowncontainer').hide();
+
+            })
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
+        }
+    });
+    
+
 }
 
 function LoadNoteDetailsGrid() {
@@ -487,6 +517,7 @@ function NewNoteDetailsModal() {
 
         PopulateDropDown('.nd-Category', 'notecategories/', '', '');
         PopulateDropDown('.nd-Topics', 'notetopics/', '', '');
+        SetupNoteTopicSelect();
 
         e.preventDefault();
 
@@ -560,6 +591,8 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id, modal);
 
+    SetupNoteTopicSelect();
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -582,7 +615,8 @@ function EditNoteDetails(id) {
             ContactDate: $(modal).find('.nd-ContactDate').val(),
             NoteCode: $(modal).find('.nd-NoteCode').val(),
             LastModifiedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
-            LastModifiedBy: currentEntity.Id
+            LastModifiedBy: currentEntity.Id,
+            NoteTopics: GetNoteTopicsToSave()
 
         }
 
@@ -609,6 +643,14 @@ function EditNoteDetails(id) {
     });
 }
 
+function GetNoteTopicsToSave() {
+    var t = {};
+
+
+    return t;
+
+}
+
 function LoadNoteDetails(id) {
 
     $.ajax({
@@ -619,7 +661,6 @@ function LoadNoteDetails(id) {
         success: function (data) {
 
             LoadTagSelector(data.Data);
-            // LoadNoteDetailsTagBox(id);
 
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
             PopulateDropDown('.nd-Topics', 'notetopics', '', '', data.Data.NoteTopicId);
@@ -640,6 +681,12 @@ function LoadNoteDetails(id) {
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading the address.');
         }
+    });
+}
+
+function SetupNoteTopicSelect() {
+    $('.noteTopicSelectImage').click(function () {
+        LoadNoteDetailsTagBox();
     });
 }
 /* End Notes Tab */
