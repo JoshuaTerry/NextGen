@@ -250,6 +250,8 @@ function ClearFields(container) {
 
     $(container + ' div.fieldblock select').val(0);
 
+    $(container + ' div.fieldblock input:checkbox').removeAttr('checked');
+
 }
 
 function LoadTabs() {
@@ -638,6 +640,28 @@ function CreateMultiSelectTags(tags, container) {
     });
 
     $(ul).appendTo($(container));
+}
+
+function GetFile(id, callback) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'filestorage/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.Data && callback) {
+                callback(data.Data);
+            }
+
+        },
+        failure: function (response) {
+            DisplayErrorMessage('Error', 'An error occurred during getting the file.');
+        }
+    });
+
 }
 
 function ExecuteFunction(functionName, context) {

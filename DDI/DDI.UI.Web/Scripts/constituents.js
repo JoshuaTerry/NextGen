@@ -44,16 +44,16 @@ $(document).ready(function () {
 
 });
 
-function UploadFiles() {
+function UploadFiles(callback) {
 
-    var modal = $('.fileuploadmodal').dialog({
+    modal = $('.fileuploadmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 400,
         resizable: false
     });
 
-    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload');
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
 
 }
 
@@ -228,24 +228,15 @@ function DisplayConstituentData() {
             }
         });
 
-        $('.constituentpic').html('');
-        var img = $('<img>');
+        DisplayConstituentPicture();
 
-        if (currentEntity.IsMasculine) {
-            $(img).attr('src', '../../Images/Male.png');
-        } else {
-            $(img).attr('src', '../../Images/Female.png');
-        }
-
-        $(img).appendTo($('.constituentpic'));
+        DisplayConstituentSideBar();
 
         DisplayConstituentType();
 
-        DisplayConstituentPrimaryAddress();
-
         GenerateContactInfoSection();
 
-	    LoadDenominationsTagBox();
+        LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
@@ -272,7 +263,7 @@ function DisplayConstituentData() {
         AmendMonthDays();
 
         $('.BirthDay').val(currentEntity.BirthDay);
-	
+    
         PopulateUserIdDropDown();
 
         LoadRelationshipsData();
@@ -285,6 +276,85 @@ function DisplayConstituentData() {
     }
 }
 
+function DisplayConstituentPicture() {
+
+    var img = $('.constituentpic img');
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.Data && data.Data[0]) {
+
+                GetFile(data.Data[0].FileId, function (item) {
+
+                    $(img).attr('src', 'data:image/jpg;base64,' + item.Data).appendTo($('.constituentpic'));
+
+                });
+
+            }
+
+        },
+        failure: function (response) {
+            DisplayErrorMessage('Error', 'An error occurred during getting the constituent picture.');
+        }
+    });
+
+    $('.constituentpic').on('mouseenter', function () {
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+    }).on('mouseleave', function () {
+        $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
+    });
+
+    $('.constituentpic').unbind('click');
+    $('.constituentpic').click(function () {
+
+        UploadFiles(function (file) {
+
+            var data = {
+                ConstituentId: currentEntity.Id,
+                FileId: file.Id
+            }
+
+            $.ajax({
+                url: WEB_API_ADDRESS + 'constituentpicture',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset-utf-8',
+                dataType: 'json',
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplayConstituentPicture();
+
+                    CloseModal(modal);
+
+                },
+                failure: function (response) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the constituent picture.');
+                }
+            });
+
+        });
+
+    });
+
+}
+
+function DisplayConstituentSideBar() {
+
+    $('.FormattedName').text(currentEntity.FormattedName);
+
+    GetConstituentPrimaryAddress();
+
+    GetConstituentPreferredContactInfo();
+
+}
+
 function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
@@ -295,39 +365,79 @@ function DisplayConstituentType() {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
         $('.organizationSection').hide();
-        $('.dbaSection').hide();
+        $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
         $('.individualConstituent').hide();
-        $('.personalSection').hide();
-        $('.clergySection').hide();
-        $('.educationSection').hide();
-        $('.professionalSection').hide();
+        $('.PersonalSettingsSection').hide();
+        $('.ClergySettingsSection').hide();
+        $('.EducationSettingsSection').hide();
+        $('.ProfessionalSettingsSection').hide();
     }
 
 }
 
-function DisplayConstituentPrimaryAddress() {
+function GetConstituentPrimaryAddress() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        contentType: 'application/json',
+        crossDomain: true,
+        success: function (data) {
 
-    if (currentEntity.ConstituentAddresses) {
+            currentaddress = data.Data;
 
-        $.map(currentEntity.ConstituentAddresses, function (item) {
+            for (i = 0; i < currentaddress.length; i++) { 
 
-            if (item.IsPrimary) {
+                if (currentaddress[i].IsPrimary) {
 
-                $('.Address').text(item.Address.AddressLine1);
+                    $('.Address').text(currentaddress[i].Address.AddressLine1);
 
-                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
+                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
+
+                        $('.Address').append(currentaddress[i].Address.AddressLine2);
+
+                    }
+
+                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
+
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the primary address.');
+        }
+    });
+}
+
+function GetConstituentPreferredContactInfo() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            currentcontactinfo = data.Data.ContactInfo;
+
+            var preferredContactInfos = ''
+
+            for (i = 0; i < currentcontactinfo.length; i++) {
+
+                if (currentcontactinfo[i].IsPreferred) {
+
+                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
+
                 }
 
-             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+                $('.ContactInfo').text(preferredContactInfos);
 
             }
-
-        });
-
-    }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the preferred contact info.');
+        }
+    });
 
 }
 
@@ -967,6 +1077,14 @@ function NewAlternateIdModal() {
             });
 
         });
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
     });
 
 }

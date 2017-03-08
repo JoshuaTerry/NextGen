@@ -17,7 +17,10 @@
 
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
-            <div class="constituentpic"></div>
+            <div class="constituentpic">
+                <img />
+                <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
+            </div>
             
             <h1>Information</h1>
             <div class="constituentinformation">
@@ -28,6 +31,7 @@
                     <label class="editable FormattedName"></label>
                     <label class="editable Address"></label>
                     <label class="editable CityStateZip"></label>
+                    <label class="editable ContactInfo"></label>
                 </div>
                 <div>
                     <span class="editable PhoneNumber"></span>
@@ -62,6 +66,7 @@
                         </div>
 
                         <div class="fieldblock">
+                            <label>Name</label>
                             <label class="editable FormattedName"></label>
                         </div>
 

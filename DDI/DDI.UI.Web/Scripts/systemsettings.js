@@ -834,8 +834,7 @@ function LoadDemographicsSectionSettings() {
 }
 
 function LoadDenominationSettingsGrid() {
-
-    
+        
     var denominationcolumns = [
        { dataField: 'Id', width: '0px' },
        { dataField: 'Code', caption: 'Code' },
@@ -1421,7 +1420,7 @@ function LoadSchoolsSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('schoolsgrid', 'schoolscontainer', schoolcolumns, 'schools', null, EditSchool);
+    LoadGrid('schoolsgrid', 'schoolscontainer', schoolcolumns, 'schools?fields=all', null, EditSchool);
 
 
 }

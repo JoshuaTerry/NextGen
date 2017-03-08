@@ -41,33 +41,48 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/filestorage/upload")]
         public async Task<IHttpActionResult> Upload()
         {
-            HttpRequestMessage request = this.Request;
-            if (!request.Content.IsMimeMultipartContent())
+            try
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
-
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-
-            foreach(var file in provider.Contents)
-            {
-                var fileNameParts = file.Headers.ContentDisposition.FileName.Trim('\"').Split('.');
-                var buffer = await file.ReadAsByteArrayAsync();
-
-                // save the uploaded filestorage
-                FileStorage newFile = new FileStorage()
+                HttpRequestMessage request = this.Request;
+                if (!request.Content.IsMimeMultipartContent())
                 {
-                    Name = fileNameParts[0],
-                    Extension = fileNameParts[1],
-                    Data = buffer,
-                    Size = buffer.LongLength
-                };
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                }
 
-                base.Post(newFile);
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                FileStorage newFile = new FileStorage();
+
+                if (provider.Contents.Count > 0)
+                {
+                    var file = provider.Contents[0];
+                    var fileNameParts = file.Headers.ContentDisposition.FileName.Trim('\"').Split('.');
+                    var buffer = await file.ReadAsByteArrayAsync();
+
+                    // save the uploaded filestorage
+                    newFile = new FileStorage()
+                    {
+                        Name = fileNameParts[0],
+                        Extension = fileNameParts[1],
+                        Data = buffer,
+                        Size = buffer.LongLength
+                    };
+
+                    var response = base.Post(newFile);
+                    return response;
+                }
+                else
+                {
+                    return InternalServerError();
+                }
             }
-
-            return Ok();
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(ex);
+            }
+            
         }
 
         [HttpPatch]
