@@ -1013,7 +1013,7 @@ function PopulateUserIdDropDown() {
 /* Audit Section */
 function ShowAuditData(id) {
 
-    $('.newaltidmodal').click(function (e) {
+    $('.newauditmodal').click(function (e) {
 
         e.preventDefault();
     var modal = $('.auditmodal').dialog({
