@@ -9,6 +9,7 @@ using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("Note")]
     public class Note : LinkedEntityBase
     {
         [Key]

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("NoteCategory")]
     public class NoteCategory : EntityBase
     {
         [Key]
