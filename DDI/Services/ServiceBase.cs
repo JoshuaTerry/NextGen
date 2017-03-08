@@ -300,8 +300,8 @@ namespace DDI.Services
             var response = new DataResponse<T>();
             try
             {
-                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork).Validate(entity);
                 _unitOfWork.Insert(entity);
+                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork).Validate(entity);
                 _unitOfWork.SaveChanges();
                 response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
                 FormatEntityForGet(response.Data);

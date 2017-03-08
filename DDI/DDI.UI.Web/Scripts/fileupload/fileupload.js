@@ -1,5 +1,5 @@
 ﻿
-function InitializeFileUploader(url) {
+function InitializeFileUploader(url, callback) {
 
     var filecounter = 0;
     var totalfiles = 0;
@@ -10,6 +10,12 @@ function InitializeFileUploader(url) {
         dropZone: $('.fileuploadcontainer'),
         disableImageResize: true,
         done: function (e, data) {
+
+            var responseFile = null;
+            if (data._response.result.Data) {
+                responseFile = data._response.result.Data;
+            }
+
             $.each(data.files, function (index, file) {
                 filecounter++;
 
@@ -23,6 +29,10 @@ function InitializeFileUploader(url) {
                     $('.filemessage').text('File upload complete.');
                     filecounter = 0;
                     totalfiles = 0;
+                }
+
+                if (callback) {
+                    callback(responseFile);
                 }
             });
         }
