@@ -307,7 +307,7 @@ function LoadNotesSettingsSectionSettings() {
 
     var accordion = $('<div>').addClass('accordions');
     var noteCodes = $('<div>').addClass('noteCodecontainer');
-    var noteCategories = $('<div>').addClass('noteCategoriescontainer');
+    var noteCategories = $('<div>').addClass('noteCategorycontainer');
     var noteTopics = $('<div>').addClass('noteTopiccontainer');
 
     var header = $('<h1>').text('Note Code').appendTo($(accordion));
@@ -364,11 +364,11 @@ function LoadNotesSettingsSectionSettings() {
     LoadNoteCodeSettingsGrid();
 
     header = $('<h1>').text('Note Category').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newnoteCategoriesmodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newnoteCategorymodallink modallink newbutton')
         .click(function (e) {
             e.preventDefault();
 
-            modal = $('.noteCategoriesmodal').dialog({
+            modal = $('.noteCategorymodal').dialog({
                 closeOnEscape: false,
                 modal: true,
                 width: 250,
@@ -380,14 +380,13 @@ function LoadNotesSettingsSectionSettings() {
                 CloseModal(modal);
             });
 
-            $('.submitnoteCategories').unbind('click');
+            $('.submitnoteCategory').unbind('click');
 
-            $('.submitnoteCategories').click(function () {
-
+            $('.submitnoteCategory').click(function () {
                 var item = {
-                    Code: $(modal).find('.noteCategories-Code').val(),
-                    Name: $(modal).find('.noteCategories-Name').val(),
-                    IsActive: $(modal).find('.noteCategories-IsActive').prop('checked')
+                    Label: $(modal).find('.noteCategory-Code').val(),
+                    Name: $(modal).find('.noteCategory-Name').val(),
+                    IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
                 }
 
                 $.ajax({
@@ -566,19 +565,19 @@ function LoadNoteCode(id) {
 }
 
 function LoadNoteCategorySettingsGrid() {
-    var noteCategoriescolumns = [
+    var noteCategorycolumns = [
         { dataField: 'Id', width: '0px' },
         { dataField: 'Label', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('noteCategoriesgrid', 'noteCategoriescontainer', noteCategoriescolumns, 'notecategories', null, EditNoteCategory);
+    LoadGrid('noteCategorygrid', 'noteCategorycontainer', noteCategorycolumns, 'notecategories', null, EditNoteCategory);
 
 }
 
 function EditNoteCategory(id) {
     LoadNoteCategory(id);
-    modal = $('.noteCategoriesmodal').dialog({
+    modal = $('.noteCategorymodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 250,
@@ -593,18 +592,18 @@ function EditNoteCategory(id) {
 
     });
 
-    $('.submitnoteCategories').unbind('click');
+    $('.submitnoteCategory').unbind('click');
 
-    $('.submitnoteCategories').click(function () {
+    $('.submitnoteCategory').click(function () {
         var item = {
-            Label: $(modal).find('.noteCategories-Code').val(),
-            Name: $(modal).find('.noteCategories-Name').val(),
-            IsActive: $(modal).find('.noteCategories-IsActive').prop('checked')
+            Label: $(modal).find('.noteCategory-Code').val(),
+            Name: $(modal).find('.noteCategory-Name').val(),
+            IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
         }
 
         $.ajax({
             method: 'PATCH',
-            url: WEB_API_ADDRESS + 'notecategories/' + $(modal).find('.noteCategoriesId').val(),
+            url: WEB_API_ADDRESS + 'notecategories/' + $(modal).find('.noteCategoryId').val(),
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
@@ -635,10 +634,10 @@ function LoadNoteCategory(id) {
         crossDomain: true,
         success: function (data) {
             if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.noteCategoriesId').val(data.Data.Id);
-                $(modal).find('.noteCategories-Code').val(data.Data.Label);
-                $(modal).find('.noteCategories-Name').val(data.Data.Name);
-                $(modal).find('.noteCategories-IsActive').prop('checked', data.Data.IsActive);
+                $(modal).find('.noteCategoryId').val(data.Data.Id);
+                $(modal).find('.noteCategory-Code').val(data.Data.Label);
+                $(modal).find('.noteCategory-Name').val(data.Data.Name);
+                $(modal).find('.noteCategory-IsActive').prop('checked', data.Data.IsActive);
 
             }
 

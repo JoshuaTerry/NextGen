@@ -645,7 +645,7 @@
 
     </div>
 
-        <div class="noteCodemodal" title="Note Code" style="display: none;">
+               <div class="noteCodemodal" title="Note Code" style="display: none;">
 
         <div class="modalcontent">
 
@@ -675,29 +675,29 @@
 
     </div>
 
-        <div class="noteCategoriesmodal" title="Note Category" style="display: none;">
+        <div class="noteCategorymodal" title="Note Category" style="display: none;">
 
         <div class="modalcontent">
 
-            <input type="hidden" class="noteCategoriesId" />
+            <input type="hidden" class="noteCategoryId" />
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="noteCategories-Code" />
+                <input type="text" class="noteCategory-Code" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="noteCategories-Name" />
+                <input type="text" class="noteCategory-Name" />
             </div>
 
             <div class="fieldblock">
                 <label>Active</label>
-                <input type="checkbox" class="noteCategories-IsActive" />
+                <input type="checkbox" class="noteCategory-IsActive" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitnoteCategories" value="Save" />
+                <input type="button" class="submitnoteCategory" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
