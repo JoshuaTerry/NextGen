@@ -231,6 +231,7 @@
     <Compile Include="Controllers\MemoCategoriesController.cs" />
     <Compile Include="Controllers\MemoCodesController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
+    <Compile Include="Controllers\NoteCodesController.cs" />
     <Compile Include="Controllers\NoteContactMethodsController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\NoteTopicsController.cs" />

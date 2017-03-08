@@ -75,6 +75,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\201703081713520_AddNoteRelatedTables.cs" />
+    <Compile Include="Migrations\201703081713520_AddNoteRelatedTables.Designer.cs">
+      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.cs" />
     <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.Designer.cs">
       <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
@@ -132,6 +136,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703081713520_AddNoteRelatedTables.resx">
+      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201703062337318_ConstituentPictureTable.resx">
       <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
     </EmbeddedResource>

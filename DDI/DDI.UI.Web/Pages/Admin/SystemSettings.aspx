@@ -644,4 +644,95 @@
         </div>
 
     </div>
+
+        <div class="noteCodemodal" title="Note Code" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteCodeId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteCode-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteCode-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteCode-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteCode" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="noteCategoriesmodal" title="Note Category" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteCategoriesId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteCategories-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteCategories-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteCategories-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteCategories" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+            <div class="noteTopicmodal" title="Topic" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteTopicId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteTopic-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteTopic-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteTopic-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteTopic" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </asp:Content>
