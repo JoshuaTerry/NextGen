@@ -277,7 +277,23 @@ namespace DDI.Data
             {
                 if (propertynames.Contains(keyValue.Key))
                 {
-                    currentValues[keyValue.Key] = keyValue.Value;
+                    string propertyName = keyValue.Key;
+
+                    // If this is a property that ends in "Id", see if it changed.
+                    bool idChanged = (propertyName.EndsWith("Id") && currentValues[propertyName] != keyValue.Value && (keyValue.Value is Guid? || keyValue.Value is Guid));
+
+                    currentValues[propertyName] = keyValue.Value;
+
+                    if (idChanged)
+                    {
+                        // If an Id changed, attempt to load (reload) the reference, which hopefully has the same name minus the "Id" suffix.
+                        var reference = _context.Entry(entity).Reference(propertyName.Substring(0, propertyName.Length - 2));
+
+                        if (reference != null)
+                        {
+                            reference.Load();
+                        }
+                    }
                 }
                 else
                 {
