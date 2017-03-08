@@ -50,10 +50,10 @@ namespace DDI.Conversion
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
-            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
-            //Run<CRM.Initialize>();
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
+            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
 
-
+            //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
             //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
 

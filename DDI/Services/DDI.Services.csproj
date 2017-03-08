@@ -80,6 +80,7 @@
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
+    <Compile Include="PaymentMethodService.cs" />
     <Compile Include="RelationshipService.cs" />
     <Compile Include="DenominationsService.cs" />
     <Compile Include="EthnicitiesService.cs" />

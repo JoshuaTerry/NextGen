@@ -302,7 +302,7 @@ namespace DDI.Conversion
 			try
             {
                 DateTime dt = Convert.ToDateTime(dtstr);
-                return dt;
+                return DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
             }
             catch
             {

@@ -25,7 +25,7 @@ namespace DDI.Shared.Models
 
         public virtual Guid? CreatedBy { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public virtual DateTime? CreatedOn { get; set; }
 
         public virtual Guid? LastModifiedBy { get; set; }

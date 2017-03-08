@@ -50,6 +50,7 @@ namespace DDI.Services
 
         #region Public Methods
 
+        protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
 
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {

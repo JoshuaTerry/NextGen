@@ -20,6 +20,7 @@ using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.Security;
+using DDI.Shared.Models;
 
 namespace DDI.Conversion.Core
 {    
@@ -51,6 +52,7 @@ namespace DDI.Conversion.Core
         private void LoadLegacyCodes(string filename)
         {
             DomainContext context = new DomainContext();
+            int createdByField = 9;
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
@@ -63,19 +65,19 @@ namespace DDI.Conversion.Core
                     string text1 = importer.GetString(5);
                     string text2 = importer.GetString(6);
                     bool isActive = importer.GetBool(8);
-
+                    IAuditableEntity entity;
 
                     switch (codeSet)
                     {
                         case NOTE_TOPIC_SET:
-                            context.NoteTopics.AddOrUpdate(
-                                prop => prop.Code,
-                                new NoteTopic { Code = code, Name = description, IsActive = isActive });
+                            entity = new NoteTopic { Code = code, Name = description, IsActive = isActive };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.NoteTopics.AddOrUpdate(p => p.Code, (NoteTopic)entity);
                             break;
                         case NOTE_CONTACT_METHOD_SET:
-                            context.NoteContactMethods.AddOrUpdate(
-                                prop => prop.Code,
-                                new NoteContactMethod { Code = code, Name = description, IsActive = isActive });
+                            entity = new NoteContactMethod { Code = code, Name = description, IsActive = isActive };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.NoteContactMethods.AddOrUpdate(prop => prop.Code, (NoteContactMethod)entity);                                
                             break;
                     }
                 }
@@ -106,6 +108,7 @@ namespace DDI.Conversion.Core
                         Name = description
                     };
 
+                    ImportCreatedModifiedInfo(noteCategory, importer, 3);
                     context.NoteCategories.AddOrUpdate(p => p.Label, noteCategory);
 
                     count++;
@@ -173,11 +176,11 @@ namespace DDI.Conversion.Core
 
                     if (user != null && !string.IsNullOrWhiteSpace(createdBy))
                     {
-                        user.CreatedBy = context.Users.FirstOrDefault(p => p.UserName == createdBy)?.Id;
+                        user.CreatedBy = context.Users.Where(p => p.UserName == createdBy).Select(p => p.Id).FirstOrDefault();
                     }
                     if (user != null && !string.IsNullOrWhiteSpace(modifiedBy))
                     {
-                        user.LastModifiedBy = context.Users.FirstOrDefault(p => p.UserName == modifiedBy)?.Id;
+                        user.LastModifiedBy = context.Users.Where(p => p.UserName == modifiedBy).Select(p => p.Id).FirstOrDefault();
                     }
                 }
 
