@@ -82,7 +82,8 @@ namespace DDI.Services
                                          {
                                              ChangeSetId = outer.cs.Id,
                                              Timestamp = outer.cs.Timestamp,
-                                             User = u.DisplayName,
+                                             User = u.UserName,
+                                             ChangeType = outer.oc.ChangeType,
                                              EntityType = outer.oc.TypeName,
                                              EntityValue = outer.oc.DisplayName,
                                              Property = outer.pc.PropertyName,

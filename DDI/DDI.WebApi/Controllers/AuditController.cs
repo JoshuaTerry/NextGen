@@ -22,8 +22,28 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("api/v1/audit/flat/{id}", Name = "AuditFlat")]
+        public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                start = start ?? DateTime.Now.AddDays(-90);
+                end = end ?? DateTime.Now;
+
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = _service.GetAllFlat(id, start.Value, end.Value, search);
+                  
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
         [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
-        public IHttpActionResult GetByConstituentId(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
@@ -59,7 +79,7 @@ namespace DDI.WebApi.Controllers
                 var pager = new Pagination();
                 var transform = new DynamicTransmogrifier();
                 pager.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
-                var dynamicResponse = transform.ToDynamicResponse(response, urlHelper, null);
+                var dynamicResponse = transform.ToDynamicResponse(response, null);
 
                 return Ok(dynamicResponse);
             }

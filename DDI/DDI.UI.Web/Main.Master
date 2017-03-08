@@ -24,9 +24,9 @@
     <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload-image.js"></script>
     <script type="text/javascript" src="..\..\Scripts\fileupload\fileupload.js"></script>
 
-    <link rel="stylesheet" href="CSS/uploader.css" />
-    <link rel="stylesheet" href="CSS/jquery.fileupload.css" />
-    <link rel="stylesheet" href="CSS/jquery.fileupload-ui.css" />
+    <link rel="stylesheet" href="CSS/fileupload/uploader.css" />
+    <link rel="stylesheet" href="CSS/fileupload/jquery.fileupload.css" />
+    <link rel="stylesheet" href="CSS/fileupload/jquery.fileupload-ui.css" />
     <!-- FileUpload Files -->
 
     <!-- DevExtreme Files -->

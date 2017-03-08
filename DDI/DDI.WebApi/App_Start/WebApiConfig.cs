@@ -29,7 +29,6 @@ namespace DDI.WebApi
 
             // Set data return type to JSON
             var json = config.Formatters.JsonFormatter;
-            json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
             json.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
