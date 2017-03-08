@@ -459,7 +459,8 @@ function NewNoteDetailsModal() {
                 ContactDate: $(modal).find('.nd-ContactDate').val(),
                 CreatedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
                 CreatedBy: currentEntity.Id,
-                LastModifiedBy: currentEntity.Id
+                LastModifiedBy: currentEntity.Id,
+                // ParentEntityId: currentEntity.Id
 
             }
 
@@ -557,7 +558,8 @@ function LoadNoteDetails(id) {
         crossDomain: true,
         success: function (data) {
 
-            LoadNoteDetailsTagBox(id);
+            LoadTagSelector(data.Data);
+            // LoadNoteDetailsTagBox(id);
 
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
             PopulateDropDown('.nd-Topics', 'notetopics', '', '', data.Data.NoteTopicId);
