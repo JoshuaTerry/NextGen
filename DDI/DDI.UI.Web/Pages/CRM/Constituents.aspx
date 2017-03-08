@@ -1142,7 +1142,7 @@
 
             <div class="fieldblock">
                 <label>Note Topics</label>
-                <div class="nd-Topics editable tagbox"></div>
+                <div class="nd-Topics tagbox"></div>
             </div>
 
             <div class="twocolumn">

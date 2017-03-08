@@ -557,6 +557,8 @@ function LoadNoteDetails(id) {
         crossDomain: true,
         success: function (data) {
 
+            LoadNoteDetailsTagBox(id);
+
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
             PopulateDropDown('.nd-Topics', 'notetopics', '', '', data.Data.NoteTopicId);
 
