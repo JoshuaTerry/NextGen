@@ -4,8 +4,12 @@
 
 .constituenttopinfo { padding: 1em 2.2em; }
 .constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
-.constituentpic { height: 150px; }
+
+.constituentpic { height: 150px; cursor: pointer; position: relative; }
 .constituentpic img { height: 150px; }
+.changeconstituentpic { background-color: black; opacity: .6; bottom: 0px; width: 100%; line-height: 50px; color: white; text-align: center; 
+                        font-weight: bold; font-size: 16px; position: absolute; z-index: 50; }
+
 .constituentinformation { height: 175px; }
 .constituentinformation div { padding: 5px; margin-bottom: 10px; }
 .constituentinformation div label { display: block; text-align: left; }

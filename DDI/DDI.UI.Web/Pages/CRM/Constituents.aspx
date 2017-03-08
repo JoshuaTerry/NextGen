@@ -17,7 +17,10 @@
 
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
-            <div class="constituentpic"></div>
+            <div class="constituentpic">
+                <img />
+                <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
+            </div>
             
             <h1>Information</h1>
             <div class="constituentinformation">
@@ -1040,21 +1043,21 @@
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
             <input type="hidden" class="hidrelationshipisswapped" />
+            <input type="hidden" class="hidconstituentlookupid" />
 
             <div class="fieldblock">
-                <label>Constituent</label>
-                <input type="text" class="FormattedName1" />
+                <label></label>
+                <input type="text" class="FormattedName2 constituentlookup" />
             </div>
 
             <div class="fieldblock">
                 <label>is the</label>
                 <select class="RelationshipTypeId"></select>
-
             </div>
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="FormattedName2" />
+                <input type="text" class="FormattedName1" />
             </div>
 
             <div class="modalbuttons">

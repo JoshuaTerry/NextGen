@@ -1,7 +1,7 @@
 ﻿
 function AddDefaultOption(e, text, val) {
 
-    var option = $('<option>').val('null').text('');
+    var option = $('<option>').val('').text('');
     $(option).appendTo($(e));
 
 }
