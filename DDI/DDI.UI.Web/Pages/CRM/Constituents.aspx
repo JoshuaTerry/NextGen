@@ -1150,9 +1150,9 @@
                 <div class="tagdropdowncontainer" style="display:none;">
                     <div class="tagdropdowndivcontainer"></div>
                     <div class="modalbuttons">
-                    <input type="button" class="savenotetopics" value="Save" />
-                    <a href="#" class="cancelnotetopics">Cancel</a>
-                </div>
+                        <input type="button" class="savenotetopics" value="Save" />
+                        <a href="#" class="cancelnotetopics">Cancel</a>
+                    </div>
                 </div>
             </div>
 
