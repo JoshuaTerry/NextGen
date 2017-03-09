@@ -2,11 +2,11 @@
 
 $(document).ready(function () {
 
-  //  DisplaySelectedTags(); // may not actually want? 
-
     LoadNoteDetailsGrid();
 
     NewNoteDetailsModal();
+
+    SetupNoteTopicSelectModal()
 
 });
 
@@ -46,8 +46,6 @@ function NewNoteDetailsModal() {
             resizable: false
         });
 
-        SetupNoteTopicSelectModal();
-
         $('.cancelmodal').click(function (e) {
 
             e.preventDefault();
@@ -59,6 +57,8 @@ function NewNoteDetailsModal() {
         $('.savenotedetails').unbind('click');
 
         $('.savenotedetails').click(function () {
+
+            GetNoteTopicsToSave();
 
             var item = {
 
@@ -162,8 +162,11 @@ function EditNoteDetails(id) {
 }
 
 function GetNoteTopicsToSave() {
-    var t = {};
+    var t = [];
 
+    var divs = $('.noteTopicSelect').children('div');
+
+    $.map(divs, function (d) { t.push(d.id) });
 
     return t;
 
@@ -180,7 +183,7 @@ function LoadNoteDetails(id) {
 
             if (!notetopicsloadedflag) {
 
-                LoadAvailableNoteTopics();
+                LoadSelectedNoteTopics();
 
                 notetopicsloadedflag = true;
             }
@@ -206,14 +209,17 @@ function LoadNoteDetails(id) {
     });
 }
 
-function SetupNoteTopicSelectModal() {
-    $('.noteTopicSelectImage').click(function () {
-        LoadNoteDetailsTagBox();
-    });
-}
 /* End Notes Tab */
 
 /* NoteTopics */
+
+function SetupNoteTopicSelectModal() {
+    $('.noteTopicSelectImage').click(function (e) {
+
+        LoadNoteDetailsTagBox();
+
+    });
+}
 
 function LoadNoteDetailsTagBox() {
 
@@ -223,6 +229,8 @@ function LoadNoteDetailsTagBox() {
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
+
+            CreateMultiSelectTags(data.Data, '.tagdropdowncontainer');
 
             $(modal).find('.tagdropdowncontainer').show();
 
@@ -248,7 +256,7 @@ function LoadNoteDetailsTagBox() {
 
 }
 
-function LoadTagSelector(type) {
+function LoadTagSelector(type) { // this will show you how to find the topics to save
 
     $('.tagselect').each(function () {
 
@@ -320,11 +328,11 @@ function LoadTagSelector(type) {
 
 }
 
-function LoadAvailableNoteTopics() {
+function LoadSelectedNoteTopics() {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics',
+        url: WEB_API_ADDRESS + 'notetopics', 
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -334,7 +342,7 @@ function LoadAvailableNoteTopics() {
                 var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
                 $('<span>').text(topic.Name).appendTo($(t));
                 $('<div>').addClass('dx-tag-remove-button')
-                    .click(function () { // adds the 'x'
+                    .click(function () { // adds cancel functionality - should point to lookup table
                         $.ajax({
                             url: WEB_API_ADDRESS,
                             method: 'DELETE',
@@ -343,9 +351,9 @@ function LoadAvailableNoteTopics() {
                             dataType: 'json',
                             crossDomain: true,
                             success: function (data) {
-                                currentEntity = data.Data;
+                                //currentEntity = data.Data;
 
-                                DisplaySelectedTags();
+                                //DisplaySelectedTags();
 
                             },
                             error: function (xhr, status, err) {
@@ -375,33 +383,6 @@ function RefreshTags() {
         });
 
     };
-
-}
-
-function DisplaySelectedTopics(data) {
-
-        $('.tagselect').html('');
-
-
-        // end meat
-}
-
-function CreateSingleSelectTags(tags, groupId, container) {
-
-    var ul = $('<ul>');
-
-    $.map(tags, function (tag) {
-
-        var li = $('<li>');
-
-        $('<input>').attr('type', 'radio').attr('name', groupId).val(tag.Id).appendTo($(li));
-        $('<span>').text(tag.DisplayName).appendTo($(li));
-
-        $(li).appendTo($(ul));
-
-    });
-
-    $(ul).appendTo($(container));
 
 }
 
