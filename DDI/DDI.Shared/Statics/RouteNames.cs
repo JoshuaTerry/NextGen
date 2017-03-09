@@ -44,7 +44,6 @@ namespace DDI.Shared.Statics
         public const string SectionName = "SectionName";
         public const string Note = "Note";
         public const string NoteCategory = "NoteCategory";
-        public const string NoteCode = "NoteCode";
         public const string NoteContactCode = "NoteContactCode";
         public const string NoteTopic = "NoteTopic";
         public const string PaymentMethod = "PaymentMethod";
