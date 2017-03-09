@@ -2601,10 +2601,10 @@ function LoadRegionLevelSettingsGrid() {
         { dataField: 'IsChildLevel', caption: 'ChildLevel', dataType: 'boolean' }
     ];
 
-    LoadGrid('regionlevelsettingsgrid', 'contentcontainer', columns, 'regionlevels', null, EditRegionLevelSetting, DeleteEntity, function () {
+    LoadGrid('regionlevelsettingsgrid', 'contentcontainer', columns, 'regionlevels', LoadRegionsSettingsGrid, EditRegionLevelSetting, DeleteEntity, function () {
         CreateNewModalLink("New Region Level",
         function () {
-            NewEntityModal('.newregionlevelmodallink', '.regionlevelmodal', '.submitregionlevel', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Region Level', 'RegionLevels');
+            NewEntityModal('.newregionlevelmodallink', '.regionlevelmodal', '.submitregionlevel', 250, null, LoadRegionLevelSettingsGrid, GetRegionLevelToSave, 'Region Level', 'RegionLevels');
         }
         , '.regionlevelsettingsgrid', '.contentcontainer', 'newregionlevelmodallink');
     });
@@ -2634,12 +2634,7 @@ function EditRegionLevelSetting(id) {
 
     $('.submitregionlevel').click(function () {
 
-        var item = {
-            Label: $(modal).find('.rl-Label').val(),
-            Abbreviation: $(modal).find('.rl-Abbreviation').val(),
-            IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
-            IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
-        }
+        var item = GetRegionLevelToSave(modal, true);
 
         $.ajax({
             method: 'PATCH',
@@ -2665,10 +2660,39 @@ function EditRegionLevelSetting(id) {
 
 }
 
+function GetRegionLevelToSave(modal, isUpdate) {
+
+    var item = {
+        Level: $(modal).find('.rl-Level').val(),
+        Label: $(modal).find('.rl-Label').val(),
+        Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+        IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+        IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
+    }
+
+    if (isUpdate === true) {
+        item.Id = $(modal).find('.regionlevelid').val();
+    }
+
+    return item;
+
+}
+
 function LoadRegionsSettingsGrid(level, parentid) {
 
+    var columns = [
 
+    ];
 
+    LoadGrid('regionsettingsgrid', 'contentcontainer', columns, 'regions', null, EditRegionSetting, DeleteEntity, 
+        function () {
+            CreateNewModalLink("New Region Level",
+            function () {
+                NewEntityModal('.newregionmodallink', '.regionmodal', '.submitregion', 250, null, LoadRegionLevelSettingsGrid, GetRegionLevelToSave, 'Region', 'Regions');
+            }
+            , '.regionsettingsgrid', '.contentcontainer', 'newregionmodallink');
+        });
+    
 }
 
 function LoadRegionLevel(id) {
