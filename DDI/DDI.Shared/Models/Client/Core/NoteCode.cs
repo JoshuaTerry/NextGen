@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    [Table("noteCode")]
+    [Table("NoteCode")]
     public class NoteCode : EntityBase, ICodeEntity
     {
         #region Public Properties
