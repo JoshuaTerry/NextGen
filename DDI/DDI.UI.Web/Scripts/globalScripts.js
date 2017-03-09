@@ -427,7 +427,7 @@ function GetAutoZipData(container) {
 
 }
 
-function LoadTagSelector(type) {
+function LoadTagSelector(type, container) {
 
     $('.tagselect').each(function () {
 
@@ -478,7 +478,7 @@ function LoadTagSelector(type) {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -568,11 +568,11 @@ function RefreshTags() {
 
 }
 
-function DisplaySelectedTags() {
+function DisplaySelectedTags(container) {
 
     if (currentEntity && currentEntity.Tags) {
 
-        $('.tagselect').html('');
+        $(container).html('');
 
         $.map(currentEntity.Tags, function (tag) {
 
@@ -591,7 +591,7 @@ function DisplaySelectedTags() {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -602,6 +602,10 @@ function DisplaySelectedTags() {
                 .appendTo($(t));
 
         });
+
+        if (!editing) {
+            $(container).find('.dx-tag-remove-button').hide();
+        }
 
     }
 }
@@ -791,6 +795,7 @@ function StartEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).removeClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').show();
     });
 }
@@ -811,6 +816,7 @@ function StopEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).addClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').hide();
     });
 
