@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
 
-    DisplaySelectedTags(); // may not actually want? 
+  //  DisplaySelectedTags(); // may not actually want? 
 
     LoadNoteDetailsGrid();
 
@@ -9,39 +9,6 @@
 });
 
 /* Notes Tab */
-function LoadNoteDetailsTagBox() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            CreateMultiSelectTags(data.Data, '.tagdropdowndivcontainer');
-            $(modal).find('.tagdropdowncontainer').show();
-
-            $('.savenotetopics').unbind('click');
-
-            $('savenotetopics').click(function () {
-
-            });
-
-            $('.cancelnotetopics').click(function (e) {
-
-                e.preventDefault();
-
-                $(modal).find('.tagdropdowncontainer').hide();
-
-            })
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
-        }
-    });
-
-
-}
 
 function LoadNoteDetailsGrid() {
 
@@ -67,8 +34,6 @@ function NewNoteDetailsModal() {
     $('.newnotesdetailmodallink').click(function (e) {
 
         PopulateDropDown('.nd-Category', 'notecategories/', '', '');
-        PopulateDropDown('.nd-Topics', 'notetopics/', '', '');
-        SetupNoteTopicSelect();
 
         e.preventDefault();
 
@@ -142,8 +107,6 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id, modal);
 
-    SetupNoteTopicSelect();
-
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -211,10 +174,9 @@ function LoadNoteDetails(id) {
         crossDomain: true,
         success: function (data) {
 
-            LoadTagSelector(data.Data); // this will start to load the constituents, you can see if you set a breakpoint
+            LoadAvailableNoteTopics();
 
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
-            PopulateDropDown('.nd-Topics', 'notetopics', '', '', data.Data.NoteTopicId);
 
             $('.nd-Title').val(data.Data.Title),
             $('.nd-Description').val(data.Data.Text),
@@ -236,6 +198,7 @@ function LoadNoteDetails(id) {
 }
 
 function SetupNoteTopicSelect() {
+    // still needs to exist, but needs to do something different
     $('.noteTopicSelectImage').click(function () {
         LoadNoteDetailsTagBox();
     });
@@ -244,5 +207,214 @@ function SetupNoteTopicSelect() {
 
 /* NoteTopics */
 
+function LoadNoteDetailsTagBox() {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'notetopics',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+        
+
+
+            $(modal).find('.tagdropdowncontainer').show();
+
+            $('.savenotetopics').unbind('click');
+
+            $('savenotetopics').click(function () {
+
+            });
+
+            $('.cancelnotetopics').click(function (e) {
+
+                e.preventDefault();
+
+                $(modal).find('.tagdropdowncontainer').hide();
+
+            })
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
+        }
+    });
+
+
+}
+
+function LoadTagSelector(type) {
+
+    $('.tagselect').each(function () {
+
+        var img = $('.tagSelectImage');
+
+        if (img.length === 0) {
+            img = $('<div>').addClass('tagSelectImage');
+
+            $(img).click(function () {
+
+                modal = $('.tagselectmodal').dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: 450,
+                    resizable: false
+                });
+
+                LoadAvailableTags();
+
+                $('.saveselectedtags').unbind('click');
+
+                $('.saveselectedtags').click(function () {
+
+                    var tagIds = [];
+
+                    $('.tagselectgridcontainer').find('input').each(function (index, value) {
+
+                        if ($(value).prop('checked')) {
+                            tagIds.push($(value).val());
+                        }
+
+                    });
+
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/constituenttags',
+                        method: 'POST',
+                        headers: GetApiHeaders(),
+                        data: JSON.stringify({ tags: tagIds }),
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            // Display success
+                            DisplaySuccessMessage('Success', 'Tags saved successfully.');
+
+                            CloseModal(modal);
+
+                            currentEntity = data.Data;
+
+                            DisplaySelectedTags();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                        }
+                    });
+
+                });
+
+            });
+
+            $(this).after($(img));
+        }
+
+        $(img).hide();
+
+    });
+
+}
+
+function LoadAvailableNoteTopics() {
+
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'notetopics',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+
+            $.map(data.Data, function () {
+
+                var t = $('<div>').addClass('dx-tag-content').attr('id', data.Data.Id).appendTo($('.nd-Topics.tagselect')); // this needs to be my tagbox
+                $('<span>').text(data.Data.DisplayName).appendTo($(t));
+                $('<div>').addClass('dx-tag-remove-button')
+                    .click(function () { // adds the 'x'
+                        $.ajax({
+                            url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/tag/' + tag.Id,
+                            method: 'DELETE',
+                            headers: GetApiHeaders(),
+                            contentType: 'application/json; charset-utf-8',
+                            dataType: 'json',
+                            crossDomain: true,
+                            success: function (data) {
+                                currentEntity = data.Data;
+
+                                DisplaySelectedTags();
+
+                            },
+                            error: function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            }
+                        });
+                    })
+                    .appendTo($(t));
+            });
+           
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+        }
+    });
+
+}
+
+function RefreshTags() {
+
+    if (currentEntity && currentEntity.Tags) {
+
+        $.map(currentEntity.Tags, function (item) {
+
+            $('input[value=' + item.Id + ']').prop('checked', true);
+
+        });
+
+    };
+
+}
+
+function DisplaySelectedTopics(data) {
+
+        $('.tagselect').html('');
+
+
+        // end meat
+}
+
+function CreateSingleSelectTags(tags, groupId, container) {
+
+    var ul = $('<ul>');
+
+    $.map(tags, function (tag) {
+
+        var li = $('<li>');
+
+        $('<input>').attr('type', 'radio').attr('name', groupId).val(tag.Id).appendTo($(li));
+        $('<span>').text(tag.DisplayName).appendTo($(li));
+
+        $(li).appendTo($(ul));
+
+    });
+
+    $(ul).appendTo($(container));
+
+}
+
+function CreateMultiSelectTags(tags, container) {
+
+    var ul = $('<ul>');
+
+    $.map(tags, function (tag) {
+
+        var li = $('<li>');
+
+        $('<input>').attr('type', 'checkbox').val(tag.Id).appendTo($(li));
+        $('<span>').text(tag.DisplayName).appendTo($(li));
+
+        $(li).appendTo($(ul));
+    });
+
+    $(ul).appendTo($(container));
+}
 
 /* End NoteTopics*/
