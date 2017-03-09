@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("UserRole")]
+    [Table("UserRoles")]
     public class UserRole : IdentityUserRole<Guid>, IEntity, IAuditableEntity
     {
         [Key]

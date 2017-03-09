@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("Role")]
+    [Table("Roles")]
     public class Role : IdentityRole<Guid, UserRole>, IEntity, IAuditableEntity
     {
           

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("User")]
+    [Table("Users")]
     public class User : IdentityUser<Guid, UserLogin, UserRole, UserClaim>, IEntity, IAuditableEntity
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User, Guid> manager, string authenticationType)

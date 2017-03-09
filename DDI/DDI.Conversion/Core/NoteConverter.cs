@@ -89,6 +89,9 @@ namespace DDI.Conversion.Core
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 var outputFile = new FileExport<Note>(Path.Combine(_outputDirectory, OutputFile.Core_NoteFile), append);
+                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                var topicFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.Core_NoteTopicFile), append); // Join table created by EF
+
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
@@ -122,9 +125,7 @@ namespace DDI.Conversion.Core
                     string contactMethodCode = importer.GetString(13);
                     string topicCodes = importer.GetString(14);
                     DateTime? deleteDt = importer.GetDateTime(15);
-
-
-
+                    
                     Note note = new Note();
                     note.EntityType = entityTypeName;
                     Guid parentEntity;
@@ -148,8 +149,7 @@ namespace DDI.Conversion.Core
                     note.AlertStartDate = alertStart;
                     note.AlertEndDate = alertEnd;
                     note.ContactDate = contactDt;
-
-
+                    
                     // Note Category
                     if (!string.IsNullOrWhiteSpace(categoryCode))
                     {
@@ -174,7 +174,7 @@ namespace DDI.Conversion.Core
                         }
                         else
                         {
-                            //note.NotecodeId = noteCode.Id;
+                            //note.NoteCodeId = noteCode.Id;
                         }
                     }
 
