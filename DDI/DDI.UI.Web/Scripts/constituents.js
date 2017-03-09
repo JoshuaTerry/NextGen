@@ -272,8 +272,7 @@ function DisplayConstituentData() {
 
         NewAddressModal();
 
-        DisplaySelectedTags();
-
+        DisplaySelectedTags($('.constituenttagselect'));
     }
 }
 
@@ -360,7 +359,7 @@ function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
 
-    LoadTagSelector(currentEntity.Category);
+    LoadTagSelector(currentEntity.Category, $('.constituenttagselect'));
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
