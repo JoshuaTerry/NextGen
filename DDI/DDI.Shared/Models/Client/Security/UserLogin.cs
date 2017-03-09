@@ -9,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("UserLogins")]
+    [Table("UserLogin")]
     public class UserLogin : IdentityUserLogin<Guid>, IEntity
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? CreatedBy { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
         public string DisplayName { get; set; } 
-        public Guid? LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }
     }

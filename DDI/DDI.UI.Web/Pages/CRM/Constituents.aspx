@@ -78,7 +78,7 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <div class="tagselect disabled"></div>
+                        <div class="tagselect constituenttagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">

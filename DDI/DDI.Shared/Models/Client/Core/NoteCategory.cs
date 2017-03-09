@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("NoteCategory")]
     public class NoteCategory : EntityBase
     {
         [Key]
@@ -17,10 +18,10 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(64)]
         public string Label { get; set; }
 
-        public bool IsActive { get; set; }
-
         [MaxLength(128)]
         public string Name { get; set; }
+
+        public bool IsActive { get; set; }
 
         public ICollection<Note> Notes { get; set; } 
     }
