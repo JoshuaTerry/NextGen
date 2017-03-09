@@ -644,4 +644,76 @@
         </div>
 
     </div>
+
+    <div class="regionlevelmodal" title="Region Level" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="regionlevelid" />
+
+            <div class="fieldblock">
+                <label>Level</label>
+                <input type="text" class="number rl-Level" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Label</label>
+                <input type="text" class="rl-Label" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Abbreviation</label>
+                <input type="text" class="rl-Abbreviation" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Required</label>
+                <input type="checkbox" class="rl-IsRequired" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Child Level</label>
+                <input type="checkbox" class="rl-IsChildLevel" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitregionlevel" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="regionmodal" title="Region" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="regionid" />
+            <input type="hidden" class="parentregionid" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="reg-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="reg-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="reg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitregion" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </asp:Content>
