@@ -1848,7 +1848,23 @@ function EditPrefix(id) {
 
 function DeletePrefix(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'prefixes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
 
+            DisplaySuccessMessage('Success', 'Prefix deleted successfully.');
+
+            LoadPrefixSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Prefix.');
+        }
+
+    });
 
 }
 
