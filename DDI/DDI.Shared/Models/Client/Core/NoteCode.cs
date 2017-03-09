@@ -19,7 +19,7 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(128)]
         public string Name { get; set; }
 
-        [MaxLength(4)]
+        [MaxLength(16)]
         public string Code { get; set; }
 
         #endregion Public Properties
