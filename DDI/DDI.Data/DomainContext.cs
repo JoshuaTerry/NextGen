@@ -42,8 +42,6 @@ namespace DDI.Data
 
         public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
-        public DbSet<MemoCode> MemoCodes { get; set; }
-        public DbSet<MemoCategory> MemoCategories { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
 

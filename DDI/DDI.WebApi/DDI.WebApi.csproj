@@ -228,8 +228,6 @@
     <Compile Include="Controllers\ConstituentPictureController.cs" />
     <Compile Include="Controllers\EFTFormatsController.cs" />
     <Compile Include="Controllers\FileStorageController.cs" />
-    <Compile Include="Controllers\MemoCategoriesController.cs" />
-    <Compile Include="Controllers\MemoCodesController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
     <Compile Include="Controllers\NoteCodesController.cs" />
     <Compile Include="Controllers\NoteContactMethodsController.cs" />

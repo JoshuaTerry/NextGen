@@ -301,7 +301,7 @@ function LoadMergeFormSystemSectionSettings() {
 
 /* NOTE SYSTEM SETTINGS */
 
-function LoadNotesSettingsSectionSettings() {
+function LoadNoteSectionSettings() {
 
     LoadSectionSettings(SettingsCategories.Common, 'Note', 'sectionpreferences', SystemSettings.Note);
 
@@ -471,10 +471,6 @@ function LoadNotesSettingsSectionSettings() {
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
-
-}
-
-function LoadNoteSectionSettings() {
 
 }
 
