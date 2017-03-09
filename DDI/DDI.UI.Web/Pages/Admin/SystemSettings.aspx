@@ -35,7 +35,7 @@
                     <li><a href="#" class="LoadDocumentTypes">Document Types</a></li>
                     <li><a href="#" class="LoadCommonHomeSreen">Home Screen</a></li>
                     <li><a href="#" class="LoadMergeFormSystem">Merge Form System</a></li>
-                    <li><a href="#" class="LoadNotesSettings">Notes Settings</a></li>
+                    <li><a href="#" class="LoadNote">Notes Settings</a></li>
                     <li><a href="#" class="LoadStatusCodes">Status Codes</a></li>
                     <li><a href="#" class="LoadTransactionCodes">Transaction Codes</a></li>
                 </ul>
@@ -645,7 +645,97 @@
 
     </div>
 
-    <div class="regionlevelmodal" title="Region Level" style="display: none;">
+               <div class="noteCodemodal" title="Note Code" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteCodeId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteCode-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteCode-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteCode-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteCode" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="noteCategorymodal" title="Note Category" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteCategoryId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteCategory-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteCategory-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteCategory-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteCategory" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+            <div class="noteTopicmodal" title="Topic" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="noteTopicId" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="noteTopic-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="noteTopic-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="noteTopic-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitnoteTopic" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+	
+	<div class="regionlevelmodal" title="Region Level" style="display: none;">
 
         <div class="modalcontent">
 
