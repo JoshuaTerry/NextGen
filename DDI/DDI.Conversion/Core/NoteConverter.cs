@@ -149,21 +149,48 @@ namespace DDI.Conversion.Core
                     note.AlertEndDate = alertEnd;
                     note.ContactDate = contactDt;
 
-                    /*
-                    // Profession
+
+                    // Note Category
                     if (!string.IsNullOrWhiteSpace(categoryCode))
                     {
-                        MemoCategory  = professions.FirstOrDefault(p => p.Code == professionCode);
-                        if (profession == null)
+                        NoteCategory category = noteCategories.FirstOrDefault(p => p.Label == categoryCode);
+                        if (category == null)
                         {
-                            importer.LogError($"Invalid profession code {professionCode} for PIN {constituentNum}.");
+                            importer.LogError($"Invalid note category label {categoryCode} for note legacy Id {legacyId}.");
                         }
                         else
                         {
-                            constituent.ProfessionId = profession.Id;
+                            note.CategoryId = category.Id;
                         }
                     }
-                    */
+
+                    // Note Code
+                    if (!string.IsNullOrWhiteSpace(noteCodeCode))
+                    {
+                        NoteCode noteCode = noteCodes.FirstOrDefault(p => p.Code == noteCodeCode);
+                        if (noteCode == null)
+                        {
+                            importer.LogError($"Invalid note code {noteCodeCode} for note legacy Id {legacyId}.");
+                        }
+                        else
+                        {
+                            //note.NotecodeId = noteCode.Id;
+                        }
+                    }
+
+                    // Contact Method
+                    if (!string.IsNullOrWhiteSpace(contactMethodCode))
+                    {
+                        NoteContactMethod method = noteContactMethods.FirstOrDefault(p => p.Code == contactMethodCode);
+                        if (method == null)
+                        {
+                            importer.LogError($"Invalid note cpntact method {contactMethodCode} for note legacy Id {legacyId}.");
+                        }
+                        else
+                        {
+                            note.ContactMethodId = method.Id;
+                        }
+                    }
 
                 }
             }

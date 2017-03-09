@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("NoteCode")]
-    public class NoteCode : EntityBase, ICodeEntity
+    public class NoteCode : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]
@@ -19,20 +19,15 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(128)]
         public string Name { get; set; }
 
-        [MaxLength(4)]
+        [MaxLength(16)]
         public string Code { get; set; }
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public override string DisplayName
-        {
-            get
-            {
-                return Name;
-            }
-        }
+        public override string DisplayName => string.IsNullOrWhiteSpace(Name) ? Code : $"{Code}: {Name}";
+
 
         #endregion
 

@@ -51,7 +51,7 @@ namespace DDI.Conversion
 
             //Run<Core.Initialize>();
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
-            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.NoteCategories));
+            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
 
             //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.

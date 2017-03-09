@@ -21,6 +21,9 @@ namespace DDI.Shared.Models.Client.Security
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }
+
+        public void AssignPrimaryKey() { }
+
     }
-   
+
 }

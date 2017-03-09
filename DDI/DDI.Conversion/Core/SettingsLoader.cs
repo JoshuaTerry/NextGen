@@ -23,8 +23,9 @@ namespace DDI.Conversion.Core
         }
 
         // nacodes.record-cd sets - these are the ones that are being imported here.        
-        private const int NOTE_CONTACT_METHOD_SET = 44;
+        private const int NOTE_CODE_SET = 17;
         private const int NOTE_TOPIC_SET = 43;
+        private const int NOTE_CONTACT_METHOD_SET = 44;
 
         private string _crmDirectory, _ddiDirectory;
 
@@ -60,6 +61,11 @@ namespace DDI.Conversion.Core
 
                     switch (codeSet)
                     {
+                        case NOTE_CODE_SET:
+                            entity = new NoteCode { Code = code, Name = description, IsActive = isActive };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.NoteCodes.AddOrUpdate(p => p.Code, (NoteCode)entity);
+                            break;
                         case NOTE_TOPIC_SET:
                             entity = new NoteTopic { Code = code, Name = description, IsActive = isActive };
                             ImportCreatedModifiedInfo(entity, importer, createdByField);

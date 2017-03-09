@@ -41,6 +41,8 @@ namespace DDI.Shared.Models.Client.Security
                 return string.IsNullOrEmpty(UserName) ? FullName : UserName;
             }
         }
+
+        public void AssignPrimaryKey() { }
     }
 }
         //public class User : EntityBase, IUser<Guid> 

@@ -22,6 +22,7 @@ namespace DDI.Conversion.Statics
         #region Core SSIS Files
 
         public static string Core_NoteFile => "Notes.csv";
+        public static string Core_NoteTopicFile => "NoteTopicNotes.csv";
 
         #endregion
 

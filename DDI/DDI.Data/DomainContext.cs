@@ -126,7 +126,7 @@ namespace DDI.Data
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            EntityBase entity = entityEntry.Entity as EntityBase;
+            IEntity entity = entityEntry.Entity as IEntity;
             if (entity != null)
             {
                 //Ensure new entities have an ID
