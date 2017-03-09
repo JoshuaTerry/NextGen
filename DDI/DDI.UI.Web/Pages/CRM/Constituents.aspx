@@ -254,7 +254,7 @@
 
                     </div>
 
-                    <h1 class="organizationSection">Organization</h1>
+                   <h1 class="OrganizationSettingsSection"><span class="OrganizationSettingsSectionLabel">Organization</span></h1>
                     <div class="editcontainer">
 
                         <div class="inline">
