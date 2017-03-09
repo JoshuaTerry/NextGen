@@ -41,11 +41,10 @@ namespace DDI.Shared.Statics
         public const string Language = "Language";
         public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
-        public const string MemoCode = "MemoCode";
-        public const string MemoCategory = "MemoCategory";
         public const string SectionName = "SectionName";
         public const string Note = "Note";
         public const string NoteCategory = "NoteCategory";
+        public const string NoteCode = "NoteCode";
         public const string NoteContactCode = "NoteContactCode";
         public const string NoteTopic = "NoteTopic";
         public const string PaymentMethod = "PaymentMethod";

@@ -17,6 +17,8 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(64)]
         public string Label { get; set; }
 
+        public bool IsActive { get; set; }
+
         [MaxLength(128)]
         public string Name { get; set; }
 
