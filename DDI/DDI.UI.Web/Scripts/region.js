@@ -71,19 +71,19 @@ function LoadAllRegionDropDowns(prefix, address) {
     if (address) {
 
         if (address.Region1) {
-            LoadRegionDropDown('.na-', 1, null, address.Region1.Id);
+            LoadRegionDropDown(prefix, 1, null, address.Region1.Id);
         }
 
         if (address.Region2 && address.Region2.Id && address.Region2.ParentRegionId) {
-            LoadRegionDropDown('.na-', 2, address.Region2.ParentRegionId, address.Region2.Id);
+            LoadRegionDropDown(prefix, 2, address.Region2.ParentRegionId, address.Region2.Id);
         }
     
         if (address.Region3 && address.Region3.Id && address.Region3.ParentRegionId) {
-            LoadRegionDropDown('.na-', 3, address.Region3.ParentRegionId, address.Region3.Id);
+            LoadRegionDropDown(prefix, 3, address.Region3.ParentRegionId, address.Region3.Id);
         }
     
         if (address.Region4 && address.Region4.Id && address.Region4.ParentRegionId) {
-            LoadRegionDropDown('.na-', 4, address.Region4.ParentRegionId, address.Region4.Id);
+            LoadRegionDropDown(prefix, 4, address.Region4.ParentRegionId, address.Region4.Id);
         }
 
     }
