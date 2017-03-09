@@ -35,7 +35,7 @@
                     <li><a href="#" class="LoadDocumentTypes">Document Types</a></li>
                     <li><a href="#" class="LoadCommonHomeSreen">Home Screen</a></li>
                     <li><a href="#" class="LoadMergeFormSystem">Merge Form System</a></li>
-                    <li><a href="#" class="LoadNotesSettings">Notes Settings</a></li>
+                    <li><a href="#" class="LoadNote">Notes Settings</a></li>
                     <li><a href="#" class="LoadStatusCodes">Status Codes</a></li>
                     <li><a href="#" class="LoadTransactionCodes">Transaction Codes</a></li>
                 </ul>

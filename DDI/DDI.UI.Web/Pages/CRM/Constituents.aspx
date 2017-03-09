@@ -78,7 +78,7 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <div class="tagselect disabled"></div>
+                        <div class="tagselect constituenttagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">
@@ -1052,21 +1052,21 @@
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
             <input type="hidden" class="hidrelationshipisswapped" />
+            <input type="hidden" class="hidconstituentlookupid" />
 
             <div class="fieldblock">
-                <label>Constituent</label>
-                <input type="text" class="FormattedName1" />
+                <label></label>
+                <input type="text" class="FormattedName2 constituentlookup" />
             </div>
 
             <div class="fieldblock">
                 <label>is the</label>
                 <select class="RelationshipTypeId"></select>
-
             </div>
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="FormattedName2" />
+                <input type="text" class="FormattedName1" />
             </div>
 
             <div class="modalbuttons">

@@ -272,7 +272,7 @@ function DisplayConstituentData() {
 
         NewAddressModal();
 
-        DisplaySelectedTags();
+        DisplaySelectedTags($('.constituenttagselect'));
     }
 }
 
@@ -359,7 +359,7 @@ function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
 
-    LoadTagSelector(currentEntity.Category);
+    LoadTagSelector(currentEntity.Category, $('.constituenttagselect'));
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
@@ -2333,8 +2333,8 @@ function NewRelationshipModal() {
 function GetRelationshipToSave(modal, isUpdate) {
 
     var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        Constituent1Id: currentEntity.Id,
+        Constituent2Id: $(modal).find('.hidconstituentlookupid').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
 
@@ -2347,15 +2347,19 @@ function GetRelationshipToSave(modal, isUpdate) {
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val(currentEntity.Id);
+    $(modal).find('.FormattedName1').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent2.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.FormattedName);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.FormattedName);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
+
 }
 /* End Relationships Tab */
 
