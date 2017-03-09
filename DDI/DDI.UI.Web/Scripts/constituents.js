@@ -1427,8 +1427,7 @@ function LoadAddress(id) {
 
             PopulateCountiesInModal(data.Data.Address.CountyId);
 
-            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
-            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
+            LoadAllRegionDropDowns('.na-', data.Data.Address);
 
         },
         error: function (xhr, status, err) {

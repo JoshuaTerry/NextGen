@@ -385,8 +385,8 @@ function GetAutoZipData(container) {
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' +
-                '&addressLine2=' +
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
                 '&city=' +
                 '&countryId=' +
                 '&countyId=' +
@@ -414,6 +414,8 @@ function GetAutoZipData(container) {
                     }
 
                     $(container).find('.autocity').val(data.Data.City);
+                    
+                    LoadAllRegionDropDowns('.na-', data.Data);
 
                 }
             
