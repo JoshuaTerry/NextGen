@@ -1076,6 +1076,8 @@ function LoadConstituentTypesSectionSettings() {
                 resizable: false
             });
 
+            LoadAvailableTags($('.consttype-tagselect'));
+
             $('.cancelmodal').click(function (e) {
 
                 e.preventDefault();
@@ -1164,7 +1166,10 @@ function LoadConstituentTypeSettingsGrid() {
             }
 
         },
-        { dataField: 'Tags', caption: 'Default Tags' },
+        //{ caption: 'Default Tags', cellTemplate: function (container, options) {
+        //    $('<label>').text(DisplaySelectedTagsConstituentType().appendTo(container));
+        //}},
+        //{ dataField: 'Tags', caption: 'Default Tags' },
         { dataField: 'NameFormat', caption: 'Name Format' },
         { dataField: 'SalutationFormal', caption: 'Formal Salutation' },
         { dataField: 'SalutationInformal', caption: 'Informal Salutation' }
@@ -1186,6 +1191,9 @@ function EditConstituentType(id) {
         width: 250,
         resizable: false
     });
+
+    LoadTagSelector(currentEntity.Category);
+    DisplaySelectedTagsConstituentType();
 
     $('.cancelmodal').click(function (e) {
 

@@ -237,10 +237,15 @@
                 </select>
             </div>
 
-            <%--<div class="fieldblock">
-                <label>Default Tags</label>
-                <input type="text" class="consttype-Tags" />
-            </div>--%>
+            <div class="fieldblock">
+                <label>Tags</label>
+                <div class="tagselect disabled"></div>
+                <div class="consttype-tagselect">
+                    <div class="tagselectgridcontainer"></div>
+                </div>
+                
+            </div>
+
 
             <div class="fieldblock">
                 <label>Name Format</label>
