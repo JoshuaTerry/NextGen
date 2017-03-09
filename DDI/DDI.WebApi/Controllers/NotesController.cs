@@ -32,7 +32,7 @@ namespace DDI.WebApi.Controllers
         {
 
             List<NoteTopic> topics = new List<NoteTopic>();
-            // entityToSave.NoteTopics.ForEach(n => base.Service.);
+            // entityToSave.NoteTopics.ForEach(n => base.Service.GetById(entityToSave.Id));
 
             return base.Post(entityToSave);
         }

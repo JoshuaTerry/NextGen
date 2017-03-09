@@ -131,7 +131,7 @@ function EditNoteDetails(id) {
             NoteCode: $(modal).find('.nd-NoteCode').val(),
             LastModifiedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
             LastModifiedBy: currentEntity.Id,
-            NoteTopics: GetNoteTopicsToSave()
+            // : GetNoteTopicsToSave()
 
         }
 
@@ -180,7 +180,7 @@ function LoadNoteDetails(id) {
 
             if (!notetopicsloadedflag) {
 
-                LoadSelectedNoteTopics();
+                LoadSelectedNoteTopics(id);
 
                 notetopicsloadedflag = true;
             }
@@ -340,11 +340,11 @@ function LoadTagSelector(type) { // this will show you how to find the topics to
 
 }
 
-function LoadSelectedNoteTopics() {
+function LoadSelectedNoteTopics(id) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics', // need to get note topics associated with a note
+        url: WEB_API_ADDRESS + '/notetopics/' + id + '/notes/', // need to get note topics associated with a note
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
