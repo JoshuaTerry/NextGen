@@ -2141,8 +2141,6 @@ function LoadProfession(id) {
 /* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
-    
-
     LoadRegionLevelSettingsGrid();
 
 }
@@ -2158,13 +2156,13 @@ function LoadRegionLevelSettingsGrid() {
         { dataField: 'IsChildLevel', caption: 'ChildLevel', dataType: 'boolean' }
     ];
 
-    LoadGrid('regionlevelsettingsgrid', 'contentcontainer', columns, 'regionlevels', null, EditRegionLevelSetting, DeleteEntity);
-
-    CreateNewModalLink("New Region Level",
+    LoadGrid('regionlevelsettingsgrid', 'contentcontainer', columns, 'regionlevels', null, EditRegionLevelSetting, DeleteEntity, function () {
+        CreateNewModalLink("New Region Level",
         function () {
-            NewEntityModal(modalLinkClass, '.regionlevelmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Region Level', 'RegionLevels');
+            NewEntityModal('.newregionlevelmodallink', '.regionlevelmodal', '.submitregionlevel', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Region Level', 'RegionLevels');
         }
-        , '.regionlevelsettingsgrid', '.contentcontainer', 'newregionlevelmodal');
+        , '.regionlevelsettingsgrid', '.contentcontainer', 'newregionlevelmodallink');
+    });
 
 }
 
