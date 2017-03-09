@@ -129,42 +129,10 @@ namespace DDI.Data.Migrations.Client
             AddForeignKey("dbo.Note", "UserResponsibleId", "dbo.Users", "UserId");
             DropColumn("dbo.Users", "FirstName");
             DropColumn("dbo.Users", "MiddleName");
-            DropTable("dbo.MemoCategory");
-            DropTable("dbo.MemoCode");
         }
         
         public override void Down()
         {
-            CreateTable(
-                "dbo.MemoCode",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false),
-                        IsActive = c.Boolean(nullable: false),
-                        Name = c.String(maxLength: 128),
-                        Code = c.String(maxLength: 4),
-                        CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
-                        LastModifiedBy = c.Guid(),
-                        LastModifiedOn = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.MemoCategory",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false),
-                        IsActive = c.Boolean(nullable: false),
-                        Name = c.String(maxLength: 128),
-                        Code = c.String(maxLength: 4),
-                        CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(),
-                        LastModifiedBy = c.Guid(),
-                        LastModifiedOn = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.Id);
-            
             AddColumn("dbo.Users", "MiddleName", c => c.String(maxLength: 256));
             AddColumn("dbo.Users", "FirstName", c => c.String(maxLength: 256));
             DropForeignKey("dbo.Note", "UserResponsibleId", "dbo.Users");
