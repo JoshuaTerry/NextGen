@@ -1145,7 +1145,7 @@
 
             <div class="fieldblock">
                 <label>Note Topics</label>
-                <div class="nd-Topics tagselect"></div>
+                <div class="nd-Topics noteTopicSelect"></div> 
                 <div class="noteTopicSelectImage" style="display: inline-block;"></div>
                 <div class="tagdropdowncontainer" style="display:none;">
                     <div class="tagdropdowndivcontainer"></div>

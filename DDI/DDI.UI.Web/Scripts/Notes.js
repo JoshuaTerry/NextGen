@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var notetopicsloadedflag = false;
+
+$(document).ready(function () {
 
   //  DisplaySelectedTags(); // may not actually want? 
 
@@ -43,6 +45,8 @@ function NewNoteDetailsModal() {
             width: 500,
             resizable: false
         });
+
+        SetupNoteTopicSelectModal();
 
         $('.cancelmodal').click(function (e) {
 
@@ -105,7 +109,7 @@ function EditNoteDetails(id) {
         resizable: false
     });
 
-    LoadNoteDetails(id, modal);
+    LoadNoteDetails(id);
 
     $('.cancelmodal').click(function (e) {
 
@@ -174,7 +178,12 @@ function LoadNoteDetails(id) {
         crossDomain: true,
         success: function (data) {
 
-            LoadAvailableNoteTopics();
+            if (!notetopicsloadedflag) {
+
+                LoadAvailableNoteTopics();
+
+                notetopicsloadedflag = true;
+            }
 
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
 
@@ -197,8 +206,7 @@ function LoadNoteDetails(id) {
     });
 }
 
-function SetupNoteTopicSelect() {
-    // still needs to exist, but needs to do something different
+function SetupNoteTopicSelectModal() {
     $('.noteTopicSelectImage').click(function () {
         LoadNoteDetailsTagBox();
     });
@@ -215,9 +223,6 @@ function LoadNoteDetailsTagBox() {
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
-
-        
-
 
             $(modal).find('.tagdropdowncontainer').show();
 
@@ -324,14 +329,14 @@ function LoadAvailableNoteTopics() {
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.Data, function () {
+            $.map(data.Data, function (topic) {
 
-                var t = $('<div>').addClass('dx-tag-content').attr('id', data.Data.Id).appendTo($('.nd-Topics.tagselect')); // this needs to be my tagbox
-                $('<span>').text(data.Data.DisplayName).appendTo($(t));
+                var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
+                $('<span>').text(topic.Name).appendTo($(t));
                 $('<div>').addClass('dx-tag-remove-button')
                     .click(function () { // adds the 'x'
                         $.ajax({
-                            url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/tag/' + tag.Id,
+                            url: WEB_API_ADDRESS,
                             method: 'DELETE',
                             headers: GetApiHeaders(),
                             contentType: 'application/json; charset-utf-8',
@@ -344,7 +349,7 @@ function LoadAvailableNoteTopics() {
 
                             },
                             error: function (xhr, status, err) {
-                                DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
                             }
                         });
                     })
@@ -357,7 +362,7 @@ function LoadAvailableNoteTopics() {
         }
     });
 
-}
+} // working
 
 function RefreshTags() {
 

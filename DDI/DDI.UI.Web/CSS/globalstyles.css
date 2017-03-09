@@ -115,10 +115,10 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 /* END TAG BOX CONTROL */
 
-.tagselect { width: 97% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
+.tagselect, .noteTopicSelect { width: 97% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
 .tagselect.disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #eee; color: #000000; }
 .tagselect div {  }
-.tagselect div.dx-tag-content span { display: block; margin-top: 5px; }
+.tagselect div.dx-tag-content span, .noteTopicSelect div.dx-tag-content span{ display: block; margin-top: 5px; }
 
 .tagSelectImage, .noteTopicSelectImage { display: inline-block; padding: 2px; margin: 0 0 0 3px; 
                   background: url('../../Images/Search_Mono_16.png') no-repeat center; width: 18px; height: 18px; vertical-align: bottom;
