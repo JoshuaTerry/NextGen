@@ -9,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("UserRoles")]
+    [Table("UserRole")]
     public class UserRole : IdentityUserRole<Guid>, IEntity, IAuditableEntity
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? CreatedBy { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
         public string DisplayName { get; set; }
-        public Guid? LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }
     }

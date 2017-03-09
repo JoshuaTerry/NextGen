@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("Users")]
+    [Table("User")]
     public class User : IdentityUser<Guid, UserLogin, UserRole, UserClaim>, IEntity, IAuditableEntity
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User, Guid> manager, string authenticationType)
@@ -26,24 +26,19 @@ namespace DDI.Shared.Models.Client.Security
         [Column("UserId")]
         public override Guid Id { get; set; }
         [MaxLength(256)]
-        public string FirstName { get; set; }
-        [MaxLength(256)]
-        public string MiddleName { get; set; }
-        [MaxLength(256)]
-        public string LastName { get; set; } 
+        public string FullName { get; set; } 
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
-        public Guid? CreatedBy { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
-        public Guid? LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
 
         public string DisplayName
         {
             get
             {
-                return string.IsNullOrEmpty(UserName) ? $"{FirstName} {LastName}" : UserName;
+                return string.IsNullOrEmpty(UserName) ? FullName : UserName;
             }
         }
     }

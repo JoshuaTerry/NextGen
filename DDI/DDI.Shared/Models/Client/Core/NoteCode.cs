@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DDI.Shared.Models.Client.CRM
+namespace DDI.Shared.Models.Client.Core
 {
-    [Table("MemoCode")]
-    public class MemoCode : EntityBase, ICodeEntity
+    [Table("NoteCode")]
+    public class NoteCode : EntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]
