@@ -68,9 +68,6 @@ function NewNoteDetailsModal() {
                 Text: $(modal).find('.nd-Description').val(),
                 CategoryId: $(modal).find('.nd-Category').val(),
                 ContactDate: $(modal).find('.nd-ContactDate').val(),
-                CreatedOn: $.datepicker.formatDate('yy-mm-dd', new Date()),
-                CreatedBy: currentEntity.Id,
-                LastModifiedBy: currentEntity.Id,
                 // ParentEntityId: currentEntity.Id
 
             }
@@ -162,13 +159,13 @@ function EditNoteDetails(id) {
 }
 
 function GetNoteTopicsToSave() {
-    var t = [];
+    var topicid= [];
 
     var divs = $('.noteTopicSelect').children('div');
 
-    $.map(divs, function (d) { t.push(d.id) });
+    $.map(divs, function (divid) { topicid.push(divid.id) });
 
-    return t;
+    return topicid;
 
 }
 
@@ -237,6 +234,21 @@ function LoadNoteDetailsTagBox() {
             $('.savenotetopics').unbind('click');
 
             $('savenotetopics').click(function () {
+
+                // route to save checked notedetails (save item)
+
+                // var item = []
+                //$('.tagselectgridcontainer').find('input').each(function (index, value) {
+
+                //    if ($(value).prop('checked')) {
+                //        item.push($(value).val());
+                //    }
+
+                //});
+
+                // will want to refresh
+
+                // route to update notedetails from lookup table (
 
             });
 
@@ -332,7 +344,7 @@ function LoadSelectedNoteTopics() {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics', 
+        url: WEB_API_ADDRESS + 'notetopics', // this will be the lookup table
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
@@ -386,16 +398,16 @@ function RefreshTags() {
 
 }
 
-function CreateMultiSelectTags(tags, container) {
+function CreateMultiSelectTags(topics, container) {
 
     var ul = $('<ul>');
 
-    $.map(tags, function (tag) {
+    $.map(topics, function (topic) {
 
         var li = $('<li>');
 
-        $('<input>').attr('type', 'checkbox').val(tag.Id).appendTo($(li));
-        $('<span>').text(tag.DisplayName).appendTo($(li));
+        $('<input>').attr('type', 'checkbox').val(topic.Id).appendTo($(li));
+        $('<span>').text(topic.DisplayName).appendTo($(li));
 
         $(li).appendTo($(ul));
     });
