@@ -23,12 +23,12 @@ namespace DDI.Shared.Models
 
         #region Properties 
 
-        public virtual Guid? CreatedBy { get; set; }
+        public virtual string CreatedBy { get; set; }
 
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public virtual DateTime? CreatedOn { get; set; }
 
-        public virtual Guid? LastModifiedBy { get; set; }
+        public virtual string LastModifiedBy { get; set; }
 
         public virtual DateTime? LastModifiedOn { get; set; }
 

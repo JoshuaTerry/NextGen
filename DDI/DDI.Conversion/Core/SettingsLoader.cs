@@ -112,7 +112,6 @@ namespace DDI.Conversion.Core
         {
 
             var context = new DomainContext();
-            var fixups = new Dictionary<string, string[]>();
 
             using (var importer = CreateFileImporter(_ddiDirectory, filename, typeof(ConversionMethod)))
             {
@@ -141,40 +140,17 @@ namespace DDI.Conversion.Core
                     {
                         UserName = userName,
                         Email = email,
-                        LastName = fullName,
+                        FullName = fullName,
                         IsActive = isActive,
                         LastLogin = lastLogin,
+                        CreatedBy = createdBy,
                         CreatedOn = createdOn,
-                        LastModifiedOn = modifiedOn
+                        LastModifiedBy = modifiedBy
                     };
                     context.Users.AddOrUpdate(p => p.UserName, user);
                     
-                    if (!string.IsNullOrWhiteSpace(createdBy) || !string.IsNullOrWhiteSpace(modifiedBy))
-                    {
-                        fixups[userName] = new string[] { createdBy, modifiedBy };
-                    }
-
                     count++;
                 }
-                context.SaveChanges();
-
-                // Populate CreatedBy, ModifiedBy
-                foreach (var entry in fixups)
-                {
-                    var user = context.Users.FirstOrDefault(p => p.UserName == entry.Key);
-                    string createdBy = entry.Value[0];
-                    string modifiedBy = entry.Value[1];
-
-                    if (user != null && !string.IsNullOrWhiteSpace(createdBy))
-                    {
-                        user.CreatedBy = context.Users.Where(p => p.UserName == createdBy).Select(p => p.Id).FirstOrDefault();
-                    }
-                    if (user != null && !string.IsNullOrWhiteSpace(modifiedBy))
-                    {
-                        user.LastModifiedBy = context.Users.Where(p => p.UserName == modifiedBy).Select(p => p.Id).FirstOrDefault();
-                    }
-                }
-
                 context.SaveChanges();
             }
         }    

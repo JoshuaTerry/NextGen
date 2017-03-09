@@ -79,12 +79,12 @@ namespace DDI.Conversion.Core
             context.NoteCategories.Load();
             context.NoteContactMethods.Load();
             context.NoteTopics.Load();
-            context.MemoCodes.Load();
+            context.NoteCodes.Load();
 
             var noteCategories = context.NoteCategories.Local;
             var noteContactMethods = context.NoteContactMethods.Local;
             var noteTopics = context.NoteTopics.Local;
-            var noteCodes = context.MemoCodes.Local;
+            var noteCodes = context.NoteCodes.Local;
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -149,7 +149,7 @@ namespace DDI.Conversion.Core
                     note.AlertEndDate = alertEnd;
                     note.ContactDate = contactDt;
 
-
+                    /*
                     // Profession
                     if (!string.IsNullOrWhiteSpace(categoryCode))
                     {
@@ -163,6 +163,7 @@ namespace DDI.Conversion.Core
                             constituent.ProfessionId = profession.Id;
                         }
                     }
+                    */
 
                 }
             }
