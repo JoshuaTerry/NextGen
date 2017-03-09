@@ -344,7 +344,7 @@ function LoadSelectedNoteTopics() {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics', // this will be the lookup table
+        url: WEB_API_ADDRESS + 'notetopics', // need to get note topics associated with a note
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
