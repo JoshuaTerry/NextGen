@@ -87,6 +87,21 @@
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
         </div>
 
+        <div class="confirmmodal" title="Confirm" style="display: none;">
+
+            <div class="modalcontent">
+
+                <p class="confirmmessage"></p>
+                
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="confirmyes" value="Ok" />
+                <input type="button" class="confirmno" value="Cancel" />
+            </div>
+
+        </div>
+
         <div class="addconstituentmodal" title="Add Constituent" style="display: none;">
 
             <div class="modalcontent">

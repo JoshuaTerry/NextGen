@@ -1445,8 +1445,13 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
+            // remove previous elements
+            $('.' + category.Name + 'header').remove();
+            $('.constituent' + category.Name + 'gridcontainer').remove();
+
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
-            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            var header = $('<h3>').text(category.SectionTitle).addClass(category.Name + 'header').appendTo($('.contactinfocontainer'));
+
             $('<a>', { 
                 title: 'New', 
                 class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
@@ -2265,6 +2270,7 @@ function LoadRelationshipsData() {
         }
     });
 }
+
 function LoadRelationshipsQuickView(data) {
 
     var formattedData = $('<ul>').addClass('relationshipQuickViewData');
@@ -2274,18 +2280,43 @@ function LoadRelationshipsQuickView(data) {
         $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
-                $('<li>').text(rowText).appendTo($(formattedData));
+
+                var li = $('<li>');
+
+                var rowText = item.RelationshipType.Name + ': ';
+                var link = $('<a>').attr('href', '#').text(item.Constituent1.FormattedName).click(function (e) {
+                    e.preventDefault();
+                    RelationshipLinkClicked(item.Constituent1.Id)
+                });
+
+                $(li).html(rowText);
+                $(link).appendTo($(li));
+
+                $(li).appendTo($(formattedData));
+                
             }
 
         });
 
     }
+
     $('.relationshipsQuickView').empty();
+
     $(formattedData).appendTo($('.relationshipsQuickView'));
 
 }
 
+function RelationshipLinkClicked(id) {
+
+    sessionStorage.setItem('constituentid', id);
+
+    if (sessionStorage.getItem('constituentid')) {
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
+    }
+
+    GetConstituentData($('.hidconstituentid').val());
+
+}
 
 function LoadRelationshipsTab(data) {
 
