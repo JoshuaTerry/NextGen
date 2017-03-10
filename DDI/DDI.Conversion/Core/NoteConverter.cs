@@ -90,10 +90,12 @@ namespace DDI.Conversion.Core
                 var outputFile = new FileExport<Note>(Path.Combine(_outputDirectory, OutputFile.Core_NoteFile), append);
                 var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.NoteIdMappingFile), append, true);
                 var topicFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.Core_NoteTopicFile), append); // Join table created by EF
+                topicFile.SetColumnNames("NoteTopic_Id", "Note_Id");
 
                 if (!append)
                 {
                     outputFile.AddHeaderRow();
+                    topicFile.AddHeaderRow();
                 }
 
                 int count = 0;
