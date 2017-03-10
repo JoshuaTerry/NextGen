@@ -1072,17 +1072,27 @@ function LoadConstituentTypesSectionSettings() {
             modal = $('.constituenttypemodal').dialog({
                 closeOnEscape: false,
                 modal: true,
-                width: 250,
+                width: 400,
                 resizable: false
             });
 
             LoadAvailableTags($('.consttype-tagselect'));
 
+            $(modal).find('.tagSelectImage').click(function () {
+
+                $('.consttype-tagselect').toggle();
+
+                if (!$('.consttype-tagselect').is(':visible')) {
+                    DisplyConstituentTypeTags($(modal).find('.tagselectgridcontainer input:checked'));
+                }
+
+            });
+
             $('.cancelmodal').click(function (e) {
 
                 e.preventDefault();
 
-                CloseModal();
+                CloseModal(modal);
 
             });
 
@@ -1112,7 +1122,7 @@ function LoadConstituentTypesSectionSettings() {
 
                         DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
 
-                        CloseModal();
+                        CloseModal(modal);
 
                         LoadConstituentTypeSettingsGrid();
 
@@ -1136,6 +1146,27 @@ function LoadConstituentTypesSectionSettings() {
 
 }
 
+function DisplyConstituentTypeTags(tags) {
+
+    $(modal).find('.tagselect').empty();
+
+    $(tags).each(function (i, tag) {
+
+        var id = $(tag).val();
+        var name = $(tag).parent().find('span').text();
+
+        var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
+        $('<span>').text(name).appendTo($(t));
+        $('<div>').addClass('dx-tag-remove-button')
+            .click(function () {
+                
+            })
+            .appendTo($(t));
+
+    });
+    
+
+}
 
 function LoadConstituentTypeSettingsGrid() {
 
@@ -1188,7 +1219,7 @@ function EditConstituentType(id) {
     modal = $('.constituenttypemodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 250,
+        width: 400,
         resizable: false
     });
 

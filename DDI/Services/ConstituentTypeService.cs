@@ -23,7 +23,6 @@ namespace DDI.Services
         #region Private Fields
 
         private readonly IRepository<ConstituentType> _repository;
-        private readonly ConstituentTypeLogic _constituenttypelogic; 
 
         #endregion
 
@@ -35,14 +34,13 @@ namespace DDI.Services
         }
 
         public ConstituentTypeService(IUnitOfWork uow)
-            : this(uow, new ConstituentTypeLogic(uow), uow.GetRepository<ConstituentType>())
+            : this(uow, uow.GetRepository<ConstituentType>())
         {
         }
 
-        private ConstituentTypeService(IUnitOfWork uow, ConstituentTypeLogic constituentTypeLogic, IRepository<ConstituentType> repository)
+        private ConstituentTypeService(IUnitOfWork uow, IRepository<ConstituentType> repository)
             : base(uow)
         {
-            _constituenttypelogic = constituentTypeLogic;
             _repository = repository;
         }
 

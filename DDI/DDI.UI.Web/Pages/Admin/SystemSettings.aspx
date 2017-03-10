@@ -239,8 +239,9 @@
 
             <div class="fieldblock">
                 <label>Tags</label>
-                <div class="tagselect disabled"></div>
-                <div class="consttype-tagselect">
+                <div class="tagselect"></div>
+                <div class="tagSelectImage"></div>
+                <div class="consttype-tagselect" style="display: none;">
                     <div class="tagselectgridcontainer"></div>
                 </div>
                 
