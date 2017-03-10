@@ -56,7 +56,7 @@ namespace DDI.Data
 
                 return _utilities;
             }
-        }                       
+        }
 
         #endregion Public Properties
 
@@ -91,7 +91,7 @@ namespace DDI.Data
             _isUOW = (context != null);
         }
         #endregion Public Constructors
-         
+
         #region Public Methods       
 
         public virtual void Delete(T entity)
@@ -105,7 +105,7 @@ namespace DDI.Data
 
                 Attach(entity);
 
-                EntitySet.Remove(entity);                            
+                EntitySet.Remove(entity);
             }
             catch (DbEntityValidationException e)
             {
@@ -120,7 +120,7 @@ namespace DDI.Data
         {
             GetReference<TElement>(entity, collection);
         }
-        
+
         /// <summary>
         /// Explicitly load a reference property or collection for an entity.
         /// </summary>
@@ -171,7 +171,7 @@ namespace DDI.Data
         {
             return Attach(entity, EntityState.Unchanged);
         }
-        
+
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
@@ -183,7 +183,7 @@ namespace DDI.Data
 
             var query = _context.Set<T>().AsQueryable();
 
-            foreach(Expression<Func<T, object>> include in includes)
+            foreach (Expression<Func<T, object>> include in includes)
             {
                 string name = PathHelper.NameFor(include, true);
                 if (!string.IsNullOrWhiteSpace(name))
@@ -232,7 +232,7 @@ namespace DDI.Data
                 {
                     // Add it only if not already added.
                     EntitySet.Add(entity);
-                }                 
+                }
 
                 return entity;
             }
@@ -253,7 +253,7 @@ namespace DDI.Data
 
                 Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
-                
+
                 return entity;
             }
             catch (DbEntityValidationException e)
@@ -277,23 +277,7 @@ namespace DDI.Data
             {
                 if (propertynames.Contains(keyValue.Key))
                 {
-                    string propertyName = keyValue.Key;
-
-                    // If this is a property that ends in "Id", see if it changed.
-                    bool idChanged = (propertyName.EndsWith("Id") && currentValues[propertyName] != keyValue.Value && (keyValue.Value is Guid? || keyValue.Value is Guid));
-
-                    currentValues[propertyName] = keyValue.Value;
-
-                    if (idChanged)
-                    {
-                        // If an Id changed, attempt to load (reload) the reference, which hopefully has the same name minus the "Id" suffix.
-                        var reference = _context.Entry(entity).Reference(propertyName.Substring(0, propertyName.Length - 2));
-
-                        if (reference != null)
-                        {
-                            reference.Load();
-                        }
-                    }
+                    currentValues[keyValue.Key] = keyValue.Value;
                 }
                 else
                 {
@@ -302,7 +286,7 @@ namespace DDI.Data
                 }
             }
 
-            action?.Invoke(entity); 
+            action?.Invoke(entity);
         }
 
         public List<string> GetModifiedProperties(T entity)

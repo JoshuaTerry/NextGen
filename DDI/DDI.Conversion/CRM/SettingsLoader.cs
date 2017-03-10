@@ -18,6 +18,7 @@ using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
+using DDI.Shared.Models;
 
 namespace DDI.Conversion.CRM
 {    
@@ -86,6 +87,7 @@ namespace DDI.Conversion.CRM
         private void LoadLegacyCodes(string filename)
         {
             DomainContext context = new DomainContext();
+            int createdByField = 9;
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
@@ -99,29 +101,27 @@ namespace DDI.Conversion.CRM
                     string text2 = importer.GetString(6);
                     string security = importer.GetString(7);
                     bool active = importer.GetBool(8);
-                    string createdBy = importer.GetString(9);
-                    DateTime? createdOn = importer.GetDateTime(10);
-                    string modifiedBy = importer.GetString(11);
-                    DateTime? modifiedOn = importer.GetDateTime(12);
 
                     bool masculine = true;
+                    IAuditableEntity entity;
 
                     switch (codeSet)
                     {
                         case ADDRESS_TYPE_SET:
-                            context.AddressTypes.AddOrUpdate(
-                                prop => prop.Code,
-                                new AddressType { Code = code, Name = description, IsActive = active });
+                            entity = new AddressType { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.AddressTypes.AddOrUpdate(prop => prop.Code, (AddressType)entity);
                             break;
                         case CLERGY_STATUS_SET:
-                            context.ClergyStatuses.AddOrUpdate(
-                               p => p.Code,
-                               new ClergyStatus { Code = code, Name = description, IsActive = active });
+                            entity = new ClergyStatus { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.ClergyStatuses.AddOrUpdate(p => p.Code, (ClergyStatus)entity);
+                               
                             break;
                         case CLERGY_TYPE_SET:
-                            context.ClergyTypes.AddOrUpdate(
-                               p => p.Code,
-                               new ClergyType { Code = code, Name = description, IsActive = active });
+                            entity = new ClergyType { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.ClergyTypes.AddOrUpdate(p => p.Code, (ClergyType)entity);                               
                             break;
                         case DENOMINATION_SET:
                             Affiliation affiliation;
@@ -153,20 +153,19 @@ namespace DDI.Conversion.CRM
                                 default:
                                     affiliation = Affiliation.None; break;
                             }
-
-                            context.Denominations.AddOrUpdate(
-                                p => p.Code,
-                                new Denomination { Code = code, Name = description, IsActive = active, Religion = religion, Affiliation = affiliation });
+                            entity = new Denomination { Code = code, Name = description, IsActive = active, Religion = religion, Affiliation = affiliation };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Denominations.AddOrUpdate(p => p.Code, (Denomination)entity);                                
                             break;
                         case EDUCATION_LEVEL_SET:
-                            context.EducationLevels.AddOrUpdate(
-                                p => p.Code,
-                                new EducationLevel { Code = code, Name = description, IsActive = active });
+                            entity = new EducationLevel { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.EducationLevels.AddOrUpdate(p => p.Code, (EducationLevel)entity);                                
                             break;
                         case ETHNICITY_SET:
-                            context.Ethnicities.AddOrUpdate(
-                               p => p.Code,
-                               new Ethnicity { Code = code, Name = description, IsActive = active });
+                            entity = new Ethnicity { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Ethnicities.AddOrUpdate(p => p.Code, (Ethnicity)entity);                               
                             break;
                         case GENDER_SET:
                             if (code == "M")
@@ -177,50 +176,49 @@ namespace DDI.Conversion.CRM
                             {
                                 masculine = false;
                             }
-                            context.Genders.AddOrUpdate(
-                               p => p.Code,
-                               new Gender { Code = code, Name = description, IsMasculine = masculine });
+                            entity = new Gender { Code = code, Name = description, IsMasculine = masculine, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Genders.AddOrUpdate(p => p.Code, (Gender)entity);                               
                             break;
                         case LANGUAGE_SET:
-                            context.Languages.AddOrUpdate(
-                               p => p.Code,
-                               new Language { Code = code, Name = description, IsActive = active });
+                            entity = new Language { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Languages.AddOrUpdate(p => p.Code, (Language)entity);
                             break;
                         case DELETION_SET:
                             if (code == "AC" || code == "BL" || code == "HO" || code == "DEL")
                             {
                                 continue;
                             }
-                            context.ConstituentStatuses.AddOrUpdate(
-                                p => p.Code,
-                                new ConstituentStatus() { Code = code, Name = description, BaseStatus = ConstituentBaseStatus.Inactive, IsActive = active, IsRequired = false });
+                            entity = new ConstituentStatus() { Code = code, Name = description, BaseStatus = ConstituentBaseStatus.Inactive, IsActive = active, IsRequired = false };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.ConstituentStatuses.AddOrUpdate(p => p.Code, (ConstituentStatus)entity);
                             break;
                         case PROFESSION_SET:
-                            context.Professions.AddOrUpdate(
-                               p => p.Code,
-                               new Profession { Code = code, Name = description, IsActive = active });
+                            entity = new Profession { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Professions.AddOrUpdate(p => p.Code, (Profession)entity);
                             break;
                         case EARNINGS_SET:
-                            context.IncomeLevels.AddOrUpdate(
-                               p => p.Code,
-                               new IncomeLevel { Code = code, Name = description, IsActive = active });
+                            entity = new IncomeLevel { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.IncomeLevels.AddOrUpdate(p => p.Code, (IncomeLevel)entity);
                             break;
                         case MARITAL_STATUS_SET:
-                            context.MaritalStatuses.AddOrUpdate(
-                               p => p.Code,
-                               new MaritalStatus { Code = code, Name = description, IsActive = active });
+                            entity = new MaritalStatus { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.MaritalStatuses.AddOrUpdate(p => p.Code, (MaritalStatus)entity);
                             break;
                         case SCHOOL_SET:
-                            context.Schools.AddOrUpdate(
-                               p => p.Code,
-                               new School { Code = code, Name = description, IsActive = active });
+                            entity = new School { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Schools.AddOrUpdate(p => p.Code, (School)entity);
                             break;
                         case DEGREE_SET:
-                            context.Degrees.AddOrUpdate(
-                               p => p.Code,
-                               new Degree { Code = code, Name = description, IsActive = active });
-                            break;
-                        
+                            entity = new Degree { Code = code, Name = description, IsActive = active };
+                            ImportCreatedModifiedInfo(entity, importer, createdByField);
+                            context.Degrees.AddOrUpdate(p => p.Code, (Degree)entity);
+                            break;                        
                         case CUSTOM_FIELD_SET:
                             LoadCustomField(context, code, description, int1, int2, active);
                             break;

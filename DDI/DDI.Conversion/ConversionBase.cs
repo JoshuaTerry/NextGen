@@ -20,7 +20,6 @@ namespace DDI.Conversion
     internal abstract class ConversionBase
     {
         #region Private Fields
-        private IRepository<User> _userRepository = null;
 
         #endregion 
 
@@ -45,18 +44,6 @@ namespace DDI.Conversion
         /// ConversionMethodArgs instance for the currently running method.
         /// </summary>
         protected ConversionMethodArgs MethodArgs { get; set; }
-
-        protected IRepository<User> UserRepository
-        {
-            get
-            {
-                if (_userRepository == null)
-                {
-                    _userRepository = new CachedRepository<User>();
-                }
-                return _userRepository;
-            }
-        }
 
         #endregion
 

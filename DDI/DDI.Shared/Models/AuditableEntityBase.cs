@@ -25,7 +25,6 @@ namespace DDI.Shared.Models
 
         public virtual string CreatedBy { get; set; }
 
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public virtual DateTime? CreatedOn { get; set; }
 
         public virtual string LastModifiedBy { get; set; }
@@ -39,20 +38,6 @@ namespace DDI.Shared.Models
         #endregion
 
         #region Methods
-
-        public override string ToString()
-        {
-            return DisplayName;
-        }
-
-        /// <summary>
-        /// Ensure the entity's primary key has been assigned.
-        /// </summary>
-        public void AssignPrimaryKey()
-        {
-            if (this.Id == default(Guid))
-                this.Id = Guid.NewGuid();
-        }
 
         #endregion
     }
