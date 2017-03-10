@@ -75,6 +75,18 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.cs" />
+    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.Designer.cs">
+      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.cs" />
+    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.Designer.cs">
+      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.cs" />
+    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.Designer.cs">
+      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.cs" />
     <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.Designer.cs">
       <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
@@ -136,6 +148,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201703092024348_Note_Notecode.resx">
+      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703092005534_NoteCodeMaxLength.resx">
+      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703091702142_RenamesAndUsers.resx">
+      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201703081713520_AddNoteRelatedTables.resx">
       <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
     </EmbeddedResource>

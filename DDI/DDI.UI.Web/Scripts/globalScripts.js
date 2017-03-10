@@ -242,6 +242,41 @@ function CloseModal(modal) {
 
 }
 
+function ConfirmModal(message, yes, no) {
+
+    modal = $('.confirmmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 450,
+        resizable: false
+    });
+
+    $(modal).find('.confirmmessage').html(message);
+
+    $('.confirmyes').unbind('click');
+
+    if (yes) {
+
+        $('.confirmyes').click(function () {
+            CloseModal(modal);
+            yes();
+        });
+
+    }
+
+    $('.confirmno').unbind('click');
+
+    if (no) {
+
+        $('.confirmno').click(function () {
+            CloseModal(modal);
+            no();
+        });
+
+    }
+
+}
+
 function ClearFields(container) {
 
     $(container + ' div.fieldblock input').val('');
@@ -427,7 +462,7 @@ function GetAutoZipData(container) {
 
 }
 
-function LoadTagSelector(type) {
+function LoadTagSelector(type, container) {
 
     $('.tagselect').each(function () {
 
@@ -478,7 +513,7 @@ function LoadTagSelector(type) {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -568,11 +603,11 @@ function RefreshTags() {
 
 }
 
-function DisplaySelectedTags() {
+function DisplaySelectedTags(container) {
 
     if (currentEntity && currentEntity.Tags) {
 
-        $('.tagselect').html('');
+        $(container).html('');
 
         $.map(currentEntity.Tags, function (tag) {
 
@@ -591,7 +626,7 @@ function DisplaySelectedTags() {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -602,6 +637,10 @@ function DisplaySelectedTags() {
                 .appendTo($(t));
 
         });
+
+        if (!editing) {
+            $(container).find('.dx-tag-remove-button').hide();
+        }
 
     }
 }
@@ -757,22 +796,16 @@ function SetupEditControls() {
         }
         else { // Another Edit already in progress
 
-            if (confirm('Another Edit is in progress.\r\n\r\nAre you sure you would like to continue and lose any unsaved information?')) {
-                // OK
-
+            ConfirmModal('Another Edit is in progress.<br /><br />Are you sure you would like to continue and lose any unsaved information?', function () {
                 // Cancel other edit
-                ($('.editcontainer.active'));
+                StopEdit($('.editcontainer.active'));
 
                 // Start new edit
                 StartEdit(editcontainer);
-            }
-            else {
-                // Cancel
-
+            }, function () {
                 // Return to previous edit
                 $('.accordions').accordion('option', 'active', lastActiveSection);
-                
-            }
+            });
 
         }
                 
@@ -828,6 +861,7 @@ function StartEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).removeClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').show();
     });
 }
@@ -848,6 +882,7 @@ function StopEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).addClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').hide();
     });
 

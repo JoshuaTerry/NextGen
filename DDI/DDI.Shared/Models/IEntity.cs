@@ -9,9 +9,9 @@ namespace DDI.Shared.Models
     public interface IEntity : ICanTransmogrify
     {
         string DisplayName { get; }
-        Guid? CreatedBy { get; set; }
+        string CreatedBy { get; set; }
         DateTime? CreatedOn { get; set; }
-        Guid? LastModifiedBy { get; set; }
+        string LastModifiedBy { get; set; }
         DateTime? LastModifiedOn { get; set; }
     }
 }

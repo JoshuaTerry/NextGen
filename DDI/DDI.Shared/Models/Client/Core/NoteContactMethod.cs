@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("NoteContactMethod")]
     public class NoteContactMethod : EntityBase, ICodeEntity
     {
         [Key]
