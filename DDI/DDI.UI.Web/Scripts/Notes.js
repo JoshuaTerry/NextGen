@@ -344,7 +344,7 @@ function LoadSelectedNoteTopics(id) {
 
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + '/notetopics/' + id + '/notes/', // need to get note topics associated with a note
+        url: WEB_API_ADDRESS + '/notetopics/' + id + '/notes/', 
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function (data) {
