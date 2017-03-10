@@ -268,6 +268,7 @@
 
         </div>
     </div>
+
     <div class="taggroupmodal" title="Tag Group" style="display: none;">
 
         <div class="modalcontent">
@@ -430,7 +431,8 @@
         </div>
 
     </div>
- <div class="languagemodal" title="Language" style="display: none;">
+
+    <div class="languagemodal" title="Language" style="display: none;">
 
         <div class="modalcontent">
 
@@ -459,6 +461,7 @@
         </div>
 
     </div>
+
     <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
@@ -488,7 +491,8 @@
         </div>
 
     </div>
-        <div class="educationLevelmodal" title="Education Level" style="display: none;">
+
+    <div class="educationLevelmodal" title="Education Level" style="display: none;">
 
         <div class="modalcontent">
 
@@ -517,7 +521,8 @@
         </div>
 
     </div>
-       <div class="schoolmodal" title="Schools" style="display: none;">
+
+    <div class="schoolmodal" title="Schools" style="display: none;">
 
         <div class="modalcontent">
 
@@ -586,7 +591,8 @@
         </div>
 
     </div>
-           <div class="incomeLevelmodal" title="Income Level" style="display: none;">
+
+    <div class="incomeLevelmodal" title="Income Level" style="display: none;">
 
         <div class="modalcontent">
 
@@ -615,7 +621,8 @@
         </div>
 
     </div>
-               <div class="professionmodal" title="Professions" style="display: none;">
+
+    <div class="professionmodal" title="Professions" style="display: none;">
 
         <div class="modalcontent">
 
@@ -644,7 +651,8 @@
         </div>
 
     </div>
-               <div class="noteCodemodal" title="Note Code" style="display: none;">
+
+    <div class="noteCodemodal" title="Note Code" style="display: none;">
 
         <div class="modalcontent">
 
@@ -674,7 +682,7 @@
 
     </div>
 
-        <div class="noteCategorymodal" title="Note Category" style="display: none;">
+    <div class="noteCategorymodal" title="Note Category" style="display: none;">
 
         <div class="modalcontent">
 
@@ -704,7 +712,7 @@
 
     </div>
 
-            <div class="noteTopicmodal" title="Topic" style="display: none;">
+    <div class="noteTopicmodal" title="Topic" style="display: none;">
 
         <div class="modalcontent">
 

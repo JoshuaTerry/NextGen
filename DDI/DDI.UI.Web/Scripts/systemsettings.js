@@ -2586,135 +2586,37 @@ function LoadProfession(id) {
 /* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
-    LoadRegionLevelSettingsGrid();
+
 
 }
 
-function LoadRegionLevelSettingsGrid() {
+function DisplayRegionLevels() {
 
-    var columns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Level', caption: 'Level', alignment: 'center' },
-        { dataField: 'Label', caption: 'Label' },
-        { dataField: 'Abbreviation', caption: 'Abbreviation' },
-        { dataField: 'IsRequired', caption: 'Required', dataType: 'boolean' },
-        { dataField: 'IsChildLevel', caption: 'ChildLevel', dataType: 'boolean' }
-    ];
-
-    LoadGrid('regionlevelsettingsgrid', 'contentcontainer', columns, 'regionlevels', LoadRegionsSettingsGrid, EditRegionLevelSetting, DeleteEntity, function () {
-        CreateNewModalLink("New Region Level",
-        function () {
-            NewEntityModal('.newregionlevelmodallink', '.regionlevelmodal', '.submitregionlevel', 250, null, LoadRegionLevelSettingsGrid, GetRegionLevelToSave, 'Region Level', 'RegionLevels');
-        }
-        , '.regionlevelsettingsgrid', '.contentcontainer', 'newregionlevelmodallink');
-    });
-
-}
-
-function EditRegionLevelSetting(id) {
-
-    modal = $('.regionlevelmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadRegionLevel(id);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitregionlevel').unbind('click');
-
-    $('.submitregionlevel').click(function () {
-
-        var item = GetRegionLevelToSave(modal, true);
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'regionlevels/' + $(modal).find('.regionlevelid').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Region Level saved successfully.');
-
-                CloseModal(modal);
-
-                LoadRegionLevelSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Region Level.');
-            }
-        });
-
-    });
-
-}
-
-function GetRegionLevelToSave(modal, isUpdate) {
-
-    var item = {
-        Level: $(modal).find('.rl-Level').val(),
-        Label: $(modal).find('.rl-Label').val(),
-        Abbreviation: $(modal).find('.rl-Abbreviation').val(),
-        IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
-        IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
-    }
-
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.regionlevelid').val();
-    }
-
-    return item;
-
-}
-
-function LoadRegionsSettingsGrid(level, parentid) {
-
-    var columns = [
-
-    ];
-
-    LoadGrid('regionsettingsgrid', 'contentcontainer', columns, 'regions', null, EditRegionSetting, DeleteEntity, 
-        function () {
-            CreateNewModalLink("New Region Level",
-            function () {
-                NewEntityModal('.newregionmodallink', '.regionmodal', '.submitregion', 250, null, LoadRegionLevelSettingsGrid, GetRegionLevelToSave, 'Region', 'Regions');
-            }
-            , '.regionsettingsgrid', '.contentcontainer', 'newregionmodallink');
-        });
-    
-}
-
-function LoadRegionLevel(id) {
+    var lc = $('<div>').addClass('regionlevelcontainer');
+    var ul = $('<ul>').addClass('regionlevellist').appendTo($(lc));
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'regionlevels/' + id,
+        url: WEB_API_ADDRESS + 'regionlevels/',
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
+
             if (data && data.Data && data.IsSuccessful) {
 
-                $(modal).find('.regionlevelid').val(id);
+                var li = $('<li>');
+                var a = $('<a>').attr('href', '#').attr('id', data.Data.Id)
+                    .click(function (e) {
+                        e.preventDefault();
 
-                $(modal).find('.rl-Level').val(data.Data.Level);
-                $(modal).find('.rl-Label').val(data.Data.Label);
-                $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
-                $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
-                $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
+                    })
+                    .appendTo($(li));
+                $(li).appendTo($(ul));
 
             }
+
+            $(lc).appendTo($('.contentcontainer'));
 
         },
         error: function (xhr, status, err) {
@@ -2724,33 +2626,13 @@ function LoadRegionLevel(id) {
 
 }
 
-function LoadRegion(id) {
+function DisplayRegions(level) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'regions/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
 
-                $(modal).find('.regionid').val(id);
-                $(modal).find('.parentregionid').val(data.Data.ParentRegionId);
-
-                $(modal).find('.reg-Code').val(data.Data.Code);
-                $(modal).find('.reg-Name').val(data.Data.Name);
-                $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
-        }
-    });
 
 }
+
+
 /* REGIONS SETTINGS */
 
 function LoadRelationshipSectionSettings() {
