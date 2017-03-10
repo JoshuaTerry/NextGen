@@ -462,7 +462,7 @@ function GetAutoZipData(container) {
 
 }
 
-function LoadTagSelector(type) {
+function LoadTagSelector(type, container) {
 
     $('.tagselect').each(function () {
 
@@ -513,7 +513,7 @@ function LoadTagSelector(type) {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -603,11 +603,11 @@ function RefreshTags() {
 
 }
 
-function DisplaySelectedTags() {
+function DisplaySelectedTags(container) {
 
     if (currentEntity && currentEntity.Tags) {
 
-        $('.tagselect').html('');
+        $(container).html('');
 
         $.map(currentEntity.Tags, function (tag) {
 
@@ -626,7 +626,7 @@ function DisplaySelectedTags() {
 
                             currentEntity = data.Data;
 
-                            DisplaySelectedTags();
+                            DisplaySelectedTags(container);
 
                         },
                         error: function (xhr, status, err) {
@@ -637,6 +637,10 @@ function DisplaySelectedTags() {
                 .appendTo($(t));
 
         });
+
+        if (!editing) {
+            $(container).find('.dx-tag-remove-button').hide();
+        }
 
     }
 }
@@ -675,6 +679,28 @@ function CreateMultiSelectTags(tags, container) {
     });
 
     $(ul).appendTo($(container));
+}
+
+function GetFile(id, callback) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'filestorage/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.Data && callback) {
+                callback(data.Data);
+            }
+
+        },
+        failure: function (response) {
+            DisplayErrorMessage('Error', 'An error occurred during getting the file.');
+        }
+    });
+
 }
 
 function ExecuteFunction(functionName, context) {
@@ -798,6 +824,7 @@ function StartEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).removeClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').show();
     });
 }
@@ -818,6 +845,7 @@ function StopEdit(editcontainer) {
 
     $(editcontainer).find('.tagselect').each(function () {
         $(this).addClass('disabled');
+        $(this).find('.dx-tag-remove-button').show();
         $('.tagSelectImage').hide();
     });
 
