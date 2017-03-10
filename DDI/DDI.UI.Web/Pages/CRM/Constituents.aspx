@@ -1118,6 +1118,8 @@
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="hidnoteid" />
             
             <div class="fieldblock">
                 <label>Title</label>
@@ -1135,11 +1137,6 @@
                     <label>Alert Start Date</label>
                     <input type="text" class="nd-AlertStartDate datepicker" />
                 </div>
-
-         <%--       <div class="fieldblock">
-                    <label>Topics - dep</label>
-                    <select class="nd-Topics Id"></select>
-                </div>--%>
 
             </div>
 
