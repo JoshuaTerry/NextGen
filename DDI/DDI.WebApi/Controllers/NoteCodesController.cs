@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Web.Http;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Services.Search;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
-    public class MemoCodesController : ControllerBase<MemoCode>
+    public class NoteCodesController : ControllerBase<NoteCode>
     {
         //[HttpGet]
         //[Route("api/v1/MemoCodes", Name = RouteNames.MemoCode)]
