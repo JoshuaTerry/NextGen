@@ -80,7 +80,7 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <div class="tagselect disabled"></div>
+                        <div class="tagselect constituenttagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">
@@ -243,7 +243,7 @@
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1>
+                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span><a href="#" title="New" class="neweducationmodallink newbutton"></a></h1> 
 
                     <div class="editcontainer">
 
@@ -256,7 +256,7 @@
 
                     </div>
 
-                    <h1 class="organizationSection">Organization</h1>
+                   <h1 class="OrganizationSettingsSection"><span class="OrganizationSettingsSectionLabel">Organization</span></h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -1054,21 +1054,21 @@
         <div class="modalcontent">
             <input type="hidden" class="hidrelationshipid" />
             <input type="hidden" class="hidrelationshipisswapped" />
+            <input type="hidden" class="hidconstituentlookupid" />
 
             <div class="fieldblock">
-                <label>Constituent</label>
-                <input type="text" class="FormattedName1" />
+                <label></label>
+                <input type="text" class="FormattedName2 constituentlookup" />
             </div>
 
             <div class="fieldblock">
                 <label>is the</label>
                 <select class="RelationshipTypeId"></select>
-
             </div>
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="FormattedName2" />
+                <input type="text" class="FormattedName1" />
             </div>
 
             <div class="modalbuttons">

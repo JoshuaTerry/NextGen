@@ -14,8 +14,10 @@ var SystemSettings = {
     DBA: 'DBASettings',
     Demographics: 'DemographicSettings',
     Education: 'EducationSettings',
+    Organization: 'OrganizationSettings',
     Personal: 'PersonalSettings',
-    Professional: 'ProfessionalSettings'
+    Professional: 'ProfessionalSettings',
+    Note: 'NoteSettings'
 }
 
 $(document).ready(function () {
@@ -298,11 +300,439 @@ function LoadMergeFormSystemSectionSettings() {
 
 }
 
-function LoadNotesSettingsSectionSettings() {
+/* NOTE SYSTEM SETTINGS */
 
+function LoadNoteSectionSettings() {
 
+    LoadSectionSettings(SettingsCategories.Common, 'Note', 'sectionpreferences', SystemSettings.Note);
+
+    var accordion = $('<div>').addClass('accordions');
+    var noteCodes = $('<div>').addClass('noteCodecontainer');
+    var noteCategories = $('<div>').addClass('noteCategorycontainer');
+    var noteTopics = $('<div>').addClass('noteTopiccontainer');
+
+    var header = $('<h1>').text('Note Code').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newnoteCodemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.noteCodemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal(modal);
+            });
+
+            $('.submitnoteCode').unbind('click');
+
+            $('.submitnoteCode').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.noteCode-Code').val(),
+                    Name: $(modal).find('.noteCode-Name').val(),
+                    IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'notecodes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Note Code saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadNoteCodeSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Code.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(noteCodes).appendTo($(accordion));
+
+    LoadNoteCodeSettingsGrid();
+
+    header = $('<h1>').text('Note Category').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newnoteCategorymodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.noteCategorymodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal(modal);
+            });
+
+            $('.submitnoteCategory').unbind('click');
+
+            $('.submitnoteCategory').click(function () {
+                var item = {
+                    Label: $(modal).find('.noteCategory-Code').val(),
+                    Name: $(modal).find('.noteCategory-Name').val(),
+                    IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'notecategories',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Note Category saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadNoteCategorySettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Category.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(noteCategories).appendTo($(accordion));
+
+    LoadNoteCategorySettingsGrid();
+
+    header = $('<h1>').text('Topic').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newnoteTopicmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.noteTopicmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+                e.preventDefault();
+                CloseModal(modal);
+            });
+
+            $('.submitnoteTopic').unbind('click');
+
+            $('.submitnoteTopic').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.noteTopic-Code').val(),
+                    Name: $(modal).find('.noteTopic-Name').val(),
+                    IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'notetopics',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('success', 'Note Topic saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadNoteTopicSettingsGrid();
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Topic.')
+                    }
+                });
+            });
+
+        })
+        .appendTo($(header));
+    $(noteTopics).appendTo($(accordion));
+
+    LoadNoteTopicSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 }
+
+function LoadNoteCodeSettingsGrid() {
+    var noteCodecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
+
+}
+
+function EditNoteCode(id) {
+    LoadNoteCode(id);
+    modal = $('.noteCodemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitnoteCode').unbind('click');
+
+    $('.submitnoteCode').click(function () {
+
+        var item = {
+            Code: $(modal).find('.noteCode-Code').val(),
+            Name: $(modal).find('.noteCode-Name').val(),
+            IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'notecodes/' + $(modal).find('.noteCodeId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Note Code saved successfully.');
+
+                CloseModal(modal);
+
+                LoadNoteCodeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note Code.');
+            }
+        });
+
+    });
+
+}
+
+function LoadNoteCode(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'notecodes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.noteCodeId').val(data.Data.Id);
+                $(modal).find('.noteCode-Code').val(data.Data.Code);
+                $(modal).find('.noteCode-Name').val(data.Data.Name);
+                $(modal).find('.noteCode-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Note Code.');
+        }
+    });
+
+}
+
+function LoadNoteCategorySettingsGrid() {
+    var noteCategorycolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Label', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('noteCategorygrid', 'noteCategorycontainer', noteCategorycolumns, 'notecategories', null, EditNoteCategory);
+
+}
+
+function EditNoteCategory(id) {
+    LoadNoteCategory(id);
+    modal = $('.noteCategorymodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitnoteCategory').unbind('click');
+
+    $('.submitnoteCategory').click(function () {
+        var item = {
+            Label: $(modal).find('.noteCategory-Code').val(),
+            Name: $(modal).find('.noteCategory-Name').val(),
+            IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'notecategories/' + $(modal).find('.noteCategoryId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Note Category saved successfully.');
+
+                CloseModal(modal);
+
+                LoadNoteCategorySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note Category.');
+            }
+        });
+
+    });
+
+}
+
+function LoadNoteCategory(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'notecategories/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.noteCategoryId').val(data.Data.Id);
+                $(modal).find('.noteCategory-Code').val(data.Data.Label);
+                $(modal).find('.noteCategory-Name').val(data.Data.Name);
+                $(modal).find('.noteCategory-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Note Category.');
+        }
+    });
+
+}
+
+function LoadNoteTopicSettingsGrid() {
+    var noteTopiccolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('noteTopicgrid', 'noteTopiccontainer', noteTopiccolumns, 'notetopics', null, EditNoteTopic);
+
+}
+
+function EditNoteTopic(id) {
+    LoadNoteTopic(id);
+    modal = $('.noteTopicmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitnoteTopic').unbind('click');
+
+    $('.submitnoteTopic').click(function () {
+
+        var item = {
+            Code: $(modal).find('.noteTopic-Code').val(),
+            Name: $(modal).find('.noteTopic-Name').val(),
+            IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'notetopics/' + $(modal).find('.noteTopicId').val(),
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Topic saved successfully.');
+
+                CloseModal(modal);
+
+                LoadNoteTopicSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during saving the Topic.');
+            }
+        });
+
+    });
+
+}
+
+function LoadNoteTopic(id) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'notetopics/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+                $(modal).find('.noteTopicId').val(data.Data.Id);
+                $(modal).find('.noteTopic-Code').val(data.Data.Code);
+                $(modal).find('.noteTopic-Name').val(data.Data.Name);
+                $(modal).find('.noteTopic-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Note Topic.');
+        }
+    });
+
+}
+
+/* END NOTE SYSTEM SETTINGS */
 
 function LoadStatusCodesSectionSettings() {
 
@@ -518,6 +948,24 @@ function EditClergyStatus(id) {
 
 function DeleteClergyStatus(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Clergy Status deleted successfully.');
+
+            LoadClergyStatusSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Status.');
+        }
+
+    });
+
 }
 
 function LoadClergyStatus(id) {
@@ -599,6 +1047,24 @@ function EditClergyType(id) {
 }
 
 function DeleteClergyType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergytypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Clergy Type deleted successfully.');
+
+            LoadClergyTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Type.');
+        }
+
+    });
 
 }
 
@@ -990,6 +1456,23 @@ function EditDenomination(id) {
 
 function DeleteDenomination(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'denominations/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Denomination deleted successfully.');
+
+            LoadDenominationSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Denomination.');
+        }
+
+    });
 
 
 }
@@ -1080,6 +1563,23 @@ function EditEthnicity(id) {
 
 function DeleteEthnicity(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'ethnicities/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Ethnicity deleted successfully.');
+
+            LoadEthnicitySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Ethnicity.');
+        }
+
+    });
 
 
 }
@@ -1168,6 +1668,23 @@ function EditLanguage(id) {
 
 function DeleteLanguage(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'languages/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Language deleted successfully.');
+
+            LoadLanguageSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Language.');
+        }
+
+    });
 
 
 }
@@ -1201,9 +1718,6 @@ function LoadLanguage(id) {
 /* END LANGUAGE SYSTEM SETTINGS */
 
 /* END DEMOGRAPHICS SYSTEM SETTINGS */
-
-
-
 
 function LoadDBASectionSettings() {
 
@@ -1679,7 +2193,7 @@ function LoadHubSearchSectionSettings() {
 
 function LoadOrganizationSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Organization', 'sectionpreferences', SystemSettings.Organization);
 
 }
 
@@ -1848,7 +2362,24 @@ function EditPrefix(id) {
 
 function DeletePrefix(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'prefixes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
 
+            DisplaySuccessMessage('Success', 'Prefix deleted successfully.');
+
+            LoadPrefixSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Prefix.');
+        }
+
+    });
+    
 
 }
 
@@ -1880,6 +2411,10 @@ function LoadPrefix(id) {
 
 }
 /* END PREFIX SYSTEM SETTINGS */
+
+/* new system settings section */
+
+/* end new system settings section */
 
 /* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
@@ -2193,9 +2728,410 @@ function LoadRegionsSectionSettings() {
 
 function LoadRelationshipSectionSettings() {
 
+    var accordion = $('<div>').addClass('accordions');
+    var category = $('<div>').addClass('relationshipcategorycontainer');
+    var type = $('<div>').addClass('relationshiptypecontainer');
+    
+    var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.relcatmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitrelcat').unbind('click');
+
+            $('.submitrelcat').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.relcat-Code').val(),
+                    Name: $(modal).find('.relcat-Name').val(),
+                    IsActive: $(modal).find('.relcat-IsActive').prop('checked'),
+                    IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshipcategories',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipCategorySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(category).appendTo($(accordion));
+
+    LoadRelationshipCategorySettingsGrid();
+
+    header = $('<h1>').text('Relationship Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.reltypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitreltype').unbind('click');
+
+            $('.submitreltype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.reltype-Code').val(),
+                    Name: $(modal).find('.reltype-Name').val(),
+                    ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+                    ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+                    ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+                    RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+                    IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+                    IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshiptypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(type).appendTo($(accordion));
+
+    LoadRelationshipTypeSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 
 }
+
+function LoadRelationshipCategorySettingsGrid() {
+
+
+    var relationshipcategorycolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Denomination' },
+       { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('relationshipcategorygrid', 'relationshipcategorycontainer', relationshipcategorycolumns, 'relationshipcategories', null, EditRelationshipCategory, DeleteRelationshipCategory);
+
+}
+
+function LoadRelationshipTypeSettingsGrid() {
+
+    var relationshiptypecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal'},
+        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal'},
+        {
+            caption: 'Constituent Category', cellTemplate: function (container, options) {
+                var category = 'Individual';
+
+                switch (options.data.ConstituentCategory) {
+                    case 1:
+                        category = 'Organization';
+                        break;
+                    case 2:
+                        category = 'Both';
+                        break;
+                }
+
+                $('<label>').text(category).appendTo(container);
+            }
+        },
+        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category'},
+        { dataField: 'IsSpouse', caption: 'Spouse'},
+        { dataField: 'IsActive', caption: 'Active'}
+    ];
+
+    LoadGrid('relationshiptypegrid', 'relationshiptypecontainer', relationshiptypecolumns, 'relationshiptypes?fields=all', null, EditRelationshipType, DeleteRelationshipType);
+}
+
+/* RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+function EditRelationshipCategory(id) {
+
+    LoadRelationshipCategory(id);
+
+    modal = $('.relcatmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitrelcat').unbind('click');
+
+    $('.submitrelcat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.relcat-Code').val(),
+            Name: $(modal).find('.relcat-Name').val(),
+            IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked'),
+            IsActive: $(modal).find('.relcat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipCategorySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Category deleted successfully.');
+
+            LoadRelationshipCategorySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Category.');
+        }
+
+    });
+
+
+}
+
+function LoadRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.relcat-Id').val(data.Data.Id);
+                $(modal).find('.relcat-Code').val(data.Data.Code);
+                $(modal).find('.relcat-Name').val(data.Data.Name);
+                $(modal).find('.relcat-IsShownInQuickView').prop('checked', data.Data.IsShownInQuickView);
+                $(modal).find('.relcat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship category.');
+        }
+    });
+
+}
+/* END RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+
+/* RELATIONSHIP TYPE SYSTEM SETTINGS */
+function EditRelationshipType(id) {
+
+    LoadRelationshipType(id);
+
+    modal = $('.reltypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitreltype').unbind('click');
+
+    $('.submitreltype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.reltype-Code').val(),
+            Name: $(modal).find('.reltype-Name').val(),
+            ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+            ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+            ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+            RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+            IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+            IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Type deleted successfully.');
+
+            LoadRelationshipTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Type.');
+        }
+
+    });
+
+}
+
+function LoadRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.reltype-Id').val(data.Data.Id);
+                $(modal).find('.reltype-Code').val(data.Data.Code);
+                $(modal).find('.reltype-Name').val(data.Data.Name);
+                $(modal).find('.reltype-ConstituentCategory').val(data.Data.ConstituentCategory);
+                $(modal).find('.reltype-IsSpouse').prop('checked', data.Data.IsSpouse);
+                $(modal).find('.reltype-IsActive').prop('checked', data.Data.IsActive);
+
+                PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeMaleId);
+                PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeFemaleId);
+                PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '', data.Data.RelationshipCategoryId);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship type.');
+        }
+    });
+
+}
+/* END RELATIONSHIP TYPE SYSTEM SETTINGS */
 
 function LoadTagGroupSectionSettings() {
 
