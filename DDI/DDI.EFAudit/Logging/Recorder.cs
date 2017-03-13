@@ -113,13 +113,14 @@ namespace DDI.EFAudit.Logging
         {
             if (entry.State != EntityState.Added)
             {
+                change.PropertyType = entity.GetType().GetProperty(fkLookup[propertyName]).PropertyType;
+                change.PropertyTypeName = change.PropertyType.Name;
+
                 ObjectStateEntry ose = entry.ObjectStateManager.GetObjectStateEntry(entity);
                 var oValues = ose.OriginalValues;
                 var id = ose.OriginalValues[propertyName];
                 if (id.GetType().Name != "DBNull")
-                {
-                    change.PropertyType = entity.GetType().GetProperty(fkLookup[propertyName]).PropertyType;
-                    change.PropertyTypeName = change.PropertyType.Name;
+                {                    
                     IEntity navEntity = (IEntity)_dbContext.Set(change.PropertyType).Find(id);
                     change.OriginalDisplayName = navEntity?.DisplayName;
                 }
@@ -151,7 +152,7 @@ namespace DDI.EFAudit.Logging
 
             result.ChangeType = entry.State.ToString();
             result.ObjectChange = objectChange;
-
+            result.PropertyName = propertyName;
 
             var fkNameLookup = entity.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ForeignKeyAttribute))).ToDictionary(p => p.GetCustomAttribute<ForeignKeyAttribute>().Name, p => p.Name);
             result.IsForeignKey = fkNameLookup.ContainsKey(propertyName);
