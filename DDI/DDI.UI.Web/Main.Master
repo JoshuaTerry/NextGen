@@ -39,14 +39,16 @@
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.timepicker.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/globalstyles.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/autocomplete.css" />
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\autocomplete.js"></script>
     <script type="text/javascript" src="..\..\Scripts\additional-methods.min.js"></script>
-    <link rel="stylesheet" href="CSS\globalstyles.css" />
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
@@ -83,6 +85,21 @@
 
         <div class="maincontainer">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </div>
+
+        <div class="confirmmodal" title="Confirm" style="display: none;">
+
+            <div class="modalcontent">
+
+                <p class="confirmmessage"></p>
+                
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="confirmyes" value="Ok" />
+                <input type="button" class="confirmno" value="Cancel" />
+            </div>
+
         </div>
 
         <div class="addconstituentmodal" title="Add Constituent" style="display: none;">

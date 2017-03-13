@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Shared.Models.Client.Core
 {
+    [Table("Note")]
     public class Note : LinkedEntityBase
     {
         [Key]
@@ -32,14 +34,17 @@ namespace DDI.Shared.Models.Client.Core
         public Guid? CategoryId { get; set; }
         public NoteCategory Category { get; set; }
 
-        [MaxLength(32)]
-        public string NoteCode { get; set; }
+        public Guid? NoteCodeId { get; set; }
+        public NoteCode NoteCode { get; set; }
 
         public Guid? PrimaryContactId { get; set; }
         public Constituent PrimaryContact { get; set; }
 
         public Guid? ContactMethodId { get; set; }
         public NoteContactMethod ContactMethod { get; set; }
+
+        public Guid? UserResponsibleId { get; set; }
+        public User UserResponsible { get; set; }
 
         public ICollection<NoteTopic> NoteTopics { get; set; } 
     }

@@ -30,7 +30,7 @@ namespace DDI.Shared.Models.Common
         public City City { get; set; }
 
         [NotMapped]
-        public override Guid? CreatedBy
+        public override string CreatedBy
         {
             get
             {
@@ -58,7 +58,7 @@ namespace DDI.Shared.Models.Common
         }
 
         [NotMapped]
-        public override Guid? LastModifiedBy
+        public override string LastModifiedBy
         {
             get
             {

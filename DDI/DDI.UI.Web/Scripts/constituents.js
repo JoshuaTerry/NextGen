@@ -272,7 +272,7 @@ function DisplayConstituentData() {
 
         NewAddressModal();
 
-        DisplaySelectedTags();
+        DisplaySelectedTags($('.constituenttagselect'));
     }
 }
 
@@ -359,7 +359,7 @@ function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
 
-    LoadTagSelector(currentEntity.Category);
+    LoadTagSelector(currentEntity.Category, $('.constituenttagselect'));
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
@@ -1445,8 +1445,13 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
+            // remove previous elements
+            $('.' + category.Name + 'header').remove();
+            $('.constituent' + category.Name + 'gridcontainer').remove();
+
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
-            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            var header = $('<h3>').text(category.SectionTitle).addClass(category.Name + 'header').appendTo($('.contactinfocontainer'));
+
             $('<a>', { 
                 title: 'New', 
                 class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
@@ -2265,6 +2270,7 @@ function LoadRelationshipsData() {
         }
     });
 }
+
 function LoadRelationshipsQuickView(data) {
 
     var formattedData = $('<ul>').addClass('relationshipQuickViewData');
@@ -2274,18 +2280,43 @@ function LoadRelationshipsQuickView(data) {
         $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
-                $('<li>').text(rowText).appendTo($(formattedData));
+
+                var li = $('<li>');
+
+                var rowText = item.RelationshipType.Name + ': ';
+                var link = $('<a>').attr('href', '#').text(item.Constituent1.FormattedName).click(function (e) {
+                    e.preventDefault();
+                    RelationshipLinkClicked(item.Constituent1.Id)
+                });
+
+                $(li).html(rowText);
+                $(link).appendTo($(li));
+
+                $(li).appendTo($(formattedData));
+                
             }
 
         });
 
     }
+
     $('.relationshipsQuickView').empty();
+
     $(formattedData).appendTo($('.relationshipsQuickView'));
 
 }
 
+function RelationshipLinkClicked(id) {
+
+    sessionStorage.setItem('constituentid', id);
+
+    if (sessionStorage.getItem('constituentid')) {
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
+    }
+
+    GetConstituentData($('.hidconstituentid').val());
+
+}
 
 function LoadRelationshipsTab(data) {
 
@@ -2334,8 +2365,8 @@ function NewRelationshipModal() {
 function GetRelationshipToSave(modal, isUpdate) {
 
     var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
+        Constituent1Id: currentEntity.Id,
+        Constituent2Id: $(modal).find('.hidconstituentlookupid').val(),
         RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
     }
 
@@ -2348,15 +2379,19 @@ function GetRelationshipToSave(modal, isUpdate) {
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val(currentEntity.Id);
+    $(modal).find('.FormattedName1').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1.Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2.Id);
+
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent2.Id);
+    $(modal).find('.FormattedName1').val(data.Data.Constituent1.FormattedName);
+    $(modal).find('.FormattedName2').val(data.Data.Constituent2.FormattedName);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
+
 }
 /* End Relationships Tab */
 
