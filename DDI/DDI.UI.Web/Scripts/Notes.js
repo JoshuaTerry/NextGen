@@ -2,11 +2,15 @@
 
 $(document).ready(function () {
 
-    LoadNoteDetailsGrid();
+    $('#tab-notes-main').click( function(e) {
 
-    NewNoteDetailsModal();
+        LoadNoteDetailsGrid();
 
-    SetupNoteTopicSelectModal()
+        NewNoteDetailsModal();
+
+        SetupNoteTopicSelectModal()
+
+    });
 
 });
 

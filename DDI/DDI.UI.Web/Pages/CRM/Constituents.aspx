@@ -48,7 +48,7 @@
 
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
             </ul>

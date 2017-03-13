@@ -1,19 +1,27 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System;
 using DDI.Services;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+
+using System;
+
+using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers
 {
-
     public class NotesController : ControllerBase<Note>
     {
+        #region Public Properties
+
         protected new INoteService Service => (INoteService)base.Service;
+
+        #endregion Public Properties
+
         #region Public Constructors
 
         public NotesController(ServiceBase<Note> service)
@@ -30,34 +38,35 @@ namespace DDI.WebApi.Controllers
 
         #region Public Methods
 
+        [HttpPost]
+        [Route("api/v1/notes/{id}/notetopics")]
+        public IHttpActionResult AddTopicsToNote(Guid id, [FromBody] JObject topic)
+        {
+            try
+            {
+                var note = Service.GetById(id).Data;
+
+                if (note == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.AddTopicsToNote(note, topic);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+        }
+
         [HttpDelete]
         [Route("api/v1/notes/{id}", Name = RouteNames.Note + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
-        }
-
-        [HttpDelete]
-        [Route("api/v1/notes/{id}/notetopics/{topicid}")]
-        public IHttpActionResult RemoveTopicFromNote(Guid id, Guid topicId)
-        {
-            try
-            {
-                var note = Service.GetById(id).Data;
-                
-                if(note == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.RemoveTopicFromNote(note, topicId);
-
-                return Ok(response);
-            } catch (Exception ex)
-            {
-                Logger.LogError(ex.ToString());
-                return InternalServerError(ex);
-            }
         }
 
         [HttpGet]
@@ -88,24 +97,24 @@ namespace DDI.WebApi.Controllers
             return base.Post(entityToSave);
         }
 
-        [HttpPost]
-        [Route("api/v1/notes/{id}/notetopics")]
-        public IHttpActionResult AddTopicsToNote(Guid id, [FromBody] JObject topic)
+        [HttpDelete]
+        [Route("api/v1/notes/{id}/notetopics/{topicid}")]
+        public IHttpActionResult RemoveTopicFromNote(Guid id, Guid topicId)
         {
             try
             {
                 var note = Service.GetById(id).Data;
 
-                if(note == null)
+                if (note == null)
                 {
                     return NotFound();
                 }
 
-                var response = Service.AddTopicsToNote(note, topic);
+                var response = Service.RemoveTopicFromNote(note, topicId);
 
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.LogError(ex.ToString());
                 return InternalServerError(ex);
@@ -113,5 +122,17 @@ namespace DDI.WebApi.Controllers
         }
 
         #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override Expression<Func<Note, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Note, object>>[]
+            {
+                n => n.NoteTopics
+            };
+        }
+
+        #endregion Protected Methods
     }
 }

@@ -47,11 +47,8 @@ namespace DDI.Services
 
             foreach (var pair in topicIds)
             {
-                // may need to double check this condition
                 if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
                 {
-                    // add the id (loop thru jtokens (id's from jarray) and parse to guid, get the notetopic from the unitofwork.
-                    // may have to add includes to unit of work. Could also probably do in multiple statements. 
                     passtedNoteTopics.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<NoteTopic>(id));
                 }
             }
@@ -63,8 +60,10 @@ namespace DDI.Services
             if (noteToUpdate != null)
             {
                 removes.ForEach(nt => noteToUpdate.NoteTopics.Remove(nt));
+                adds.ForEach(na => noteToUpdate.NoteTopics.Add(na));
             }
 
+            
             UnitOfWork.SaveChanges();
 
             response = new DataResponse<Note>()
