@@ -59,7 +59,7 @@ namespace DDI.EFAudit.Logging
         
         public TChangeSet Bake(DateTime timestamp, TPrincipal user)
         {
-            _set.User = user;
+            _set.User = user;            
             _set.Timestamp = timestamp;
 
             foreach (var deferredObjectChange in _deferredObjectChanges.Values)

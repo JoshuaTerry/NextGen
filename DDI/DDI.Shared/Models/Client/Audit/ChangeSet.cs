@@ -22,7 +22,7 @@ namespace DDI.Shared.Models.Client.Audit
         public string UserName { get; set; }  
 
         public User User { get; set; }
-
+        public Guid UserId { get; set; }
         void IChangeSet<User>.Add(IObjectChange<User> objectChange)
         {
             ObjectChanges.Add((ObjectChange)objectChange);

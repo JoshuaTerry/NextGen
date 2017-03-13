@@ -235,8 +235,8 @@ namespace DDI.Data
                     var user = EntityFrameworkHelpers.GetCurrentUser();
                     if (user != null)
                     {                        
-                        auditableEntity.CreatedBy = user.Id;
-                        auditableEntity.LastModifiedBy = user.Id;
+                        auditableEntity.CreatedBy = user.UserName;
+                        auditableEntity.LastModifiedBy = user.UserName;
                     }
 
                     auditableEntity.CreatedOn = DateTime.UtcNow;
@@ -267,7 +267,7 @@ namespace DDI.Data
                 var user = EntityFrameworkHelpers.GetCurrentUser();
                 if (user != null)
                 { 
-                    auditableEntity.LastModifiedBy = user.Id;
+                    auditableEntity.LastModifiedBy = user.UserName;
                 }
                  
                 auditableEntity.LastModifiedOn = DateTime.UtcNow;
