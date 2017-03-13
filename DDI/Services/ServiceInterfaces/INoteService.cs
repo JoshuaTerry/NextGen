@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace DDI.Services.ServiceInterfaces
 {
-    public interface INoteService
+    public interface INoteService : IService<Note>
     {
+
         IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds);
         IDataResponse RemoveTopicFromNote(Note note, Guid topicId);
 

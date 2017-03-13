@@ -5,9 +5,6 @@ using DDI.Services;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-
-using System;
-
 using System.Web.Http;
 using DDI.Services.ServiceInterfaces;
 
@@ -16,7 +13,7 @@ namespace DDI.WebApi.Controllers
 
     public class NotesController : ControllerBase<Note>
     {
-        private INoteService _service;
+        protected new INoteService Service => (INoteService)base.Service;
         #region Public Constructors
 
         public NotesController(ServiceBase<Note> service)
@@ -53,7 +50,7 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
 
-                var response = _service.RemoveTopicFromNote(note, topicId);
+                var response = Service.RemoveTopicFromNote(note, topicId);
 
                 return Ok(response);
             } catch (Exception ex)
@@ -104,7 +101,7 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
 
-                var response = _service.AddTopicsToNote(note, topic);
+                var response = Service.AddTopicsToNote(note, topic);
 
                 return Ok(response);
             }
