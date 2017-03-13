@@ -1253,7 +1253,7 @@ function NewAddressModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
