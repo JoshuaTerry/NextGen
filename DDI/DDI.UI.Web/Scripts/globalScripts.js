@@ -34,6 +34,7 @@ $(document).ready(function () {
 
 });
 
+/* NEW CONSTITUENT */
 function NewConstituentModal() {
 
     $('.addconstituent').click(function (e) {
@@ -43,9 +44,15 @@ function NewConstituentModal() {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 950,
+            width: 925,
             height: 625,
-            resizable: false
+            resizable: false,
+            beforeClose: function (event, ui) {
+                // $('.constituenttypeinner').css('left', 'auto');
+
+                $('.constituenttypeselect').show();
+                $('.constituentdetails').hide();
+            }
         });
 
         SetupConstituentTypeSelector();
@@ -53,9 +60,13 @@ function NewConstituentModal() {
         $('.savenewconstituent').unbind('click');
 
         $('.savenewconstituent').click(function () {
+            SaveNewConstituent(modal, false);
+        });
 
-            SaveNewConstituent(modal);
+        $('.saveandnewconstituent').unbind('click');
 
+        $('.saveandnewconstituent').click(function () {
+            SaveNewConstituent(modal, true);
         });
 
         $('.cancelmodal').click(function (e) {
@@ -97,7 +108,15 @@ function SetupConstituentTypeSelector() {
                     .attr('id', item.Id)
                     .click(function (e) {
 
-                        $('.constituenttypeinner').stop().animate({ left: '-895px' }, 100);
+                        // Might be implemented later...  Issue with getting the inner container to sit correctly in the modal when opened. - MR 3/13/2017
+                        // $('.constituenttypeinner').stop().animate({ left: '-895px' }, 250);
+
+                        $(container).hide('fast');
+                        $(details).show('fast');
+
+                        ConstituentTypeLayout(item.Name);
+
+                        SetupNewConstituent(item.Id);
 
                     });
 
@@ -146,6 +165,140 @@ function GetConstituentTypeImage(name) {
     return path;
 
 }
+
+function ConstituentTypeLayout(name) {
+
+    switch (name) {
+        case 'Individual':
+            IndividualLayout();
+            break;
+        case 'Church':
+            NonindividualLayout();
+            break;
+        case 'Family':
+            NonindividualLayout();
+            break;
+        case 'Organization':
+            NonindividualLayout();
+            break;
+        default:
+            IndividualLayout();
+            break;
+    }
+
+}
+
+function IndividualLayout() {
+
+    $('.IndividualContainer').show();
+    $('.OrganizationContainer').hide();
+
+    $('.nc-TaxID').mask('000-00-0000');
+}
+
+function NonindividualLayout() {
+
+    $('.IndividualContainer').hide();
+    $('.OrganizationContainer').show();
+
+    $('.nc-TaxID').mask('00-0000000');
+}
+
+function SetupNewConstituent(constituenttypeid) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituents/new/' + constituenttypeid,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $('.nc-ConstituentNumber').val(data.Data.ConstituentNumber);
+                $('.nc-ConstituentTypeId').val(data.Data.ConstituentType.Id);
+            }
+
+        },
+        failure: function (response) {
+
+        }
+    })
+
+}
+
+function SaveNewConstituent(modal, addnew) {
+
+    // Get the fields
+    var fields = GetNewFields();
+
+    // Save the Constituent
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituents',
+        method: 'POST',
+        headers: GetApiHeaders(),
+        data: fields,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data.IsSuccessful) {
+
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+                ClearFields();
+
+                if (addnew) {
+                    $(container).show('fast');
+                    $(details).hide('fast');
+                }
+                else {
+                    CloseModal(modal);
+
+                    DisplayConstituent(data.Data.ConstituentNumber);
+                }
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+        }
+    });
+
+}
+
+function GetNewFields() {
+
+    var p = [];
+
+    $(modal).find('.modalcontent div.fieldblock input').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    $(modal).find('.modalcontent div.fieldblock select').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+/* NEW CONSTITUENT */
 
 function LoadHeaderInfo() {
     LoadBusinessDate();
@@ -256,65 +409,6 @@ function GetQueryString() {
     }
 
     return vars;
-}
-
-function SaveNewConstituent(modal) {
-
-    // Get the fields
-    var fields = GetNewFields();
-
-    // Save the Constituent
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituents',
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-            
-            ClearFields();
-
-            CloseModal(modal);
-            
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
-        }
-    });
-
-}
-
-function GetNewFields() {
-
-    var p = [];
-
-    $(modal).find('.modalcontent div.fieldblock input').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    $(modal).find('.modalcontent div.fieldblock select').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    p = '{' + p + '}';
-
-    return p;
-
 }
 
 function CloseModal(modal) {

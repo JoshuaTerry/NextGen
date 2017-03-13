@@ -158,21 +158,20 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .addconstituentmodal div.fieldblock select { width: 100%; }
 
 .newconstituentcontainer { vertical-align: top; overflow: hidden; }
-.constituenttypeinner { width: 1805px; position: relative; left: 0px; }
-.constituenttypeselect { display: inline-block; width: 900px; vertical-align: top; }
-.constituentdetails { display: inline-block; width: 900px; vertical-align: top; }
+.constituenttypeinner { width: 900px; /*position: relative; left: auto;*/ margin: 0px; padding: 0px; }
+.constituenttypeselect { display: inline-block; width: 900px; vertical-align: top; margin: 0px; padding: 0px; }
+.constituentdetails { display: inline-block; width: 900px; vertical-align: top; margin: 0px; padding: 0px; }
 
 .constituenttypeselect div { width: 150px; height: 177px; border: 5px transparent; display: inline-block; margin: 10px; }
 .constituenttypeselect div:hover { cursor: pointer; box-shadow: -5px 5px 15px #333333; }
 .constituenttypeselect div img { display: block; width: 100%;  }
 .constituenttypeselect div label { display: block; text-align: center; font-size: 14px; font-weight: bold; margin-top: 5px; }
+
 .church { background: url('../../Images/Church.png') no-repeat; }
 .family { background: url('../../Images/Family.png') no-repeat; }
 .individual { background: url('../../Images/Male.png') no-repeat; }
 .organization { background: url('../../Images/Organization.png') no-repeat; }
 .default { background: url('../../Images/Male.png') no-repeat; }
-
-
 /* END NEW CONSTITUENT MODAL */
 
 

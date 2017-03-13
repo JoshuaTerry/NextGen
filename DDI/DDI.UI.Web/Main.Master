@@ -91,6 +91,8 @@
 
             <div class="modalcontent">
 
+                <input type="hidden" class="nc-ConstituentTypeId" />
+
                 <div class="newconstituentcontainer">
                     <div class="constituenttypeinner">
 
@@ -98,7 +100,7 @@
 
                         </div>
 
-                        <div class="constituentdetails">
+                        <div class="constituentdetails" style="display: none;">
 
                             <div class="fivecolumn">
                                 <div class="fieldblock">
@@ -106,31 +108,40 @@
                                     <input type="text" class="nc-ConstituentNumber" maxlength="9" />
                                 </div>
                             </div>
+                            
+                            <div class="IndividualContainer">
+                                <div class="fivecolumn">
+                                    <div class="fieldblock">
+                                        <label>Prefix</label>
+                                        <select class="nc-PrefixId"></select>
+                                    </div>
 
-                            <div class="fivecolumn">
-                                <div class="fieldblock">
-                                    <label>Prefix</label>
-                                    <select class="nc-PrefixId"></select>
+                                    <div class="fieldblock">
+                                        <label>First</label>
+                                        <input type="text" class="nc-FirstName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Middle</label>
+                                        <input type="text" class="nc-MiddleName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Last</label>
+                                        <input type="text" class="nc-LastName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Suffix</label>
+                                        <input type="text" class="nc-Suffix" />
+                                    </div>
                                 </div>
+                            </div>
 
+                            <div class="OrganizationContainer">
                                 <div class="fieldblock">
-                                    <label>First</label>
-                                    <input type="text" class="nc-FirstName" />
-                                </div>
-
-                                <div class="fieldblock">
-                                    <label>Middle</label>
-                                    <input type="text" class="nc-MiddleName" />
-                                </div>
-
-                                <div class="fieldblock">
-                                    <label>Last</label>
+                                    <label>Name</label>
                                     <input type="text" class="nc-LastName" />
-                                </div>
-
-                                <div class="fieldblock">
-                                    <label>Suffix</label>
-                                    <input type="text" class="nc-Suffix" />
                                 </div>
                             </div>
 
@@ -157,7 +168,7 @@
                                     <input type="text" class="nc-TaxID" />
                                 </div>
 
-                                <div class="fieldblock">
+                                <div class="fieldblock IndividualContainer">
                                     <label>Gender</label>
                                     <select class="nc-GenderId"></select>
                                 </div>
@@ -258,6 +269,7 @@
 
                             <div class="modalbuttons">
                                 <input type="button" class="savenewconstituent" value="Save" />
+                                <input type="button" class="saveandnewconstituent" value="Save & New" />
                                 <a href="#" class="cancelmodal">Cancel</a>
                             </div>
                     

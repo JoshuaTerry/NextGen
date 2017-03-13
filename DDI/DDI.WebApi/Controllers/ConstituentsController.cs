@@ -152,6 +152,24 @@ namespace DDI.WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/constituents/new/{constituenttypeid}")]
+        public IHttpActionResult NewConstituent(Guid constituenttypeid, string fields = null)
+        {
+            try
+            {
+                var constituent = Service.NewConstituent(constituenttypeid);
+
+                return FinalizeResponse(constituent, fields);
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+            
+        }
+
         [HttpPost]
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Constituent constituent)
