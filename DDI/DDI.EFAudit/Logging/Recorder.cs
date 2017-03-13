@@ -7,6 +7,10 @@ using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Serializers;
 using System.Data.Entity;
 using DDI.Shared.Models;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace DDI.EFAudit.Logging
 {
@@ -17,52 +21,42 @@ namespace DDI.EFAudit.Logging
         private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
         private IDictionary<object, DeferredObjectChange<TPrincipal>> _deferredObjectChanges;
         private ISerializationManager _serializer;
+        private DbContext _dbContext;
 
-        public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory)
+        public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory, DbContext dbContext)
         {
             this._deferredObjectChanges = new Dictionary<object, DeferredObjectChange<TPrincipal>>(new ReferenceEqualityComparer());
             this._factory = factory;
             this._serializer = null;
+            this._dbContext = dbContext;
         }
 
-        public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory, ISerializationManager serializer)
-            : this(factory)
+        public Recorder(IChangeSetFactory<TChangeSet, TPrincipal> factory, ISerializationManager serializer, DbContext dbContext)
+            : this(factory, dbContext)
         {
             this._serializer = serializer;
         }
 
         public bool HasChangeSet { get { return _set != null; } }
-
-        // You have to pass both the ObjectStateEntry entry AND object entity.  For scalar changes the entity is available off of 
-        // entry.Entity, but for non-scalar changes the entry.Entity is null and is instead retreived by the caller using a GetById        
+                     
         public void Record(ObjectStateEntry entry, object entity, Func<string> deferredReference, string propertyName, Func<object> deferredValue)
         {
             EnsureChangeSetExists();
 
             var typeName = ObjectContext.GetObjectType(entity.GetType()).Name;
             var deferredObjectChange = CreateOrRetreiveDeferredObjectChange(_set, entry, entity, typeName, deferredReference);
-
-            if (entry.State != EntityState.Deleted)
-                Record(entry, deferredObjectChange, propertyName, deferredValue);
+            Record(entry, deferredObjectChange, propertyName, deferredValue, entity);
         }
-        private void Record(ObjectStateEntry entry, DeferredObjectChange<TPrincipal> deferredObjectChange, string propertyName, Func<object> deferredValue)
+        private void Record(ObjectStateEntry entry, DeferredObjectChange<TPrincipal> deferredObjectChange, string propertyName, Func<object> deferredValue, object entity)
         {
             var deferredValues = deferredObjectChange.FutureValues;
-            var propertyChange = CreateOrRetrievePropertyChange(deferredObjectChange.ObjectChange, propertyName, entry);
+            var propertyChange = CreateOrRetrievePropertyChange(deferredObjectChange.ObjectChange, propertyName, entry, entity);
             if (deferredValue != null)
             {
                 deferredValues.Store(propertyName, deferredValue);
             }
         }
-
-        /// <summary>
-        /// Values for Many-to-Many can't be calculated while commit changes are unfinished.
-        /// So instead you have to just record the deferred values until after the db changes 
-        /// are saved.  Then before you commit the ChangeSet you have to "Bake" in those deferred 
-        /// values into the PropertyChange.  
-        /// 
-        /// The timing for these types of changes was difficult to figure out.
-        /// </summary>
+        
         public TChangeSet Bake(DateTime timestamp, TPrincipal user)
         {
             _set.User = user;
@@ -70,7 +64,7 @@ namespace DDI.EFAudit.Logging
 
             foreach (var deferredObjectChange in _deferredObjectChanges.Values)
             {
-                deferredObjectChange.Bake();
+                deferredObjectChange.ProcessDeferredValues();
             }
 
             return _set;
@@ -94,36 +88,126 @@ namespace DDI.EFAudit.Logging
             result.ChangeSet = set;
             set.Add(result);
 
-            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer);
+            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer, entity);
             _deferredObjectChanges.Add(entity, deferredObjectChange);
 
             return deferredObjectChange;
         }
-        private IPropertyChange<TPrincipal> CreateOrRetrievePropertyChange(IObjectChange<TPrincipal> objectChange, string propertyName, ObjectStateEntry entry)
+        private IPropertyChange<TPrincipal> ProcessScalarChange(IPropertyChange<TPrincipal> change, ObjectStateEntry entry, object entity, string propertyName)
         {
-            var result = objectChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == propertyName);
+            change.PropertyName = propertyName;
 
-            if (result == null)
+            if (entity.GetType().GetProperty(propertyName) != null)
             {
-                result = _factory.PropertyChange();
-                result.ChangeType = entry.State.ToString();
-                result.ObjectChange = objectChange;
-                result.PropertyName = propertyName;
-                // Deletes for Complex entities will not have the propertyName in the OriginalValues
-
-                if (entry.State != EntityState.Added && entry.State != EntityState.Deleted)
-                    result.OriginalValue = Convert.ToString(entry.OriginalValues[propertyName]);
-
-                result.Value = null;
-                objectChange.Add(result);
+                change.PropertyType = entity.GetType().GetProperty(propertyName).PropertyType;
+                change.PropertyTypeName = Nullable.GetUnderlyingType(change.PropertyType)?.Name ?? change.PropertyType.Name;
             }
+
+            // Deletes for Complex entities will not have the propertyName in the OriginalValues
+            if (entry.State != EntityState.Added && entry.State != EntityState.Deleted)
+                change.OriginalValue = Convert.ToString(entry.OriginalValues[propertyName]);
+
+            return change;
+        }
+        private IPropertyChange<TPrincipal> ProcessForeignKeyChange(IPropertyChange<TPrincipal> change, ObjectStateEntry entry, object entity, string propertyName, Dictionary<string, string> fkLookup)
+        {
+            if (entry.State != EntityState.Added)
+            {
+                ObjectStateEntry ose = entry.ObjectStateManager.GetObjectStateEntry(entity);
+                var oValues = ose.OriginalValues;
+                var id = ose.OriginalValues[propertyName];
+                if (id.GetType().Name != "DBNull")
+                {
+                    change.PropertyType = entity.GetType().GetProperty(fkLookup[propertyName]).PropertyType;
+                    change.PropertyTypeName = change.PropertyType.Name;
+                    IEntity navEntity = (IEntity)_dbContext.Set(change.PropertyType).Find(id);
+                    change.OriginalDisplayName = navEntity?.DisplayName;
+                }
+            }
+            return change;
+        }
+        private IPropertyChange<TPrincipal> ProcessRelationshipChange(IPropertyChange<TPrincipal> change, ObjectStateEntry entry, object entity, string propertyName)
+        {
+            var ends = GetAssociationEnds(entry);
+            var foreignEnd = GetOtherAssociationEnd(entry, ends[0]);
+            var typeNameP1 = entity.GetType().GetProperty(propertyName).PropertyType.Name.Replace("`1", " ");
+            var typeNameP2 = entity.GetType().GetProperty(propertyName).PropertyType.GetGenericArguments()[0].Name;
+
+            change.PropertyTypeName = $"{typeNameP1}{typeNameP2}";
+            change.IsManyToMany = foreignEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many;
+
+            if (entry.State == EntityState.Deleted)
+            {
+                IEntity child = (IEntity)entry.ObjectStateManager.GetObjectStateEntry(GetEndEntityKey(entry, foreignEnd)).Entity;
+                change.OriginalDisplayName = child.DisplayName;
+                change.OriginalValue = child.Id.ToString();
+            }
+
+            return change;
+        }
+        private IPropertyChange<TPrincipal> CreateOrRetrievePropertyChange(IObjectChange<TPrincipal> objectChange, string propertyName, ObjectStateEntry entry, object entity)
+        {
+            var result = _factory.PropertyChange();
+
+            result.ChangeType = entry.State.ToString();
+            result.ObjectChange = objectChange;
+
+
+            var fkNameLookup = entity.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ForeignKeyAttribute))).ToDictionary(p => p.GetCustomAttribute<ForeignKeyAttribute>().Name, p => p.Name);
+            result.IsForeignKey = fkNameLookup.ContainsKey(propertyName);
+
+            if (result.IsForeignKey)
+            {
+                result = ProcessForeignKeyChange(result, entry, entity, propertyName, fkNameLookup);
+            }
+            else if (entry.IsRelationship)
+            {
+                result = ProcessRelationshipChange(result, entry, entity, propertyName);
+            }
+            else
+            {
+                result = ProcessScalarChange(result, entry, entity, propertyName);
+            }
+
+            result.NewValue = null;
+            objectChange.Add(result);
 
             return result;
         }
+
         private void EnsureChangeSetExists()
         {
             if (_set == null)
                 _set = _factory.ChangeSet();
+        }
+
+        private AssociationEndMember GetOtherAssociationEnd(ObjectStateEntry entry, AssociationEndMember end)
+        {
+            AssociationEndMember[] ends = GetAssociationEnds(entry);
+            if (ends[0] == end)
+                return ends[1];
+            else
+                return ends[0];
+        }
+
+        private EntityKey GetEndEntityKey(ObjectStateEntry entry, AssociationEndMember end)
+        {
+            AssociationEndMember[] ends = GetAssociationEnds(entry);
+            if (ends[0] == end)
+                return UseableValues(entry)[0] as EntityKey;
+            else
+                return UseableValues(entry)[1] as EntityKey;
+        }
+
+        private AssociationEndMember[] GetAssociationEnds(ObjectStateEntry entry)
+        {
+            var fieldMetadata = UseableValues(entry).DataRecordInfo.FieldMetadata;
+            return fieldMetadata.Select(m => m.FieldType as AssociationEndMember).ToArray();
+        }
+
+        private IExtendedDataRecord UseableValues(ObjectStateEntry entry)
+        {
+            return entry.State == EntityState.Deleted ? (IExtendedDataRecord)entry.OriginalValues : entry.CurrentValues;
         }
     }
 }

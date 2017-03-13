@@ -52,16 +52,12 @@ namespace DDI.WebApi.Controllers
 
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = _service.GetChanges(id, start.Value, end.Value);
-                //var response = _service.GetAllWhereExpression(a => a.ObjectChanges.Where(o => o.ObjectReference == id.ToString()), search);
-
-                //var response = _service.GetAllFlat(id, start.Value, end.Value, search);
-                //return FinalizeResponse(response, RouteNames.Audit, search);
-
+                  
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                return InternalServerError();
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 

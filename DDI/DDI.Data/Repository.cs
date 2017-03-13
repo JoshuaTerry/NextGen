@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using DDI.Shared.Models;
 using DDI.Logger;
 using DDI.Shared.Helpers;
+using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
@@ -230,6 +231,17 @@ namespace DDI.Data
 
                 if (_context.Entry(entity).State != EntityState.Added)
                 {
+                    IEntity auditableEntity = (IEntity)entity;
+                    var user = EntityFrameworkHelpers.GetCurrentUser();
+                    if (user != null)
+                    {                        
+                        auditableEntity.CreatedBy = user.Id;
+                        auditableEntity.LastModifiedBy = user.Id;
+                    }
+
+                    auditableEntity.CreatedOn = DateTime.UtcNow;
+                    auditableEntity.LastModifiedOn = DateTime.UtcNow;
+
                     // Add it only if not already added.
                     EntitySet.Add(entity);
                 }                 
@@ -250,6 +262,15 @@ namespace DDI.Data
                 {
                     throw new ArgumentNullException(nameof(entity));
                 }
+
+                IEntity auditableEntity = (IEntity)entity;
+                var user = EntityFrameworkHelpers.GetCurrentUser();
+                if (user != null)
+                { 
+                    auditableEntity.LastModifiedBy = user.Id;
+                }
+                 
+                auditableEntity.LastModifiedOn = DateTime.UtcNow;
 
                 Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
