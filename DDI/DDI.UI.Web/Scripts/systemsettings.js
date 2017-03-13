@@ -2323,6 +2323,10 @@ function LoadPrefix(id) {
 }
 /* END PREFIX SYSTEM SETTINGS */
 
+/* new system settings section */
+
+/* end new system settings section */
+
 /* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
     LoadSectionSettings(SettingsCategories.CRM, 'Professional', 'sectionpreferences', SystemSettings.Professional);
