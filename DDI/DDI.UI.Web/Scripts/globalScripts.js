@@ -20,6 +20,22 @@ $(document).ready(function () {
 
     LoadAccordions();
 
+    NewConstituentModal();
+
+    $('.logout').click(function (e) {
+
+        e.preventDefault();
+
+        sessionStorage.removeItem(AUTH_TOKEN_KEY);
+        auth_token = null;
+
+        location.href = "/Login.aspx";
+    });
+
+});
+
+function NewConstituentModal() {
+
     $('.addconstituent').click(function (e) {
 
         e.preventDefault();
@@ -27,10 +43,14 @@ $(document).ready(function () {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 900,
+            width: 950,
             height: 625,
             resizable: false
         });
+
+        SetupConstituentTypeSelector();
+
+        $('.savenewconstituent').unbind('click');
 
         $('.savenewconstituent').click(function () {
 
@@ -52,17 +72,80 @@ $(document).ready(function () {
 
     });
 
-    $('.logout').click(function (e) {
+}
 
-        e.preventDefault();
+function SetupConstituentTypeSelector() {
 
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        auth_token = null;
+    var container = $('.constituenttypeselect');
+    var details = $('.constituentdetails');
 
-        location.href = "/Login.aspx";
+    $(container).empty();
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+                
+                $.map(data.Data, function (item) {
+
+                    var option = $('<div>')
+                    .attr('id', item.Id)
+                    .click(function (e) {
+
+                        $('.constituenttypeinner').stop().animate({ left: '-895px' }, 100);
+
+                    });
+
+                    var label = $('<label>').text(item.Name);
+                    var img = $('<img>').attr('src', GetConstituentTypeImage(item.Name)).attr('alt', item.Name);
+
+                    $(img).appendTo($(option));
+                    $(label).appendTo($(option));
+
+                    $(option).appendTo($(container));
+
+                });
+
+            }
+
+        },
+        failure: function (response) {
+            
+        }
     });
 
-});
+}
+
+function GetConstituentTypeImage(name) {
+    
+    var path = 'default';
+
+    switch (name) {
+        case 'Church':
+            path = '../../Images/church.png';
+            break;
+        case 'Family':
+            path = '../../Images/family.png';
+            break;
+        case 'Individual':
+            path = '../../Images/male.png';
+            break;
+        case 'Organization':
+            path = '../../Images/organization.png';
+            break;
+        default:
+            path = '../../Images/male.png';
+            break;
+    }
+
+    return path;
+
+}
 
 function LoadHeaderInfo() {
     LoadBusinessDate();

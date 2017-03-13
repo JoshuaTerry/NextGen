@@ -91,165 +91,179 @@
 
             <div class="modalcontent">
 
-                <div class="fivecolumn">
-                    <div class="fieldblock">
-                        <label>ID</label>
-                        <input type="text" class="nc-ConstituentNumber" maxlength="9" />
-                    </div>
-                </div>
+                <div class="newconstituentcontainer">
+                    <div class="constituenttypeinner">
 
-                <div class="fivecolumn">
-                    <div class="fieldblock">
-                        <label>Prefix</label>
-                        <select class="nc-PrefixId"></select>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>First</label>
-                        <input type="text" class="nc-FirstName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Middle</label>
-                        <input type="text" class="nc-MiddleName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Last</label>
-                        <input type="text" class="nc-LastName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Suffix</label>
-                        <input type="text" class="nc-Suffix" />
-                    </div>
-                </div>
-
-                <div class="threecolumn">
-                    <div class="fieldblock">
-                        <label>Nick Name</label>
-                        <input type="text" class="nc-NickName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Name 2</label>
-                        <input type="text" class="nc-Name2" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Salutation</label>
-                        <input type="text" class="nc-Salutation" />
-                    </div>
-                </div>
-
-                <div class="threecolumn">
-                    <div class="fieldblock">
-                        <label>Tax ID</label>
-                        <input type="text" class="nc-TaxID" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Gender</label>
-                        <select class="nc-GenderId"></select>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Source</label>
-                        <input type="text" class="nc-Source" />
-                    </div>
-                </div>
-
-                <fieldset>
-                    <legend>Primary Address</legend>
-
-                    <div class="threecolumn">
-
-                        <div>
-                            <div class="fieldblock">
-                                <label>Address Type</label>
-                                <select class="nc-AddressType"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Address Line 1</label>
-                                <input type="text" class="nc-AddressLine1 autoaddress1" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Address Line 2</label>
-                                <input type="text" class="nc-AddressLine2 autoaddress2" />
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="fieldblock">
-                                <label>Postal Code</label>
-                                <input type="text" class="nc-PostalCode autozip" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Country</label>
-                                <select class="nc-Country autocountry"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>State</label>
-                                <select class="nc-State autostate"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>City</label>
-                                <input type="text" class="nc-City autocity" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>County</label>
-                                <select class="nc-County autocounty"></select>
-                            </div>
+                        <div class="constituenttypeselect">
 
                         </div>
 
-                        <div class="regionscontainer"></div>
+                        <div class="constituentdetails">
 
-                    </div>
+                            <div class="fivecolumn">
+                                <div class="fieldblock">
+                                    <label>ID</label>
+                                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                                </div>
+                            </div>
 
-                </fieldset>
+                            <div class="fivecolumn">
+                                <div class="fieldblock">
+                                    <label>Prefix</label>
+                                    <select class="nc-PrefixId"></select>
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>First</label>
+                                    <input type="text" class="nc-FirstName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Middle</label>
+                                    <input type="text" class="nc-MiddleName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Last</label>
+                                    <input type="text" class="nc-LastName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Suffix</label>
+                                    <input type="text" class="nc-Suffix" />
+                                </div>
+                            </div>
+
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Nick Name</label>
+                                    <input type="text" class="nc-NickName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="nc-Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="nc-Salutation" />
+                                </div>
+                            </div>
+
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" class="nc-TaxID" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Gender</label>
+                                    <select class="nc-GenderId"></select>
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="nc-Source" />
+                                </div>
+                            </div>
+
+                            <fieldset>
+                                <legend>Primary Address</legend>
+
+                                <div class="threecolumn">
+
+                                    <div>
+                                        <div class="fieldblock">
+                                            <label>Address Type</label>
+                                            <select class="nc-AddressType"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Address Line 1</label>
+                                            <input type="text" class="nc-AddressLine1 autoaddress1" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Address Line 2</label>
+                                            <input type="text" class="nc-AddressLine2 autoaddress2" />
+                                        </div>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="fieldblock">
+                                            <label>Postal Code</label>
+                                            <input type="text" class="nc-PostalCode autozip" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Country</label>
+                                            <select class="nc-Country autocountry"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>State</label>
+                                            <select class="nc-State autostate"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>City</label>
+                                            <input type="text" class="nc-City autocity" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>County</label>
+                                            <select class="nc-County autocounty"></select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="regionscontainer"></div>
+
+                                </div>
+
+                            </fieldset>
                 
-                <fieldset>
-                    <legend>Contact Information</legend>
+                            <fieldset>
+                                <legend>Contact Information</legend>
 
-                    <div class="twocolumn">
-                        <div class="twocolumn">
-                            <div class="fieldblock">
-                                <label>Email</label>
-                                <input type="email" class="nc-Email" />
-                            </div>
+                                <div class="twocolumn">
+                                    <div class="twocolumn">
+                                        <div class="fieldblock">
+                                            <label>Email</label>
+                                            <input type="email" class="nc-Email" />
+                                        </div>
 
-                            <div class="fieldblock">
-                                <label>Email Type</label>
-                                <select class="nc-EmailType"></select>
+                                        <div class="fieldblock">
+                                            <label>Email Type</label>
+                                            <select class="nc-EmailType"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="twocolumn">
+                                        <div class="fieldblock">
+                                            <label>Phone</label>
+                                            <input type="text" class="nc-Phone" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Phone Type</label>
+                                            <select class="nc-PhoneType"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                            <div class="modalbuttons">
+                                <input type="button" class="savenewconstituent" value="Save" />
+                                <a href="#" class="cancelmodal">Cancel</a>
                             </div>
+                    
                         </div>
-
-                        <div class="twocolumn">
-                            <div class="fieldblock">
-                                <label>Phone</label>
-                                <input type="text" class="nc-Phone" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Phone Type</label>
-                                <select class="nc-PhoneType"></select>
-                            </div>
-                        </div>
+                    
                     </div>
-
-                </fieldset>
-
-                <div class="modalbuttons">
-                    <input type="button" class="savenewconstituent" value="Save" />
-                    <a href="#" class="cancelmodal">Cancel</a>
                 </div>
 
             </div>
