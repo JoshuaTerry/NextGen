@@ -123,6 +123,7 @@ namespace DDI.EFAudit.Logging
                 {                    
                     IEntity navEntity = (IEntity)_dbContext.Set(change.PropertyType).Find(id);
                     change.OriginalDisplayName = navEntity?.DisplayName;
+                    change.OriginalValue = navEntity?.Id.ToString();
                 }
             }
             return change;
