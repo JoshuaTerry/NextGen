@@ -1631,9 +1631,6 @@ function LoadLanguage(id) {
 
 /* END DEMOGRAPHICS SYSTEM SETTINGS */
 
-
-
-
 function LoadDBASectionSettings() {
 
     LoadSectionSettings(SettingsCategories.CRM, 'Doing Business As', 'sectionpreferences', SystemSettings.DBA);
@@ -2325,6 +2322,10 @@ function LoadPrefix(id) {
 
 }
 /* END PREFIX SYSTEM SETTINGS */
+
+/* new system settings section */
+
+/* end new system settings section */
 
 /* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
