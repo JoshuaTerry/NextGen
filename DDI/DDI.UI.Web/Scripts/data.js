@@ -226,7 +226,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
         }
     });
 
-    $(datagrid).appendTo($(container));
+    $(container).append($(datagrid));
 }
 
 function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, loadEntityGrid, getEntityToSave, entityName, route, id) {

@@ -788,6 +788,7 @@
 
             <input type="hidden" class="regionid" />
             <input type="hidden" class="parentregionid" />
+            <input type="hidden" class="currentlevel" />
 
             <div class="fieldblock">
                 <label>Code</label>

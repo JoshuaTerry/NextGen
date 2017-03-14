@@ -2679,12 +2679,12 @@ function LoadRegionsSectionSettings() {
     $('.contentcontainer').empty();
     var lc = $('<div>').addClass('regionlevelcontainer');
     var rc = $('<div>').addClass('regioncontainer');
+    var rgc = $('<div>').addClass('regiongridcontainer');
     $(lc).appendTo($('.contentcontainer'));
     $(rc).appendTo($('.contentcontainer'));
+    $(rgc).appendTo($(rc));
 
     CreateRegionLevelSelector(lc);
-
-    DisplayRegionLevels();
 
 }
 
@@ -2709,25 +2709,33 @@ function DisplayRegionLevels(container) {
 
                 $.map(data.Data, function (level) {
                     var li = $('<li>').attr('id', level.Id).text(level.DisplayName).click(function () {
-                        $('.regioncontainer').empty();
+                        
+                        if ($('.parentregions').length) {
+                            $('.parentregions').remove();
+                        }
+
+                        $('.regiongridcontainer').empty();
+
                         $('.regionlevellist li').removeClass('selected');
                         $(this).addClass('selected');
 
-                        // DisplayRegions(level, id);
-
                         if (level.IsChildLevel) {
                             var parents = $('<select>').addClass('parentregions');
-                            $(parents).appendTo($('.regioncontainer'));
-                            // PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, callback)
+                            $('.regioncontainer').prepend($(parents));
+
                             PopulateDropDown('.parentregions', 'regions/regionlevels/' + (level.Level - 1), '', '', null, function () {
-                                // selected item
+                                DisplayRegions(level.Level, $('.parentregions').val());
                             });
+                        }
+                        else {
+                            DisplayRegions(level.Level, null);
                         }
                     });
 
                     $(li).appendTo($(container));
                 });
 
+                // Add Region Level button
                 if (data.Data.length < 4) {
 
                     var li = $('<li>')
@@ -2737,8 +2745,6 @@ function DisplayRegionLevels(container) {
                         .click(function (e) {
                             e.preventDefault();
 
-                            // display new region level modal.
-                            // regionlevelmodal
                             modal = $('.regionlevelmodal').dialog({
                                 closeOnEscape: false,
                                 modal: true,
@@ -2780,7 +2786,7 @@ function DisplayRegionLevels(container) {
 
                                         CloseModal(modal);
 
-                                        DisplayRegionLevels();
+                                        LoadRegionsSectionSettings();
 
                                     },
                                     error: function (xhr, status, err) {
@@ -2806,28 +2812,197 @@ function DisplayRegionLevels(container) {
 
 function DisplayRegions(level, parentid) {
 
+    $('.currentlevel').val(level);
+
     var route = 'regionlevels/' + level + '/regions/';
 
     if (parentid) {
         route = route + parentid;
     }
 
-    // LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete)
     var columns = [
        { dataField: 'Id', width: '0px' },
        { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Name' },
        { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('regiongrid', 'regoingridcontainer', columns, route, null, EditRegion, DeleteRegion, null);
+    LoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
+
+        // Add the new link...
+        var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .text('New Region')
+            .click(function (e) {
+                e.preventDefault();
+
+                NewRegion();
+
+            });
+        $('.regiongridcontainer').prepend($(link));
+
+    });
+
+}
+
+function NewRegion() {
+
+    modal = $('.regionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitregion').unbind('click');
+
+    $('.submitregion').click(function () {
+
+        var item = {
+            Level: $('.currentlevel').val(),
+            ParentRegionId: $('.parentregions').val(),
+            Code: $(modal).find('.reg-Code').val(),
+            Name: $(modal).find('.reg-Name').val(),
+            IsActive: $(modal).find('.reg-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'POST',
+            url: WEB_API_ADDRESS + 'regions',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Region saved successfully.');
+
+                CloseModal(modal);
+
+                DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
 
 }
 
 function EditRegion(id){
 
+    LoadRegion(id);
+
+    modal = $('.regionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitregion').unbind('click');
+
+    $('.submitregion').click(function () {
+
+        var item = {
+            ParentRegionId: $(modal).find('.parentregionid').val(),
+            Code: $(modal).find('.reg-Code').val(),
+            Name: $(modal).find('.reg-Name').val(),
+            IsActive: $(modal).find('.reg-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'regions/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Region saved successfully.');
+
+                CloseModal(modal);
+
+                DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
 }
 
 function DeleteRegion(id) {
+
+    $.ajax({
+        method: 'DELETE',
+        url: WEB_API_ADDRESS + 'regions/' + id,
+        data: item,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Region deleted successfully.');
+
+            CloseModal(modal);
+
+            DisplayRegions($('.currentlevel').val(), $('.parentregions').val());
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
+function LoadRegion(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regions/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.regionid').val(id);
+                $(modal).find('.parentregionid').val(data.Data.ParentRegionId);
+                $(modal).find('.currentlevel').val(data.Data.Level);
+
+                $(modal).find('.reg-Code').val(data.Data.Code);
+                $(modal).find('.reg-Name').val(data.Data.Name);
+                $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Region Level.');
+        }
+    });
 
 }
 
