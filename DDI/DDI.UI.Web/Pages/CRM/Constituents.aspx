@@ -241,7 +241,7 @@
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1>
+                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span><a href="#" title="New" class="neweducationmodallink newbutton"></a></h1> 
 
                     <div class="editcontainer">
 
@@ -254,7 +254,7 @@
 
                     </div>
 
-                    <h1 class="organizationSection">Organization</h1>
+                   <h1 class="OrganizationSettingsSection"><span class="OrganizationSettingsSectionLabel">Organization</span></h1>
                     <div class="editcontainer">
 
                         <div class="inline">

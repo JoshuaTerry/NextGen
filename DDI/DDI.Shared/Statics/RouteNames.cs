@@ -44,6 +44,7 @@ namespace DDI.Shared.Statics
         public const string SectionName = "SectionName";
         public const string Note = "Note";
         public const string NoteCategory = "NoteCategory";
+        public const string NoteCode = "NoteCode";
         public const string NoteContactCode = "NoteContactCode";
         public const string NoteTopic = "NoteTopic";
         public const string PaymentMethod = "PaymentMethod";
@@ -53,6 +54,7 @@ namespace DDI.Shared.Statics
         public const string RegionLevel = "RegionLevels";
         public const string RegionChildren = "ChildrenRegion";
         public const string Relationship = "Relationship";
+        public const string RelationshipCategories = "RelationshipCategories";
         public const string RelationshipTypes = "RelationshipTypes";
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";
