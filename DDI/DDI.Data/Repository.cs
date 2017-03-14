@@ -14,6 +14,7 @@ using DDI.Shared.Models;
 using DDI.Logger;
 using DDI.Shared.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
