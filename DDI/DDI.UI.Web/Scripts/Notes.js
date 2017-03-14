@@ -71,8 +71,6 @@ function NewNoteDetailsModal() {
             width: 500,
             resizable: false
         });
-
-
        
         $('.noteTopicSelectImage').click(function (e) {
 
@@ -85,7 +83,7 @@ function NewNoteDetailsModal() {
                 /////////////////Currently working on////////////////////////////
                 /////////////////////////////////////////////
                 //////////////////////////////////////////////
-                // I bet errything from here down could go in a function
+                // I bet a lot of this can/should be a separate function
 
                 newsavednotetopics = GetCheckedNoteTopics();
 
@@ -173,7 +171,7 @@ function NewNoteDetailsModal() {
                         $.ajax({
                             type: 'POST',
                             url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-                            data: item,
+                            data: JSON.stringify(topicsavelist), 
                             contentType: 'application/x-www-form-urlencoded',
                             crossDomain: true,
                             success: function (data) {
