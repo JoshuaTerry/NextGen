@@ -1138,6 +1138,11 @@
                     <input type="text" class="nd-AlertStartDate datepicker" />
                 </div>
 
+                <div class="fieldblock">
+                    <label>Alert End Date</label>
+                    <input type="text" class="nd-AlertEndDate datepicker" />
+                </div>
+
             </div>
 
             <div class="fieldblock">
@@ -1156,13 +1161,13 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Alert End Date</label>
-                    <input type="text" class="nd-AlertEndDate datepicker" />
+                    <label>Note code</label>
+                    <select class="nd-NoteCode"></select>
                 </div>
 
                 <div class="fieldblock">
-                    <label>Note code</label>
-                    <select class="nd-NoteCode"></select>
+                    <label>Note Category</label>
+                    <select class="nd-Category Id"></select>
                 </div>
 
             </div>
@@ -1174,9 +1179,9 @@
                     <input type="text" class="nd-ContactDate datepicker" />
                 </div>
 
-                <div class="fieldblock">
-                    <label>Category</label>
-                    <select class="nd-Category Id"></select>
+                 <div class="fieldblock">
+                    <label>Primary Contact</label>
+                    <select class="nd-PrimaryContact"></select>
                 </div>
 
             </div>
@@ -1193,11 +1198,6 @@
                     <select class="nd-ContactMethod"></select>
                 </div>
 
-            </div>
-
-            <div class="fieldblock">
-                    <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact"></select>
             </div>
 
             <div class="twocolumn">
