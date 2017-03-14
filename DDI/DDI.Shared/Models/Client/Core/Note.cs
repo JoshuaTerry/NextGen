@@ -34,8 +34,8 @@ namespace DDI.Shared.Models.Client.Core
         public Guid? CategoryId { get; set; }
         public NoteCategory Category { get; set; }
 
-        [MaxLength(32)]
-        public string NoteCode { get; set; }
+        public Guid? NoteCodeId { get; set; }
+        public NoteCode NoteCode { get; set; }
 
         public Guid? PrimaryContactId { get; set; }
         public Constituent PrimaryContact { get; set; }
