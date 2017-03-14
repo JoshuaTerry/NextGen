@@ -159,7 +159,6 @@
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Client\Core\Language.cs" />
-    <Compile Include="Models\Client\Core\LogEntry.cs" />
     <Compile Include="Models\Client\Core\SectionPreference.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />
     <Compile Include="Models\Client\CRM\AddressType.cs" />

@@ -23,7 +23,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string Name { get; set; }
 
         public Guid? TagGroupId { get; set; }
-
+        [ForeignKey("TagGroupId")]
         public TagGroup TagGroup { get; set; }
 
         public int Order { get; set; }

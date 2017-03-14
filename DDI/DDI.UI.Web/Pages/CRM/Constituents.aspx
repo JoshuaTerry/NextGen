@@ -21,7 +21,9 @@
                 <img />
                 <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
             </div>
-            
+            <div>
+                <a href="#" class="newauditmodal">Audit History</a>
+            </div>
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
@@ -37,7 +39,7 @@
                     <span class="editable PhoneNumber"></span>
                 </div>
             </div>
-
+            
             <h1>Relationships</h1>
             <div class="editable relationshipsQuickView">
 

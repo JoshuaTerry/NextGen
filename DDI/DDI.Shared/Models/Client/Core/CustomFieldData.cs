@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.Core
         public DDI.Shared.Enums.Common.CustomFieldEntity EntityType { get; set; }
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
-
+        [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 
         [NotMapped]

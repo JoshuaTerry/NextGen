@@ -44,6 +44,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private Country _country = null;
         [NotMapped]
+        [ForeignKey("CountryId")]
         public Country Country
         {
             get
@@ -59,6 +60,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private State _state = null;
         [NotMapped]
+        [ForeignKey("StateId")]
         public State State
         {
             get
@@ -74,6 +76,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private County _county = null;
         [NotMapped]
+        [ForeignKey("CountyId")]
         public County County
         {
             get
