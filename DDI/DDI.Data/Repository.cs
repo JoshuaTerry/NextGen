@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using DDI.Shared.Models;
 using DDI.Logger;
 using DDI.Shared.Helpers;
-using DDI.Data.Helpers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Data
 {
@@ -293,7 +293,6 @@ namespace DDI.Data
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
             IEnumerable<string> propertynames = currentValues.PropertyNames;
-
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
                 if (propertynames.Contains(keyValue.Key))
@@ -309,7 +308,6 @@ namespace DDI.Data
 
             action?.Invoke(entity); 
         }
-
         public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();

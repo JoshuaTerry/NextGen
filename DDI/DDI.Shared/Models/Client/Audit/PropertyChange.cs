@@ -13,6 +13,7 @@ namespace DDI.Shared.Models.Client.Audit
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public long ObjectChangeId { get; set; }
+        [ForeignKey("ObjectChangeId")]
         public ObjectChange ObjectChange { get; set; }
         [MaxLength(128)]
         public string PropertyName { get; set; }

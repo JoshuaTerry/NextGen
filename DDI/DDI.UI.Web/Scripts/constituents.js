@@ -1064,23 +1064,23 @@ function LoadAuditTable() {
     var end = $(modal).find('.na-EndDate').val();
     var route = 'audit/flat/' + id;
     var columns = [
-            { dataField: 'ChangeSetId' },
-            { dataField: 'Timestamp' },
+            { dataField: 'ChangeSetId', groupIndex: 0  },
+            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
             { dataField: 'User' },
-            { dataField: 'ChangeType' },
-            { dataField: 'EntityType' },
-            { dataField: 'EntityValue' },
+            //{ dataField: 'EntityType', groupIndex: 1 },
+            { dataField: 'ChangeType', width: '100px' },            
+            //{ dataField: 'EntityValue' },
             { dataField: 'Property' },
             { dataField: 'OldValue' },
             { dataField: 'NewValue' }
     ];
 
-    LoadGrid('auditgrid',
+    LoadAuditGrid('auditgrid',
        'auditgridcontainer',
        columns,
        route,
-       null,
-       null);
+       false);
+     
 }
 /* End Audit Section */
 

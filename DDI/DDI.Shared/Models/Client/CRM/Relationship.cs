@@ -16,15 +16,15 @@ namespace DDI.Shared.Models.Client.CRM
         public override Guid Id { get; set; }
 
         public Guid? RelationshipTypeId { get; set; }
-
+        [ForeignKey("RelationshipTypeId")]
         public RelationshipType RelationshipType { get; set; }
 
         public Guid? Constituent1Id { get; set; }
-
+        [ForeignKey("Constituent1Id")]
         public Constituent Constituent1 { get; set; }
 
         public Guid? Constituent2Id { get; set; }
-
+        [ForeignKey("Constituent2Id")]
         public Constituent Constituent2 { get; set; }
 
         [NotMapped]

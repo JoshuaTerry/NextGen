@@ -26,9 +26,11 @@ namespace DDI.Shared.Models.Client.CRM
         public Guid? ParentContactId { get; set; }
 
         #region Navigation Properties
-
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
+        [ForeignKey("ContactTypeId")]
         public ContactType ContactType { get; set; }
+        [ForeignKey("ParentContactId")]
         public ContactInfo ParentContact { get; set; }
 
         [InverseProperty(nameof(ParentContact))]

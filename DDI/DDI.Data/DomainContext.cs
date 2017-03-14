@@ -33,8 +33,7 @@ namespace DDI.Data
         public DbSet<CustomField> CustomField { get; set; }
         public DbSet<CustomFieldData> CustomFieldData { get; set; }
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Language> Languages { get; set; } 
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
 
@@ -117,6 +116,7 @@ namespace DDI.Data
             Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, this, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
+            // Why is this false?
             this.Configuration.ProxyCreationEnabled = false;
         }       
         #endregion Public Constructors
