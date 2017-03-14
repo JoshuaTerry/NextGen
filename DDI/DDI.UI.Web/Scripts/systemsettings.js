@@ -2676,13 +2676,23 @@ function LoadProfession(id) {
 /* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
-
+    DisplayRegionLevels();
 
 }
 
 function DisplayRegionLevels() {
 
-    var lc = $('<div>').addClass('regionlevelcontainer');
+    var lc = $('.regionlevelcontainer');
+    var rc = $('.regioncontainer');
+
+    if ($(lc).length) {
+        $(lc).empty();
+    }
+    else {
+        lc = $('<div>').addClass('regionlevelcontainer');
+        rc = $('<div>').addClass('regioncontainer').appendTo($('.contentcontainer'));
+    }
+
     var ul = $('<ul>').addClass('regionlevellist').appendTo($(lc));
 
     $.ajax({
@@ -2695,15 +2705,86 @@ function DisplayRegionLevels() {
 
             if (data && data.Data && data.IsSuccessful) {
 
-                var li = $('<li>');
-                var a = $('<a>').attr('href', '#').attr('id', data.Data.Id)
-                    .click(function (e) {
-                        e.preventDefault();
+                $.map(data.Data, function (level) {
+                    var li = $('<li>').attr('id', level.Id).text(level.DisplayName).click(function () {
+                        $('.regionlevellist li').removeClass('selected');
+                        $(this).addClass('selected');
 
-                    })
-                    .appendTo($(li));
-                $(li).appendTo($(ul));
+                        // DisplayRegions(level, id);
+                        // TODO - need to populate this levels dropdown
+                        // then when option is selected in the dropdown, populate the grid...
+                    });
 
+                    $(li).appendTo($(ul));
+                });
+
+                if (data.Data.length < 4) {
+
+                    var li = $('<li>')
+                        .attr('href', '#')
+                        .text('+ Add Region Level')
+                        .addClass('newregionlevellink')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            // display new region level modal.
+                            // regionlevelmodal
+                            modal = $('.regionlevelmodal').dialog({
+                                closeOnEscape: false,
+                                modal: true,
+                                width: 250,
+                                resizable: false
+                            });
+
+                            $(modal).find('.rl-Level').val(data.Data.length + 1);
+
+                            $('.cancelmodal').click(function (e) {
+
+                                e.preventDefault();
+
+                                CloseModal(modal);
+
+                            });
+
+                            $('.submitregionlevel').unbind('click');
+
+                            $('.submitregionlevel').click(function () {
+
+                                var item = {
+                                    Level: $(modal).find('.rl-Level').val(),
+                                    Label: $(modal).find('.rl-Label').val(),
+                                    Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                    IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
+                                }
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: WEB_API_ADDRESS + 'regionlevels',
+                                    data: item,
+                                    contentType: 'application/x-www-form-urlencoded',
+                                    crossDomain: true,
+                                    success: function () {
+
+                                        DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                        CloseModal(modal);
+
+                                        DisplayRegionLevels();
+
+                                    },
+                                    error: function (xhr, status, err) {
+                                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                                    }
+                                });
+
+                            });
+                        });
+
+                    $(li).appendTo($(ul));
+                }
+
+                $(ul).appendTo($(lc));
             }
 
             $(lc).appendTo($('.contentcontainer'));
@@ -2716,12 +2797,32 @@ function DisplayRegionLevels() {
 
 }
 
-function DisplayRegions(level) {
+function DisplayRegions(level, parentid) {
 
+    var route = 'regionlevels/' + level + '/regions/';
 
+    if (parentid) {
+        route = route + parentid;
+    }
+
+    // LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete)
+    var columns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('regiongrid', 'regoingridcontainer', columns, route, null, EditRegion, DeleteRegion, null);
 
 }
 
+function EditRegion(id){
+
+}
+
+function DeleteRegion(id) {
+
+}
 
 /* REGIONS SETTINGS */
 
