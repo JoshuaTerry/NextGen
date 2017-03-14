@@ -42,19 +42,5 @@ namespace DDI.Shared.Models.Client.Security
         }
     }
 }
-        //public class User : EntityBase, IUser<Guid> 
-        //{
-        //    [Key]
-        //    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        //    public override Guid Id { get; set; }
-        //    public string UserName { get; set; }
-        //    [MaxLength(256)]
-        //    public string FirstName { get; set; }
-        //    [MaxLength(256)]
-        //    public string MiddleName { get; set; }
-        //    [MaxLength(256)]
-        //    public string LastName { get; set; }
-        //    public bool IsActive { get; set; }
-        //    public DateTime? LastLogin { get; set; }
-        //}
+        
    

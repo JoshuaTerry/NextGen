@@ -27,8 +27,8 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                start = start ?? DateTime.Now.AddDays(-90);
-                end = end ?? DateTime.Now;
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1); 
 
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = _service.GetAllFlat(id, start.Value, end.Value, search);
@@ -47,8 +47,8 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                start = start ?? DateTime.Now.AddDays(-90);
-                end = end ?? DateTime.Now;
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1);
 
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = _service.GetChanges(id, start.Value, end.Value);

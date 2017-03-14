@@ -11,6 +11,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.EFAudit.Logging
 {
@@ -59,8 +60,13 @@ namespace DDI.EFAudit.Logging
         
         public TChangeSet Bake(DateTime timestamp, TPrincipal user)
         {
-            _set.User = user;            
-            _set.Timestamp = timestamp;
+            if (user != null && user is IEntity)
+            {
+                var ddiUser = user as IEntity;
+                _set.User = user;
+                _set.UserName = ddiUser.DisplayName;
+                _set.Timestamp = timestamp;
+            }
 
             foreach (var deferredObjectChange in _deferredObjectChanges.Values)
             {

@@ -67,6 +67,9 @@ namespace DDI.EFAudit.Logging
 
             string valueAsString = ValueToString(value);
             propertyChange.NewValue = valueAsString;
+
+            if (string.IsNullOrEmpty(propertyChange.NewDisplayName) && !string.IsNullOrEmpty(propertyChange.NewValue))
+                propertyChange.NewDisplayName = propertyChange.NewValue;
         }
         private string ValueToString(object value)
         {

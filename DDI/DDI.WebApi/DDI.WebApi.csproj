@@ -290,6 +290,10 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
+    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.cs" />
+    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.Designer.cs">
+      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.cs" />
     <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.Designer.cs">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
@@ -396,6 +400,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.resx">
+      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201703022119126_AddingIdentityTables.resx">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </EmbeddedResource>

@@ -1019,8 +1019,9 @@ function ShowAuditData(id) {
     var modal = $('.auditmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 250,
-        resizable: false
+        width: 700,
+        height: 500,
+        resizable: true
     });
 
     LoadAuditTable(id, modal);

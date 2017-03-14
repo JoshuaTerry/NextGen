@@ -119,7 +119,7 @@ namespace DDI.EFAudit
 
                 if (oven.HasChangeSet)
                 {
-                    result.ChangeSet = oven.Bake(DateTime.Now, principal);
+                    result.ChangeSet = oven.Bake(DateTime.UtcNow, principal);
                     _context.AddChangeSet(result.ChangeSet);
                     _context.DetectChanges();
 
