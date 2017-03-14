@@ -1,16 +1,9 @@
 ﻿/* 
    List of entities more or less taken from CustomFields
    May need to be altered as functionality is expanded
-
-   Also, the logic to choose which section you are in
-   will need to be created once more modules come in
-   (right now the entity type is hardcoded)
-
-   May have a corresponding dict in the controller 
-   and pass in based on that?
 */
 var NoteEntity = {
-    0: 'CRM.Constituent', 1: 'GeneralLedger', 2: 'AccountsPayable', 3: 'AccountsReceivable', 4 : 'FixedAssets',
+    0: 'Constituent', 1: 'GeneralLedger', 2: 'AccountsPayable', 3: 'AccountsReceivable', 4 : 'FixedAssets',
     5: 'Inventory', 6: 'CashProcessing', 7: 'CashDisbursements', 8: 'CashReceipting', 9: 'Gifts',
     10: 'NamedFunds', 11: 'CropEvents', 12: 'PlannedGiving', 13: 'Campaigns', 14 : 'Investments',
     15: 'LineOfCredit', 16: 'Loans', 17: 'Portfolio', 18: 'Pools', 19: 'CRM',
@@ -22,7 +15,14 @@ var notetopicsloadedflag = false;
 
 $(document).ready(function () {
 
-    $('#tab-notes-main').click( function(e) {
+    SetupNotesTab();
+
+});
+
+/* Notes Tab */
+
+function SetupNotesTab() {
+    $('#tab-notes-main').click(function (e) {
 
         LoadNoteDetailsGrid();
 
@@ -31,10 +31,7 @@ $(document).ready(function () {
         SetupNoteTopicSelectModal()
 
     });
-
-});
-
-/* Notes Tab */
+}
 
 function LoadNoteDetailsGrid() {
 
@@ -372,3 +369,17 @@ function CreateMultiSelectTags(topics, container) {
 }
 
 /* End NoteTopics*/
+
+/* Note Alerts Modal */
+
+function SetupNoteAlertsmodal() {
+
+    // make ajax call, if data...
+
+    // create modal and set events
+}
+
+
+
+
+/* End Note Alerts Modal */

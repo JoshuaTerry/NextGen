@@ -69,6 +69,25 @@ namespace DDI.WebApi.Controllers
             return base.Delete(id);
         }
 
+        //[HttpGet]
+        //[Route("api/v1/notes/{entitytypeid}")]
+        //public IHttpActionResult GetAllByEntityType(Guid entityTypeid)
+        //{
+        //    var result = Service.GetAll(entityType);
+
+        //    if(result == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if(!result.IsSuccessful)
+        //    {
+        //        return InternalServerError();
+        //    }
+
+        //    return Ok(result);
+        //}
+
         [HttpGet]
         [Route("api/v1/notes", Name = RouteNames.Note)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -81,6 +100,25 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/{parentid}/notes")]
+        public IHttpActionResult GetByEntityId(Guid parentId)
+        {
+            var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            if(!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
         }
 
         [HttpPatch]

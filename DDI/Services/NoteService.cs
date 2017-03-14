@@ -1,14 +1,18 @@
-﻿using DDI.Data;
+﻿using DDI.Business.Helpers;
+using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CRM;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebGrease.Css.Extensions;
+using DDI.Shared.Models;
 
 namespace DDI.Services
 {
@@ -37,6 +41,18 @@ namespace DDI.Services
         #endregion Public Constructors
 
         #region Public Methods
+        public override IDataResponse<Note> Add(Note note)
+        {
+            SetEntityType(note);
+
+            return base.Add(note);
+        }
+
+        public IDataResponse<List<Note>> GetAll(string parentEntityType)
+        {
+            var result = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.EntityType == parentEntityType).ToList();
+            return new DataResponse<List<Note>>(result);
+        }
 
         public IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds)
         {
@@ -103,6 +119,19 @@ namespace DDI.Services
         {
             _unitOfWork = uow;
             _repository = _unitOfWork.GetRepository<Note>();
+        }
+
+        private void SetEntityType(Note note)
+        {
+            // As we expand, this will have to encompass more than just constituent
+            if (note.EntityType == "Constituent")
+            {
+                note.EntityType = LinkedEntityHelper.GetEntityTypeName<Constituent>();
+            }
+            else
+            {
+                throw new TypeAccessException("Invalid Entity Type for Note");
+            }
         }
 
         #endregion Private Methods
