@@ -17,7 +17,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
-    public class UsersController : ApiController
+    public class UsersController : ControllerBase<User>
     {
         private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
@@ -76,13 +76,15 @@ namespace DDI.WebApi.Controllers
                 {
                     return NotFound();
                 }
+
+                return Ok(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok(user);
         }
 
 
@@ -108,7 +110,8 @@ namespace DDI.WebApi.Controllers
             }
             catch(Exception ex)
             {
-                // LOG ERRORS
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
             //var result = await UserManager.CreateAsync(user, model.Password);
             
@@ -128,7 +131,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
             return Ok();
@@ -149,18 +153,21 @@ namespace DDI.WebApi.Controllers
 
                 var patchUpdateUser = new PatchUpdateUser<User>();
                 patchUpdateUser.UpdateUser(id, userPropertiesChanged);
+
+                return Ok(UserManager.FindByIdAsync(user.Id).Result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok(UserManager.FindByIdAsync(user.Id).Result);
+            
         }
 
         [HttpDelete]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Delete(Guid id)
+        public new async Task<IHttpActionResult> Delete(Guid id)
         {
             try
             {
@@ -175,13 +182,12 @@ namespace DDI.WebApi.Controllers
                 {
                     return GetErrorResult(result);
                 }
+                return Ok();
             }
             catch (Exception)
             {
                 return InternalServerError();
             }
-
-            return Ok();
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)

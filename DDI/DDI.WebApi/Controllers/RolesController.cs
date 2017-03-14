@@ -14,7 +14,7 @@ using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Controllers
 {
-    public class RolesController : ApiController
+    public class RolesController : ControllerBase<Role>
     {
         private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
@@ -71,13 +71,14 @@ namespace DDI.WebApi.Controllers
                 {
                     await RoleManager.CreateAsync(new Role() { Name = role });
                 }
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]
@@ -98,13 +99,14 @@ namespace DDI.WebApi.Controllers
                 var userIds = role.Users.ToList().Select(u => u.UserId);
                 var usersToAdd = userIds.Select(id => UserManager.FindByIdAsync(id).Result);
                 users.AddRange(usersToAdd);
+                return Ok(users);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok(users);
         }
 
         [HttpPatch]
@@ -128,13 +130,15 @@ namespace DDI.WebApi.Controllers
             {
                 roleToUpdate.Name = newRoleName;
                 await RoleManager.UpdateAsync(roleToUpdate);
+                return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok();
+          
         }
 
         [HttpPost]

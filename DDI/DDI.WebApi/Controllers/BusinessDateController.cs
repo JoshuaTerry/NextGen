@@ -12,8 +12,16 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/businessdate", Name = RouteNames.BusinessDate)]
         public IHttpActionResult Get()
         {
-            var response = new DataResponse<DateTime>() { Data = DateTime.Now }; 
-            return Ok(response);
+            try
+            {
+                var response = new DataResponse<DateTime>() { Data = DateTime.Now }; 
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                //base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }         
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
 using DDI.WebApi.Models;
+using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -15,7 +16,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace DDI.WebApi.Controllers
 {
-    public class UserRolesController : ApiController
+    public class UserRolesController : ControllerBase<UserRole>
     {
         private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
@@ -68,13 +69,13 @@ namespace DDI.WebApi.Controllers
                     return NotFound();
                 }
                 roles = await UserManager.GetRolesAsync(user.Id);
+                return Ok(roles);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            return Ok(roles);
         }
 
         [HttpPost]
@@ -100,13 +101,15 @@ namespace DDI.WebApi.Controllers
                     await UserManager.AddToRolesAsync(user.Id, model.Roles);
 
                 }
+                return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok();
+
         }
 
 
@@ -134,26 +137,34 @@ namespace DDI.WebApi.Controllers
                     await UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
 
                 }
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         private Tuple<bool, string> CanRoleBeAddedToUser(string email, string role)
         {
-            Tuple<bool, string> canRoleBeAddedToUser = null;
+            try {
+                Tuple<bool, string> canRoleBeAddedToUser = null;
 
-            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
-            if (userAlreadyHasRole)
-            {
-                canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
+                var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+                if (userAlreadyHasRole)
+                {
+                    canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
+                }
+
+                return canRoleBeAddedToUser;
             }
-
-            return canRoleBeAddedToUser;
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return null;  //InternalServerError();
+            }
         }
 
         private Tuple<bool, string> CanRolesBeAddedToUsers(string[] emails, string[] roles)
