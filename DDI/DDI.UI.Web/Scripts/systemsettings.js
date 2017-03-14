@@ -2676,24 +2676,26 @@ function LoadProfession(id) {
 /* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
+    $('.contentcontainer').empty();
+    var lc = $('<div>').addClass('regionlevelcontainer');
+    var rc = $('<div>').addClass('regioncontainer');
+    $(lc).appendTo($('.contentcontainer'));
+    $(rc).appendTo($('.contentcontainer'));
+
+    CreateRegionLevelSelector(lc);
+
     DisplayRegionLevels();
 
 }
 
-function DisplayRegionLevels() {
+function CreateRegionLevelSelector(container) {
 
-    var lc = $('.regionlevelcontainer');
-    var rc = $('.regioncontainer');
+    var ul = $('<ul>').addClass('regionlevellist').appendTo($(container));
+    DisplayRegionLevels(ul);
 
-    if ($(lc).length) {
-        $(lc).empty();
-    }
-    else {
-        lc = $('<div>').addClass('regionlevelcontainer');
-        rc = $('<div>').addClass('regioncontainer').appendTo($('.contentcontainer'));
-    }
+}
 
-    var ul = $('<ul>').addClass('regionlevellist').appendTo($(lc));
+function DisplayRegionLevels(container) {
 
     $.ajax({
         url: WEB_API_ADDRESS + 'regionlevels/',
@@ -2707,15 +2709,23 @@ function DisplayRegionLevels() {
 
                 $.map(data.Data, function (level) {
                     var li = $('<li>').attr('id', level.Id).text(level.DisplayName).click(function () {
+                        $('.regioncontainer').empty();
                         $('.regionlevellist li').removeClass('selected');
                         $(this).addClass('selected');
 
                         // DisplayRegions(level, id);
-                        // TODO - need to populate this levels dropdown
-                        // then when option is selected in the dropdown, populate the grid...
+
+                        if (level.IsChildLevel) {
+                            var parents = $('<select>').addClass('parentregions');
+                            $(parents).appendTo($('.regioncontainer'));
+                            // PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, callback)
+                            PopulateDropDown('.parentregions', 'regions/regionlevels/' + (level.Level - 1), '', '', null, function () {
+                                // selected item
+                            });
+                        }
                     });
 
-                    $(li).appendTo($(ul));
+                    $(li).appendTo($(container));
                 });
 
                 if (data.Data.length < 4) {
@@ -2781,13 +2791,10 @@ function DisplayRegionLevels() {
                             });
                         });
 
-                    $(li).appendTo($(ul));
+                    $(li).appendTo($(container));
                 }
 
-                $(ul).appendTo($(lc));
             }
-
-            $(lc).appendTo($('.contentcontainer'));
 
         },
         error: function (xhr, status, err) {

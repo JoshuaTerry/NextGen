@@ -34,13 +34,13 @@ div.tagscontainer { height: 50vh }
 
 /* REGION SETTINGS */
 
-.regionlevelcontainer { display: inline-block; width: 10%; }
-.regionlevellist { list-style: none; width: 100%; }
-.regionlevellist li { font-weight: bold; display: block; padding: 8px 15px; text-align: right; width: 100%; }
+.regionlevelcontainer { display: inline-block; width: 15%; vertical-align: top; }
+.regionlevellist { list-style: none; }
+.regionlevellist li { font-weight: bold; display: block; padding: 8px 15px; text-align: right; }
 .regionlevellist li:hover { background-color: #333333; color: white; cursor: pointer; }
 .regionlevellist li.selected { background-color: white; color: black; }
 .regionlevellist li.selected:hover { color: black; }
 
-.regoincontainer { display: inline-block; width: 85%; background-color: white; }
+.regioncontainer { display: inline-block; width: 70%; background-color: white; vertical-align: top; min-height: 250px; }
 
 /* END REGION SETTINGS */
