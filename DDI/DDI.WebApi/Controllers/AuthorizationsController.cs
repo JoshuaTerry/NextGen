@@ -23,6 +23,7 @@ using Microsoft.Owin.Security.OAuth;
 using DDI.WebApi.Services;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
@@ -31,6 +32,8 @@ namespace DDI.WebApi.Controllers
     {
         private const string LOCAL_LOGIN_PROVIDER = "Local";
         private UserManager _userManager;
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuthorizationsController));
+        protected ILogger Logger => _logger;
 
         public AuthorizationsController()
         {
@@ -81,9 +84,10 @@ namespace DDI.WebApi.Controllers
             {
                 roles = await UserManager.GetRolesAsync(user.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
 
             return Ok(roles);
@@ -155,12 +159,20 @@ namespace DDI.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.AddPasswordAsync(Guid.Parse(User.Identity.GetUserId()), model.NewPassword);
-
-            if (!result.Succeeded)
+            try
             {
-                return GetErrorResult(result);
+                IdentityResult result = await UserManager.AddPasswordAsync(Guid.Parse(User.Identity.GetUserId()), model.NewPassword);
+
             }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+            }
+            //if (!result.Succeeded)
+            //{
+            //    return GetErrorResult(result);
+            //}
 
             return Ok();
         }
@@ -176,19 +188,26 @@ namespace DDI.WebApi.Controllers
 
             IdentityResult result;
 
-            if (model.LoginProvider == LOCAL_LOGIN_PROVIDER)
+            try
             {
-                result = await UserManager.RemovePasswordAsync(Guid.Parse(User.Identity.GetUserId()));
+                if (model.LoginProvider == LOCAL_LOGIN_PROVIDER)
+                {
+                    result = await UserManager.RemovePasswordAsync(Guid.Parse(User.Identity.GetUserId()));
+                }
+                else
+                {
+                    result = await UserManager.RemoveLoginAsync(Guid.Parse(User.Identity.GetUserId()), new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                result = await UserManager.RemoveLoginAsync(Guid.Parse(User.Identity.GetUserId()), new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
+            //if (!result.Succeeded)
+            //{
+            //    return GetErrorResult(result);
+            //}
 
             return Ok();
         }
@@ -202,13 +221,13 @@ namespace DDI.WebApi.Controllers
             {
                 ModelState.AddModelError("", "User Email and Code are required");
                 return BadRequest(ModelState);
-            }
+            } 
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
+            
             User user;
             try
             {
@@ -216,16 +235,26 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return BadRequest(ModelState);
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+                //ModelState.AddModelError("", ex.Message);
+                //return BadRequest(ModelState);
             }
 
 
 
-            IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
-            if (!result.Succeeded)
+            try
             {
-                return GetErrorResult(result);
+                IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
+                //if (!result.Succeeded)
+                //{
+                //    return GetErrorResult(result);
+                //}
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
 
             return Ok();
@@ -247,8 +276,10 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return BadRequest(ModelState);
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+                //ModelState.AddModelError("", ex.Message);
+                //return BadRequest(ModelState);
             }
 
             var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -260,8 +291,15 @@ namespace DDI.WebApi.Controllers
             var body = "Reset your <a href=\"" + callbackUrl + "\">password</a>.";
             var message = service.CreateMailMessage(from, to, "Forgotten Password", body);
 
-            service.SendMailMessage(message);
-
+            try
+            {
+                service.SendMailMessage(message);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+            }
             return Ok();
 
         }
@@ -288,14 +326,24 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return BadRequest(ModelState);
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+                //ModelState.AddModelError("", ex.Message);
+                //return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.NewPassword);
-            if (!result.Succeeded)
+            try
             {
-                return GetErrorResult(result);
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.NewPassword);
+            }
+            //if (!result.Succeeded)
+            //{
+            //    return GetErrorResult(result);
+            //}
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
 
             return Ok();

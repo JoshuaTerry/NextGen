@@ -7,12 +7,16 @@ using System.Web.Http;
 using DDI.Services;
 using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
     public class CustomFieldDataController : ApiController
     {
         ServiceBase<CustomFieldData> _service;
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuthorizationsController));
+        protected ILogger Logger => _logger;
+
 
         #region Constructors
 
@@ -32,33 +36,51 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/customfielddata")]
         public IHttpActionResult GetAll()
         {
-            var result = _service.GetAll();
+            try
+            {
+                var result = _service.GetAll();
 
-            if (result == null)
-            {
-                return NotFound();
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                throw new Exception("Test Error customer field getall");
+                //return Ok(result);
             }
-            if (!result.IsSuccessful)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
-            return Ok(result);
+            //if (!result.IsSuccessful)
+            //{
+            //    return InternalServerError();
+            //}
         }
 
         [HttpGet]
         [Route("api/v1/customfielddata/{id}")]
         public IHttpActionResult GetById(Guid id)
         {
-            var result = _service.GetById(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetById(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                throw new Exception("Test Error customer field getbyid");
+                //return Ok(result);
             }
-            if (!result.IsSuccessful)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
-            return Ok(result);
+            //if (!result.IsSuccessful)
+            //{
+            //    return InternalServerError();
+            //}
         }
 
         [HttpPost]
@@ -92,7 +114,9 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+                //return BadRequest(ex.ToString());
             }
         }
 
@@ -117,9 +141,10 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }

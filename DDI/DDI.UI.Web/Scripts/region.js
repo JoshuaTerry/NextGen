@@ -44,7 +44,7 @@ function LoadRegions(container, prefix) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -100,7 +100,7 @@ function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }

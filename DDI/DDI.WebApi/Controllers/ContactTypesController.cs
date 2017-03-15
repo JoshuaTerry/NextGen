@@ -21,18 +21,26 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/contacttypes/{categoryid}", Name = RouteNames.ContactType + RouteNames.ContactCategory)]
         public IHttpActionResult GetContactTypesByContactCategory(Guid categoryId)
         {
-            var response = Service.GetAllWhereExpression(c => c.ContactCategory.Id == categoryId);
-            if(response == null)
+            try
+            { 
+                var response = Service.GetAllWhereExpression(c => c.ContactCategory.Id == categoryId);
+                if(response == null)
+                {
+                    return NotFound();
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            if(!response.IsSuccessful)
-            {
-                return InternalServerError();
-            }
+            //if(!response.IsSuccessful)
+            //{
+            //    return InternalServerError();
+            //}
 
-            return Ok(response);
             
         }
     }
