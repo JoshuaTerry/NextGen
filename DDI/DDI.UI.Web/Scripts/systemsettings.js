@@ -17,7 +17,9 @@ var SystemSettings = {
     Organization: 'OrganizationSettings',
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
-    Note: 'NoteSettings'
+    Note: 'NoteSettings',
+    PaymentPreferences: 'PaymentPreferencesSettings'
+
 }
 
 $(document).ready(function () {
@@ -2199,7 +2201,7 @@ function LoadOrganizationSectionSettings() {
 
 function LoadPaymentPreferencesSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Payment Preferences', 'sectionpreferences', SystemSettings.PaymentPreferences);
 
 }
 

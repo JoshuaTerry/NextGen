@@ -295,7 +295,8 @@
 
                     </div>
 
-                    <h1>Payment Preferences<a href="#" title="New" class="newppmodallink newbutton"></a></h1>
+                    <h1 class ="PaymentPreferencesSettingsSection">
+                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span><a href="#" title="New" class="newppmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
