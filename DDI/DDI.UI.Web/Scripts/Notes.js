@@ -30,8 +30,6 @@ function SetupNotesTab() {
 
         NoteTopicsMultiselectModal();
 
-        // SetupNoteTopicSelectModal();
-
         GetNoteAlerts();
 
     });
@@ -76,7 +74,7 @@ function NewNoteDetailsModal() {
        
         $('.noteTopicSelectImage').click(function (e) {
 
-            SetupNoteTopicSelectModal();
+            $(modal).find('.tagdropdowncontainer').show();
 
             $('.savenotetopics').click(function (e) {
 
@@ -361,13 +359,6 @@ function LoadNoteDetails(id) {
 /* End Notes Tab */
 
 /* NoteTopics */
-function SetupNoteTopicSelectModal() {
-
-    $(modal).find('.tagdropdowncontainer').show();
-
-
-}
-
 function NoteTopicsMultiselectModal() {
 
     $.ajax({
@@ -468,7 +459,6 @@ function GetCheckedNoteTopics() {
 
 }
 
-
 /* End NoteTopics */
 
 /* Note Alerts Modal */
@@ -533,8 +523,5 @@ function SetupNoteAlertModal() {
 
     });
 
-    // make ajax call, if data...
-
-    // create modal and set events
 }
 /* End Note Alerts Modal */
