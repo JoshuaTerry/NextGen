@@ -64,10 +64,6 @@ namespace DDI.WebApi.Controllers
                     Logger.LogError(ex.ToString);
                     return InternalServerError(new Exception(ex.Message));
                 }
-                //if (!result.IsSuccessful)
-                //{
-                //    return InternalServerError();
-                //}
 
             var totalCount = result.TotalResults;
 

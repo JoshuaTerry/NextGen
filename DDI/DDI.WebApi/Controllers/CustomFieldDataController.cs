@@ -44,18 +44,13 @@ namespace DDI.WebApi.Controllers
                 {
                     return NotFound();
                 }
-                throw new Exception("Test Error customer field getall");
-                //return Ok(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.ToString);
                 return InternalServerError(new Exception(ex.Message));
             }
-            //if (!result.IsSuccessful)
-            //{
-            //    return InternalServerError();
-            //}
         }
 
         [HttpGet]
@@ -69,18 +64,13 @@ namespace DDI.WebApi.Controllers
                 {
                     return NotFound();
                 }
-                throw new Exception("Test Error customer field getbyid");
-                //return Ok(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.ToString);
                 return InternalServerError(new Exception(ex.Message));
             }
-            //if (!result.IsSuccessful)
-            //{
-            //    return InternalServerError();
-            //}
         }
 
         [HttpPost]
@@ -116,7 +106,6 @@ namespace DDI.WebApi.Controllers
             {
                 Logger.LogError(ex.ToString);
                 return InternalServerError(new Exception(ex.Message));
-                //return BadRequest(ex.ToString());
             }
         }
 

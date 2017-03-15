@@ -36,12 +36,6 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError(new Exception(ex.Message));
             }
 
-            //if(!response.IsSuccessful)
-            //{
-            //    return InternalServerError();
-            //}
-
-            
         }
     }
 }
