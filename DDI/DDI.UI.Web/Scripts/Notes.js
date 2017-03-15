@@ -28,9 +28,9 @@ function SetupNotesTab() {
 
         NewNoteDetailsModal();
 
-        NoteTopicsTagBox();
+        NoteTopicsMultiselectModal();
 
-        SetupNoteTopicSelectModal();
+        // SetupNoteTopicSelectModal();
 
         GetNoteAlerts();
 
@@ -210,6 +210,29 @@ function EditNoteDetails(id) {
 
     $('.hidnoteid').val(id);
 
+    LoadSelectedNoteTopics(id);
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        $(modal).find('.tagdropdowncontainer').show();
+
+        $('.savenotetopics').click(function (e) {
+
+            var notetopics = GetNoteTopicsToSave();
+
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+
+    });
+
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
@@ -307,9 +330,7 @@ function SetupNoteTopicSelectModal() {
 
 }
 
-function NoteTopicsTagBox() {
-
-    var id = $('.hidnoteid').val();
+function NoteTopicsMultiselectModal() {
 
     $.ajax({
         type: 'GET',
@@ -329,7 +350,7 @@ function NoteTopicsTagBox() {
 
 }
 
-function StyleAndSetupIndividualTags(topic, DeleteFunction) { // DeleteFunction may actually have to be called in ExecFunction()
+function StyleAndSetupIndividualTags(topic, DeleteFunction) { 
 
     var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
     $('<span>').text(topic.Name).appendTo($(t));
@@ -409,22 +430,6 @@ function GetCheckedNoteTopics() {
 
 }
 
-function CreateMultiSelectTags(topics, container) {
-
-    var ul = $('<ul>');
-
-    $.map(topics, function (topic) {
-
-        var li = $('<li>');
-
-        $('<input>').attr('type', 'checkbox').val(topic.Id).appendTo($(li));
-        $('<span>').text(topic.DisplayName).appendTo($(li));
-
-        $(li).appendTo($(ul));
-    });
-
-    $(ul).appendTo($(container));
-}
 
 /* End NoteTopics */
 
