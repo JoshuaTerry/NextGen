@@ -61,7 +61,14 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/users")]
         public IHttpActionResult Get()
         {
-            return Ok(UserManager.Users);
+            try { 
+                return Ok(UserManager.Users);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]
@@ -103,18 +110,12 @@ namespace DDI.WebApi.Controllers
             {
                 var result = UserManager.Create(user, model.Password);
 
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
             }
             catch(Exception ex)
             {
                 base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
-            //var result = await UserManager.CreateAsync(user, model.Password);
-            
 
             try
             {
@@ -128,14 +129,14 @@ namespace DDI.WebApi.Controllers
                 var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
 
                 service.SendMailMessage(message);
+
+                return Ok();
             }
             catch (Exception ex)
             {
                 base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
-            }
-
-            return Ok();
+            }        
         }
 
         [HttpPatch]
@@ -161,8 +162,6 @@ namespace DDI.WebApi.Controllers
                 base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
-
-            
         }
 
         [HttpDelete]
@@ -182,6 +181,7 @@ namespace DDI.WebApi.Controllers
                 {
                     return GetErrorResult(result);
                 }
+
                 return Ok();
             }
             catch (Exception)

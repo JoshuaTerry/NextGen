@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
+    //When model is created for this controller change inheritance from APIController to ControllerBase<BusinessData>
     public class BusinessDateController : ApiController
     { 
         [HttpGet]

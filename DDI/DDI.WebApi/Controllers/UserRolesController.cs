@@ -108,11 +108,8 @@ namespace DDI.WebApi.Controllers
                 base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
-
-
         }
-
-
+        
         // This endpoint is given the POST attribute as DELETE does not allow a request body and we need it in order to send arrays of users and roles
         [HttpPost]
         [Route("api/v1/users/roles/remove")]

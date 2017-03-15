@@ -8,8 +8,10 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
+    //When model is created for this controller change inheritance from APIController to ControllerBase<Environment>
     public class EnvironmentController : ApiController
     {
+        
         private string ENVIRONMENTKEY = "Environment";
         [HttpGet]
         [Route("api/v1/environment", Name = RouteNames.Environment)]
@@ -39,6 +41,7 @@ namespace DDI.WebApi.Controllers
             }
             catch(Exception ex)
             {
+                
                 //base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }

@@ -84,10 +84,17 @@ namespace DDI.WebApi.Controllers
         [HttpGet]
         [Route("api/v1/roles")]
         public IHttpActionResult Get()
-        {
-            return Ok(RoleManager.Roles.ToList());
+        { 
+            try
+            {
+                return Ok(RoleManager.Roles.ToList());
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
-
         [HttpGet]
         [Route("api/v1/roles/{roleId}/users")]
         public async Task<IHttpActionResult> GetUsersInRole(Guid roleId)
@@ -137,8 +144,6 @@ namespace DDI.WebApi.Controllers
                 base.Logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
-
-          
         }
 
         [HttpPost]
@@ -161,13 +166,14 @@ namespace DDI.WebApi.Controllers
                         await RoleManager.DeleteAsync(roleToDelete);
                     }
                 }
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
 
