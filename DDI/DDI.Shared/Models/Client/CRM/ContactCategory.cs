@@ -28,8 +28,8 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
 
-        public Guid? DefaultContactTypeID { get; set; }
-
+        public Guid? DefaultContactTypeId { get; set; }
+        [ForeignKey("DefaultContactTypeId")]
         public ContactType DefaultContactType { get; set; }
 
         public ICollection<ContactType> ContactTypes { get; set; }

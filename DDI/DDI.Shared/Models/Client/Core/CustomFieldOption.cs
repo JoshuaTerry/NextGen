@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.Core
         public string Code { get; set; }
         public string Description { get; set; }
         public int SortOrder { get; set; }
-
+        [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 
         [NotMapped]

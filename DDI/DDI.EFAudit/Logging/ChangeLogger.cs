@@ -22,14 +22,14 @@ namespace DDI.EFAudit.Logging
         private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
         private Recorder<TChangeSet, TPrincipal> _recorder;
         private ILoggingFilter _filter;
+        private DbContext _dbContext;
 
-        public ChangeLogger(IAuditLogContext<TChangeSet, TPrincipal> context,
-            IChangeSetFactory<TChangeSet, TPrincipal> factory,
-            ILoggingFilter filter, ISerializationManager serializer)
+        public ChangeLogger(IAuditLogContext<TChangeSet, TPrincipal> context, DbContext dbContext, IChangeSetFactory<TChangeSet, TPrincipal> factory, ILoggingFilter filter, ISerializationManager serializer)
         {
             this._context = context;
+            this._dbContext = dbContext;
             this._factory = factory;
-            this._recorder = new Recorder<TChangeSet, TPrincipal>(factory, serializer);
+            this._recorder = new Recorder<TChangeSet, TPrincipal>(factory, serializer, dbContext);
             this._filter = filter;
         }
 
@@ -59,7 +59,7 @@ namespace DDI.EFAudit.Logging
         }
 
         private void LogScalarChanges(ObjectStateEntry entry)
-        {
+        { 
             object entity = entry.Entity;
             if (!(entity is IAuditableEntity))
             {
@@ -69,7 +69,6 @@ namespace DDI.EFAudit.Logging
             Type type = entity.GetType();
             bool isModifiedSet = false;
 
-            // If this class shouldn't be logged, give up at this point
             if (!_filter.ShouldLog(type))
             {
                 return;
@@ -84,12 +83,8 @@ namespace DDI.EFAudit.Logging
 
                     foreach (var valuePair in valuePairs)
                     {
-
-                        var pair = valuePair;
-                        _recorder.Record(entry, entity,
-                            () => _context.GetReferenceForObject(entity),
-                            valuePair.PropertyName,
-                            pair.NewValue);
+                        var pair = valuePair;                        
+                        _recorder.Record(entry, entity, () => _context.GetReferenceForObject(entity), valuePair.PropertyName, pair.NewValue);
                     }
                 }
             }
@@ -99,8 +94,7 @@ namespace DDI.EFAudit.Logging
         /// This is where Navigation Properties will get updated
         /// </summary> 
         private void LogRelationshipChange(ObjectStateEntry entry)
-        {
-
+        {                      
             if (entry.State == EntityState.Added || entry.State == EntityState.Deleted)
             {
                 // Each relationship has two ends. Log both directions.

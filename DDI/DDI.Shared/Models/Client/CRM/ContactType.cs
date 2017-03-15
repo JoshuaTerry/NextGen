@@ -23,7 +23,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string Name { get; set; }
 
         public Guid? ContactCategoryId { get; set; }
-
+        [ForeignKey("ContactCategoryId")]
         public ContactCategory ContactCategory { get; set; }
 
         public bool IsAlwaysShown { get; set; }

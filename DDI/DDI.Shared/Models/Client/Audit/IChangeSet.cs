@@ -13,6 +13,7 @@ namespace DDI.Shared.Models.Client.Audit
         IEnumerable<IObjectChange<TPrincipal>> ObjectChanges { get; }
         void Add(IObjectChange<TPrincipal> objectChange);
         DateTime Timestamp { get; set; }
+        string UserName { get; set; }
         Guid UserId { get; set; }
         TPrincipal User { get; set; }
     }

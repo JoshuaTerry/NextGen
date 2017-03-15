@@ -38,7 +38,7 @@ namespace DDI.Shared.Models.Client.CRM
         public ConstituentCategory ConstituentCategory { get; set; }
 
         public Guid? RelationshipCategoryId { get; set; }
-
+        [ForeignKey("RelationshipCategoryId")]
         public RelationshipCategory RelationshipCategory { get; set; }
 
         public ICollection<Relationship> Relationships { get; set; }

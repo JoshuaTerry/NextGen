@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using DDI.Shared.Models;
 using DDI.Logger;
 using DDI.Shared.Helpers;
+using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
@@ -230,6 +232,19 @@ namespace DDI.Data
 
                 if (_context.Entry(entity).State != EntityState.Added)
                 {
+                    IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                    if (auditableEntity != null)
+                    {
+                        var user = EntityFrameworkHelpers.GetCurrentUser();
+                        if (user != null)
+                        {
+                            auditableEntity.CreatedBy = user.UserName;
+                            auditableEntity.LastModifiedBy = user.UserName;
+                        }
+
+                        auditableEntity.CreatedOn = DateTime.UtcNow;
+                        auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                    }
                     // Add it only if not already added.
                     EntitySet.Add(entity);
                 }
@@ -251,6 +266,17 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
+                IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                if (auditableEntity != null)
+                {
+                    var user = EntityFrameworkHelpers.GetCurrentUser();
+                    if (user != null)
+                    {
+                        auditableEntity.LastModifiedBy = user.UserName;
+                    }
+
+                    auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                }
                 Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
 
@@ -272,7 +298,6 @@ namespace DDI.Data
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
             IEnumerable<string> propertynames = currentValues.PropertyNames;
-
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
                 if (propertynames.Contains(keyValue.Key))
@@ -288,7 +313,6 @@ namespace DDI.Data
 
             action?.Invoke(entity);
         }
-
         public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();

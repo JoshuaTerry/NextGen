@@ -51,7 +51,7 @@ namespace DDI.EFAudit
 
             await transactionProvider.InTransactionAsync(async () =>
             {
-                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _factory, _filter, _serializer);
+                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _dbcontext, _factory, _filter, _serializer);
                 var oven = (IOven<TChangeSet, TPrincipal>)null;
                  
                 cancellationToken.ThrowIfCancellationRequested(); 
@@ -74,7 +74,7 @@ namespace DDI.EFAudit
                 
                 if (oven.HasChangeSet)
                 {                  
-                    result.ChangeSet = oven.Bake(DateTime.Now, principal);
+                    result.ChangeSet = oven.Bake(DateTime.UtcNow, principal);
                     _context.AddChangeSet(result.ChangeSet);
                     _context.DetectChanges();
                     
