@@ -54,6 +54,7 @@ namespace DDI.Shared.Statics
         public const string RegionLevel = "RegionLevels";
         public const string RegionChildren = "ChildrenRegion";
         public const string Relationship = "Relationship";
+        public const string RelationshipCategories = "RelationshipCategories";
         public const string RelationshipTypes = "RelationshipTypes";
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";

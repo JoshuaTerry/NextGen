@@ -27,7 +27,7 @@ namespace DDI.Shared.Models.Client.CRM
         public bool IsActive { get; set; }
 
         public Guid? ParentRegionId { get; set; }
-
+        [ForeignKey("ParentRegionId")]
         public Region ParentRegion { get; set; }
 
         [InverseProperty(nameof(ParentRegion))]

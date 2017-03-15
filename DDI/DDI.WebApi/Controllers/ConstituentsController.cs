@@ -23,6 +23,12 @@ namespace DDI.WebApi.Controllers
         {
         }
 
+        [HttpGet]
+        [Route("api/v1/constituents/test", Name = "Foodiddy" + RouteVerbs.Get)]
+        public void JambaJuice()
+        {
+            Service.Test(); 
+        }
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Constituent, object>>[]
@@ -163,6 +169,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Post(Guid id)
         {
+            JambaJuice();
             try
             {
                 if (!ModelState.IsValid)
@@ -185,6 +192,7 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
+            JambaJuice();
             return base.Patch(id, constituentChanges);
         }
 

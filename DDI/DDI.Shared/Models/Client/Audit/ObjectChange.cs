@@ -20,6 +20,7 @@ namespace DDI.Shared.Models.Client.Audit
         [MaxLength(128)]
         public string EntityId { get; set; }
         public long ChangeSetId { get; set; }
+        [ForeignKey("ChangeSetId")]
         public ChangeSet ChangeSet { get; set; }
         public List<PropertyChange> PropertyChanges { get; set; }
 

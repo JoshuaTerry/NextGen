@@ -33,8 +33,7 @@ namespace DDI.Data
         public DbSet<CustomField> CustomField { get; set; }
         public DbSet<CustomFieldData> CustomFieldData { get; set; }
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Language> Languages { get; set; } 
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
 
@@ -114,13 +113,10 @@ namespace DDI.Data
         { }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
-            // Commented this line out for now.  See http://stackoverflow.com/questions/14064434/ef5-getting-this-error-message-model-compatibility-cannot-be-checked-because-th
-            // Basically compatibility cannot be checked.
-            //Database.SetInitializer<DomainContext>(new DomainContextInitializer());
-
-            Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, filterProvider);
+            Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, this, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
+            // Why is this false?
             this.Configuration.ProxyCreationEnabled = false;
         }       
         #endregion Public Constructors
@@ -172,6 +168,5 @@ namespace DDI.Data
             return Logger.SaveChanges(author);
         } 
         #endregion
-
     }
 }

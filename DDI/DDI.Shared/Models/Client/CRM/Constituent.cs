@@ -149,17 +149,27 @@ namespace DDI.Shared.Models.Client.CRM
         public int? YearEstablished { get; set; }
 
         #region Navigation Properties
-
+        [ForeignKey("ClergyStatusId")]
         public ClergyStatus ClergyStatus { get; set; }
+        [ForeignKey("ClergyTypeId")]
         public ClergyType ClergyType { get; set; }
+        [ForeignKey("ConstituentStatusId")]
         public ConstituentStatus ConstituentStatus { get; set; }
+        [ForeignKey("ConstituentTypeId")]
         public ConstituentType ConstituentType { get; set; }
+        [ForeignKey("EducationLevelId")]
         public EducationLevel EducationLevel { get; set; }
+        [ForeignKey("GenderId")]
         public Gender Gender { get; set; }
+        [ForeignKey("IncomeLevelId")]
         public IncomeLevel IncomeLevel { get; set; }
+        [ForeignKey("LanguageId")]
         public Language Language { get; set; }
+        [ForeignKey("MaritalStatusId")]
         public MaritalStatus MaritalStatus { get; set; }
+        [ForeignKey("PrefixId")]
         public Prefix Prefix { get; set; }
+        [ForeignKey("ProfessionId")]
         public Profession Profession { get; set; }
 
 
