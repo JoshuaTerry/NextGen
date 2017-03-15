@@ -1113,17 +1113,9 @@ function LoadConstituentTypesSectionSettings() {
                 resizable: false
             });
 
-            LoadAvailableTags($('.consttype-tagselect'));
-
-            $(modal).find('.tagSelectImage').click(function () {
-
-                $('.consttype-tagselect').toggle();
-
-                if (!$('.consttype-tagselect').is(':visible')) {
-                    DisplyConstituentTypeTags($(modal).find('.tagselectgridcontainer input:checked'));
-                }
-
-            });
+            $('.consttype-tagselect').hide();
+            $('.tagSelectImage').hide();
+            $('.tagSelect').hide();
 
             $('.cancelmodal').click(function (e) {
 
@@ -1141,7 +1133,6 @@ function LoadConstituentTypesSectionSettings() {
                     Code: $(modal).find('.consttype-Code').val(),
                     Name: $(modal).find('.consttype-Name').val(),
                     Category: $(modal).find('.consttype-Category').val(),
-                    //Tags: $(modal).find('.consttype-Tags').val(),
                     NameFormat: $(modal).find('.consttype-NameFormat').val(),
                     SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
                     SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
@@ -1183,26 +1174,108 @@ function LoadConstituentTypesSectionSettings() {
 
 }
 
-function DisplyConstituentTypeTags(tags) {
+function DisplayConstituentTypeTags(tags) {
 
     $(modal).find('.tagselect').empty();
+    $(modal).find('.consttype-tagselect').empty();
 
     $(tags).each(function (i, tag) {
 
-        var id = $(tag).val();
-        var name = $(tag).parent().find('span').text();
+        var id = tag.Id;
+        var name = tag.Name;
 
         var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
         $('<span>').text(name).appendTo($(t));
         $('<div>').addClass('dx-tag-remove-button')
             .click(function () {
-                
+                $.ajax({
+                    url: WEB_API_ADDRESS + 'constituenttypes/' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id,
+                    method: 'DELETE',
+                    headers: GetApiHeaders(),
+                    contentType: 'application/json; charset-utf-8',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred deleting the tag.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+                    }
+                });
             })
             .appendTo($(t));
 
     });
     
 
+}
+
+function LoadConstituentTypeTagSelector(typeId, container) {
+
+    $('.tagselect').each(function () {
+
+        var img = $('.tagSelectImage');
+        var constTypeId = typeId;
+        
+        if (img.length === 0) {
+            img = $('<div>').addClass('tagSelectImage');
+        }
+
+            $(img).click(function () {
+
+                modal = $('.tagselectmodal').dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: 450,
+                    resizable: false
+                });
+
+                LoadAvailableTags(modal);
+
+                $('.saveselectedtags').unbind('click');
+
+                $('.saveselectedtags').click(function () {
+
+                    var tagIds = [];
+
+                    $('.tagselectgridcontainer').find('input').each(function (index, value) {
+
+                        if ($(value).prop('checked')) {
+                            tagIds.push($(value).val());
+                        }
+                    });
+
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituenttypes/' + constTypeId + '/constituenttypetags',
+                        method: 'POST',
+                        headers: GetApiHeaders(),
+                        data: JSON.stringify({ tags: tagIds }),
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            // Display success
+                            DisplaySuccessMessage('Success', 'Tags saved successfully.');
+                            CloseModal(modal);
+                            EditConstituentType(constTypeId);
+                        },
+                        error: function (xhr, status, err) {
+
+                            DisplayErrorMessage('Error', 'An error occurred saving the tags.');
+                            CloseModal(modal);
+                            EditConstituentType(constTypeId);
+                        }
+                    });
+                });
+            });
+            $(this).after($(img));
+    });
 }
 
 function LoadConstituentTypeSettingsGrid() {
@@ -1228,16 +1301,27 @@ function LoadConstituentTypeSettingsGrid() {
                         break;
                 }
 
-
                 $('<label>').text(category).appendTo(container);
-
             }
-
         },
-        //{ caption: 'Default Tags', cellTemplate: function (container, options) {
-        //    $('<label>').text(DisplaySelectedTagsConstituentType().appendTo(container));
-        //}},
-        //{ dataField: 'Tags', caption: 'Default Tags' },
+        {
+            caption: 'Tags', cellTemplate: function (container, options) {
+
+                var tags;
+
+                if (options.data.Tags.length > 0) {
+                    var label = $('<label>');
+
+                    $.map(options.data.Tags, function (tag) {
+                        $(label).text($(label).text() + tag.Code + ', ');
+                    });
+
+                    var codes = $(label).text();
+                    $(label).text(codes.substr(0, codes.length - 2));
+                    $(label).appendTo($(container));
+                }
+            }
+        },
         { dataField: 'NameFormat', caption: 'Name Format' },
         { dataField: 'SalutationFormal', caption: 'Formal Salutation' },
         { dataField: 'SalutationInformal', caption: 'Informal Salutation' }
@@ -1248,26 +1332,30 @@ function LoadConstituentTypeSettingsGrid() {
 
 }
 
+
 // CONSTITUENT TYPE SYSTEM SETTINGS 
 function EditConstituentType(id) {
 
     LoadConstituentType(id);
 
+
     modal = $('.constituenttypemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 400,
+        height: 500,
         resizable: false
     });
 
-    LoadTagSelector(currentEntity.Category);
-    DisplaySelectedTagsConstituentType();
+    $('.consttype-tagselect').show();
 
     $('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
         CloseModal(modal);
+
+        LoadConstituentTypeSettingsGrid()
 
     });
 
@@ -1279,7 +1367,6 @@ function EditConstituentType(id) {
             Code: $(modal).find('.consttype-Code').val(),
             Name: $(modal).find('.consttype-Name').val(),
             Category: $(modal).find('.consttype-Category').val(),
-            //Tags: $(modal).find('.consttype-Tags').val(),
             NameFormat: $(modal).find('.consttype-NameFormat').val(),
             SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
             SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
@@ -1311,7 +1398,23 @@ function EditConstituentType(id) {
 
 function DeleteConstituentType(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
 
+            DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
+
+            LoadConstituentTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+        }
+
+    });
 
 }
 
@@ -1331,13 +1434,19 @@ function LoadConstituentType(id) {
                 $(modal).find('.consttype-Code').val(data.Data.Code);
                 $(modal).find('.consttype-Name').val(data.Data.Name);
                 $(modal).find('.consttype-Category').val(data.Data.Category);
-                $(modal).find('.consttype-Tags').val(data.Data.Tags);
                 $(modal).find('.consttype-NameFormat').val(data.Data.NameFormat);
                 $(modal).find('.consttype-SalutationFormal').val(data.Data.SalutationFormal);
                 $(modal).find('.consttype-SalutationInformal').val(data.Data.SalutationInformal);
 
-            }
+                LoadConstituentTypeTagSelector(data.Data.Id, $('.consttype-tagselect'));
 
+                if (data.Data.Tags.length > 0) {
+                    DisplayConstituentTypeTags($(data.Data.Tags));
+                }
+                else {
+                    $(modal).find('.consttype-tagselect').empty();
+                }
+            }
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error loading constituent type.');

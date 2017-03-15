@@ -238,17 +238,6 @@
             </div>
 
             <div class="fieldblock">
-                <label>Tags</label>
-                <div class="tagselect"></div>
-                <div class="tagSelectImage"></div>
-                <div class="consttype-tagselect" style="display: none;">
-                    <div class="tagselectgridcontainer"></div>
-                </div>
-                
-            </div>
-
-
-            <div class="fieldblock">
                 <label>Name Format</label>
                 <input type="text" class="consttype-NameFormat" />
             </div>
@@ -263,10 +252,26 @@
                 <input type="text" class="consttype-SalutationInformal" />
             </div>
 
+            <div class="fieldblock">
+                <label>Tags</label>
+                <div class="tagselect consttype-tagselect"></div>
+            </div>
+
+            <div class="fieldblock">
+                <label></label>
+            </div>
+            <div class="fieldblock">
+                <label></label>
+            </div>
+            <div class="fieldblock">
+                <label></label>
+            </div>
+
             <div class="modalbuttons">
                 <input type="button" class="submitconsttype" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
+
 
         </div>
 
