@@ -22,7 +22,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
-
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
 
         public Guid? ConstituentId { get; set; }

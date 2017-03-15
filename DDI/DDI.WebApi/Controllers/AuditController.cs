@@ -26,22 +26,38 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
-        public IHttpActionResult GetByConstituentId(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        [Route("api/v1/audit/flat/{id}", Name = "AuditFlat")]
+        public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
-                start = start ?? DateTime.Now.AddDays(-90);
-                end = end ?? DateTime.Now;
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1); 
 
                 var search = new PageableSearch(offset, limit, orderBy);
-
-                //var response = _service.GetAllWhereExpression(a => a.ObjectChanges.Where(o => o.ObjectReference == id.ToString()), search);
-
-                //var response = _service.GetAll(id, start.Value, end.Value, search);
-                //return FinalizeResponse(response, RouteNames.Audit, search);
-
+                var response = _service.GetAllFlat(id, start.Value, end.Value, search);
+                  
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
                 return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
+        public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1);
+
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = _service.GetChanges(id, start.Value, end.Value);
+                  
+                return Ok(response);
             }
             catch (Exception ex)
             {

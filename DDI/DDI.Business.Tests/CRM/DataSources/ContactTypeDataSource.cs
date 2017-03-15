@@ -74,7 +74,7 @@ namespace DDI.Business.Tests.CRM.DataSources
             if (isDefault && category != null)
             {
                 category.DefaultContactType = type;
-                category.DefaultContactTypeID = type.Id;
+                category.DefaultContactTypeId = type.Id;
                 type.ContactCategoryDefaults = new List<ContactCategory>() { category };
             }
 

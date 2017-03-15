@@ -13,6 +13,7 @@ using DDI.EFAudit.Translation.Serializers;
 using DDI.Shared.Caching;
 using System.Web.Configuration;
 using DDI.Logger;
+using System.Data.Entity;
 
 namespace DDI.EFAudit
 {
@@ -48,22 +49,24 @@ namespace DDI.EFAudit
         }
 
     }
-    public partial class EFAuditModule<TChangeSet, TPrincipal>
-        where TChangeSet : IChangeSet<TPrincipal>
+    public partial class EFAuditModule<TChangeSet, TPrincipal>  where TChangeSet : IChangeSet<TPrincipal>
     {
         public bool Enabled { get; set; }
         private IChangeSetFactory<TChangeSet, TPrincipal> _factory;
         private IAuditLogContext<TChangeSet, TPrincipal> _context;
         private ILoggingFilter _filter;
         private ISerializationManager _serializer;
+        private DbContext _dbcontext;
 
         public EFAuditModule(IChangeSetFactory<TChangeSet, TPrincipal> factory,
             IAuditLogContext<TChangeSet, TPrincipal> context,
+            DbContext dbcontext,
             ILoggingFilterProvider filter = null,
             ISerializationManager serializer = null)
         {
             this._factory = factory;
             this._context = context;
+            this._dbcontext = dbcontext;
             this._filter = (filter ?? Filters.Default).Get(context);
             this._serializer = (serializer ?? new ValueTranslationManager(context));
             Enabled = true;
@@ -101,7 +104,7 @@ namespace DDI.EFAudit
 
             transactionProvider.InTransaction(() =>
             {
-                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _factory, _filter, _serializer);
+                var logger = new ChangeLogger<TChangeSet, TPrincipal>(_context, _dbcontext, _factory, _filter, _serializer);
                 var oven = (IOven<TChangeSet, TPrincipal>)null;
 
                 _context.DetectChanges();
@@ -116,7 +119,7 @@ namespace DDI.EFAudit
 
                 if (oven.HasChangeSet)
                 {
-                    result.ChangeSet = oven.Bake(DateTime.Now, principal);
+                    result.ChangeSet = oven.Bake(DateTime.UtcNow, principal);
                     _context.AddChangeSet(result.ChangeSet);
                     _context.DetectChanges();
 
