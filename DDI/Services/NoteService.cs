@@ -111,6 +111,31 @@ namespace DDI.Services
             return response;
         }
 
+        public IDataResponse GetNotesInAlertDateRange(Guid parentid)
+        {
+            IDataResponse response = null;
+            var entityNotes = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.ParentEntityId == parentid).ToList();
+            List<Note> topicsInDateRange = new List<Note>();
+
+            DateTime currentDay = DateTime.Today;
+
+            foreach(Note note in entityNotes)
+            {
+                if(note.AlertStartDate <= currentDay && note.AlertEndDate >= currentDay)
+                {
+                    topicsInDateRange.Add(note);
+                }
+            }
+
+            response = new DataResponse<List<Note>>
+            {
+                Data = topicsInDateRange,
+                IsSuccessful = true
+            };
+
+            return response;
+
+        }
         #endregion Public Methods
 
         #region Private Methods

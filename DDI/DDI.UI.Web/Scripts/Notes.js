@@ -32,6 +32,8 @@ function SetupNotesTab() {
 
         SetupNoteTopicSelectModal();
 
+        GetNoteAlerts();
+
     });
 }
 
@@ -78,13 +80,6 @@ function NewNoteDetailsModal() {
 
             $('.savenotetopics').click(function (e) {
 
-                /////////////////////////////////////////////
-                /////////////////////////////////////////////
-                /////////////////Currently working on////////////////////////////
-                /////////////////////////////////////////////
-                //////////////////////////////////////////////
-                // I bet a lot of this can/should be a separate function
-
                 newsavednotetopics = GetCheckedNoteTopics();
 
                 $.map(newsavednotetopics, function (topicid) {
@@ -92,7 +87,6 @@ function NewNoteDetailsModal() {
                     $.ajax({
                         url: WEB_API_ADDRESS + '/notetopics/' + topicid,
                         method: 'GET',
-                        headers: GetApiHeaders(),
                         contentType: 'application/json; charset-utf-8',
                         dataType: 'json',
                         crossDomain: true,
@@ -143,7 +137,7 @@ function NewNoteDetailsModal() {
 
         $('.savenotedetails').click(function () {
 
-            topicsavelist  = GetNoteTopicsToSave();
+            var topicsavelist  = JSON.stringify(GetNoteTopicsToSave());
 
             var item = {
 
@@ -163,28 +157,25 @@ function NewNoteDetailsModal() {
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'notes/',
                 data: item,
-                contentType: 'application/x-www-form-urlencoded',
+                contentType: 'application/json; charset-utf-8',
                 crossDomain: true,
                 success: function (data) {
 
-                    if (topicsavelist != null) { // null or empty, check
+                    if (topicsavelist != null) { 
+
                         $.ajax({
                             type: 'POST',
                             url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-                            data: JSON.stringify(topicsavelist), 
+                            data: topicsavelist,
                             contentType: 'application/x-www-form-urlencoded',
                             crossDomain: true,
                             success: function (data) {
 
                                 DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 
-                                CloseModal(modal);
-
-                                LoadNoteDetailsGrid();
-
                             },
                             error: function (xhr, status, err) {
-                                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+                                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
                             }
                         });
                     }
@@ -330,51 +321,6 @@ function NoteTopicsTagBox() {
 
             CreateMultiSelectTags(data.Data, '.tagdropdowncontainer');
 
-            $('.savenotetopics').unbind('click');
-
-            //$('.savenotetopics').click(function () {
-
-
-            //    // probably will need to tear this out into a function...
-            //    var item = []
-            //    $('.tagdropdowncontainer').find('input').each(function (index, value) {
-
-            //        if ($(value).prop('checked')) {
-            //            item.push($(value).val());
-            //        }
-
-            //    });
-            //    // ...all this here
-
-            //    $.ajax({
-            //        type: 'POST',
-            //        url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics',
-            //        data: item,
-            //        contentType: 'application/x-www-form-urlencoded',
-            //        crossDomain: true,
-            //        success: function (data) {
-
-            //            DisplaySuccessMessage('Success', 'Note Topics saved successfully.');
-
-            //            CloseModal(modal);
-
-            //            LoadNoteDetailsGrid();
-
-            //        },
-            //        error: function (xhr, status, err) {
-            //            DisplayErrorMessage('Error', 'An error occurred during saving the Note Topics.');
-            //        }
-            //    });
-
-            //});
-
-            $('.cancelnotetopics').click(function (e) {
-
-                e.preventDefault();
-
-                $(modal).find('.tagdropdowncontainer').hide();
-
-            })
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
@@ -410,7 +356,6 @@ function LoadSelectedNoteTopics(id) {
                         $.ajax({
                             url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
                             method: 'DELETE',
-                            headers: GetApiHeaders(),
                             contentType: 'application/json; charset-utf-8',
                             dataType: 'json',
                             crossDomain: true,
@@ -448,7 +393,7 @@ function GetNoteTopicsToSave() {
 
 function GetCheckedNoteTopics() {
 
-    var item = []
+    var item = [];
 
     $('.tagdropdowncontainer').find('input').each(function (index, value) {
 
@@ -484,7 +429,66 @@ function CreateMultiSelectTags(topics, container) {
 /* End NoteTopics */
 
 /* Note Alerts Modal */
-function SetupNoteAlertsmodal() {
+
+function GetNoteAlerts() {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'notealert/' + currentEntity.Id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data.Data.length > 0) {
+
+                SetupNoteAlertModal();
+
+                LoadNoteAlertGrid(data.Data);
+
+                $('.notealertmodal').show();
+            }
+
+        },
+        error: function (xhr, status, err) {
+            // DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+        }
+    });
+}
+function LoadNoteAlertGrid(data) {
+
+    var columns = [
+        { dataField: 'Id', width: '0px', },
+        { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
+        { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
+        { dataField: 'Title', caption: 'Title' }
+    ];
+
+    LoadGrid('notealertgrid',
+        'notealertgridcontainer',
+        columns,
+        'notealert/' + currentEntity.Id ,
+        null,
+        null,
+        null);
+}
+
+function SetupNoteAlertModal() {
+
+    var modal = $('.notealertmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
 
     // make ajax call, if data...
 

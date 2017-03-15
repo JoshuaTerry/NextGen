@@ -13,6 +13,7 @@ namespace DDI.Services.ServiceInterfaces
     {
         IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds);
         IDataResponse RemoveTopicFromNote(Note note, Guid topicId);
+        IDataResponse GetNotesInAlertDateRange(Guid parentid);
 
     }
 }

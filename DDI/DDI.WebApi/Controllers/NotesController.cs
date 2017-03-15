@@ -69,25 +69,6 @@ namespace DDI.WebApi.Controllers
             return base.Delete(id);
         }
 
-        //[HttpGet]
-        //[Route("api/v1/notes/{entitytypeid}")]
-        //public IHttpActionResult GetAllByEntityType(Guid entityTypeid)
-        //{
-        //    var result = Service.GetAll(entityType);
-
-        //    if(result == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if(!result.IsSuccessful)
-        //    {
-        //        return InternalServerError();
-        //    }
-
-        //    return Ok(result);
-        //}
-
         [HttpGet]
         [Route("api/v1/notes", Name = RouteNames.Note)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -114,6 +95,25 @@ namespace DDI.WebApi.Controllers
             }
 
             if(!result.IsSuccessful)
+            {
+                return InternalServerError();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/v1/notealert/{parentid}")]
+        public IHttpActionResult GetNotesWithinAlertDateRange(Guid parentId)
+        {
+            var result = Service.GetNotesInAlertDateRange(parentId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            if (!result.IsSuccessful)
             {
                 return InternalServerError();
             }

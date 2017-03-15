@@ -1236,4 +1236,18 @@
         </div>
 
     </div>
+
+    <div class="notealertmodal" title="NotesAlert" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="notealertgridcontainer"></div>
+
+            <div class="modalbuttons">
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>
