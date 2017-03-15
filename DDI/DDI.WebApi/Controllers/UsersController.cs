@@ -177,16 +177,13 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var result = await UserManager.DeleteAsync(user);
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
-
+              
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 

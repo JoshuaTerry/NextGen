@@ -146,22 +146,15 @@ namespace DDI.WebApi.Controllers
 
         private Tuple<bool, string> CanRoleBeAddedToUser(string email, string role)
         {
-            try {
-                Tuple<bool, string> canRoleBeAddedToUser = null;
+            Tuple<bool, string> canRoleBeAddedToUser = null;
 
-                var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
-                if (userAlreadyHasRole)
-                {
-                    canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
-                }
-
-                return canRoleBeAddedToUser;
-            }
-            catch (Exception ex)
+            var userAlreadyHasRole = UserManager.Users.SingleOrDefault(u => u.Email == email).Roles.Any(r => r.RoleId == RoleManager.FindByNameAsync(role).Result.Id);
+            if (userAlreadyHasRole)
             {
-                base.Logger.LogError(ex.Message);
-                return null;  //InternalServerError();
+                canRoleBeAddedToUser = new Tuple<bool, string>(false, $"User {email} is already in role {role}");
             }
+
+            return canRoleBeAddedToUser;
         }
 
         private Tuple<bool, string> CanRolesBeAddedToUsers(string[] emails, string[] roles)
