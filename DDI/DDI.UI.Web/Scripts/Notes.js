@@ -94,7 +94,7 @@ function NewNoteDetailsModal() {
 
                             StyleAndSetupIndividualTags(data.Data, function () {
 
-                                // $(this).remove();
+                                $('.noteTopicSelect').remove(this);
 
                             });
 
@@ -219,6 +219,44 @@ function EditNoteDetails(id) {
         $('.savenotetopics').click(function (e) {
 
             var notetopics = GetNoteTopicsToSave();
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/',
+                data: notetopics,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                success: function (data) {
+
+                    StyleAndSetupIndividualTags(data.Data, function () {
+
+                        $('.noteTopicSelect').remove(this);
+
+                        $.ajax({
+                            url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/' + data.Data.Id,
+                            method: 'DELETE',
+                            contentType: 'application/json; charset-utf-8',
+                            dataType: 'json',
+                            crossDomain: true,
+                            success: function (data) {
+
+                                DisplaySelectedTags();
+
+                            },
+                            error: function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during deleting the note topic.');
+                            }
+                        });
+
+                    });
+
+                    DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+                }
+            });
+
 
         });
 
