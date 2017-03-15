@@ -1,4 +1,5 @@
-﻿using DDI.Services;
+﻿using DDI.Logger;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Statics;
@@ -14,6 +15,7 @@ namespace DDI.WebApi.Controllers
 {
     public class AuditController : ApiController
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuditController));
         private AuditService _service = null;
 
         public AuditController()
@@ -37,7 +39,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError();
+                _logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -57,6 +60,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -68,6 +72,7 @@ namespace DDI.WebApi.Controllers
                 var urlHelper = new UrlHelper(Request);
                 if (!response.IsSuccessful)
                 {
+                    _logger.LogError(response.ErrorMessages.ToString());
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
@@ -80,8 +85,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResponse);
             }
             catch (Exception ex)
-            { 
-                return InternalServerError();
+            {
+                _logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }
