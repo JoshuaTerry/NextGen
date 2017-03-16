@@ -8,6 +8,8 @@ namespace DDI.WebApi.Controllers
 {
     public class GendersController : ControllerBase<Gender>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/genders", Name = RouteNames.Gender)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
