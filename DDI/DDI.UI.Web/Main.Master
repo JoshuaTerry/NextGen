@@ -105,9 +105,7 @@
         <div class="addconstituentmodal" title="Add Constituent" style="display: none;">
 
             <div class="modalcontent">
-
-                <input type="hidden" class="nc-ConstituentTypeId" />
-
+                
                 <div class="newconstituentcontainer">
                     <div class="constituenttypeinner">
 
@@ -121,6 +119,7 @@
                                 <div class="fieldblock">
                                     <label>ID</label>
                                     <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                                    <input type="hidden" class="nc-ConstituentTypeId" />
                                 </div>
                             </div>
                             
@@ -156,7 +155,7 @@
                             <div class="OrganizationContainer">
                                 <div class="fieldblock">
                                     <label>Name</label>
-                                    <input type="text" class="nc-LastName" />
+                                    <input type="text" class="nc-Name" />
                                 </div>
                             </div>
 

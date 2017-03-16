@@ -57,12 +57,14 @@ function NewConstituentModal() {
 
         SetupConstituentTypeSelector();
 
+        // Save Constituent
         $('.savenewconstituent').unbind('click');
 
         $('.savenewconstituent').click(function () {
             SaveNewConstituent(modal, false);
         });
 
+        // Save & New Constituent
         $('.saveandnewconstituent').unbind('click');
 
         $('.saveandnewconstituent').click(function () {
@@ -244,16 +246,16 @@ function SaveNewConstituent(modal, addnew) {
         crossDomain: true,
         success: function (data) {
 
-            if (data && data.Data.IsSuccessful) {
+            if (data && data.IsSuccessful) {
 
                 // Display success
                 DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-                ClearFields();
-
+                
                 if (addnew) {
-                    $(container).show('fast');
-                    $(details).hide('fast');
+                    ClearFields('.modalcontent');
+
+                    $(modal).find('.constituenttypeselect').show('fast');
+                    $(modal).find('.constituentdetails').hide('fast');
                 }
                 else {
                     CloseModal(modal);
@@ -265,7 +267,7 @@ function SaveNewConstituent(modal, addnew) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
