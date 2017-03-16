@@ -1,67 +1,105 @@
 ﻿
-function AddDefaultOption(e, text, val) {
 
-    var option = $('<option>').val('').text('');
-    $(option).appendTo($(e));
-
-}
-
-function MakeServiceCall(e, method, selectedValue) {
+function MakeServiceCall(method, route, successCallback, errorCallback) {
 
     $.ajax({
-        url: WEB_API_ADDRESS + method,
-        method: 'GET',
+        url: WEB_API_ADDRESS + route,
+        method: method,
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
 
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.DisplayName);
-                $(option).appendTo($(e));
-
-            });
-
-            if (selectedValue) {
-                $(e).val(selectedValue);
+            if (data && data.IsSuccessful) {
+                if (successCallback) {
+                    successCallback(data);
+                }
+            }
+            else {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
 
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            if (errorCallback) {
+                errorCallback();
+            }
         }
     });
 
 }
 
-function PopulateDropDown(e, method, selectedValue) {
 
-    ClearElement(e);
-    
-    MakeServiceCall(e, method, selectedValue);
+/* POPULATE DROPDOWN CONTROLS */
+function AddDefaultOption(element, text, val) {
+
+    var option = $('<option>').val('').text('');
+    $(option).appendTo($(element));
 
 }
 
-function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, callback) {
+function PopulateDropDown(element, route, selectedValue) {
 
-    ClearElement(e);
-    AddDefaultOption(e, defaultText, defaultValue);
+    ClearElement(element);
+    
+    MakeServiceCall('GET', route, function (data) {
+        if (data.Data) {
 
-    MakeServiceCall(e, method, selectedValue);
+            $.map(data.Data, function (item) {
+
+                option = $('<option>').val(item.Id).text(item.DisplayName);
+                $(option).appendTo($(element));
+
+            });
+
+            if (selectedValue) {
+                $(element).val(selectedValue);
+            }
+
+        }
+    }, null);
+
+}
+
+function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, callback) {
+
+    ClearElement(element);
+
+    AddDefaultOption(element, defaultText, defaultValue);
+
+    MakeServiceCall('GET', route, function (data) {
+        if (data.Data) {
+
+            $.map(data.Data, function (item) {
+
+                option = $('<option>').val(item.Id).text(item.DisplayName);
+                $(option).appendTo($(element));
+
+            });
+
+            if (selectedValue) {
+                $(element).val(selectedValue);
+            }
+
+        }
+    }, null);
 
     if (callback) {
 
-        $(e).unbind('change');
+        $(element).unbind('change');
 
-        $(e).change(function () {
+        $(element).change(function () {
             callback();
         });
 
     }
 
 }
+/* END POPULATE DROPDOWN CONTROLS */
 
+
+/* POPULATE TAGBOX CONTROLS */
 function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -116,7 +154,11 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
         }
     }); 
 }
+/* END POPULATE TAGBOX CONTROLS */
 
+
+
+/* DATAGRID FUNCTIONALITY */
 function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
 
     if (showFilterRow == '' || showFilterRow === undefined)
@@ -182,6 +224,7 @@ function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, d
 
     $(datagrid).appendTo($(container));
 }
+
 function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
 
     if (container.indexOf('.') != 0)
@@ -406,4 +449,5 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
         }
     });
 }
+/* END DATAGRID FUNCTIONALITY */
 
