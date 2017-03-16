@@ -121,6 +121,7 @@
     <Compile Include="Enums\GL\LedgerStatus.cs" />
     <Compile Include="Enums\GL\PostedTransactionType.cs" />
     <Compile Include="Enums\GL\PriorPeriodPostingMode.cs" />
+    <Compile Include="Enums\GL\RecurringCode.cs" />
     <Compile Include="Enums\GL\SegmentFormat.cs" />
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\Account.cs" />
-    <Compile Include="Models\Client\GL\AccountAllocation.cs" />
     <Compile Include="Models\Client\GL\AccountGroup.cs" />
     <Compile Include="Models\Client\GL\AccountSegment.cs" />
     <Compile Include="Models\Client\GL\Budget.cs" />
@@ -162,16 +162,12 @@
     <Compile Include="Models\Client\GL\FiscalYear.cs" />
     <Compile Include="Models\Client\GL\Fund.cs" />
     <Compile Include="Models\Client\GL\FundTransfer.cs" />
-    <Compile Include="Models\Client\GL\Journal.cs" />
-    <Compile Include="Models\Client\GL\JournalLine.cs" />
-    <Compile Include="Models\Client\GL\JournalTransaction.cs" />
     <Compile Include="Models\Client\GL\Ledger.cs" />
     <Compile Include="Models\Client\GL\LedgerAccount.cs" />
     <Compile Include="Models\Client\GL\LedgerAccountMerge.cs" />
     <Compile Include="Models\Client\GL\LedgerAccountYear.cs" />
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Reconciliation.cs" />
-    <Compile Include="Models\Client\GL\RecurringCode.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
     <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />

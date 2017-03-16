@@ -16,10 +16,8 @@ namespace DDI.Shared.Models.Client.GL
         public FiscalYear DefaultFiscalYear { get; set; }
         public bool IsParent { get; set; }         
         public string Code { get; set; }         
-        public string Description { get; set; }
-        // JLT Why a byte, is this number of account segments?  
-        // How does it get updated or set?
-        public byte NumberOfSegments { get; set; }
+        public string Description { get; set; }       
+        public int NumberOfSegments { get; set; }
         public LedgerStatus Status { get; set; }
         [MaxLength(255)]
         public string FixedBudgetName { get; set; }
@@ -39,17 +37,10 @@ namespace DDI.Shared.Models.Client.GL
         public Ledger OrgLedger { get; set; } 
         public bool PostToAllocAccts { get; set; }
         public PriorPeriodPostingMode PriorPeriodPostingMode { get; set; }
-        //JLT Does this change on a per ledger basis or is this something that would be set in settings at the business Unit or Org Level
-        public bool CapitalizeHeaders { get; set; }
-        //JLT Whats this?
-        public bool CopyCOAChanges { get; set; }
-        //JLT why byte?  What is this?
-        public byte RecurringJournalDays { get; set; }
+        public bool CapitalizeHeaders { get; set; }       
+        public bool CopyCOAChanges { get; set; }       
         public int LegacyKey { get; set; }
-
-        //JLT Why a byte?  Shouldn't this be a collection?
-        public byte AccountGroupLevels { get; set; } 
-        // JLT how do these stay up to date?
+        public int AccountGroupLevels { get; set; } 
         public string AccountGroup1Title { get; set; }         
         public string AccountGroup2Title { get; set; }         
         public string AccountGroup3Title { get; set; }         
@@ -58,14 +49,6 @@ namespace DDI.Shared.Models.Client.GL
         public ICollection<SegmentLevel> SegmentLevels { get; set; }
         public ICollection<LedgerAccount> LedgerAccounts { get; set; }
         public ICollection<FiscalYear> FiscalYears { get; set; }
-        // JFA: 
-
-        // OrgLedger probably needs to be added, as it's a link to the "template" ledger for the organization. All common business units must have ledgers that have common settings.
-        // Most of these settings need to be added as well:
-        //   AccountGroup1Title - AccountGroup4Title, 
-        // JT For the AccountGroupTitle 1 - 4, why do we use strings for these instead of a collection of Account Groups?
-        //CapitalizeHeaders, NumSegments (number of segments),  PriorPeriodPostingMode.
-        // IsParent may be required for F9.
-
+       
     }
 }

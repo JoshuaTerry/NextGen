@@ -22,13 +22,9 @@ namespace DDI.Shared.Models.Client.GL
 
         public DateTime? TransactionDate { get; set; }
 
-        public decimal Amount { get; set; }
-
-        //JLT What was this a reference to before
-        // and what should it be referencing now?
+        public decimal Amount { get; set; } 
         //public DocumentType TranSource { get; set; }
-
-        //JLT How is TransactionNumber different from TransactionId?
+         
         public Int64 TransactionNumber { get; set; }
 
         public int LineNumber { get; set; }
@@ -43,20 +39,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public Guid? SubledgerTranId { get; set; }
         [ForeignKey(nameof(SubledgerTranId))]
-        public SubledgerTransaction SubledgerTransaction { get; set; }
-
-        //JLT What are these Tags?
-        // Why do we need just 10?
-        // Can they be a collection?
-        public string Tag01 { get; set; }
-        public string Tag02 { get; set; }
-        public string Tag03 { get; set; }
-        public string Tag04 { get; set; }
-        public string Tag05 { get; set; }
-        public string Tag06 { get; set; }         
-        public string Tag07 { get; set; }         
-        public string Tag08 { get; set; }         
-        public string Tag09 { get; set; }         
-        public string Tag10 { get; set; }
+        public SubledgerTransaction SubledgerTransaction { get; set; } 
+        
     }
 }

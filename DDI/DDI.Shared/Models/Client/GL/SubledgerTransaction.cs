@@ -17,8 +17,7 @@ namespace DDI.Shared.Models.Client.GL
         public FiscalYear FiscalYear { get; set; }
 
         public int LegacyKey { get; set; }
-
-        //JLT how is this different than TransactionID? 
+         
         public Int64 TrasactionNumber { get; set; }
 
         public int LineNumber { get; set; }
@@ -54,22 +53,7 @@ namespace DDI.Shared.Models.Client.GL
         public bool IsAdjustment { get; set; }
 
         public string Description { get; set; }
-
-        //JLT What are these Tags?
-        // Why do we need just 10?
-        // Can they be a collection?
-        // These all had size 20 on them?
-        public string Tag01 { get; set; }
-        public string Tag02 { get; set; }
-        public string Tag03 { get; set; }
-        public string Tag04 { get; set; }
-        public string Tag05 { get; set; }
-        public string Tag06 { get; set; }
-        public string Tag07 { get; set; }
-        public string Tag08 { get; set; }
-        public string Tag09 { get; set; }
-        public string Tag10 { get; set; }
-
+         
         public Guid? ReconciliationId { get; set; }
         [ForeignKey(nameof(ReconciliationId))]
         public Reconciliation Reconciliation { get; set; }
@@ -78,9 +62,9 @@ namespace DDI.Shared.Models.Client.GL
 
         public ICollection<PostedTransaction> PostedTransaction { get; set; }
 
-        //JLT What is this?
-        // public PostedTransaction<SubledgerXref> DocumentTranXrefs { get; set; }
+        public ICollection<SubLedgerTransfer> SubLedgerTransfers { get; set; }
 
+         
         //JLT What is this?
         //public IList<BaseDocumentTran> DocumentTrans { get; set; }
     }

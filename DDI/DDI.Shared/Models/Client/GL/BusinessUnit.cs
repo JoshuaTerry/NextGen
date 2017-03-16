@@ -1,4 +1,5 @@
 ﻿using DDI.Shared.Enums.GL;
+using DDI.Shared.Models.Client.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public string Code { get; set; }
                 
+        ICollection<User> Users { get; set; }
         // JFA:
         
         // Also missing is a way to link users to entities.  That was what the EntityUser table was for in the old NextGen.

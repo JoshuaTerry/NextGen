@@ -15,9 +15,6 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? FromAccountId { get; set; }
         public Guid? ToAccountId { get; set; }
 
-        //JLT if we have the To and From Account referenced
-        //do we need the numbers on the object like this?
-        //If so how do we update them and keep them sync?
         public string FromAccountNumber { get; set; }    
         public string ToAccountNumber { get; set; }
 

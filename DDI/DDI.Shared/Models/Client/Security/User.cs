@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using DDI.Shared.Models.Client.GL;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace DDI.Shared.Models.Client.Security
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
 
+        ICollection<BusinessUnit> BusinessUnits { get; set; }
         public string DisplayName
         {
             get
