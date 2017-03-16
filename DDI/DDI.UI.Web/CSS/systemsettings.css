@@ -43,4 +43,6 @@ div.tagscontainer { height: 50vh }
 
 .regioncontainer { display: inline-block; width: 70%; background-color: white; vertical-align: top; min-height: 250px; }
 
+.editregionlevellink { background: url('../../Images/Edit_11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
+
 /* END REGION SETTINGS */

@@ -2733,7 +2733,7 @@ function DisplayRegionLevels(container) {
             if (data && data.Data && data.IsSuccessful) {
 
                 $.map(data.Data, function (level) {
-                    var li = $('<li>').attr('id', level.Id).text(level.DisplayName).click(function () {
+                    var li = $('<li>').attr('id', level.Id).click(function () {
                         
                         if ($('.parentregions').length) {
                             $('.parentregions').remove();
@@ -2757,6 +2757,65 @@ function DisplayRegionLevels(container) {
                         }
                     });
 
+                    $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
+                        e.preventDefault();
+
+                        $('.regionlevelid').val(level.Id);
+
+                        modal = $('.regionlevelmodal').dialog({
+                            closeOnEscape: false,
+                            modal: true,
+                            width: 250,
+                            resizable: false
+                        });
+
+                        LoadRegionLevel(level.Id);
+
+                        $('.cancelmodal').click(function (e) {
+
+                            e.preventDefault();
+
+                            CloseModal(modal);
+
+                        });
+
+                        $('.submitregionlevel').unbind('click');
+
+                        $('.submitregionlevel').click(function () {
+
+                            var id = $('.regionlevelid').val();
+
+                            var item = {
+                                Level: $(modal).find('.rl-Level').val(),
+                                Label: $(modal).find('.rl-Label').val(),
+                                Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
+                            }
+
+                            $.ajax({
+                                type: 'PATCH',
+                                url: WEB_API_ADDRESS + 'regionlevels/' + id,
+                                data: item,
+                                contentType: 'application/x-www-form-urlencoded',
+                                crossDomain: true,
+                                success: function () {
+
+                                    DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                    CloseModal(modal);
+
+                                    LoadRegionsSectionSettings();
+
+                                },
+                                error: function (xhr, status, err) {
+                                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                                }
+                            });
+
+                        });
+                    }).appendTo($(li));
+                    $('<span>').text(level.DisplayName).appendTo($(li));
                     $(li).appendTo($(container));
                 });
 
@@ -2796,7 +2855,7 @@ function DisplayRegionLevels(container) {
                                     Label: $(modal).find('.rl-Label').val(),
                                     Abbreviation: $(modal).find('.rl-Abbreviation').val(),
                                     IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
-                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
+                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
                                 }
 
                                 $.ajax({
@@ -2829,7 +2888,7 @@ function DisplayRegionLevels(container) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2997,6 +3056,33 @@ function DeleteRegion(id) {
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
+function LoadRegionLevel(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regionlevels/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.rl-Level').val(data.Data.Level);
+                $(modal).find('.rl-Label').val(data.Data.Label);
+                $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
+                $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
+                $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Region Level.');
         }
     });
 
