@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("FileStorage")]
-    public class FileStorage : EntityBase
+    public class FileStorage : AuditableEntityBase
     {
         public override Guid Id { get; set; }
         public string Name { get; set; }        

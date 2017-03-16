@@ -75,11 +75,13 @@
   <ItemGroup>
     <Compile Include="AuditService.cs" />
     <Compile Include="ConstituentAddressService.cs" />
+    <Compile Include="ConstituentTypeService.cs" />
     <Compile Include="ConstituentService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="CustomFieldService.cs" />
+    <Compile Include="PaymentMethodService.cs" />
     <Compile Include="RelationshipService.cs" />
     <Compile Include="DenominationsService.cs" />
     <Compile Include="EthnicitiesService.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Search\PageableSearch.cs" />
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="ServiceBase.cs" />
+    <Compile Include="ServiceInterfaces\IConstituentTypeService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
     <Compile Include="ServiceInterfaces\IDenominationsService.cs" />

@@ -32,7 +32,7 @@ namespace DDI.Business.Helpers
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="code">Code to convert</param>
         /// <param name="predicate">"Where" predicate</param>        
-        public static Guid? ConvertToGuid<T>(IUnitOfWork unitOfWork, string code, Expression<Func<T, bool>> predicate = null) where T : class, ICodeEntity
+        public static Guid? ConvertToGuid<T>(IUnitOfWork unitOfWork, string code, Expression<Func<T, bool>> predicate = null) where T : class, ICodeEntity, IEntity
         {
             if (string.IsNullOrWhiteSpace(code))
             {
@@ -59,7 +59,7 @@ namespace DDI.Business.Helpers
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="text">Text to convert</param>
         /// <param name="predicate">"Where" predicate</param>        
-        public static string ConvertCodeListToGuidList<T>(IUnitOfWork unitOfWork, string text, Expression<Func<T, bool>> predicate = null) where T : class, ICodeEntity
+        public static string ConvertCodeListToGuidList<T>(IUnitOfWork unitOfWork, string text, Expression<Func<T, bool>> predicate = null) where T : class, ICodeEntity, IEntity
         {
             if (string.IsNullOrWhiteSpace(text))
                 return null;

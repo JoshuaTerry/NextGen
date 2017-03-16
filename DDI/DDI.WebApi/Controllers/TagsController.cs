@@ -68,6 +68,24 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("api/v1/tags/constituenttypes/{id}")]
+        [Route("api/v1/constituenttypes/{id}/tags", Name = RouteNames.ConstituentType + RouteNames.Tag + RouteVerbs.Get)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        public IHttpActionResult GetByConstituentTypeId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentTypes.Any(c => c.Id == id), search);
+                return FinalizeResponse(response, "", search, fields);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
         [Route("api/v1/tags/taggroups/{id}")]
         [Route("api/v1/taggroups/{id}/tags")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByTagGroupId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)

@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldData")]
-    public class CustomFieldData : EntityBase
+    public class CustomFieldData : AuditableEntityBase
     {
         #region Properties
 

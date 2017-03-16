@@ -6,7 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion
 {
@@ -15,9 +19,12 @@ namespace DDI.Conversion
     /// </summary>
     internal abstract class ConversionBase
     {
+        #region Private Fields
+
+        #endregion 
 
         #region Public Abstract Methods
-        
+
         /// <summary>
         /// Execute a set of conversion methods.
         /// </summary>
@@ -151,6 +158,33 @@ namespace DDI.Conversion
             }
             query.Load();
             return entities.Local;
+        }
+
+        /// <summary>
+        /// Import CreatedBy, CreatedOn, LastModifiedBy, LastModifiedOn values.
+        /// </summary>
+        /// <param name="entity">Entity being converted.</param>
+        /// <param name="importer">FileImport object.</param>
+        /// <param name="createdByColumn">Column number for CreatedBy</param>
+        /// <param name="createdOnColumn">Column number for CreatedOn</param>
+        /// <param name="modifiedByColumn">Column number for LastModifiedBy</param>
+        /// <param name="modifiedOnColumn">Column number for LastModifiedOn</param>
+        protected void ImportCreatedModifiedInfo(IAuditableEntity entity, FileImport importer, int createdByColumn, int createdOnColumn = -1, int modifiedByColumn = -1, int modifiedOnColumn = -1)
+        {
+            if (createdOnColumn < 0)
+            {
+                createdOnColumn = createdByColumn + 1;
+                modifiedByColumn = createdByColumn + 2;
+                modifiedOnColumn = createdByColumn + 3;
+            }
+
+            string createdBy = importer.GetString(createdByColumn);
+            string modifiedBy = importer.GetString(modifiedByColumn);
+
+            entity.CreatedOn = importer.GetDateTime(createdOnColumn);
+            entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);
+            entity.CreatedBy = importer.GetString(createdByColumn);
+            entity.LastModifiedBy = importer.GetString(modifiedByColumn);         
         }
 
         #endregion

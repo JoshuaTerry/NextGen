@@ -1,8 +1,8 @@
-﻿using DDI.EFAudit.Contexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects;
+using DDI.EFAudit.Contexts;
+using DDI.Shared.Attributes.Logging;
 
 namespace DDI.EFAudit.Filter
 { 

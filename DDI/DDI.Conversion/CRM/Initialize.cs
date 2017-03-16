@@ -60,8 +60,8 @@ namespace DDI.Conversion.CRM
             //Genders
             context.Genders.AddOrUpdate(
                 p => p.Code,
-                new Gender { Code = "M", IsMasculine = true, Name = "Male" },
-                new Gender { Code = "F", IsMasculine = false, Name = "Female" }
+                new Gender { Code = "M", IsMasculine = true, Name = "Male", IsActive = true },
+                new Gender { Code = "F", IsMasculine = false, Name = "Female", IsActive = true }
             );
 
             // Contact categories
@@ -87,7 +87,8 @@ namespace DDI.Conversion.CRM
                     Code = code,
                     Name = description,
                     SectionTitle = title,
-                    TextBoxLabel = infoLabel
+                    TextBoxLabel = infoLabel,
+                    IsActive = true
                 });
         }
 

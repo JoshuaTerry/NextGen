@@ -9,7 +9,7 @@ using DDI.Shared.Models;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("Configuration")]
-    public class Configuration : EntityBase
+    public class Configuration : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
