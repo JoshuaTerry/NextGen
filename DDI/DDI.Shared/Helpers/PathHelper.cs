@@ -12,6 +12,7 @@ namespace DDI.Shared.Helpers
     {
 
         public const string FieldExcludePrefix = "^";
+        public const string IncludeEverythingField = "*";
 
         /// <summary>
         /// Convert a property expression to a property name or path.
@@ -78,6 +79,16 @@ namespace DDI.Shared.Helpers
                 _fields.Add(_pathPrefix + NameFor(path, true));
                 return this;
             }
+
+            /// <summary>
+            /// Force all fields are to be included.
+            /// </summary>
+            public FieldListBuilder<T> IncludeAll()
+            {
+                _fields.Add(PathHelper.IncludeEverythingField);
+                return this;
+            }
+
 
             /// <summary>
             /// Exclude a path from the field list being built.

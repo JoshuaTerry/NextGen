@@ -31,3 +31,8 @@ a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 div.taggroupsgrid { height: 50vh }
 div.tagscontainer { height: 50vh }
 
+.tagselect { width: 85% !important; }
+.tagSelectorContainer ul li input { width: auto; }
+.consttype-tagselect { position: absolute; z-index: 950; background-color: white; border: solid 1px #333333; width: 85%; }
+.tagselectgridcontainer { height: 175px; }
+.tagSelectImage { margin-left: 350px; }

@@ -50,6 +50,8 @@ namespace DDI.Services
 
         #region Public Methods
 
+        protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
+		
         public IDataResponse Test()
         {
             var c = UnitOfWork.GetRepository<Constituent>().Find(Guid.Parse("9d0b8b6d-0182-43da-baa1-d995dc81f47d"));

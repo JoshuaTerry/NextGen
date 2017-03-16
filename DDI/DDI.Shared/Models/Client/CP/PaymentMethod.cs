@@ -9,7 +9,7 @@ using DDI.Shared.Models.Client.CRM;
 namespace DDI.Shared.Models.Client.CP
 {
     [Table("PaymentMethod")]
-    public class PaymentMethod : EntityBase
+    public class PaymentMethod : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

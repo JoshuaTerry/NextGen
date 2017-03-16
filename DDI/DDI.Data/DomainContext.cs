@@ -36,10 +36,8 @@ namespace DDI.Data
         public DbSet<Language> Languages { get; set; } 
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
-
         public DbSet<NoteCode> NoteCodes { get; set; }
-
-        public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
+        public DbSet<NoteContactMethod> NoteContactMethods { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
@@ -124,7 +122,7 @@ namespace DDI.Data
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            EntityBase entity = entityEntry.Entity as EntityBase;
+            IEntity entity = entityEntry.Entity as IEntity;
             if (entity != null)
             {
                 //Ensure new entities have an ID

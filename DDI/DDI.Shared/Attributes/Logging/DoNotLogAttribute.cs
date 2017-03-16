@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DDI.EFAudit.Filter
+namespace DDI.Shared.Attributes.Logging
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
     public class DoNotLogAttribute : Attribute, IFilterAttribute
