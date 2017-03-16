@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("NoteCategory")]
-    public class NoteCategory : EntityBase
+    public class NoteCategory : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -23,6 +23,8 @@ namespace DDI.Shared.Models.Client.Core
 
         public bool IsActive { get; set; }
 
-        public ICollection<Note> Notes { get; set; } 
+        public ICollection<Note> Notes { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

@@ -4,7 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
+using DDI.Data;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using log4net;
 
 namespace DDI.Conversion
@@ -33,12 +37,16 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-
+    
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
-            //Run<CRM.Initialize>();
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.NoteCategories));
+            //Run<Core.NoteConverter>(new ConversionMethodArgs(Core.NoteConverter.ConversionMethod.Notes_CRM));
 
+            //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
             //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
 

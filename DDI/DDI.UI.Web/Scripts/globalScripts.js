@@ -497,7 +497,7 @@ function LoadTagSelector(type, container) {
                     });
 
                     $.ajax({
-                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/constituenttags',
+                        url: WEB_API_ADDRESS + path1 + '/' + currentEntity.Id + '/' + path2,
                         method: 'POST',
                         headers: GetApiHeaders(),
                         data: JSON.stringify({ tags: tagIds }),

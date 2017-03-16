@@ -49,7 +49,7 @@ namespace DDI.Services
         #region Public Methods
 
 
-        
+
         public IDataResponse AddTagsToConstituentType(ConstituentType constituentType, JObject tagIds)
         {
             var constituentTypeToUpdate = UnitOfWork.GetById<ConstituentType>(constituentType.Id, c => c.Tags);
@@ -77,12 +77,12 @@ namespace DDI.Services
             }
 
             UnitOfWork.SaveChanges();
-            
+
             response = new DataResponse<ConstituentType>()
             {
                 Data = UnitOfWork.GetById<ConstituentType>(constituentType.Id),
                 IsSuccessful = true
-                
+
             };
 
             return response;
@@ -114,7 +114,7 @@ namespace DDI.Services
 
         #region Private Methods
 
-        
+
 
         #endregion
     }

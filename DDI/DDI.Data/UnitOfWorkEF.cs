@@ -278,7 +278,9 @@ namespace DDI.Data
             var user = EntityFrameworkHelpers.GetCurrentUser();
             if (EFAuditModule.IsAuditEnabled && user != null)
             {
-                return _clientContext.Save(user).AffectedObjectCount;
+
+                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) + 
+                       (_commonContext?.SaveChanges() ?? 0);
             }
             else
             {
