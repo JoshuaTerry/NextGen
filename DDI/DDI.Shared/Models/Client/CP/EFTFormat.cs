@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CP
 {
     [Table("EFTFormat")]
-    public class EFTFormat : EntityBase, ICodeEntity
+    public class EFTFormat : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]

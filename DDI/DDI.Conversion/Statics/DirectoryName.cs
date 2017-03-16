@@ -19,6 +19,8 @@ namespace DDI.Conversion.Statics
         public static string CRM => "CRM";
         public static string GL => "GL";
         public static string CP => "CP";
+        public static string DDI => "DDI";
+        public static string Core => "Core";
 
         #endregion
     }

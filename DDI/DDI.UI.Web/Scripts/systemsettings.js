@@ -1054,6 +1054,31 @@ function LoadConstituentTypesSectionSettings() {
 
 }
 
+
+function LoadConstituentTypeSettingsGrid() {
+
+
+}
+
+// CONSTITUENT TYPE SYSTEM SETTINGS 
+function EditConstituentType(id) {
+
+
+}
+
+function DeleteConstituentType(id) {
+
+
+
+}
+
+function LoadConstituentType(id) {
+
+
+}
+/* END CONSTITUENT TYPE SYSTEM SETTINGS */
+
+
 function LoadContactInformationSectionSettings() {
 
 
@@ -3998,9 +4023,4 @@ function SendCustomField(route, action, data, modal) {
 
 }
 /* END CUSTOM FIELDS */
-
-
-
-
-
 

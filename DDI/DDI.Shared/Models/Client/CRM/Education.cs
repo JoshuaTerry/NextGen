@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Education")]
-    public class Education : EntityBase
+    public class Education : AuditableEntityBase
     {
         #region Public Properties
         [Key]
@@ -21,6 +21,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string Name { get; set; }
 
         public Guid? SchoolId { get; set; }
+        [ForeignKey("SchoolId")]
         public School School { get; set;
         }
 
@@ -39,7 +40,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
-
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
 
         public Guid? ConstituentId { get; set; }

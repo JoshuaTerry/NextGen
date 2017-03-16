@@ -42,7 +42,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,11 +67,8 @@
     <Compile Include="Exceptions\UnknownPropertyInLogException.cs" />
     <Compile Include="Filter\AttributeBasedLoggingFilter.cs" />
     <Compile Include="Filter\BlacklistLoggingFilter.cs" />
-    <Compile Include="Filter\DoLogAttribute.cs" />
-    <Compile Include="Filter\DoNotLogAttribute.cs" />
     <Compile Include="Filter\FilterAttributeCache.cs" />
     <Compile Include="Filter\Filters.cs" />
-    <Compile Include="Filter\IFilterAttribute.cs" />
     <Compile Include="Filter\ILoggingFilter.cs" />
     <Compile Include="Filter\ILoggingFilterProvider.cs" />
     <Compile Include="Filter\TypeLookup.cs" />

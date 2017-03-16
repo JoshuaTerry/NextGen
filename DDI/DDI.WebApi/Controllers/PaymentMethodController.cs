@@ -17,13 +17,13 @@ namespace DDI.WebApi.Controllers
     {
         private IConstituentService ConstituentService;
 
-        public PaymentMethodController() : this(new ConstituentService())
+        public PaymentMethodController() : this(new PaymentMethodService(), new ConstituentService())
         {
 
         }
 
-        public PaymentMethodController(IConstituentService constituentService)
-        {
+        public PaymentMethodController(PaymentMethodService service, IConstituentService constituentService) : base(service)
+        {            
             ConstituentService = constituentService;
         }
 
