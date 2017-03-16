@@ -77,13 +77,20 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/customfielddata")]
         public IHttpActionResult Post([FromBody] CustomFieldData item)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var response = _service.Add(item);
+                return Ok(response);
             }
-
-            var response = _service.Add(item);
-            return Ok();
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPatch]
