@@ -7,6 +7,7 @@ using DDI.Shared.Models;
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using System.Data.Entity;
 
 namespace DDI.EFAudit.Logging
 {
@@ -16,15 +17,17 @@ namespace DDI.EFAudit.Logging
         private readonly DeferredValue _futureReference;
         private readonly DeferredValueMap _futureValues;
         private readonly ISerializationManager _serializer;
+        private readonly DbContext _dbContext;
         private readonly object _entity;
 
-        public DeferredObjectChange(IObjectChange<TPrincipal> objectChange, Func<string> deferredReference, ISerializationManager serializer, object entity)
+        public DeferredObjectChange(IObjectChange<TPrincipal> objectChange, Func<string> deferredReference, ISerializationManager serializer, object entity, DbContext context)
         {
             this._objectChange = objectChange;
             this._futureReference = new DeferredValue(deferredReference);
             this._futureValues = new DeferredValueMap(objectChange);
             this._serializer = serializer;
             this._entity = entity;
+            this._dbContext = context;
         }
          
         public void ProcessDeferredValues()
@@ -53,9 +56,17 @@ namespace DDI.EFAudit.Logging
             if (propertyChange.IsForeignKey)
             {
                 var fkNameLookup = _entity.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ForeignKeyAttribute))).ToDictionary(p => p.GetCustomAttribute<ForeignKeyAttribute>().Name, p => p.Name);
+                var reference = _dbContext.Entry(_entity).Reference(fkNameLookup[propertyChange.PropertyName]);
+                if (reference != null)
+                {
+                    reference.Load();
+                }
+
                 var obj = _entity.GetType().GetProperty(fkNameLookup[propertyChange.PropertyName]).GetValue(_entity);
-                if (obj != null)
+                if (obj != null && obj.GetType().GetInterfaces().Contains(typeof(IEntity)))
+                {
                     propertyChange.NewDisplayName = (obj as IEntity).DisplayName;
+                }
             }
             else if (propertyChange.IsManyToMany)
             {

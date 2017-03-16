@@ -87,7 +87,7 @@ namespace DDI.Services
                                              OldValue = outer.pc.OriginalValue,
                                              NewDisplayName = outer.pc.NewDisplayName,
                                              NewValue = outer.pc.NewValue
-                                         }).ToList<dynamic>();
+                                         }).Distinct().OrderByDescending(c => c.Timestamp).ToList<dynamic>();
 
                 response.Data = results;
             }
