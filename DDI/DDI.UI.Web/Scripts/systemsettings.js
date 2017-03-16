@@ -1458,30 +1458,6 @@ function LoadConstituentType(id) {
 
 
 
-function LoadConstituentTypeSettingsGrid() {
-
-
-}
-
-// CONSTITUENT TYPE SYSTEM SETTINGS 
-function EditConstituentType(id) {
-
-
-}
-
-function DeleteConstituentType(id) {
-
-
-
-}
-
-function LoadConstituentType(id) {
-
-
-}
-/* END CONSTITUENT TYPE SYSTEM SETTINGS */
-
-
 function LoadContactInformationSectionSettings() {
 
 
