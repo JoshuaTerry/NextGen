@@ -58,7 +58,7 @@ function NewNoteDetailsModal() {
 
     $('.newnotesdetailmodallink').click(function (e) {
 
-        newsavednotetopics = null;
+        var newsavednotetopics = null;
 
         PopulateDropDown('.nd-Category', 'notecategories/', '', '');
         PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
@@ -101,8 +101,6 @@ function NewNoteDetailsModal() {
                             DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
                         }
                     });
-
-                    
 
                     DisplaySelectedTags();
 
@@ -206,8 +204,6 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id);
 
-    $('.hidnoteid').val(id);
-
     LoadSelectedNoteTopics(id);
 
     $('.noteTopicSelectImage').click(function (e) {
@@ -216,8 +212,9 @@ function EditNoteDetails(id) {
 
         $('.savenotetopics').click(function (e) {
 
-            var notetopics = GetNoteTopicsToSave();
-            $.ajax({
+            var notetopics = GetCheckedNoteTopics();
+
+            $.ajax({ // may need to move this after the note details save, like the new
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/',
                 data: notetopics,
@@ -226,6 +223,7 @@ function EditNoteDetails(id) {
                 success: function (data) {
 
                     StyleAndSetupIndividualTags(data.Data, function () {
+                        $(this);
 
                         $('.noteTopicSelect').remove(this);
 
@@ -258,11 +256,11 @@ function EditNoteDetails(id) {
 
         });
 
-        $('.cancelmodal').click(function (e) {
+        $('.cancelnotetopics').click(function (e) {
 
             e.preventDefault();
 
-            CloseModal(modal);
+            $(modal).find('.tagdropdowncontainer').hide();
 
         });
 
@@ -369,7 +367,7 @@ function NoteTopicsMultiselectModal() {
         success: function (data) {
 
 
-            CreateMultiSelectTags(data.Data, '.tagdropdowncontainer');
+            CreateMultiSelectTags(data.Data, '.tagdropdowncontainer'); // not setting value here...either that or it's getting overwritten?
 
         },
         error: function (xhr, status, err) {
@@ -457,6 +455,23 @@ function GetCheckedNoteTopics() {
 
     return item;
 
+}
+
+function CreateMultiSelectTags(topics, container) {
+
+    var ul = $('<ul>');
+
+    $.map(topics, function (topic) {
+
+        var li = $('<li>');
+
+        $('<input>').attr('type', 'checkbox').val(topic.Id).appendTo($(li));
+        $('<span>').text(topic.DisplayName).appendTo($(li));
+
+        $(li).appendTo($(ul));
+    });
+
+    $(ul).appendTo($(container));
 }
 
 /* End NoteTopics */

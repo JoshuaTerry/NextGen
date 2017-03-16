@@ -1119,8 +1119,6 @@
 
         <div class="modalcontent">
 
-            <input type="hidden" class="hidnoteid" />
-            
             <div class="fieldblock">
                 <label>Title</label>
                 <input type="text" class="nd-Title" />
