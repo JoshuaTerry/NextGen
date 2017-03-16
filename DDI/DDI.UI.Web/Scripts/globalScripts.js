@@ -480,7 +480,7 @@ function LoadTagSelector(type, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags();
+                LoadAvailableTags(modal);
 
                 $('.saveselectedtags').unbind('click');
 
@@ -497,7 +497,7 @@ function LoadTagSelector(type, container) {
                     });
 
                     $.ajax({
-                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/constituenttags',
+                        url: WEB_API_ADDRESS + path1 + '/' + currentEntity.Id + '/' + path2,
                         method: 'POST',
                         headers: GetApiHeaders(),
                         data: JSON.stringify({ tags: tagIds }),
@@ -534,7 +534,7 @@ function LoadTagSelector(type, container) {
 
 }
 
-function LoadAvailableTags() {
+function LoadAvailableTags(container) {
 
     $.ajax({
         type: 'GET',
@@ -547,7 +547,7 @@ function LoadAvailableTags() {
                 if (data.IsSuccessful) {
                     if (data.Data) {
 
-                        $(modal).find('.tagselectgridcontainer').html('');
+                        $(container).find('.tagselectgridcontainer').html('');
 
                         $.map(data.Data, function (group) {
 
@@ -641,6 +641,43 @@ function DisplaySelectedTags(container) {
         if (!editing) {
             $(container).find('.dx-tag-remove-button').hide();
         }
+
+    }
+}
+
+function DisplaySelectedTagsConstituentType() {
+
+    if (currentEntity && currentEntity.Tags) {
+
+        $('.tagselect').html('');
+
+        $.map(currentEntity.Tags, function (tag) {
+
+            var t = $('<div>').addClass('dx-tag-content').attr('id', tag.Id).appendTo($('.tagselect'));
+            $('<span>').text(tag.DisplayName).appendTo($(t));
+            $('<div>').addClass('dx-tag-remove-button')
+                .click(function () {
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id,
+                        method: 'DELETE',
+                        headers: GetApiHeaders(),
+                        contentType: 'application/json; charset-utf-8',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            currentEntity = data.Data;
+
+                            DisplaySelectedTagsConstituentType();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                        }
+                    });
+                })
+                .appendTo($(t));
+
+        });
 
     }
 }

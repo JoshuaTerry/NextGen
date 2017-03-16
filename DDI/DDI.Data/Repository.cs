@@ -58,7 +58,7 @@ namespace DDI.Data
 
                 return _utilities;
             }
-        }                       
+        }
 
         #endregion Public Properties
 
@@ -93,7 +93,7 @@ namespace DDI.Data
             _isUOW = (context != null);
         }
         #endregion Public Constructors
-         
+
         #region Public Methods       
 
         public virtual void Delete(T entity)
@@ -107,7 +107,7 @@ namespace DDI.Data
 
                 Attach(entity);
 
-                EntitySet.Remove(entity);                            
+                EntitySet.Remove(entity);
             }
             catch (DbEntityValidationException e)
             {
@@ -122,7 +122,7 @@ namespace DDI.Data
         {
             GetReference<TElement>(entity, collection);
         }
-        
+
         /// <summary>
         /// Explicitly load a reference property or collection for an entity.
         /// </summary>
@@ -173,7 +173,7 @@ namespace DDI.Data
         {
             return Attach(entity, EntityState.Unchanged);
         }
-        
+
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
@@ -185,7 +185,7 @@ namespace DDI.Data
 
             var query = _context.Set<T>().AsQueryable();
 
-            foreach(Expression<Func<T, object>> include in includes)
+            foreach (Expression<Func<T, object>> include in includes)
             {
                 string name = PathHelper.NameFor(include, true);
                 if (!string.IsNullOrWhiteSpace(name))
@@ -232,20 +232,22 @@ namespace DDI.Data
 
                 if (_context.Entry(entity).State != EntityState.Added)
                 {
-                    IEntity auditableEntity = (IEntity)entity;
-                    var user = EntityFrameworkHelpers.GetCurrentUser();
-                    if (user != null)
-                    {                        
-                        auditableEntity.CreatedBy = user.UserName;
-                        auditableEntity.LastModifiedBy = user.UserName;
+                    IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                    if (auditableEntity != null)
+                    {
+                        var user = EntityFrameworkHelpers.GetCurrentUser();
+                        if (user != null)
+                        {
+                            auditableEntity.CreatedBy = user.UserName;
+                            auditableEntity.LastModifiedBy = user.UserName;
+                        }
+
+                        auditableEntity.CreatedOn = DateTime.UtcNow;
+                        auditableEntity.LastModifiedOn = DateTime.UtcNow;
                     }
-
-                    auditableEntity.CreatedOn = DateTime.UtcNow;
-                    auditableEntity.LastModifiedOn = DateTime.UtcNow;
-
                     // Add it only if not already added.
                     EntitySet.Add(entity);
-                }                 
+                }
 
                 return entity;
             }
@@ -264,18 +266,20 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                IEntity auditableEntity = (IEntity)entity;
-                var user = EntityFrameworkHelpers.GetCurrentUser();
-                if (user != null)
-                { 
-                    auditableEntity.LastModifiedBy = user.UserName;
-                }
-                 
-                auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                if (auditableEntity != null)
+                {
+                    var user = EntityFrameworkHelpers.GetCurrentUser();
+                    if (user != null)
+                    {
+                        auditableEntity.LastModifiedBy = user.UserName;
+                    }
 
+                    auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                }
                 Attach(entity, EntityState.Modified);
                 _context.Entry(entity).State = EntityState.Modified;
-                
+
                 return entity;
             }
             catch (DbEntityValidationException e)
@@ -307,7 +311,7 @@ namespace DDI.Data
                 }
             }
 
-            action?.Invoke(entity); 
+            action?.Invoke(entity);
         }
         public List<string> GetModifiedProperties(T entity)
         {

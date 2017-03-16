@@ -1,8 +1,4 @@
-﻿using DDI.EFAudit.Contexts;
-using DDI.EFAudit.Filter;
-using DDI.EFAudit.Logging.ValuePairs;
-using DDI.Shared.Models.Client.Audit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core;
@@ -10,8 +6,12 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
-using DDI.EFAudit.History;
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Filter;
+using DDI.EFAudit.Logging.ValuePairs;
 using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.Logging
 {
@@ -35,7 +35,7 @@ namespace DDI.EFAudit.Logging
 
         // This is where you can get State (Add, Edit, Delete)
         public IOven<TChangeSet, TPrincipal> Log(ObjectStateManager objectStateManager)
-        {  
+        {
             var entries = objectStateManager.GetObjectStateEntries(EntityState.Added | EntityState.Modified | EntityState.Deleted);
 
             foreach (var entry in entries)
@@ -47,34 +47,44 @@ namespace DDI.EFAudit.Logging
         }
 
         private void Process(ObjectStateEntry entry)
-        { 
+        {
             if (entry.IsRelationship)
             {
                 LogRelationshipChange(entry);
             }
             else
             {
-                 LogScalarChanges(entry);
+                LogScalarChanges(entry);
             }
         }
 
         private void LogScalarChanges(ObjectStateEntry entry)
         { 
-            if (!_filter.ShouldLog(entry.Entity.GetType()))
-                return; 
-           
+            object entity = entry.Entity;
+            if (!(entity is IAuditableEntity))
+            {
+                return;
+            }
+
+            Type type = entity.GetType();
+            bool isModifiedSet = false;
+
+            if (!_filter.ShouldLog(type))
+            {
+                return;
+            }
+
             foreach (string propertyName in GetChangedProperties(entry))
             {
-                if (_filter.ShouldLog(entry.Entity.GetType(), propertyName))
+                if (_filter.ShouldLog(type, propertyName))
                 {
                     // We can have multiple changes for the same property if its a complex type
                     var valuePairs = ValuePairSource.Get(entry, propertyName).Where(p => p.HasChanged);
-                    var entity = entry.Entity;
 
                     foreach (var valuePair in valuePairs)
                     {
                         var pair = valuePair;                        
-                        _recorder.Record(entry, entry.Entity, () => _context.GetReferenceForObject(entity), valuePair.PropertyName, pair.NewValue);
+                        _recorder.Record(entry, entity, () => _context.GetReferenceForObject(entity), valuePair.PropertyName, pair.NewValue);
                     }
                 }
             }
@@ -99,7 +109,7 @@ namespace DDI.EFAudit.Logging
         }
 
         private void LogForeignKeyChange(ObjectStateEntry entry, AssociationEndMember localEnd, AssociationEndMember foreignEnd)
-        {  
+        {
             // These "keys" represent in-memory unique references to the objects at the ends of these associations.
             // This will give you the Entity Type and the Key you need
             var key = GetEndEntityKey(entry, localEnd);
@@ -111,7 +121,7 @@ namespace DDI.EFAudit.Logging
 
             // The property on the "local" object that navigates to the "foreign" object
             var property = GetProperty(entry, localEnd, foreignEnd, key);
-             
+
             if (property == null || !_filter.ShouldLog(property))
                 return;
 
