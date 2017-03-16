@@ -273,6 +273,8 @@ function DisplayConstituentData() {
         NewAddressModal();
 
         DisplaySelectedTags($('.constituenttagselect'));
+
+		ShowAuditData(currentEntity.Id);
     }
 }
 
@@ -779,8 +781,7 @@ function LoadEducation(id) {
 
 }
 /* End Education Section */
-
-
+ 
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
@@ -1009,6 +1010,79 @@ function PopulateUserIdDropDown() {
 
 /* End Professional Section */
 
+/* Audit Section */
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+    var modal = $('.auditmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 700,
+        height: 500,
+        resizable: true
+    });
+
+    LoadAuditTable(id, modal);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                LoadAuditTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred loading Audit Table.');
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable() {
+    var id = currentEntity.Id;
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+            { dataField: 'ChangeSetId', groupIndex: 0  },
+            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+            { dataField: 'User' },
+            //{ dataField: 'EntityType', groupIndex: 1 },
+            { dataField: 'ChangeType', width: '100px' },            
+            //{ dataField: 'EntityValue' },
+            { dataField: 'Property' },
+            { dataField: 'OldValue' },
+            { dataField: 'NewValue' }
+    ];
+
+    LoadAuditGrid('auditgrid',
+       'auditgridcontainer',
+       columns,
+       route,
+       false);
+     
+}
+/* End Audit Section */
 
 /* Alternate Id Section */
 function LoadAlternateIDTable() {
@@ -1445,8 +1519,13 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
+            // remove previous elements
+            $('.' + category.Name + 'header').remove();
+            $('.constituent' + category.Name + 'gridcontainer').remove();
+
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
-            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
+            var header = $('<h3>').text(category.SectionTitle).addClass(category.Name + 'header').appendTo($('.contactinfocontainer'));
+
             $('<a>', { 
                 title: 'New', 
                 class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
@@ -2265,6 +2344,7 @@ function LoadRelationshipsData() {
         }
     });
 }
+
 function LoadRelationshipsQuickView(data) {
 
     var formattedData = $('<ul>').addClass('relationshipQuickViewData');
@@ -2274,18 +2354,43 @@ function LoadRelationshipsQuickView(data) {
         $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                var rowText = item.RelationshipType.Name + ': ' + item.Constituent1.FormattedName;
-                $('<li>').text(rowText).appendTo($(formattedData));
+
+                var li = $('<li>');
+
+                var rowText = item.RelationshipType.Name + ': ';
+                var link = $('<a>').attr('href', '#').text(item.Constituent1.FormattedName).click(function (e) {
+                    e.preventDefault();
+                    RelationshipLinkClicked(item.Constituent1.Id)
+                });
+
+                $(li).html(rowText);
+                $(link).appendTo($(li));
+
+                $(li).appendTo($(formattedData));
+                
             }
 
         });
 
     }
+
     $('.relationshipsQuickView').empty();
+
     $(formattedData).appendTo($('.relationshipsQuickView'));
 
 }
 
+function RelationshipLinkClicked(id) {
+
+    sessionStorage.setItem('constituentid', id);
+
+    if (sessionStorage.getItem('constituentid')) {
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
+    }
+
+    GetConstituentData($('.hidconstituentid').val());
+
+}
 
 function LoadRelationshipsTab(data) {
 

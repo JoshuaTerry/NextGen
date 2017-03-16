@@ -419,6 +419,41 @@ function CloseModal(modal) {
 
 }
 
+function ConfirmModal(message, yes, no) {
+
+    modal = $('.confirmmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 450,
+        resizable: false
+    });
+
+    $(modal).find('.confirmmessage').html(message);
+
+    $('.confirmyes').unbind('click');
+
+    if (yes) {
+
+        $('.confirmyes').click(function () {
+            CloseModal(modal);
+            yes();
+        });
+
+    }
+
+    $('.confirmno').unbind('click');
+
+    if (no) {
+
+        $('.confirmno').click(function () {
+            CloseModal(modal);
+            no();
+        });
+
+    }
+
+}
+
 function ClearFields(container) {
 
     $(container + ' div.fieldblock input').val('');
@@ -639,7 +674,7 @@ function LoadTagSelector(type, container) {
                     });
 
                     $.ajax({
-                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/constituenttags',
+                        url: WEB_API_ADDRESS + path1 + '/' + currentEntity.Id + '/' + path2,
                         method: 'POST',
                         headers: GetApiHeaders(),
                         data: JSON.stringify({ tags: tagIds }),
@@ -901,22 +936,16 @@ function SetupEditControls() {
         }
         else { // Another Edit already in progress
 
-            if (confirm('Another Edit is in progress.\r\n\r\nAre you sure you would like to continue and lose any unsaved information?')) {
-                // OK
-
+            ConfirmModal('Another Edit is in progress.<br /><br />Are you sure you would like to continue and lose any unsaved information?', function () {
                 // Cancel other edit
-                ($('.editcontainer.active'));
+                StopEdit($('.editcontainer.active'));
 
                 // Start new edit
                 StartEdit(editcontainer);
-            }
-            else {
-                // Cancel
-
+            }, function () {
                 // Return to previous edit
                 $('.accordions').accordion('option', 'active', lastActiveSection);
-                
-            }
+            });
 
         }
                 

@@ -35,5 +35,12 @@ namespace DDI.WebApi.Controllers
         {
             return base.Patch(id, changes);
         }
+
+        [HttpDelete]
+        [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
     }
 }

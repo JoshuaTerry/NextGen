@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("SectionPreference")]
-    public class SectionPreference : EntityBase
+    public class SectionPreference : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

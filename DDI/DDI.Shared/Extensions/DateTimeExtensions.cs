@@ -28,5 +28,21 @@ public static class DateTimeExtensions
                dt <= System.Data.SqlTypes.SqlDateTime.MaxValue.Value;
     }
 
+    /// <summary>
+    /// Returns TRUE if DateTime value has a time of day.
+    /// </summary>
+    public static bool HasTime(this DateTime? dt)
+    {
+        return dt.HasValue && dt.Value.TimeOfDay.Ticks > 0;
+    }
+
+    /// <summary>
+    /// Returns TRUE if DateTime value has a time of day.
+    /// </summary>
+    public static bool HasTime(this DateTime dt)
+    {
+        return dt.TimeOfDay.Ticks > 0;
+    }
+
 }
 
