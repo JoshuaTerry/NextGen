@@ -28,8 +28,6 @@ function SetupNotesTab() {
 
         NewNoteDetailsModal();
 
-        NoteTopicsMultiselectModal();
-
         GetNoteAlerts();
 
     });
@@ -58,8 +56,6 @@ function NewNoteDetailsModal() {
 
     $('.newnotesdetailmodallink').click(function (e) {
 
-        var newsavednotetopics = null;
-
         PopulateDropDown('.nd-Category', 'notecategories/', '', '');
         PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
 
@@ -71,55 +67,16 @@ function NewNoteDetailsModal() {
             width: 500,
             resizable: false
         });
+
+        // $('.savenotetopics').unbind('click');
        
         $('.noteTopicSelectImage').click(function (e) {
 
-            $(modal).find('.tagdropdowncontainer').show();
-
-            $('.savenotetopics').click(function (e) {
-
-                newsavednotetopics = GetCheckedNoteTopics();
-
-                $.map(newsavednotetopics, function (topicid) {
-
-                    $.ajax({
-                        url: WEB_API_ADDRESS + '/notetopics/' + topicid,
-                        method: 'GET',
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
-
-                            StyleAndSetupIndividualTags(data.Data, function () {
-
-                                $('.noteTopicSelect').remove(this);
-
-                            });
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
-                        }
-                    });
-
-                    DisplaySelectedTags();
-
-                });
-
-                $(modal).find('.tagdropdowncontainer').hide();
-                newsavednotetopics = null;
-
-            });
-
-            $('.cancelnotetopics').click(function (e) {
-
-                e.preventDefault();
-
-                $(modal).find('.tagdropdowncontainer').hide();
-
-            })
-
+            SaveNewNoteTopics(modal);
+            
         });
+
+  
 
         $('.cancelmodal').click(function (e) {
 
@@ -129,11 +86,11 @@ function NewNoteDetailsModal() {
 
         });
 
-        $('.savenotedetails').unbind('click');
+        // $('.savenotedetails').unbind('click');
 
         $('.savenotedetails').click(function () {
 
-            var topicsavelist  = JSON.stringify(GetNoteTopicsToSave());
+            var topicsavelist = GetNoteTopicsToSave();
 
             var item = {
 
@@ -153,28 +110,26 @@ function NewNoteDetailsModal() {
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'notes/',
                 data: item,
-                contentType: 'application/json; charset-utf-8',
+                contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
                 success: function (data) {
 
-                    if (topicsavelist != null) { 
+                    $.ajax({
+                        type: 'POST',
+                        url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
+                        data: topicsavelist,
+                        contentType: 'application/x-www-form-urlencoded',
+                        crossDomain: true,
+                        success: function (data) {
 
-                        $.ajax({
-                            type: 'POST',
-                            url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-                            data: topicsavelist,
-                            contentType: 'application/x-www-form-urlencoded',
-                            crossDomain: true,
-                            success: function (data) {
+                            DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 
-                                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-                            },
-                            error: function (xhr, status, err) {
-                                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-                            }
-                        });
-                    }
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+                        }
+                    });
+                
 
                     DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
@@ -206,15 +161,19 @@ function EditNoteDetails(id) {
 
     LoadSelectedNoteTopics(id);
 
+    // $('.noteTopicSelectImage').unbind('click');
+
     $('.noteTopicSelectImage').click(function (e) {
+
+        SetupNoteTopicsMultiselectModal();
 
         $(modal).find('.tagdropdowncontainer').show();
 
         $('.savenotetopics').click(function (e) {
-
+            // pull this out into function? 
             var notetopics = GetCheckedNoteTopics();
 
-            $.ajax({ // may need to move this after the note details save, like the new
+            $.ajax({ 
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/',
                 data: notetopics,
@@ -223,9 +182,10 @@ function EditNoteDetails(id) {
                 success: function (data) {
 
                     StyleAndSetupIndividualTags(data.Data, function () {
-                        $(this);
 
-                        $('.noteTopicSelect').remove(this);
+                        var removeid = '#' + data.Data.Id;
+
+                        $('.noteTopicSelect > div').remove(removeid);
 
                         $.ajax({
                             url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/' + data.Data.Id,
@@ -235,7 +195,6 @@ function EditNoteDetails(id) {
                             crossDomain: true,
                             success: function (data) {
 
-                                DisplaySelectedTags();
 
                             },
                             error: function (xhr, status, err) {
@@ -251,9 +210,12 @@ function EditNoteDetails(id) {
                 error: function (xhr, status, err) {
                     DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
                 }
+
             });
 
+            $(modal).find('.tagdropdowncontainer').hide();
 
+            ClearNoteTopicSelectModal();
         });
 
         $('.cancelnotetopics').click(function (e) {
@@ -262,10 +224,14 @@ function EditNoteDetails(id) {
 
             $(modal).find('.tagdropdowncontainer').hide();
 
+            ClearNoteTopicSelectModal();
+
         });
 
 
     });
+
+    // END pull this out into function? 
 
     $('.cancelmodal').click(function (e) {
 
@@ -275,7 +241,7 @@ function EditNoteDetails(id) {
 
     });
 
-    $('.savenotedetails').unbind('click');
+    // $('.savenotedetails').unbind('click');
 
     $('.savenotedetails').click(function () {
 
@@ -289,7 +255,7 @@ function EditNoteDetails(id) {
             ContactDate: $(modal).find('.nd-ContactDate').val(),
             NoteCode: $(modal).find('.nd-NoteCode').val(),
             ParentEntityId: currentEntity.Id,
-            ParentEntityType : NoteEntity[0]
+            EntityType: NoteEntity[0]
 
         }
 
@@ -357,7 +323,70 @@ function LoadNoteDetails(id) {
 /* End Notes Tab */
 
 /* NoteTopics */
-function NoteTopicsMultiselectModal() {
+
+function SaveNewNoteTopics(modal) {
+
+    SetupNoteTopicsMultiselectModal();
+
+    $(modal).find('.tagdropdowncontainer').show();
+
+    // $('.savenotetopics').unbind('click');
+
+    $('.savenotetopics').click(function (e) {
+
+        var newsavednotetopics = GetCheckedNoteTopics();
+
+        $.map(newsavednotetopics, function (topicid) {
+
+            $.ajax({
+                url: WEB_API_ADDRESS + '/notetopics/' + topicid,
+                method: 'GET',
+                contentType: 'application/json; charset-utf-8',
+                dataType: 'json',
+                crossDomain: true,
+                success: function (data) {
+
+                    var topic = data.Data
+
+                    StyleAndSetupIndividualTags(topic, function () {
+
+                        var removeid = '#' + data.Data.Id;
+
+                        $('.noteTopicSelect > div').remove(removeid);
+                                 
+                    });
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
+                }
+            });
+                    
+            // DisplaySelectedTags();
+
+        });
+
+        $(modal).find('.tagdropdowncontainer').hide(); 
+
+        ClearNoteTopicSelectModal();
+
+        newsavednotetopics = null; 
+
+    });
+
+    $('.cancelnotetopics').click(function (e) {
+
+        e.preventDefault();
+
+        $(modal).find('.tagdropdowncontainer').hide();
+
+        ClearNoteTopicSelectModal();
+
+    });
+
+}
+
+function SetupNoteTopicsMultiselectModal() {
 
     $.ajax({
         type: 'GET',
@@ -367,7 +396,7 @@ function NoteTopicsMultiselectModal() {
         success: function (data) {
 
 
-            CreateMultiSelectTags(data.Data, '.tagdropdowncontainer'); // not setting value here...either that or it's getting overwritten?
+            CreateMultiSelectTopics(data.Data, $('.tagdropdowncontainer')); 
 
         },
         error: function (xhr, status, err) {
@@ -375,6 +404,11 @@ function NoteTopicsMultiselectModal() {
         }
     });
 
+}
+
+function ClearNoteTopicSelectModal() {
+
+    $('.tagdropdowncontainer > ul').remove();
 }
 
 function StyleAndSetupIndividualTags(topic, DeleteFunction) { 
@@ -409,7 +443,7 @@ function LoadSelectedNoteTopics(id) {
                             crossDomain: true,
                             success: function (data) {
 
-                                DisplaySelectedTags();
+                                DisplaySelectedTags($('.noteTopicSelect')); // added notetopicselect
 
                             },
                             error: function (xhr, status, err) {
@@ -429,13 +463,17 @@ function LoadSelectedNoteTopics(id) {
 } 
 
 function GetNoteTopicsToSave() {
-    var topicid = [];
+    var topicidobject = { 
+        
+        TopicIds: []
+            
+     };
 
     var divs = $('.noteTopicSelect').children('div');
 
-    $.map(divs, function (divid) { topicid.push(divid.id) });
+    $.map(divs, function (divid) { topicidobject.TopicIds.push(divid.id) });
 
-    return topicid;
+    return topicidobject;
 
 }
 
@@ -457,7 +495,7 @@ function GetCheckedNoteTopics() {
 
 }
 
-function CreateMultiSelectTags(topics, container) {
+function CreateMultiSelectTopics(topics, container) {
 
     var ul = $('<ul>');
 
@@ -503,6 +541,7 @@ function GetNoteAlerts() {
         }
     });
 }
+
 function LoadNoteAlertGrid(data) {
 
     var columns = [
