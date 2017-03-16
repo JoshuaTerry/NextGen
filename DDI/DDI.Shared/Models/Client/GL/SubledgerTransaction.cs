@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public int LegacyKey { get; set; }
          
-        public Int64 TrasactionNumber { get; set; }
+        public Int64 TransactionNumber { get; set; }
 
         public int LineNumber { get; set; }
 
