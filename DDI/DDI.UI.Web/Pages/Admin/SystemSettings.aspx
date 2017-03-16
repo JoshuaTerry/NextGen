@@ -712,7 +712,7 @@
 
     </div>
 
-    <div class="noteTopicmodal" title="Topic" style="display: none;">
+    <div class="noteTopicmodal" title="Note Topic" style="display: none;">
 
         <div class="modalcontent">
 
