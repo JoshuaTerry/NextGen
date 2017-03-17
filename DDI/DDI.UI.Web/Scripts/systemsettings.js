@@ -17,7 +17,9 @@ var SystemSettings = {
     Organization: 'OrganizationSettings',
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
-    Note: 'NoteSettings'
+    Note: 'NoteSettings',
+    PaymentPreferences: 'PaymentPreferencesSettings'
+
 }
 
 $(document).ready(function () {
@@ -83,7 +85,7 @@ function LoadSettingsGrid(grid, container, columns, route) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Grid.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -107,7 +109,7 @@ function GetSystemSettings(category, callback) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the system settings.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -117,6 +119,7 @@ function GetSystemSettings(category, callback) {
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
 
+    route = route + '?fields=all';
     var container = $('<div>').addClass('twocolumn');
 
     var activeSection = $('<div>').addClass('fieldblock');
@@ -175,7 +178,7 @@ function GetSetting(category, key, route, id, checkbox, label) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the section label.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -228,7 +231,7 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the section label.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -353,7 +356,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteCodeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Code.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -405,7 +408,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteCategorySettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Category.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -458,7 +461,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteTopicSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Topic.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -529,7 +532,7 @@ function EditNoteCode(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Code.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -555,7 +558,7 @@ function LoadNoteCode(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Code.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -614,7 +617,7 @@ function EditNoteCategory(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Category.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -640,7 +643,7 @@ function LoadNoteCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -700,7 +703,7 @@ function EditNoteTopic(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Topic.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -726,7 +729,7 @@ function LoadNoteTopic(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Topic.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -804,7 +807,7 @@ function LoadClergySectionSettings() {
                         LoadClergyStatusSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Status.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -856,7 +859,7 @@ function LoadClergySectionSettings() {
                         LoadClergyTypeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Type.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -938,9 +941,7 @@ function EditClergyStatus(id) {
 
             },
             error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
-
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     });
@@ -988,7 +989,7 @@ function LoadClergyStatus(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -1038,9 +1039,7 @@ function EditClergyType(id) {
 
             },
             error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
-
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     });
@@ -1088,7 +1087,7 @@ function LoadClergyType(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -1525,7 +1524,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1582,7 +1581,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1639,7 +1638,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1803,7 +1802,7 @@ function EditDenomination(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1857,7 +1856,7 @@ function LoadDenomination(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading denomination.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1910,7 +1909,7 @@ function EditEthnicity(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1962,7 +1961,7 @@ function LoadEthnicity(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading ethnicity.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2015,7 +2014,7 @@ function EditLanguage(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2067,7 +2066,7 @@ function LoadLanguage(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading language.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2133,7 +2132,7 @@ function LoadEducationSectionSettings() {
                         LoadDegreeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Degree.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2186,7 +2185,7 @@ function LoadEducationSectionSettings() {
                         LoadEducationLevelSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Education Level.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2239,7 +2238,7 @@ function LoadEducationSectionSettings() {
                         LoadSchoolsSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the School.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2341,7 +2340,7 @@ function EditDegree(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Degree.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2367,7 +2366,7 @@ function LoadDegree(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the degree.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2417,7 +2416,7 @@ function EditEducationLevel(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Education Level.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2443,7 +2442,7 @@ function LoadEducationLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the education level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2493,7 +2492,7 @@ function EditSchool(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the School.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2522,7 +2521,7 @@ function LoadSchool(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the school.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2556,7 +2555,7 @@ function LoadOrganizationSectionSettings() {
 
 function LoadPaymentPreferencesSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Payment Preferences', 'sectionpreferences', SystemSettings.PaymentPreferences);
 
 }
 
@@ -2628,7 +2627,7 @@ function LoadPrefixSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -2709,7 +2708,7 @@ function EditPrefix(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2732,7 +2731,7 @@ function DeletePrefix(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Prefix.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -2762,7 +2761,7 @@ function LoadPrefix(id) {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading prefix.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2823,7 +2822,7 @@ function LoadProfessionalSectionSettings() {
                         LoadIncomeLevelSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Income Level.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2876,7 +2875,7 @@ function LoadProfessionalSectionSettings() {
                         LoadProfessionSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Profession.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2963,7 +2962,7 @@ function EditIncomeLevel(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Income Level.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2989,7 +2988,7 @@ function LoadIncomeLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Income Level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -3040,7 +3039,7 @@ function Editprofession(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Profession.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -3066,7 +3065,7 @@ function LoadProfession(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Profession.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -3077,11 +3076,426 @@ function LoadProfession(id) {
 
 /* END PROFESSIONAL SYSTEM SETTINGS */
 
+/* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
+    $('.contentcontainer').empty();
+    var lc = $('<div>').addClass('regionlevelcontainer');
+    var rc = $('<div>').addClass('regioncontainer');
+    var rgc = $('<div>').addClass('regiongridcontainer');
+    $(lc).appendTo($('.contentcontainer'));
+    $(rc).appendTo($('.contentcontainer'));
+    $(rgc).appendTo($(rc));
 
+    CreateRegionLevelSelector(lc);
 
 }
+
+function CreateRegionLevelSelector(container) {
+
+    var ul = $('<ul>').addClass('regionlevellist').appendTo($(container));
+    DisplayRegionLevels(ul);
+
+}
+
+function DisplayRegionLevels(container) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regionlevels/',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $.map(data.Data, function (level) {
+                    var li = $('<li>').attr('id', level.Id).click(function () {
+                        
+                        if ($('.parentregions').length) {
+                            $('.parentregions').remove();
+                        }
+
+                        $('.regiongridcontainer').empty();
+
+                        $('.regionlevellist li').removeClass('selected');
+                        $(this).addClass('selected');
+
+                        if (level.IsChildLevel) {
+                            var parents = $('<select>').addClass('parentregions');
+                            $('.regioncontainer').prepend($(parents));
+
+                            PopulateDropDown('.parentregions', 'regions/regionlevels/' + (level.Level - 1), '', '', null, function () {
+                                DisplayRegions(level.Level, $('.parentregions').val());
+                            });
+                        }
+                        else {
+                            DisplayRegions(level.Level, null);
+                        }
+                    });
+
+                    $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
+                        e.preventDefault();
+
+                        $('.regionlevelid').val(level.Id);
+
+                        modal = $('.regionlevelmodal').dialog({
+                            closeOnEscape: false,
+                            modal: true,
+                            width: 250,
+                            resizable: false
+                        });
+
+                        LoadRegionLevel(level.Id);
+
+                        $('.cancelmodal').click(function (e) {
+
+                            e.preventDefault();
+
+                            CloseModal(modal);
+
+                        });
+
+                        $('.submitregionlevel').unbind('click');
+
+                        $('.submitregionlevel').click(function () {
+
+                            var id = $('.regionlevelid').val();
+
+                            var item = {
+                                Level: $(modal).find('.rl-Level').val(),
+                                Label: $(modal).find('.rl-Label').val(),
+                                Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
+                            }
+
+                            $.ajax({
+                                type: 'PATCH',
+                                url: WEB_API_ADDRESS + 'regionlevels/' + id,
+                                data: item,
+                                contentType: 'application/x-www-form-urlencoded',
+                                crossDomain: true,
+                                success: function () {
+
+                                    DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                    CloseModal(modal);
+
+                                    LoadRegionsSectionSettings();
+
+                                },
+                                error: function (xhr, status, err) {
+                                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                                }
+                            });
+
+                        });
+                    }).appendTo($(li));
+                    $('<span>').text(level.DisplayName).appendTo($(li));
+                    $(li).appendTo($(container));
+                });
+
+                // Add Region Level button
+                if (data.Data.length < 4) {
+
+                    var li = $('<li>')
+                        .attr('href', '#')
+                        .text('+ Add Region Level')
+                        .addClass('newregionlevellink')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            modal = $('.regionlevelmodal').dialog({
+                                closeOnEscape: false,
+                                modal: true,
+                                width: 250,
+                                resizable: false
+                            });
+
+                            $(modal).find('.rl-Level').val(data.Data.length + 1);
+
+                            $('.cancelmodal').click(function (e) {
+
+                                e.preventDefault();
+
+                                CloseModal(modal);
+
+                            });
+
+                            $('.submitregionlevel').unbind('click');
+
+                            $('.submitregionlevel').click(function () {
+
+                                var item = {
+                                    Level: $(modal).find('.rl-Level').val(),
+                                    Label: $(modal).find('.rl-Label').val(),
+                                    Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                    IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
+                                }
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: WEB_API_ADDRESS + 'regionlevels',
+                                    data: item,
+                                    contentType: 'application/x-www-form-urlencoded',
+                                    crossDomain: true,
+                                    success: function () {
+
+                                        DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                        CloseModal(modal);
+
+                                        LoadRegionsSectionSettings();
+
+                                    },
+                                    error: function (xhr, status, err) {
+                                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                                    }
+                                });
+
+                            });
+                        });
+
+                    $(li).appendTo($(container));
+                }
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
+function DisplayRegions(level, parentid) {
+
+    $('.currentlevel').val(level);
+
+    var route = 'regionlevels/' + level + '/regions/';
+
+    if (parentid) {
+        route = route + parentid;
+    }
+
+    var columns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Name' },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
+
+        // Add the new link...
+        var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .text('New Region')
+            .click(function (e) {
+                e.preventDefault();
+
+                NewRegion();
+
+            });
+        $('.regiongridcontainer').prepend($(link));
+
+    });
+
+}
+
+function NewRegion() {
+
+    modal = $('.regionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitregion').unbind('click');
+
+    $('.submitregion').click(function () {
+
+        var item = {
+            Level: $('.currentlevel').val(),
+            ParentRegionId: $('.parentregions').val(),
+            Code: $(modal).find('.reg-Code').val(),
+            Name: $(modal).find('.reg-Name').val(),
+            IsActive: $(modal).find('.reg-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'POST',
+            url: WEB_API_ADDRESS + 'regions',
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Region saved successfully.');
+
+                CloseModal(modal);
+
+                DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function EditRegion(id){
+
+    LoadRegion(id);
+
+    modal = $('.regionmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitregion').unbind('click');
+
+    $('.submitregion').click(function () {
+
+        var item = {
+            ParentRegionId: $(modal).find('.parentregionid').val(),
+            Code: $(modal).find('.reg-Code').val(),
+            Name: $(modal).find('.reg-Name').val(),
+            IsActive: $(modal).find('.reg-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'regions/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                DisplaySuccessMessage('Success', 'Region saved successfully.');
+
+                CloseModal(modal);
+
+                DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function DeleteRegion(id) {
+
+    $.ajax({
+        method: 'DELETE',
+        url: WEB_API_ADDRESS + 'regions/' + id,
+        data: item,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Region deleted successfully.');
+
+            CloseModal(modal);
+
+            DisplayRegions($('.currentlevel').val(), $('.parentregions').val());
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
+function LoadRegionLevel(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regionlevels/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.rl-Level').val(data.Data.Level);
+                $(modal).find('.rl-Label').val(data.Data.Label);
+                $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
+                $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
+                $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Region Level.');
+        }
+    });
+
+}
+
+function LoadRegion(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regions/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.regionid').val(id);
+                $(modal).find('.parentregionid').val(data.Data.ParentRegionId);
+                $(modal).find('.currentlevel').val(data.Data.Level);
+
+                $(modal).find('.reg-Code').val(data.Data.Code);
+                $(modal).find('.reg-Name').val(data.Data.Name);
+                $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Region Level.');
+        }
+    });
+
+}
+
+/* REGIONS SETTINGS */
 
 function LoadRelationshipSectionSettings() {
 
@@ -4067,7 +4481,7 @@ function SendCustomField(route, action, data, modal) {
             
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error saving custom field.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 

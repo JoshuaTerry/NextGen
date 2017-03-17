@@ -1,4 +1,11 @@
 ﻿
+function AddDefaultOption(e, text, val) {
+
+    var option = $('<option>').val('').text('');
+    $(option).appendTo($(e));
+
+}
+
 function GetApiHeaders() {
 
     var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
@@ -69,7 +76,9 @@ function PopulateDropDown(element, route, selectedValue) {
             if (selectedValue) {
                 $(element).val(selectedValue);
             }
-
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     }, null);
 
@@ -115,7 +124,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
 /* POPULATE TAGBOX CONTROLS */
 function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $(container).html('');
@@ -134,8 +143,8 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
             });
             DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -163,8 +172,8 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
             $(tagBoxControl).appendTo(container);
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     }); 
 }
@@ -244,7 +253,7 @@ function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
     if (showFilterRow == '' || showFilterRow === undefined)
         showFilterRow = false;
 
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $.ajax({
@@ -304,8 +313,7 @@ function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, d
 
     $(datagrid).appendTo($(container));
 }
-
-function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
+function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -319,10 +327,14 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
+
+            if (oncomplete) {
+                oncomplete();
+            }
                         
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -408,7 +420,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
         }
     });
 
-    $(datagrid).appendTo($(container));
+    $(container).append($(datagrid));
 }
 
 function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, loadEntityGrid, getEntityToSave, entityName, route, id) {
@@ -452,7 +464,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -505,7 +517,7 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -525,7 +537,7 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
             loadEntityData(data, modal);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the ' + entityName + '.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
