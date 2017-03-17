@@ -10,8 +10,6 @@ var NoteEntity = {
     20: 'OfficeIntegration', 21: 'ProcessManagement', 22: 'ProjectManagement', 23: 'JobProcessing', 24: 'HealthPolicy', 25: 'SystemAdministration',
     26: 'Accounting'
 };
-var notetopicsloadedflag = false;
-
 
 $(document).ready(function () {
 
@@ -161,8 +159,6 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id);
 
-    LoadSelectedNoteTopics(id);
-
     $('.noteTopicSelectImage').unbind('click');
 
     $('.noteTopicSelectImage').click(function (e) {
@@ -187,7 +183,7 @@ function EditNoteDetails(id) {
                         crossDomain: true,
                         success: function (data) {
 
-                            var topic = data.Data
+                            var topic = data.Data;
 
                             StyleAndSetupIndividualTags(topic, function () {
 
@@ -195,6 +191,19 @@ function EditNoteDetails(id) {
 
                                 $('.noteTopicSelect > div').remove(removeid);
 
+                                $.ajax({
+                                    url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
+                                    method: 'DELETE',
+                                    contentType: 'application/json; charset-utf-8',
+                                    dataType: 'json',
+                                    crossDomain: true,
+                                    success: function (data) {
+
+                                    },
+                                    error: function (xhr, status, err) {
+                                        DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                                    }
+                                });
                             });
 
                         },
@@ -225,8 +234,6 @@ function EditNoteDetails(id) {
 
 
     });
-
-    // END pull this out into function? 
 
     $('.cancelmodal').click(function (e) {
 
@@ -308,12 +315,7 @@ function LoadNoteDetails(id) {
         crossDomain: true,
         success: function (data) {
 
-            if (!notetopicsloadedflag) {
-
-                LoadSelectedNoteTopics(id);
-
-                notetopicsloadedflag = true;
-            }
+            LoadSelectedNoteTopics(id);
 
             PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
             PopulateDropDown('.nd-NoteCode', 'notecodes', '', '', data.Data.NoteCodeId);
@@ -379,8 +381,6 @@ function SaveNewNoteTopics(modal) {
                 }
             });
                     
-            // DisplaySelectedTags();
-
         });
 
         $(modal).find('.tagdropdowncontainer').hide(); 
@@ -454,27 +454,27 @@ function LoadSelectedNoteTopics(id) {
 
             $.map(data.Data, function (topic) {
 
-                var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
-                $('<span>').text(topic.Name).appendTo($(t));
-                $('<div>').addClass('dx-tag-remove-button')
-                    .click(function () { 
-                        $.ajax({
-                            url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
-                            method: 'DELETE',
-                            contentType: 'application/json; charset-utf-8',
-                            dataType: 'json',
-                            crossDomain: true,
-                            success: function (data) {
+                StyleAndSetupIndividualTags(topic, function () {
 
-                                DisplaySelectedTags($('.noteTopicSelect')); // added notetopicselect
+                    var removeid = '#' + data.Data.Id;
 
-                            },
-                            error: function (xhr, status, err) {
-                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
-                            }
-                        });
-                    })
-                    .appendTo($(t));
+                    $('.noteTopicSelect > div').remove(removeid);
+
+                    $.ajax({
+                        url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
+                        method: 'DELETE',
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                        }
+                    });
+
+                });
             });
            
         },
