@@ -125,8 +125,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
 
         }
@@ -145,8 +150,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
 
@@ -173,8 +183,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
 
@@ -202,8 +217,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
 
@@ -222,8 +242,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
 
@@ -244,8 +269,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
 
@@ -275,8 +305,13 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogError(ex);
+                return InternalServerError();
+=======
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
+>>>>>>> develop
             }
         }
     }

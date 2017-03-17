@@ -39,7 +39,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -60,7 +60,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -86,7 +86,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

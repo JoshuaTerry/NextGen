@@ -31,6 +31,21 @@ a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 div.taggroupsgrid { height: 50vh }
 div.tagscontainer { height: 50vh }
 
+
+/* REGION SETTINGS */
+
+.regionlevelcontainer { display: inline-block; width: 15%; vertical-align: top; }
+.regionlevellist { list-style: none; }
+.regionlevellist li { font-weight: bold; display: block; padding: 8px 15px; text-align: right; }
+.regionlevellist li:hover { background-color: #333333; color: white; cursor: pointer; }
+.regionlevellist li.selected { background-color: white; color: black; }
+.regionlevellist li.selected:hover { color: black; }
+
+.regioncontainer { display: inline-block; width: 70%; background-color: white; vertical-align: top; min-height: 250px; }
+
+.editregionlevellink { background: url('../../Images/Edit_11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
+
+/* END REGION SETTINGS */
 .tagselect { width: 85% !important; }
 .tagSelectorContainer ul li input { width: auto; }
 .consttype-tagselect { position: absolute; z-index: 950; background-color: white; border: solid 1px #333333; width: 85%; }

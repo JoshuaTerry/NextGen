@@ -182,7 +182,7 @@ function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, d
 
     $(datagrid).appendTo($(container));
 }
-function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod) {
+function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -196,6 +196,10 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
+
+            if (oncomplete) {
+                oncomplete();
+            }
                         
         },
         error: function (xhr, status, err) {
@@ -285,7 +289,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
         }
     });
 
-    $(datagrid).appendTo($(container));
+    $(container).append($(datagrid));
 }
 
 function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, loadEntityGrid, getEntityToSave, entityName, route, id) {
