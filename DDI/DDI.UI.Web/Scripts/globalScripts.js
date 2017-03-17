@@ -48,8 +48,6 @@ function NewConstituentModal() {
             height: 625,
             resizable: false,
             beforeClose: function (event, ui) {
-                // $('.constituenttypeinner').css('left', 'auto');
-
                 $('.constituenttypeselect').show();
                 $('.constituentdetails').hide();
             }
