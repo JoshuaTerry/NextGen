@@ -166,6 +166,7 @@
     <Compile Include="Models\Client\GL\FiscalYear.cs" />
     <Compile Include="Models\Client\GL\Fund.cs" />
     <Compile Include="Models\Client\GL\FundTransfer.cs" />
+    <Compile Include="Models\Client\GL\ITransaction.cs" />
     <Compile Include="Models\Client\GL\Ledger.cs" />
     <Compile Include="Models\Client\GL\LedgerAccount.cs" />
     <Compile Include="Models\Client\GL\LedgerAccountMerge.cs" />
