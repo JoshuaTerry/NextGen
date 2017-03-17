@@ -37,7 +37,15 @@ namespace DDI.WebApi.Controllers
 
         private Expression<Func<ConstituentAddress, object>>[] DataIncludes()
         {
-            Expression<Func<ConstituentAddress, object>>[] includes = {a => a.Address, a => a.AddressType};
+            Expression<Func<ConstituentAddress, object>>[] includes = 
+            {
+                a => a.Address,
+                a => a.AddressType,
+                a => a.Address.Region1,
+                a => a.Address.Region2,
+                a => a.Address.Region3,
+                a => a.Address.Region4
+            };
             return includes;
         }
 
@@ -89,7 +97,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

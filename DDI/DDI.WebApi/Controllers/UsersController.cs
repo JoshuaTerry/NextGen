@@ -66,7 +66,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -88,7 +88,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
 
@@ -113,7 +113,7 @@ namespace DDI.WebApi.Controllers
             }
             catch(Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
 
@@ -134,7 +134,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }        
         }
@@ -159,7 +159,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -182,7 +182,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

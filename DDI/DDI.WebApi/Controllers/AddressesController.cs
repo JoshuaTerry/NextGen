@@ -76,14 +76,14 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
-                var fields = "City,Country,County.Id,County.Description,State.Id,State.CountryId,State.Description,PostalCode";
+                var fields = "City,Country,County.Id,County.Description,State.Id,State.CountryId,State.Description,PostalCode,Region1Id,Region2Id,Region3Id,Region4Id,Region1,Region2,Region3,Region4";
                 var response = Service.RefineAddress(addressLine1, addressLine2, city, countryId, countyId, stateId, zip);
 
                 return FinalizeResponse(response, fields);
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.ToString);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

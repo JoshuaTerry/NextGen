@@ -38,7 +38,7 @@ namespace DDI.EFAudit
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex.Message);
+                            _logger.LogError(ex);
                             isAuditEnabled = false;
                         }
                     }

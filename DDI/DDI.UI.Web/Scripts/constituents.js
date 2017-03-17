@@ -454,9 +454,6 @@ function LoadEthnicitiesTagBox() {
 }
 /* End Demographics Section */
 
-
-
-
 /* Doing Business As Section */
 function LoadDBAGrid() {
 
@@ -1019,8 +1016,8 @@ function ShowAuditData(id) {
     var modal = $('.auditmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 700,
-        height: 500,
+        width: 800,
+        height: 600,
         resizable: true
     });
 
@@ -1064,15 +1061,15 @@ function LoadAuditTable() {
     var end = $(modal).find('.na-EndDate').val();
     var route = 'audit/flat/' + id;
     var columns = [
-            { dataField: 'ChangeSetId', groupIndex: 0  },
+            { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0  },
             { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
-            { dataField: 'User' },
-            //{ dataField: 'EntityType', groupIndex: 1 },
-            { dataField: 'ChangeType', width: '100px' },            
-            //{ dataField: 'EntityValue' },
+            { dataField: 'User' }, 
+            { dataField: 'ChangeType', width: '100px' },  
             { dataField: 'Property' },
-            { dataField: 'OldValue' },
-            { dataField: 'NewValue' }
+            { dataField: 'OldValue', caption: 'Old Value' },
+            { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+            { dataField: 'NewValue', caption: 'New Value' },
+            { dataField: 'NewDisplayName', caption: 'New Display Name' }
     ];
 
     LoadAuditGrid('auditgrid',
@@ -1267,12 +1264,14 @@ function NewAddressModal() {
 
         e.preventDefault();
 
-        var modal = $('.addressmodal').dialog({
+        modal = $('.addressmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 375,
             resizable: false
         });
+
+        LoadRegions($(modal).find('.regionscontainer'), 'na-');
 
         $('.cancelmodal').click(function (e) {
 
@@ -1333,15 +1332,13 @@ function NewAddressModal() {
 
         });
 
-        AutoZip(modal);
+        AutoZip(modal, '.na-');
 
     });
 
     PopulateAddressTypesInModal(null);
 
     PopulateCountriesInModal(null);
-
-    LoadRegions('regionscontainer', 'na-');
 
 }
 
@@ -1382,7 +1379,7 @@ function PopulateCountiesInModal(selectedValue) {
 
 function EditAddressModal(id) {
 
-    var modal = $('.addressmodal').dialog({
+    modal = $('.addressmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 375,
@@ -1394,7 +1391,9 @@ function EditAddressModal(id) {
 
     PopulateCountriesInModal(null);
 
-    AutoZip(modal);
+    LoadRegions($(modal).find('.regionscontainer'), 'na-');
+
+    AutoZip(modal, '.na-');
 
     LoadAddress(id);
 
@@ -1422,6 +1421,8 @@ function EditAddressModal(id) {
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+                CloseModal(modal);
 
             },
             error: function (xhr, status, err) {
@@ -1501,8 +1502,7 @@ function LoadAddress(id) {
 
             PopulateCountiesInModal(data.Data.Address.CountyId);
 
-            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
-            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
+            LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
 
         },
         error: function (xhr, status, err) {

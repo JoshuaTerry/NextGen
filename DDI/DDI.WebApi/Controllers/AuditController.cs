@@ -10,13 +10,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
     public class AuditController : ApiController
     {
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuditController));
         private AuditService _service = null;
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuditController));
+        protected ILogger Logger => _logger;
+
 
         public AuditController()
         {
@@ -39,7 +42,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -60,7 +63,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -86,7 +89,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
