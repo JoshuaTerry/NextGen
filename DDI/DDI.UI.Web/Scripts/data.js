@@ -183,7 +183,7 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 /* DATAGRID FUNCTIONALITY */
 
-function LoadGrid(container, gridClass, columns, route, selected, prefix, showEdit, showDelete, showNew, showFilter, showGroup) {
+function LoadGrid(container, gridClass, columns, route, selected, prefix, showEdit, showDelete, showNew, showFilter, showGroup, onComplete) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0) {
         container = '.' + containr;
@@ -205,10 +205,40 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, showEd
 
     if (showEdit) {
         // Add column for edit
+        columns.push({
+            width: '100px',
+            alignment: 'center',
+            cellTemplate: function(container, options) {
+                $('<a/>')
+                    .addClass('editLink')
+                    .text('Edit')
+                    .click(function(e) {
+                        e.preventDefault();
+
+                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                    })
+                    .appendTo(container);
+            }
+        });
     }
 
     if (showDelete) {
         // add column for delete
+        columns.push({
+            width: '100px',
+            alignment: 'center',
+            cellTemplate: function (container, options) {
+                $('<a/>')
+                    .addClass('deleteLink')
+                    .text('Delete')
+                    .click(function (e) {
+                        e.preventDefault();
+
+                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                    })
+                    .appendTo(container);
+            }
+        });
     }
 
     $(datagrid).dxDataGrid({
