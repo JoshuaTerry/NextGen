@@ -115,16 +115,20 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 /* END TAG BOX CONTROL */
 
-.tagselect { width: 97% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
+.tagselect, .noteTopicSelect { width: 97% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
 .tagselect.disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #eee; color: #000000; }
 .tagselect div {  }
-.tagselect div.dx-tag-content span { display: block; margin-top: 5px; }
+.tagselect div.dx-tag-content span, .noteTopicSelect div.dx-tag-content span{ display: block; margin-top: 5px; }
 
-.tagSelectImage { display: inline-block; padding: 2px; margin: 0 0 0 3px; 
+.tagSelectImage, .noteTopicSelectImage { display: inline-block; padding: 2px; margin: 0 0 0 3px; 
                   background: url('../../Images/Search_Mono_16.png') no-repeat center; width: 18px; height: 18px; vertical-align: bottom;
 }
+
+.tagdropdowncontainer { position:absolute; z-index:950; background-color:white; border:solid 1px #333333; box-shadow:3px 5px 5px #eee; padding:10px 20px 10px 5px }
+.tagdropdowncontainer ul { list-style:none; margin:0px; padding:0px;  }
 .tagselectgridcontainer { height: 600px; overflow: scroll; }
-.tagSelectImage:hover { cursor: pointer; }
+.tagselectgridcontainer { height: 600px; overflow-y: scroll; }
+.tagSelectImage:hover, .noteTopicSelectImage:hover { cursor: pointer; }
 .tagSelectorHeader { background-color: #0f75b4; color: white; font-weight: bold; font-size: 14px; padding: 3px 8px; border-radius: 5px; }
 .tagSelectorContainer { margin-bottom: 10px; }
 .tagSelectorContainer ul { list-style: none; padding: 0px; margin: 0px; }

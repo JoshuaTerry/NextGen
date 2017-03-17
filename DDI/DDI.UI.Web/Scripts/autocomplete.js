@@ -30,6 +30,9 @@ $(document).ready(function () {
                         response(results);
 
                     }
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
         },

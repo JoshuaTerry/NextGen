@@ -7,12 +7,16 @@ using System.Web.Http;
 using DDI.Services;
 using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
+using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
     public class CustomFieldDataController : ApiController
     {
         ServiceBase<CustomFieldData> _service;
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuthorizationsController));
+        protected ILogger Logger => _logger;
+
 
         #region Constructors
 
@@ -32,46 +36,61 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/customfielddata")]
         public IHttpActionResult GetAll()
         {
-            var result = _service.GetAll();
+            try
+            {
+                var result = _service.GetAll();
 
-            if (result == null)
-            {
-                return NotFound();
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
-            if (!result.IsSuccessful)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
-            return Ok(result);
         }
 
         [HttpGet]
         [Route("api/v1/customfielddata/{id}")]
         public IHttpActionResult GetById(Guid id)
         {
-            var result = _service.GetById(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _service.GetById(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
-            if (!result.IsSuccessful)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
-            return Ok(result);
         }
 
         [HttpPost]
         [Route("api/v1/customfielddata")]
         public IHttpActionResult Post([FromBody] CustomFieldData item)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var response = _service.Add(item);
+                return Ok(response);
             }
-
-            var response = _service.Add(item);
-            return Ok();
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPatch]
@@ -92,7 +111,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -117,9 +137,10 @@ namespace DDI.WebApi.Controllers
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }

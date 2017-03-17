@@ -8,6 +8,8 @@ namespace DDI.WebApi.Controllers
 {
     public class ClergyTypesController : ControllerBase<ClergyType>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

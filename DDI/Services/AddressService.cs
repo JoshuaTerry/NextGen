@@ -63,7 +63,10 @@ namespace DDI.Services
             };
 
             string resultAddress = string.Empty;
+
             _zipLookup.GetZipPlus4(ref addressToFormat, out resultAddress);
+            UpdateAddressRegions(addressToFormat);
+
             IDataResponse<Address> response = new DataResponse<Address>();
             response.Data = addressToFormat;
             return response;
@@ -71,5 +74,24 @@ namespace DDI.Services
 
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void UpdateAddressRegions(Address address)
+        {
+            RegionLogic rl = new RegionLogic();
+            var regions = rl.GetRegionsByAddress(address.CountryId, address.StateId, address.CountyId, address.City, address.PostalCode);
+
+            address.Region1 = regions.Where(r => r.Level == 1).FirstOrDefault();
+            address.Region1Id = address.Region1?.Id;
+            address.Region2 = regions.Where(r => r.Level == 2).FirstOrDefault();
+            address.Region2Id = address.Region2?.Id;
+            address.Region3 = regions.Where(r => r.Level == 3).FirstOrDefault();
+            address.Region3Id = address.Region3?.Id;
+            address.Region4 = regions.Where(r => r.Level == 4).FirstOrDefault();
+            address.Region4Id = address.Region4?.Id;
+        }
+
+        #endregion
     }
 }

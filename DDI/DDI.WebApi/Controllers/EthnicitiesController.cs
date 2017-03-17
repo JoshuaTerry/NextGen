@@ -17,6 +17,8 @@ namespace DDI.WebApi.Controllers
 {
     public class EthnicitiesController : ControllerBase<Ethnicity>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
         private IConstituentService _constituentService;
         public EthnicitiesController()
@@ -78,7 +80,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError();
             }
         }
@@ -100,7 +102,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError();
             }
         }

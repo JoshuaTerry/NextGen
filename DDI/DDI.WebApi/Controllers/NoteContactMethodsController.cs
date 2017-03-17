@@ -12,6 +12,8 @@ namespace DDI.WebApi.Controllers
 {
     public class NoteContactMethodsController : ControllerBase<NoteContactMethod>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/notecontactcodes", Name = RouteNames.NoteContactCode)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
