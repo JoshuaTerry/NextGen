@@ -16,6 +16,7 @@ namespace DDI.Data.Helpers
         {
             User user = null;
             var userId = Thread.CurrentPrincipal?.Identity.Name;
+
             if (!string.IsNullOrEmpty(userId))
             {
                 var repo = new Repository<User>();

@@ -9,7 +9,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentAddress")]
-    public class ConstituentAddress : EntityBase
+    public class ConstituentAddress : AuditableEntityBase
     {
         #region Public Properties
         [Key]
@@ -44,10 +44,11 @@ namespace DDI.Shared.Models.Client.CRM
         public string DuplicateKey { get; set; }
 
         // Navigation Properties
+        [ForeignKey("AddressId")]
         public Address Address { get; set; }
-
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
-
+        [ForeignKey("AddressTypeId")]
         public AddressType AddressType { get; set; }
 
         public override string DisplayName

@@ -70,7 +70,6 @@
     <Compile Include="Core\ConfigurationBaseTest.cs" />
     <Compile Include="CP\PaymentMethodTest.cs" />
     <Compile Include="CRM\AddressLogicTest.cs" />
-    <Compile Include="CRM\ConstituentAddressLogicTest.cs" />
     <Compile Include="CRM\DataSources\ContactTypeDataSource.cs" />
     <Compile Include="CRM\DataSources\ContactCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\RegionDataSource.cs" />
@@ -90,7 +89,6 @@
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
     <Compile Include="Helpers\AbbreviationHelperTest.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
-    <Compile Include="Helpers\BusinessLogicHelperTest.cs" />
     <Compile Include="Helpers\CodeEntityHelperTest.cs" />
     <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />

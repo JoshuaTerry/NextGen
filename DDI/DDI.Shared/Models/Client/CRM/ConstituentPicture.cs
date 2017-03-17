@@ -8,7 +8,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentPicture")]
-    public class ConstituentPicture : EntityBase
+    public class ConstituentPicture : AuditableEntityBase
     {
         #region Public Properties
         [Key]
@@ -16,11 +16,11 @@ namespace DDI.Shared.Models.Client.CRM
         public override Guid Id { get; set; }
 
         public Guid ConstituentId { get; set; }
-
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
 
         public Guid FileId { get; set; }
-
+        [ForeignKey("FileId")]
         public FileStorage File { get; set; }
 
         #endregion Public Properties

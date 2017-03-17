@@ -1,4 +1,5 @@
-﻿using DDI.Services;
+﻿using DDI.Logger;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Statics;
@@ -14,6 +15,7 @@ namespace DDI.WebApi.Controllers
 {
     public class AuditController : ApiController
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AuditController));
         private AuditService _service = null;
 
         public AuditController()
@@ -22,26 +24,44 @@ namespace DDI.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
-        public IHttpActionResult GetByConstituentId(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        [Route("api/v1/audit/flat/{id}", Name = "AuditFlat")]
+        public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
-                start = start ?? DateTime.Now.AddDays(-90);
-                end = end ?? DateTime.Now;
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1); 
 
                 var search = new PageableSearch(offset, limit, orderBy);
-
-                //var response = _service.GetAllWhereExpression(a => a.ObjectChanges.Where(o => o.ObjectReference == id.ToString()), search);
-
-                //var response = _service.GetAll(id, start.Value, end.Value, search);
-                //return FinalizeResponse(response, RouteNames.Audit, search);
-
-                return InternalServerError();
+                var response = _service.GetAllFlat(id, start.Value, end.Value, search);
+                  
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                return InternalServerError();
+                _logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
+        public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1);
+
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = _service.GetChanges(id, start.Value, end.Value);
+                  
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -52,6 +72,7 @@ namespace DDI.WebApi.Controllers
                 var urlHelper = new UrlHelper(Request);
                 if (!response.IsSuccessful)
                 {
+                    _logger.LogError(response.ErrorMessages.ToString());
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
@@ -64,8 +85,9 @@ namespace DDI.WebApi.Controllers
                 return Ok(dynamicResponse);
             }
             catch (Exception ex)
-            { 
-                return InternalServerError();
+            {
+                _logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }

@@ -45,19 +45,22 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/customfields/entity/{entityId}", Name = RouteNames.CustomField + RouteNames.Entity)]
         public IHttpActionResult GetByEntity(int entityId)
         {
-            var result = Service.GetByEntityId(entityId);
-
-            if (result == null)
+            try
             {
-                return NotFound();
-            }
+                var result = Service.GetByEntityId(entityId);
 
-            if (!result.IsSuccessful)
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            return Ok(result);
         }
 
         [HttpPost]

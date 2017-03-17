@@ -56,7 +56,7 @@ namespace DDI.EFAudit.History
             else
             {
                 var existingValue = property.GetValue(model, null);
-                var value = binder.Bind(wrapped.Value, property.PropertyType, existingValue);
+                var value = binder.Bind(wrapped.NewValue, property.PropertyType, existingValue);
                 if (IsEntityCollection(property) && existingValue != null)
                 {
                     // Don't do anything, the contents were already updated and you can't use property setter on an entity collection

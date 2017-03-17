@@ -5,6 +5,7 @@ using System.Web.Http;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers
 {
@@ -27,15 +28,46 @@ namespace DDI.WebApi.Controllers
             return base.GetById(id, fields);
         }
 
+        [HttpPost]
+        [Route("api/v1/relationshiptypes", Name = RouteNames.RelationshipTypes + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] RelationshipType entityToSave)
+        {
+            return base.Post(entityToSave);
+        }
+
+        [HttpPatch]
+        [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        {
+            return base.Patch(id, entityChanges);
+        }
+
+        [HttpDelete]
+        [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
+
         protected override Expression<Func<RelationshipType, object>>[] GetDataIncludesForSingle() =>
             new Expression<Func<RelationshipType, object>>[]
             {
-                p => p.RelationshipCategory
+                p => p.RelationshipCategory,
+                p => p.ReciprocalTypeMale,
+                p => p.ReciprocalTypeFemale
+
             };
 
-
-        protected override Expression<Func<RelationshipType, object>>[] GetDataIncludesForList() => GetDataIncludesForSingle();
-
+        protected override Expression<Func<RelationshipType, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<RelationshipType, object>>[]
+            {
+                p => p.RelationshipCategory,
+                p => p.ReciprocalTypeMale,
+                p => p.ReciprocalTypeFemale
+                
+            };
+        }
         protected override string FieldsForList => FieldLists.CodeFields;
 
         protected override string FieldsForAll
@@ -47,8 +79,9 @@ namespace DDI.WebApi.Controllers
                     // For entity types with recursive properties or large collections, we need to exclude these.
                     // This is an example of using the FieldListBuilder to create a list of fields.
                     _allFields = new PathHelper.FieldListBuilder<RelationshipType>()
-                        .Exclude(p => p.ReciprocalTypeFemale)
-                        .Exclude(p => p.ReciprocalTypeMale)
+                        .IncludeAll()
+                        .Include(p => p.ReciprocalTypeFemale.DisplayName)
+                        .Include(p => p.ReciprocalTypeMale.DisplayName)
                         .Exclude(p => p.FemaleTypes)
                         .Exclude(p => p.MaleTypes)
                         .Exclude(p => p.Relationships)

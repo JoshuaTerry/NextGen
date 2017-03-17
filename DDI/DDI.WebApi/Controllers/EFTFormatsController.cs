@@ -11,6 +11,8 @@ namespace DDI.WebApi.Controllers
 {
     public class EFTFormatsController : ControllerBase<EFTFormat>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/eftformats")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

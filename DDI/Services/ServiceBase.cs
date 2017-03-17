@@ -15,6 +15,7 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DDI.Logger;
 using WebGrease.Css.Extensions;
+using System.Reflection;
 
 namespace DDI.Services
 {
@@ -100,6 +101,11 @@ namespace DDI.Services
             }
 
             var queryDataList = queryData.ToList();
+            if (typeof(AuditableEntityBase).IsAssignableFrom(typeof(T)))
+            {
+                queryDataList.Cast<IAuditableEntity>().ForEach(p => SetDateTimeKind(p));
+            }
+
             FormatEntityListForGet(queryDataList);
 
             var response = GetIDataResponse(() => ModifySortOrder(queryDataList).ToList<ICanTransmogrify>());
@@ -107,6 +113,65 @@ namespace DDI.Services
             response.TotalResults = totalCount;
 
             return response;
+        }
+
+        /// <summary>
+        /// Set CreatedOn and LastModifiedOn properties on an entity to UTC.
+        /// </summary>
+        private void SetDateTimeKind(IAuditableEntity entity)
+        {
+            if (entity != null && entity.CreatedOn.HasTime() && entity.CreatedOn.Value.Kind == DateTimeKind.Unspecified)
+            {
+                entity.CreatedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
+            }
+            if (entity != null && entity.LastModifiedOn.HasTime() && entity.CreatedOn.Value.Kind == DateTimeKind.Unspecified)
+            {
+                entity.LastModifiedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
+            }
+        }
+
+        /// <summary>
+        /// Set a DateTime? property to UTC if the property contains a DateTime value with a non-zero time of day.
+        /// </summary>
+        /// <param name="entity">Entity to update.</param>
+        /// <param name="path">Path to DateTime? property.</param>
+        /// <returns>The service (to allow chaining of method calls.)</returns>
+        protected ServiceBase<T> SetDateTimeKind(T entity, Expression<Func<T, DateTime?>> path)
+        {
+            if (entity != null && path != null)
+            {
+                var expr = (MemberExpression)path.Body;
+                var prop = (PropertyInfo)expr.Member;
+                DateTime? dt = (DateTime?)prop.GetValue(entity);
+
+                if (dt.HasTime() && dt.Value.Kind == DateTimeKind.Unspecified)
+                {
+                    prop.SetValue(entity, DateTime.SpecifyKind(dt.Value, DateTimeKind.Utc));
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Set a DateTime property to UTC if the property contains a DateTime value with a non-zero time of day.
+        /// </summary>
+        /// <param name="entity">Entity to update.</param>
+        /// <param name="path">Path to DateTime property.</param>
+        /// <returns>The service (to allow chaining of method calls.)</returns>
+        protected ServiceBase<T> SetDateTimeKind(T entity, Expression<Func<T, DateTime>> path)
+        {
+            if (entity != null && path != null)
+            {
+                var expr = (MemberExpression)path.Body;
+                var prop = (PropertyInfo)expr.Member;
+                DateTime dt = (DateTime)prop.GetValue(entity);
+
+                if (dt.HasTime() && dt.Kind == DateTimeKind.Unspecified)
+                {
+                    prop.SetValue(entity, DateTime.SpecifyKind(dt, DateTimeKind.Utc));
+                }
+            }
+            return this;
         }
 
         protected virtual List<T> ModifySortOrder(List<T> data)
@@ -131,6 +196,10 @@ namespace DDI.Services
         public virtual IDataResponse<T> GetById(Guid id)
         {
             T result = _unitOfWork.GetById(id, _includesForSingle);
+            if (result is IAuditableEntity)
+            {
+                SetDateTimeKind((IAuditableEntity)result);
+            }
             FormatEntityForGet(result);
             return GetIDataResponse(() => result);
         }

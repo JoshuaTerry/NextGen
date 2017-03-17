@@ -13,6 +13,8 @@ namespace DDI.WebApi.Controllers
 {
     public class DenominationsController : ControllerBase<Denomination>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         private IConstituentService _constituentService;
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
         public DenominationsController()

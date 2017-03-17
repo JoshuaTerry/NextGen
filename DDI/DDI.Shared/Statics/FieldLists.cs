@@ -11,7 +11,7 @@ namespace DDI.Shared.Statics
         /// <summary>
         /// Fields for Code Entities (ICodeEntity): "Id,DisplayName,IsActive"
         /// </summary>
-        public static string CodeFields => $"{nameof(ICodeEntity.Id)},{nameof(ICodeEntity.DisplayName)},{nameof(ICodeEntity.IsActive)}";
+        public static string CodeFields => $"{nameof(IEntity.Id)},{nameof(IEntity.DisplayName)},{nameof(ICodeEntity.IsActive)}";
 
     }
 }
