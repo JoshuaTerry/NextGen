@@ -125,7 +125,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
 
@@ -145,7 +145,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -173,7 +173,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -202,7 +202,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -222,7 +222,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -244,7 +244,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -275,7 +275,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                _logger.LogError(ex.Message);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

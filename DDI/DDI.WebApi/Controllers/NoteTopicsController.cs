@@ -12,6 +12,8 @@ namespace DDI.WebApi.Controllers
 {
     public class NoteTopicsController : ControllerBase<NoteTopic>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/notetopics", Name = RouteNames.NoteTopic)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

@@ -12,6 +12,8 @@ namespace DDI.WebApi.Controllers
 {
     public class NoteCategoriesController : ControllerBase<NoteCategory>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/notecategories", Name = RouteNames.NoteCategory)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

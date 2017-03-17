@@ -1,4 +1,5 @@
-﻿using DDI.Services;
+﻿using DDI.Logger;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Statics;
@@ -41,7 +42,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -62,7 +63,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
@@ -74,6 +75,7 @@ namespace DDI.WebApi.Controllers
                 var urlHelper = new UrlHelper(Request);
                 if (!response.IsSuccessful)
                 {
+                    _logger.LogError(response.ErrorMessages.ToString());
                     return BadRequest(response.ErrorMessages.ToString());
                 }
 
@@ -87,7 +89,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
