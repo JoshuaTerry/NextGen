@@ -148,18 +148,7 @@ function LoadNewConstituentModalDropDowns() {
 
 }
 
-function GetApiHeaders() {
 
-    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    var headers = {};
-
-    if (token) {
-        headers.Authorization = 'Bearer ' + token;
-    }
-
-    return headers;
-
-}
 
 function GetQueryString() {
 

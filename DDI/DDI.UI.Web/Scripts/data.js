@@ -1,4 +1,16 @@
 ﻿
+function GetApiHeaders() {
+
+    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    var headers = {};
+
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+    return headers;
+
+}
 
 function MakeServiceCall(method, route, successCallback, errorCallback) {
 
@@ -7,6 +19,7 @@ function MakeServiceCall(method, route, successCallback, errorCallback) {
         method: method,
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
@@ -99,6 +112,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 /* END POPULATE DROPDOWN CONTROLS */
 
 
+
 /* POPULATE TAGBOX CONTROLS */
 function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
     if (container.indexOf('.') != 0)
@@ -159,6 +173,72 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 
 /* DATAGRID FUNCTIONALITY */
+
+function LoadGrid(container, gridClass, columns, route, selected, prefix, showEdit, showDelete, showNew, showFilter, showGroup) {
+
+    if ($.type(container) === "string" && container.indexOf('.') != 0) {
+        container = '.' + containr;
+    }
+
+    var datagrid = $('<div>').addClass(grid);
+
+    if (typeof (showFilter) == 'undefined' || showFilter == null) {
+        showFilter = false; // Hide the filter by default
+    }
+
+    if (typeof (showGroup) == 'undefined' || showGroup == null) {
+        showFilter = false; // Hide the group by default
+    }
+
+    if (showNew) {
+        // Add link for new modal
+    }
+
+    if (showEdit) {
+        // Add column for edit
+    }
+
+    if (showDelete) {
+        // add column for delete
+    }
+
+    $(datagrid).dxDataGrid({
+        dataSource: actualData,
+        columns: columns,
+        paging: {
+            pageSize: 25
+        },
+        pager: {
+            showNavigationButtons: true,
+            showPageSizeSelector: true,
+            showInfo: true,
+            allowedPageSizes: [15, 25, 50, 100]
+        },
+        groupPanel: {
+            visible: showGroup,
+            allowColumnDragging: true
+        },
+        filterRow: {
+            visible: showFilter,
+            showOperationChooser: false
+        },
+        selection: {
+            mode: 'single',
+            allowSelectAll: false
+        },
+        onRowClick: function (info) {
+
+            if (selected) {
+                selected(info);
+            }
+
+        }
+    });
+
+    $(datagrid).appendTo($(container));
+
+}
+
 function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
 
     if (showFilterRow == '' || showFilterRow === undefined)
