@@ -302,7 +302,8 @@ namespace DDI.Conversion
 			try
             {
                 DateTime dt = Convert.ToDateTime(dtstr);
-                return dt;
+                // Convert local times (which is what's stored in legacy db) to UTC
+                return DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
             }
             catch
             {

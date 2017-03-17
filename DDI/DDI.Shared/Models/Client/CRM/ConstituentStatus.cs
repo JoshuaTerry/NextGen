@@ -8,7 +8,7 @@ using DDI.Shared.Enums.CRM;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentStatus")]
-    public class ConstituentStatus : EntityBase, ICodeEntity
+    public class ConstituentStatus : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties        
         [Key]

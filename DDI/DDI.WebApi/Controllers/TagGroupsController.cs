@@ -53,7 +53,7 @@ namespace DDI.WebApi.Controllers
             }
             catch(Exception ex)
             {
-                return InternalServerError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 

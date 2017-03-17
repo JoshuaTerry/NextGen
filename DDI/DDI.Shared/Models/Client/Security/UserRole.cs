@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("UserRole")]
-    public class UserRole : IdentityUserRole<Guid>, IEntity
+    [Table("UserRoles")]
+    public class UserRole : IdentityUserRole<Guid>, IEntity, IAuditableEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -21,5 +21,8 @@ namespace DDI.Shared.Models.Client.Security
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }
+
+        public void AssignPrimaryKey() { }
+
     }
 }
