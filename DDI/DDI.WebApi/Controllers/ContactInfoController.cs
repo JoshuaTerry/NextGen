@@ -46,20 +46,22 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/contactinfo/{categoryid}/{constituentid}", Name = RouteNames.ContactCategory + RouteNames.ContactInfo)]
         public IHttpActionResult GetContactInfoByContactCategoryForConstituent(Guid? categoryId, Guid? constituentId)
         {
-
-            var result = Service.GetAllWhereExpression(c => c.ConstituentId == constituentId && c.ContactType.ContactCategoryId == categoryId);
-
-            if (result == null)
+            try
             {
-                return NotFound();
-            }
+                var result = Service.GetAllWhereExpression(c => c.ConstituentId == constituentId && c.ContactType.ContactCategoryId == categoryId);
 
-            if (!result.IsSuccessful)
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            return Ok(result);
         }
 
         [HttpPost]

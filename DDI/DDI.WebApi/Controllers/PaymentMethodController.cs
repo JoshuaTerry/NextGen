@@ -45,27 +45,35 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
-            if (entityToSave.ConstituentId.HasValue)
+            try
             {
-                if (entityToSave.Constituents == null)
+                if (entityToSave.ConstituentId.HasValue)
                 {
-                    entityToSave.Constituents = new List<DDI.Shared.Models.Client.CRM.Constituent>();
-                }
+                    if (entityToSave.Constituents == null)
+                    {
+                        entityToSave.Constituents = new List<DDI.Shared.Models.Client.CRM.Constituent>();
+                    }
 
-                var constituent = ConstituentService.GetById(entityToSave.ConstituentId.Value).Data;
-                
-                if (constituent.PaymentMethods == null)
+                    var constituent = ConstituentService.GetById(entityToSave.ConstituentId.Value).Data;
+
+                    if (constituent.PaymentMethods == null)
+                    {
+                        constituent.PaymentMethods = new List<PaymentMethod>();
+                    }
+
+                    constituent.PaymentMethods.Add(entityToSave);
+
+                    return Ok(ConstituentService.Update(constituent));
+                }
+                else
                 {
-                    constituent.PaymentMethods = new List<PaymentMethod>();
+                    return BadRequest();
                 }
-
-                constituent.PaymentMethods.Add(entityToSave);
-
-                return Ok(ConstituentService.Update(constituent));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -96,8 +104,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError();
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }

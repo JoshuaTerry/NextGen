@@ -11,6 +11,7 @@ namespace DDI.WebApi.Controllers
 {
     public class ContactCategoryController : ControllerBase<ContactCategory>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]
         [Route("api/v1/contactcategory", Name = RouteNames.ContactCategory)]

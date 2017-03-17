@@ -93,8 +93,8 @@ function LoadBusinessDate() {
 
                 $('.businessdate').text(date);
             },
-            failure: function (response) {
-                alert(response);
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     }
@@ -123,8 +123,8 @@ function LoadEnvironment() {
 
                 $('.environment').text(data.Data);
             },
-            failure: function (response) {
-                alert(response);
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     }
@@ -200,7 +200,7 @@ function SaveNewConstituent(modal) {
             
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -454,7 +454,7 @@ function GetAutoZipData(container) {
             
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -517,7 +517,7 @@ function LoadTagSelector(type, container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
 
@@ -583,7 +583,7 @@ function LoadAvailableTags(container) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -630,7 +630,7 @@ function DisplaySelectedTags(container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
                 })
@@ -733,8 +733,8 @@ function GetFile(id, callback) {
             }
 
         },
-        failure: function (response) {
-            DisplayErrorMessage('Error', 'An error occurred during getting the file.');
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -916,7 +916,7 @@ function SaveEdit(editcontainer) {
             RefreshEntity();
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1012,7 +1012,7 @@ function SaveChildCollection(children, route) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -1042,7 +1042,7 @@ function DeleteEntity(url, method, confirmationMessage) {
                 DisplaySuccessMessage('Success', 'The item was deleted.');
             },
             error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during delete. It was unsuccessful');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     };
