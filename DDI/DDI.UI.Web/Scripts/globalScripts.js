@@ -93,8 +93,8 @@ function LoadBusinessDate() {
 
                 $('.businessdate').text(date);
             },
-            failure: function (response) {
-                alert(response);
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     }
@@ -123,8 +123,8 @@ function LoadEnvironment() {
 
                 $('.environment').text(data.Data);
             },
-            failure: function (response) {
-                alert(response);
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     }
@@ -200,7 +200,7 @@ function SaveNewConstituent(modal) {
             
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -454,7 +454,7 @@ function GetAutoZipData(container) {
             
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -480,7 +480,7 @@ function LoadTagSelector(type, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags();
+                LoadAvailableTags(modal);
 
                 $('.saveselectedtags').unbind('click');
 
@@ -517,7 +517,7 @@ function LoadTagSelector(type, container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
 
@@ -534,7 +534,7 @@ function LoadTagSelector(type, container) {
 
 }
 
-function LoadAvailableTags() {
+function LoadAvailableTags(container) {
 
     $.ajax({
         type: 'GET',
@@ -547,7 +547,7 @@ function LoadAvailableTags() {
                 if (data.IsSuccessful) {
                     if (data.Data) {
 
-                        $(modal).find('.tagselectgridcontainer').html('');
+                        $(container).find('.tagselectgridcontainer').html('');
 
                         $.map(data.Data, function (group) {
 
@@ -583,7 +583,7 @@ function LoadAvailableTags() {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -630,7 +630,7 @@ function DisplaySelectedTags(container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
                 })
@@ -641,6 +641,43 @@ function DisplaySelectedTags(container) {
         if (!editing) {
             $(container).find('.dx-tag-remove-button').hide();
         }
+
+    }
+}
+
+function DisplaySelectedTagsConstituentType() {
+
+    if (currentEntity && currentEntity.Tags) {
+
+        $('.tagselect').html('');
+
+        $.map(currentEntity.Tags, function (tag) {
+
+            var t = $('<div>').addClass('dx-tag-content').attr('id', tag.Id).appendTo($('.tagselect'));
+            $('<span>').text(tag.DisplayName).appendTo($(t));
+            $('<div>').addClass('dx-tag-remove-button')
+                .click(function () {
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id,
+                        method: 'DELETE',
+                        headers: GetApiHeaders(),
+                        contentType: 'application/json; charset-utf-8',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            currentEntity = data.Data;
+
+                            DisplaySelectedTagsConstituentType();
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                        }
+                    });
+                })
+                .appendTo($(t));
+
+        });
 
     }
 }
@@ -696,8 +733,8 @@ function GetFile(id, callback) {
             }
 
         },
-        failure: function (response) {
-            DisplayErrorMessage('Error', 'An error occurred during getting the file.');
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -879,7 +916,7 @@ function SaveEdit(editcontainer) {
             RefreshEntity();
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -975,7 +1012,7 @@ function SaveChildCollection(children, route) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -1005,7 +1042,7 @@ function DeleteEntity(url, method, confirmationMessage) {
                 DisplaySuccessMessage('Success', 'The item was deleted.');
             },
             error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during delete. It was unsuccessful');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     };

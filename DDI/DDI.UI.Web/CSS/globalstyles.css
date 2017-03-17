@@ -123,7 +123,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .tagSelectImage { display: inline-block; padding: 2px; margin: 0 0 0 3px; 
                   background: url('../../Images/Search_Mono_16.png') no-repeat center; width: 18px; height: 18px; vertical-align: bottom;
 }
-.tagselectgridcontainer { height: 600px; overflow: scroll; }
+.tagselectgridcontainer { height: 600px; overflow-y: scroll; }
 .tagSelectImage:hover { cursor: pointer; }
 .tagSelectorHeader { background-color: #0f75b4; color: white; font-weight: bold; font-size: 14px; padding: 3px 8px; border-radius: 5px; }
 .tagSelectorContainer { margin-bottom: 10px; }

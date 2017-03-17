@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
@@ -69,38 +69,6 @@ namespace DDI.WebApi.Controllers
             return base.Delete(id);
         }
 
-        //protected override string FieldsForAll
-        //{
-        //    get
-        //    {
-        //        if (_allFields == null)
-        //        {
-        //            //// For entity types with recursive properties or large collections, we need to exclude these.
-        //            //// This is an example of using the FieldListBuilder to create a list of fields.
-        //            _allFields = new PathHelper.FieldListBuilder<ConstituentType>()
-        //                .Include(p => p.Code)
-        //                .Include(p => p.Category)
-        //                .Include(p => p.DisplayName)
-        //                .Include(p => p.Id)
-        //                .Include(p => p.IsActive)
-        //                .Include(p => p.IsRequired)
-        //                .Include(p => p.Name)
-        //                .Include(p => p.NameFormat)
-        //                .Include(p => p.SalutationFormal)
-        //                .Include(p => p.SalutationInformal)
-        //                .Include(p => p.Code)
-        //                .Include(p => p.Tags.Count);
-
-        //            //    .Exclude(p => p.ReciprocalTypeMale)
-        //            //    .Exclude(p => p.FemaleTypes)
-        //            //    .Exclude(p => p.MaleTypes)
-        //            //    .Exclude(p => p.Relationships)
-        //            //    .Exclude(p => p.RelationshipCategory.RelationshipTypes);
-        //        }
-        //        return _allFields;
-        //    }
-        //}
-
         [HttpPost]
         [Route("api/v1/constituenttypes/{id}/constituenttypetags")]
         public IHttpActionResult AddTagsToConstituentType(Guid id, [FromBody] JObject tags)
@@ -120,7 +88,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError(ex);
             }
         }
@@ -144,7 +112,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError(ex);
             }
         }

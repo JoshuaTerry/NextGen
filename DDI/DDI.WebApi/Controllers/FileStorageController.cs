@@ -74,13 +74,13 @@ namespace DDI.WebApi.Controllers
                 }
                 else
                 {
-                    return InternalServerError();
+                    return InternalServerError(new Exception("No files were uploaded"));
                 }
             }
             catch (Exception ex)
             {
-                base.Logger.LogError(ex.Message);
-                return InternalServerError(ex);
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
             
         }

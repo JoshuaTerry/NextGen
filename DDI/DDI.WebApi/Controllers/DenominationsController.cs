@@ -13,6 +13,8 @@ namespace DDI.WebApi.Controllers
 {
     public class DenominationsController : ControllerBase<Denomination>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         private IConstituentService _constituentService;
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
         public DenominationsController()
@@ -74,7 +76,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError();
             }
         }
@@ -96,7 +98,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError();
             }
         }
