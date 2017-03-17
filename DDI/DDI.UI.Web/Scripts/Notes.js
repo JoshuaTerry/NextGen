@@ -68,15 +68,13 @@ function NewNoteDetailsModal() {
             resizable: false
         });
 
-        $('.savenotetopics').unbind('click');
-       
+        $('.noteTopicSelectImage').unbind('click');
+
         $('.noteTopicSelectImage').click(function (e) {
 
             SaveNewNoteTopics(modal);
             
         });
-
-  
 
         $('.cancelmodal').click(function (e) {
 
@@ -137,6 +135,8 @@ function NewNoteDetailsModal() {
 
                     CloseModal(modal);
 
+                    ClearNoteTopicTagBox(modal);
+
                     LoadNoteDetailsGrid();
 
                 },
@@ -161,7 +161,9 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id);
 
-    LoadSelectedNoteTopics(id);
+    LoadSelectedNoteTopics();
+
+    $('.noteTopicSelectImage').unbind('click');
 
     $('.noteTopicSelectImage').click(function (e) {
 
@@ -169,54 +171,49 @@ function EditNoteDetails(id) {
 
         $(modal).find('.tagdropdowncontainer').show();
 
+        $('.savenotetopics').unbind('click');
+
         $('.savenotetopics').click(function (e) {
-            // pull this out into function? 
-            var notetopics = GetCheckedNoteTopics();
 
-            $.ajax({ 
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/',
-                data: notetopics,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
+               var newsavednotetopics = GetCheckedNoteTopics();
 
-                    StyleAndSetupIndividualTags(data.Data, function () {
+                $.map(newsavednotetopics, function (topicid) {
 
-                        var removeid = '#' + data.Data.Id;
+                    $.ajax({
+                        url: WEB_API_ADDRESS + '/notetopics/' + topicid,
+                        method: 'GET',
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
 
-                        $('.noteTopicSelect > div').remove(removeid);
+                            var topic = data.Data
 
-                        $.ajax({
-                            url: WEB_API_ADDRESS + 'notes/' + id + '/notetopics/' + data.Data.Id,
-                            method: 'DELETE',
-                            contentType: 'application/json; charset-utf-8',
-                            dataType: 'json',
-                            crossDomain: true,
-                            success: function (data) {
+                            StyleAndSetupIndividualTags(topic, function () {
 
+                                var removeid = '#' + data.Data.Id;
 
-                            },
-                            error: function (xhr, status, err) {
-                                DisplayErrorMessage('Error', 'An error occurred during deleting the note topic.');
-                            }
-                        });
+                                $('.noteTopicSelect > div').remove(removeid);
 
+                            });
+
+                        },
+                        error: function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
+                        }
                     });
 
-                    DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+                    // DisplaySelectedTags();
 
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-                }
+                });
+
+                $(modal).find('.tagdropdowncontainer').hide();
+
+                ClearNoteTopicSelectModal();
+
+                newsavednotetopics = null;
 
             });
-
-            $(modal).find('.tagdropdowncontainer').hide();
-
-            ClearNoteTopicSelectModal();
-        });
 
         $('.cancelnotetopics').click(function (e) {
 
@@ -239,11 +236,15 @@ function EditNoteDetails(id) {
 
         CloseModal(modal);
 
+        ClearNoteTopicTagBox(modal);
+
     });
 
     $('.savenotedetails').unbind('click');
 
     $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
 
         var item = {
 
@@ -253,7 +254,7 @@ function EditNoteDetails(id) {
             Text: $(modal).find('.nd-Description').val(),
             CategoryId: $(modal).find('.nd-Category').val(),
             ContactDate: $(modal).find('.nd-ContactDate').val(),
-            NoteCode: $(modal).find('.nd-NoteCode').val(),
+            NoteCodeId: $(modal).find('.nd-NoteCode').val(),
             ParentEntityId: currentEntity.Id,
             EntityType: NoteEntity[0]
 
@@ -265,11 +266,29 @@ function EditNoteDetails(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
-            success: function () {
+            success: function (data) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
+                    data: topicsavelist,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function (data) {
+
+                        DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+                    }
+                });
 
                 DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
                 CloseModal(modal);
+
+                ClearNoteTopicTagBox(modal);
 
                 LoadNoteDetailsGrid();
 
@@ -562,7 +581,7 @@ function LoadNoteAlertGrid(data) {
         columns,
         'notealert/' + currentEntity.Id ,
         null,
-        null,
+        EditNoteDetails,
         null);
 }
 
