@@ -161,7 +161,7 @@ function EditNoteDetails(id) {
 
     LoadNoteDetails(id);
 
-    LoadSelectedNoteTopics();
+    LoadSelectedNoteTopics(id);
 
     $('.noteTopicSelectImage').unbind('click');
 
@@ -202,8 +202,6 @@ function EditNoteDetails(id) {
                             DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
                         }
                     });
-
-                    // DisplaySelectedTags();
 
                 });
 
