@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("NoteTopic")]
-    public class NoteTopic : EntityBase, ICodeEntity
+    public class NoteTopic : AuditableEntityBase, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

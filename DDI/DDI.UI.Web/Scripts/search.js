@@ -132,8 +132,8 @@ function DoSearch() {
             }
 
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 

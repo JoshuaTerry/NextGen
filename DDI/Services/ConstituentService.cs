@@ -50,7 +50,16 @@ namespace DDI.Services
 
         #region Public Methods
 
-
+        protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
+		
+        public IDataResponse Test()
+        {
+            var c = UnitOfWork.GetRepository<Constituent>().Find(Guid.Parse("9d0b8b6d-0182-43da-baa1-d995dc81f47d"));
+            var p = UnitOfWork.GetRepository<Prefix>().Find(Guid.Parse("ffbf44cb-441b-442f-adb9-4c64323fa032"));
+            c.Prefix = p;
+            UnitOfWork.SaveChanges();
+            return null;
+        }
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
             var criteria = (ConstituentSearch)search;

@@ -8,7 +8,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("RelationshipType")]
-    public class RelationshipType : EntityBase, ICodeEntity
+    public class RelationshipType : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]
@@ -38,7 +38,7 @@ namespace DDI.Shared.Models.Client.CRM
         public ConstituentCategory ConstituentCategory { get; set; }
 
         public Guid? RelationshipCategoryId { get; set; }
-
+        [ForeignKey("RelationshipCategoryId")]
         public RelationshipCategory RelationshipCategory { get; set; }
 
         public ICollection<Relationship> Relationships { get; set; }

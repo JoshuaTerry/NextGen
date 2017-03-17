@@ -95,7 +95,7 @@ namespace DDI.Business.CRM
         {
             ConstituentType type = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
 
-            if (type.Category == ConstituentCategory.Organization)
+            if (type?.Category == ConstituentCategory.Organization)
             {
                 return constituent.Name;
             }

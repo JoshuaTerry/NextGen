@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("MaritialStatus")]
-    public class MaritalStatus : EntityBase, ICodeEntity
+    public class MaritalStatus : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]

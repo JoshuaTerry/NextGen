@@ -14,6 +14,7 @@ var SystemSettings = {
     DBA: 'DBASettings',
     Demographics: 'DemographicSettings',
     Education: 'EducationSettings',
+    Organization: 'OrganizationSettings',
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings'
@@ -116,6 +117,7 @@ function GetSystemSettings(category, callback) {
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
 
+    route = route + '?fields=all';
     var container = $('<div>').addClass('twocolumn');
 
     var activeSection = $('<div>').addClass('fieldblock');
@@ -947,6 +949,24 @@ function EditClergyStatus(id) {
 
 function DeleteClergyStatus(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Clergy Status deleted successfully.');
+
+            LoadClergyStatusSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Status.');
+        }
+
+    });
+
 }
 
 function LoadClergyStatus(id) {
@@ -1029,6 +1049,24 @@ function EditClergyType(id) {
 
 function DeleteClergyType(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'clergytypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Clergy Type deleted successfully.');
+
+            LoadClergyTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Type.');
+        }
+
+    });
+
 }
 
 function LoadClergyType(id) {
@@ -1060,9 +1098,366 @@ function LoadClergyType(id) {
 
 function LoadConstituentTypesSectionSettings() {
 
+    var accordion = $('<div>').addClass('accordions');
+    var types = $('<div>').addClass('constituenttypescontainer');
 
+    
+    var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.constituenttypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 400,
+                resizable: false
+            });
+
+            $('.consttype-tagselect').hide();
+            $('.tagSelectImage').hide();
+            $('.tagSelect').hide();
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitconsttype').unbind('click');
+
+            $('.submitconsttype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.consttype-Code').val(),
+                    Name: $(modal).find('.consttype-Name').val(),
+                    Category: $(modal).find('.consttype-Category').val(),
+                    NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                    SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                    SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
+                    IsActive: true,
+                    IsRequired: true
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'constituenttypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadConstituentTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+
+    $(types).appendTo($(accordion));
+
+    LoadConstituentTypeSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 }
+
+function DisplayConstituentTypeTags(tags) {
+
+    $(modal).find('.tagselect').empty();
+    $(modal).find('.consttype-tagselect').empty();
+
+    $(tags).each(function (i, tag) {
+
+        var id = tag.Id;
+        var name = tag.Name;
+
+        var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
+        $('<span>').text(name).appendTo($(t));
+        $('<div>').addClass('dx-tag-remove-button')
+            .click(function () {
+                $.ajax({
+                    url: WEB_API_ADDRESS + 'constituenttypes/' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id,
+                    method: 'DELETE',
+                    headers: GetApiHeaders(),
+                    contentType: 'application/json; charset-utf-8',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred deleting the tag.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+                    }
+                });
+            })
+            .appendTo($(t));
+
+    });
+    
+
+}
+
+function LoadConstituentTypeTagSelector(typeId, container) {
+
+    $('.tagselect').each(function () {
+
+        var img = $('.tagSelectImage');
+        var constTypeId = typeId;
+        
+        if (img.length === 0) {
+            img = $('<div>').addClass('tagSelectImage');
+        }
+
+            $(img).click(function () {
+
+                modal = $('.tagselectmodal').dialog({
+                    closeOnEscape: false,
+                    modal: true,
+                    width: 450,
+                    resizable: false
+                });
+
+                LoadAvailableTags(modal);
+
+                $('.saveselectedtags').unbind('click');
+
+                $('.saveselectedtags').click(function () {
+
+                    var tagIds = [];
+
+                    $('.tagselectgridcontainer').find('input').each(function (index, value) {
+
+                        if ($(value).prop('checked')) {
+                            tagIds.push($(value).val());
+                        }
+                    });
+
+                    $.ajax({
+                        url: WEB_API_ADDRESS + 'constituenttypes/' + constTypeId + '/constituenttypetags',
+                        method: 'POST',
+                        headers: GetApiHeaders(),
+                        data: JSON.stringify({ tags: tagIds }),
+                        contentType: 'application/json; charset-utf-8',
+                        dataType: 'json',
+                        crossDomain: true,
+                        success: function (data) {
+
+                            // Display success
+                            DisplaySuccessMessage('Success', 'Tags saved successfully.');
+                            CloseModal(modal);
+                            EditConstituentType(constTypeId);
+                        },
+                        error: function (xhr, status, err) {
+
+                            DisplayErrorMessage('Error', 'An error occurred saving the tags.');
+                            CloseModal(modal);
+                            EditConstituentType(constTypeId);
+                        }
+                    });
+                });
+            });
+            $(this).after($(img));
+    });
+}
+
+function LoadConstituentTypeSettingsGrid() {
+
+    var typecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        {
+            caption: 'Category', cellTemplate: function (container, options) {
+
+                var category;
+
+                switch (options.data.Category) {
+                    case 0:
+                        category = "Individual";
+                        break;
+                    case 1:
+                        category = "Organization";
+                        break;
+                    case 2:
+                        category = "Both";
+                        break;
+                }
+
+                $('<label>').text(category).appendTo(container);
+            }
+        },
+        {
+            caption: 'Tags', cellTemplate: function (container, options) {
+
+                var tags;
+
+                if (options.data.Tags.length > 0) {
+                    var label = $('<label>');
+
+                    $.map(options.data.Tags, function (tag) {
+                        $(label).text($(label).text() + tag.Code + ', ');
+                    });
+
+                    var codes = $(label).text();
+                    $(label).text(codes.substr(0, codes.length - 2));
+                    $(label).appendTo($(container));
+                }
+            }
+        },
+        { dataField: 'NameFormat', caption: 'Name Format' },
+        { dataField: 'SalutationFormal', caption: 'Formal Salutation' },
+        { dataField: 'SalutationInformal', caption: 'Informal Salutation' }
+    ];
+
+    
+    LoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes', null, EditConstituentType, DeleteConstituentType);
+
+}
+
+
+// CONSTITUENT TYPE SYSTEM SETTINGS 
+function EditConstituentType(id) {
+
+    LoadConstituentType(id);
+
+
+    modal = $('.constituenttypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        height: 500,
+        resizable: false
+    });
+
+    $('.consttype-tagselect').show();
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        LoadConstituentTypeSettingsGrid()
+
+    });
+
+    $('.submitconsttype').unbind('click');
+
+    $('.submitconsttype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.consttype-Code').val(),
+            Name: $(modal).find('.consttype-Name').val(),
+            Category: $(modal).find('.consttype-Category').val(),
+            NameFormat: $(modal).find('.consttype-NameFormat').val(),
+            SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+            SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadConstituentTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteConstituentType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
+
+            LoadConstituentTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+        }
+
+    });
+
+}
+
+function LoadConstituentType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.consttype-Id').val(data.Data.Id);
+                $(modal).find('.consttype-Code').val(data.Data.Code);
+                $(modal).find('.consttype-Name').val(data.Data.Name);
+                $(modal).find('.consttype-Category').val(data.Data.Category);
+                $(modal).find('.consttype-NameFormat').val(data.Data.NameFormat);
+                $(modal).find('.consttype-SalutationFormal').val(data.Data.SalutationFormal);
+                $(modal).find('.consttype-SalutationInformal').val(data.Data.SalutationInformal);
+
+                LoadConstituentTypeTagSelector(data.Data.Id, $('.consttype-tagselect'));
+
+                if (data.Data.Tags.length > 0) {
+                    DisplayConstituentTypeTags($(data.Data.Tags));
+                }
+                else {
+                    $(modal).find('.consttype-tagselect').empty();
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading constituent type.');
+        }
+    });
+
+}
+/* END CONSTITUENT TYPE SYSTEM SETTINGS */
+
+
 
 function LoadContactInformationSectionSettings() {
 
@@ -1419,6 +1814,23 @@ function EditDenomination(id) {
 
 function DeleteDenomination(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'denominations/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Denomination deleted successfully.');
+
+            LoadDenominationSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Denomination.');
+        }
+
+    });
 
 
 }
@@ -1509,6 +1921,23 @@ function EditEthnicity(id) {
 
 function DeleteEthnicity(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'ethnicities/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Ethnicity deleted successfully.');
+
+            LoadEthnicitySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Ethnicity.');
+        }
+
+    });
 
 
 }
@@ -1597,6 +2026,23 @@ function EditLanguage(id) {
 
 function DeleteLanguage(id) {
 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'languages/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Language deleted successfully.');
+
+            LoadLanguageSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Language.');
+        }
+
+    });
 
 
 }
@@ -2105,7 +2551,7 @@ function LoadHubSearchSectionSettings() {
 
 function LoadOrganizationSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Organization', 'sectionpreferences', SystemSettings.Organization);
 
 }
 
@@ -2291,6 +2737,7 @@ function DeletePrefix(id) {
         }
 
     });
+    
 
 }
 
@@ -2639,9 +3086,410 @@ function LoadRegionsSectionSettings() {
 
 function LoadRelationshipSectionSettings() {
 
+    var accordion = $('<div>').addClass('accordions');
+    var category = $('<div>').addClass('relationshipcategorycontainer');
+    var type = $('<div>').addClass('relationshiptypecontainer');
+    
+    var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.relcatmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitrelcat').unbind('click');
+
+            $('.submitrelcat').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.relcat-Code').val(),
+                    Name: $(modal).find('.relcat-Name').val(),
+                    IsActive: $(modal).find('.relcat-IsActive').prop('checked'),
+                    IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshipcategories',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipCategorySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(category).appendTo($(accordion));
+
+    LoadRelationshipCategorySettingsGrid();
+
+    header = $('<h1>').text('Relationship Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.reltypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitreltype').unbind('click');
+
+            $('.submitreltype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.reltype-Code').val(),
+                    Name: $(modal).find('.reltype-Name').val(),
+                    ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+                    ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+                    ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+                    RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+                    IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+                    IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshiptypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(type).appendTo($(accordion));
+
+    LoadRelationshipTypeSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 
 }
+
+function LoadRelationshipCategorySettingsGrid() {
+
+
+    var relationshipcategorycolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Denomination' },
+       { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('relationshipcategorygrid', 'relationshipcategorycontainer', relationshipcategorycolumns, 'relationshipcategories', null, EditRelationshipCategory, DeleteRelationshipCategory);
+
+}
+
+function LoadRelationshipTypeSettingsGrid() {
+
+    var relationshiptypecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal'},
+        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal'},
+        {
+            caption: 'Constituent Category', cellTemplate: function (container, options) {
+                var category = 'Individual';
+
+                switch (options.data.ConstituentCategory) {
+                    case 1:
+                        category = 'Organization';
+                        break;
+                    case 2:
+                        category = 'Both';
+                        break;
+                }
+
+                $('<label>').text(category).appendTo(container);
+            }
+        },
+        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category'},
+        { dataField: 'IsSpouse', caption: 'Spouse'},
+        { dataField: 'IsActive', caption: 'Active'}
+    ];
+
+    LoadGrid('relationshiptypegrid', 'relationshiptypecontainer', relationshiptypecolumns, 'relationshiptypes?fields=all', null, EditRelationshipType, DeleteRelationshipType);
+}
+
+/* RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+function EditRelationshipCategory(id) {
+
+    LoadRelationshipCategory(id);
+
+    modal = $('.relcatmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitrelcat').unbind('click');
+
+    $('.submitrelcat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.relcat-Code').val(),
+            Name: $(modal).find('.relcat-Name').val(),
+            IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked'),
+            IsActive: $(modal).find('.relcat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipCategorySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Category deleted successfully.');
+
+            LoadRelationshipCategorySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Category.');
+        }
+
+    });
+
+
+}
+
+function LoadRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.relcat-Id').val(data.Data.Id);
+                $(modal).find('.relcat-Code').val(data.Data.Code);
+                $(modal).find('.relcat-Name').val(data.Data.Name);
+                $(modal).find('.relcat-IsShownInQuickView').prop('checked', data.Data.IsShownInQuickView);
+                $(modal).find('.relcat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship category.');
+        }
+    });
+
+}
+/* END RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+
+/* RELATIONSHIP TYPE SYSTEM SETTINGS */
+function EditRelationshipType(id) {
+
+    LoadRelationshipType(id);
+
+    modal = $('.reltypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitreltype').unbind('click');
+
+    $('.submitreltype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.reltype-Code').val(),
+            Name: $(modal).find('.reltype-Name').val(),
+            ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+            ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+            ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+            RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+            IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+            IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Type deleted successfully.');
+
+            LoadRelationshipTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Type.');
+        }
+
+    });
+
+}
+
+function LoadRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.reltype-Id').val(data.Data.Id);
+                $(modal).find('.reltype-Code').val(data.Data.Code);
+                $(modal).find('.reltype-Name').val(data.Data.Name);
+                $(modal).find('.reltype-ConstituentCategory').val(data.Data.ConstituentCategory);
+                $(modal).find('.reltype-IsSpouse').prop('checked', data.Data.IsSpouse);
+                $(modal).find('.reltype-IsActive').prop('checked', data.Data.IsActive);
+
+                PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeMaleId);
+                PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeFemaleId);
+                PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '', data.Data.RelationshipCategoryId);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship type.');
+        }
+    });
+
+}
+/* END RELATIONSHIP TYPE SYSTEM SETTINGS */
 
 function LoadTagGroupSectionSettings() {
 
@@ -3226,9 +4074,4 @@ function SendCustomField(route, action, data, modal) {
 
 }
 /* END CUSTOM FIELDS */
-
-
-
-
-
 

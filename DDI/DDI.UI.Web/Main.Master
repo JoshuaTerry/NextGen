@@ -318,7 +318,7 @@
         <div class="auditmodal" title="Audit History" style="display: none;">
             <div class="modalcontent">
             
-            <div class="fieldblock range">
+           <%-- <div class="fieldblock range">
                 <label>Dates</label>
                 <input type="text" class="na-StartDate datepicker" />
                 <span>to</span>
@@ -327,13 +327,13 @@
 
             <div class="modalbuttons">
                 <input type="button" class="queryAudit" value="Query" /> 
-             </div>
+             </div>--%>
 
             <div class="auditgridcontainer"></div>
 
-            <div class="modalbuttons"> 
+           <%-- <div class="modalbuttons"> 
                 <a href ="#" class="cancelmodal">Cancel</a>
-            </div>
+            </div>--%>
                             
         </div>        
     </div>

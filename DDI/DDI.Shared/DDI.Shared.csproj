@@ -85,6 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\Logging\DoLogAttribute.cs" />
+    <Compile Include="Attributes\Logging\DoNotLogAttribute.cs" />
+    <Compile Include="Attributes\Logging\IFilterAttribute.cs" />
     <Compile Include="Caching\CacheHelper.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\MemoryCacheProvider.cs" />
@@ -152,14 +155,15 @@
     <Compile Include="Models\Client\Security\UserClaim.cs" />
     <Compile Include="Models\Client\Security\UserLogin.cs" />
     <Compile Include="Models\Client\Security\UserRole.cs" />
+    <Compile Include="Models\AuditableEntityBase.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
+    <Compile Include="Models\IAuditableEntity.cs" />
     <Compile Include="Models\ISearchDocument.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
     <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Client\Core\Language.cs" />
-    <Compile Include="Models\Client\Core\LogEntry.cs" />
     <Compile Include="Models\Client\Core\SectionPreference.cs" />
     <Compile Include="Models\Client\CRM\Address.cs" />
     <Compile Include="Models\Client\CRM\AddressType.cs" />
@@ -231,7 +235,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Attributes\" />
     <Folder Include="bin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

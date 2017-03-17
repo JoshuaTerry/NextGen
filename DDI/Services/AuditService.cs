@@ -40,12 +40,19 @@ namespace DDI.Services
                 o => o.PropertyChanges
             };
         }
-        public IDataResponse<List<ChangeSet>> GetAllWhereExpression(Expression<Func<ObjectChange, bool>> expression, IPageable search = null)
+
+        public IDataResponse<List<ObjectChange>> GetChanges(Guid id, DateTime start, DateTime end, IPageable search = null)
         {
-          
-            var result = _uow.GetRepository<ObjectChange>().GetEntities(GetDataIncludesForList()).Where(expression).Select(o => o.ChangeSet).ToList();  //.GetEntities(_includesForList).Where(expression);
-            return null;
+            var changes = _uow.GetRepository<ObjectChange>().Entities.IncludePath(o => o.ChangeSet)
+                                                                     .IncludePath(o => o.PropertyChanges)
+                                                                     .Where(o => o.EntityId == id.ToString() &&
+                                                                                 o.ChangeSet.Timestamp > start &&
+                                                                                 o.ChangeSet.Timestamp <= end).ToList();
+            var response = new DataResponse<List<ObjectChange>>();
+            response.Data = changes;
+            return response;
         }
+       
         public IDataResponse<List<dynamic>> GetAllFlat(Guid id, DateTime start, DateTime end, IPageable search = null)
         {
             var response = new DataResponse<List<dynamic>>();
@@ -60,22 +67,26 @@ namespace DDI.Services
                                  .GroupJoin(_uow.GetRepository<PropertyChange>().Entities,
                                          outer => outer.oc.Id,
                                          pc => pc.ObjectChangeId,
-                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
+                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc }) 
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .Join(_uow.GetRepository<User>().Entities,
-                                         outer => outer.cs.UserId,
-                                         u => u.Id,
+                                         outer => outer.cs.UserName,
+                                         u => u.UserName,
                                          (outer, u) => new
                                          {
                                              ChangeSetId = outer.cs.Id,
                                              Timestamp = outer.cs.Timestamp,
-                                             User = u.DisplayName,
+                                             User = u.UserName,
+                                             ChangeType = outer.oc.ChangeType,
                                              EntityType = outer.oc.TypeName,
                                              EntityValue = outer.oc.DisplayName,
                                              Property = outer.pc.PropertyName,
+                                             PropertyChangeType = outer.pc.ChangeType,
+                                             OldDisplayName = outer.pc.OriginalDisplayName,
                                              OldValue = outer.pc.OriginalValue,
-                                             NewValue = outer.pc.Value
+                                             NewDisplayName = outer.pc.NewDisplayName,
+                                             NewValue = outer.pc.NewValue
                                          }).ToList<dynamic>();
 
                 response.Data = results;

@@ -8,7 +8,7 @@ using DDI.Shared.Enums.CRM;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentType")]
-    public class ConstituentType : EntityBase, ICodeEntity
+    public class ConstituentType : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]

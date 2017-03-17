@@ -9,7 +9,7 @@ using DDI.Shared.Statics;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Tag")]
-    public class Tag : EntityBase, ICodeEntity
+    public class Tag : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]
@@ -23,7 +23,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string Name { get; set; }
 
         public Guid? TagGroupId { get; set; }
-
+        [ForeignKey("TagGroupId")]
         public TagGroup TagGroup { get; set; }
 
         public int Order { get; set; }

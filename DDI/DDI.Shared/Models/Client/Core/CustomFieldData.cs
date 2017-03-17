@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldData")]
-    public class CustomFieldData : EntityBase
+    public class CustomFieldData : AuditableEntityBase
     {
         #region Properties
 
@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.Core
         public DDI.Shared.Enums.Common.CustomFieldEntity EntityType { get; set; }
         public Guid? ParentEntityId { get; set; }
         public string Value { get; set; }
-
+        [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 
         [NotMapped]

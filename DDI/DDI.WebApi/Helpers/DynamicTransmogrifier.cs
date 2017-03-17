@@ -16,6 +16,15 @@ namespace DDI.WebApi.Helpers
 {
     public class DynamicTransmogrifier
     {
+        private const int MAX_RECURSION_DEPTH = 10;
+
+        /* Fields is a comma delimited list of property names or paths (e.g. State.County) that should be included in the response.
+         * Fields can be excluded:  This can be useful to exclude properties like Region.ParentRegion or Region.ChildRegions (because they are recursive.) 
+         * To exclude a field, prefix it with "^": "^ParentRegion,^ChildRegions". 
+         * If a field list is nothing but excludes, all other fields will be included.
+         * To exclude a field from a referenced entity: "ChildRegion.^ParentRegion"
+         * To force all fields to be included:  "*,ChildRegion.Code"
+         */
         public IDataResponse ToDynamicResponse<T>(IDataResponse<T> response, string fields = null)
         {
             var dynamicResponse = new DataResponse<dynamic>
@@ -25,7 +34,12 @@ namespace DDI.WebApi.Helpers
                 TotalResults = response.TotalResults,
                 VerboseErrorMessages = response.VerboseErrorMessages
             };
-            if (response.Data is IEnumerable<ICanTransmogrify>)
+
+            if (response.Data == null)
+            {
+                dynamicResponse.Data = null;
+            }
+            else if (response.Data is IEnumerable<ICanTransmogrify>)
             {
                 dynamicResponse.Data = ToDynamicList((response.Data as IEnumerable<ICanTransmogrify>), fields);
             }
@@ -33,7 +47,7 @@ namespace DDI.WebApi.Helpers
             {
                 dynamicResponse.Data = ToDynamicObject((response.Data as ICanTransmogrify), fields);
             }
-            else if (response.Data == null || IsSimple(response.Data.GetType()))
+            else if (IsSimple(response.Data.GetType()))
             {
                 dynamicResponse.Data = response.Data;
             }
@@ -87,9 +101,14 @@ namespace DDI.WebApi.Helpers
             return RecursivelyTransmogrify(data, listOfFields);
         }
 
-        private dynamic RecursivelyTransmogrify<T>(T data, List<string> fieldsToInclude = null, IEnumerable<Guid> visited = null)
+        private dynamic RecursivelyTransmogrify<T>(T data, List<string> fieldsToInclude = null, IEnumerable<Guid> visited = null, int level = 0)
             where T : ICanTransmogrify
         {
+            if (level >= MAX_RECURSION_DEPTH)
+            {
+                return null;
+            }
+
             dynamic returnObject = new ExpandoObject();
             if (visited == null)
             {
@@ -114,7 +133,7 @@ namespace DDI.WebApi.Helpers
             bool hasExcludes = (excludesCount > 0);
 
             // Include all fields if field list is empty, or field list contains only fields to exclude.
-            bool includeEverything = (fieldsToInclude == null || fieldsToInclude.Count == 0 || excludesCount == fieldsToInclude.Count);
+            bool includeEverything = (fieldsToInclude == null || fieldsToInclude.Count == 0 || excludesCount == fieldsToInclude.Count || fieldsToInclude.Contains(PathHelper.IncludeEverythingField));
 
             foreach (PropertyInfo property in properties)
             {
@@ -127,13 +146,13 @@ namespace DDI.WebApi.Helpers
                                           || fieldsToInclude.Any(a => a.StartsWith(propertyNameAsAccessor))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>)returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<ICanTransmogrify>), strippedFieldList, visited);
+                    ((IDictionary<string, object>)returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as IEnumerable<ICanTransmogrify>), strippedFieldList, visited, level + 1);
                 }
                 else if (fieldValue is ICanTransmogrify && (includeEverything && (!hasExcludes && fieldsToInclude.Contains(propertyNameExclude))
                                           || fieldsToInclude.Any(a => a.StartsWith(propertyNameAsAccessor))))
                 {
                     var strippedFieldList = StripFieldList(fieldsToInclude, propertyNameUppercased);
-                    ((IDictionary<string, object>)returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as ICanTransmogrify), strippedFieldList, visited);
+                    ((IDictionary<string, object>)returnObject)[property.Name] = RecursivelyTransmogrify((fieldValue as ICanTransmogrify), strippedFieldList, visited, level + 1);
                 }
                 else if ((includeEverything && !(hasExcludes && fieldsToInclude.Contains(propertyNameExclude))
                                           ||
@@ -157,13 +176,19 @@ namespace DDI.WebApi.Helpers
             return fieldsToInclude.Where(a => a.StartsWith(currentProperty)).Select(a => a.Substring(length)).ToList();
         }
 
-        private dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, List<string> fieldsToInclude = null, IEnumerable<Guid> visited = null)
+        private dynamic RecursivelyTransmogrify<T>(IEnumerable<T> entities, List<string> fieldsToInclude = null, IEnumerable<Guid> visited = null, int level = 0)
             where T : ICanTransmogrify
         {
+            if (level >= MAX_RECURSION_DEPTH)
+            {
+                return null;
+            }
+
             var list = new List<ExpandoObject>();
+
             foreach (var item in entities)
             {
-                list.Add(RecursivelyTransmogrify(item, fieldsToInclude, visited));
+                list.Add(RecursivelyTransmogrify(item, fieldsToInclude, visited, level + 1));
             }
 
             return list;

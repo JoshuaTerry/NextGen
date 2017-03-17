@@ -176,8 +176,8 @@ function GetConstituentData(id) {
             DisplayConstituentData();
             
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -273,6 +273,8 @@ function DisplayConstituentData() {
         NewAddressModal();
 
         DisplaySelectedTags($('.constituenttagselect'));
+
+		ShowAuditData(currentEntity.Id);
     }
 }
 
@@ -299,8 +301,8 @@ function DisplayConstituentPicture() {
             }
 
         },
-        failure: function (response) {
-            DisplayErrorMessage('Error', 'An error occurred during getting the constituent picture.');
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -334,8 +336,8 @@ function DisplayConstituentPicture() {
                     CloseModal(modal);
 
                 },
-                failure: function (response) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the constituent picture.');
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -405,7 +407,7 @@ function GetConstituentPrimaryAddress() {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the primary address.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -435,7 +437,7 @@ function GetConstituentPreferredContactInfo() {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the preferred contact info.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -520,7 +522,7 @@ function NewDBAModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -577,7 +579,7 @@ function EditDBA(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -601,7 +603,7 @@ function LoadDBA(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -688,7 +690,7 @@ function NewEducationModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -745,7 +747,7 @@ function EditEducationModal(id) {
 
             },
             error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -770,14 +772,13 @@ function LoadEducation(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
 }
 /* End Education Section */
-
-
+ 
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
@@ -867,7 +868,7 @@ function NewPaymentPreference() {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -937,7 +938,7 @@ function EditPaymentPreference(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -967,7 +968,7 @@ function LoadPaymentPreference(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1006,6 +1007,79 @@ function PopulateUserIdDropDown() {
 
 /* End Professional Section */
 
+/* Audit Section */
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+    var modal = $('.auditmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 700,
+        height: 500,
+        resizable: true
+    });
+
+    LoadAuditTable(id, modal);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function (data) {
+
+                LoadAuditTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable() {
+    var id = currentEntity.Id;
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+            { dataField: 'ChangeSetId', groupIndex: 0  },
+            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+            { dataField: 'User' },
+            //{ dataField: 'EntityType', groupIndex: 1 },
+            { dataField: 'ChangeType', width: '100px' },            
+            //{ dataField: 'EntityValue' },
+            { dataField: 'Property' },
+            { dataField: 'OldValue' },
+            { dataField: 'NewValue' }
+    ];
+
+    LoadAuditGrid('auditgrid',
+       'auditgridcontainer',
+       columns,
+       route,
+       false);
+     
+}
+/* End Audit Section */
 
 /* Alternate Id Section */
 function LoadAlternateIDTable() {
@@ -1069,7 +1143,7 @@ function NewAlternateIdModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -1131,7 +1205,7 @@ function EditAlternateId(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1152,7 +1226,7 @@ function LoadAlternateId(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Alternate Id.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1250,7 +1324,7 @@ function NewAddressModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -1348,7 +1422,7 @@ function EditAddressModal(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         })
 
@@ -1429,7 +1503,7 @@ function LoadAddress(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1496,7 +1570,7 @@ function LoadCategories(CategoryTitles) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -1567,7 +1641,7 @@ function NewPhoneModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -1635,7 +1709,7 @@ function EditPhone(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1661,7 +1735,7 @@ function LoadPhone(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1717,7 +1791,7 @@ function NewEmailModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Email');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -1785,7 +1859,7 @@ function EditEmail(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Email.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1812,7 +1886,7 @@ function LoadEmail(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Email.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1863,7 +1937,7 @@ function NewWebModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Web Site');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -1931,7 +2005,7 @@ function EditWeb(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Web Site.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1957,7 +2031,7 @@ function LoadWeb(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Web Site.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2007,7 +2081,7 @@ function NewPersonModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -2075,7 +2149,7 @@ function EditPerson(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2101,7 +2175,7 @@ function LoadPerson(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Point of Contact.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2151,7 +2225,7 @@ function NewOtherModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Other Contact');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -2217,7 +2291,7 @@ function EditOther(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Other Contacts.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2243,7 +2317,7 @@ function LoadOther(id, modal) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Other Contact.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2263,7 +2337,7 @@ function LoadRelationshipsData() {
             LoadRelationshipsTab(data);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }

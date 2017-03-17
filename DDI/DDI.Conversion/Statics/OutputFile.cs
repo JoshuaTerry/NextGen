@@ -16,7 +16,15 @@ namespace DDI.Conversion.Statics
         public static string ConstituentIdMappingFile = "ConstituentId.csv";
         public static string AddressIdMappingFile = "AddressId.csv";
         public static string PaymentMethodIdMappingFile = "PaymentMethodId.csv";
+        public static string NoteIdMappingFile = "NoteId.csv";
 
+        #endregion
+
+        #region Core SSIS Files
+
+        public static string Core_NoteFile => "Notes.csv";
+        public static string Core_NoteTopicFile => "NoteTopicNotes.csv";
+        
         #endregion
 
         #region CRM SSIS Files

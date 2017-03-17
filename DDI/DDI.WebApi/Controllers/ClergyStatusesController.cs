@@ -10,6 +10,8 @@ namespace DDI.WebApi.Controllers
 {
     public class ClergyStatusesController : ControllerBase<ClergyStatus>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -37,5 +39,13 @@ namespace DDI.WebApi.Controllers
         {
             return base.Patch(id, changes);
         }
+
+        [HttpDelete]
+        [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
+
     }
 }

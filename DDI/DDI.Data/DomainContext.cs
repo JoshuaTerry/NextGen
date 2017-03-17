@@ -33,14 +33,11 @@ namespace DDI.Data
         public DbSet<CustomField> CustomField { get; set; }
         public DbSet<CustomFieldData> CustomFieldData { get; set; }
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Language> Languages { get; set; } 
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
-
         public DbSet<NoteCode> NoteCodes { get; set; }
-
-        public DbSet<NoteContactMethod> NoteContactCodes { get; set; }
+        public DbSet<NoteContactMethod> NoteContactMethods { get; set; }
         public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
@@ -114,13 +111,10 @@ namespace DDI.Data
         { }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
-            // Commented this line out for now.  See http://stackoverflow.com/questions/14064434/ef5-getting-this-error-message-model-compatibility-cannot-be-checked-because-th
-            // Basically compatibility cannot be checked.
-            //Database.SetInitializer<DomainContext>(new DomainContextInitializer());
-
-            Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, filterProvider);
+            Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, this, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
+            // Why is this false?
             this.Configuration.ProxyCreationEnabled = false;
         }       
         #endregion Public Constructors
@@ -128,7 +122,7 @@ namespace DDI.Data
         #region Method Overrides 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            EntityBase entity = entityEntry.Entity as EntityBase;
+            IEntity entity = entityEntry.Entity as IEntity;
             if (entity != null)
             {
                 //Ensure new entities have an ID
@@ -172,6 +166,5 @@ namespace DDI.Data
             return Logger.SaveChanges(author);
         } 
         #endregion
-
     }
 }

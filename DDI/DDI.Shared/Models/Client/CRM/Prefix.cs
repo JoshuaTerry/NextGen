@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDI.Shared.Models.Client.CRM
 {
 	[Table("Prefix")]
-	public class Prefix : EntityBase, ICodeEntity
+	public class Prefix : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]
@@ -32,7 +32,7 @@ namespace DDI.Shared.Models.Client.CRM
         public bool IsActive { get; set; }
 
         public bool ShowOnline { get; set; }
-
+        [ForeignKey("GenderId")]
         public Gender Gender { get; set; }
 
         public Guid? GenderId { get; set; }

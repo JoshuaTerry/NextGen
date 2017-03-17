@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    [Table("User")]
-    public class User : IdentityUser<Guid, UserLogin, UserRole, UserClaim>, IEntity
+    [Table("Users")]
+    public class User : IdentityUser<Guid, UserLogin, UserRole, UserClaim>, IEntity, IAuditableEntity
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User, Guid> manager, string authenticationType)
         {
@@ -33,6 +33,7 @@ namespace DDI.Shared.Models.Client.Security
         public DateTime? CreatedOn { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
+
         public string DisplayName
         {
             get
@@ -40,21 +41,9 @@ namespace DDI.Shared.Models.Client.Security
                 return string.IsNullOrEmpty(UserName) ? FullName : UserName;
             }
         }
+
+        public void AssignPrimaryKey() { }
     }
 }
-        //public class User : EntityBase, IUser<Guid> 
-        //{
-        //    [Key]
-        //    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        //    public override Guid Id { get; set; }
-        //    public string UserName { get; set; }
-        //    [MaxLength(256)]
-        //    public string FirstName { get; set; }
-        //    [MaxLength(256)]
-        //    public string MiddleName { get; set; }
-        //    [MaxLength(256)]
-        //    public string LastName { get; set; }
-        //    public bool IsActive { get; set; }
-        //    public DateTime? LastLogin { get; set; }
-        //}
+        
    

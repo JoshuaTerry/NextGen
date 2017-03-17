@@ -59,7 +59,7 @@ namespace DDI.EFAudit.History
                 return objectChanges
                     .OrderByDescending(o => o.ChangeSet.Timestamp)
                     .SelectMany(o => o.PropertyChanges)
-                    .Select(p => Change.FromObjectChange(binder.Bind<TValue>(p.Value), p.ObjectChange));
+                    .Select(p => Change.FromObjectChange(binder.Bind<TValue>(p.NewValue), p.ObjectChange));
             }
         }
 
@@ -198,7 +198,7 @@ namespace DDI.EFAudit.History
                 return ChangeType.Modify;
             else
             {
-                if (keyChange.Value == null)
+                if (keyChange.NewValue == null)
                 {
                     return ChangeType.Delete;
                 }

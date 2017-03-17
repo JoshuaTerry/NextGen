@@ -8,6 +8,8 @@ namespace DDI.WebApi.Controllers
 {
     public class ClergyTypesController : ControllerBase<ClergyType>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/clergytypes", Name = RouteNames.ClergyType)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -34,6 +36,13 @@ namespace DDI.WebApi.Controllers
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
+        }
+
+        [HttpDelete]
+        [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
         }
     }
 }

@@ -227,6 +227,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\ConstituentPictureController.cs" />
+    <Compile Include="Controllers\RelationshipCategoriesController.cs" />
     <Compile Include="Controllers\EFTFormatsController.cs" />
     <Compile Include="Controllers\FileStorageController.cs" />
     <Compile Include="Controllers\NoteCategoriesController.cs" />
@@ -290,6 +291,10 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
+    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.cs" />
+    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.Designer.cs">
+      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.cs" />
     <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.Designer.cs">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
@@ -396,6 +401,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.resx">
+      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201703022119126_AddingIdentityTables.resx">
       <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
     </EmbeddedResource>

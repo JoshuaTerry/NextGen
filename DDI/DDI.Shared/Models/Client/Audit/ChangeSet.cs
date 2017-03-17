@@ -19,11 +19,10 @@ namespace DDI.Shared.Models.Client.Audit
         {
             get { return ObjectChanges; }
         }
-         
-        public Guid UserId { get; set; }
+        public string UserName { get; set; }  
 
         public User User { get; set; }
-
+        public Guid UserId { get; set; }
         void IChangeSet<User>.Add(IObjectChange<User> objectChange)
         {
             ObjectChanges.Add((ObjectChange)objectChange);

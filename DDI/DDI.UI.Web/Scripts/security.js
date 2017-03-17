@@ -45,7 +45,7 @@ function SetupNewUserModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during user creation.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -121,7 +121,7 @@ function LoadGroupMembersGrid() {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -191,7 +191,7 @@ function DisplayUserInfo(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading user info.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     })
 
@@ -214,7 +214,7 @@ function AddUsersToRoles(user, roles) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during user creation.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
