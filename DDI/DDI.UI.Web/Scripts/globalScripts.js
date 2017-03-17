@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip(modal);
+        AutoZip(modal, '.nc-');
 
     });
 
@@ -144,7 +144,7 @@ function LoadNewConstituentModalDropDowns() {
 
     });
 
-    LoadRegions('regionscontainer', 'nc-');
+    LoadRegions($(modal).find('.regionscontainer'), 'nc-');
 
 }
 
@@ -404,17 +404,17 @@ function ClearElement(e) {
     }
 }
 
-function AutoZip(container) {
+function AutoZip(container, prefix) {
 
     $(container).find('.autozip').blur(function () {
 
-        GetAutoZipData(container);
+        GetAutoZipData(container, prefix);
 
     });
 
 }
 
-function GetAutoZipData(container) {
+function GetAutoZipData(container, prefix) {
 
     var zip = $(container).find('.autozip').val();
 
@@ -450,7 +450,7 @@ function GetAutoZipData(container) {
 
                     $(container).find('.autocity').val(data.Data.City);
                     
-                    LoadAllRegionDropDowns('.na-', data.Data);
+                    LoadAllRegionDropDowns(modal, prefix, data.Data);
 
                 }
             

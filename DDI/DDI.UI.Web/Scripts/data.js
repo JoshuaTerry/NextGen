@@ -63,7 +63,7 @@ function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, c
 }
 
 function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $(container).html('');
@@ -122,7 +122,7 @@ function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
     if (showFilterRow == '' || showFilterRow === undefined)
         showFilterRow = false;
 
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $.ajax({

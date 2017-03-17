@@ -1267,12 +1267,14 @@ function NewAddressModal() {
 
         e.preventDefault();
 
-        var modal = $('.addressmodal').dialog({
+        modal = $('.addressmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 375,
             resizable: false
         });
+
+        LoadRegions($(modal).find('.regionscontainer'), 'na-');
 
         $('.cancelmodal').click(function (e) {
 
@@ -1333,15 +1335,13 @@ function NewAddressModal() {
 
         });
 
-        AutoZip(modal);
+        AutoZip(modal, '.na-');
 
     });
 
     PopulateAddressTypesInModal(null);
 
     PopulateCountriesInModal(null);
-
-    LoadRegions('regionscontainer', 'na-');
 
 }
 
@@ -1382,7 +1382,7 @@ function PopulateCountiesInModal(selectedValue) {
 
 function EditAddressModal(id) {
 
-    var modal = $('.addressmodal').dialog({
+    modal = $('.addressmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 375,
@@ -1394,7 +1394,9 @@ function EditAddressModal(id) {
 
     PopulateCountriesInModal(null);
 
-    AutoZip(modal);
+    LoadRegions($(modal).find('.regionscontainer'), 'na-');
+
+    AutoZip(modal, '.na-');
 
     LoadAddress(id);
 
@@ -1422,6 +1424,8 @@ function EditAddressModal(id) {
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address saved successfully.');
+
+                CloseModal(modal);
 
             },
             error: function (xhr, status, err) {
@@ -1501,7 +1505,7 @@ function LoadAddress(id) {
 
             PopulateCountiesInModal(data.Data.Address.CountyId);
 
-            LoadAllRegionDropDowns('.na-', data.Data.Address);
+            LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
 
         },
         error: function (xhr, status, err) {
