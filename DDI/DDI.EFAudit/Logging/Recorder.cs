@@ -94,7 +94,7 @@ namespace DDI.EFAudit.Logging
             result.ChangeSet = set;
             set.Add(result);
 
-            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer, entity);
+            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer, entity, _dbContext);
             _deferredObjectChanges.Add(entity, deferredObjectChange);
 
             return deferredObjectChange;
@@ -111,7 +111,10 @@ namespace DDI.EFAudit.Logging
 
             // Deletes for Complex entities will not have the propertyName in the OriginalValues
             if (entry.State != EntityState.Added && entry.State != EntityState.Deleted)
+            {
                 change.OriginalValue = Convert.ToString(entry.OriginalValues[propertyName]);
+                change.OriginalDisplayName = change.OriginalValue;
+            }
 
             return change;
         }

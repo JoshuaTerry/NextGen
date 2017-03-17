@@ -155,7 +155,7 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                Logger.LogError(ex);
                 return InternalServerError();
             }
         }

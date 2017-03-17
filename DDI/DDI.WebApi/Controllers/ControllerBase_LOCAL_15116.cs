@@ -126,7 +126,7 @@ namespace DDI.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
 
         }
@@ -137,16 +137,12 @@ namespace DDI.WebApi.Controllers
             {                
                 urlHelper = urlHelper ?? GetUrlHelper();
                 var response = _service.GetById(id);
-                if (!response.IsSuccessful)
-                {
-                    throw new Exception(response.ErrorMessages.ToString());
-                }
                 return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle), urlHelper);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
 
@@ -165,16 +161,13 @@ namespace DDI.WebApi.Controllers
 
                 Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
-                if (!dynamicResponse.IsSuccessful)
-                {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
-                }
+
                 return Ok(dynamicResponse);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
 
@@ -193,17 +186,13 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
-                if (!dynamicResponse.IsSuccessful)
-                {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
-                }
 
                 return Ok(dynamicResponse);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
 
@@ -223,7 +212,7 @@ namespace DDI.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
 
@@ -232,7 +221,6 @@ namespace DDI.WebApi.Controllers
             try
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -245,7 +233,7 @@ namespace DDI.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
 
@@ -254,12 +242,10 @@ namespace DDI.WebApi.Controllers
             try
             {
                 var entity = _service.GetById(id);
-
                 if (entity.Data == null)
                 {
                     return NotFound();
                 }
-
                 if (!entity.IsSuccessful)
                 {
                     return BadRequest(entity.ErrorMessages.ToString());
@@ -276,7 +262,7 @@ namespace DDI.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return InternalServerError();
             }
         }
     }
