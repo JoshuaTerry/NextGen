@@ -9,22 +9,38 @@ namespace DDI.Shared.Models.Client.GL
     public class AccountGroup : AuditableEntityBase
     {
         [Key]
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public override Guid Id { get; set; } 
+        public override Guid Id { get; set; }
+
         [MaxLength(255)]
         public string Description { get; set; }
+
         public int? Sequence { get; set; }
+
         public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
-        public Guid? CategoryId { get; set; }
-        [ForeignKey(nameof(CategoryId))]
+
         public AccountCategory Category { get; set; }
 
-        //Parent & Child Groups
-        //Group 1 thru 4 Accounts
+        public Guid? ParentGroupId { get; set; }
+        [ForeignKey(nameof(ParentGroupId))]
+        public AccountGroup ParentGroup { get; set; }
 
-        // JFA:
-        // The above properties are needed in order to represent the chart of accounts in a grid with grouping.  
+        [InverseProperty(nameof(ParentGroup))]
+        public ICollection<AccountGroup> ChildGroups { get; set; }
+
+        [InverseProperty(nameof(Account.Group1))]
+        public ICollection<Account> Group1Accounts { get; set; }
+
+        [InverseProperty(nameof(Account.Group2))]
+        public ICollection<Account> Group2Accounts { get; set; }
+
+        [InverseProperty(nameof(Account.Group3))]
+        public ICollection<Account> Group3Accounts { get; set; }
+
+        [InverseProperty(nameof(Account.Group4))]
+        public ICollection<Account> Group4Accounts { get; set; }
+
     }
 }

@@ -1,8 +1,9 @@
-﻿using DDI.Shared.Enums.GL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
+using DDI.Shared.Enums.GL;
 
 namespace DDI.Shared.Models.Client.GL
 {
@@ -11,38 +12,57 @@ namespace DDI.Shared.Models.Client.GL
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
+
         [MaxLength(128)]
         public string AccountNumber { get; set; }
+
         [MaxLength(255)]
         public string Description { get; set; }
+
         public bool IsActive { get; set; } 
 
-        // Made these non-null.  The Decimal Precision has to be set in the DBContext in 
-        // the OnModelCreating method.
+        [DecimalPrecision(14, 2)]
         public decimal BeginningBalance { get; set; }
-        public decimal EndingBalance { get; set; }
-        public AccountCategory Category { get; set; }                
-        // Made this a collection
-        public ICollection<LedgerAccount> LedgerAccounts { get; set; } 
-        public ICollection<Budget> Budgets { get; set; }
+
+        public AccountCategory Category { get; set; }            
+            
+        public bool IsNormallyDebit { get; set; } 
+
+        [Index]
+        public string SortKey { get; set; }
+
+        public PeriodAmountList Debit { get; set; }
+
+        public PeriodAmountList Credit { get; set; }
+
+        public Guid? ClosingAccountId { get; set; }
+        public Account ClosingAccount { get; set; }
+
+        public Guid? Group1Id { get; set; }
+        public AccountGroup Group1 { get; set; }
+
+        public Guid? Group2Id { get; set; }
+        public AccountGroup Group2 { get; set; }
+
+        public Guid? Group3Id { get; set; }
+        public AccountGroup Group3 { get; set; }
+
+        public Guid? Group4Id { get; set; }
+        public AccountGroup Group4 { get; set; }
+
+        public ICollection<LedgerAccount> LedgerAccounts { get; set; }
+        public ICollection<AccountBudget> Budgets { get; set; }
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
-        public bool IsNormallyDebit { get; set; } // Added
-        public string SortKey { get; set; } // Added
- 
+        public ICollection<AccountSegment> AccountSegments { get; set; }
 
-        // Definitely need the actuals.  There are fourteen for debits, and fourteen for credits.
-         
-        // Also needed: 
-        //  AccountSegments collection
-        //  NextYearAccounts collection (see note below)
-        //  PriorYearAccounts collection (see note below)
-        //  ClosingAccount (Account)
-        //  Group1 thru Group4 (AccountGroup)
+        [InverseProperty(nameof(AccountPriorYear.PriorAccount))]
+        public ICollection<AccountPriorYear> PriorYearAccounts { get; set; }
 
-        // AccountPriorYear entity is missing and needs to be added.
+        [InverseProperty(nameof(AccountPriorYear.Account))]
+        public ICollection<AccountPriorYear> NextYearAccounts { get; set; }
 
     }
 }

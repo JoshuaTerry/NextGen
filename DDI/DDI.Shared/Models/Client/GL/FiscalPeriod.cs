@@ -11,7 +11,7 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        public Guid? FiscalYearId { get; set; }
+        public int PeriodNumber { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? StartDate { get; set; }
@@ -22,13 +22,9 @@ namespace DDI.Shared.Models.Client.GL
         public bool IsAdjustmentPeriod { get; set; }
 
         public FiscalPeriodStatus Status { get; set; }
-         
-        [ForeignKey(nameof(FiscalYearId))]
+
+        public Guid? FiscalYearId { get; set; }
         public FiscalYear FiscalYear {get; set;}
-
-        // JFA: 
-        // PeriodNumber is definitely needed.  Periods are numbered 1 thru 14 (which is the max).
-
 
     }
 }

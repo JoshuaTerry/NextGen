@@ -35,7 +35,11 @@ namespace DDI.Shared.Models.Client.Security
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
 
+        public Guid? DefaultBusinessUnitId { get; set; }
+        public BusinessUnit DefaultBusinessUnit { get; set; }
+
         ICollection<BusinessUnit> BusinessUnits { get; set; }
+
         public string DisplayName
         {
             get

@@ -10,14 +10,16 @@ namespace DDI.Shared.Models.Client.GL
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         public Guid? LedgerId { get; set; }
-        [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
+
         [MaxLength(128)]
         public string AccountNumber { get; set; }
+
         [MaxLength(255)]
         public string Description { get; set; }
-        public int LegacyKey { get; set; }         
+
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; } 
     }
 }

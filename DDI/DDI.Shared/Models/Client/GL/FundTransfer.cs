@@ -12,27 +12,19 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
         public Guid? FundId { get; set; }
-        [ForeignKey(nameof(FundId))]
         public Fund Fund { get; set; }
 
         public Guid? OffsettingFundId { get; set; }
-        [ForeignKey(nameof(OffsettingFundId))]
         public Fund OffsettingFund { get; set; }
 
         public Guid? FromAccountId { get; set; }
-        [ForeignKey(nameof(FromAccountId))]
         public LedgerAccount FromAccount { get; set; }
 
         public Guid? ToAccountId { get; set; }
-        [ForeignKey(nameof(ToAccountId))]
         public LedgerAccount ToAccount { get; set; }
 
-        public Guid? BusinessUnitId { get; set; }
-        [ForeignKey(nameof(BusinessUnitId))]
-        public BusinessUnit BusinessUnit { get; set; }
     }
 }

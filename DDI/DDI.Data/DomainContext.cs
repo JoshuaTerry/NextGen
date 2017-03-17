@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Threading;
+using System.Threading.Tasks;
+using DDI.Data.Conventions;
+using DDI.EFAudit;
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Filter;
+using DDI.EFAudit.History;
+using DDI.EFAudit.Logging;
 using DDI.Shared;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
-using DDI.EFAudit.Filter;
-using DDI.Shared.Models.Client.Audit;
-using DDI.EFAudit.Contexts;
-using DDI.EFAudit.History;
-using DDI.EFAudit;
-using System.Threading.Tasks;
-using System.Threading;
-using DDI.EFAudit.Logging;
 using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data
@@ -152,6 +153,7 @@ namespace DDI.Data
         public DbSet<UserClaim> UserClaims { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<UserLogin>().ToTable("UserLogins"); ;
             modelBuilder.Entity<Role>().ToTable("Roles"); ;

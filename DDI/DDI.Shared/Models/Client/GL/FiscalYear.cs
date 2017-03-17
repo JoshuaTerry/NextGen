@@ -13,7 +13,6 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? LedgerId { get; set; }
-        [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 
         [MaxLength(255)]
@@ -33,7 +32,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public ICollection<FiscalPeriod> FiscalPeriods { get; set; }
 
-        public ICollection<LedgerAccount> LedgerAccounts { get; set; }
+        public ICollection<LedgerAccountYear> LedgerAccounts { get; set; }
 
         public ICollection<Segment> Segments { get; set; }
          
