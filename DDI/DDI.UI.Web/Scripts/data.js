@@ -26,10 +26,9 @@ function MakeServiceCall(e, method, selectedValue) {
             if (selectedValue) {
                 $(e).val(selectedValue);
             }
-
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -63,7 +62,7 @@ function PopulateDropDown(e, method, defaultText, defaultValue, selectedValue, c
 }
 
 function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $(container).html('');
@@ -82,8 +81,8 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
             });
             DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -111,8 +110,8 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
             $(tagBoxControl).appendTo(container);
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     }); 
 }
@@ -122,7 +121,7 @@ function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
     if (showFilterRow == '' || showFilterRow === undefined)
         showFilterRow = false;
 
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $.ajax({
@@ -203,7 +202,7 @@ function LoadGrid(grid, container, columns, route, selected, editMethod, deleteM
                         
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -333,7 +332,7 @@ function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, l
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -386,7 +385,7 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage("Error", "An error occurred during the saving of the " + entityName + ".");
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -406,7 +405,7 @@ function LoadEntity(route, id, modal, loadEntityData, entityName) {
             loadEntityData(data, modal);
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the ' + entityName + '.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }

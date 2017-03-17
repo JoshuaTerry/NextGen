@@ -19,7 +19,7 @@ function DisplayCustomFieldsGrid(container, entity) {
 
     currentCustomFieldEntity = entity;
 
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     var datagrid = $('<div>').addClass('customfieldgrid');
@@ -84,7 +84,7 @@ function EditCustomControl(id) {
 
 function DisplayCustomFields(container, entity, callback) {
 
-    if (container.indexOf('.') != 0)
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
     $.ajax({
