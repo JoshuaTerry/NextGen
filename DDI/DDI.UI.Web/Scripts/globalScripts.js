@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip(modal);
+        AutoZip(modal, '.nc-');
 
     });
 
@@ -144,7 +144,7 @@ function LoadNewConstituentModalDropDowns() {
 
     });
 
-    LoadRegions('regionscontainer', 'nc-');
+    LoadRegions($(modal).find('.regionscontainer'), 'nc-');
 
 }
 
@@ -404,24 +404,24 @@ function ClearElement(e) {
     }
 }
 
-function AutoZip(container) {
+function AutoZip(container, prefix) {
 
     $(container).find('.autozip').blur(function () {
 
-        GetAutoZipData(container);
+        GetAutoZipData(container, prefix);
 
     });
 
 }
 
-function GetAutoZipData(container) {
+function GetAutoZipData(container, prefix) {
 
     var zip = $(container).find('.autozip').val();
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' +
-                '&addressLine2=' +
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
                 '&city=' +
                 '&countryId=' +
                 '&countyId=' +
@@ -449,6 +449,8 @@ function GetAutoZipData(container) {
                     }
 
                     $(container).find('.autocity').val(data.Data.City);
+                    
+                    LoadAllRegionDropDowns(modal, prefix, data.Data);
 
                 }
             

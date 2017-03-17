@@ -17,7 +17,9 @@ var SystemSettings = {
     Organization: 'OrganizationSettings',
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
-    Note: 'NoteSettings'
+    Note: 'NoteSettings',
+    PaymentPreferences: 'PaymentPreferencesSettings'
+
 }
 
 $(document).ready(function () {
@@ -42,6 +44,53 @@ $(document).ready(function () {
 
 });
 
+function LoadSettingsGrid(grid, container, columns, route) {
+
+    if (container.indexOf('.') != 0)
+        container = '.' + container;
+
+    var datagrid = $('<div>').addClass(grid);
+
+    $.ajax({
+        url: WEB_API_ADDRESS + route,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            $(datagrid).dxDataGrid({
+                dataSource: data.Data,
+                columns: columns,
+                paging: {
+                    pageSize: 25
+                },
+                pager: {
+                    showNavigationButtons: true,
+                    showPageSizeSelector: true,
+                    showInfo: true,
+                    allowedPageSizes: [15, 25, 50, 100]
+                },
+                groupPanel: {
+                    visible: true,
+                    allowColumnDragging: true
+                },
+                filterRow: {
+                    visible: true,
+                    showOperationChooser: false
+                }
+            });
+
+            $(datagrid).appendTo($(container));
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
 function GetSystemSettings(category, callback) {
 
     $.ajax({
@@ -60,7 +109,7 @@ function GetSystemSettings(category, callback) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the system settings.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -129,7 +178,7 @@ function GetSetting(category, key, route, id, checkbox, label) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the section label.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -182,7 +231,7 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error getting the section label.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -307,7 +356,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteCodeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Code.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -359,7 +408,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteCategorySettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Category.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -412,7 +461,7 @@ function LoadNoteSectionSettings() {
                         LoadNoteTopicSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Note Topic.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -483,7 +532,7 @@ function EditNoteCode(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Code.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -509,7 +558,7 @@ function LoadNoteCode(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Code.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -568,7 +617,7 @@ function EditNoteCategory(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Category.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -594,7 +643,7 @@ function LoadNoteCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -654,7 +703,7 @@ function EditNoteTopic(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Topic.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -680,7 +729,7 @@ function LoadNoteTopic(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Note Topic.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -758,7 +807,7 @@ function LoadClergySectionSettings() {
                         LoadClergyStatusSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Status.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -810,7 +859,7 @@ function LoadClergySectionSettings() {
                         LoadClergyTypeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Clergy Type.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -892,9 +941,7 @@ function EditClergyStatus(id) {
 
             },
             error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Status.');
-
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     });
@@ -942,7 +989,7 @@ function LoadClergyStatus(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Status.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -992,9 +1039,7 @@ function EditClergyType(id) {
 
             },
             error: function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred while saving Clergy Type.');
-
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     });
@@ -1042,7 +1087,7 @@ function LoadClergyType(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred loading Clergy Type.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -1479,7 +1524,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1536,7 +1581,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1593,7 +1638,7 @@ function LoadDemographicsSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -1757,7 +1802,7 @@ function EditDenomination(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Denomination.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1811,7 +1856,7 @@ function LoadDenomination(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading denomination.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1864,7 +1909,7 @@ function EditEthnicity(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Ethnicity.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -1916,7 +1961,7 @@ function LoadEthnicity(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading ethnicity.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1969,7 +2014,7 @@ function EditLanguage(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the language.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2021,7 +2066,7 @@ function LoadLanguage(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading language.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2087,7 +2132,7 @@ function LoadEducationSectionSettings() {
                         LoadDegreeSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Degree.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2140,7 +2185,7 @@ function LoadEducationSectionSettings() {
                         LoadEducationLevelSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Education Level.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2193,7 +2238,7 @@ function LoadEducationSectionSettings() {
                         LoadSchoolsSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the School.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2295,7 +2340,7 @@ function EditDegree(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Degree.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2321,7 +2366,7 @@ function LoadDegree(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the degree.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2371,7 +2416,7 @@ function EditEducationLevel(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Education Level.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2397,7 +2442,7 @@ function LoadEducationLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the education level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2447,7 +2492,7 @@ function EditSchool(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the School.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2476,7 +2521,7 @@ function LoadSchool(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred when loading the school.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2510,7 +2555,7 @@ function LoadOrganizationSectionSettings() {
 
 function LoadPaymentPreferencesSectionSettings() {
 
-
+    LoadSectionSettings(SettingsCategories.CRM, 'Payment Preferences', 'sectionpreferences', SystemSettings.PaymentPreferences);
 
 }
 
@@ -2582,7 +2627,7 @@ function LoadPrefixSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -2663,7 +2708,7 @@ function EditPrefix(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the Prefix.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2686,7 +2731,7 @@ function DeletePrefix(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Prefix.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
@@ -2716,7 +2761,7 @@ function LoadPrefix(id) {
             }
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading prefix.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2777,7 +2822,7 @@ function LoadProfessionalSectionSettings() {
                         LoadIncomeLevelSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Income Level.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2830,7 +2875,7 @@ function LoadProfessionalSectionSettings() {
                         LoadProfessionSettingsGrid();
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Profession.')
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
             });
@@ -2917,7 +2962,7 @@ function EditIncomeLevel(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Income Level.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -2943,7 +2988,7 @@ function LoadIncomeLevel(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Income Level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -2994,7 +3039,7 @@ function Editprofession(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Profession.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -3020,7 +3065,7 @@ function LoadProfession(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Profession.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -4436,7 +4481,7 @@ function SendCustomField(route, action, data, modal) {
             
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error saving custom field.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
