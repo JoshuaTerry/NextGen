@@ -68,7 +68,7 @@ function NewNoteDetailsModal() {
             resizable: false
         });
 
-        // $('.savenotetopics').unbind('click');
+        $('.savenotetopics').unbind('click');
        
         $('.noteTopicSelectImage').click(function (e) {
 
@@ -241,7 +241,7 @@ function EditNoteDetails(id) {
 
     });
 
-    // $('.savenotedetails').unbind('click');
+    $('.savenotedetails').unbind('click');
 
     $('.savenotedetails').click(function () {
 
@@ -330,7 +330,7 @@ function SaveNewNoteTopics(modal) {
 
     $(modal).find('.tagdropdowncontainer').show();
 
-    // $('.savenotetopics').unbind('click');
+    $('.savenotetopics').unbind('click');
 
     $('.savenotetopics').click(function (e) {
 
