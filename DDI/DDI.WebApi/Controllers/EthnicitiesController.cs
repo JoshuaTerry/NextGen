@@ -17,6 +17,8 @@ namespace DDI.WebApi.Controllers
 {
     public class EthnicitiesController : ControllerBase<Ethnicity>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
         private IConstituentService _constituentService;
         public EthnicitiesController()

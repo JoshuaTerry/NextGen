@@ -10,6 +10,8 @@ namespace DDI.WebApi.Controllers
 {
     public class ConstituentStatusesController : ControllerBase<ConstituentStatus>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

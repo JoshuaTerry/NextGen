@@ -46,3 +46,8 @@ div.tagscontainer { height: 50vh }
 .editregionlevellink { background: url('../../Images/Edit_11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
 
 /* END REGION SETTINGS */
+.tagselect { width: 85% !important; }
+.tagSelectorContainer ul li input { width: auto; }
+.consttype-tagselect { position: absolute; z-index: 950; background-color: white; border: solid 1px #333333; width: 85%; }
+.tagselectgridcontainer { height: 175px; }
+.tagSelectImage { margin-left: 350px; }

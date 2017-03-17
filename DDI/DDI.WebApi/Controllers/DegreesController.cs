@@ -9,6 +9,8 @@ namespace DDI.WebApi.Controllers
 {
     public class DegreesController : ControllerBase<Degree>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/degrees", Name = RouteNames.Degree)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

@@ -17,7 +17,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers
 {
-    public class UsersController : ApiController
+    public class UsersController : ControllerBase<User>
     {
         private UserManager _userManager;
         private ApplicationRoleManager _roleManager;
@@ -61,7 +61,14 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/users")]
         public IHttpActionResult Get()
         {
-            return Ok(UserManager.Users);
+            try { 
+                return Ok(UserManager.Users);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]
@@ -76,13 +83,15 @@ namespace DDI.WebApi.Controllers
                 {
                     return NotFound();
                 }
+
+                return Ok(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            return Ok(user);
         }
 
 
@@ -101,17 +110,12 @@ namespace DDI.WebApi.Controllers
             {
                 var result = UserManager.Create(user, model.Password);
 
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
             }
             catch(Exception ex)
             {
-                // LOG ERRORS
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
-            //var result = await UserManager.CreateAsync(user, model.Password);
-            
 
             try
             {
@@ -125,13 +129,14 @@ namespace DDI.WebApi.Controllers
                 var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
 
                 service.SendMailMessage(message);
+
+                return Ok();
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
-            }
-
-            return Ok();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }        
         }
 
         [HttpPatch]
@@ -149,18 +154,19 @@ namespace DDI.WebApi.Controllers
 
                 var patchUpdateUser = new PatchUpdateUser<User>();
                 patchUpdateUser.UpdateUser(id, userPropertiesChanged);
-            }
-            catch (Exception)
-            {
-                return InternalServerError();
-            }
 
-            return Ok(UserManager.FindByIdAsync(user.Id).Result);
+                return Ok(UserManager.FindByIdAsync(user.Id).Result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpDelete]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Delete(Guid id)
+        public new async Task<IHttpActionResult> Delete(Guid id)
         {
             try
             {
@@ -171,17 +177,14 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var result = await UserManager.DeleteAsync(user);
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
+              
+                return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex.Message);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            return Ok();
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
