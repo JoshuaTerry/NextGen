@@ -412,7 +412,6 @@ function SetupNoteTopicsMultiselectModal() {
         crossDomain: true,
         success: function (data) {
 
-
             CreateMultiSelectTopics(data.Data, $('.tagdropdowncontainer')); 
 
         },
@@ -426,6 +425,7 @@ function SetupNoteTopicsMultiselectModal() {
 function ClearNoteTopicSelectModal() {
 
     $('.tagdropdowncontainer > ul').remove();
+
 }
 
 function ClearNoteTopicTagBox(modal) {
@@ -560,7 +560,6 @@ function GetNoteAlerts() {
 
         },
         error: function (xhr, status, err) {
-            // DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
         }
     });
 }
