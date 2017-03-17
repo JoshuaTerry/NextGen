@@ -88,7 +88,7 @@ function NewNoteDetailsModal() {
 
         });
 
-        // $('.savenotedetails').unbind('click');
+        $('.savenotedetails').unbind('click');
 
         $('.savenotedetails').click(function () {
 
@@ -162,8 +162,6 @@ function EditNoteDetails(id) {
     LoadNoteDetails(id);
 
     LoadSelectedNoteTopics(id);
-
-    // $('.noteTopicSelectImage').unbind('click');
 
     $('.noteTopicSelectImage').click(function (e) {
 
@@ -464,7 +462,7 @@ function LoadSelectedNoteTopics(id) {
            
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+            DisplayErrorMessage('Error', 'An error occurred during loading the Note Topics.');
         }
     });
 
