@@ -84,6 +84,8 @@ function NewNoteDetailsModal() {
 
             CloseModal(modal);
 
+            ClearNoteTopicTagBox(modal);
+
         });
 
         // $('.savenotedetails').unbind('click');
@@ -409,6 +411,12 @@ function SetupNoteTopicsMultiselectModal() {
 function ClearNoteTopicSelectModal() {
 
     $('.tagdropdowncontainer > ul').remove();
+}
+
+function ClearNoteTopicTagBox(modal) {
+
+    $(modal).find('.noteTopicSelect > div.dx-tag-content').remove();
+
 }
 
 function StyleAndSetupIndividualTags(topic, DeleteFunction) { 

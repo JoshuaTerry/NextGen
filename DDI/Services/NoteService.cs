@@ -114,22 +114,12 @@ namespace DDI.Services
         public IDataResponse GetNotesInAlertDateRange(Guid parentid)
         {
             IDataResponse response = null;
-            var entityNotes = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.ParentEntityId == parentid).ToList();
-            List<Note> topicsInDateRange = new List<Note>();
-
-            DateTime currentDay = DateTime.Today;
-
-            foreach(Note note in entityNotes)
-            {
-                if(note.AlertStartDate <= currentDay && note.AlertEndDate >= currentDay)
-                {
-                    topicsInDateRange.Add(note);
-                }
-            }
-
+            DateTime currentDay = DateTime.Today.Date;
+            var entityNotesInRange = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.ParentEntityId == parentid && (n.AlertStartDate <= currentDay && n.AlertEndDate >= currentDay)).ToList();
+            
             response = new DataResponse<List<Note>>
             {
-                Data = topicsInDateRange,
+                Data = entityNotesInRange,
                 IsSuccessful = true
             };
 
@@ -149,7 +139,7 @@ namespace DDI.Services
         private void SetEntityType(Note note)
         {
             // As we expand, this will have to encompass more than just constituent
-            if (note.EntityType == "Constituent")
+            if (string.Compare(note.EntityType, "constituent", true) == 0)
             {
                 note.EntityType = LinkedEntityHelper.GetEntityTypeName<Constituent>();
             }
