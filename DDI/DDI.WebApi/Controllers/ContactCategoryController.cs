@@ -11,6 +11,13 @@ namespace DDI.WebApi.Controllers
 {
     public class ContactCategoryController : ControllerBase<ContactCategory>
     {
+        protected override Expression<Func<ContactCategory, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<ContactCategory, object>>[]
+            {
+                a => a.DefaultContactType
+            };
+        }
 
         [HttpGet]
         [Route("api/v1/contactcategory", Name = RouteNames.ContactCategory)]
