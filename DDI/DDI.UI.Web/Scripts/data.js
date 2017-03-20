@@ -19,12 +19,13 @@ function GetApiHeaders() {
 
 }
 
-function MakeServiceCall(method, route, successCallback, errorCallback) {
+function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: method,
         contentType: 'application/json; charset-utf-8',
+        data: item,
         dataType: 'json',
         headers: GetApiHeaders(),
         crossDomain: true,
@@ -76,9 +77,6 @@ function PopulateDropDown(element, route, selectedValue) {
             if (selectedValue) {
                 $(element).val(selectedValue);
             }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     }, null);
 
@@ -131,22 +129,12 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
 
     var selectedItems = [];
 
-    $.ajax({
-        url: WEB_API_ADDRESS + routeForSelectedOptions,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            data.Data.forEach(function (item) {
-                selectedItems.push(item.Id);
-            });
-            DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
+    MakeServiceCall('GET', routeForSelectedOptions, null, function (data) {
+        data.Data.forEach(function (item) {
+            selectedItems.push(item.Id);
+        });
+        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
+    }, null);
 
 }
 
@@ -154,28 +142,19 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
     var tagBoxControl = $('<div>').addClass(tagBox);
 
-    $.ajax({
-        url: WEB_API_ADDRESS + routeForAllOptions,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            $(tagBoxControl).dxTagBox({
-                items: data.Data,
-                value: selectedItems,
-                displayExpr: 'DisplayName',
-                valueExpr: 'Id',
-                showClearButton: true,
-                disabled: true
-            });
+    MakeServiceCall('GET', routeForAllOptions, null, function (data) {
+        $(tagBoxControl).dxTagBox({
+            items: data.Data,
+            value: selectedItems,
+            displayExpr: 'DisplayName',
+            valueExpr: 'Id',
+            showClearButton: true,
+            disabled: true
+        });
 
-            $(tagBoxControl).appendTo(container);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    }); 
+        $(tagBoxControl).appendTo(container);
+    }, null);
+
 }
 /* END POPULATE TAGBOX CONTROLS */
 
@@ -183,7 +162,7 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 /* DATAGRID FUNCTIONALITY */
 
-function LoadGrid(container, gridClass, columns, route, selected, prefix, showEdit, showDelete, showNew, showFilter, showGroup, onComplete) {
+function LoadGrid(container, gridClass, columns, route, selected, modalClass, prefix, editModalClass, newModalClass, showDelete, showFilter, showGroup, onComplete) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0) {
         container = '.' + containr;
@@ -196,14 +175,14 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, showEd
     }
 
     if (typeof (showGroup) == 'undefined' || showGroup == null) {
-        showFilter = false; // Hide the group by default
+        showGroup = false; // Hide the group by default
     }
 
-    if (showNew) {
+    if (newModal) {
         // Add link for new modal
     }
 
-    if (showEdit) {
+    if (editModal) {
         // Add column for edit
         columns.push({
             width: '100px',
@@ -343,6 +322,7 @@ function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, d
 
     $(datagrid).appendTo($(container));
 }
+
 function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
     if (container.indexOf('.') != 0)
@@ -557,6 +537,25 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
 }
 
 function LoadEntity(route, id, modal, loadEntityData, entityName) {
+
+    
+
+    MakeServiceCall('GET', route + '/' + id, item, function (data) {
+
+        $.map(data.Data, function (item) {
+
+            $(modal).find('input').not('input[type="button"').each(function () {
+
+            });
+
+            $(modal).find('select').each(function () {
+
+            });
+
+        });
+
+    }, null);
+
 
     $.ajax({
         type: 'GET',
