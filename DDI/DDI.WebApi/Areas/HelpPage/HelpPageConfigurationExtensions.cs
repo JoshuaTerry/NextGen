@@ -1,3 +1,6 @@
+using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
+using DDI.WebApi.Areas.HelpPage.Models;
+using DDI.WebApi.Areas.HelpPage.SampleGeneration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,9 +14,6 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
-using DDI.WebApi.Areas.HelpPage.Models;
-using DDI.WebApi.Areas.HelpPage.SampleGeneration;
 
 namespace DDI.WebApi.Areas.HelpPage
 {

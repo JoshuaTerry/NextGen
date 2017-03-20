@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects;
 
 namespace DDI.EFAudit.Filter
 {

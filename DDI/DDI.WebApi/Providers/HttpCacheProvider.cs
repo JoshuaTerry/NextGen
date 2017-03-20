@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Caching;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Caching;
-using DDI.Shared.Caching;
 
 namespace DDI.WebApi.Providers
 {

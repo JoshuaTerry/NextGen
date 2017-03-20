@@ -1,7 +1,7 @@
 ﻿
 namespace DDI.Shared.Enums.CRM
 {
-	public enum BirthDateType
+    public enum BirthDateType
 	{
 		None = 0,
 		AgeRange = 1,

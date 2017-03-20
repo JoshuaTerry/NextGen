@@ -1,5 +1,5 @@
-using System.Web.Http.Routing;
 using DDI.Shared;
+using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Helpers
 {

@@ -1,9 +1,6 @@
-using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Attributes.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes.Logging;
 
 namespace DDI.Shared.Models
 {

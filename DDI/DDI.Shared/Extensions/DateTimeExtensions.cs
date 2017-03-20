@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Extension Methods for DateTime and DateTime? that ensure datetime values will not throw exceptions when stored in SQL columns.
