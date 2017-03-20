@@ -8,7 +8,7 @@ namespace DDI.WebApi.Controllers.CRM
 {
     public class ContactCategoryController : GenericController<ContactCategory>
     {
-        protected override string FieldsForList => FieldLists.CodeFields;
+        protected override string FieldsForList => FieldLists.CodeFields + ",SectionTitle";
 
         [HttpGet]
         [Route("api/v1/contactcategory", Name = RouteNames.ContactCategory)]
