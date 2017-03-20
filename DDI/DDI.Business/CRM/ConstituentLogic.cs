@@ -1,18 +1,18 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
-using System;
-using DDI.Shared.Enums.CRM;
 using DDI.Business.Core;
-using DDI.Shared.Statics.CRM;
-using DDI.Search.Models;
-using DDI.Shared.Models;
+using DDI.Data;
 using DDI.Search;
+using DDI.Search.Models;
+using DDI.Shared;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -152,6 +152,7 @@ namespace DDI.Business.CRM
         }
         public override void Validate(Constituent constituent)
         {
+            constituent.AssignPrimaryKey();
             ValidateUniqueConstituentNumber(constituent);
             constituent = CalculateConstituentNameProperties(constituent);
             ScheduleUpdateSearchDocument(constituent);

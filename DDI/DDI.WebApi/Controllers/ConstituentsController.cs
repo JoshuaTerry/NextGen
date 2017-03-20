@@ -153,9 +153,27 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError();
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
+        }
+
+        [HttpGet]
+        [Route("api/v1/constituents/new/{constituenttypeid}")]
+        public IHttpActionResult NewConstituent(Guid constituenttypeid, string fields = null)
+        {
+            try
+            {
+                var constituent = Service.NewConstituent(constituenttypeid);
+
+                return FinalizeResponse(constituent, fields);
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+            
         }
 
         [HttpPost]
@@ -183,8 +201,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError();
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -222,8 +240,8 @@ namespace DDI.WebApi.Controllers
             }
             catch(Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError(ex);
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 
@@ -246,8 +264,8 @@ namespace DDI.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError(ex);
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
     }

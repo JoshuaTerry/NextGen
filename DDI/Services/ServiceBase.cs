@@ -124,9 +124,9 @@ namespace DDI.Services
             {
                 entity.CreatedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
             }
-            if (entity != null && entity.LastModifiedOn.HasTime() && entity.CreatedOn.Value.Kind == DateTimeKind.Unspecified)
+            if (entity != null && entity.LastModifiedOn.HasTime() && entity.LastModifiedOn.Value.Kind == DateTimeKind.Unspecified)
             {
-                entity.LastModifiedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
+                entity.LastModifiedOn = DateTime.SpecifyKind(entity.LastModifiedOn.Value, DateTimeKind.Utc);
             }
         }
 

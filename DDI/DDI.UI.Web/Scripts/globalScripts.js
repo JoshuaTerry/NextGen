@@ -20,37 +20,7 @@ $(document).ready(function () {
 
     LoadAccordions();
 
-    $('.addconstituent').click(function (e) {
-
-        e.preventDefault();
-
-        modal = $('.addconstituentmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 900,
-            height: 625,
-            resizable: false
-        });
-
-        $('.savenewconstituent').click(function () {
-
-            SaveNewConstituent(modal);
-
-        });
-
-        $('.cancelmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-        });
-
-        LoadNewConstituentModalDropDowns();
-
-        AutoZip(modal);
-
-    });
+    NewConstituentModal();
 
     $('.logout').click(function (e) {
 
@@ -64,118 +34,201 @@ $(document).ready(function () {
 
 });
 
-function LoadHeaderInfo() {
-    LoadBusinessDate();
-    LoadBusinessUnit();
-    LoadEnvironment();
-}
+/* NEW CONSTITUENT */
+function NewConstituentModal() {
 
-function LoadBusinessDate() {
+    $('.addconstituent').click(function (e) {
 
-    if (sessionStorage.getItem('businessdate')) {
-        $('.businessdate').text(sessionStorage.getItem('businessdate'));
-    }
-    else {
+        e.preventDefault();
 
-        $.ajax({
-            url: WEB_API_ADDRESS + 'businessdate',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
-                
-                var date = FormatJSONDate(data.Data);
-
-                if (date) {
-                    sessionStorage.setItem('businessdate', date);
-                }
-
-                $('.businessdate').text(date);
-            },
-            failure: function (response) {
-                alert(response);
+        modal = $('.addconstituentmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 925,
+            height: 625,
+            resizable: false,
+            beforeClose: function (event, ui) {
+                $('.constituenttypeselect').show();
+                $('.constituentdetails').hide();
             }
         });
-    }
-}
 
-function LoadBusinessUnit() {
-    /* Will be implemented with Business Unit */
-}
+        SetupConstituentTypeSelector();
 
-function LoadEnvironment() {
-    if (sessionStorage.getItem('environment')) {
-        $('.environment').text(sessionStorage.getItem('environment'));
-    }
-    else {
-        $.ajax({
-            url: WEB_API_ADDRESS + 'environment',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
+        // Save Constituent
+        $('.savenewconstituent').unbind('click');
 
-                if (data.Data.length > 0) {
-                    sessionStorage.setItem('environment', data.Data);
-                }
-
-                $('.environment').text(data.Data);
-            },
-            failure: function (response) {
-                alert(response);
-            }
+        $('.savenewconstituent').click(function () {
+            SaveNewConstituent(modal, false);
         });
-    }
-}
 
-function LoadNewConstituentModalDropDowns() {
+        // Save & New Constituent
+        $('.saveandnewconstituent').unbind('click');
 
-    PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
-    PopulateDropDown('.nc-GenderId', 'genders', '', '');
+        $('.saveandnewconstituent').click(function () {
+            SaveNewConstituent(modal, true);
+        });
 
-    PopulateDropDown('.nc-Country', 'countries', '', '');
-    PopulateDropDown('.nc-AddressType', 'addresstypes', '', '');
+        $('.cancelmodal').click(function (e) {
 
-    $('.nc-Country').change(function () {
+            e.preventDefault();
 
-        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+            CloseModal(modal);
+
+        });
+
+        LoadNewConstituentModalDropDowns();
+
+        AutoZip(modal, '.nc-');
 
     });
 
-    LoadRegions('regionscontainer', 'nc-');
+}
+
+function SetupConstituentTypeSelector() {
+
+    var container = $('.constituenttypeselect');
+    var details = $('.constituentdetails');
+
+    $(container).empty();
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+                
+                $.map(data.Data, function (item) {
+
+                    var option = $('<div>')
+                    .attr('id', item.Id)
+                    .click(function (e) {
+
+                        // Might be implemented later...  Issue with getting the inner container to sit correctly in the modal when opened. - MR 3/13/2017
+                        // $('.constituenttypeinner').stop().animate({ left: '-895px' }, 250);
+
+                        $(container).hide('fast');
+                        $(details).show('fast');
+
+                        ConstituentTypeLayout(item.Name);
+
+                        SetupNewConstituent(item.Id);
+
+                    });
+
+                    var label = $('<label>').text(item.Name);
+                    var img = $('<img>').attr('src', GetConstituentTypeImage(item.Name)).attr('alt', item.Name);
+
+                    $(img).appendTo($(option));
+                    $(label).appendTo($(option));
+
+                    $(option).appendTo($(container));
+
+                });
+
+            }
+
+        },
+        failure: function (response) {
+            
+        }
+    });
 
 }
 
-function GetApiHeaders() {
+function GetConstituentTypeImage(name) {
+    
+    var path = 'default';
 
-    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    var headers = {};
-
-    if (token) {
-        headers.Authorization = 'Bearer ' + token;
+    switch (name) {
+        case 'Church':
+            path = '../../Images/church.png';
+            break;
+        case 'Family':
+            path = '../../Images/family.png';
+            break;
+        case 'Individual':
+            path = '../../Images/male.png';
+            break;
+        case 'Organization':
+            path = '../../Images/organization.png';
+            break;
+        default:
+            path = '../../Images/male.png';
+            break;
     }
 
-    return headers;
+    return path;
 
 }
 
-function GetQueryString() {
+function ConstituentTypeLayout(name) {
 
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
+    switch (name) {
+        case 'Individual':
+            IndividualLayout();
+            break;
+        case 'Church':
+            NonindividualLayout();
+            break;
+        case 'Family':
+            NonindividualLayout();
+            break;
+        case 'Organization':
+            NonindividualLayout();
+            break;
+        default:
+            IndividualLayout();
+            break;
     }
 
-    return vars;
 }
 
-function SaveNewConstituent(modal) {
+function IndividualLayout() {
+
+    $('.IndividualContainer').show();
+    $('.OrganizationContainer').hide();
+
+    $('.nc-TaxID').mask('000-00-0000');
+}
+
+function NonindividualLayout() {
+
+    $('.IndividualContainer').hide();
+    $('.OrganizationContainer').show();
+
+    $('.nc-TaxID').mask('00-0000000');
+}
+
+function SetupNewConstituent(constituenttypeid) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituents/new/' + constituenttypeid,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $('.nc-ConstituentNumber').val(data.Data.ConstituentNumber);
+                $('.nc-ConstituentTypeId').val(data.Data.ConstituentType.Id);
+            }
+
+        },
+        failure: function (response) {
+
+        }
+    })
+
+}
+
+function SaveNewConstituent(modal, addnew) {
 
     // Get the fields
     var fields = GetNewFields();
@@ -191,16 +244,28 @@ function SaveNewConstituent(modal) {
         crossDomain: true,
         success: function (data) {
 
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-            
-            ClearFields();
+            if (data && data.IsSuccessful) {
 
-            CloseModal(modal);
-            
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+                
+                if (addnew) {
+                    ClearFields('.modalcontent');
+
+                    $(modal).find('.constituenttypeselect').show('fast');
+                    $(modal).find('.constituentdetails').hide('fast');
+                }
+                else {
+                    CloseModal(modal);
+
+                    DisplayConstituent(data.Data.ConstituentNumber);
+                }
+
+            }
+
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -232,6 +297,118 @@ function GetNewFields() {
 
     return p;
 
+}
+/* NEW CONSTITUENT */
+
+function LoadHeaderInfo() {
+    LoadBusinessDate();
+    LoadBusinessUnit();
+    LoadEnvironment();
+}
+
+function LoadBusinessDate() {
+
+    if (sessionStorage.getItem('businessdate')) {
+        $('.businessdate').text(sessionStorage.getItem('businessdate'));
+    }
+    else {
+
+        $.ajax({
+            url: WEB_API_ADDRESS + 'businessdate',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                
+                var date = FormatJSONDate(data.Data);
+
+                if (date) {
+                    sessionStorage.setItem('businessdate', date);
+                }
+
+                $('.businessdate').text(date);
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+    }
+}
+
+function LoadBusinessUnit() {
+    /* Will be implemented with Business Unit */
+}
+
+function LoadEnvironment() {
+    if (sessionStorage.getItem('environment')) {
+        $('.environment').text(sessionStorage.getItem('environment'));
+    }
+    else {
+        $.ajax({
+            url: WEB_API_ADDRESS + 'environment',
+            method: 'GET',
+            contentType: 'application/json; charset-utf-8',
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+
+                if (data.Data.length > 0) {
+                    sessionStorage.setItem('environment', data.Data);
+                }
+
+                $('.environment').text(data.Data);
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+    }
+}
+
+function LoadNewConstituentModalDropDowns() {
+
+    PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
+    PopulateDropDown('.nc-GenderId', 'genders', '', '');
+
+    PopulateDropDown('.nc-Country', 'countries', '', '');
+    PopulateDropDown('.nc-AddressType', 'addresstypes', '', '');
+
+    $('.nc-Country').change(function () {
+
+        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+
+    });
+
+    LoadRegions($(modal).find('.regionscontainer'), 'nc-');
+
+}
+
+function GetApiHeaders() {
+
+    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    var headers = {};
+
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+    return headers;
+
+}
+
+function GetQueryString() {
+
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+
+    return vars;
 }
 
 function CloseModal(modal) {
@@ -404,24 +581,24 @@ function ClearElement(e) {
     }
 }
 
-function AutoZip(container) {
+function AutoZip(container, prefix) {
 
     $(container).find('.autozip').blur(function () {
 
-        GetAutoZipData(container);
+        GetAutoZipData(container, prefix);
 
     });
 
 }
 
-function GetAutoZipData(container) {
+function GetAutoZipData(container, prefix) {
 
     var zip = $(container).find('.autozip').val();
 
     if (zip && zip.length > 0) {
 
-        var fields = 'addressLine1=' +
-                '&addressLine2=' +
+        var fields = 'addressLine1=' + $(container).find('.autoaddress1').val() +
+                '&addressLine2=' + $(container).find('.autoaddress2').val() +
                 '&city=' +
                 '&countryId=' +
                 '&countyId=' +
@@ -449,12 +626,14 @@ function GetAutoZipData(container) {
                     }
 
                     $(container).find('.autocity').val(data.Data.City);
+                    
+                    LoadAllRegionDropDowns(modal, prefix, data.Data);
 
                 }
             
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during loading address data.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -517,7 +696,7 @@ function LoadTagSelector(type, container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
 
@@ -583,7 +762,7 @@ function LoadAvailableTags(container) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -630,7 +809,7 @@ function DisplaySelectedTags(container) {
 
                         },
                         error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
+                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
                     });
                 })
@@ -733,8 +912,8 @@ function GetFile(id, callback) {
             }
 
         },
-        failure: function (response) {
-            DisplayErrorMessage('Error', 'An error occurred during getting the file.');
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -916,7 +1095,7 @@ function SaveEdit(editcontainer) {
             RefreshEntity();
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -1012,7 +1191,7 @@ function SaveChildCollection(children, route) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during saving the constituent.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -1042,7 +1221,7 @@ function DeleteEntity(url, method, confirmationMessage) {
                 DisplaySuccessMessage('Success', 'The item was deleted.');
             },
             error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during delete. It was unsuccessful');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
     };

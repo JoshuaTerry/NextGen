@@ -11,6 +11,8 @@ namespace DDI.WebApi.Controllers
 {
     public class ProfessionsController : ControllerBase<Profession>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/professions", Name = RouteNames.Profession)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

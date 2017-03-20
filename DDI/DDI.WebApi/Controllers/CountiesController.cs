@@ -52,24 +52,29 @@ namespace DDI.WebApi.Controllers
             {
                 var result = _service.GetAll(search);
 
-                if (result == null)
+                try
                 {
-                    return NotFound();
+                    if (result == null)
+                    {
+                        return NotFound();
+                    }
                 }
-                if (!result.IsSuccessful)
+                catch (Exception ex)
                 {
-                    return InternalServerError();
+                    Logger.LogError(ex.ToString);
+                    return InternalServerError(new Exception(ex.Message));
                 }
 
-                var totalCount = result.TotalResults;
+            var totalCount = result.TotalResults;
 
                 Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, fields);
                 return Ok(dynamicResult);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                Logger.LogError(ex.ToString);
+                return InternalServerError(new Exception(ex.Message));
             }
         }
 

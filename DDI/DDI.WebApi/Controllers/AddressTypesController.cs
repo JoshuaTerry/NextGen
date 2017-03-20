@@ -13,6 +13,8 @@ namespace DDI.WebApi.Controllers
 {
     public class AddressTypesController : ControllerBase<AddressType>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

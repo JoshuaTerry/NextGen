@@ -17,25 +17,43 @@ namespace DDI.Logger
             Log4NetLog = LogManager.GetLogger(type);
         }
 
-        public void Log(LogLevel logLevel, string message)
+        public void Log(LogLevel logLevel, string message, Exception exception = null)
         {
             if (!ShouldLog(logLevel)) return;
             switch (logLevel)
             {
                 case LogLevel.Critical:
-                    Log4NetLog.Fatal(message);
+                    if (exception == null)
+                        Log4NetLog.Fatal(message);
+                    else
+                        Log4NetLog.Fatal(message, exception);
                     break;
-                case LogLevel.Error:
-                    Log4NetLog.Error(message);
+                case LogLevel.Error:                    
+                    if (exception == null)
+                        Log4NetLog.Error(message);
+                    else
+                        Log4NetLog.Error(message, exception);
                     break;
                 case LogLevel.Warning:
-                    Log4NetLog.Warn(message);
+                    
+                    if (exception == null)
+                        Log4NetLog.Warn(message);
+                    else
+                        Log4NetLog.Warn(message, exception);
                     break;
                 case LogLevel.Information:
-                    Log4NetLog.Info(message);
+
+                    if (exception == null)
+                        Log4NetLog.Info(message);
+                    else
+                        Log4NetLog.Info(message, exception);
                     break;
                 case LogLevel.Verbose:
-                    Log4NetLog.Debug(message);
+                    
+                    if (exception == null)
+                        Log4NetLog.Debug(message);
+                    else
+                        Log4NetLog.Debug(message, exception);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("logLevel");
@@ -129,5 +147,31 @@ namespace DDI.Logger
                     throw new ArgumentOutOfRangeException("logLevel");
             }
         }
+
+        public void LogCritical(Exception exception)
+        {
+            Log(LogLevel.Critical, string.Empty, exception);
+        }
+
+        public void LogError(Exception exception)
+        {
+            Log(LogLevel.Error, string.Empty, exception);
+        }
+
+        public void LogWarning(Exception exception)
+        {
+            Log(LogLevel.Warning, string.Empty, exception);
+        }
+
+        public void LogInformation(Exception exception)
+        {
+            Log(LogLevel.Information, string.Empty, exception);
+        }
+
+        public void LogVerbose(Exception exception)
+        {
+            Log(LogLevel.Verbose, string.Empty, exception);
+        }
+         
     }
 }

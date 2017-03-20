@@ -50,7 +50,7 @@
 
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
             </ul>
@@ -295,7 +295,8 @@
 
                     </div>
 
-                    <h1>Payment Preferences<a href="#" title="New" class="newppmodallink newbutton"></a></h1>
+                    <h1 class ="PaymentPreferencesSettingsSection">
+                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span><a href="#" title="New" class="newppmodallink newbutton"></a></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -490,30 +491,21 @@
 
             </div>
 
-            <!-- Notes Tab -->
+             <!-- Notes Tab -->
             <div id="tab-notes" class="scrollable">
 
                 <div class="tabscontainer inner">
 
-                    <ul>
+                    <ul> 
                         <li><a href="#tab-notedetail">Note Detail</a></li>
                         <li><a href="#tab-attachments">Attachments</a></li>
                     </ul>
 
                     <div id="tab-notedetail">
 
-                        <table class="datagrid notedetailtable">
-                            <thead>
-                                <tr>
-                                    <th>Created Date</th>
-                                    <th>Created By</th>
-                                    <th>Title</th>
-                                    <th><img src="Images/Note_16.png" /></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
+                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
+                        <div class="notedetailsgridcontainer"></div>
+                        
                     </div>
 
                     <div id="tab-attachments">
@@ -1126,4 +1118,137 @@
 
     </div>
 
+    <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Title</label>
+                <input type="text" class="nd-Title" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <textarea rows ="4" cols ="86" class="nd-Description"></textarea>
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Alert Start Date</label>
+                    <input type="text" class="nd-AlertStartDate datepicker" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Alert End Date</label>
+                    <input type="text" class="nd-AlertEndDate datepicker" />
+                </div>
+
+            </div>
+
+            <div class="fieldblock">
+                <label>Note Topics</label>
+                <div class="nd-Topics noteTopicSelect"></div> 
+                <div class="noteTopicSelectImage" style="display: inline-block;"></div>
+                <div class="tagdropdowncontainer" style="display:none;">
+                    <div class="tagdropdowndivcontainer"></div>
+                    <div class="modalbuttons">
+                        <input type="button" class="savenotetopics" value="Save" />
+                        <a href="#" class="cancelnotetopics">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Note code</label>
+                    <select class="nd-NoteCode"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Note Category</label>
+                    <select class="nd-Category Id"></select>
+                </div>
+
+            </div>
+
+             <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Contact Date</label>
+                    <input type="text" class="nd-ContactDate datepicker" />
+                </div>
+
+                 <div class="fieldblock">
+                    <label>Primary Contact</label>
+                    <select class="nd-PrimaryContact"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Person Responsible</label>
+                    <select class="nd-PersonResponsible"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Contact Method</label>
+                    <select class="nd-ContactMethod"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Created By</label>
+                    <label class="nd-CreatedBy"></label>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Updated By</label>
+                    <label class="nd-UpdatedBy"></label>
+                </div>
+
+            </div>
+
+             <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>On</label>
+                    <label class="nd-CreatedOn"></label>
+                </div>
+
+                <div class="fieldblock">
+                    <label>On</label>
+                    <label class="nd-UpdatedOn"></label>
+                </div>
+
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savenotedetails" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="notealertmodal" title="NotesAlert" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="notealertgridcontainer"></div>
+
+            <div class="modalbuttons">
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>

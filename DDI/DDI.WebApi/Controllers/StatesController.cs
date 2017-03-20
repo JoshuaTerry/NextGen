@@ -20,13 +20,13 @@ namespace DDI.WebApi.Controllers
         [Route("api/v1/states", Name = RouteNames.State)]
         public IHttpActionResult GetAll(Guid? countryId = null, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault)
         {
-            var search = new ForeignKeySearch()
-            {
-                Id = countryId,
-                Limit = limit,
-                Offset = offset
-            };
-            return base.GetAll(RouteNames.State, search);
+                var search = new ForeignKeySearch()
+                {
+                    Id = countryId,
+                    Limit = limit,
+                    Offset = offset
+                };
+                return base.GetAll(RouteNames.State, search);
         }
     }
 }
