@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DDI.Services.Extensions;
+using DDI.Shared;
+using System;
 using System.Web;
 using System.Web.Http.Routing;
-using DDI.Services.Extensions;
-using DDI.Services.Search;
-using DDI.Shared;
 
 namespace DDI.WebApi.Helpers
 {

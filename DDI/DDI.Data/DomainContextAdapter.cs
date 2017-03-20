@@ -1,12 +1,8 @@
 ﻿using DDI.EFAudit.Contexts;
 using DDI.Shared.Models.Client.Audit;
-using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Data
 {

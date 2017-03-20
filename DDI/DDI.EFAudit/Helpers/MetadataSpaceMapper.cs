@@ -1,7 +1,6 @@
-﻿using DDI.EFAudit.Filter; 
+﻿using DDI.EFAudit.Filter;
 using System;
 using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;

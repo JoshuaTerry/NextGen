@@ -1,7 +1,7 @@
 ﻿
 namespace DDI.Shared.Enums.CRM
 {
-	public enum ResidentType
+    public enum ResidentType
 	{
 		Primary = 0,
 		Secondary = 1,

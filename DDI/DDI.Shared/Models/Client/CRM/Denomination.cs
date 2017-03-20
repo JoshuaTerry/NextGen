@@ -1,10 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Enums.CRM;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq; 
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Models.Client.CRM
 {

@@ -1,8 +1,8 @@
+using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
+using DDI.WebApi.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using DDI.WebApi.Areas.HelpPage.ModelDescriptions;
-using DDI.WebApi.Areas.HelpPage.Models;
 
 namespace DDI.WebApi.Areas.HelpPage.Controllers
 {

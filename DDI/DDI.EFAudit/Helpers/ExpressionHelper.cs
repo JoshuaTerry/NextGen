@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DDI.EFAudit.Exceptions;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using DDI.EFAudit.Exceptions;
 
 namespace DDI.EFAudit.Helpers
 {

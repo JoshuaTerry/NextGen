@@ -1,7 +1,6 @@
-﻿using System.Web.Http;
-using System.Web.Http.Cors;
-using Microsoft.Owin.Security.OAuth;
+﻿using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json;
+using System.Web.Http;
 
 namespace DDI.WebApi
 {

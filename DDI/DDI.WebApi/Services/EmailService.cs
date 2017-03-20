@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Net;
-using System.Web;
 using System.Net.Mail;
-using System.Reflection;
 using System.Runtime.Remoting;
 using System.Web.Configuration;
-using Microsoft.Ajax.Utilities;
 
 namespace DDI.WebApi.Services
 {

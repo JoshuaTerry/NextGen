@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace DDI.Shared.Statics
+﻿namespace DDI.Shared.Statics
 {
     public static class RouteNames
     {

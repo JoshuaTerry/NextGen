@@ -1,11 +1,11 @@
+using DDI.Shared;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Common;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System;
 using System.Data.Entity.Validation;
-using System.Collections.Generic;
-using DDI.Shared.Models;
-using DDI.Shared;
 
 namespace DDI.Data
 {

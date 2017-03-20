@@ -1,22 +1,22 @@
+using DDI.EFAudit;
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Filter;
+using DDI.EFAudit.History;
+using DDI.EFAudit.Logging;
+using DDI.Shared;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Security;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using DDI.Shared;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Models.Client.CRM;
-using DDI.EFAudit.Filter;
-using DDI.Shared.Models.Client.Audit;
-using DDI.EFAudit.Contexts;
-using DDI.EFAudit.History;
-using DDI.EFAudit;
-using System.Threading.Tasks;
 using System.Threading;
-using DDI.EFAudit.Logging;
-using DDI.Shared.Models.Client.Security;
+using System.Threading.Tasks;
 
 namespace DDI.Data
 {
