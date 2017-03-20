@@ -1115,7 +1115,7 @@ function LoadConstituentTypesSectionSettings() {
             $('.tagSelectImage').hide();
             $('.tagSelect').hide();
 
-            $('.cancelmodal').click(function (e) {
+            $('.canceltypemodal').click(function (e) {
 
                 e.preventDefault();
 
@@ -1226,14 +1226,24 @@ function LoadConstituentTypeTagSelector(typeId, container) {
 
             $(img).click(function () {
 
-                modal = $('.tagselectmodal').dialog({
+                tagmodal = $('.tagselectmodal').dialog({
                     closeOnEscape: false,
                     modal: true,
                     width: 450,
                     resizable: false
                 });
 
-                LoadAvailableTags(modal);
+                LoadAvailableTags(tagmodal);
+
+                $('.cancelmodal').click(function (e) {
+
+                    e.preventDefault();
+
+                    CloseModal(tagmodal);
+                    CloseModal(modal);
+                    EditConstituentType(constTypeId);
+
+                });
 
                 $('.saveselectedtags').unbind('click');
 
@@ -1260,13 +1270,13 @@ function LoadConstituentTypeTagSelector(typeId, container) {
 
                             // Display success
                             DisplaySuccessMessage('Success', 'Tags saved successfully.');
-                            CloseModal(modal);
+                            CloseModal(tagmodal);
                             EditConstituentType(constTypeId);
                         },
                         error: function (xhr, status, err) {
 
                             DisplayErrorMessage('Error', 'An error occurred saving the tags.');
-                            CloseModal(modal);
+                            CloseModal(tagmodal);
                             EditConstituentType(constTypeId);
                         }
                     });
@@ -1341,13 +1351,12 @@ function EditConstituentType(id) {
         closeOnEscape: false,
         modal: true,
         width: 400,
-        height: 500,
         resizable: false
     });
 
     $('.consttype-tagselect').show();
 
-    $('.cancelmodal').click(function (e) {
+    $('.canceltypemodal').click(function (e) {
 
         e.preventDefault();
 
