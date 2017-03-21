@@ -7,6 +7,7 @@ namespace DDI.Data.Migrations.Client
     {
         public override void Up()
         {
+            DropIndex("dbo.ContactType", new[] { "ContactCategoryId" });
             DropIndex("dbo.ContactCategory", new[] { "DefaultContactTypeID" });
             AlterColumn("dbo.Address", "CreatedOn", c => c.DateTime());
             AlterColumn("dbo.ConstituentAddress", "CreatedOn", c => c.DateTime());
@@ -67,7 +68,7 @@ namespace DDI.Data.Migrations.Client
             CreateIndex("dbo.ConstituentType", "Name", unique: true);
             CreateIndex("dbo.Tag", "Code", unique: true);
             CreateIndex("dbo.Tag", "Name", unique: true);
-            CreateIndex("dbo.ContactType", "Code", unique: true);
+            CreateIndex("dbo.ContactType", new[] { "ContactCategoryId", "Code" }, unique: true, name: "IX_Code");
             CreateIndex("dbo.ContactType", "Name", unique: true);
             CreateIndex("dbo.ContactCategory", "Code", unique: true);
             CreateIndex("dbo.ContactCategory", "Name", unique: true);
@@ -167,7 +168,7 @@ namespace DDI.Data.Migrations.Client
             DropIndex("dbo.ContactCategory", new[] { "Name" });
             DropIndex("dbo.ContactCategory", new[] { "Code" });
             DropIndex("dbo.ContactType", new[] { "Name" });
-            DropIndex("dbo.ContactType", new[] { "Code" });
+            DropIndex("dbo.ContactType", "IX_Code");
             DropIndex("dbo.Tag", new[] { "Name" });
             DropIndex("dbo.Tag", new[] { "Code" });
             DropIndex("dbo.ConstituentType", new[] { "Name" });
@@ -228,6 +229,7 @@ namespace DDI.Data.Migrations.Client
             AlterColumn("dbo.ConstituentAddress", "CreatedOn", c => c.DateTime());
             AlterColumn("dbo.Address", "CreatedOn", c => c.DateTime());
             CreateIndex("dbo.ContactCategory", "DefaultContactTypeID");
+            CreateIndex("dbo.ContactType", "ContactCategoryId");
         }
     }
 }

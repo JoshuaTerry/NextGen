@@ -13,7 +13,7 @@ namespace DDI.Data.Migrations.Client
         
         string IMigrationMetadata.Id
         {
-            get { return "201703211642099_AddingUniqueIndexes"; }
+            get { return "201703211657318_AddingUniqueIndexes"; }
         }
         
         string IMigrationMetadata.Source
