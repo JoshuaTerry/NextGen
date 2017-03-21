@@ -2576,8 +2576,9 @@ function LoadPrefixSectionSettings() {
        { dataField: 'LabelPrefix', caption: 'Label Prefix' },
        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
-    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, 
-    //          modalWidth, showDelete, showFilter, showGroup, onComplete)
+
+    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
+    // showDelete, showFilter, showGroup, onComplete)
     LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
               250, true, false, false, null);
 }

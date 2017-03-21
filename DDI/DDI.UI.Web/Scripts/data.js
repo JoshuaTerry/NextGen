@@ -209,7 +209,7 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, editMo
                         e.preventDefault();
 
                         var id = $(this).parent().parent().find('td:not(:empty):first').text();
-                        // ConfirmModal(message, yes, no)
+                        
                         ConfirmModal('Are you sure you want to delete this item?', function () {
                             DeleteEntity(route, id, refreshGrid);
                         }, null);
