@@ -162,7 +162,7 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 /* DATAGRID FUNCTIONALITY */
 
-function LoadGrid(container, gridClass, columns, route, selected, modalClass, prefix, editModalClass, newModalClass, showDelete, showFilter, showGroup, onComplete) {
+function LoadGrid(container, gridClass, columns, route, selected, modalClass, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0) {
         container = '.' + containr;
@@ -178,11 +178,11 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
         showGroup = false; // Hide the group by default
     }
 
-    if (newModal) {
+    if (newModalClass) {
         // Add link for new modal
     }
 
-    if (editModal) {
+    if (editModalClass) {
         // Add column for edit
         columns.push({
             width: '100px',
@@ -194,7 +194,8 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
                     .click(function(e) {
                         e.preventDefault();
 
-                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        var id = $(this).parent().parent().find('td:not(:empty):first').text();
+                        EditEntity(route, prefix, id, editModal, modalWidth);
                     })
                     .appendTo(container);
             }
@@ -213,7 +214,11 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        var id = $(this).parent().parent().find('td:not(:empty):first').text();
+                        // ConfirmModal(message, yes, no)
+                        ConfirmModal('Are you sure you want to delete this item?', function () {
+                            DeleteEntity(route, id);
+                        }, null);
                     })
                     .appendTo(container);
             }
@@ -254,6 +259,10 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
     });
 
     $(datagrid).appendTo($(container));
+
+}
+
+function RefreshGrid() {
 
 }
 
@@ -433,56 +442,13 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     $(container).append($(datagrid));
 }
 
-function EditEntity(modalClass, saveButtonClass, modalWidth, loadEntityMethod, loadEntityGrid, getEntityToSave, entityName, route, id) {
+function NewModalLink() {
 
-    var modal = $(modalClass).dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: modalWidth,
-        resizable: false
-    });
-    
-    LoadEntity(route, id, modal, loadEntityMethod, entityName);
 
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $(saveButtonClass).unbind('click');
-
-    $(saveButtonClass).click(function () {
-
-        var item = getEntityToSave(modal, true);
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + route + '/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage("Success", entityName + " saved successfully.");
-
-                CloseModal(modal);
-
-                loadEntityGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
 
 }
 
-function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, prePopulateNewModal, loadEntityGrid, getEntityToSave, entityName, route) {
+function NewEntityModal(route, prefix, newModalLink, modalClass, modalWidth) {
 
     $(newModalLink).click(function (e) {
 
@@ -495,80 +461,147 @@ function NewEntityModal(newModalLink, modalClass, saveButtonClass, modalWidth, p
             resizable: false
         });
 
-        if (prePopulateNewModal) {
-            prePopulateNewModal(modal);
-        }
+        $(modal).find('.cancelmodal').click(function (e) {
+            e.preventDefault();
+            CloseModal(modal);
+        });
 
-        $('.cancelmodal')
-            .click(function (e) {
-                e.preventDefault();
+        $(modal).find('.savebutton').unbind('click');
+
+        $(modal).find('.savebutton').click(function () {
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('POST', route, item, function () {
+                DisplaySuccessMessage("Success", "Save successful.");
+
                 CloseModal(modal);
-            });
-
-        $(saveButtonClass).unbind('click');
-
-        $(saveButtonClass).click(function () {
-
-            var item = getEntityToSave(modal, false);
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + route,
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
-
-                    DisplaySuccessMessage("Success", entityName + " saved successfully.");
-
-                    CloseModal(modal);
-
-                    loadEntityGrid();
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                }
-            });
+                RefreshGrid();
+            }, null);
 
         });
     });
 
 }
 
-function LoadEntity(route, id, modal, loadEntityData, entityName) {
+function EditEntity(route, prefix, id, modalClass, modalWidth) {
 
+    var modal = $(modalClass).dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: modalWidth,
+        resizable: false
+    });
     
+    LoadEntity(route, id, prefix);
 
-    MakeServiceCall('GET', route + '/' + id, item, function (data) {
+    $(modal).find('.cancelmodal').click(function (e) {
 
-        $.map(data.Data, function (item) {
+        e.preventDefault();
 
-            $(modal).find('input').not('input[type="button"').each(function () {
+        CloseModal(modal);
 
-            });
+    });
 
-            $(modal).find('select').each(function () {
+    $(modal).find('.savebutton').unbind('click');
 
-            });
+    $(modal).find('.savebutton').click(function () {
 
-        });
+        var item = GetModalFieldsToSave(prefix);
+        
+        MakeServiceCall('PATCH', route + '/' + id, item, function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+            RefreshGrid();
+        }, null);
+
+    });
+
+}
+
+function DeleteEntity(route, id) {
+
+    MakeServiceCall('DELETE', route + '/' + id, null, function () {
+
+        DisplaySuccessMessage('Success', 'Delete successful.');
+        RefreshGrid();
 
     }, null);
 
+}
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + route + '/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            loadEntityData(data, modal);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+function GetModalFieldsToSave(prefix) {
+
+    var p = [];
+
+    $(modal).find('input').not('input[type="button"]').each(function () {
+
+        var property = $(this).attr('class').split(' ');
+
+        if (property[0].indexOf(prefix) > 0) {
+            var propertyName = property[0].replace(prefix, '');
+            var value = '';
+
+            if ($(this).is(':checkbox')) {
+                value = $(this).prop('checked');
+            }
+            else {
+                value = $(this).val();
+            }
+
+            for (var key in currentEntity) {
+                if (key == propertyName && currentEntity[key] != value) {
+                    if (value == 'null') {
+                        p.push('"' + propertyName + '": ' + null);
+                    }
+                    else {
+                        p.push('"' + propertyName + '": "' + value + '"');
+                    }
+                }
+            }
+        }
+        
+    });
+
+    $(modal).find('select').each(function () {
+
+        var property = $(this).attr('class').split(' ');
+
+        if (property[0].indexOf(prefix) > 0) {
+
+            var propertyName = property[0].replace(prefix, '');
+            var value = $(this).val();
+
+            for (var key in currentEntity) {
+                if (key == propertyName && currentEntity[key] != value) {
+                    if (value == 'null') {
+                        p.push('"' + propertyName + '": ' + null);
+                    }
+                    else {
+                        p.push('"' + propertyName + '": "' + value + '"');
+                    }
+                }
+            }
+
         }
     });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+
+function LoadEntity(route, id, prefix) {
+
+    MakeServiceCall('GET', route + '/' + id, item, function (data) {
+
+        for (var property in data.Data) {
+            $(prefix + property).val(data.Data[property]);
+        }
+
+    }, null);
 }
 /* END DATAGRID FUNCTIONALITY */
 
