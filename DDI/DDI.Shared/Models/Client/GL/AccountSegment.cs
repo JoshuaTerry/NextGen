@@ -20,8 +20,5 @@ namespace DDI.Shared.Models.Client.GL
         public Guid SegmentId { get; set; }
         public Segment Segment { get; set; }
 
-        public Guid SegmentLevelId { get; set; }
-        public SegmentLevel SegmentLevel { get; set; }         
-
     }
 }

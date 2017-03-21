@@ -70,7 +70,6 @@ namespace DDI.Shared.Models.Client.GL
         // How will these relate to the controller exactly?  It almost seems like the LedgerAccountYear
         // controller, depending on its includes, would do most of the work?
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
-        public ICollection<LedgerAccount> LedgerAccounts { get; set; }
         public ICollection<AccountBudget> Budgets { get; set; }        
         public ICollection<AccountSegment> AccountSegments { get; set; }
 
