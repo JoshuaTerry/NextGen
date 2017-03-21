@@ -1162,7 +1162,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Note code</label>
+                    <label>Note Code</label>
                     <select class="nd-NoteCode"></select>
                 </div>
 

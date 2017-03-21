@@ -44,8 +44,8 @@ function LoadNoteDetailsGrid() {
     // showDelete, showFilter, showGroup, onComplete)
     LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, false, false, null);
 
-    PopulateDropDown('.nd-Category', 'notecategories/');
-    PopulateDropDown('.nd-NoteCode', 'notecodes/');
+    PopulateDropDown('.nd-Category', 'notecategories', '', '', ''); 
+    PopulateDropDown('.nd-NoteCode', 'notecodes', '', ''); 
 
 }
 
@@ -550,7 +550,7 @@ function GetNoteAlerts() {
 
             if (data.Data.length > 0) {
 
-                SetupNoteAlertModal();
+                //SetupNoteAlertModal();
 
                 LoadNoteAlertGrid(data.Data);
 
@@ -572,31 +572,34 @@ function LoadNoteAlertGrid(data) {
         { dataField: 'Title', caption: 'Title' }
     ];
 
-    LoadGrid('notealertgrid',
-        'notealertgridcontainer',
-        columns,
-        'notealert/' + currentEntity.Id ,
-        null,
-        EditNoteDetails,
-        null);
+    LoadGrid('.notealertgridcontainer', 'notealertgrid', columns, 'notealert/' + currentEntity.Id, null, '', '.notealertmodal', '.notealertmodal', 500, false, false, false, null);
+
+
+//    LoadGrid('notealertgrid',
+//        'notealertgridcontainer',
+//        columns,
+//        'notealert/' + currentEntity.Id ,
+//        null,
+//        EditNoteDetails,
+//        null);
 }
 
-function SetupNoteAlertModal() {
+//function SetupNoteAlertModal() {
 
-    var modal = $('.notealertmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 500,
-        resizable: false
-    });
+//    var modal = $('.notealertmodal').dialog({
+//        closeOnEscape: false,
+//        modal: true,
+//        width: 500,
+//        resizable: false
+//    });
 
-    $('.cancelmodal').click(function (e) {
+//    $('.cancelmodal').click(function (e) {
 
-        e.preventDefault();
+//        e.preventDefault();
 
-        CloseModal(modal);
+//        CloseModal(modal);
 
-    });
+//    });
 
-}
+//}
 /* End Note Alerts Modal */
