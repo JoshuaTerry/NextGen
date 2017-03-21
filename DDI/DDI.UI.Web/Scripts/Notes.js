@@ -40,31 +40,30 @@ function LoadNoteDetailsGrid() {
     { dataField: 'Title', caption: 'Title' }
     ];
 
-    LoadGrid('notedetailsgrid',
-        'notedetailsgridcontainer',
-        columns,
-        currentEntity.Id + '/notes/',
-        null,
-        EditNoteDetails,
-        null);
+    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
+    // showDelete, showFilter, showGroup, onComplete)
+    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, false, false, null);
+
+    PopulateDropDown('.nd-Category', 'notecategories/');
+    PopulateDropDown('.nd-NoteCode', 'notecodes/');
 
 }
 
 function NewNoteDetailsModal() {
 
-    $('.newnotesdetailmodallink').click(function (e) {
+    //$('.newnotesdetailmodallink').click(function (e) {
 
-        PopulateDropDown('.nd-Category', 'notecategories/', '', '');
-        PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+        //PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+        //PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
 
-        e.preventDefault();
+        //e.preventDefault();
 
-        modal = $('.notesdetailmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 500,
-            resizable: false
-        });
+        //modal = $('.notesdetailmodal').dialog({
+        //    closeOnEscape: false,
+        //    modal: true,
+        //    width: 500,
+        //    resizable: false
+        //});
 
         $('.noteTopicSelectImage').unbind('click');
 
@@ -145,7 +144,7 @@ function NewNoteDetailsModal() {
 
         });
 
-    });
+    //});
 }
 
 function EditNoteDetails(id) {

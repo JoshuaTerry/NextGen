@@ -503,7 +503,7 @@
 
                     <div id="tab-notedetail">
 
-                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
+                        <h1>Note Detail<%--<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a>--%></h1>
                         <div class="notedetailsgridcontainer"></div>
                         
                     </div>
