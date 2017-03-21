@@ -156,6 +156,7 @@
     <Compile Include="Models\Client\Security\UserLogin.cs" />
     <Compile Include="Models\Client\Security\UserRole.cs" />
     <Compile Include="Models\AuditableEntityBase.cs" />
+    <Compile Include="Models\DatabaseConstraintException.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\IAuditableEntity.cs" />

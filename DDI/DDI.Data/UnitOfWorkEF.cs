@@ -270,11 +270,12 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
+
             var user = EntityFrameworkHelpers.GetCurrentUser();
             if (EFAuditModule.IsAuditEnabled && user != null)
             {
 
-                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) + 
+                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
             else

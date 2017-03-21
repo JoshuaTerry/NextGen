@@ -3,6 +3,7 @@ using DDI.EFAudit.Contexts;
 using DDI.EFAudit.Filter;
 using DDI.EFAudit.History;
 using DDI.EFAudit.Logging;
+using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Audit;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,8 +25,9 @@ namespace DDI.Data
     public class DomainContext : DbContext
     {
         private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(DomainContext));
         #region Public Properties
-         
+
         public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
         #region Core Entities
@@ -140,11 +143,69 @@ namespace DDI.Data
         }
         public override int SaveChanges()
         {
-            if (CustomSaveChangesLogic != null)
-                CustomSaveChangesLogic(this);
+            try
+            {
+                if (CustomSaveChangesLogic != null)
+                    CustomSaveChangesLogic(this);
 
-            return base.SaveChanges();
+                return base.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex?.InnerException?.InnerException != null && ex.InnerException.InnerException is SqlException)
+                {
+                    var sqlException = ex.InnerException.InnerException as SqlException;
+                    //var sqlConstraintErrorNumbers = new List<int>(new int[] { 2627, 547, 2601 });
+                    if (sqlException.Number == 2627 || sqlException.Number == 2601)
+                    {                     
+                        _logger.LogInformation(ex);
+                        throw new DatabaseConstraintException();
+                    }
+                    else if (sqlException.Number == 547)
+                    {
+                        _logger.LogInformation(ex);
+                        throw new DatabaseConstraintDeleteException();
+                    }
+                    else
+                    {
+                        _logger.LogError(ex);
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    _logger.LogError(ex);
+                    throw ex;
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
+
+        private void ProcessDBExceptions(Exception ex)
+        {
+            var updateException = ex as DbUpdateException;
+            if (updateException != null && updateException?.InnerException?.InnerException != null && updateException.InnerException.InnerException is SqlException)
+            {
+                var sqlException = updateException.InnerException.InnerException as SqlException;
+
+                var sqlConstraintErrorNumbers = new List<int>(new int[] { 2627, 547, 2601 });
+                if (sqlConstraintErrorNumbers.Contains(sqlException.Number))
+                {
+                    _logger.LogInformation(ex);
+                    throw new DatabaseConstraintException();
+                }
+            }
+            else
+            {
+                _logger.LogError(ex);
+                throw ex;
+            }
+
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<UserLogin> UserLogins { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -162,8 +223,16 @@ namespace DDI.Data
 
         public ISaveResult<ChangeSet> Save(User author)
         {
-            // NOTE: This will eventually circle back and call our overridden SaveChanges() later
-            return Logger.SaveChanges(author);
+            try
+            {
+                // NOTE: This will eventually circle back and call our overridden SaveChanges() later
+                return Logger.SaveChanges(author);
+            }
+            catch (Exception ex)
+            {
+                string a = ex.Message;
+                throw ex;
+            }
         } 
         #endregion
     }
