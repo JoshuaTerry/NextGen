@@ -307,167 +307,178 @@ function LoadMergeFormSystemSectionSettings() {
 
 function LoadNoteSectionSettings() {
 
-    LoadSectionSettings(SettingsCategories.Common, 'Note', 'sectionpreferences', SystemSettings.Note);
-
     var accordion = $('<div>').addClass('accordions');
     var noteCodes = $('<div>').addClass('noteCodecontainer');
     var noteCategories = $('<div>').addClass('noteCategorycontainer');
     var noteTopics = $('<div>').addClass('noteTopiccontainer');
 
     var header = $('<h1>').text('Note Code').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newnoteCodemodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
+    //$('<a>').attr('href', '#').addClass('newnoteCodemodallink modallink newbutton')
+    //    .click(function (e) {
+    //        e.preventDefault();
 
-            modal = $('.noteCodemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
+    //        modal = $('.noteCodemodal').dialog({
+    //            closeOnEscape: false,
+    //            modal: true,
+    //            width: 250,
+    //            resizable: false
+    //        });
 
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
+    //        $('.cancelmodal').click(function (e) {
+    //            e.preventDefault();
+    //            CloseModal(modal);
+    //        });
 
-            $('.submitnoteCode').unbind('click');
+    //        $('.submitnoteCode').unbind('click');
 
-            $('.submitnoteCode').click(function () {
+    //        $('.submitnoteCode').click(function () {
 
-                var item = {
-                    Code: $(modal).find('.noteCode-Code').val(),
-                    Name: $(modal).find('.noteCode-Name').val(),
-                    IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
-                }
+    //            var item = {
+    //                Code: $(modal).find('.noteCode-Code').val(),
+    //                Name: $(modal).find('.noteCode-Name').val(),
+    //                IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
+    //            }
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'notecodes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
+    //            $.ajax({
+    //                type: 'POST',
+    //                url: WEB_API_ADDRESS + 'notecodes',
+    //                data: item,
+    //                contentType: 'application/x-www-form-urlencoded',
+    //                crossDomain: true,
+    //                success: function () {
 
-                        DisplaySuccessMessage('success', 'Note Code saved successfully.');
+    //                    DisplaySuccessMessage('success', 'Note Code saved successfully.');
 
-                        CloseModal(modal);
+    //                    CloseModal(modal);
 
-                        LoadNoteCodeSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
+    //                    LoadNoteCodeSettingsGrid();
+    //                },
+    //                error: function (xhr, status, err) {
+    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+    //                }
+    //            });
+    //        });
 
-        })
-        .appendTo($(header));
+    //    })
+    //    .appendTo($(header));
     $(noteCodes).appendTo($(accordion));
 
-    LoadNoteCodeSettingsGrid();
+    //LoadNoteCodeSettingsGrid();
+
+    var noteCodecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    //LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
+    //          250, true, false, false, null);
+    //LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
+    LoadGrid('.noteCodecontainer', 'noteCodegrid', noteCodecolumns, 'notecodes', null, 'noteCode-', '.noteCodemodal', '.noteCodemodal', 250, true, false, false, null);
+
 
     header = $('<h1>').text('Note Category').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newnoteCategorymodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
+    //$('<a>').attr('href', '#').addClass('newnoteCategorymodallink modallink newbutton')
+    //    .click(function (e) {
+    //        e.preventDefault();
 
-            modal = $('.noteCategorymodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
+    //        modal = $('.noteCategorymodal').dialog({
+    //            closeOnEscape: false,
+    //            modal: true,
+    //            width: 250,
+    //            resizable: false
+    //        });
 
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
+    //        $('.cancelmodal').click(function (e) {
+    //            e.preventDefault();
+    //            CloseModal(modal);
+    //        });
 
-            $('.submitnoteCategory').unbind('click');
+    //        $('.submitnoteCategory').unbind('click');
 
-            $('.submitnoteCategory').click(function () {
-                var item = {
-                    Label: $(modal).find('.noteCategory-Code').val(),
-                    Name: $(modal).find('.noteCategory-Name').val(),
-                    IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
-                }
+    //        $('.submitnoteCategory').click(function () {
+    //            var item = {
+    //                Label: $(modal).find('.noteCategory-Code').val(),
+    //                Name: $(modal).find('.noteCategory-Name').val(),
+    //                IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
+    //            }
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'notecategories',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
+    //            $.ajax({
+    //                type: 'POST',
+    //                url: WEB_API_ADDRESS + 'notecategories',
+    //                data: item,
+    //                contentType: 'application/x-www-form-urlencoded',
+    //                crossDomain: true,
+    //                success: function () {
 
-                        DisplaySuccessMessage('success', 'Note Category saved successfully.');
+    //                    DisplaySuccessMessage('success', 'Note Category saved successfully.');
 
-                        CloseModal(modal);
+    //                    CloseModal(modal);
 
-                        LoadNoteCategorySettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
+    //                    LoadNoteCategorySettingsGrid();
+    //                },
+    //                error: function (xhr, status, err) {
+    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+    //                }
+    //            });
+    //        });
 
-        })
-        .appendTo($(header));
+    //    })
+    //    .appendTo($(header));
     $(noteCategories).appendTo($(accordion));
 
     LoadNoteCategorySettingsGrid();
 
     header = $('<h1>').text('Topic').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newnoteTopicmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
+    //$('<a>').attr('href', '#').addClass('newnoteTopicmodallink modallink newbutton')
+    //    .click(function (e) {
+    //        e.preventDefault();
 
-            modal = $('.noteTopicmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
+    //        modal = $('.noteTopicmodal').dialog({
+    //            closeOnEscape: false,
+    //            modal: true,
+    //            width: 250,
+    //            resizable: false
+    //        });
 
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
+    //        $('.cancelmodal').click(function (e) {
+    //            e.preventDefault();
+    //            CloseModal(modal);
+    //        });
 
-            $('.submitnoteTopic').unbind('click');
+    //        $('.submitnoteTopic').unbind('click');
 
-            $('.submitnoteTopic').click(function () {
+    //        $('.submitnoteTopic').click(function () {
 
-                var item = {
-                    Code: $(modal).find('.noteTopic-Code').val(),
-                    Name: $(modal).find('.noteTopic-Name').val(),
-                    IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
-                }
+    //            var item = {
+    //                Code: $(modal).find('.noteTopic-Code').val(),
+    //                Name: $(modal).find('.noteTopic-Name').val(),
+    //                IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
+    //            }
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'notetopics',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
+    //            $.ajax({
+    //                type: 'POST',
+    //                url: WEB_API_ADDRESS + 'notetopics',
+    //                data: item,
+    //                contentType: 'application/x-www-form-urlencoded',
+    //                crossDomain: true,
+    //                success: function () {
 
-                        DisplaySuccessMessage('success', 'Note Topic saved successfully.');
+    //                    DisplaySuccessMessage('success', 'Note Topic saved successfully.');
 
-                        CloseModal(modal);
+    //                    CloseModal(modal);
 
-                        LoadNoteTopicSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
+    //                    LoadNoteTopicSettingsGrid();
+    //                },
+    //                error: function (xhr, status, err) {
+    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+    //                }
+    //            });
+    //        });
 
-        })
-        .appendTo($(header));
+    //    })
+    //    .appendTo($(header));
     $(noteTopics).appendTo($(accordion));
 
     LoadNoteTopicSettingsGrid();
@@ -485,7 +496,11 @@ function LoadNoteCodeSettingsGrid() {
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
+
+    //LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
+    //          250, true, false, false, null);
+    //LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
+    LoadGrid('.')
 
 }
 
