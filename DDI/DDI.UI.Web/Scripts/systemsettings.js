@@ -3108,8 +3108,9 @@ function DisplayRegionLevels(container) {
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
-
+                
                 $.map(data.Data, function (level) {
+                    
                     var li = $('<li>').attr('id', level.Id).click(function () {
                         
                         if ($('.parentregions').length) {
@@ -3133,6 +3134,19 @@ function DisplayRegionLevels(container) {
                             DisplayRegions(level.Level, null);
                         }
                     });
+
+                    $('<a>').attr('href', '#').addClass('deleteregionlevellink').click(function (e) {
+                            e.preventDefault();
+                        
+                            ConfirmModal('Are you sure you want to delete this Region Level?', function () {
+                          
+                            DeleteRegionLevel(level.Id);
+
+                        }, function () {
+                           
+                        });
+
+                    }).appendTo($(li));
 
                     $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
                         e.preventDefault();
@@ -3272,7 +3286,6 @@ function DisplayRegionLevels(container) {
 }
 
 function DisplayRegions(level, parentid) {
-
     $('.currentlevel').val(level);
 
     var route = 'regionlevels/' + level + '/regions/';
@@ -3289,7 +3302,6 @@ function DisplayRegions(level, parentid) {
     ];
 
     LoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
-
         // Add the new link...
         var link = $('<a>')
             .attr('href', '#')
@@ -3419,7 +3431,6 @@ function DeleteRegion(id) {
     $.ajax({
         method: 'DELETE',
         url: WEB_API_ADDRESS + 'regions/' + id,
-        data: item,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         success: function () {
@@ -3430,6 +3441,27 @@ function DeleteRegion(id) {
 
             DisplayRegions($('.currentlevel').val(), $('.parentregions').val());
 
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+function DeleteRegionLevel(id) {
+
+    var currentLevel = $('.currentlevel').val();
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regionlevels/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            DisplaySuccessMessage('Success', 'Region Level deleted successfully.');
+
+            CloseModal(modal);
+
+            LoadRegionsSectionSettings();
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -3448,18 +3480,15 @@ function LoadRegionLevel(id) {
         crossDomain: true,
         success: function (data) {
             if (data && data.Data && data.IsSuccessful) {
-
                 $(modal).find('.rl-Level').val(data.Data.Level);
                 $(modal).find('.rl-Label').val(data.Data.Label);
                 $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
                 $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
                 $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
-
             }
-
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -3488,7 +3517,7 @@ function LoadRegion(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -3549,7 +3578,7 @@ function LoadRelationshipSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -3615,7 +3644,7 @@ function LoadRelationshipSectionSettings() {
 
                     },
                     error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                     }
                 });
 
@@ -3727,7 +3756,7 @@ function EditRelationshipCategory(id) {
 
             },
             error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
         });
 
@@ -3750,7 +3779,7 @@ function DeleteRelationshipCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     });
