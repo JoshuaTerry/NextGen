@@ -21,6 +21,7 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(PriorAccountId))]
         public Account PriorAccount { get; set; }
 
+        // JLT - Percentage of What?
         [DecimalPrecision(5, 2)]
         public decimal Percentage { get; set; }
 

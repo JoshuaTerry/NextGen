@@ -1,17 +1,16 @@
-﻿using System;
+﻿using DDI.EFAudit.Helpers;
+using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
-using DDI.EFAudit.Helpers;
-using DDI.Shared.Models.Client.Audit;
-using DDI.EFAudit.Translation.Serializers;
-using System.Data.Entity;
-using DDI.Shared.Models;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.EFAudit.Logging
 {
@@ -94,7 +93,7 @@ namespace DDI.EFAudit.Logging
             result.ChangeSet = set;
             set.Add(result);
 
-            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer, entity);
+            deferredObjectChange = new DeferredObjectChange<TPrincipal>(result, deferredReference, _serializer, entity, _dbContext);
             _deferredObjectChanges.Add(entity, deferredObjectChange);
 
             return deferredObjectChange;
@@ -111,7 +110,10 @@ namespace DDI.EFAudit.Logging
 
             // Deletes for Complex entities will not have the propertyName in the OriginalValues
             if (entry.State != EntityState.Added && entry.State != EntityState.Deleted)
+            {
                 change.OriginalValue = Convert.ToString(entry.OriginalValues[propertyName]);
+                change.OriginalDisplayName = change.OriginalValue;
+            }
 
             return change;
         }

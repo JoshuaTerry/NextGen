@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using DDI.Business;
+﻿using DDI.Business;
 using DDI.Business.Helpers;
 using DDI.Data;
+using DDI.Logger;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
@@ -13,9 +9,12 @@ using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using DDI.Logger;
-using WebGrease.Css.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -124,9 +123,9 @@ namespace DDI.Services
             {
                 entity.CreatedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
             }
-            if (entity != null && entity.LastModifiedOn.HasTime() && entity.CreatedOn.Value.Kind == DateTimeKind.Unspecified)
+            if (entity != null && entity.LastModifiedOn.HasTime() && entity.LastModifiedOn.Value.Kind == DateTimeKind.Unspecified)
             {
-                entity.LastModifiedOn = DateTime.SpecifyKind(entity.CreatedOn.Value, DateTimeKind.Utc);
+                entity.LastModifiedOn = DateTime.SpecifyKind(entity.LastModifiedOn.Value, DateTimeKind.Utc);
             }
         }
 

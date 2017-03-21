@@ -15,7 +15,10 @@ namespace DDI.Shared.Models.Client.GL
     public class PeriodAmountList
     {
         private const int MAX_PERIODS = 14;
-
+        // JLT - I understand now that these are ending balances for a period
+        // When we look these up for some previous year, wouldn't we also need 
+        // to cross reference the periods that were assigned to that year as its
+        // possible that they have changed since then??
         [DecimalPrecision(14, 2)]
         public decimal Amount01 { get; set; }
         [DecimalPrecision(14, 2)]
@@ -44,6 +47,17 @@ namespace DDI.Shared.Models.Client.GL
         public decimal Amount13 { get; set; }
         [DecimalPrecision(14, 2)]
         public decimal Amount14 { get; set; }
+
+        // JLT - I'm not sure I understand what all this is for or how it fits into 
+        // EF, but it looks like the following is to establish an Indexer?  
+        // If thats the case can we just do the following?
+
+        //private decimal[] amounts = new decimal[14];
+        //public decimal this[int index]
+        //{
+        //    get { return amounts[index]; }
+        //    set { amounts[index] = value; }
+        //}
 
         [NotMapped]
         private IEnumerable<decimal> Enumerable

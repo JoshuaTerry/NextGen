@@ -1,8 +1,7 @@
 namespace DDI.Data.Migrations.Client
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class IsActive : DbMigration
     {
         public override void Up()

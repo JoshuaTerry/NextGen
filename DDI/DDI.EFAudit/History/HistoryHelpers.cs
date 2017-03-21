@@ -1,7 +1,5 @@
 ﻿using DDI.EFAudit.Exceptions;
 using System;
-using System.Linq;
-using System.Reflection;
 
 namespace DDI.EFAudit.History
 {

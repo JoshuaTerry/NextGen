@@ -6,11 +6,6 @@ using System.Data.Entity.Validation;
 using System.Threading;
 using System.Threading.Tasks;
 using DDI.Data.Conventions;
-using DDI.EFAudit;
-using DDI.EFAudit.Contexts;
-using DDI.EFAudit.Filter;
-using DDI.EFAudit.History;
-using DDI.EFAudit.Logging;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Audit;
@@ -18,6 +13,13 @@ using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Client.Security;
+using System.Threading;
+using System.Threading.Tasks;
+using DDI.EFAudit;
+using DDI.EFAudit.Logging;
+using DDI.EFAudit.Contexts;
+using DDI.EFAudit.History;
+using DDI.EFAudit.Filter;
 
 namespace DDI.Data
 {

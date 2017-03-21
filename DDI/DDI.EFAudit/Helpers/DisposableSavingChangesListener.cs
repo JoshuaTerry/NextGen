@@ -7,7 +7,7 @@ namespace DDI.EFAudit.Helpers
     /// <summary>
     /// A disposable event listener for the ObjectContext.SavingChanges event
     /// </summary>
-    
+
     public class DisposableSavingChangesListener : IDisposable
     {
         private readonly ObjectContext context;

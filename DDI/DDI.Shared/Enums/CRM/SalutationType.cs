@@ -1,7 +1,7 @@
 ﻿
 namespace DDI.Shared.Enums.CRM
 {
-	public enum SalutationType
+    public enum SalutationType
 	{
 		Default = 0,
 		Formal = 1,

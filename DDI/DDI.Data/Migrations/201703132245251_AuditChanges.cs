@@ -1,8 +1,7 @@
 namespace DDI.Data.Migrations.Client
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class AuditChanges : DbMigration
     {
         public override void Up()

@@ -1,5 +1,4 @@
-﻿using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.Security;
+﻿using DDI.Shared.Models.Client.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

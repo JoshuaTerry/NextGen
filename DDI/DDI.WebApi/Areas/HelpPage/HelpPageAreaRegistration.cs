@@ -1,6 +1,6 @@
+using DDI.WebApi.Areas.HelpPage.App_Start;
 using System.Web.Http;
 using System.Web.Mvc;
-using DDI.WebApi.Areas.HelpPage.App_Start;
 
 namespace DDI.WebApi.Areas.HelpPage
 {

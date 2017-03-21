@@ -1,6 +1,4 @@
-﻿using DDI.Shared.Models.Client.Audit;
-
-namespace DDI.EFAudit
+﻿namespace DDI.EFAudit
 {
     public interface ISaveResult<TChangeSet>
     { 

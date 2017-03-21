@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EntityFramework.MappingAPI.Extensions;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using EntityFramework.MappingAPI.Extensions;
 
 
 public static class ContextExtensions

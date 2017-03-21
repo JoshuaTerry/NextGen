@@ -1,5 +1,4 @@
-﻿using System;
-using DDI.WebApi.Models;
+﻿using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -7,6 +6,7 @@ using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using System;
 
 namespace DDI.WebApi
 {

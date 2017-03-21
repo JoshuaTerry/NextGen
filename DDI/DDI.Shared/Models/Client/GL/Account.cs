@@ -22,14 +22,20 @@ namespace DDI.Shared.Models.Client.GL
         [MaxLength(255)]
         public string Description { get; set; }
 
+        // JLT - What happens when you Deactivate an Account?
         public bool IsActive { get; set; } 
 
         [DecimalPrecision(14, 2)]
         public decimal BeginningBalance { get; set; }
-
+        // JLT - Account has this Category but then AccountGroup also 
+        // has a Category and the Account can be associated with 
+        // up to 4 of those.  Should all of these Categories be the
+        // the same or can they vary between Groups or even Account and
+        // Group?
         public AccountCategory Category { get; set; }            
             
-        public bool IsNormallyDebit { get; set; } 
+        // JLT - Do we still need this?
+        //public bool IsNormallyDebit { get; set; } 
 
         [Index]
         public string SortKey { get; set; }
@@ -38,6 +44,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public PeriodAmountList Credit { get; set; }
 
+             
         public Guid? ClosingAccountId { get; set; }
         public Account ClosingAccount { get; set; }
 
@@ -53,14 +60,24 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? Group4Id { get; set; }
         public AccountGroup Group4 { get; set; }
 
-        public ICollection<LedgerAccount> LedgerAccounts { get; set; }
-        public ICollection<AccountBudget> Budgets { get; set; }
+        // JLT - In the previous model the relationship went:
+        // BankAccount -> LedgerAccounts -> Ledger -> Fiscal Year -> LedgerAccountYear -> Account & SubLedgerTrans
+        //
+        // With the properties here I'm not sure I understand what relationships are?
+        // Shouldn't the LedgerAccounts be available through the LedgerAccountYears object?
+        // The LedgerAccountYear object has back to the account as well as a reference
+        // to a LedgerAccount.
+        // How will these relate to the controller exactly?  It almost seems like the LedgerAccountYear
+        // controller, depending on its includes, would do most of the work?
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
+        public ICollection<LedgerAccount> LedgerAccounts { get; set; }
+        public ICollection<AccountBudget> Budgets { get; set; }        
         public ICollection<AccountSegment> AccountSegments { get; set; }
 
         [InverseProperty(nameof(AccountPriorYear.PriorAccount))]
         public ICollection<AccountPriorYear> PriorYearAccounts { get; set; }
 
+        // JLT - Why are the Next Year Accounts of type AccountPriorYear?
         [InverseProperty(nameof(AccountPriorYear.Account))]
         public ICollection<AccountPriorYear> NextYearAccounts { get; set; }
 

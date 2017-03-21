@@ -1,7 +1,7 @@
 ﻿
 namespace DDI.Shared.Enums.Core
 {
-	public enum DateType
+    public enum DateType
 	{
 		MonthDayYear = 0,
 		MonthYear = 1,

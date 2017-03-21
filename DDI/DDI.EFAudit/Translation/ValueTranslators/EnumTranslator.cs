@@ -1,6 +1,6 @@
-﻿using System;
-using DDI.EFAudit.Translation.Binders;
+﻿using DDI.EFAudit.Translation.Binders;
 using DDI.EFAudit.Translation.Serializers;
+using System;
 
 namespace DDI.EFAudit.Translation.ValueTranslators
 {
