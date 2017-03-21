@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DDI.EFAudit.Contexts;
+using DDI.Shared.Attributes.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
-using DDI.EFAudit.Contexts;
-using DDI.Shared.Attributes.Logging;
 
 namespace DDI.EFAudit.Filter
-{ 
+{
     public abstract class AttributeBasedLoggingFilter : ILoggingFilter
     {
         private FilterAttributeCache cache;

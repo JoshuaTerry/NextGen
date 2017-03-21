@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DDI.Shared.Extensions;
+using LinqKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using LinqKit;
-using DDI.Shared.Extensions;
 
 namespace DDI.Services
 {

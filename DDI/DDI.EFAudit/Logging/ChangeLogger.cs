@@ -1,4 +1,10 @@
-﻿using System;
+﻿using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Filter;
+using DDI.EFAudit.Logging.ValuePairs;
+using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core;
@@ -6,12 +12,6 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
-using DDI.EFAudit.Contexts;
-using DDI.EFAudit.Filter;
-using DDI.EFAudit.Logging.ValuePairs;
-using DDI.EFAudit.Translation.Serializers;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.Logging
 {

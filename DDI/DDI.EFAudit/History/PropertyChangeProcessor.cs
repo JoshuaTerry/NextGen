@@ -1,7 +1,7 @@
 ﻿using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Helpers;
-using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Translation.Binders;
+using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects.DataClasses;

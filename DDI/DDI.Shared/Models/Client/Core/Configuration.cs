@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDI.Shared.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Enums;
-using DDI.Shared.Models;
 
 namespace DDI.Shared.Models.Client.Core
 {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using DDI.Data;
+﻿using DDI.Data;
+using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics.CP;
-using DDI.Logger;
+using System.Text.RegularExpressions;
 
 namespace DDI.Business.CP
 {

@@ -1,5 +1,5 @@
-﻿using System;
-using DDI.EFAudit.Translation.ValueTranslators;
+﻿using DDI.EFAudit.Translation.ValueTranslators;
+using System;
 
 namespace DDI.EFAudit.Translation.Binders
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using DDI.Shared;
-using System;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
-using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 
 namespace DDI.WebApi.Models
 {

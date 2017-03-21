@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DDI.Shared.Models.Client.Audit;
-using DDI.EFAudit.Translation.Serializers;
+﻿using DDI.EFAudit.Translation.Serializers;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
 using System.Data.Entity;
+using System.Linq;
+using System.Reflection;
 
 namespace DDI.EFAudit.Logging
 {

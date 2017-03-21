@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Statics.CRM
+﻿namespace DDI.Shared.Statics.CRM
 {
     /// <summary>
     /// Address formatting macros, used in Country.AddressFormat

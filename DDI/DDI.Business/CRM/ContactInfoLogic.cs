@@ -1,16 +1,12 @@
-﻿
-using System.Collections.Generic;
+﻿using DDI.Data;
+using DDI.Shared;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Common;
+using DDI.Shared.Statics.CRM;
+using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
-using System;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Helpers;
-using DDI.Shared.Statics.CRM;
 namespace DDI.Business.CRM
 {
     public class ContactInfoLogic : EntityLogicBase<ContactInfo>

@@ -2,18 +2,17 @@
 using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Filter;
 using DDI.EFAudit.Logging;
-using DDI.Shared.Models.Client.Audit;
 using DDI.EFAudit.Transactions;
-using System;
-using System.Data.Entity.Core.Objects;
-using System.Threading;
-using System.Transactions;
 using DDI.EFAudit.Translation;
 using DDI.EFAudit.Translation.Serializers;
-using DDI.Shared.Caching;
 using DDI.Logger;
 using DDI.Shared;
+using DDI.Shared.Caching;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Transactions;
 
 namespace DDI.EFAudit
 {

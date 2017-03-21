@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DDI.EFAudit.Translation.Binders;
+using System;
 using System.Linq;
-using DDI.EFAudit.Translation.Binders;
 
 namespace DDI.EFAudit.Translation.ValueTranslators
 {

@@ -1,10 +1,4 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.Core;
 using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
@@ -13,6 +7,9 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DDI.Business.CRM
 {

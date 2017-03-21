@@ -257,19 +257,9 @@
                 <div class="tagselect consttype-tagselect"></div>
             </div>
 
-            <div class="fieldblock">
-                <label></label>
-            </div>
-            <div class="fieldblock">
-                <label></label>
-            </div>
-            <div class="fieldblock">
-                <label></label>
-            </div>
-
             <div class="modalbuttons">
                 <input type="button" class="submitconsttype" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="canceltypemodal">Cancel</a>
             </div>
 
 

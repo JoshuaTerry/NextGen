@@ -1,20 +1,15 @@
-using System;
+using DDI.Data.Helpers;
+using DDI.Logger;
 using DDI.Shared;
-using System.Collections;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Models;
-using DDI.Logger;
-using DDI.Shared.Helpers;
-using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Data.Helpers;
 
 namespace DDI.Data
 {

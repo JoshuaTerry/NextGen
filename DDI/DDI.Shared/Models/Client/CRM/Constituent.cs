@@ -1,11 +1,10 @@
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {

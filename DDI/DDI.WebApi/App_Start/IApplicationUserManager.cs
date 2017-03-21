@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using DDI.Shared.Models.Client.Security;
+using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DDI.WebApi.Models;
-using Microsoft.AspNet.Identity;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi
 {

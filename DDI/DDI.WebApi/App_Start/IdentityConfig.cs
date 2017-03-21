@@ -1,10 +1,6 @@
-﻿using DDI.Services;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.Security;
+﻿using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models;
-using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;

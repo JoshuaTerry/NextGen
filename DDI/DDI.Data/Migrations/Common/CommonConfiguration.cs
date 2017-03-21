@@ -1,10 +1,8 @@
-using System;
 using System.Data.Entity.Migrations;
-using System.Linq;
 
 namespace DDI.Data.Migrations.Common
 {
-	internal sealed class CommonConfiguration : DbMigrationsConfiguration<CommonContext>
+    internal sealed class CommonConfiguration : DbMigrationsConfiguration<CommonContext>
 	{
         /*
          * Commands
