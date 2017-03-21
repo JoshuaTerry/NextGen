@@ -161,25 +161,19 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 
 /* DATAGRID FUNCTIONALITY */
-
-function LoadGrid(container, gridClass, columns, route, selected, modalClass, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
+function LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0) {
-        container = '.' + containr;
+        container = '.' + container;
     }
 
-    var datagrid = $('<div>').addClass(grid);
-
-    if (typeof (showFilter) == 'undefined' || showFilter == null) {
-        showFilter = false; // Hide the filter by default
-    }
-
-    if (typeof (showGroup) == 'undefined' || showGroup == null) {
-        showGroup = false; // Hide the group by default
-    }
-
-    if (newModalClass) {
-        // Add link for new modal
+    var refreshGrid = function () {
+        LoadGridData(container, gridClass, columns, route, selected, showFilter, showGroup, function () {
+            if (newModalClass) {
+                // Add link for new modal
+                NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid)
+            }
+        });
     }
 
     if (editModalClass) {
@@ -195,7 +189,7 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
                         e.preventDefault();
 
                         var id = $(this).parent().parent().find('td:not(:empty):first').text();
-                        EditEntity(route, prefix, id, editModal, modalWidth);
+                        EditEntity(route, prefix, id, editModalClass, modalWidth, refreshGrid);
                     })
                     .appendTo(container);
             }
@@ -217,7 +211,7 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
                         var id = $(this).parent().parent().find('td:not(:empty):first').text();
                         // ConfirmModal(message, yes, no)
                         ConfirmModal('Are you sure you want to delete this item?', function () {
-                            DeleteEntity(route, id);
+                            DeleteEntity(route, id, refreshGrid);
                         }, null);
                     })
                     .appendTo(container);
@@ -225,44 +219,71 @@ function LoadGrid(container, gridClass, columns, route, selected, modalClass, pr
         });
     }
 
-    $(datagrid).dxDataGrid({
-        dataSource: actualData,
-        columns: columns,
-        paging: {
-            pageSize: 25
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: showGroup,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: showFilter,
-            showOperationChooser: false
-        },
-        selection: {
-            mode: 'single',
-            allowSelectAll: false
-        },
-        onRowClick: function (info) {
-
-            if (selected) {
-                selected(info);
-            }
-
+    LoadGridData(container, gridClass, columns, route, selected, showFilter, showGroup, function () {
+        if (newModalClass) {
+            // Add link for new modal
+            NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid)
         }
     });
 
-    $(datagrid).appendTo($(container));
-
 }
 
-function RefreshGrid() {
+function LoadGridData(container, grid, columns, route, selected, showFilter, showGroup, onComplete) {
+
+    $('.' + grid).remove();
+
+    var datagrid = $('<div>').addClass(grid);
+
+    if (typeof (showFilter) == 'undefined' || showFilter == null) {
+        showFilter = false; // Hide the filter by default
+    }
+
+    if (typeof (showGroup) == 'undefined' || showGroup == null) {
+        showGroup = false; // Hide the group by default
+    }
+
+    MakeServiceCall('GET', route, null, function (data) {
+
+        $(datagrid).dxDataGrid({
+            dataSource: data.Data,
+            columns: columns,
+            paging: {
+                pageSize: 25
+            },
+            pager: {
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                showInfo: true,
+                allowedPageSizes: [15, 25, 50, 100]
+            },
+            groupPanel: {
+                visible: showGroup,
+                allowColumnDragging: true
+            },
+            filterRow: {
+                visible: showFilter,
+                showOperationChooser: false
+            },
+            selection: {
+                mode: 'single',
+                allowSelectAll: false
+            },
+            onRowClick: function (info) {
+
+                if (selected) {
+                    selected(info);
+                }
+
+            }
+        });
+
+        $(container).append($(datagrid));
+
+        if (onComplete) {
+            onComplete();
+        }
+
+    }, null);
 
 }
 
@@ -332,7 +353,7 @@ function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, d
     $(datagrid).appendTo($(container));
 }
 
-function LoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
+function LoadGrid2(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;
@@ -442,51 +463,63 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     $(container).append($(datagrid));
 }
 
-function NewModalLink() {
+function NewModalLink(container, route, prefix, modalClass, modalWidth, refreshGrid) {
 
+    $('.newmodallink').remove();
 
+    var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .text('New Item')
+            .click(function (e) {
+                e.preventDefault();
+
+                NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid);
+
+            });
+    $(container).prepend($(link));
 
 }
 
-function NewEntityModal(route, prefix, newModalLink, modalClass, modalWidth) {
+function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
 
-    $(newModalLink).click(function (e) {
+    modal = $(modalClass).dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: modalWidth,
+        resizable: false
+    });
 
+    $(modal).find('.cancelmodal').click(function (e) {
         e.preventDefault();
+        CloseModal(modal);
+    });
 
-        var modal = $(modalClass).dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: modalWidth,
-            resizable: false
-        });
+    $(modal).find('.savebutton').unbind('click');
 
-        $(modal).find('.cancelmodal').click(function (e) {
-            e.preventDefault();
+    $(modal).find('.savebutton').click(function () {
+
+        var item = GetModalFieldsToSave(prefix);
+
+        MakeServiceCall('POST', route, item, function () {
+            DisplaySuccessMessage("Success", "Save successful.");
+
             CloseModal(modal);
-        });
 
-        $(modal).find('.savebutton').unbind('click');
+            currentEntity = null;
 
-        $(modal).find('.savebutton').click(function () {
+            if (refreshGrid) {
+                refreshGrid();
+            }
+        }, null);
 
-            var item = GetModalFieldsToSave(prefix);
-
-            MakeServiceCall('POST', route, item, function () {
-                DisplaySuccessMessage("Success", "Save successful.");
-
-                CloseModal(modal);
-                RefreshGrid();
-            }, null);
-
-        });
     });
 
 }
 
-function EditEntity(route, prefix, id, modalClass, modalWidth) {
+function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
 
-    var modal = $(modalClass).dialog({
+    modal = $(modalClass).dialog({
         closeOnEscape: false,
         modal: true,
         width: modalWidth,
@@ -513,20 +546,27 @@ function EditEntity(route, prefix, id, modalClass, modalWidth) {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
-            RefreshGrid();
+
+            currentEntity = null;
+
+            if (refreshGrid) {
+                refreshGrid();
+            }
         }, null);
 
     });
 
 }
 
-function DeleteEntity(route, id) {
+function DeleteEntity(route, id, refreshGrid) {
 
     MakeServiceCall('DELETE', route + '/' + id, null, function () {
 
         DisplaySuccessMessage('Success', 'Delete successful.');
-        RefreshGrid();
-
+        
+        if (refreshGrid) {
+            refreshGrid();
+        }
     }, null);
 
 }
@@ -539,7 +579,7 @@ function GetModalFieldsToSave(prefix) {
 
         var property = $(this).attr('class').split(' ');
 
-        if (property[0].indexOf(prefix) > 0) {
+        if (property[0].indexOf(prefix) >= 0) {
             var propertyName = property[0].replace(prefix, '');
             var value = '';
 
@@ -550,16 +590,24 @@ function GetModalFieldsToSave(prefix) {
                 value = $(this).val();
             }
 
-            for (var key in currentEntity) {
-                if (key == propertyName && currentEntity[key] != value) {
-                    if (value == 'null') {
-                        p.push('"' + propertyName + '": ' + null);
-                    }
-                    else {
-                        p.push('"' + propertyName + '": "' + value + '"');
+            if (currentEntity) { // null if new
+                for (var key in currentEntity) {
+                    if (key == propertyName && currentEntity[key] != value) {
+                        if (value == 'null') {
+                            p.push('"' + propertyName + '": ' + null);
+                        }
+                        else {
+                            p.push('"' + propertyName + '": "' + value + '"');
+                        }
                     }
                 }
             }
+            else {
+                if (propertyName != 'id') {
+                    p.push('"' + propertyName + '": "' + value + '"');
+                }
+            }
+            
         }
         
     });
@@ -568,21 +616,27 @@ function GetModalFieldsToSave(prefix) {
 
         var property = $(this).attr('class').split(' ');
 
-        if (property[0].indexOf(prefix) > 0) {
+        if (property[0].indexOf(prefix) >= 0) {
 
             var propertyName = property[0].replace(prefix, '');
             var value = $(this).val();
 
-            for (var key in currentEntity) {
-                if (key == propertyName && currentEntity[key] != value) {
-                    if (value == 'null') {
-                        p.push('"' + propertyName + '": ' + null);
-                    }
-                    else {
-                        p.push('"' + propertyName + '": "' + value + '"');
+            if (currentEntity) { // null if new
+                for (var key in currentEntity) {
+                    if (key == propertyName && currentEntity[key] != value) {
+                        if (value == 'null') {
+                            p.push('"' + propertyName + '": ' + null);
+                        }
+                        else {
+                            p.push('"' + propertyName + '": "' + value + '"');
+                        }
                     }
                 }
             }
+            else {
+                p.push('"' + propertyName + '": "' + value + '"');
+            }
+            
 
         }
     });
@@ -595,7 +649,13 @@ function GetModalFieldsToSave(prefix) {
 
 function LoadEntity(route, id, prefix) {
 
+    if ($.type(prefix) === "string" && prefix.indexOf('.') != 0) {
+        prefix = '.' + prefix;
+    }
+
     MakeServiceCall('GET', route + '/' + id, item, function (data) {
+
+        currentEntity = data.Data;
 
         for (var property in data.Data) {
             $(prefix + property).val(data.Data[property]);

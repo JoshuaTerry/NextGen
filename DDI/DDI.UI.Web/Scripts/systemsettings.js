@@ -2568,6 +2568,22 @@ function LoadPersonalSectionSettings() {
 /* PREFIX SYSTEM SETTINGS */
 function LoadPrefixSectionSettings() {
 
+    var prefixcolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Description' },
+       { dataField: 'Salutation', caption: 'Salutation Prefix' },
+       { dataField: 'LabelPrefix', caption: 'Label Prefix' },
+       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
+    ];
+    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, 
+    //          modalWidth, showDelete, showFilter, showGroup, onComplete)
+    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
+              250, true, false, false, null);
+}
+
+function LoadPrefixSectionSettings2() {
+
     var accordion = $('<div>').addClass('accordions');
     var prefix = $('<div>').addClass('prefixescontainer');
 
