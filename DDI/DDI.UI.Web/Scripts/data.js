@@ -490,6 +490,16 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
         resizable: false
     });
 
+    $(modal).find('select').each(function () {
+
+        var classes = $(this).attr('class').split(' ');
+        if (classes.length > 1) {
+            var route = classes[1];
+
+            PopulateDropDown($(this), route, '', '', null, null);
+        }
+    });
+
     $(modal).find('.cancelmodal').click(function (e) {
         e.preventDefault();
         CloseModal(modal);
@@ -658,7 +668,22 @@ function LoadEntity(route, id, prefix) {
         currentEntity = data.Data;
 
         for (var property in data.Data) {
-            $(prefix + property).val(data.Data[property]);
+
+            if ($(prefix + property).is('select')) {
+
+                var classes = $(prefix + property).attr('class').split(' ');
+
+                if (classes.length > 1) {
+                    var route = classes[1];
+
+                    PopulateDropDown($(this), route, '', '', data.Data[property], null);
+                }
+
+            }
+            else {
+                $(prefix + property).val(data.Data[property]);
+            }
+
         }
 
     }, null);
