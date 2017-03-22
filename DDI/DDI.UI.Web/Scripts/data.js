@@ -161,17 +161,17 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
 
 
 /* DATAGRID FUNCTIONALITY */
-function LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
+function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0) {
         container = '.' + container;
     }
 
     var refreshGrid = function () {
-        LoadGridData(container, gridClass, columns, route, selected, showFilter, showGroup, function () {
+        LoadGridData(container, gridClass, columns, getRoute, selected, showFilter, showGroup, function () {
             if (newModalClass) {
                 // Add link for new modal
-                NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid)
+                NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid)
             }
         });
     }
@@ -189,7 +189,7 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, editMo
                         e.preventDefault();
 
                         var id = $(this).parent().parent().find('td:not(:empty):first').text();
-                        EditEntity(route, prefix, id, editModalClass, modalWidth, refreshGrid);
+                        EditEntity(saveRoute, prefix, id, editModalClass, modalWidth, refreshGrid);
                     })
                     .appendTo(container);
             }
@@ -211,7 +211,7 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, editMo
                         var id = $(this).parent().parent().find('td:not(:empty):first').text();
                         
                         ConfirmModal('Are you sure you want to delete this item?', function () {
-                            DeleteEntity(route, id, refreshGrid);
+                            DeleteEntity(saveRoute, id, refreshGrid);
                         }, null);
                     })
                     .appendTo(container);
@@ -219,10 +219,10 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, editMo
         });
     }
 
-    LoadGridData(container, gridClass, columns, route, selected, showFilter, showGroup, function () {
-        if (newModalClass !== null) {
+    LoadGridData(container, gridClass, columns, getRoute, selected, showFilter, showGroup, function () {
+        if (newModalClass) {
             // Add link for new modal
-            NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid);
+            NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
         }
     });
 
@@ -465,11 +465,14 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
 
 function NewModalLink(container, route, prefix, modalClass, modalWidth, refreshGrid) {
 
-    $('.newmodallink').remove();
+    var modalLinkClass = prefix + 'newmodallink';
+
+    $('.' + modalLinkClass).remove();
 
     var link = $('<a>')
             .attr('href', '#')
             .addClass('newmodallink')
+            .addClass(modalLinkClass)
             .text('New Item')
             .click(function (e) {
                 e.preventDefault();
@@ -487,7 +490,10 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
         closeOnEscape: false,
         modal: true,
         width: modalWidth,
-        resizable: false
+        resizable: false,
+        beforeClose: function (event, ui) {
+            currentEntity = previousEntity;
+        }
     });
 
     $(modal).find('select').each(function () {
@@ -509,14 +515,15 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
 
     $(modal).find('.savebutton').click(function () {
 
+        previousEntity = currentEntity;
+        currentEntity = null;
+
         var item = GetModalFieldsToSave(prefix);
 
         MakeServiceCall('POST', route, item, function () {
             DisplaySuccessMessage("Success", "Save successful.");
 
             CloseModal(modal);
-
-            currentEntity = null;
 
             if (refreshGrid) {
                 refreshGrid();
@@ -533,7 +540,10 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
         closeOnEscape: false,
         modal: true,
         width: modalWidth,
-        resizable: false
+        resizable: false,
+        beforeClose: function (event, ui) {
+            currentEntity = previousEntity;
+        }
     });
     
     LoadEntity(route, id, prefix);
@@ -556,8 +566,6 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
-
-            currentEntity = null;
 
             if (refreshGrid) {
                 refreshGrid();
@@ -665,6 +673,7 @@ function LoadEntity(route, id, prefix) {
 
     MakeServiceCall('GET', route + '/' + id, item, function (data) {
 
+        previousEntity = currentEntity;
         currentEntity = data.Data;
 
         for (var property in data.Data) {

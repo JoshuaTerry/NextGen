@@ -1904,7 +1904,7 @@ function LoadPrefixSectionSettings() {
 
     // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
     // showDelete, showFilter, showGroup, onComplete)
-    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
+    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
               250, true, false, false, null);
 }
 
