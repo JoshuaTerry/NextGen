@@ -118,7 +118,7 @@ namespace DDI.Business.CRM
             var formattedNameFields = GetFormattedNameFields();
 
             List<string> modifiedProperties = null;
-            if (constituent.Id != Guid.Empty)
+            if (_constituentRepo.GetEntityState(constituent) != EntityState.Added)
             {
                 modifiedProperties = _constituentRepo.GetModifiedProperties(constituent);
             }

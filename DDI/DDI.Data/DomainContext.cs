@@ -126,7 +126,7 @@ namespace DDI.Data
             if (entity != null)
             {
                 //Ensure new entities have an ID
-                if (entityEntry.State == EntityState.Added && entity.Id == default(Guid))
+                if (entityEntry.State == System.Data.Entity.EntityState.Added && entity.Id == default(Guid))
                 {
                     entity.AssignPrimaryKey();
                 }  
