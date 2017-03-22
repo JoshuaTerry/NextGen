@@ -220,9 +220,9 @@ function LoadGrid(container, gridClass, columns, route, selected, prefix, editMo
     }
 
     LoadGridData(container, gridClass, columns, route, selected, showFilter, showGroup, function () {
-        if (newModalClass) {
+        if (newModalClass !== null) {
             // Add link for new modal
-            NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid)
+            NewModalLink(container, route, prefix, newModalClass, modalWidth, refreshGrid);
         }
     });
 

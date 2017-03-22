@@ -300,7 +300,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitcstat" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -329,7 +329,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitctype" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -771,7 +771,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitnoteCategory" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -801,7 +801,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitnoteTopic" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

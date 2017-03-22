@@ -313,175 +313,42 @@ function LoadNoteSectionSettings() {
     var noteTopics = $('<div>').addClass('noteTopiccontainer');
 
     var header = $('<h1>').text('Note Code').appendTo($(accordion));
-    //$('<a>').attr('href', '#').addClass('newnoteCodemodallink modallink newbutton')
-    //    .click(function (e) {
-    //        e.preventDefault();
-
-    //        modal = $('.noteCodemodal').dialog({
-    //            closeOnEscape: false,
-    //            modal: true,
-    //            width: 250,
-    //            resizable: false
-    //        });
-
-    //        $('.cancelmodal').click(function (e) {
-    //            e.preventDefault();
-    //            CloseModal(modal);
-    //        });
-
-    //        $('.submitnoteCode').unbind('click');
-
-    //        $('.submitnoteCode').click(function () {
-
-    //            var item = {
-    //                Code: $(modal).find('.noteCode-Code').val(),
-    //                Name: $(modal).find('.noteCode-Name').val(),
-    //                IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
-    //            }
-
-    //            $.ajax({
-    //                type: 'POST',
-    //                url: WEB_API_ADDRESS + 'notecodes',
-    //                data: item,
-    //                contentType: 'application/x-www-form-urlencoded',
-    //                crossDomain: true,
-    //                success: function () {
-
-    //                    DisplaySuccessMessage('success', 'Note Code saved successfully.');
-
-    //                    CloseModal(modal);
-
-    //                    LoadNoteCodeSettingsGrid();
-    //                },
-    //                error: function (xhr, status, err) {
-    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-    //                }
-    //            });
-    //        });
-
-    //    })
-    //    .appendTo($(header));
     $(noteCodes).appendTo($(accordion));
-
-    //LoadNoteCodeSettingsGrid();
-
+    
     var noteCodecolumns = [
         { dataField: 'Id', width: '0px' },
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-
-    //LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
-    //          250, true, false, false, null);
-    //LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
-    LoadGrid('.noteCodecontainer', 'noteCodegrid', noteCodecolumns, 'notecodes', null, 'noteCode-', '.noteCodemodal', '.noteCodemodal', 250, true, false, false, null);
+    LoadGrid('.noteCodecontainer', 'noteCodegrid', noteCodecolumns, 'notecodes', null, 'noteCode-',
+        '.noteCodemodal', '.noteCodemodal', 250, true, false, false, null);
 
 
     header = $('<h1>').text('Note Category').appendTo($(accordion));
-    //$('<a>').attr('href', '#').addClass('newnoteCategorymodallink modallink newbutton')
-    //    .click(function (e) {
-    //        e.preventDefault();
-
-    //        modal = $('.noteCategorymodal').dialog({
-    //            closeOnEscape: false,
-    //            modal: true,
-    //            width: 250,
-    //            resizable: false
-    //        });
-
-    //        $('.cancelmodal').click(function (e) {
-    //            e.preventDefault();
-    //            CloseModal(modal);
-    //        });
-
-    //        $('.submitnoteCategory').unbind('click');
-
-    //        $('.submitnoteCategory').click(function () {
-    //            var item = {
-    //                Label: $(modal).find('.noteCategory-Code').val(),
-    //                Name: $(modal).find('.noteCategory-Name').val(),
-    //                IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
-    //            }
-
-    //            $.ajax({
-    //                type: 'POST',
-    //                url: WEB_API_ADDRESS + 'notecategories',
-    //                data: item,
-    //                contentType: 'application/x-www-form-urlencoded',
-    //                crossDomain: true,
-    //                success: function () {
-
-    //                    DisplaySuccessMessage('success', 'Note Category saved successfully.');
-
-    //                    CloseModal(modal);
-
-    //                    LoadNoteCategorySettingsGrid();
-    //                },
-    //                error: function (xhr, status, err) {
-    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-    //                }
-    //            });
-    //        });
-
-    //    })
-    //    .appendTo($(header));
     $(noteCategories).appendTo($(accordion));
 
-    LoadNoteCategorySettingsGrid();
+    var noteCategorycolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Label', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('.noteCategorycontainer', 'noteCategorygrid', noteCategorycolumns, 'notecategories', null, 'noteCategory-',
+        '.noteCategorymodal', '.noteCategorymodal', 250, true, false, false, null);
+    
 
     header = $('<h1>').text('Topic').appendTo($(accordion));
-    //$('<a>').attr('href', '#').addClass('newnoteTopicmodallink modallink newbutton')
-    //    .click(function (e) {
-    //        e.preventDefault();
-
-    //        modal = $('.noteTopicmodal').dialog({
-    //            closeOnEscape: false,
-    //            modal: true,
-    //            width: 250,
-    //            resizable: false
-    //        });
-
-    //        $('.cancelmodal').click(function (e) {
-    //            e.preventDefault();
-    //            CloseModal(modal);
-    //        });
-
-    //        $('.submitnoteTopic').unbind('click');
-
-    //        $('.submitnoteTopic').click(function () {
-
-    //            var item = {
-    //                Code: $(modal).find('.noteTopic-Code').val(),
-    //                Name: $(modal).find('.noteTopic-Name').val(),
-    //                IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
-    //            }
-
-    //            $.ajax({
-    //                type: 'POST',
-    //                url: WEB_API_ADDRESS + 'notetopics',
-    //                data: item,
-    //                contentType: 'application/x-www-form-urlencoded',
-    //                crossDomain: true,
-    //                success: function () {
-
-    //                    DisplaySuccessMessage('success', 'Note Topic saved successfully.');
-
-    //                    CloseModal(modal);
-
-    //                    LoadNoteTopicSettingsGrid();
-    //                },
-    //                error: function (xhr, status, err) {
-    //                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-    //                }
-    //            });
-    //        });
-
-    //    })
-    //    .appendTo($(header));
     $(noteTopics).appendTo($(accordion));
 
-    LoadNoteTopicSettingsGrid();
+    var noteTopiccolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('.noteTopiccontainer', 'noteTopicgrid', noteTopiccolumns, 'notetopics', null, 'noteTopic-', 
+        '.noteTopicmodal', '.noteTopicmodal', 250, true, false, false, null);
 
     $(accordion).appendTo($('.contentcontainer'));
 
@@ -489,268 +356,8 @@ function LoadNoteSectionSettings() {
 
 }
 
-function LoadNoteCodeSettingsGrid() {
-    var noteCodecolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
 
-    //LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
-    //          250, true, false, false, null);
-    //LoadGrid('noteCodegrid', 'noteCodecontainer', noteCodecolumns, 'notecodes', null, EditNoteCode);
-    LoadGrid('.')
 
-}
-
-function EditNoteCode(id) {
-    LoadNoteCode(id);
-    modal = $('.noteCodemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitnoteCode').unbind('click');
-
-    $('.submitnoteCode').click(function () {
-
-        var item = {
-            Code: $(modal).find('.noteCode-Code').val(),
-            Name: $(modal).find('.noteCode-Name').val(),
-            IsActive: $(modal).find('.noteCode-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'notecodes/' + $(modal).find('.noteCodeId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Note Code saved successfully.');
-
-                CloseModal(modal);
-
-                LoadNoteCodeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadNoteCode(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'notecodes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.noteCodeId').val(data.Data.Id);
-                $(modal).find('.noteCode-Code').val(data.Data.Code);
-                $(modal).find('.noteCode-Name').val(data.Data.Name);
-                $(modal).find('.noteCode-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-function LoadNoteCategorySettingsGrid() {
-    var noteCategorycolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Label', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-    LoadGrid('noteCategorygrid', 'noteCategorycontainer', noteCategorycolumns, 'notecategories', null, EditNoteCategory);
-
-}
-
-function EditNoteCategory(id) {
-    LoadNoteCategory(id);
-    modal = $('.noteCategorymodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitnoteCategory').unbind('click');
-
-    $('.submitnoteCategory').click(function () {
-        var item = {
-            Label: $(modal).find('.noteCategory-Code').val(),
-            Name: $(modal).find('.noteCategory-Name').val(),
-            IsActive: $(modal).find('.noteCategory-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'notecategories/' + $(modal).find('.noteCategoryId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Note Category saved successfully.');
-
-                CloseModal(modal);
-
-                LoadNoteCategorySettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadNoteCategory(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'notecategories/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.noteCategoryId').val(data.Data.Id);
-                $(modal).find('.noteCategory-Code').val(data.Data.Label);
-                $(modal).find('.noteCategory-Name').val(data.Data.Name);
-                $(modal).find('.noteCategory-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-function LoadNoteTopicSettingsGrid() {
-    var noteTopiccolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-    LoadGrid('noteTopicgrid', 'noteTopiccontainer', noteTopiccolumns, 'notetopics', null, EditNoteTopic);
-
-}
-
-function EditNoteTopic(id) {
-    LoadNoteTopic(id);
-    modal = $('.noteTopicmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitnoteTopic').unbind('click');
-
-    $('.submitnoteTopic').click(function () {
-
-        var item = {
-            Code: $(modal).find('.noteTopic-Code').val(),
-            Name: $(modal).find('.noteTopic-Name').val(),
-            IsActive: $(modal).find('.noteTopic-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'notetopics/' + $(modal).find('.noteTopicId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Topic saved successfully.');
-
-                CloseModal(modal);
-
-                LoadNoteTopicSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadNoteTopic(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'notetopics/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.noteTopicId').val(data.Data.Id);
-                $(modal).find('.noteTopic-Code').val(data.Data.Code);
-                $(modal).find('.noteTopic-Name').val(data.Data.Name);
-                $(modal).find('.noteTopic-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-/* END NOTE SYSTEM SETTINGS */
 
 function LoadStatusCodesSectionSettings() {
 
@@ -782,108 +389,28 @@ function LoadClergySectionSettings() {
     var types = $('<div>').addClass('clergytypecontainer');
 
     var header = $('<h1>').text('Clergy Status').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newclergystatusmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.clergystatusmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitcstat').unbind('click');
-
-            $('.submitcstat').click(function () {
-                var item = {
-                    Code: $(modal).find('.cstat-Code').val(),
-                    Name: $(modal).find('.cstat-Name').val(),
-                    IsActive: $(modal).find('.cstat-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergystatuses',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Clergy Status saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadClergyStatusSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(status).appendTo($(accordion));
 
-    LoadClergyStatusSettingsGrid();
+    var statuscolumns = [
+              { dataField: 'Id', width: '0px' },
+              { dataField: 'Code', caption: 'Code' },
+              { dataField: 'Name', caption: 'Description' },
+              { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses', null, 'cstat-',
+        '.clergystatusmodal', '.clergystatusmodal', 250, true, false, false, null);
 
     header = $('<h1>').text('Clergy Type').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newclergytypemodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.clergytypemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitctype').unbind('click');
-
-            $('.submitctype').click(function () {
-                var item = {
-                    Code: $(modal).find('.ctype-Code').val(),
-                    Name: $(modal).find('.ctype-Name').val(),
-                    IsActive: $(modal).find('.ctype-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'clergytypes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Clergy Type saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadClergyTypeSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(types).appendTo($(accordion));
 
-    LoadClergyTypeSettingsGrid();
+    var typecolumns = [
+    { dataField: 'Id', width: '0px' },
+    { dataField: 'Code', caption: 'Code' },
+    { dataField: 'Name', caption: 'Description' },
+    { dataField: 'IsActive', caption: 'Active' }
+    ];
+    LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes', null, 'ctype-',
+        '.clergytypemodal', '.clergytypemodal', 250, true, false, false, null);
 
     $(accordion).appendTo($('.contentcontainer'));
 
@@ -891,223 +418,6 @@ function LoadClergySectionSettings() {
 
 }
 
-function LoadClergyStatusSettingsGrid() {
-    var statuscolumns = [
-          { dataField: 'Id', width: '0px' },
-          { dataField: 'Code', caption: 'Code' },
-          { dataField: 'Name', caption: 'Description' },
-          { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
-}
-
-function LoadClergyTypeSettingsGrid() {
-    var typecolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
-    ];
-
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
-}
-
-// CLERGY STATUS SYSTEM SETTINGS
-function EditClergyStatus(id) {
-
-    LoadClergyStatus(id);
-
-    modal = $('.clergystatusmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-        e.preventDefault();
-        CloseModal(modal);
-    })
-
-    $('.submitcstat').unbind('click');
-
-    $('.submitcstat').click(function () {
-
-        var item = {
-            Code: $(modal).find('.cstat-Code').val(),
-            Name: $(modal).find('.cstat-Name').val(),
-            IsActive: $(modal).find('.cstat-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'clergystatuses/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Clergy Status saved successfully.');
-
-                CloseModal(modal);
-
-                LoadClergyStatusSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-    });
-}
-
-function DeleteClergyStatus(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Clergy Status deleted successfully.');
-
-            LoadClergyStatusSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Status.');
-        }
-
-    });
-
-}
-
-function LoadClergyStatus(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergystatuses/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.cstat-Id').val(data.Data.Id);
-                $(modal).find('.cstat-Code').val(data.Data.Code);
-                $(modal).find('.cstat-Name').val(data.Data.Name);
-                $(modal).find('.cstat-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-
-    });
-}
-// END CLERGY STATUS SYSTEM SETTINGS
-
-// CLERGY TYPE SYSTEM SETTINGS
-function EditClergyType(id) {
-
-    LoadClergyType(id);
-
-    modal = $('.clergytypemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-        e.preventDefault();
-        CloseModal(modal);
-    })
-
-    $('.submitctype').unbind('click');
-
-    $('.submitctype').click(function () {
-
-        var item = {
-            Code: $(modal).find('.ctype-Code').val(),
-            Name: $(modal).find('.ctype-Name').val(),
-            IsActive: $(modal).find('.ctype-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'clergytypes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Clergy Type saved successfully.');
-
-                CloseModal(modal);
-
-                LoadClergyTypeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-    });
-}
-
-function DeleteClergyType(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergytypes/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Clergy Type deleted successfully.');
-
-            LoadClergyTypeSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Clergy Type.');
-        }
-
-    });
-
-}
-
-function LoadClergyType(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'clergytypes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.ctype-Id').val(data.Data.Id);
-                $(modal).find('.ctype-Code').val(data.Data.Code);
-                $(modal).find('.ctype-Name').val(data.Data.Name);
-                $(modal).find('.ctype-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-
-    });
-}
-// END CLERGY TYPE SYSTEM SETTINGS
 
 function LoadConstituentTypesSectionSettings() {
 
