@@ -40,7 +40,7 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
 
             //ConstituentStatuses
-            context.ConstituentStatuses.AddOrUpdate(
+            context.CRM_ConstituentStatuses.AddOrUpdate(
                 p => p.Code,
                 new ConstituentStatus { Code = CONSTITUENT_STATUS_ACTIVE, Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
                 new ConstituentStatus { Code = CONSTITUENT_STATUS_INACTIVE, Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
@@ -49,7 +49,7 @@ namespace DDI.Conversion.CRM
                 );
 
             //Constituent Types
-            context.ConstituentTypes.AddOrUpdate(
+            context.CRM_ConstituentTypes.AddOrUpdate(
                 p => p.Code,
                 new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{PREFIX}{FIRST}{MI}{LAST}{SUFFIX}", SalutationFormal = "Dear {PREFIX}{LAST}", SalutationInformal = "Dear {NICKNAME}" },
                 new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
@@ -58,7 +58,7 @@ namespace DDI.Conversion.CRM
             );
 
             //Genders
-            context.Genders.AddOrUpdate(
+            context.CRM_Genders.AddOrUpdate(
                 p => p.Code,
                 new Gender { Code = "M", IsMasculine = true, Name = "Male", IsActive = true },
                 new Gender { Code = "F", IsMasculine = false, Name = "Female", IsActive = true }
@@ -81,7 +81,7 @@ namespace DDI.Conversion.CRM
 
         private void AddContactCategory(DomainContext context, string code, string description, string title, string infoLabel)
         {
-            context.ContactCategories.AddOrUpdate(p => p.Code,
+            context.CRM_ContactCategories.AddOrUpdate(p => p.Code,
                 new ContactCategory()
                 {
                     Code = code,
@@ -94,7 +94,7 @@ namespace DDI.Conversion.CRM
 
         private void AddRelationshipCategory(DomainContext context, string code, string description, bool isShownInQuickView)
         {
-            context.RelationshipCategories.AddOrUpdate(p => p.Code,
+            context.CRM_RelationshipCategories.AddOrUpdate(p => p.Code,
                 new RelationshipCategory()
                 {
                     Code = code,

@@ -6,10 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_AccountGroup")]
     public class AccountGroup : AuditableEntityBase
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
@@ -19,6 +19,7 @@ namespace DDI.Shared.Models.Client.GL
         public int? Sequence { get; set; }
 
         public Guid? FiscalYearId { get; set; }
+        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
         public AccountCategory Category { get; set; }

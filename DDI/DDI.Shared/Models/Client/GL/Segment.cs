@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_Segment")]
     public class Segment : AuditableEntityBase
     {
         [Key]
@@ -15,9 +16,11 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid FiscalYearId { get; set; }
+        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
         public Guid SegmentLevelId { get; set; }
+        [ForeignKey(nameof(SegmentLevelId))]
         public SegmentLevel SegmentLevel { get; set; }
 
         public int Level { get; set; }
@@ -29,9 +32,8 @@ namespace DDI.Shared.Models.Client.GL
         public string Description { get; set; } 
 
         public Guid? ParentSegmentId { get; set; }
+        [ForeignKey(nameof(ParentSegmentId))]
         public Segment ParentSegment { get; set; }         
-
-        public string LegacyKey { get; set; }
 
         [InverseProperty(nameof(ParentSegment))]
         public ICollection<Segment> ChildSegments { get; set; }

@@ -126,7 +126,7 @@
     <Compile Include="Enums\GL\SegmentFormat.cs" />
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
-    <Compile Include="Enums\GL\TransactionTransferCategory.cs" />
+    <Compile Include="Enums\GL\TransactionXferCategory.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
@@ -156,6 +156,7 @@
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
+    <Compile Include="Models\Client\GL\AccountClose.cs" />
     <Compile Include="Models\Client\GL\Account.cs" />
     <Compile Include="Models\Client\GL\AccountPriorYear.cs" />
     <Compile Include="Models\Client\GL\AccountGroup.cs" />
@@ -164,8 +165,9 @@
     <Compile Include="Models\Client\GL\BusinessUnit.cs" />
     <Compile Include="Models\Client\GL\FiscalPeriod.cs" />
     <Compile Include="Models\Client\GL\FiscalYear.cs" />
+    <Compile Include="Models\Client\GL\BusinessUnitFromTo.cs" />
     <Compile Include="Models\Client\GL\Fund.cs" />
-    <Compile Include="Models\Client\GL\FundTransfer.cs" />
+    <Compile Include="Models\Client\GL\FundFromTo.cs" />
     <Compile Include="Models\Client\GL\ITransaction.cs" />
     <Compile Include="Models\Client\GL\Ledger.cs" />
     <Compile Include="Models\Client\GL\LedgerAccount.cs" />
@@ -173,11 +175,10 @@
     <Compile Include="Models\Client\GL\LedgerAccountYear.cs" />
     <Compile Include="Models\Client\GL\PeriodAmountList.cs" />
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
-    <Compile Include="Models\Client\GL\Reconciliation.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
     <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />
-    <Compile Include="Models\Client\GL\SubLedgerTransfer.cs" />
+    <Compile Include="Models\Client\GL\SubLedgerXref.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />

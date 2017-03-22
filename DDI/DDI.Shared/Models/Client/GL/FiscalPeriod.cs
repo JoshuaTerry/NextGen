@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_FiscalPeriod")]
     public class FiscalPeriod : AuditableEntityBase
     {
         [Key]
@@ -24,6 +25,7 @@ namespace DDI.Shared.Models.Client.GL
         public FiscalPeriodStatus Status { get; set; }
 
         public Guid? FiscalYearId { get; set; }
+        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear {get; set;}
 
     }

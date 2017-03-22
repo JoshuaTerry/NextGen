@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_FiscalYear")]
     public class FiscalYear : AuditableEntityBase
     {
         [Key]
@@ -13,6 +14,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? LedgerId { get; set; }
+        [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 
         [MaxLength(255)]

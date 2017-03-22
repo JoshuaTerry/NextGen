@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_Ledger")]
     public class Ledger : AuditableEntityBase
     {
         [Key]
@@ -13,6 +14,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? DefaultFiscalYearId { get; set; }
+        [ForeignKey(nameof(DefaultFiscalYearId))]
         public FiscalYear DefaultFiscalYear { get; set; }
 
         public bool IsParent { get; set; }         
@@ -46,6 +48,7 @@ namespace DDI.Shared.Models.Client.GL
         public bool PostAutomatically { get; set; }
 
         public Guid? OrgLedgerId { get; set; }
+        [ForeignKey(nameof(OrgLedgerId))]
         public Ledger OrgLedger { get; set; } 
 
         public PriorPeriodPostingMode PriorPeriodPostingMode { get; set; }

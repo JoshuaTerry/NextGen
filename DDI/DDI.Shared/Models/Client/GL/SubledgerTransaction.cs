@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    public class SubledgerTransaction : AuditableEntityBase
+    [Table("GL_SubledgerTransaction")]
+    public class SubledgerTransaction : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -16,34 +18,36 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
-        public int LegacyKey { get; set; }
-         
         public Int64 TransactionNumber { get; set; }
 
         public int LineNumber { get; set; }
 
         public int TransactionId { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime? TransactionDate { get; set; }
 
         public DateTime? PostDate { get; set; }
 
-        //JLT what was this?  What should it be now?
-        //public DocumentType DocumentType { get; set; }
+        [MaxLength(4)]
+        public string DocumentType { get; set; }
 
-        //JLT what was this?  What should it be now?
-        //public BaseDocument Document { get; set; }
+        // TBD
+        // public BaseDocument Document { get; set; }
 
-        //JLT what was this?  What should it be now?
+        // TBD
         // public BaseDocumentLine DocumentLine { get; set; }
 
+        [DecimalPrecision(14, 2)]
         public decimal Amount { get; set; }
-        //JLT this was size 20.  What is this?  Should it be an Enum?
-        public string AmountType { get; set; }
+
+        // TBD
+        // public string AmountType { get; set; }
 
         public Guid? DebitAccountId { get; set; }
         [ForeignKey(nameof(DebitAccountId))]
         public LedgerAccountYear DebitAccount { get; set; }
+
         public Guid? CreditAccountId { get; set; }
         [ForeignKey(nameof(CreditAccountId))]
         public LedgerAccountYear CreditAccount { get; set; }
@@ -52,20 +56,22 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool IsAdjustment { get; set; }
 
+        [MaxLength(255)]
         public string Description { get; set; }
+        
+        // TBD 
+        // public Guid? ReconciliationId { get; set; }
+        // [ForeignKey(nameof(ReconciliationId))]
+        // public Reconciliation Reconciliation { get; set; }
+
+        // public DateTime? DateCleared { get; set; }
+
+        public ICollection<PostedTransaction> PostedTransactions { get; set; }
+
+        // TBD
+        // public ICollection<SubLedgerXref> SubLedgerXrefs { get; set; }
          
-        public Guid? ReconciliationId { get; set; }
-        [ForeignKey(nameof(ReconciliationId))]
-        public Reconciliation Reconciliation { get; set; }
-
-        public DateTime? DateCleared { get; set; }
-
-        public ICollection<PostedTransaction> PostedTransaction { get; set; }
-
-        public ICollection<SubLedgerTransfer> SubLedgerTransfers { get; set; }
-
-         
-        //JLT What is this?
-        //public IList<BaseDocumentTran> DocumentTrans { get; set; }
+        // TBD
+        // public IList<BaseDocumentTran> DocumentTrans { get; set; }
     }
 }

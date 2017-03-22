@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_AccountBudget")]
     public class AccountBudget : AuditableEntityBase
     {
         [Key]
@@ -14,6 +15,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? AccountId { get; set; }
+        [ForeignKey(nameof(AccountId))]
         public Account Account { get; set; }
 
         public BudgetType BudgetType { get; set; }
@@ -26,6 +28,7 @@ namespace DDI.Shared.Models.Client.GL
         public PeriodAmountList Percent { get; set; }
          
         public Guid? FiscalYearId { get; set; }
+        [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
 

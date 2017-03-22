@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_LedgerAccount")]
     public class LedgerAccount : AuditableEntityBase
     {
         [Key]
@@ -12,6 +13,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid? LedgerId { get; set; }
+        [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 
         [MaxLength(128)]

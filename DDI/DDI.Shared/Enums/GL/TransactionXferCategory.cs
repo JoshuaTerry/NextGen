@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Enums.GL
 { 
-    public enum TransactionTransferCategory { None = 0, Adjustment = 1, Receipt = 2, Disbursement = 3 }
+    public enum TransactionXrefCategory { None = 0, Adjustment = 1, Receipt = 2, Disbursement = 3 }
 }

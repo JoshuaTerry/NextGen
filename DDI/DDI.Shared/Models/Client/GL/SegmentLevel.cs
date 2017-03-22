@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.GL
 {
+    [Table("GL_SegmentLevel")]
     public class SegmentLevel : AuditableEntityBase
     {
         [Key]
@@ -16,6 +17,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public Guid LedgerId { get; set; }
+        [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
                  
         public int Level { get; set; }         
