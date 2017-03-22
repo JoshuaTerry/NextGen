@@ -1099,12 +1099,12 @@
 
                 <div class="fieldblock">
                     <label>School</label>
-                    <select class="ed-School"></select>
+                    <select class="ed-School schools"></select>
                 </div>
 
                 <div class="fieldblock">
                     <label>Degree</label>
-                    <select class="ed-Degree"></select>
+                    <select class="ed-Degree degrees"></select>
                 </div>
 
             </div>
