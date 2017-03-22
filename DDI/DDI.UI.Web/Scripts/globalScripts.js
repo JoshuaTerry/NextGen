@@ -4,6 +4,7 @@ var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
 var currentEntity = null;
+var previousEntity = null;
 var modal = null;
 
 $(document).ready(function () {
@@ -77,14 +78,9 @@ function LoadBusinessDate() {
     }
     else {
 
-        $.ajax({
-            url: WEB_API_ADDRESS + 'businessdate',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
-                
+        MakeServiceCall('GET', 'businessdate', item, function (data) {
+
+            if (data.Data) {
                 var date = FormatJSONDate(data.Data);
 
                 if (date) {
@@ -92,11 +88,10 @@ function LoadBusinessDate() {
                 }
 
                 $('.businessdate').text(date);
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
+
     }
 }
 
@@ -109,24 +104,17 @@ function LoadEnvironment() {
         $('.environment').text(sessionStorage.getItem('environment'));
     }
     else {
-        $.ajax({
-            url: WEB_API_ADDRESS + 'environment',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('GET', 'environment', item, function (data) {
 
+            if (data.Data) {
                 if (data.Data.length > 0) {
                     sessionStorage.setItem('environment', data.Data);
                 }
 
                 $('.environment').text(data.Data);
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
     }
 }
 
@@ -170,28 +158,18 @@ function SaveNewConstituent(modal) {
     var fields = GetNewFields();
 
     // Save the Constituent
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituents',
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('POST', 'constituents', fields, function (data) {
 
+        if (data.Data) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-            
+
             ClearFields();
 
             CloseModal(modal);
-            
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -417,38 +395,27 @@ function GetAutoZipData(container, prefix) {
                 '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
-        $.ajax({
-            url: WEB_API_ADDRESS + 'addresses/zip/?' + fields,
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('GET', 'addresses/zip/?' + fields, item, function (data) {
 
-                if (data && data.Data) {
+            if (data && data.Data) {
 
-                    $(container).find('.autozip').val(data.Data.PostalCode);
+                $(container).find('.autozip').val(data.Data.PostalCode);
 
-                    if (data.Data.State) {
-                        $(container).find('.autocountry').val(data.Data.State.CountryId);
-                        
-                        PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
+                if (data.Data.State) {
+                    $(container).find('.autocountry').val(data.Data.State.CountryId);
 
-                        PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
-                    }
+                    PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
-                    $(container).find('.autocity').val(data.Data.City);
-                    
-                    LoadAllRegionDropDowns(modal, prefix, data.Data);
-
+                    PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
                 }
-            
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
 
+                $(container).find('.autocity').val(data.Data.City);
+
+                LoadAllRegionDropDowns(modal, prefix, data.Data);
+
+            }
+
+        }, null);
     }
 
 }
@@ -487,17 +454,10 @@ function LoadTagSelector(type, container) {
 
                     });
 
-                    $.ajax({
-                        url: WEB_API_ADDRESS + path1 + '/' + currentEntity.Id + '/' + path2,
-                        method: 'POST',
-                        headers: GetApiHeaders(),
-                        data: JSON.stringify({ tags: tagIds }),
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('POST', path1 + '/' + currentEntity.Id + '/' + path2, JSON.stringify({ tags: tagIds }), function (data) {
 
-                            // Display success
+                        if (data.Data) {
+
                             DisplaySuccessMessage('Success', 'Tags saved successfully.');
 
                             CloseModal(modal);
@@ -506,11 +466,9 @@ function LoadTagSelector(type, container) {
 
                             DisplaySelectedTags(container);
 
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
-                    });
+        
+                    }, null);
 
                 });
 
@@ -527,56 +485,43 @@ function LoadTagSelector(type, container) {
 
 function LoadAvailableTags(container) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'taggroups',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'taggroups', item, function (data) {
 
-            if (data) {
-                if (data.IsSuccessful) {
-                    if (data.Data) {
+        if (data.Data) {
 
-                        $(container).find('.tagselectgridcontainer').html('');
+            $(container).find('.tagselectgridcontainer').html('');
 
-                        $.map(data.Data, function (group) {
+            $.map(data.Data, function (group) {
 
-                            var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
-                            var tagsContainer = $('<div>').addClass('tagSelectorContainer');
+                var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
+                var tagsContainer = $('<div>').addClass('tagSelectorContainer');
 
-                            if (group.Tags) {
+                if (group.Tags) {
 
-                                switch (group.TagSelectionType) {
+                    switch (group.TagSelectionType) {
 
-                                    case 0:
-                                        CreateMultiSelectTags(group.Tags, tagsContainer);
-                                        break;
-                                    case 1:
-                                        CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                            }
-
-                            $(header).appendTo($(modal).find('.tagselectgridcontainer'));
-                            $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
-
-                        });
-
-                        RefreshTags();
-
+                        case 0:
+                            CreateMultiSelectTags(group.Tags, tagsContainer);
+                            break;
+                        case 1:
+                            CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
+                            break;
+                        default:
+                            break;
                     }
-                }
-            }
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                }
+
+                $(header).appendTo($(modal).find('.tagselectgridcontainer'));
+                $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
+
+            });
+
+            RefreshTags();
+
         }
-    });
+        
+    }, null);
 
 }
 
@@ -606,24 +551,16 @@ function DisplaySelectedTags(container) {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    $.ajax({
-                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/tag/' + tag.Id,
-                        method: 'DELETE',
-                        headers: GetApiHeaders(),
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+
+                        if (data.Data){
 
                             currentEntity = data.Data;
 
                             DisplaySelectedTags(container);
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
-                    });
+
+                    }, null);
                 })
                 .appendTo($(t));
 
@@ -648,23 +585,16 @@ function DisplaySelectedTagsConstituentType() {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    $.ajax({
-                        url: WEB_API_ADDRESS + 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id,
-                        method: 'DELETE',
-                        headers: GetApiHeaders(),
-                        contentType: 'application/json; charset-utf-8',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+
+                        if (data.Data){
 
                             currentEntity = data.Data;
 
                             DisplaySelectedTagsConstituentType();
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
                         }
-                    });
+
+                    }, null);
                 })
                 .appendTo($(t));
 
@@ -711,23 +641,13 @@ function CreateMultiSelectTags(tags, container) {
 
 function GetFile(id, callback) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'filestorage/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'filestorage/' + id, function (data) {
 
-            if (data.Data && callback) {
-                callback(data.Data);
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        if (data.Data && callback) {
+            callback(data.Data);
         }
-    });
+
+    }, null);
 
 }
 
@@ -888,16 +808,9 @@ function SaveEdit(editcontainer) {
     SaveTagBoxes(editcontainer);
 
     // Save the entity
-    $.ajax({
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
-        method: 'PATCH',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
 
+        if (data.Data){
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
@@ -905,11 +818,9 @@ function SaveEdit(editcontainer) {
             currentEntity = data.Data;
 
             RefreshEntity();
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -988,24 +899,15 @@ function SaveTagBoxes(editcontainer) {
 }
 
 function SaveChildCollection(children, route) {
-    $.ajax({
-        url: route,
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: JSON.stringify({ChildIds: children}),
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ChildIds: children}), function (data) {
 
+        if (data.Data){
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 }
 
 function CancelEdit() {
@@ -1022,20 +924,15 @@ function DeleteEntity(url, method, confirmationMessage) {
     var okToDelete = confirm(confirmationMessage);
     if (okToDelete === true) {
         // delete the entity
-        $.ajax({
-            url: url,
-            method: method,
-            headers: GetApiHeaders(),
-            contentType: 'application/json; charset-utf-8',
-            crossDomain: true,
-            success: function() {
+        MakeServiceCall(method, url, item, function (data) {
+
+            if (data.Data){
                 // Display success
-                DisplaySuccessMessage('Success', 'The item was deleted.');
-            },
-            error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                DisplaySuccessMessage('Success', 'This item was deleted.');
+
             }
-        });
+
+        }, null);
     };
 
 }
