@@ -11,6 +11,7 @@
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Clergy: 'ClergySettings',
+    ContactInformation: 'ContactInformationSettings',
     DBA: 'DBASettings',
     Demographics: 'DemographicSettings',
     Education: 'EducationSettings',
@@ -1467,11 +1468,578 @@ function LoadConstituentType(id) {
 
 function LoadContactInformationSectionSettings() {
 
+    LoadSectionSettings(SettingsCategories.CRM, 'Contact Information', 'sectionpreferences', SystemSettings.ContactInformation);
+
+    var accordion = $('<div>').addClass('accordions');
+    var addresstypes = $('<div>').addClass('addresstypescontainer');
+    var contactcategories = $('<div>').addClass('contactcategoriescontainer');
+    var contacttypes = $('<div>').addClass('contacttypescontainer');
+
+
+    var header = $('<h1>').text('Address Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.addresstypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitaddrtype').unbind('click');
+
+            $('.submitaddrtype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.addrtype-Code').val(),
+                    Name: $(modal).find('.addrtype-Name').val(),
+                    IsActive: $(modal).find('.addrtype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'addresstypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Address Type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadAddressTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred saving the Address Type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(addresstypes).appendTo($(accordion));
+
+    LoadAddressTypeSettingsGrid();
+
+    header = $('<h1>').text('Contact Categories').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.contactcategorymodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            PopulateDropDown('.contcat-DefaultContactTypeId', 'contacttypes', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitcontcat').unbind('click');
+
+            $('.submitcontcat').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.contcat-Code').val(),
+                    Name: $(modal).find('.contcat-Name').val(),
+                    SectionTitle: $(modal).find('.contcat-SectionTitle').val(),
+                    TextBoxLabel: $(modal).find('.contcat-TextBoxLabel').val(),
+                    DefaultContactTypeId: $(modal).find('.contcat-DefaultContactTypeId').val(),
+                    IsActive: $(modal).find('.contcat-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'contactcategory',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadContactCategorySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Contact Category.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(contactcategories).appendTo($(accordion));
+
+    LoadContactCategorySettingsGrid();
+
+    header = $('<h1>').text('Contact Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.contacttypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            PopulateDropDown('.conttype-ContactCategoryId', 'contactcategory', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitconttype').unbind('click');
+
+            $('.submitconttype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.conttype-Code').val(),
+                    Name: $(modal).find('.conttype-Name').val(),
+                    ContactCategoryId: $(modal).find('.conttype-ContactCategoryId').val(),
+                    IsAlwaysShown: $(modal).find('.conttype-IsAlwaysShown').prop('checked'),
+                    CanDelete: $(modal).find('.conttype-CanDelete').prop('checked'),
+                    IsActive: $(modal).find('.conttype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'contacttypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadContactTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred saving the Contact Type.');
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
+    $(contacttypes).appendTo($(accordion));
+
+    LoadContactTypeSettingsGrid();
+
+    $(accordion).appendTo($('.contentcontainer'));
+
+    LoadAccordions();
 
 
 }
 
+function LoadAddressTypeSettingsGrid() {
 
+    var addresstypecolumns = [
+       { dataField: 'Id', width: '0px' },
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Description' },
+       { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('addresstypesgrid', 'addresstypescontainer', addresstypecolumns, 'addresstypes', null, EditAddressType, DeleteAddressType);
+
+}
+
+function LoadContactCategorySettingsGrid() {
+
+    var contactcategorycolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'SectionTitle', caption: 'Section Title' },
+        { dataField: 'TextBoxLabel', caption: 'Text Box Label' },
+        { dataField: 'DefaultContactType.DisplayName', caption: 'Default Contact Type' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('contactcategoriesgrid', 'contactcategoriescontainer', contactcategorycolumns, 'contactcategory', null, EditContactCategory, DeleteContactCategory);
+}
+
+function LoadContactTypeSettingsGrid() {
+
+    var contacttypecolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'ContactCategory.DisplayName', caption: 'Contact Category' },
+        { dataField: 'IsAlwaysShown', caption: 'Show Always' },
+        { dataField: 'CanDelete', caption: 'Can Delete' },
+        { dataField: 'IsActive', caption: 'Active' }
+    ];
+
+    LoadGrid('contacttypesgrid', 'contacttypescontainer', contacttypecolumns, 'contacttypes', null, EditContactType, DeleteContactType);
+
+}
+
+/* ADDRESS TYPE SYSTEM SETTINGS */
+function EditAddressType(id) {
+
+    LoadAddressType(id);
+
+    modal = $('.addresstypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitaddrtype').unbind('click');
+
+    $('.submitaddrtype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.addrtype-Code').val(),
+            Name: $(modal).find('.addrtype-Name').val(),
+            IsActive: $(modal).find('.addrtype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'addresstypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Address Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadAddressTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred saving the Address Type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteAddressType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'addresstypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Address Type deleted successfully.');
+
+            LoadAddressTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Address Type.');
+        }
+
+    });
+
+
+}
+
+function LoadAddressType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'addresstypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.addrtype-Id').val(data.Data.Id);
+                $(modal).find('.addrtype-Code').val(data.Data.Code);
+                $(modal).find('.addrtype-Name').val(data.Data.Name);
+                $(modal).find('.addrtype-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Address Type.');
+        }
+    });
+
+}
+/* END ADDRESS TYPE SYSTEM SETTINGS */
+
+
+/* CONTACT CATEGORY SYSTEM SETTINGS */
+function EditContactCategory(id) {
+
+    LoadContactCategory(id);
+
+    modal = $('.contactcategorymodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitcontcat').unbind('click');
+
+    $('.submitcontcat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.contcat-Code').val(),
+            Name: $(modal).find('.contcat-Name').val(),
+            SectionTitle: $(modal).find('.contcat-SectionTitle').val(),
+            TextBoxLabel: $(modal).find('.contcat-TextBoxLabel').val(),
+            DefaultContactTypeId: $(modal).find('.contcat-DefaultContactTypeId').val(),
+            IsActive: $(modal).find('.contcat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'contactcategory/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
+
+                CloseModal(modal);
+
+                LoadContactCategorySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred saving the Contact Category.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteContactCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'contactcategory/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Contact Category deleted successfully.');
+
+            LoadContactCategorySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Category.');
+        }
+
+    });
+
+
+}
+
+function LoadContactCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'contactcategory/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.contcat-Id').val(data.Data.Id);
+                $(modal).find('.contcat-Code').val(data.Data.Code);
+                $(modal).find('.contcat-Name').val(data.Data.Name);
+                $(modal).find('.contcat-SectionTitle').val(data.Data.SectionTitle);
+                $(modal).find('.contcat-TextBoxLabel').val(data.Data.TextBoxLabel);
+                $(modal).find('.contcat-DefaultContactTypeId').val(data.Data.DefaultContactTypeId);
+                $(modal).find('.contcat-IsActive').prop('checked', data.Data.IsActive);
+
+                PopulateDropDown('.contcat-DefaultContactTypeId', 'contacttypes', '', '', data.Data.DefaultContactTypeId);
+
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Contact Category.');
+        }
+    });
+
+}
+/* END CONTACT CATEGORY SYSTEM SETTINGS */
+
+/* CONTACT TYPE SYSTEM SETTINGS */
+function EditContactType(id) {
+
+    LoadContactType(id);
+
+    modal = $('.contacttypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitconttype').unbind('click');
+
+    $('.submitconttype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.conttype-Code').val(),
+            Name: $(modal).find('.conttype-Name').val(),
+            ContactCategoryId: $(modal).find('.conttype-ContactCategoryId').val(),
+            IsAlwaysShown: $(modal).find('.conttype-IsAlwaysShown').prop('checked'),
+            CanDelete: $(modal).find('.conttype-CanDelete').prop('checked'),
+            IsActive: $(modal).find('.conttype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'contacttypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadContactTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred saving the Contact Type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteContactType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'contacttypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Contact Type deleted successfully.');
+
+            LoadContactTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Type.');
+        }
+
+    });
+
+
+}
+
+function LoadContactType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'contacttypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.conttype-Id').val(data.Data.Id);
+                $(modal).find('.conttype-Code').val(data.Data.Code);
+                $(modal).find('.conttype-Name').val(data.Data.Name);
+                $(modal).find('.conttype-ContactCategoryId').val(data.Data.ContactCategoryId);
+                $(modal).find('.conttype-IsAlwaysShown').prop('checked', data.Data.IsAlwaysShown);
+                $(modal).find('.conttype-CanDelete').prop('checked', data.Data.CanDelete);
+                $(modal).find('.conttype-IsActive').prop('checked', data.Data.IsActive);
+
+                PopulateDropDown('.conttype-ContactCategoryId', 'contactcategory', '', '', data.Data.ContactCategoryId);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading Contact Type.');
+        }
+    });
+
+}
+/* END CONTACT TYPE SYSTEM SETTINGS */
 
 /* DEMOGRAPHICS SYSTEM SETTINGS */
 function LoadDemographicsSectionSettings() {
