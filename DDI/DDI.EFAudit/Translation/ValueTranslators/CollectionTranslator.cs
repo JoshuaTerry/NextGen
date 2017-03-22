@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DDI.EFAudit.Contexts;
+using DDI.EFAudit.Translation.Binders;
+using DDI.EFAudit.Translation.Serializers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DDI.EFAudit.Translation.Binders;
-using DDI.EFAudit.Translation.Serializers;
-using DDI.EFAudit.Contexts;
 
 namespace DDI.EFAudit.Translation.ValueTranslators
 {

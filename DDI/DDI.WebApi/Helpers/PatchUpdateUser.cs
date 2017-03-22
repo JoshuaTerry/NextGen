@@ -1,15 +1,11 @@
-﻿using System;
+﻿using DDI.Shared.Models.Client.Security;
+using DDI.WebApi.Models;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Reflection;
-using System.Web;
-using DDI.Shared.Models.Client.CRM;
-using DDI.WebApi.Models;
-using Newtonsoft.Json.Linq;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.WebApi.Helpers
 {

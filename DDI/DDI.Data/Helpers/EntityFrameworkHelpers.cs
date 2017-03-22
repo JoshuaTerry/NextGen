@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DDI.Shared.Models.Client.Security;
+using System;
 using System.Data.Entity;
-using DDI.Shared.Models.Client.Core;
+using System.Linq;
 using System.Threading;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data.Helpers
 {

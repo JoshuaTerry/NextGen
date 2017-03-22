@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-	[Table("DoingBusinessAs")]
+    [Table("DoingBusinessAs")]
 	public class DoingBusinessAs : AuditableEntityBase
     {
         #region Public Properties

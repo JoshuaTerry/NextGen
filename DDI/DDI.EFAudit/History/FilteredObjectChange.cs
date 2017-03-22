@@ -1,8 +1,6 @@
 ﻿using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DDI.EFAudit.History
 {

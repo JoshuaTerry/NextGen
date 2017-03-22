@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Business.CRM
+﻿namespace DDI.Business.CRM
 {
     /// <summary>
     /// Class for specifying label formatting options for NameFormatter.

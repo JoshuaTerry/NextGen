@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DDI.EFAudit.Exceptions;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DDI.EFAudit.Exceptions;
-using DDI.Shared.Models.Client.Audit;
 
 namespace DDI.EFAudit.History
 {
