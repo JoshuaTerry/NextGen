@@ -238,12 +238,12 @@
                         </div>
                     </div>
 
-                    <h1 class ="DBASettingsSection"><span class="DBASettingsSectionLabel">Doing Business As</span> <a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="DBASettingsSection"><span class="DBASettingsSectionLabel">Doing Business As</span></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span><a href="#" title="New" class="neweducationmodallink newbutton"></a></h1> 
+                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1> 
 
                     <div class="editcontainer">
 
@@ -296,7 +296,7 @@
                     </div>
 
                     <h1 class ="PaymentPreferencesSettingsSection">
-                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span><a href="#" title="New" class="newppmodallink newbutton"></a></h1>
+                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -449,7 +449,7 @@
 
                     </div>
 
-                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span> <a href="#" class="newaltidmodal newbutton"></a></h1>
+                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span></h1>
                     <div>
                         
                         <div class="alternateidgridcontainer"></div>
@@ -464,7 +464,7 @@
                                 </div>
 
                                 <div class="modalbuttons">
-                                    <input type="button" class="submitaltid" value="Save" />
+                                    <input type="button" class="savebutton" value="Save" />
                                     <a href ="#" class="cancelmodal">Cancel</a>
                                 </div>
 
@@ -529,7 +529,7 @@
             
             <!-- Relationships Tab -->
             <div id="tab-relationships" class="scrollable">
-                <h1>Relationships<a href="#" class="newrelationshipmodal newbutton"></a></h1>
+                <h1>Relationships</h1>
                 <div class="relationshipstable"></div>
             </div>
             
@@ -723,7 +723,7 @@
             </fieldset>
 
             <div class="modalbuttons">
-                <input type="button" class="saveaddress" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -739,26 +739,26 @@
 
             <div class="fieldblock">
                 <label>DBA Name:</label>
-                <input type="text" class="DBAName" />
+                <input type="text" class="dba-Name" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>From:</label>
-                    <input type="text" class="StartDate datepicker" />
+                    <input type="text" class="dba-StartDate datepicker" />
 
                 </div>
 
 
                 <div class="fieldblock">
                     <label>To:</label>
-                    <input type="text" class="EndDate datepicker" />
+                    <input type="text" class="dba-EndDate datepicker" />
 
                 </div>
 
                 <div class="modalbuttons">
-                    <input type="button" class="savedba" value="Save" />
+                    <input type="button" class="savebutton" value="Save" />
                     <a href="#" class="cancelmodal">Cancel</a>
                 </div>
 
@@ -835,7 +835,7 @@
             <input type="hidden" class="pp-PreviousStatus" />
 
             <div class="modalbuttons">
-                <input type="button" class="savepaymentpreference" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -843,32 +843,32 @@
 
     </div>
                         
-    <div class="phonenumbermodal" title="Phone Number" style="display: none;">
+    <div class="phonemodal" title="Phone Number" style="display: none;">
 
         <div class="modalcontent">
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="pn-PhoneNumberType ContactTypeId"></select>
+                <select class="phone-PhoneNumberType ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Phone:</label>
-                <input type="text"  class="pn-Info" />
+                <input type="text"  class="phone-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="pn-IsPreferred" />
+                <input type="checkbox"  class="phone-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="pn-Comment" />
+                <input type="text"  class="phone-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitphonenumber" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -882,26 +882,26 @@
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="e-EmailType ContactTypeId"></select>
+                <select class="email-EmailType ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Email:</label>
-                <input type="text"  class="e-Info" />
+                <input type="text"  class="email-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="e-IsPreferred" />
+                <input type="checkbox"  class="email-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="e-Comment" />
+                <input type="text"  class="email-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitemail" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -909,32 +909,32 @@
 
     </div>
 
-    <div class="websitemodal" title="Web Sites" style="display: none;">
+    <div class="webmodal" title="Web Sites" style="display: none;">
 
         <div class="modalcontent">
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="ws-WebSiteType ContactTypeId" ></select>
+                <select class="web-WebSiteType ContactTypeId" ></select>
             </div>
 
             <div class="fieldblock">
                 <label>Web Site:</label>
-                <input type="text"  class="ws-Info" />
+                <input type="text"  class="web-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="ws-IsPreferred" />
+                <input type="checkbox"  class="web-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="ws-Comment" />
+                <input type="text"  class="web-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitwebsite" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -942,32 +942,32 @@
 
     </div>
 
-    <div class="pocmodal" title="Point Of Contact" style="display: none;">
+    <div class="personmodal" title="Point Of Contact" style="display: none;">
 
         <div class="modalcontent">
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="poc-PocType ContactTypeId"></select>
+                <select class="person-PocType ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Info:</label>
-                <input type="text"  class="poc-Info" />
+                <input type="text"  class="person-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="poc-IsPreferred" />
+                <input type="checkbox"  class="person-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="poc-Comment" />
+                <input type="text"  class="person-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitpoc" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1014,26 +1014,26 @@
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="o-OtherType ContactTypeId"></select>
+                <select class="other-OtherType ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Info:</label>
-                <input type="text"  class="o-Info" />
+                <input type="text"  class="other-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="o-IsPreferred" />
+                <input type="checkbox"  class="other-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="o-Comment" />
+                <input type="text"  class="other-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitother" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1050,21 +1050,21 @@
 
             <div class="fieldblock">
                 <label></label>
-                <input type="text" class="FormattedName2 constituentlookup" />
+                <input type="text" class="rs-FormattedName2 constituentlookup" />
             </div>
 
             <div class="fieldblock">
                 <label>is the</label>
-                <select class="RelationshipTypeId"></select>
+                <select class="rs-RelationshipTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="FormattedName1" />
+                <input type="text" class="rs-FormattedName1" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="saverelationship" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1110,7 +1110,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="saveeducation" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
