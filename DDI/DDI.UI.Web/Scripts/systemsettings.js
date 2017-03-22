@@ -883,7 +883,7 @@ function LoadClergyStatusSettingsGrid() {
           { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses', null, EditClergyStatus, DeleteClergyStatus);
+    LoadGrid('clergystatusgrid', 'clergystatuscontainer', statuscolumns, 'clergystatuses?fields=all', null, EditClergyStatus, DeleteClergyStatus);
 }
 
 function LoadClergyTypeSettingsGrid() {
@@ -894,7 +894,7 @@ function LoadClergyTypeSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes', null, EditClergyType, DeleteClergyType);
+    LoadGrid('clergytypegrid', 'clergytypecontainer', typecolumns, 'clergytypes?fields=all', null, EditClergyType, DeleteClergyType);
 }
 
 // CLERGY STATUS SYSTEM SETTINGS
@@ -1731,7 +1731,7 @@ function LoadDenominationSettingsGrid() {
        { dataField: 'IsActive', caption: 'Active' }
     ];
    
-    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations', null, EditDenomination, DeleteDenomination);
+    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations?fields=all', null, EditDenomination, DeleteDenomination);
 
 }
 
@@ -1744,7 +1744,7 @@ function LoadEthnicitySettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
+    LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities?fields=all', null, EditEthnicity, DeleteEthnicity);
 }
 
 
@@ -1757,7 +1757,7 @@ function LoadLanguageSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('languagesgrid', 'languagescontainer', languagecolumns, 'languages', null, EditLanguage, DeleteLanguage);
+    LoadGrid('languagesgrid', 'languagescontainer', languagecolumns, 'languages?fields=all', null, EditLanguage, DeleteLanguage);
 
 }
 
@@ -2271,7 +2271,7 @@ function LoadDegreeSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('degreesgrid', 'degreecontainer', degreecolumns, 'degrees', null, EditDegree);
+    LoadGrid('degreesgrid', 'degreecontainer', degreecolumns, 'degrees?fields=all', null, EditDegree);
 
 }
 
@@ -2284,7 +2284,7 @@ function LoadEducationLevelSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', educationLevelcolumns, 'educationlevels', null, EditEducationLevel);
+    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', educationLevelcolumns, 'educationlevels?fields=all', null, EditEducationLevel);
 
 
 }
@@ -2546,7 +2546,7 @@ function LoadGenderSectionSettings() {
         { dataField: 'Name', caption: 'Gender' }
     ];
 
-    LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders');
+    LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders?fields=all');
 }
 
 function LoadHubSearchSectionSettings() {
@@ -2665,7 +2665,7 @@ function LoadPrefixSettingsGrid() {
        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
-    LoadGrid('prefixesgrid', 'prefixescontainer', prefixcolumns, 'prefixes', null, EditPrefix, DeletePrefix);
+    LoadGrid('prefixesgrid', 'prefixescontainer', prefixcolumns, 'prefixes?fields=all', null, EditPrefix, DeletePrefix);
 
 }
 
@@ -2908,7 +2908,7 @@ function LoadIncomeLevelSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('incomeLevelgrid', 'incomeLevelcontainer', incomeLevelcolumns, 'incomelevels', null, EditIncomeLevel);
+    LoadGrid('incomeLevelgrid', 'incomeLevelcontainer', incomeLevelcolumns, 'incomelevels?fields=all', null, EditIncomeLevel);
 
 }
 
@@ -2921,7 +2921,7 @@ function LoadProfessionSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('professiongrid', 'professioncontainer', professioncolumns, 'professions', null, Editprofession);
+    LoadGrid('professiongrid', 'professioncontainer', professioncolumns, 'professions?fields=all', null, Editprofession);
 
 }
 
@@ -3930,12 +3930,14 @@ function LoadTagGroupSectionSettings() {
     LoadGrid('taggroupsgrid',
         'contentcontainer',
         columns,
-        'taggroups',
+        'taggroups?fields=all',
         TagGroupSelected,
         EditTagGroup,
-        DeleteEntity);
+        null,
+        function () {
+            CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.contentcontainer', 'newtaggroupmodal')
+        });
 
-    CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.contentcontainer', 'newtaggroupmodal');
 }
 
 function TagGroupSelected(info) {
@@ -3974,9 +3976,10 @@ function TagGroupSelected(info) {
         'taggroups/' + selectedRow.Id + '/tags',
         TagGroupSelected,
         EditTag,
-        DeleteEntity);
-
-    CreateNewModalLink("New Tag", NewTagModal, '.tagsgrid', '.tagscontainer', 'newtagmodal');
+        null,
+        function () {
+            CreateNewModalLink("New Tag", NewTagModal, '.tagsgrid', '.tagscontainer', 'newtagmodal')
+        });
 
 }
 
@@ -4061,7 +4064,7 @@ function NewTagModal(modalLinkClass) {
 
 function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addToContainer, modalLinkClass) {
 
-    var modallink = $('<a>').attr('href', '#').addClass('newmodallink').addClass(modalLinkClass).text(linkText).appendTo($(addToContainer));
+    var modallink = $('<a>').attr('href', '#').addClass('newmodallink').addClass(modalLinkClass).text(linkText);
 
     $(prependToClass).before($(modallink));
 
