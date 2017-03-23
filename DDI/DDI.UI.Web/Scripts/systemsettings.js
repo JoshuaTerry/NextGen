@@ -11,6 +11,7 @@
 var SystemSettings = {
     AlternateId: 'AlternateIdSettings',
     Clergy: 'ClergySettings',
+    ContactInformation: 'ContactInformationSettings',
     DBA: 'DBASettings',
     Demographics: 'DemographicSettings',
     Education: 'EducationSettings',
@@ -303,8 +304,6 @@ function LoadMergeFormSystemSectionSettings() {
 
 }
 
-/* NOTE SYSTEM SETTINGS */
-
 function LoadNoteSectionSettings() {
 
     var accordion = $('<div>').addClass('accordions');
@@ -321,20 +320,19 @@ function LoadNoteSectionSettings() {
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('.noteCodecontainer', 'noteCodegrid', noteCodecolumns, 'notecodes', null, 'noteCode-',
+    LoadGrid('.noteCodecontainer', 'noteCodegrid', noteCodecolumns, 'notecodes', 'notecodes', null, 'noteCode-',
         '.noteCodemodal', '.noteCodemodal', 250, true, false, false, null);
-
 
     header = $('<h1>').text('Note Category').appendTo($(accordion));
     $(noteCategories).appendTo($(accordion));
 
     var noteCategorycolumns = [
         { dataField: 'Id', width: '0px' },
-        { dataField: 'Label', caption: 'Code' },
+        { dataField: 'Label', caption: 'Label' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('.noteCategorycontainer', 'noteCategorygrid', noteCategorycolumns, 'notecategories', null, 'noteCategory-',
+    LoadGrid('.noteCategorycontainer', 'noteCategorygrid', noteCategorycolumns, 'notecategories?fields=all', 'notecategories', null, 'noteCategory-',
         '.noteCategorymodal', '.noteCategorymodal', 250, true, false, false, null);
     
 
@@ -347,7 +345,7 @@ function LoadNoteSectionSettings() {
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('.noteTopiccontainer', 'noteTopicgrid', noteTopiccolumns, 'notetopics', null, 'noteTopic-', 
+    LoadGrid('.noteTopiccontainer', 'noteTopicgrid', noteTopiccolumns, 'notetopics?fields=all', 'notetopics', null, 'noteTopic-',
         '.noteTopicmodal', '.noteTopicmodal', 250, true, false, false, null);
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -355,9 +353,6 @@ function LoadNoteSectionSettings() {
     LoadAccordions();
 
 }
-
-
-
 
 function LoadStatusCodesSectionSettings() {
 
@@ -397,7 +392,7 @@ function LoadClergySectionSettings() {
               { dataField: 'Name', caption: 'Description' },
               { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses', null, 'cstat-',
+    LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses?fields=all', 'clergystatuses', null, 'cstat-',
         '.clergystatusmodal', '.clergystatusmodal', 250, true, false, false, null);
 
     header = $('<h1>').text('Clergy Type').appendTo($(accordion));
@@ -409,7 +404,7 @@ function LoadClergySectionSettings() {
     { dataField: 'Name', caption: 'Description' },
     { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes', null, 'ctype-',
+    LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes?fields=all', 'clergytypes', null, 'ctype-',
         '.clergytypemodal', '.clergytypemodal', 250, true, false, false, null);
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -652,7 +647,7 @@ function LoadConstituentTypeSettingsGrid() {
     ];
 
     
-    LoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes', null, EditConstituentType, DeleteConstituentType);
+    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes', null, EditConstituentType, DeleteConstituentType);
 
 }
 
@@ -781,13 +776,9 @@ function LoadConstituentType(id) {
 /* END CONSTITUENT TYPE SYSTEM SETTINGS */
 
 
-
 function LoadContactInformationSectionSettings() {
 
-
-
 }
-
 
 
 /* DEMOGRAPHICS SYSTEM SETTINGS */
@@ -802,176 +793,15 @@ function LoadDemographicsSectionSettings() {
 
 
     var header = $('<h1>').text('Denominations').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newdenominationmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.denominationmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submitden').unbind('click');
-
-            $('.submitden').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.den-Code').val(),
-                    Name: $(modal).find('.den-Name').val(),
-                    Religion: $(modal).find('.den-Religion').val(),
-                    Affiliation: $(modal).find('.den-Affiliation').val(),
-                    IsActive: $(modal).find('.den-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'denominations',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Denomination saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadDenominationSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
     $(denomination).appendTo($(accordion));
-
     LoadDenominationSettingsGrid();
 
     header = $('<h1>').text('Ethnicities').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newEthnicitiesmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.ethnicitymodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submiteth').unbind('click');
-
-            $('.submiteth').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.eth-Code').val(),
-                    Name: $(modal).find('.eth-Name').val(),
-                    IsActive: $(modal).find('.eth-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'ethnicities',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadEthnicitySettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
     $(ethnicity).appendTo($(accordion));
-
     LoadEthnicitySettingsGrid();
 
     header = $('<h1>').text('Languages').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newLanguagesmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.languagemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submitlang').unbind('click');
-
-            $('.submitlang').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.lang-Code').val(),
-                    Name: $(modal).find('.lang-Name').val(),
-                    IsActive: $(modal).find('.lang-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'languages',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Language saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadLanguageSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
     $(language).appendTo($(accordion));
-
     LoadLanguageSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -1047,8 +877,9 @@ function LoadDenominationSettingsGrid() {
        },
        { dataField: 'IsActive', caption: 'Active' }
     ];
-   
-    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations', null, EditDenomination, DeleteDenomination);
+
+    LoadGrid('.denominationscontainer', 'denominationsgrid', denominationcolumns, 'denominations?fields=all', 'denominations', null, 'den-',
+        '.denominationmodal', '.denominationmodal', 250, true, false, false, null);
 
 }
 
@@ -1061,9 +892,10 @@ function LoadEthnicitySettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('ethnicitiesgrid', 'ethnicitiescontainer', ethnicitycolumns, 'ethnicities', null, EditEthnicity, DeleteEthnicity);
-}
+    LoadGrid('.ethnicitiescontainer', 'ethnicitiesgrid', ethnicitycolumns, 'ethnicities?fields=all', 'ethnicities', null, 'eth-',
+        '.ethnicitymodal', '.ethnicitymodal', 250, true, false, false, null);
 
+}
 
 function LoadLanguageSettingsGrid() {
 
@@ -1074,330 +906,10 @@ function LoadLanguageSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('languagesgrid', 'languagescontainer', languagecolumns, 'languages', null, EditLanguage, DeleteLanguage);
+    LoadGrid('.languagescontainer', 'languagesgrid', languagecolumns, 'languages?fields=all', 'languages', null, 'lang-',
+        '.languagemodal', '.languagemodal', 250, true, false, false, null);
 
 }
-
-/* DENOMINATION SYSTEM SETTINGS */
-
-function EditDenomination(id) {
-
-    LoadDenomination(id);
-
-    modal = $('.denominationmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitden').unbind('click');
-
-    $('.submitden').click(function () {
-
-        var item = {
-            Code: $(modal).find('.den-Code').val(),
-            Name: $(modal).find('.den-Name').val(),
-            Religion: $(modal).find('.den-Religion').val(),
-            Affiliation: $(modal).find('.den-Affiliation').val(),
-            IsActive: $(modal).find('.den-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'denominations/' + $(modal).find('.den-Id').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Denomination saved successfully.');
-
-                CloseModal(modal);
-
-                LoadDenominationSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function DeleteDenomination(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'denominations/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Denomination deleted successfully.');
-
-            LoadDenominationSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Denomination.');
-        }
-
-    });
-
-
-}
-
-function LoadDenomination(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'denominations/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.den-Id').val(data.Data.Id);
-                $(modal).find('.den-Code').val(data.Data.Code);
-                $(modal).find('.den-Name').val(data.Data.Name);
-                $(modal).find('.den-Religion').val(data.Data.Religion);
-                $(modal).find('.den-Affiliation').val(data.Data.Affiliation);
-                $(modal).find('.den-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-/* END DENOMINATION SYSTEM SETTINGS */
-
-/* ETHNICITY SYSTEM SETTINGS */
-function EditEthnicity(id) {
-
-    LoadEthnicity(id);
-
-    modal = $('.ethnicitymodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submiteth').unbind('click');
-
-    $('.submiteth').click(function () {
-
-        var item = {
-            Code: $(modal).find('.eth-Code').val(),
-            Name: $(modal).find('.eth-Name').val(),
-            IsActive: $(modal).find('.eth-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'ethnicities/' + $(modal).find('.eth-Id').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Ethnicity saved successfully.');
-
-                CloseModal(modal);
-
-                LoadEthnicitySettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function DeleteEthnicity(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'ethnicities/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Ethnicity deleted successfully.');
-
-            LoadEthnicitySettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Ethnicity.');
-        }
-
-    });
-
-
-}
-
-function LoadEthnicity(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'ethnicities/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.eth-Id').val(data.Data.Id);
-                $(modal).find('.eth-Code').val(data.Data.Code);
-                $(modal).find('.eth-Name').val(data.Data.Name);
-                $(modal).find('.eth-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-/* END ETHNICITY SYSTEM SETTINGS */
-
-/* LANGUAGE SYSTEM SETTINGS */
-function EditLanguage(id) {
-
-    LoadLanguage(id);
-
-    modal = $('.languagemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitlang').unbind('click');
-
-    $('.submitlang').click(function () {
-
-        var item = {
-            Code: $(modal).find('.lang-Code').val(),
-            Name: $(modal).find('.lang-Name').val(),
-            IsActive: $(modal).find('.lang-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'languages/' + $(modal).find('.lang-Id').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Language saved successfully.');
-
-                CloseModal(modal);
-
-                LoadLanguageSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function DeleteLanguage(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'languages/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Language deleted successfully.');
-
-            LoadLanguageSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Language.');
-        }
-
-    });
-
-
-}
-
-function LoadLanguage(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'languages/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.lang-Id').val(data.Data.Id);
-                $(modal).find('.lang-Code').val(data.Data.Code);
-                $(modal).find('.lang-Name').val(data.Data.Name);
-                $(modal).find('.lang-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-/* END LANGUAGE SYSTEM SETTINGS */
-
 /* END DEMOGRAPHICS SYSTEM SETTINGS */
 
 function LoadDBASectionSettings() {
@@ -1416,162 +928,15 @@ function LoadEducationSectionSettings() {
     var schools = $('<div>').addClass('schoolscontainer');
 
     var header = $('<h1>').text('Degrees').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newdegreemodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.degreemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitdeg').unbind('click');
-
-            $('.submitdeg').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.deg-Code').val(),
-                    Name: $(modal).find('.deg-Name').val(),
-                    IsActive: $(modal).find('.deg-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'degrees',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Degree saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadDegreeSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(degrees).appendTo($(accordion));
-
     LoadDegreeSettingsGrid();
         
     header = $('<h1>').text('Education Level').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('neweducationlevelsmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.educationLevelmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submiteduLev').unbind('click');
-
-            $('.submiteduLev').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.eduLev-Code').val(),
-                    Name: $(modal).find('.eduLev-Name').val(),
-                    IsActive: $(modal).find('.eduLev-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'educationlevels',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Education Level saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadEducationLevelSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(educationlevels).appendTo($(accordion));
-
     LoadEducationLevelSettingsGrid();
 
     header = $('<h1>').text('Schools').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newschoolgridmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.schoolmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitsch').unbind('click');
-
-            $('.submitsch').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.sch-Code').val(),
-                    Name: $(modal).find('.sch-Name').val(),
-                    IsActive: $(modal).find('.sch-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'schools',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'School saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadSchoolsSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(schools).appendTo($(accordion));
-
     LoadSchoolsSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -1588,7 +953,8 @@ function LoadDegreeSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('degreesgrid', 'degreecontainer', degreecolumns, 'degrees', null, EditDegree);
+    LoadGrid('.degreecontainer', 'degreesgrid', degreecolumns, 'degrees?fields=all', 'degrees', null, 'deg-',
+    '.degreemodal', '.degreemodal', 250, true, false, false, null);
 
 }
 
@@ -1601,8 +967,8 @@ function LoadEducationLevelSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('educationlevelsgrid', 'educationlevelscontainer', educationLevelcolumns, 'educationlevels', null, EditEducationLevel);
-
+    LoadGrid('.educationlevelscontainer', 'educationlevelsgrid', educationLevelcolumns, 'educationlevels?fields=all', 'educationlevels', null, 'eduLev-',
+    '.educationLevelmodal', '.educationLevelmodal', 250, true, false, false, null);
 
 }
 
@@ -1615,255 +981,24 @@ function LoadSchoolsSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('schoolsgrid', 'schoolscontainer', schoolcolumns, 'schools?fields=all', null, EditSchool);
-
-
-}
-
-function EditDegree(id) {
-
-    LoadDegree(id);
-
-    modal = $('.degreemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitdeg').unbind('click');
-
-    $('.submitdeg').click(function () {
-
-        var item = {
-            Code: $(modal).find('.deg-Code').val(),
-            Name: $(modal).find('.deg-Name').val(),
-            IsActive: $(modal).find('.deg-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'degrees/' + $(modal).find('.degreeId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Degree saved successfully.');
-
-                CloseModal(modal);
-
-                LoadDegreeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
+    LoadGrid('.schoolscontainer', 'schoolsgrid', schoolcolumns, 'schools?fields=all', 'schools', null, 'sch-',
+    '.schoolmodal', '.schoolmodal', 250, true, false, false, null);
 
 }
-
-function LoadDegree(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'degrees/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.degreeId').val(data.Data.Id);
-                $(modal).find('.deg-Code').val(data.Data.Code);
-                $(modal).find('.deg-Name').val(data.Data.Name);
-                $(modal).find('.deg-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-function EditEducationLevel(id) {
-    LoadEducationLevel(id);
-
-    modal = $('.educationLevelmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submiteduLev').unbind('click');
-
-    $('.submiteduLev').click(function () {
-
-        var item = {
-            Code: $(modal).find('.eduLev-Code').val(),
-            Name: $(modal).find('.eduLev-Name').val(),
-            IsActive: $(modal).find('.eduLev-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'educationlevels/' + $(modal).find('.educationLevelId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Education Level saved successfully.');
-
-                CloseModal(modal);
-
-                LoadEducationLevelSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadEducationLevel(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'educationlevels/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.educationLevelId').val(data.Data.Id);
-                $(modal).find('.eduLev-Code').val(data.Data.Code);
-                $(modal).find('.eduLev-Name').val(data.Data.Name);
-                $(modal).find('.eduLev-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-function EditSchool(id) {
-    LoadSchool(id);
-
-    modal = $('.schoolmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitsch').unbind('click');
-
-    $('.submitsch').click(function () {
-
-        var item = {
-            Code: $(modal).find('.sch-Code').val(),
-            Name: $(modal).find('.sch-Name').val(),
-            IsActive: $(modal).find('.sch-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'schools/' + $(modal).find('.schoolId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'School saved successfully.');
-
-                CloseModal(modal);
-
-                LoadSchoolsSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadSchool(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'schools/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.schoolId').val(data.Data.Id);
-                $(modal).find('.sch-Code').val(data.Data.Code);
-                $(modal).find('.sch-Name').val(data.Data.Name);
-                $(modal).find('.sch-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
 /* END EDUCATION SYSTEM SETTINGS */
-
-
 
 function LoadGenderSectionSettings() {
 
     var columns = [
+        { dataField: 'Id', width: '0px' },
         { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Gender' }
+        { dataField: 'Name', caption: 'Gender' },
+        { dataField: 'IsMasculine', caption: 'Masculine' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('gendergridcontainer', 'contentcontainer', columns, 'genders');
+    LoadGrid('.contentcontainer', 'gendergridcontainer', columns, 'genders?fields=all', 'genders', null, 'gen-',
+    '.gendermodal', '.gendermodal', 250, true, false, false, null);
 }
 
 function LoadHubSearchSectionSettings() {
@@ -1890,7 +1025,6 @@ function LoadPersonalSectionSettings() {
 
 }
 
-/* PREFIX SYSTEM SETTINGS */
 function LoadPrefixSectionSettings() {
 
     var prefixcolumns = [
@@ -1902,217 +1036,9 @@ function LoadPrefixSectionSettings() {
        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
-    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
-    // showDelete, showFilter, showGroup, onComplete)
-    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes', 'prefixes', null, 'prefix-', '.prefixmodal', '.prefixmodal',
-              250, true, false, false, null);
+    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
+        '.prefixmodal', '.prefixmodal', 250, true, false, false, null);
 }
-
-function LoadPrefixSectionSettings2() {
-
-    var accordion = $('<div>').addClass('accordions');
-    var prefix = $('<div>').addClass('prefixescontainer');
-
-    var header = $('<h1>').text('Prefixes').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newprefixmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.prefixmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submitprefix').unbind('click');
-
-            $('.submitprefix').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.prefix-Code').val(),
-                    Name: $(modal).find('.prefix-Name').val(),
-                    Salutation: $(modal).find('.prefix-Salutation').val(),
-                    LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
-                    LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val()
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'prefixes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Prefix saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadPrefixSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
-
-    $(prefix).appendTo($(accordion));
-
-    LoadPrefixSettingsGrid();
-
-    $(accordion).appendTo($('.contentcontainer'));
-
-    LoadAccordions();
-
-
-}
-
-function LoadPrefixSettingsGrid() {
-
-    var prefixcolumns = [
-       { dataField: 'Id', width: '0px' },
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Description' },
-       { dataField: 'Salutation', caption: 'Salutation Prefix' },
-       { dataField: 'LabelPrefix', caption: 'Label Prefix' },
-       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
-    ];
-
-    LoadGrid('prefixesgrid', 'prefixescontainer', prefixcolumns, 'prefixes', null, EditPrefix, DeletePrefix);
-
-}
-
-function EditPrefix(id) {
-
-    LoadPrefix(id);
-
-    modal = $('.prefixmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitprefix').unbind('click');
-
-    $('.submitprefix').click(function () {
-
-        var item = {
-            Code: $(modal).find('.prefix-Code').val(),
-            Name: $(modal).find('.prefix-Name').val(),
-            Salutation: $(modal).find('.prefix-Salutation').val(),
-            LabelPrefix: $(modal).find('.prefix-LabelPrefix').val(),
-            LabelAbbreviation: $(modal).find('.prefix-LabelAbbreviation').val()
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'prefixes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Prefix saved successfully.');
-
-                CloseModal(modal);
-
-                LoadPrefixSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function DeletePrefix(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'prefixes/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Prefix deleted successfully.');
-
-            LoadPrefixSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-
-    });
-    
-
-}
-
-function LoadPrefix(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'prefixes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.prefix-Id').val(data.Data.Id);
-                $(modal).find('.prefix-Code').val(data.Data.Code);
-                $(modal).find('.prefix-Name').val(data.Data.Name);
-                $(modal).find('.prefix-Salutation').val(data.Data.Salutation);
-                $(modal).find('.prefix-LabelPrefix').val(data.Data.LabelPrefix);
-                $(modal).find('.prefix-LabelAbbreviation').val(data.Data.LabelAbbreviation);
-
-            }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-/* END PREFIX SYSTEM SETTINGS */
-
-/* new system settings section */
-
-/* end new system settings section */
 
 /* PROFESSIONAL SYSTEM SETTINGS */
 function LoadProfessionalSectionSettings() {
@@ -2123,109 +1049,11 @@ function LoadProfessionalSectionSettings() {
     var professions = $('<div>').addClass('professioncontainer');
 
     var header = $('<h1>').text('Income Level').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newincomeLevelmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.incomeLevelmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitinc').unbind('click');
-
-            $('.submitinc').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.inc-Code').val(),
-                    Name: $(modal).find('.inc-Name').val(),
-                    IsActive: $(modal).find('.inc-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'incomelevels',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Income Levels saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadIncomeLevelSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(incomeLevels).appendTo($(accordion));
-
     LoadIncomeLevelSettingsGrid();
 
     header = $('<h1>').text('Professions').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newprofessionsmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.professionmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-                e.preventDefault();
-                CloseModal(modal);
-            });
-
-            $('.submitpro').unbind('click');
-
-            $('.submitpro').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.pro-Code').val(),
-                    Name: $(modal).find('.pro-Name').val(),
-                    IsActive: $(modal).find('.pro-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'professions',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('success', 'Profession saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadProfessionSettingsGrid();
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                    }
-                });
-            });
-
-        })
-        .appendTo($(header));
     $(professions).appendTo($(accordion));
-
     LoadProfessionSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
@@ -2242,7 +1070,8 @@ function LoadIncomeLevelSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('incomeLevelgrid', 'incomeLevelcontainer', incomeLevelcolumns, 'incomelevels', null, EditIncomeLevel);
+    LoadGrid('.incomeLevelcontainer', 'incomeLevelgrid', incomeLevelcolumns, 'incomelevels?fields=all', 'incomelevels', null, 'inc-',
+        '.incomeLevelmodal', '.incomeLevelmodal', 250, true, false, false, null);
 
 }
 
@@ -2255,167 +1084,9 @@ function LoadProfessionSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('professiongrid', 'professioncontainer', professioncolumns, 'professions', null, Editprofession);
-
+    LoadGrid('.professioncontainer', 'professiongrid', professioncolumns, 'professions?fields=all', 'professions', null, 'pro-',
+        '.professionmodal', '.professionmodal', 250, true, false, false, null);
 }
-
-function EditIncomeLevel(id) {
-
-    LoadIncomeLevel(id);
-
-    modal = $('.incomeLevelmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitinc').unbind('click');
-
-    $('.submitinc').click(function () {
-
-        var item = {
-            Code: $(modal).find('.inc-Code').val(),
-            Name: $(modal).find('.inc-Name').val(),
-            IsActive: $(modal).find('.inc-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'incomelevels/' + $(modal).find('.incomeLevelId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Income Level saved successfully.');
-
-                CloseModal(modal);
-
-                LoadIncomeLevelSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadIncomeLevel(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'incomelevels/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.incomeLevelId').val(data.Data.Id);
-                $(modal).find('.inc-Code').val(data.Data.Code);
-                $(modal).find('.inc-Name').val(data.Data.Name);
-                $(modal).find('.inc-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-function Editprofession(id) {
-
-    LoadProfession(id);
-
-    modal = $('.professionmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitpro').unbind('click');
-
-    $('.submitpro').click(function () {
-
-        var item = {
-            Code: $(modal).find('.pro-Code').val(),
-            Name: $(modal).find('.pro-Name').val(),
-            IsActive: $(modal).find('.pro-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'professions/' + $(modal).find('.professionId').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Profession saved successfully.');
-
-                CloseModal(modal);
-
-                LoadProfessionSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadProfession(id) {
-    $.ajax({
-        url: WEB_API_ADDRESS + 'professions/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
-                $(modal).find('.professionId').val(data.Data.Id);
-                $(modal).find('.pro-Code').val(data.Data.Code);
-                $(modal).find('.pro-Name').val(data.Data.Name);
-                $(modal).find('.pro-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
-
-
-
-
 /* END PROFESSIONAL SYSTEM SETTINGS */
 
 /* REGIONS SETTINGS */
@@ -2631,7 +1302,7 @@ function DisplayRegions(level, parentid) {
        { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
+    CustomLoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
 
         // Add the new link...
         var link = $('<a>')
@@ -2836,7 +1507,6 @@ function LoadRegion(id) {
     });
 
 }
-
 /* REGIONS SETTINGS */
 
 function LoadRelationshipSectionSettings() {
@@ -2846,133 +1516,16 @@ function LoadRelationshipSectionSettings() {
     var type = $('<div>').addClass('relationshiptypecontainer');
     
     var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.relcatmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submitrelcat').unbind('click');
-
-            $('.submitrelcat').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.relcat-Code').val(),
-                    Name: $(modal).find('.relcat-Name').val(),
-                    IsActive: $(modal).find('.relcat-IsActive').prop('checked'),
-                    IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'relationshipcategories',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadRelationshipCategorySettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
     $(category).appendTo($(accordion));
-
     LoadRelationshipCategorySettingsGrid();
 
     header = $('<h1>').text('Relationship Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
-        .click(function (e) {
-            e.preventDefault();
-
-            modal = $('.reltypemodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 250,
-                resizable: false
-            });
-
-            PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '');
-            PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '');
-            PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '');
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(modal);
-
-            });
-
-            $('.submitreltype').unbind('click');
-
-            $('.submitreltype').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.reltype-Code').val(),
-                    Name: $(modal).find('.reltype-Name').val(),
-                    ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
-                    ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
-                    ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
-                    RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
-                    IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
-                    IsActive: $(modal).find('.reltype-IsActive').prop('checked')
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'relationshiptypes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
-
-                        DisplaySuccessMessage('Success', 'Relationship type saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadRelationshipTypeSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
-                    }
-                });
-
-            });
-        })
-        .appendTo($(header));
     $(type).appendTo($(accordion));
-
     LoadRelationshipTypeSettingsGrid();
 
     $(accordion).appendTo($('.contentcontainer'));
 
     LoadAccordions();
-
 
 }
 
@@ -2987,7 +1540,8 @@ function LoadRelationshipCategorySettingsGrid() {
        { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('relationshipcategorygrid', 'relationshipcategorycontainer', relationshipcategorycolumns, 'relationshipcategories', null, EditRelationshipCategory, DeleteRelationshipCategory);
+    LoadGrid('.relationshipcategorycontainer', 'relationshipcategorygrid', relationshipcategorycolumns, 'relationshipcategories?fields=all', 'relationshipcategories', null, 'relcat-',
+        '.relcatmodal', '.relcatmodal', 250, true, false, false, null);
 
 }
 
@@ -3020,231 +1574,10 @@ function LoadRelationshipTypeSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active'}
     ];
 
-    LoadGrid('relationshiptypegrid', 'relationshiptypecontainer', relationshiptypecolumns, 'relationshiptypes?fields=all', null, EditRelationshipType, DeleteRelationshipType);
-}
-
-/* RELATIONSHIP CATEGORY SYSTEM SETTINGS */
-function EditRelationshipCategory(id) {
-
-    LoadRelationshipCategory(id);
-
-    modal = $('.relcatmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitrelcat').unbind('click');
-
-    $('.submitrelcat').click(function () {
-
-        var item = {
-            Code: $(modal).find('.relcat-Code').val(),
-            Name: $(modal).find('.relcat-Name').val(),
-            IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked'),
-            IsActive: $(modal).find('.relcat-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
-
-                CloseModal(modal);
-
-                LoadRelationshipCategorySettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the relationship category.');
-            }
-        });
-
-    });
+    LoadGrid('.relationshiptypecontainer', 'relationshiptypegrid', relationshiptypecolumns, 'relationshiptypes?fields=all', 'relationshiptypes', null, 'reltype-',
+        '.reltypemodal', '.reltypemodal', 250, true, false, false, null);
 
 }
-
-function DeleteRelationshipCategory(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Relationship Category deleted successfully.');
-
-            LoadRelationshipCategorySettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Category.');
-        }
-
-    });
-
-
-}
-
-function LoadRelationshipCategory(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.relcat-Id').val(data.Data.Id);
-                $(modal).find('.relcat-Code').val(data.Data.Code);
-                $(modal).find('.relcat-Name').val(data.Data.Name);
-                $(modal).find('.relcat-IsShownInQuickView').prop('checked', data.Data.IsShownInQuickView);
-                $(modal).find('.relcat-IsActive').prop('checked', data.Data.IsActive);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading relationship category.');
-        }
-    });
-
-}
-/* END RELATIONSHIP CATEGORY SYSTEM SETTINGS */
-
-/* RELATIONSHIP TYPE SYSTEM SETTINGS */
-function EditRelationshipType(id) {
-
-    LoadRelationshipType(id);
-
-    modal = $('.reltypemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitreltype').unbind('click');
-
-    $('.submitreltype').click(function () {
-
-        var item = {
-            Code: $(modal).find('.reltype-Code').val(),
-            Name: $(modal).find('.reltype-Name').val(),
-            ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
-            ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
-            ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
-            RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
-            IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
-            IsActive: $(modal).find('.reltype-IsActive').prop('checked')
-        }
-
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Relationship Type saved successfully.');
-
-                CloseModal(modal);
-
-                LoadRelationshipTypeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
-            }
-        });
-
-    });
-
-}
-
-function DeleteRelationshipType(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
-
-            DisplaySuccessMessage('Success', 'Relationship Type deleted successfully.');
-
-            LoadRelationshipTypeSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Type.');
-        }
-
-    });
-
-}
-
-function LoadRelationshipType(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            if (data && data.Data && data.IsSuccessful) {
-
-                $(modal).find('.reltype-Id').val(data.Data.Id);
-                $(modal).find('.reltype-Code').val(data.Data.Code);
-                $(modal).find('.reltype-Name').val(data.Data.Name);
-                $(modal).find('.reltype-ConstituentCategory').val(data.Data.ConstituentCategory);
-                $(modal).find('.reltype-IsSpouse').prop('checked', data.Data.IsSpouse);
-                $(modal).find('.reltype-IsActive').prop('checked', data.Data.IsActive);
-
-                PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeMaleId);
-                PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeFemaleId);
-                PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '', data.Data.RelationshipCategoryId);
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading relationship type.');
-        }
-    });
-
-}
-/* END RELATIONSHIP TYPE SYSTEM SETTINGS */
 
 function LoadTagGroupSectionSettings() {
 
@@ -3261,7 +1594,7 @@ function LoadTagGroupSectionSettings() {
         { dataField: 'IsActive', caption: 'Active' },
     ];
 
-    LoadGrid('taggroupsgrid',
+    CustomLoadGrid('taggroupsgrid',
         'contentcontainer',
         columns,
         'taggroups',
@@ -3302,7 +1635,7 @@ function TagGroupSelected(info) {
         { dataField: 'IsActive', caption: 'Active' },
     ];
 
-    LoadGrid('tagsgrid',
+    CustomLoadGrid('tagsgrid',
         'tagscontainer',
         columns,
         'taggroups/' + selectedRow.Id + '/tags',

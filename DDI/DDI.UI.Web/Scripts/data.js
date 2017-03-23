@@ -677,7 +677,7 @@ function LoadEntity(route, id, prefix) {
         currentEntity = data.Data;
 
         for (var property in data.Data) {
-
+            
             if ($(prefix + property).is('select')) {
 
                 var classes = $(prefix + property).attr('class').split(' ');
@@ -687,11 +687,18 @@ function LoadEntity(route, id, prefix) {
 
                     PopulateDropDown($(this), route, '', '', data.Data[property], null);
                 }
+                else {
+                    $(prefix + property).val(data.Data[property]);
+                }
 
+            }
+            else if ($(prefix + property).is('input[type="checkbox"]')) {
+                $(prefix + property).prop('checked', data.Data[property]);
             }
             else {
                 $(prefix + property).val(data.Data[property]);
             }
+            
 
         }
 
