@@ -13,12 +13,13 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_LedgerName", Order = 1, IsUnique = true)]
         public Guid? LedgerId { get; set; }
         [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 
-        [MaxLength(255)]
-        public string YearName { get; set; }
+        [Index("IX_LedgerName", Order = 2, IsUnique = true), MaxLength(16)]
+        public string Name { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? StartDate { get; set; }

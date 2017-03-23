@@ -122,7 +122,6 @@
     <Compile Include="Enums\GL\LedgerStatus.cs" />
     <Compile Include="Enums\GL\PostedTransactionType.cs" />
     <Compile Include="Enums\GL\PriorPeriodPostingMode.cs" />
-    <Compile Include="Enums\GL\RecurringCode.cs" />
     <Compile Include="Enums\GL\SegmentFormat.cs" />
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />

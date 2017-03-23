@@ -14,11 +14,12 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(255)]
-        public string Description { get; set; }
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; }
 
         public BusinessUnitType BusinessUnitType { get; set; }
 
+        [Index("IX_Code", IsUnique = true), MaxLength(16)]
         public string Code { get; set; }
                 
         ICollection<User> Users { get; set; }

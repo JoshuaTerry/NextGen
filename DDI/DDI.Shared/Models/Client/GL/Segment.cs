@@ -25,11 +25,11 @@ namespace DDI.Shared.Models.Client.GL
 
         public int Level { get; set; }
 
-        [MaxLength(30)]
-        public string Code { get; set; }         
+        [Index("IX_Code", IsUnique = true), MaxLength(30)]
+        public string Code { get; set; }
 
-        [MaxLength(255)]
-        public string Description { get; set; } 
+        [Index("IX_Description", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; } 
 
         public Guid? ParentSegmentId { get; set; }
         [ForeignKey(nameof(ParentSegmentId))]

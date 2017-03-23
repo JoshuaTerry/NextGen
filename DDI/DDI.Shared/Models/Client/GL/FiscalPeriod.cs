@@ -12,6 +12,12 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_FiscalYear_PeriodNumber", IsUnique = true, Order = 1)]
+        public Guid? FiscalYearId { get; set; }
+        [ForeignKey(nameof(FiscalYearId))]
+        public FiscalYear FiscalYear { get; set; }
+
+        [Index("IX_FiscalYear_PeriodNumber", IsUnique = true, Order = 2)]
         public int PeriodNumber { get; set; }
 
         [Column(TypeName = "date")]
@@ -23,10 +29,6 @@ namespace DDI.Shared.Models.Client.GL
         public bool IsAdjustmentPeriod { get; set; }
 
         public FiscalPeriodStatus Status { get; set; }
-
-        public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
-        public FiscalYear FiscalYear {get; set;}
 
     }
 }

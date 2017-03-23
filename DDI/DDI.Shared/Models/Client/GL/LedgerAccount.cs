@@ -19,8 +19,8 @@ namespace DDI.Shared.Models.Client.GL
         [MaxLength(128)]
         public string AccountNumber { get; set; }
 
-        [MaxLength(255)]
-        public string Description { get; set; }
+        [MaxLength(128)]
+        public string Name { get; set; }
 
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; } 
     }

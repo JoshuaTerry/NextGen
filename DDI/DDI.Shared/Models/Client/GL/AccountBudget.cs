@@ -14,10 +14,12 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_Account_BudgetType", IsUnique = true, Order = 1)]
         public Guid? AccountId { get; set; }
         [ForeignKey(nameof(AccountId))]
         public Account Account { get; set; }
 
+        [Index("IX_Account_BudgetType", IsUnique = true, Order = 2)]
         public BudgetType BudgetType { get; set; }
 
         [DecimalPrecision(14, 2)]
@@ -27,10 +29,5 @@ namespace DDI.Shared.Models.Client.GL
 
         public PeriodAmountList Percent { get; set; }
          
-        public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
-        public FiscalYear FiscalYear { get; set; }
-
-
     }
 }

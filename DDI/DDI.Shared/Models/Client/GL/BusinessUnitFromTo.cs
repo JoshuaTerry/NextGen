@@ -13,14 +13,17 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_FiscalYear_BUs", IsUnique = true, Order = 1)]
         public Guid? FiscalYearId { get; set; }
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
+        [Index("IX_FiscalYear_BUs", IsUnique = true, Order = 2)]
         public Guid? BusinessUnitId { get; set; }
         [ForeignKey(nameof(BusinessUnitId))]
         public BusinessUnit BusinessUnit { get; set; }
 
+        [Index("IX_FiscalYear_BUs", IsUnique = true, Order = 3)]
         public Guid? OffsettingBusinessUnitId { get; set; }
         [ForeignKey(nameof(OffsettingBusinessUnitId))]
         public Fund OffsettingFund { get; set; }

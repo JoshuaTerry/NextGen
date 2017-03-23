@@ -20,22 +20,24 @@ namespace DDI.Shared.Models.Client.GL
         public bool IsParent { get; set; }         
 
         [MaxLength(16)]
+        [Index("IX_Code", IsUnique = true)]
         public string Code { get; set; }         
 
-        [MaxLength(255)]
-        public string Description { get; set; }       
+        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true)]
+        public string Name { get; set; }       
 
         public int NumberOfSegments { get; set; }
 
         public LedgerStatus Status { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string FixedBudgetName { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string WorkingBudgetName { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string WhatIfBudgetName { get; set; }
 
         public bool ApproveJournals { get; set; }
@@ -59,16 +61,16 @@ namespace DDI.Shared.Models.Client.GL
 
         public int AccountGroupLevels { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string AccountGroup1Title { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string AccountGroup2Title { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string AccountGroup3Title { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(40)]
         public string AccountGroup4Title { get; set; }
 
         public ICollection<SegmentLevel> SegmentLevels { get; set; }

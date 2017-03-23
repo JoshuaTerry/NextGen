@@ -13,8 +13,8 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(255)]
-        public string Description { get; set; }
+        [MaxLength(128)]
+        public string Name { get; set; }
 
         public int? Sequence { get; set; }
 
