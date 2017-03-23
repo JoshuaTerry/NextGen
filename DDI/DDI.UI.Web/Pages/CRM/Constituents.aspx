@@ -503,7 +503,7 @@
 
                     <div id="tab-notedetail">
 
-                        <h1>Note Detail<%--<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a>--%></h1>
+                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
                         <div class="notedetailsgridcontainer"></div>
                         
                     </div>
@@ -1121,6 +1121,9 @@
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
 
         <div class="modalcontent">
+<%--            <input type="hidden" class="hidrelationshipid" />--%>
+            <input type="hidden" class="nd-hidparententityid" />
+            <input type="hidden" class="hidentitytype" />
 
             <div class="fieldblock">
                 <label>Title</label>
@@ -1230,7 +1233,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
+                <input type="button" class="savenotedetails" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 

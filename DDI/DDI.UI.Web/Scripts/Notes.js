@@ -42,7 +42,7 @@ function LoadNoteDetailsGrid() {
 
     // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
     // showDelete, showFilter, showGroup, onComplete)
-    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, true, true, null);
+    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', 'notes', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, true, true, null);
 
     PopulateDropDown('.nd-Category', 'notecategories', '', '', ''); 
     PopulateDropDown('.nd-NoteCode', 'notecodes', '', ''); 
@@ -51,97 +51,92 @@ function LoadNoteDetailsGrid() {
 
 function NewNoteDetailsModal() {
 
-    //$('.newnotesdetailmodallink').click(function (e) {
+    $('.newnotesdetailmodallink').click(function (e) {
 
-        //PopulateDropDown('.nd-Category', 'notecategories/', '', '');
-        //PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+    //PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+    //PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
 
-        //e.preventDefault();
+    //e.preventDefault();
 
-        //modal = $('.notesdetailmodal').dialog({
-        //    closeOnEscape: false,
-        //    modal: true,
-        //    width: 500,
-        //    resizable: false
-        //});
+    //modal = $('.notesdetailmodal').dialog({
+    //    closeOnEscape: false,
+    //    modal: true,
+    //    width: 500,
+    //    resizable: false
+    //});
 
-        $('.noteTopicSelectImage').unbind('click');
+    $('.noteTopicSelectImage').unbind('click');
 
-        $('.noteTopicSelectImage').click(function (e) {
+    $('.noteTopicSelectImage').click(function (e) {
 
-            SaveNewNoteTopics(modal);
-            
-        });
+        SaveNewNoteTopics(modal);
 
-        $('.cancelmodal').click(function (e) {
+    });
 
-            e.preventDefault();
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = {
+
+            Title: $(modal).find('.nd-Title').val(),
+            AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
+            AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
+            Text: $(modal).find('.nd-Description').val(),
+            CategoryId: $(modal).find('.nd-Category').val(),
+            ContactDate: $(modal).find('.nd-ContactDate').val(),
+            NoteCodeId: $(modal).find('.nd-NoteCode').val(),
+            ParentEntityId: currentEntity.Id,
+            EntityType: NoteEntity[0]
+
+        }
+
+
+        //function MakeServiceCall(method, route, item, successCallback, errorCallback) {
+        MakeServiceCall('POST', 'notes', item, function (data) {
+
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', topicsavelist, function () {
+
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+
+            })
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
 
             ClearNoteTopicTagBox(modal);
 
+            LoadNoteDetailsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+
         });
 
-        //$('.savenotedetails').unbind('click');
 
-        //$('.savenotedetails').click(function () {
+    });
 
-        //    var topicsavelist = GetNoteTopicsToSave();
-
-        //    var item = {
-
-        //        Title: $(modal).find('.nd-Title').val(),
-        //        AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
-        //        AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
-        //        Text: $(modal).find('.nd-Description').val(),
-        //        CategoryId: $(modal).find('.nd-Category').val(),
-        //        ContactDate: $(modal).find('.nd-ContactDate').val(),
-        //        NoteCodeId: $(modal).find('.nd-NoteCode').val(),
-        //        ParentEntityId: currentEntity.Id,
-        //        EntityType: NoteEntity[0]
-
-        //    }
-
-        //    //$.ajax({
-        //    //    type: 'POST',
-        //    //    url: WEB_API_ADDRESS + 'notes/',
-        //    //    data: item,
-        //    //    contentType: 'application/x-www-form-urlencoded',
-        //    //    crossDomain: true,
-        //    //    success: function (data) {
-        //    MakeServiceCall('POST', 'notes', function() {
-        //            $.ajax({
-        //                type: 'POST',
-        //                url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-        //                data: topicsavelist,
-        //                contentType: 'application/x-www-form-urlencoded',
-        //                crossDomain: true,
-        //                success: function (data) {
-
-        //                    DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-        //                },
-        //                error: function (xhr, status, err) {
-        //                }
-        //            });
-                
-
-        //            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
-
-        //            CloseModal(modal);
-
-        //            ClearNoteTopicTagBox(modal);
-
-        //            LoadNoteDetailsGrid();
-
-        //        },
-        //    });
-
-        //});
-
-    //});
+    });
 }
+
 
 function EditNoteDetails(id) {
 
