@@ -16,13 +16,13 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [Index("IX_Ledger_Name", IsUnique = true, Order = 1)]
-        [Index("IX_Ledger_Level", IsUnique = true, Order = 1)]
+        [Index("IX_Name", IsUnique = true, Order = 1)]
+        [Index("IX_Level", IsUnique = true, Order = 1)]
         public Guid LedgerId { get; set; }
         [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 
-        [Index("IX_Ledger_Level", IsUnique = true, Order = 2)]
+        [Index("IX_Level", IsUnique = true, Order = 2)]
         public int Level { get; set; }         
 
         public SegmentType Type { get; set; }         
@@ -35,7 +35,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool IsCommon { get; set; }         
         
-        [Index("IX_Ledger_Name", IsUnique = true, Order = 2), MaxLength(40)]
+        [Index("IX_Name", IsUnique = true, Order = 2), MaxLength(40)]
         public string Name { get; set; }         
 
         [MaxLength(16)]
