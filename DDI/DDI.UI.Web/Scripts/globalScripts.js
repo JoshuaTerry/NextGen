@@ -76,7 +76,7 @@ function LoadBusinessDate() {
     }
     else {
 
-        MakeServiceCall('GET', 'businessdate', item, function (data) {
+        MakeServiceCall('GET', 'businessdate', null, function (data) {
 
             if (data.Data) {
                 var date = FormatJSONDate(data.Data);
@@ -102,7 +102,7 @@ function LoadEnvironment() {
         $('.environment').text(sessionStorage.getItem('environment'));
     }
     else {
-        MakeServiceCall('GET', 'environment', item, function (data) {
+        MakeServiceCall('GET', 'environment', null, function (data) {
 
             if (data.Data) {
                 if (data.Data.length > 0) {
@@ -393,7 +393,7 @@ function GetAutoZipData(container, prefix) {
                 '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
-        MakeServiceCall('GET', 'addresses/zip/?' + fields, item, function (data) {
+        MakeServiceCall('GET', 'addresses/zip/?' + fields, null, function (data) {
 
             if (data && data.Data) {
 
@@ -483,7 +483,7 @@ function LoadTagSelector(type, container) {
 
 function LoadAvailableTags(container) {
 
-    MakeServiceCall('GET', 'taggroups', item, function (data) {
+    MakeServiceCall('GET', 'taggroups', null, function (data) {
 
         if (data.Data) {
 
@@ -549,7 +549,7 @@ function DisplaySelectedTags(container) {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
 
                         if (data.Data){
 
@@ -583,7 +583,7 @@ function DisplaySelectedTagsConstituentType() {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
 
                         if (data.Data){
 
@@ -639,7 +639,7 @@ function CreateMultiSelectTags(tags, container) {
 
 function GetFile(id, callback) {
 
-    MakeServiceCall('GET', 'filestorage/' + id, function (data) {
+    MakeServiceCall('GET', 'filestorage/' + id, null, function (data) {
 
         if (data.Data && callback) {
             callback(data.Data);
@@ -922,7 +922,7 @@ function DeleteEntity(url, method, confirmationMessage) {
     var okToDelete = confirm(confirmationMessage);
     if (okToDelete === true) {
         // delete the entity
-        MakeServiceCall(method, url, item, function (data) {
+        MakeServiceCall(method, url, null, function (data) {
 
             if (data.Data){
                 // Display success
