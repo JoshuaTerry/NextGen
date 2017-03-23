@@ -1520,21 +1520,21 @@ function GenerateContactInfoSection() {
         $.map(data.Data, function (category) {
 
             // remove previous elements
-            $('.' + category.Name + 'header').remove();
-            $('.constituent' + category.Name + 'gridcontainer').remove();
+            $('.' + category.DisplayName + 'header').remove();
+            $('.constituent' + category.DisplayName + 'gridcontainer').remove();
 
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
-            var header = $('<h3>').text(category.SectionTitle).addClass(category.Name + 'header').appendTo($('.contactinfocontainer'));
+            var header = $('<h3>').text(category.SectionTitle).addClass(category.DisplayName + 'header').appendTo($('.contactinfocontainer'));
 
             $('<a>', { 
                 title: 'New', 
-                class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
+                class: 'new' + category.DisplayName.toLowerCase() + 'modallink' + ' newbutton', 
                 href: '#'
             }).appendTo($(header));
 
-            $('<div>').attr('id', category.Id).addClass('constituent' + category.Name + 'gridcontainer').appendTo($('.contactinfocontainer'));
+            $('<div>').attr('id', category.Id).addClass('constituent' + category.DisplayName + 'gridcontainer').appendTo($('.contactinfocontainer'));
 
-            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.DisplayName);
 
         });
         

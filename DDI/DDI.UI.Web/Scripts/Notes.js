@@ -26,7 +26,7 @@ function SetupNotesTab() {
 
         NewNoteDetailsModal();
 
-        GetNoteAlerts();
+        // GetNoteAlerts();
 
     });
 }
@@ -42,7 +42,7 @@ function LoadNoteDetailsGrid() {
 
     // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
     // showDelete, showFilter, showGroup, onComplete)
-    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, false, false, null);
+    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, true, true, null);
 
     PopulateDropDown('.nd-Category', 'notecategories', '', '', ''); 
     PopulateDropDown('.nd-NoteCode', 'notecodes', '', ''); 
@@ -83,66 +83,62 @@ function NewNoteDetailsModal() {
 
         });
 
-        $('.savenotedetails').unbind('click');
+        //$('.savenotedetails').unbind('click');
 
-        $('.savenotedetails').click(function () {
+        //$('.savenotedetails').click(function () {
 
-            var topicsavelist = GetNoteTopicsToSave();
+        //    var topicsavelist = GetNoteTopicsToSave();
 
-            var item = {
+        //    var item = {
 
-                Title: $(modal).find('.nd-Title').val(),
-                AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
-                AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
-                Text: $(modal).find('.nd-Description').val(),
-                CategoryId: $(modal).find('.nd-Category').val(),
-                ContactDate: $(modal).find('.nd-ContactDate').val(),
-                NoteCodeId: $(modal).find('.nd-NoteCode').val(),
-                ParentEntityId: currentEntity.Id,
-                EntityType: NoteEntity[0]
+        //        Title: $(modal).find('.nd-Title').val(),
+        //        AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
+        //        AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
+        //        Text: $(modal).find('.nd-Description').val(),
+        //        CategoryId: $(modal).find('.nd-Category').val(),
+        //        ContactDate: $(modal).find('.nd-ContactDate').val(),
+        //        NoteCodeId: $(modal).find('.nd-NoteCode').val(),
+        //        ParentEntityId: currentEntity.Id,
+        //        EntityType: NoteEntity[0]
 
-            }
+        //    }
 
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'notes/',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
+        //    //$.ajax({
+        //    //    type: 'POST',
+        //    //    url: WEB_API_ADDRESS + 'notes/',
+        //    //    data: item,
+        //    //    contentType: 'application/x-www-form-urlencoded',
+        //    //    crossDomain: true,
+        //    //    success: function (data) {
+        //    MakeServiceCall('POST', 'notes', function() {
+        //            $.ajax({
+        //                type: 'POST',
+        //                url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
+        //                data: topicsavelist,
+        //                contentType: 'application/x-www-form-urlencoded',
+        //                crossDomain: true,
+        //                success: function (data) {
 
-                    $.ajax({
-                        type: 'POST',
-                        url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-                        data: topicsavelist,
-                        contentType: 'application/x-www-form-urlencoded',
-                        crossDomain: true,
-                        success: function (data) {
+        //                    DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 
-                            DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-                        }
-                    });
+        //                },
+        //                error: function (xhr, status, err) {
+        //                }
+        //            });
                 
 
-                    DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+        //            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
-                    CloseModal(modal);
+        //            CloseModal(modal);
 
-                    ClearNoteTopicTagBox(modal);
+        //            ClearNoteTopicTagBox(modal);
 
-                    LoadNoteDetailsGrid();
+        //            LoadNoteDetailsGrid();
 
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
-                }
-            });
+        //        },
+        //    });
 
-        });
+        //});
 
     //});
 }
@@ -550,7 +546,7 @@ function GetNoteAlerts() {
 
             if (data.Data.length > 0) {
 
-                //SetupNoteAlertModal();
+                SetupNoteAlertModal();
 
                 LoadNoteAlertGrid(data.Data);
 
@@ -575,31 +571,31 @@ function LoadNoteAlertGrid(data) {
     LoadGrid('.notealertgridcontainer', 'notealertgrid', columns, 'notealert/' + currentEntity.Id, null, '', '.notealertmodal', '.notealertmodal', 500, false, false, false, null);
 
 
-//    LoadGrid('notealertgrid',
-//        'notealertgridcontainer',
-//        columns,
-//        'notealert/' + currentEntity.Id ,
-//        null,
-//        EditNoteDetails,
-//        null);
+    //LoadGrid('notealertgrid',
+    //    'notealertgridcontainer',
+    //    columns,
+    //    'notealert/' + currentEntity.Id ,
+    //    null,
+    //    EditNoteDetails,
+    //    null);
 }
 
-//function SetupNoteAlertModal() {
+function SetupNoteAlertModal() {
 
-//    var modal = $('.notealertmodal').dialog({
-//        closeOnEscape: false,
-//        modal: true,
-//        width: 500,
-//        resizable: false
-//    });
+    var modal = $('.notealertmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
 
-//    $('.cancelmodal').click(function (e) {
+    $('.cancelmodal').click(function (e) {
 
-//        e.preventDefault();
+        e.preventDefault();
 
-//        CloseModal(modal);
+        CloseModal(modal);
 
-//    });
+    });
 
-//}
+}
 /* End Note Alerts Modal */

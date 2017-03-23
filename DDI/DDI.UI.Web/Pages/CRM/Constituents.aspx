@@ -1230,7 +1230,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="savenotedetails" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1238,7 +1238,7 @@
 
     </div>
 
-    <div class="notealertmodal" title="NotesAlert" style="display: none;">
+    <div class="notealertmodal" title="Note Alerts" style="display: none;">
 
         <div class="modalcontent">
 
