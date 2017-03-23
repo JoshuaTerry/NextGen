@@ -3,6 +3,7 @@ var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
 var currentEntity = null;
+var previousEntity = null;
 var modal = null;
 
 $(document).ready(function () {
