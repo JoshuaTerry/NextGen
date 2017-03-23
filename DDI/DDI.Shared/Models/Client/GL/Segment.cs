@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_Segment")]
+    [Table("Segment")]
     public class Segment : AuditableEntityBase
     {
         [Key]

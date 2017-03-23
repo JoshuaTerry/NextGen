@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_FundFromTo")]
+    [Table("FundFromTo")]
     public class FundFromTo : AuditableEntityBase
     {
         [Key]

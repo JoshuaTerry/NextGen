@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_LedgerAccountYear")]
+    [Table("LedgerAccountYear")]
     public class LedgerAccountYear : AuditableEntityBase
     {
         [Key]

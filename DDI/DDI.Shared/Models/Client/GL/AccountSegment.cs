@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_AccountSegment")]
+    [Table("AccountSegment")]
     public class AccountSegment : AuditableEntityBase
     {
         [Key]

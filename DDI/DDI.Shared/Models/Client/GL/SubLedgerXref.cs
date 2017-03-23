@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_SubledgerXref")]
+    [Table("SubledgerXref")]
     public class SubLedgerXref : EntityBase
     {
         [Key]

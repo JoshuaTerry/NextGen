@@ -7,7 +7,7 @@ using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_SubledgerTransaction")]
+    [Table("SubledgerTransaction")]
     public class SubledgerTransaction : EntityBase
     {
         [Key]

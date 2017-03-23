@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_PostedTransaction")]
+    [Table("PostedTransaction")]
     public class PostedTransaction : EntityBase
     {
         [Key]
@@ -46,6 +46,9 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool IsAdjustment { get; set; }
 
-        public ICollection<SubledgerTransaction> SubledgerTransactions { get; set; }        
+        public Guid? SubledgerTransactionId { get; set; }        
+        [ForeignKey(nameof(SubledgerTransactionId))]
+        public SubledgerTransaction SubledgerTransaction { get; set; }
+
     }
 }

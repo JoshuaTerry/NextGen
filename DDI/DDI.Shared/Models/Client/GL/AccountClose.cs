@@ -7,7 +7,7 @@ using DDI.Shared.Enums.GL;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_AccountClose")]
+    [Table("AccountClose")]
     public class AccountClose : EntityBase
     {
         [Key]

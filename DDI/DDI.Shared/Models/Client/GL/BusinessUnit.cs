@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_BusinessUnit")]
+    [Table("BusinessUnit")]
     public class BusinessUnit : AuditableEntityBase
     {
         [Key]

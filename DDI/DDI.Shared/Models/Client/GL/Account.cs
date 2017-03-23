@@ -7,7 +7,7 @@ using DDI.Shared.Enums.GL;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_Account")]
+    [Table("Account")]
     public class Account : AuditableEntityBase
     {
         [Key]
@@ -34,11 +34,7 @@ namespace DDI.Shared.Models.Client.GL
         public bool IsNormallyDebit { get; set; } 
 
         [Index]
-        public string SortKey { get; set; }
-
-        public PeriodAmountList Debit { get; set; }
-
-        public PeriodAmountList Credit { get; set; }   
+        public string SortKey { get; set; }      
              
         public Guid? ClosingAccountId { get; set; }
         [ForeignKey(nameof(ClosingAccountId))]

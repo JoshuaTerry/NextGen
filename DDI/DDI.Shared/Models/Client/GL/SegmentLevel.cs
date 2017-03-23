@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("GL_SegmentLevel")]
+    [Table("SegmentLevel")]
     public class SegmentLevel : AuditableEntityBase
     {
         [Key]
