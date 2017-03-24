@@ -33,7 +33,7 @@ namespace DDI.Shared.Models.Client.GL
             
         public bool IsNormallyDebit { get; set; } 
 
-        [Index]
+        [Index,MaxLength(128)]
         public string SortKey { get; set; }      
              
         public Guid? ClosingAccountId { get; set; }

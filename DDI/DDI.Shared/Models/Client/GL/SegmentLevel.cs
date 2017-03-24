@@ -18,7 +18,7 @@ namespace DDI.Shared.Models.Client.GL
 
         [Index("IX_Name", IsUnique = true, Order = 1)]
         [Index("IX_Level", IsUnique = true, Order = 1)]
-        public Guid LedgerId { get; set; }
+        public Guid? LedgerId { get; set; }
         [ForeignKey(nameof(LedgerId))]
         public Ledger Ledger { get; set; }
 

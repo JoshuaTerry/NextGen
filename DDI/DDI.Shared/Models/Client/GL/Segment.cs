@@ -17,13 +17,13 @@ namespace DDI.Shared.Models.Client.GL
 
         [Index("IX_Code", IsUnique = true, Order = 1)]
         [Index("IX_Name", IsUnique = true, Order = 1)]
-        public Guid FiscalYearId { get; set; }
+        public Guid? FiscalYearId { get; set; }
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
         [Index("IX_Code", IsUnique = true, Order = 2)]
         [Index("IX_Name", IsUnique = true, Order = 2)]
-        public Guid SegmentLevelId { get; set; }
+        public Guid? SegmentLevelId { get; set; }
         [ForeignKey(nameof(SegmentLevelId))]
         public SegmentLevel SegmentLevel { get; set; }
 

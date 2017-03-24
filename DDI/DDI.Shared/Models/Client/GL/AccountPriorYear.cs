@@ -14,11 +14,11 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        public Guid AccountId { get; set; }
+        public Guid? AccountId { get; set; }
         [ForeignKey(nameof(AccountId))]
         public Account Account { get; set; }
 
-        public Guid PriorAccountId { get; set; }
+        public Guid? PriorAccountId { get; set; }
         [ForeignKey(nameof(PriorAccountId))]
         public Account PriorAccount { get; set; }
 
