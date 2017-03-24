@@ -463,6 +463,8 @@
                                     <input type="text"  class="ai-Name" />
                                 </div>
 
+                                 <input type="hidden" class="ai-ConstituentId parentid" />
+
                                 <div class="modalbuttons">
                                     <input type="button" class="savebutton" value="Save" />
                                     <a href ="#" class="cancelmodal">Cancel</a>
@@ -734,8 +736,8 @@
     <div class="dbamodal" title="Doing Business As" style="display: none;">
 
         <div class="modalcontent">
-            <input type="hidden" class="hiddbaid" />
-
+            
+            <input type="hidden" class="dba-ConstituentId parentid" />
 
             <div class="fieldblock">
                 <label>DBA Name:</label>
@@ -791,7 +793,7 @@
 
                 <div class="fieldblock">
                     <label>Account Number</label>
-                    <input type="text" class="pp-AccountNumber" />
+                    <input type="text" class="pp-BankAccount" />
                 </div>
 
             </div>
@@ -809,7 +811,7 @@
 
                 <div class="fieldblock">
                     <label>EFT Format</label>
-                    <select class="pp-EFTFormatId"></select>
+                    <select class="pp-EFTFormatId eftformats"></select>
                 </div>
 
             </div>
@@ -833,6 +835,7 @@
             
             <input type="hidden" class="pp-StatusDate" />
             <input type="hidden" class="pp-PreviousStatus" />
+            <input type="hidden" class="pp-ConstituentId parentid" />
 
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
@@ -847,9 +850,11 @@
 
         <div class="modalcontent">
             
+            <input type="hidden" class="phone-ConstituentId parentid" />
+
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="phone-PhoneNumberType ContactTypeId"></select>
+                <select class="phone-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -880,9 +885,11 @@
 
         <div class="modalcontent">
             
+            <input type="hidden" class="email-ConstituentId parentid" />
+
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="email-EmailType ContactTypeId"></select>
+                <select class="email-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -912,10 +919,12 @@
     <div class="webmodal" title="Web Sites" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="web-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="web-WebSiteType ContactTypeId" ></select>
+                <select class="web-ContactTypeId" ></select>
             </div>
 
             <div class="fieldblock">
@@ -945,10 +954,12 @@
     <div class="personmodal" title="Point Of Contact" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="person-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="person-PocType ContactTypeId"></select>
+                <select class="person-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -981,7 +992,7 @@
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="sm-SocialMediaType ContactTypeId"></select>
+                <select class="sm-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -1011,10 +1022,12 @@
     <div class="othermodal" title="Other Contacts" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="other-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="other-OtherType ContactTypeId"></select>
+                <select class="other-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -1099,15 +1112,17 @@
 
                 <div class="fieldblock">
                     <label>School</label>
-                    <select class="ed-School schools"></select>
+                    <select class="ed-SchoolId schools"></select>
                 </div>
 
                 <div class="fieldblock">
                     <label>Degree</label>
-                    <select class="ed-Degree degrees"></select>
+                    <select class="ed-DegreeId degrees"></select>
                 </div>
 
             </div>
+            
+             <input type="hidden" class="ed-ConstituentId parentid" />
 
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />

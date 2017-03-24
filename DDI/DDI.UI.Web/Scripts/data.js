@@ -64,7 +64,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
     ClearElement(element);
     
-    MakeServiceCall('GET', route, function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
         if (data.Data) {
 
             $.map(data.Data, function (item) {
@@ -88,7 +88,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
     AddDefaultOption(element, defaultText, defaultValue);
 
-    MakeServiceCall('GET', route, function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
         if (data.Data) {
 
             $.map(data.Data, function (item) {
@@ -496,6 +496,10 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
         }
     });
 
+    if (currentEntity && currentEntity.Id) {
+        $(modal).find('.parentid').val(currentEntity.Id);
+    }
+
     $(modal).find('select').each(function () {
 
         var classes = $(this).attr('class').split(' ');
@@ -685,7 +689,10 @@ function LoadEntity(route, id, prefix) {
                 if (classes.length > 1) {
                     var route = classes[1];
 
-                    PopulateDropDown($(this), route, '', '', data.Data[property], null);
+                    PopulateDropDown($(prefix + property), route, '', '', data.Data[property], null);
+                }
+                else {
+                    $(prefix + property).val(data.Data[property]);
                 }
 
             }

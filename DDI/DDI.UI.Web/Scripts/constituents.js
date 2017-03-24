@@ -458,7 +458,7 @@ function LoadDBAGrid() {
         { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/doingbusinessas'
+    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/doingbusinessas', 'doingbusinessas'
         , null, 'dba-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 
 }
@@ -478,7 +478,7 @@ function LoadEducationGrid() {
             { dataField: 'Major', caption: 'Major' }
     ];
 
-    LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations'
+    LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
         , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
 
 }
@@ -513,7 +513,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods'
         , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
 }
 
@@ -633,7 +633,7 @@ function LoadAlternateIDTable() {
             { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids'
+    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
         , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, false, true, false, null);
 }
 
@@ -979,9 +979,12 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
+    PopulateDropDown($('.'+ name.toLowerCase() + "-ContactTypeId"), 'contacttypes/'+categoryid, null)
    
-    LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id
-        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() +'modal', name.toLowerCase() +'modal', 250, false, true, false, null);
+    LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
+        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
+
+   
 }
 
 
@@ -1006,9 +1009,9 @@ function LoadRelationshipsQuickView() {
 
     var formattedData = $('<ul>').addClass('relationshipQuickViewData');
 
-    if (data.Data) {
+    if (quickviewdata) {
 
-        $.map(data.Data, function (item) {
+        $.map(quickviewdata, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
 
@@ -1059,7 +1062,7 @@ function LoadRelationshipsTab() {
         { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
     ];
    
-    LoadGrid('.relationshipstable', 'relationshipsgrid', columns,  'constituents/' + currentEntity.Id + '/relationships', null, 
+    LoadGrid('.relationshipstable', 'relationshipsgrid', columns,  'constituents/' + currentEntity.Id + '/relationships', 'relationsships', null, 
         'rs-', '.relationshipmodal', '.relationshipmodal', 250, false, false, false, null);
 }
 
