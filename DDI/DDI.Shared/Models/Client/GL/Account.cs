@@ -66,5 +66,6 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(AccountPriorYear.Account))]
         public ICollection<AccountPriorYear> NextYearAccounts { get; set; }
 
+        public override string DisplayName => AccountNumber;
     }
 }

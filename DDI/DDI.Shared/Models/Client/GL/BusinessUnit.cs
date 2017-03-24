@@ -28,5 +28,7 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(User.DefaultBusinessUnit))]
         public ICollection<User> DefaultUsers { get; set; }
 
+        public override string DisplayName => Code;
+
     }
 }

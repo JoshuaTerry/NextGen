@@ -17,6 +17,8 @@ namespace DDI.Conversion.Statics
         public static string AddressIdMappingFile = "AddressId.csv";
         public static string PaymentMethodIdMappingFile = "PaymentMethodId.csv";
         public static string NoteIdMappingFile = "NoteId.csv";
+        public static string BusinessUnitIdMappingFile = "BusinessUnitId.csv";
+        public static string LedgerIdMappingFile = "LedgerId.csv";
 
         #endregion
 
