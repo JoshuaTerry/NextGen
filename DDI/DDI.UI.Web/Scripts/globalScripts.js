@@ -258,7 +258,10 @@ function SaveNewConstituent(modal, addnew) {
                 else {
                     CloseModal(modal);
 
-                    DisplayConstituent(data.Data.ConstituentNumber);
+                    currentEntity = data.Data;
+
+                    sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
+                    location.href = "Constituents.aspx";
                 }
 
             }

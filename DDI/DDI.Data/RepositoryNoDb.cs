@@ -73,6 +73,11 @@ namespace DDI.Data
 
         #region Public Methods
 
+        public EntityState GetEntityState(T entity)
+        {
+            return EntityState.Unchanged;
+        }
+
         /// <summary>
         /// Clear all entities in the repository.
         /// </summary>
