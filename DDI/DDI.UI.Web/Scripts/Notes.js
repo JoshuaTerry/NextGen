@@ -26,7 +26,7 @@ function SetupNotesTab() {
 
         NewNoteDetailsModal();
 
-        // GetNoteAlerts();
+        GetNoteAlerts();
 
     });
 }
@@ -40,12 +40,11 @@ function LoadNoteDetailsGrid() {
     { dataField: 'Title', caption: 'Title' }
     ];
 
-    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
-    // showDelete, showFilter, showGroup, onComplete)
-    LoadGrid('.notedetailsgridcontainer', 'notedetailsgrid', columns, currentEntity.Id + '/notes/', 'notes', null, 'nd-', '.notesdetailmodal', '.notesdetailmodal', 500, false, true, true, null);
+    CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, currentEntity.Id + '/notes/', null, EditNoteDetails, null, null);
 
     PopulateDropDown('.nd-Category', 'notecategories', '', '', ''); 
-    PopulateDropDown('.nd-NoteCode', 'notecodes', '', ''); 
+    PopulateDropDown('.nd-NoteCode', 'notecodes', '', '');
+    PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
 
 }
 
@@ -53,17 +52,18 @@ function NewNoteDetailsModal() {
 
     $('.newnotesdetailmodallink').click(function (e) {
 
-    //PopulateDropDown('.nd-Category', 'notecategories/', '', '');
-    //PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+    PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+    PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+    PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
 
-    //e.preventDefault();
+    e.preventDefault();
 
-    //modal = $('.notesdetailmodal').dialog({
-    //    closeOnEscape: false,
-    //    modal: true,
-    //    width: 500,
-    //    resizable: false
-    //});
+    modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
 
     $('.noteTopicSelectImage').unbind('click');
 
@@ -89,25 +89,11 @@ function NewNoteDetailsModal() {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = {
+        var item = GetNoteDetailsToSave();
 
-            Title: $(modal).find('.nd-Title').val(),
-            AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
-            AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
-            Text: $(modal).find('.nd-Description').val(),
-            CategoryId: $(modal).find('.nd-Category').val(),
-            ContactDate: $(modal).find('.nd-ContactDate').val(),
-            NoteCodeId: $(modal).find('.nd-NoteCode').val(),
-            ParentEntityId: currentEntity.Id,
-            EntityType: NoteEntity[0]
-
-        }
-
-
-        //function MakeServiceCall(method, route, item, successCallback, errorCallback) {
         MakeServiceCall('POST', 'notes', item, function (data) {
 
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', topicsavelist, function () {
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
 
                 DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 
@@ -115,7 +101,7 @@ function NewNoteDetailsModal() {
 
                 DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
 
-            })
+            });
 
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
@@ -131,12 +117,10 @@ function NewNoteDetailsModal() {
 
         });
 
-
-    });
+        });
 
     });
 }
-
 
 function EditNoteDetails(id) {
 
@@ -163,43 +147,28 @@ function EditNoteDetails(id) {
 
                var newsavednotetopics = GetCheckedNoteTopics();
 
-                $.map(newsavednotetopics, function (topicid) {
+               $.map(newsavednotetopics, function (topicid) {
 
-                    $.ajax({
-                        url: WEB_API_ADDRESS + '/notetopics/' + topicid,
-                        method: 'GET',
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('GET', 'notetopics/' + topicid, null, function (data) {
 
-                            var topic = data.Data;
+                        var topic = data.Data;
 
-                            StyleAndSetupIndividualTags(topic, function () {
+                        StyleAndSetupIndividualTags(topic, function () {
 
-                                var removeid = '#' + data.Data.Id;
+                            var removeid = '#' + data.Data.Id;
 
-                                $('.noteTopicSelect > div').remove(removeid);
+                            $('.noteTopicSelect > div').remove(removeid);
 
-                                $.ajax({
-                                    url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
-                                    method: 'DELETE',
-                                    contentType: 'application/json; charset-utf-8',
-                                    dataType: 'json',
-                                    crossDomain: true,
-                                    success: function (data) {
+                            MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
 
-                                    },
-                                    error: function (xhr, status, err) {
-                                        DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
-                                    }
-                                });
+                            function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
                             });
 
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
-                        }
+                        }, function (xhr, status, err) {
+                            DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                        });
+
                     });
 
                 });
@@ -241,56 +210,31 @@ function EditNoteDetails(id) {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = {
+        var item = GetNoteDetailsToSave();
 
-            Title: $(modal).find('.nd-Title').val(),
-            AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
-            AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
-            Text: $(modal).find('.nd-Description').val(),
-            CategoryId: $(modal).find('.nd-Category').val(),
-            ContactDate: $(modal).find('.nd-ContactDate').val(),
-            NoteCodeId: $(modal).find('.nd-NoteCode').val(),
-            ParentEntityId: currentEntity.Id,
-            EntityType: NoteEntity[0]
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
-        }
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
 
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'notes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'notes/' + data.Data.Id + '/notetopics/',
-                    data: topicsavelist,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function (data) {
+            }, function (xhr, status, err) {
 
-                        DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
 
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-                    }
-                });
+            });
 
-                DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
-                CloseModal(modal);
+            CloseModal(modal);
 
-                ClearNoteTopicTagBox(modal);
+            ClearNoteTopicTagBox(modal);
 
-                LoadNoteDetailsGrid();
+            LoadNoteDetailsGrid();
 
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
-            }
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
         });
 
     });
@@ -298,35 +242,53 @@ function EditNoteDetails(id) {
 
 function LoadNoteDetails(id) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'notes/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'notes/' + id, null, function (data) {
 
-            LoadSelectedNoteTopics(id);
+        LoadSelectedNoteTopics(id);
 
-            PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
-            PopulateDropDown('.nd-NoteCode', 'notecodes', '', '', data.Data.NoteCodeId);
+        PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
+        PopulateDropDown('.nd-NoteCode', 'notecodes', '', '', data.Data.NoteCodeId);
+        PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '', data.Data.ContactMethodId);
 
-            $('.nd-Title').val(data.Data.Title),
-            $('.nd-Description').val(data.Data.Text),
-            $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
-            $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
-            $('.nd-ContactDate').val(data.Data.ContactDate),
-            $('.nd-ContactDate').val(data.Data.NoteCode),
-            $('.nd-CreatedBy').text(data.Data.CreatedBy),
-            $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
-            $('.nd-CreatedOn').text(data.Data.CreatedOn),
-            $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
+        $('.nd-Title').val(data.Data.Title),
+        $('.nd-Description').val(data.Data.Text),
+        $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
+        $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
+        $('.nd-ContactDate').val(data.Data.ContactDate),
+        $('.nd-ContactDate').val(data.Data.NoteCode),
+        $('.nd-CreatedBy').text(data.Data.CreatedBy),
+        $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
+        $('.nd-CreatedOn').text(data.Data.CreatedOn),
+        $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
 
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
-        }
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Note Details.');
     });
+
+}
+
+function GetNoteDetailsToSave() {
+
+    var rawitem = {
+
+        Title: $(modal).find('.nd-Title').val(),
+        AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
+        AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
+        Text: $(modal).find('.nd-Description').val(),
+        CategoryId: $(modal).find('.nd-Category').val(),
+        ContactDate: $(modal).find('.nd-ContactDate').val(),
+        NoteCodeId: $(modal).find('.nd-NoteCode').val(),
+        ParentEntityId: currentEntity.Id,
+        EntityType: NoteEntity[0],
+        ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
 }
 
 /* End Notes Tab */
@@ -347,28 +309,20 @@ function SaveNewNoteTopics(modal) {
 
         $.map(newsavednotetopics, function (topicid) {
 
-            $.ajax({
-                url: WEB_API_ADDRESS + '/notetopics/' + topicid,
-                method: 'GET',
-                contentType: 'application/json; charset-utf-8',
-                dataType: 'json',
-                crossDomain: true,
-                success: function (data) {
+            MakeServiceCall('GET', 'notetopics/' + topicid, null, function (data) {
 
-                    var topic = data.Data
+                var topic = data.Data
 
-                    StyleAndSetupIndividualTags(topic, function () {
+                StyleAndSetupIndividualTags(topic, function () {
 
-                        var removeid = '#' + data.Data.Id;
+                    var removeid = '#' + data.Data.Id;
 
-                        $('.noteTopicSelect > div').remove(removeid);
-                                 
-                    });
+                    $('.noteTopicSelect > div').remove(removeid);
 
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
-                }
+                });
+
+            }, function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred during displaying the note topics.');
             });
                     
         });
@@ -395,19 +349,14 @@ function SaveNewNoteTopics(modal) {
 
 function SetupNoteTopicsMultiselectModal() {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'notetopics',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'notetopics', null, function (data) {
 
-            CreateMultiSelectTopics(data.Data, $('.tagdropdowncontainer')); 
+        CreateMultiSelectTopics(data.Data, $('.tagdropdowncontainer'));
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
-        }
+    }, function (xhr, status, err) {
+
+        DisplayErrorMessage('Error', 'An error occurred during loading the note topics.');
+
     });
 
 }
@@ -435,42 +384,32 @@ function StyleAndSetupIndividualTags(topic, DeleteFunction) {
 
 function LoadSelectedNoteTopics(id) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + '/notetopics/' + id + '/notes/', 
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'notetopics/' + id + '/notes', null, function (data) {
 
-            $.map(data.Data, function (topic) {
+        $.map(data.Data, function (topic) {
 
-                StyleAndSetupIndividualTags(topic, function () {
+            StyleAndSetupIndividualTags(topic, function () {
 
-                    var removeid = '#' + data.Data.Id;
+                var removeid = '#' + topic.Id;
 
-                    $('.noteTopicSelect > div').remove(removeid);
+                $('.noteTopicSelect > div').remove(removeid);
 
-                    $.ajax({
-                        url: WEB_API_ADDRESS + '/notes/' + id + '/notetopics/' + topic.Id,
-                        method: 'DELETE',
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                MakeServiceCall('DELETE', '/notes/' + id + '/notetopics/' + topic.Id, null, null,
 
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
-                        }
-                    });
+                function (xhr, status, err) {
+
+                    DisplayErrorMessage('Error', 'An error occurred during deleting the note topics.');
 
                 });
+
             });
-           
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Note Topics.');
-        }
+
+        });
+
+    }, function (xhr, status, err) {
+
+        DisplayErrorMessage('Error', 'An error occurred during loading the Note Topics.');
+
     });
 
 } 
@@ -531,26 +470,22 @@ function CreateMultiSelectTopics(topics, container) {
 
 function GetNoteAlerts() {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'notealert/' + currentEntity.Id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'notealert/' + currentEntity.Id, null, function (data) {
 
-            if (data.Data.length > 0) {
+        if (data.Data.length > 0) {
 
-                SetupNoteAlertModal();
+            SetupNoteAlertModal();
 
-                LoadNoteAlertGrid(data.Data);
+            LoadNoteAlertGrid(data.Data);
 
-                $('.notealertmodal').show();
-            }
+            $('.notealertmodal').show();
 
-        },
-        error: function (xhr, status, err) {
         }
+
+    },
+
+    function (xhr, status, err) {
+
     });
 }
 
@@ -563,16 +498,8 @@ function LoadNoteAlertGrid(data) {
         { dataField: 'Title', caption: 'Title' }
     ];
 
-    LoadGrid('.notealertgridcontainer', 'notealertgrid', columns, 'notealert/' + currentEntity.Id, null, '', '.notealertmodal', '.notealertmodal', 500, false, false, false, null);
+    CustomLoadGrid('notealertgrid', '.notealertgridcontainer', columns, 'notealert/' + currentEntity.Id, null, EditNoteDetails, null, null);
 
-
-    //LoadGrid('notealertgrid',
-    //    'notealertgridcontainer',
-    //    columns,
-    //    'notealert/' + currentEntity.Id ,
-    //    null,
-    //    EditNoteDetails,
-    //    null);
 }
 
 function SetupNoteAlertModal() {

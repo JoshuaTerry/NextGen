@@ -39,11 +39,11 @@ namespace DDI.Shared.Models.Client.Core
         public NoteCode NoteCode { get; set; }
 
         public Guid? PrimaryContactId { get; set; }
-       // [ForeignKey("PrimaryContactId")]
+        [ForeignKey("PrimaryContactId")]
         public Constituent PrimaryContact { get; set; }
 
         public Guid? ContactMethodId { get; set; }
-        // [ForeignKey("ContactMethodId")]
+        [ForeignKey("ContactMethodId")]
         public NoteContactMethod ContactMethod { get; set; }
 
         public Guid? UserResponsibleId { get; set; }
