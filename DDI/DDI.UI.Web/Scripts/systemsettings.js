@@ -120,7 +120,7 @@ function GetSystemSettings(category, callback) {
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
 
-    route = route + '?fields=all';
+   // route = route + '?fields=all';
     var container = $('<div>').addClass('twocolumn');
 
     var activeSection = $('<div>').addClass('fieldblock');
