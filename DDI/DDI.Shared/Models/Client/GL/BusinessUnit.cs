@@ -22,6 +22,11 @@ namespace DDI.Shared.Models.Client.GL
         [Index("IX_Code", IsUnique = true), MaxLength(16)]
         public string Code { get; set; }
                 
-        ICollection<User> Users { get; set; }
+        [InverseProperty(nameof(User.BusinessUnits))]
+        public ICollection<User> Users { get; set; }
+
+        [InverseProperty(nameof(User.DefaultBusinessUnit))]
+        public ICollection<User> DefaultUsers { get; set; }
+
     }
 }

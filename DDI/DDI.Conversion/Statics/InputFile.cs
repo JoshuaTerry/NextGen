@@ -53,6 +53,7 @@ namespace DDI.Conversion.Statics
         #region GL Files
         public static string GL_FWCodes => "FWCodes.csv";
         public static string GL_BusinessUnits => "Entity.csv";
+        public static string GL_BusinessUnitUsers => "EntityUser.csv";
         #endregion
 
         #region CP Files

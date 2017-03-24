@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion.GL
 {    
@@ -18,6 +20,7 @@ namespace DDI.Conversion.GL
         {
             Codes = 70001,
             BusinessUnits = 70002,
+            BusinessUnitUsers = 70003,
         }
 
         private string _glDirectory;        
@@ -29,6 +32,7 @@ namespace DDI.Conversion.GL
 
             RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.GL_FWCodes));
             RunConversion(ConversionMethod.BusinessUnits, () => LoadBusinessUnits(InputFile.GL_BusinessUnits));
+            RunConversion(ConversionMethod.BusinessUnitUsers, () => LoadBusinessUnitUsers(InputFile.GL_BusinessUnitUsers));
         }
 
         private void LoadLegacyCodes(string filename)
@@ -95,7 +99,60 @@ namespace DDI.Conversion.GL
             }
         }
 
+        private void LoadBusinessUnitUsers(string filename)
+        {
+            DomainContext context = new DomainContext();
+            context.GL_BusinessUnits.Load();
+            context.Users.Include(p => p.BusinessUnits).Include(p => p.DefaultBusinessUnit).Load();
 
+            IList<BusinessUnit> businessUnits = context.GL_BusinessUnits.Local;
+            IList<User> users = context.Users.Local;
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    string code = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(code))
+                    {
+                        continue;
+                    }
+
+                    BusinessUnit bu = businessUnits.FirstOrDefault(p => p.Code == code);
+                    if (bu == null)
+                    {
+                        importer.LogError($"Invalid business unit code \"{code}\".");
+                        continue;
+                    }
+                    
+                    string username = importer.GetString(1);
+                    User user = GetUserByName(users, username);
+                    if (user == null)
+                    {
+                        importer.LogError($"Invalid user name \"{username}\".");
+                        continue;
+                    }
+
+                    bool isDefault = importer.GetBool(2);
+
+                    if (!user.BusinessUnits.Any(p => p.Id == bu.Id))
+                    {
+                        user.BusinessUnits.Add(bu);
+                    }
+
+                    if (isDefault)
+                    {
+                        user.DefaultBusinessUnit = bu;
+                    }
+
+                    count++;
+                }
+
+                context.SaveChanges();
+            }
+        }
 
     }
 }
