@@ -752,8 +752,8 @@ function LoadAvailableTags(container) {
 
                             }
 
-                            $(header).appendTo($(modal).find('.tagselectgridcontainer'));
-                            $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
+                            $(header).appendTo($(container).find('.tagselectgridcontainer'));
+                            $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
 
                         });
 

@@ -102,7 +102,7 @@
             <h1>Custom Fields</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadCRMClientCustomFields">Client Custom Fields</a></li>
+                    <li><a href="#" class="LoadCRMClientCustomFields">CRM Custom Fields</a></li>
                     <li><a href="#" class="LoadDonationClientCustomFields">Donation Custom Fields</a></li>
                     <li><a href="#" class="LoadGLClientCustomFields">GL Format Custom Fields</a></li>
                 </ul>
