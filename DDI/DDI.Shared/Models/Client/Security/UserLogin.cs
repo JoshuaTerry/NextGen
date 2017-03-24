@@ -10,10 +10,12 @@ namespace DDI.Shared.Models.Client.Security
     {
         [Key]
         public Guid Id { get; set; }
+        [MaxLength(64)]
         public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
-        public string DisplayName { get; set; } 
+        public string DisplayName { get; set; }
+        [MaxLength(64)]
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }

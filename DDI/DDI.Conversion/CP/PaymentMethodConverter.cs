@@ -65,7 +65,7 @@ namespace DDI.Conversion.CP
             LoadConstituentIds();
 
             // Load the EFT formats
-            var formats = LoadEntities(context.EFTFormats);
+            var formats = LoadEntities(context.CP_EFTFormats);
 
             using (var importer = CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)))
             {

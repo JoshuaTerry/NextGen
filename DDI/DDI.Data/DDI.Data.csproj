@@ -69,6 +69,7 @@
     <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
+    <Compile Include="Conventions\DecimalPrecisionAttributeConvention.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />

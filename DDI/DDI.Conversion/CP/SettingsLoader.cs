@@ -62,7 +62,7 @@ namespace DDI.Conversion.CP
                     switch (codeSet)
                     {
                         case EFT_FORMAT_SET:
-                            context.EFTFormats.AddOrUpdate(
+                            context.CP_EFTFormats.AddOrUpdate(
                                 prop => prop.Code,
                                 new EFTFormat { Code = code, Name = description, IsActive = true });
                             break;
