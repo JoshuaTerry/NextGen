@@ -4027,7 +4027,7 @@ function DeleteRegion(id) {
 }
 function DeleteRegionLevel(id) {
 
-    var currentLevel = $('.currentlevel').val();
+ 
     $.ajax({
         url: WEB_API_ADDRESS + 'regionlevels/' + id,
         method: 'DELETE',
