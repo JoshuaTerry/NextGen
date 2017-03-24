@@ -979,7 +979,7 @@
          
         <div class="modalcontent"> 
          
-            <input type="hidden" class="noteCodeId" /> <!-- will need to be notecode-Id -->
+            <input type="hidden" class="noteCodeId" />
          
             <div class="fieldblock"> 
                 <label>Code</label> 
