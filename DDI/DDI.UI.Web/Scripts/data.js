@@ -287,73 +287,7 @@ function LoadGridData(container, grid, columns, route, selected, showFilter, sho
 
 }
 
-function LoadAuditGrid(grid, container, columns, route, showFilterRow) {
-
-    if (showFilterRow == '' || showFilterRow === undefined)
-        showFilterRow = false;
-
-    if ($.type(container) === "string" && container.indexOf('.') != 0)
-        container = '.' + container;
-
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            LoadAuditGridWithData(grid, container, columns, route, showFilterRow, data);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
-        }
-    });
-}
-
-function LoadAuditGridWithData(grid, container, columns, route, showFilterRow, data) {
-
-    $(container).html('');
-
-    var datagrid = $('<div>').addClass(grid);
-    
-    var actualData = data;
-
-    if (data.Data) {
-        actualData = data.Data;
-    }
-
-    $(datagrid).dxDataGrid({
-        dataSource: actualData,
-        columns: columns,
-        paging: {
-            pageSize: 25
-        },
-        pager: {
-            showNavigationButtons: true,
-            showPageSizeSelector: true,
-            showInfo: true,
-            allowedPageSizes: [15, 25, 50, 100]
-        },
-        groupPanel: {
-            visible: false,
-            allowColumnDragging: true
-        },
-        filterRow: {
-            visible: showFilterRow,
-            showOperationChooser: false
-        },
-        selection: {
-            mode: 'single',
-            allowSelectAll: false
-        }
-    });
-
-    $(datagrid).appendTo($(container));
-}
-
-function LoadGrid2(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
+function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
     if (container.indexOf('.') != 0)
         container = '.' + container;

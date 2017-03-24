@@ -1,5 +1,4 @@
-﻿
-var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
+﻿var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
 var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
@@ -78,7 +77,7 @@ function LoadBusinessDate() {
     }
     else {
 
-        MakeServiceCall('GET', 'businessdate', item, function (data) {
+        MakeServiceCall('GET', 'businessdate', null, function (data) {
 
             if (data.Data) {
                 var date = FormatJSONDate(data.Data);
@@ -104,7 +103,7 @@ function LoadEnvironment() {
         $('.environment').text(sessionStorage.getItem('environment'));
     }
     else {
-        MakeServiceCall('GET', 'environment', item, function (data) {
+        MakeServiceCall('GET', 'environment', null, function (data) {
 
             if (data.Data) {
                 if (data.Data.length > 0) {
@@ -204,7 +203,7 @@ function GetNewFields() {
 function CloseModal(modal) {
 
     ClearFields('.modalcontent');
-    
+
     $(modal).dialog('close');
 
 }
@@ -284,9 +283,9 @@ function LoadAccordions() {
 
             ).insertBefore(this);
         }
-        
+
     });
-    
+
 
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
@@ -304,7 +303,7 @@ function LoadAccordions() {
 
         $(".ui-accordion-content").show('fast');
         $('.ui-accordion-header').addClass('ui-state-active');
-        
+
     });
 
 }
@@ -318,19 +317,19 @@ function LoadDatePickers() {
 function LoadDatePair() {
 
     // if ($.timepicker) {
-        //$('.datepair .time').timepicker({
-        //    'showDuration': true,
-        //    'timeFormat': 'g:ia'
-        //});
+    //$('.datepair .time').timepicker({
+    //    'showDuration': true,
+    //    'timeFormat': 'g:ia'
+    //});
 
-        //$('.datepair .date').datepicker({
-        //    'format': 'm/d/yyyy',
-        //    'autoclose': true
-        //});
+    //$('.datepair .date').datepicker({
+    //    'format': 'm/d/yyyy',
+    //    'autoclose': true
+    //});
 
-        // $('.datepair').datepair();
+    // $('.datepair').datepair();
     // }
-    
+
 }
 
 function FormatJSONDate(jsonDate) {
@@ -340,7 +339,7 @@ function FormatJSONDate(jsonDate) {
     if (jsonDate) {
         date = new Date(jsonDate).toDateString();
     }
-    
+
     return date;
 }
 
@@ -363,7 +362,7 @@ function ClearElement(e) {
         }
 
     }
-    
+
     if ($(e).is('textarea')) {
 
         $(e).text('');
@@ -395,7 +394,7 @@ function GetAutoZipData(container, prefix) {
                 '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
-        MakeServiceCall('GET', 'addresses/zip/?' + fields, item, function (data) {
+        MakeServiceCall('GET', 'addresses/zip/?' + fields, null, function (data) {
 
             if (data && data.Data) {
 
@@ -467,7 +466,7 @@ function LoadTagSelector(type, container) {
                             DisplaySelectedTags(container);
 
                         }
-        
+
                     }, null);
 
                 });
@@ -485,7 +484,7 @@ function LoadTagSelector(type, container) {
 
 function LoadAvailableTags(container) {
 
-    MakeServiceCall('GET', 'taggroups', item, function (data) {
+    MakeServiceCall('GET', 'taggroups', null, function (data) {
 
         if (data.Data) {
 
@@ -520,7 +519,7 @@ function LoadAvailableTags(container) {
             RefreshTags();
 
         }
-        
+
     }, null);
 
 }
@@ -551,9 +550,9 @@ function DisplaySelectedTags(container) {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
 
-                        if (data.Data){
+                        if (data.Data) {
 
                             currentEntity = data.Data;
 
@@ -585,9 +584,9 @@ function DisplaySelectedTagsConstituentType() {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, item, function (data) {
+                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
 
-                        if (data.Data){
+                        if (data.Data) {
 
                             currentEntity = data.Data;
 
@@ -641,7 +640,7 @@ function CreateMultiSelectTags(tags, container) {
 
 function GetFile(id, callback) {
 
-    MakeServiceCall('GET', 'filestorage/' + id, function (data) {
+    MakeServiceCall('GET', 'filestorage/' + id, null, function (data) {
 
         if (data.Data && callback) {
             callback(data.Data);
@@ -719,7 +718,7 @@ function SetupEditControls() {
             });
 
         }
-                
+
     });
 
     $('.savebutton').click(function (e) {
@@ -749,10 +748,10 @@ function SetupEditControls() {
 }
 
 function StartEdit(editcontainer) {
-   
+
     editing = true;
     // Get the index of the section that was previously edited
-    lastActiveSection = $('.accordions').accordion('option', 'active'); 
+    lastActiveSection = $('.accordions').accordion('option', 'active');
 
     $(editcontainer).find('.editmode-active').show();
     $(editcontainer).find('.editmode-inactive').hide();
@@ -764,7 +763,7 @@ function StartEdit(editcontainer) {
 
     });
 
-    $(editcontainer).find('.dx-tagbox').each(function() {
+    $(editcontainer).find('.dx-tagbox').each(function () {
         $(this).dxTagBox({
             disabled: false
         });
@@ -810,7 +809,7 @@ function SaveEdit(editcontainer) {
     // Save the entity
     MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
 
-        if (data.Data){
+        if (data.Data) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
@@ -899,9 +898,9 @@ function SaveTagBoxes(editcontainer) {
 }
 
 function SaveChildCollection(children, route) {
-    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ChildIds: children}), function (data) {
+    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
 
-        if (data.Data){
+        if (data.Data) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
@@ -924,9 +923,9 @@ function DeleteEntity(url, method, confirmationMessage) {
     var okToDelete = confirm(confirmationMessage);
     if (okToDelete === true) {
         // delete the entity
-        MakeServiceCall(method, url, item, function (data) {
+        MakeServiceCall(method, url, null, function (data) {
 
-            if (data.Data){
+            if (data.Data) {
                 // Display success
                 DisplaySuccessMessage('Success', 'This item was deleted.');
 
