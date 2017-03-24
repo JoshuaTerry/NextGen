@@ -628,9 +628,6 @@ function LoadEntity(route, id, prefix) {
                 else {
                     $(prefix + property).val(data.Data[property]);
                 }
-                else {
-                    $(prefix + property).val(data.Data[property]);
-                }
 
             }
             else if ($(prefix + property).is('input[type="checkbox"]')) {
