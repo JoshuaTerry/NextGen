@@ -7,6 +7,7 @@ using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -103,7 +104,7 @@ namespace DDI.WebApi.Controllers
                 var response = _service.GetById(id);
                 if (!response.IsSuccessful)
                 {
-                    throw new Exception(response.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", response.ErrorMessages));
                 }
                 return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle), urlHelper);
             }
@@ -122,7 +123,7 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
                 var totalCount = response.TotalResults;
@@ -131,7 +132,7 @@ namespace DDI.WebApi.Controllers
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", dynamicResponse.ErrorMessages));
                 }
                 return Ok(dynamicResponse);
             }
@@ -159,7 +160,7 @@ namespace DDI.WebApi.Controllers
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", dynamicResponse.ErrorMessages));
                 }
 
                 return Ok(dynamicResponse);
@@ -226,13 +227,13 @@ namespace DDI.WebApi.Controllers
 
                 if (!entity.IsSuccessful)
                 {
-                    return BadRequest(entity.ErrorMessages.ToString());
+                    return BadRequest(string.Join(",", entity.ErrorMessages));
                 }
 
                 var response = _service.Delete(entity.Data);
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
                 return Ok();

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using DDI.Shared.Models.Client.GL;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
@@ -26,10 +28,18 @@ namespace DDI.Shared.Models.Client.Security
         public string FullName { get; set; } 
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
+        [MaxLength(64)]
         public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
+        [MaxLength(64)]
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
+
+        public Guid? DefaultBusinessUnitId { get; set; }
+        [ForeignKey(nameof(DefaultBusinessUnitId))]
+        public BusinessUnit DefaultBusinessUnit { get; set; }
+
+        ICollection<BusinessUnit> BusinessUnits { get; set; }
 
         public string DisplayName
         {

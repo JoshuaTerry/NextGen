@@ -473,7 +473,7 @@
                         </div>
                     </div>
 
-                    <h1>Contact Information</h1>
+                    <h1 class="ContactInformationSettingsSection"><span class="ContactInformationSettingsSectionLabel">Contact Information</span></h1>
                     <div>
 
                         <div class="accordions contactinfocontainer">

@@ -12,10 +12,10 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(4)]
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
         public string Code { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         public bool IsActive { get; set; }

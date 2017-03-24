@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDI.Shared.Models
+namespace DDI.Shared.Enums.GL
 {
-    // This is a Marker Interface for Read Only Entities
-    public interface IReadOnlyEntity
+    public enum BusinessUnitType
     {
+        Organization = 0,
+        Common = 1,
+        Separate = 2
     }
+
 }

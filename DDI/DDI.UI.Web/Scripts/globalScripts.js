@@ -258,7 +258,10 @@ function SaveNewConstituent(modal, addnew) {
                 else {
                     CloseModal(modal);
 
-                    DisplayConstituent(data.Data.ConstituentNumber);
+                    currentEntity = data.Data;
+
+                    sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
+                    location.href = "Constituents.aspx";
                 }
 
             }
@@ -749,8 +752,8 @@ function LoadAvailableTags(container) {
 
                             }
 
-                            $(header).appendTo($(modal).find('.tagselectgridcontainer'));
-                            $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
+                            $(header).appendTo($(container).find('.tagselectgridcontainer'));
+                            $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
 
                         });
 
