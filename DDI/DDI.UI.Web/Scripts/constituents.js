@@ -261,9 +261,7 @@ function DisplayConstituentData() {
         PopulateUserIdDropDown();
 
         LoadRelationshipsQuickView();
-
-      
-
+        
         NewAddressModal();
 
         DisplaySelectedTags($('.constituenttagselect'));
@@ -480,13 +478,6 @@ function LoadEducationGrid() {
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
         , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
-
-}
-
-function EducationModalDropDowns() {
-
-    PopulateDropDown('.ed-Degree', 'degrees', '', '', null);
-    PopulateDropDown('.ed-School', 'schools', '', '', null);
 
 }
 
@@ -987,8 +978,8 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
    
 }
 
-
 /* End Contact Information Section */
+
 /* Relationships Tab */
 
 function LoadRelationshipsQuickView() {
