@@ -47,5 +47,7 @@ namespace DDI.Shared.Models.Client.GL
         public int SortOrder { get; set; }
 
         public ICollection<Segment> Segments { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

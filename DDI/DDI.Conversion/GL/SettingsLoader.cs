@@ -24,6 +24,7 @@ namespace DDI.Conversion.GL
             Ledgers = 70004,
             FiscalYears = 70005,
             FiscalPeriods = 70006,
+            SegmentLevels = 70007,
         }
 
         private string _glDirectory;
@@ -46,6 +47,7 @@ namespace DDI.Conversion.GL
             RunConversion(ConversionMethod.Ledgers, () => LoadLedgers(InputFile.GL_Ledgers));
             RunConversion(ConversionMethod.FiscalYears, () => LoadFiscalYears(InputFile.GL_FiscalYears));
             RunConversion(ConversionMethod.FiscalPeriods, () => LoadFiscalPeriods(InputFile.GL_FiscalPeriods));
+            RunConversion(ConversionMethod.SegmentLevels, () => LoadSegmentLevels(InputFile.GL_SegmentLevels));
         }
 
         private void LoadLegacyCodes(string filename)
@@ -89,13 +91,13 @@ namespace DDI.Conversion.GL
 
                 while (importer.GetNextRow())
                 {
-                    string code = importer.GetString(0);
+                    string code = importer.GetString(0, 16);
                     if (string.IsNullOrWhiteSpace(code))
                     {
                         continue;
                     }
                     
-                    string name = importer.GetString(1);
+                    string name = importer.GetString(1, 128);
                     BusinessUnitType type = importer.GetEnum<BusinessUnitType>(2);
 
                     context.GL_BusinessUnits.AddOrUpdate(p => p.Code,
@@ -170,7 +172,7 @@ namespace DDI.Conversion.GL
             DomainContext context = new DomainContext();
 
             FileExport<LegacyToID> companyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.BusinessUnitIdMappingFile), false, true);
-            FileExport<LegacyToID> LedgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerIdMappingFile), false, true);
+            FileExport<LegacyToID> ledgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerIdMappingFile), false, true);
 
             var businessUnits = LoadEntities(context.GL_BusinessUnits);
 
@@ -181,7 +183,7 @@ namespace DDI.Conversion.GL
 
                 while (importer.GetNextRow())
                 {
-                    string code = importer.GetString(0);
+                    string code = importer.GetString(0, 16);
                     if (string.IsNullOrWhiteSpace(code))
                     {
                         continue;
@@ -211,20 +213,20 @@ namespace DDI.Conversion.GL
                     }
 
                     ledger.OrgLedger = orgLedger;
-                    ledger.Name = importer.GetString(1);
+                    ledger.Name = importer.GetString(1, 128);
                     ledger.Status = importer.GetEnum<LedgerStatus>(2);
                     ledger.NumberOfSegments = importer.GetInt(3);
-                    ledger.FixedBudgetName = importer.GetString(4);
-                    ledger.WorkingBudgetName = importer.GetString(5);
-                    ledger.WhatIfBudgetName = importer.GetString(6);
+                    ledger.FixedBudgetName = importer.GetString(4, 40);
+                    ledger.WorkingBudgetName = importer.GetString(5, 40);
+                    ledger.WhatIfBudgetName = importer.GetString(6, 40);
                     ledger.PriorPeriodPostingMode = importer.GetEnum<PriorPeriodPostingMode>(9);
                     ledger.CapitalizeHeaders = importer.GetBool(10);
                     ledger.ApproveJournals = importer.GetBool(14);
                     ledger.AccountGroupLevels = importer.GetInt(16);
-                    ledger.AccountGroup1Title = importer.GetString(17);
-                    ledger.AccountGroup2Title = importer.GetString(18);
-                    ledger.AccountGroup3Title = importer.GetString(19);
-                    ledger.AccountGroup4Title = importer.GetString(20);
+                    ledger.AccountGroup1Title = importer.GetString(17, 40);
+                    ledger.AccountGroup2Title = importer.GetString(18, 40);
+                    ledger.AccountGroup3Title = importer.GetString(19, 40);
+                    ledger.AccountGroup4Title = importer.GetString(20, 40);
                     ledger.PostAutomatically = importer.GetBool(21);
                     ledger.CopyCOAChanges = importer.GetBool(22);
                     ledger.IsParent = importer.GetBool(23);
@@ -235,7 +237,7 @@ namespace DDI.Conversion.GL
                         orgLedger = ledger;
                     }
 
-                    LedgerIdFile.AddRow(new LegacyToID(companyId, ledger.Id));
+                    ledgerIdFile.AddRow(new LegacyToID(companyId, ledger.Id));
 
                     count++;
                 }
@@ -244,12 +246,13 @@ namespace DDI.Conversion.GL
             }
 
             companyIdFile.Dispose();
-            LedgerIdFile.Dispose();
+            ledgerIdFile.Dispose();
         }
 
         private void LoadFiscalYears(string filename)
         {
             DomainContext context = new DomainContext();
+            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerIdMappingFile), false, true);
 
             LoadLedgerIds();
             var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
@@ -277,12 +280,13 @@ namespace DDI.Conversion.GL
 
                     Ledger ledger = ledgers.FirstOrDefault(p => p.Id == ledgerId);
 
-                    string yearName = importer.GetString(1);
+                    string yearName = importer.GetString(1, 16);
 
                     FiscalYear year = context.GL_FiscalYears.FirstOrDefault(p => p.LedgerId == ledgerId && p.Name == yearName);
                     if (year == null)
                     {
                         year = new FiscalYear();
+                        year.AssignPrimaryKey();
                         context.GL_FiscalYears.Add(year);
                         year.LedgerId = ledgerId;
                         year.Name = yearName;
@@ -301,11 +305,15 @@ namespace DDI.Conversion.GL
 
                     ImportCreatedModifiedInfo(year, importer, 10);
 
+                    yearIdFile.AddRow(new LegacyToID($"{code},{yearName}", ledger.Id));
+
                     count++;        
                 }
 
                 context.SaveChanges();
             }
+
+            yearIdFile.Dispose();
         }
 
         private void LoadFiscalPeriods(string filename)
@@ -368,8 +376,66 @@ namespace DDI.Conversion.GL
             }
         }
 
+        private void LoadSegmentLevels(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadLedgerIds();
+            var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    // Legacy company ID
+                    string code = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(code))
+                    {
+                        continue;
+                    }
+
+                    int cid = 0;
+                    Guid ledgerId;
+
+                    if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
+                    {
+                        importer.LogError($"Invalid legacy company ID \"{code}\"");
+                        continue;
+                    }
+
+                    int level = importer.GetInt(1);
+
+                    SegmentLevel slev = context.GL_SegmentLevels.FirstOrDefault(p => p.LedgerId == ledgerId && p.Level == level);
+                    if (slev == null)
+                    {
+                        slev = new SegmentLevel();
+                        context.GL_SegmentLevels.Add(slev);
+                        slev.LedgerId = ledgerId;
+                        slev.Level = level;
+                    }
+
+                    slev.Type = importer.GetEnum<SegmentType>(2);
+                    slev.Format = importer.GetEnum<SegmentFormat>(3);
+                    slev.Length = importer.GetInt(4);
+                    slev.IsLinked = importer.GetBool(5);
+                    slev.IsCommon = importer.GetBool(6);
+                    slev.Name = importer.GetString(7, 40);
+                    slev.Abbreviation = importer.GetString(8, 16);
+                    slev.Separator = importer.GetString(9, 1);
+                    slev.SortOrder = importer.GetInt(10);
+
+                    count++;
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+
         /// <summary>
-        /// If necessary, load legacy constituent IDs into dictionary.
+        /// If necessary, load legacy ledger IDs into dictionary.
         /// </summary>
         private void LoadLedgerIds()
         {

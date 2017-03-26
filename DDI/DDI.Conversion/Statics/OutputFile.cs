@@ -19,6 +19,7 @@ namespace DDI.Conversion.Statics
         public static string NoteIdMappingFile = "NoteId.csv";
         public static string BusinessUnitIdMappingFile = "BusinessUnitId.csv";
         public static string LedgerIdMappingFile = "LedgerId.csv";
+        public static string FiscalYearIdMappingFile = "FiscalYearId.csv";
 
         #endregion
 
@@ -50,6 +51,12 @@ namespace DDI.Conversion.Statics
 
         public static string CP_PaymentMethodFile => "PaymentMethod.csv";
         public static string CP_PaymentMethodConstituentFile => "PaymentMethodConstituents.csv";
+
+        #endregion
+
+        #region GL SSIS Files
+
+        public static string GL_SegmentFile => "Segment.csv";
 
         #endregion
 

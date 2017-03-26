@@ -57,6 +57,8 @@ namespace DDI.Conversion.Statics
         public static string GL_Ledgers => "Ledger.csv";
         public static string GL_FiscalYears => "FiscalYear.csv";
         public static string GL_FiscalPeriods => "FiscalPeriod.csv";
+        public static string GL_SegmentLevels => "SegmentLevel.csv";
+        public static string GL_Segments => "Segment.csv";
         #endregion
 
         #region CP Files
