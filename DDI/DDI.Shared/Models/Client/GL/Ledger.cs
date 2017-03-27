@@ -44,7 +44,8 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool FundAccounting { get; set; }
 
-        public Guid BusinessUnitId { get; set; }
+        public Guid? BusinessUnitId { get; set; }
+        [ForeignKey(nameof(BusinessUnitId))]
         public BusinessUnit BusinessUnit { get; set; }
 
         public bool PostAutomatically { get; set; }

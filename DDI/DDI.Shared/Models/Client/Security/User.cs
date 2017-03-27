@@ -39,7 +39,8 @@ namespace DDI.Shared.Models.Client.Security
         [ForeignKey(nameof(DefaultBusinessUnitId))]
         public BusinessUnit DefaultBusinessUnit { get; set; }
 
-        ICollection<BusinessUnit> BusinessUnits { get; set; }
+        [InverseProperty(nameof(BusinessUnit.Users))]
+        public ICollection<BusinessUnit> BusinessUnits { get; set; }
 
         public string DisplayName
         {

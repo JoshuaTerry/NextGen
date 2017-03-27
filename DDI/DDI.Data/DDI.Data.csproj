@@ -76,6 +76,14 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201703241853454_GL_v2.cs" />
+    <Compile Include="Migrations\Client\201703241853454_GL_v2.Designer.cs">
+      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703241755260_GL_v1.cs" />
+    <Compile Include="Migrations\Client\201703241755260_GL_v1.Designer.cs">
+      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.cs" />
     <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.Designer.cs">
       <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
@@ -153,6 +161,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201703241853454_GL_v2.resx">
+      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703241755260_GL_v1.resx">
+      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201703211657318_AddingUniqueIndexes.resx">
       <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
     </EmbeddedResource>

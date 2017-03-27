@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Shared;
@@ -185,6 +186,16 @@ namespace DDI.Conversion
             entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);
             entity.CreatedBy = importer.GetString(createdByColumn);
             entity.LastModifiedBy = importer.GetString(modifiedByColumn);         
+        }
+
+        /// <summary>
+        /// Lookup a user by user name.
+        /// </summary>
+        /// <param name="users">Set of User entities.</param>
+        /// <param name="userName">User name.</param>
+        protected User GetUserByName(IEnumerable<User> users, string userName)
+        {
+            return users.FirstOrDefault(p => Regex.IsMatch(p.UserName, $"^{userName}(@.*)?$", RegexOptions.IgnoreCase));
         }
 
         #endregion

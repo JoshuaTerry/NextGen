@@ -18,6 +18,7 @@ using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace DDI.Data
 {
