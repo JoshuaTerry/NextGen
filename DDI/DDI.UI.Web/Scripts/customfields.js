@@ -33,14 +33,9 @@ function DisplayCustomFieldsGrid(container, entity) {
         { dataField: 'DisplayOrder', caption: 'Display Order' }
     ]
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + 'entity/' + entity,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, item, function (data) {
 
+        if (data.Data) {
             $(datagrid).dxDataGrid({
                 dataSource: data.Data,
                 columns: columns,
@@ -68,11 +63,9 @@ function DisplayCustomFieldsGrid(container, entity) {
 
             $(datagrid).appendTo($(container));
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -87,33 +80,22 @@ function DisplayCustomFields(container, entity, callback) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + 'entity/' + entity,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, item, function (data) {
 
-            if (data && data.IsSuccessful) {
+        if (data && data.IsSuccessful) {
 
-                $.map(data.Data, function (item) {
+            $.map(data.Data, function (item) {
 
-                    $(container).append(CreateCustomField(item));
+                $(container).append(CreateCustomField(item));
 
-                });
+            });
 
-                if (callback) {
-                    callback();
-                }
-
+            if (callback) {
+                callback();
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
