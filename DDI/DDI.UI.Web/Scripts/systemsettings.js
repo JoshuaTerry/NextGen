@@ -52,14 +52,9 @@ function LoadSettingsGrid(grid, container, columns, route) {
 
     var datagrid = $('<div>').addClass(grid);
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
+        if (data.Data) {
             $(datagrid).dxDataGrid({
                 dataSource: data.Data,
                 columns: columns,
@@ -83,36 +78,25 @@ function LoadSettingsGrid(grid, container, columns, route) {
             });
 
             $(datagrid).appendTo($(container));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
 function GetSystemSettings(category, callback) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'sectionpreferences/' + category + '/settings',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'sectionpreferences/' + category + '/settings', null, function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful && callback) {
 
                 callback(data.Data);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -161,14 +145,9 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
 function GetSetting(category, key, route, id, checkbox, label) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + '/' + category + '/settings/' + key,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + '/' + category + '/settings/' + key, null, function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful) {
 
                 $(id).val(data.Data.Id);
@@ -176,12 +155,9 @@ function GetSetting(category, key, route, id, checkbox, label) {
                 $(label).val(data.Data.Value);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -214,27 +190,18 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
         }
     }
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: method,
-        data: JSON.stringify(item),
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall(method, route, JSON.stringify(item), function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful) {
                 DisplaySuccessMessage('Success', 'Setting saved successfully.');
 
                 $(idContainer).val(data.Data.Id);
             }
 
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 /* END SECTION SETTINGS */
@@ -459,26 +426,17 @@ function LoadConstituentTypesSectionSettings() {
                     IsRequired: true
                 }
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'constituenttypes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
+                MakeServiceCall('POST', 'constituenttypes', item, function (data) {
 
+                    if (data.Data) {
                         DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
 
                         CloseModal(modal);
 
                         LoadConstituentTypeSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
                     }
-                });
 
+                }, null);
             });
         })
         .appendTo($(header));
@@ -507,6 +465,21 @@ function DisplayConstituentTypeTags(tags) {
         $('<span>').text(name).appendTo($(t));
         $('<div>').addClass('dx-tag-remove-button')
             .click(function () {
+                MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
+
+                    if (data.Data) {
+                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+                    }
+
+                },
+                {
+                    CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+
+                    }
+                });
                 $.ajax({
                     url: WEB_API_ADDRESS + 'constituenttypes/' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id,
                     method: 'DELETE',
