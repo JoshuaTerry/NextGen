@@ -20,6 +20,11 @@ namespace DDI.Conversion.Statics
         public static string BusinessUnitIdMappingFile = "BusinessUnitId.csv";
         public static string LedgerIdMappingFile = "LedgerId.csv";
         public static string FiscalYearIdMappingFile = "FiscalYearId.csv";
+        public static string SegmentIdMappingFile = "SegmentId.csv";
+        public static string AccountGroupIdMappingFile = "AccountGroupId.csv";
+        public static string AccountIdMappingFile = "AccountId.csv";
+        public static string LedgerAccountIdMappingFile = "LedgerAccountId.csv";
+        public static string LedgerAccountYearIdMappingFile = "LedgerAccountYearId.csv";
 
         #endregion
 
@@ -57,7 +62,14 @@ namespace DDI.Conversion.Statics
         #region GL SSIS Files
 
         public static string GL_SegmentFile => "Segment.csv";
-
+        public static string GL_AccountGroupFile => "AccountGroup.csv";
+        public static string GL_AccountFile => "Account.csv";
+        public static string GL_AccountPriorYear => "AccountPriorYear.csv";
+        public static string GL_AccountSegment => "AccountSegment.csv";
+        public static string GL_LedgerAccount => "LedgerAccount.csv";
+        public static string GL_LedgerAccountMerge => "LedgerAccountMerge.csv";
+        public static string GL_LedgerAccountYear => "LedgerAccountYear.csv";
+        
         #endregion
 
 

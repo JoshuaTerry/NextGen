@@ -252,7 +252,7 @@ namespace DDI.Conversion.GL
         private void LoadFiscalYears(string filename)
         {
             DomainContext context = new DomainContext();
-            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerIdMappingFile), false, true);
+            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.FiscalYearIdMappingFile), false, true);
 
             LoadLedgerIds();
             var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
@@ -305,7 +305,7 @@ namespace DDI.Conversion.GL
 
                     ImportCreatedModifiedInfo(year, importer, 10);
 
-                    yearIdFile.AddRow(new LegacyToID($"{code},{yearName}", ledger.Id));
+                    yearIdFile.AddRow(new LegacyToID($"{code},{yearName}", year.Id));
 
                     count++;        
                 }

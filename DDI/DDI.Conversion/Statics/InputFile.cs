@@ -51,6 +51,7 @@ namespace DDI.Conversion.Statics
         #endregion
 
         #region GL Files
+
         public static string GL_FWCodes => "FWCodes.csv";
         public static string GL_BusinessUnits => "Entity.csv";
         public static string GL_BusinessUnitUsers => "EntityUser.csv";
@@ -59,6 +60,12 @@ namespace DDI.Conversion.Statics
         public static string GL_FiscalPeriods => "FiscalPeriod.csv";
         public static string GL_SegmentLevels => "SegmentLevel.csv";
         public static string GL_Segments => "Segment.csv";
+        public static string GL_AccountGroups => "AccountGroup.csv";
+        public static string GL_Accounts => "Account.csv";
+        public static string GL_AccountPriorYears => "AccountPriorYear.csv";
+        public static string GL_LedgerAccountYears => "LedgerAccountYear.csv";
+        public static string GL_LedgerAccountMerges => "LedgerAccountMerge.csv";
+
         #endregion
 
         #region CP Files
