@@ -9,7 +9,7 @@ function AddDefaultOption(e, text, val) {
 function GetApiHeaders() {
 
     var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    var headers = {};
+    var headers = {}; 
 
     if (token) {
         headers.Authorization = 'Bearer ' + token;
