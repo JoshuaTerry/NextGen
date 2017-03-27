@@ -293,6 +293,10 @@
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
     <Compile Include="Helpers\PatchUpdateUser.cs" />
+    <Compile Include="Migrations\Identity\201703271907212_UserMigrationFixes.cs" />
+    <Compile Include="Migrations\Identity\201703271907212_UserMigrationFixes.Designer.cs">
+      <DependentUpon>201703271907212_UserMigrationFixes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.cs" />
     <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.Designer.cs">
       <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
@@ -403,6 +407,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Identity\201703271907212_UserMigrationFixes.resx">
+      <DependentUpon>201703271907212_UserMigrationFixes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.resx">
       <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
     </EmbeddedResource>
