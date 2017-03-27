@@ -52,14 +52,9 @@ function LoadSettingsGrid(grid, container, columns, route) {
 
     var datagrid = $('<div>').addClass(grid);
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
+        if (data.Data) {
             $(datagrid).dxDataGrid({
                 dataSource: data.Data,
                 columns: columns,
@@ -83,36 +78,25 @@ function LoadSettingsGrid(grid, container, columns, route) {
             });
 
             $(datagrid).appendTo($(container));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
 function GetSystemSettings(category, callback) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'sectionpreferences/' + category + '/settings',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'sectionpreferences/' + category + '/settings', null, function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful && callback) {
 
                 callback(data.Data);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -161,14 +145,9 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
 function GetSetting(category, key, route, id, checkbox, label) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + '/' + category + '/settings/' + key,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + '/' + category + '/settings/' + key, null, function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful) {
 
                 $(id).val(data.Data.Id);
@@ -176,12 +155,9 @@ function GetSetting(category, key, route, id, checkbox, label) {
                 $(label).val(data.Data.Value);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -214,27 +190,18 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
         }
     }
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: method,
-        data: JSON.stringify(item),
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall(method, route, JSON.stringify(item), function (data) {
 
+        if (data.Data) {
             if (data.IsSuccessful) {
                 DisplaySuccessMessage('Success', 'Setting saved successfully.');
 
                 $(idContainer).val(data.Data.Id);
             }
 
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 /* END SECTION SETTINGS */
@@ -459,25 +426,17 @@ function LoadConstituentTypesSectionSettings() {
                     IsRequired: true
                 }
 
-                $.ajax({
-                    type: 'POST',
-                    url: WEB_API_ADDRESS + 'constituenttypes',
-                    data: item,
-                    contentType: 'application/x-www-form-urlencoded',
-                    crossDomain: true,
-                    success: function () {
+                MakeServiceCall('POST', 'constituenttypes', item, function (data) {
 
+                    if (data.Data) {
                         DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
 
                         CloseModal(modal);
 
                         LoadConstituentTypeSettingsGrid();
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
                     }
-                });
+
+                }, null);
 
             });
         })
@@ -507,21 +466,10 @@ function DisplayConstituentTypeTags(tags) {
         $('<span>').text(name).appendTo($(t));
         $('<div>').addClass('dx-tag-remove-button')
             .click(function () {
-                $.ajax({
-                    url: WEB_API_ADDRESS + 'constituenttypes/' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id,
-                    method: 'DELETE',
-                    headers: GetApiHeaders(),
-                    contentType: 'application/json; charset-utf-8',
-                    crossDomain: true,
-                    success: function () {
+                MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
 
+                    if (data.Data) {
                         DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-
-                    },
-                    error: function (xhr, status, err) {
-                        DisplayErrorMessage('Error', 'An error occurred deleting the tag.');
                         CloseModal(modal);
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
@@ -569,28 +517,16 @@ function LoadConstituentTypeTagSelector(typeId, container) {
                         }
                     });
 
-                    $.ajax({
-                        url: WEB_API_ADDRESS + 'constituenttypes/' + constTypeId + '/constituenttypetags',
-                        method: 'POST',
-                        headers: GetApiHeaders(),
-                        data: JSON.stringify({ tags: tagIds }),
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('POST', 'constituenttypes/' + constTypeId + '/constituenttypetags', JSON.stringify({ tags: tagIds }), function (data) {
 
-                            // Display success
+                        if (data.Data) {
                             DisplaySuccessMessage('Success', 'Tags saved successfully.');
                             CloseModal(modal);
                             EditConstituentType(constTypeId);
-                        },
-                        error: function (xhr, status, err) {
-
-                            DisplayErrorMessage('Error', 'An error occurred saving the tags.');
-                            CloseModal(modal);
-                            EditConstituentType(constTypeId);
                         }
-                    });
+
+                    }, null);
+
                 });
             });
             $(this).after($(img));
@@ -691,25 +627,17 @@ function EditConstituentType(id) {
             SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
         }
 
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituenttypes/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
+        MakeServiceCall('PATCH', 'constituenttypes/' + id, item, function (data) {
 
+            if (data.Data) {
                 DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
 
                 CloseModal(modal);
 
                 LoadConstituentTypeSettingsGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
             }
-        });
+
+        }, null);
 
     });
 
@@ -717,36 +645,23 @@ function EditConstituentType(id) {
 
 function DeleteConstituentType(id) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
-        method: 'DELETE',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
+    MakeServiceCall('DELETE', 'constituenttypes/' + id, null, function (data) {
 
+        if (data.Data) {
             DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
 
             LoadConstituentTypeSettingsGrid();
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
         }
 
-    });
+    }, null);
 
 }
 
 function LoadConstituentType(id) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituenttypes/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'constituenttypes/' + id, null, function (data) {
 
+        if (data.Data) {
             if (data && data.Data && data.IsSuccessful) {
 
                 $(modal).find('.consttype-Id').val(data.Data.Id);
@@ -766,11 +681,9 @@ function LoadConstituentType(id) {
                     $(modal).find('.consttype-tagselect').empty();
                 }
             }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading constituent type.');
         }
-    });
+
+    }, null);
 
 }
 /* END CONSTITUENT TYPE SYSTEM SETTINGS */
@@ -1113,19 +1026,14 @@ function CreateRegionLevelSelector(container) {
 
 function DisplayRegionLevels(container) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'regionlevels/',
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'regionlevels/', null, function (data) {
 
+        if (data.Data) {
             if (data && data.Data && data.IsSuccessful) {
 
                 $.map(data.Data, function (level) {
                     var li = $('<li>').attr('id', level.Id).click(function () {
-                        
+
                         if ($('.parentregions').length) {
                             $('.parentregions').remove();
                         }
@@ -1184,25 +1092,17 @@ function DisplayRegionLevels(container) {
                                 IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
                             }
 
-                            $.ajax({
-                                type: 'PATCH',
-                                url: WEB_API_ADDRESS + 'regionlevels/' + id,
-                                data: item,
-                                contentType: 'application/x-www-form-urlencoded',
-                                crossDomain: true,
-                                success: function () {
+                            MakeServiceCall('PATCH', 'regionlevels/' + id, item, function (data) {
 
+                                if (data.Data) {
                                     DisplaySuccessMessage('Success', 'Region Level saved successfully.');
 
                                     CloseModal(modal);
 
                                     LoadRegionsSectionSettings();
-
-                                },
-                                error: function (xhr, status, err) {
-                                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                                 }
-                            });
+
+                            }, null);
 
                         });
                     }).appendTo($(li));
@@ -1249,25 +1149,163 @@ function DisplayRegionLevels(container) {
                                     IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
                                 }
 
-                                $.ajax({
-                                    type: 'POST',
-                                    url: WEB_API_ADDRESS + 'regionlevels',
-                                    data: item,
-                                    contentType: 'application/x-www-form-urlencoded',
-                                    crossDomain: true,
-                                    success: function () {
+                                MakeServiceCall('POST', 'regionlevels', item, function (data) {
 
+                                    if (data.Data) {
                                         DisplaySuccessMessage('Success', 'Region Level saved successfully.');
 
                                         CloseModal(modal);
 
                                         LoadRegionsSectionSettings();
-
-                                    },
-                                    error: function (xhr, status, err) {
-                                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                                     }
-                                });
+
+                                }, null);
+
+                            });
+                        });
+
+                    $(li).appendTo($(container));
+                }
+
+            }
+        }
+
+    }, null);
+
+    MakeServiceCall('GET', 'regionlevels/', null, function (data) {
+
+        if (data.Data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $.map(data.Data, function (level) {
+                    var li = $('<li>').attr('id', level.Id).click(function () {
+
+                        if ($('.parentregions').length) {
+                            $('.parentregions').remove();
+                        }
+
+                        $('.regiongridcontainer').empty();
+
+                        $('.regionlevellist li').removeClass('selected');
+                        $(this).addClass('selected');
+
+                        if (level.IsChildLevel) {
+                            var parents = $('<select>').addClass('parentregions');
+                            $('.regioncontainer').prepend($(parents));
+
+                            PopulateDropDown('.parentregions', 'regions/regionlevels/' + (level.Level - 1), '', '', null, function () {
+                                DisplayRegions(level.Level, $('.parentregions').val());
+                            });
+                        }
+                        else {
+                            DisplayRegions(level.Level, null);
+                        }
+                    });
+
+                    $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
+                        e.preventDefault();
+
+                        $('.regionlevelid').val(level.Id);
+
+                        modal = $('.regionlevelmodal').dialog({
+                            closeOnEscape: false,
+                            modal: true,
+                            width: 250,
+                            resizable: false
+                        });
+
+                        LoadRegionLevel(level.Id);
+
+                        $('.cancelmodal').click(function (e) {
+
+                            e.preventDefault();
+
+                            CloseModal(modal);
+
+                        });
+
+                        $('.submitregionlevel').unbind('click');
+
+                        $('.submitregionlevel').click(function () {
+
+                            var id = $('.regionlevelid').val();
+
+                            var item = {
+                                Level: $(modal).find('.rl-Level').val(),
+                                Label: $(modal).find('.rl-Label').val(),
+                                Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
+                            }
+
+                            MakeServiceCall('PATCH', 'regionlevels/' + id, item, function (data) {
+
+                                if (data.Data) {
+                                    DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                    CloseModal(modal);
+
+                                    LoadRegionsSectionSettings();
+                                }
+
+                            }, null);
+
+                        });
+                    }).appendTo($(li));
+                    $('<span>').text(level.DisplayName).appendTo($(li));
+                    $(li).appendTo($(container));
+                });
+
+                // Add Region Level button
+                if (data.Data.length < 4) {
+
+                    var li = $('<li>')
+                        .attr('href', '#')
+                        .text('+ Add Region Level')
+                        .addClass('newregionlevellink')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            modal = $('.regionlevelmodal').dialog({
+                                closeOnEscape: false,
+                                modal: true,
+                                width: 250,
+                                resizable: false
+                            });
+
+                            $(modal).find('.rl-Level').val(data.Data.length + 1);
+
+                            $('.cancelmodal').click(function (e) {
+
+                                e.preventDefault();
+
+                                CloseModal(modal);
+
+                            });
+
+                            $('.submitregionlevel').unbind('click');
+
+                            $('.submitregionlevel').click(function () {
+
+                                var item = {
+                                    Level: $(modal).find('.rl-Level').val(),
+                                    Label: $(modal).find('.rl-Label').val(),
+                                    Abbreviation: $(modal).find('.rl-Abbreviation').val(),
+                                    IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
+                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
+                                }
+
+                                MakeServiceCall('POST', 'regionlevels', item, function (data) {
+
+                                    if (data.Data) {
+                                        DisplaySuccessMessage('Success', 'Region Level saved successfully.');
+
+                                        CloseModal(modal);
+
+                                        LoadRegionsSectionSettings();
+                                    }
+
+                                }, null);
 
                             });
                         });
@@ -1277,11 +1315,9 @@ function DisplayRegionLevels(container) {
 
             }
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -1350,25 +1386,17 @@ function NewRegion() {
             IsActive: $(modal).find('.reg-IsActive').prop('checked')
         }
 
-        $.ajax({
-            method: 'POST',
-            url: WEB_API_ADDRESS + 'regions',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('POST', 'regions', item, function (data) {
 
+            if (data.Data) {
                 DisplaySuccessMessage('Success', 'Region saved successfully.');
 
                 CloseModal(modal);
 
                 DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
 
     });
 
@@ -1404,25 +1432,18 @@ function EditRegion(id){
             IsActive: $(modal).find('.reg-IsActive').prop('checked')
         }
 
-        $.ajax({
-            method: 'PATCH',
-            url: WEB_API_ADDRESS + 'regions/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('PATCH', 'regions/' + id, item, function (data) {
 
+            if (data.Data) {
                 DisplaySuccessMessage('Success', 'Region saved successfully.');
 
                 CloseModal(modal);
 
                 DisplayRegions(data.Data.Level, data.Data.ParentRegionId);
 
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
 
     });
 
@@ -1430,81 +1451,54 @@ function EditRegion(id){
 
 function DeleteRegion(id) {
 
-    $.ajax({
-        method: 'DELETE',
-        url: WEB_API_ADDRESS + 'regions/' + id,
-        data: item,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function () {
+    MakeServiceCall('DELETE', 'regions/' + id, null, function (data) {
 
+        if (data.Data) {
             DisplaySuccessMessage('Success', 'Region deleted successfully.');
 
             CloseModal(modal);
 
             DisplayRegions($('.currentlevel').val(), $('.parentregions').val());
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
 function LoadRegionLevel(id) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'regionlevels/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
+    MakeServiceCall('GET', 'regionlevels/' + id, null, function (data) {
 
-                $(modal).find('.rl-Level').val(data.Data.Level);
-                $(modal).find('.rl-Label').val(data.Data.Label);
-                $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
-                $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
-                $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
+        if (data && data.Data && data.IsSuccessful) {
 
-            }
+            $(modal).find('.rl-Level').val(data.Data.Level);
+            $(modal).find('.rl-Label').val(data.Data.Label);
+            $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
+            $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
+            $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
         }
-    });
 
+    }, null);
 }
 
 function LoadRegion(id) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'regions/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            if (data && data.Data && data.IsSuccessful) {
+    MakeServiceCall('GET', 'regions/' + id, null, function (data) {
 
-                $(modal).find('.regionid').val(id);
-                $(modal).find('.parentregionid').val(data.Data.ParentRegionId);
-                $(modal).find('.currentlevel').val(data.Data.Level);
+        if (data && data.Data && data.IsSuccessful) {
 
-                $(modal).find('.reg-Code').val(data.Data.Code);
-                $(modal).find('.reg-Name').val(data.Data.Name);
-                $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
+            $(modal).find('.regionid').val(id);
+            $(modal).find('.parentregionid').val(data.Data.ParentRegionId);
+            $(modal).find('.currentlevel').val(data.Data.Level);
 
-            }
+            $(modal).find('.reg-Code').val(data.Data.Code);
+            $(modal).find('.reg-Name').val(data.Data.Name);
+            $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading Region Level.');
         }
-    });
+
+    }, null);
 
 }
 /* REGIONS SETTINGS */
@@ -2131,21 +2125,15 @@ function SaveCustomField(modal) {
 
     }
 
-    SendCustomField('customfields', method, data, modal);
+    SendCustomField(method, 'customfields', data, modal);
 
 }
 
-function SendCustomField(route, action, data, modal) {
+function SendCustomField(method, route, data, modal) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: action,
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall(method, 'route', JSON.stringify(data), function (data) {
 
+        if (data.Data) {
             DisplaySuccessMessage('Success', 'Custom field saved successfully.');
 
             CloseModal(modal);
@@ -2153,12 +2141,10 @@ function SendCustomField(route, action, data, modal) {
             RefreshCustomFieldsGrid();
 
             CreateNewCustomFieldModalLink(currentCustomFieldEntity, '');
-            
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
         }
-    });
+
+    }, null);
 
 }
 /* END CUSTOM FIELDS */
