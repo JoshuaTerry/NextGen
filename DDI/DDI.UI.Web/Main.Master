@@ -66,6 +66,7 @@
             </div>
             <div class="info">
                 <ul>
+                    <li title="Edit Business Unit"><a href ="#"><img src ="Images/Edit_16.png"/></a></li>
                     <li title="Business Unit"><a href="#" >BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
@@ -362,6 +363,23 @@
                             
         </div>        
     </div>
+
+    <div class="businessunitmodal" title="Change Business Unit" style="display: none;">
+        <div class="modalcontent">
+            
+        <div class="fieldblock">
+            <label>Selected Business Unit</label>
+            <select class="editable BusinessUnit"></select>
+        </div>
+
+        <div class="modalbuttons">
+            <input type="button" class="savebutton" value="Save" />
+            <a href="#" class="cancelmodal">Cancel</a>
+        </div>
+                            
+        </div>        
+    </div>
+
     </form>
 </body>
 </html>
