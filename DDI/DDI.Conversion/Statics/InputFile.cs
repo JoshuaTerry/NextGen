@@ -63,6 +63,7 @@ namespace DDI.Conversion.Statics
         public static string GL_AccountGroups => "AccountGroup.csv";
         public static string GL_Accounts => "Account.csv";
         public static string GL_AccountPriorYears => "AccountPriorYear.csv";
+        public static string GL_LedgerAccounts => "LedgerAccount.csv";
         public static string GL_LedgerAccountYears => "LedgerAccountYear.csv";
         public static string GL_LedgerAccountMerges => "LedgerAccountMerge.csv";
 

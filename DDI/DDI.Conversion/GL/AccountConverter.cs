@@ -21,6 +21,10 @@ namespace DDI.Conversion.GL
             Segments = 70100,
             AccountGroups = 701001,
             Accounts = 701002,
+            LedgerAccounts = 701003,
+            LedgerAccountYears = 701004,
+            LedgerAccountMerges = 701005,
+            AccountPriorYears = 701006,
         }
 
         private string _glDirectory;
@@ -46,49 +50,9 @@ namespace DDI.Conversion.GL
             RunConversion(ConversionMethod.Segments, () => ConvertSegments(InputFile.GL_Segments));
             RunConversion(ConversionMethod.AccountGroups, () => ConvertAccountGroups(InputFile.GL_AccountGroups));
             RunConversion(ConversionMethod.Accounts, () => ConvertAccounts(InputFile.GL_Accounts));
+            RunConversion(ConversionMethod.LedgerAccounts, () => ConvertLedgerAccounts(InputFile.GL_LedgerAccounts));
         }
 
-        private Guid? GetFiscalYearId(FileImport importer, int column)
-        {
-            Guid? ledgerId;
-            return GetFiscalYearId(importer, column, out ledgerId);
-        }
-
-        private Guid? GetFiscalYearId(FileImport importer, int column, out Guid? ledgerId)
-        {
-            ledgerId = null;
-
-            // Legacy company ID
-            string code = importer.GetString(column);
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                return null;
-            }
-
-            if (_ledgerIds.Count > 0)
-            {
-                int cid = 0;
-                Guid id;
-                if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out id))
-                {
-                    importer.LogError($"Invalid legacy company ID \"{code}\"");
-                    return null;
-                }
-
-                ledgerId = id;
-            }
-
-            string yearName = importer.GetString(column + 1);
-            string legacyKey = $"{code},{yearName}";
-            Guid fiscalYearId;
-            if (_fiscalYearIds.TryGetValue(legacyKey, out fiscalYearId))
-            {
-                return fiscalYearId;
-            }
-
-            importer.LogError($"Invalid year \"{yearName}\" for cid \"{code}\".");
-            return null;
-        }
 
         private void ConvertSegments(string filename)
         {
@@ -252,7 +216,7 @@ namespace DDI.Conversion.GL
             var closingAccounts = new Dictionary<string, string>();
 
             var outputFile = new FileExport<Account>(Path.Combine(_outputDirectory, OutputFile.GL_AccountFile), false);
-            var segmentOutputFile = new FileExport<AccountSegment>(Path.Combine(_outputDirectory, OutputFile.GL_AccountSegment), false);
+            var segmentOutputFile = new FileExport<AccountSegment>(Path.Combine(_outputDirectory, OutputFile.GL_AccountSegmentFile), false);
             var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.AccountIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
@@ -371,6 +335,94 @@ namespace DDI.Conversion.GL
             }
         }
 
+        private void ConvertLedgerAccounts(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadLedgerIds();
+            var outputFile = new FileExport<LedgerAccount>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerAccountFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerAccountIdMappingFile), false, true);
+
+            outputFile.AddHeaderRow();
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    Guid? ledgerId = GetLedgerId(importer, 0);
+
+                    if (ledgerId == null)
+                    {
+                        continue;
+                    }
+
+                    int legacyKey = importer.GetInt(3);
+                    if (legacyKey == 0)
+                    {
+                        continue;
+                    }
+
+                    LedgerAccount account = new LedgerAccount();
+                    account.LedgerId = ledgerId;
+                    account.AccountNumber = importer.GetString(1, 128);
+                    account.Name = importer.GetString(2, 128);
+                    account.AssignPrimaryKey();
+                    outputFile.AddRow(account);
+                    legacyIdFile.AddRow(new LegacyToID(legacyKey, account.Id));
+                    count++;
+                }
+            }
+            legacyIdFile.Dispose();
+            outputFile.Dispose();
+
+        }
+
+        private void ConvertLedgerAccountYears(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadFiscalYearIds();
+            var outputFile = new FileExport<LedgerAccountYear>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerAccountYearFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerAccountYearIdMappingFile), false, true);
+
+            outputFile.AddHeaderRow();
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    Guid? fiscalYearId = GetFiscalYearId(importer, 0);
+
+                    if (fiscalYearId == null)
+                    {
+                        continue;
+                    }
+
+                    string legacyKey = importer.GetString(3);
+                    if (string.IsNullOrWhiteSpace(legacyKey))
+                    {
+                        continue;
+                    }
+
+                    LedgerAccountYear account = new LedgerAccountYear();
+                    account.FiscalYearId = fiscalYearId;
+                    
+                    account.AssignPrimaryKey();
+                    outputFile.AddRow(account);
+                    legacyIdFile.AddRow(new LegacyToID(legacyKey, account.Id));
+                    count++;
+                }
+            }
+            legacyIdFile.Dispose();
+            outputFile.Dispose();
+
+        }
+
+
         private Guid? GetAccountGroup(FileImport importer, int column)
         {
             int key = importer.GetInt(column);
@@ -432,7 +484,59 @@ namespace DDI.Conversion.GL
             }
         }
 
+        private Guid? GetFiscalYearId(FileImport importer, int column)
+        {
+            Guid? ledgerId;
+            return GetFiscalYearId(importer, column, out ledgerId);
+        }
 
+        private Guid? GetFiscalYearId(FileImport importer, int column, out Guid? ledgerId)
+        {
+            ledgerId = GetLedgerId(importer, column);
+            if (ledgerId == null)
+            {
+                return null;
+            }
+
+            string code = importer.GetString(column);
+            string yearName = importer.GetString(column + 1);
+            string legacyKey = $"{code},{yearName}";
+            Guid fiscalYearId;
+            if (_fiscalYearIds.TryGetValue(legacyKey, out fiscalYearId))
+            {
+                return fiscalYearId;
+            }
+
+            importer.LogError($"Invalid year \"{yearName}\" for cid \"{code}\".");
+            return null;
+        }
+
+        private Guid? GetLedgerId(FileImport importer, int column)
+        {
+            Guid? ledgerId = null;
+
+            // Legacy company ID
+            string code = importer.GetString(column);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return null;
+            }
+
+            if (_ledgerIds.Count > 0)
+            {
+                int cid = 0;
+                Guid id;
+                if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out id))
+                {
+                    importer.LogError($"Invalid legacy company ID \"{code}\"");
+                    return null;
+                }
+
+                ledgerId = id;
+            }
+
+            return ledgerId;
+        }
 
 
     }

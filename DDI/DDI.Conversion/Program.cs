@@ -70,7 +70,8 @@ namespace DDI.Conversion
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.SegmentLevels));
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.Segments));
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountGroups));
-            Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.Accounts));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.Accounts));
+            Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccounts));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));

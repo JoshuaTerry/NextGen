@@ -64,11 +64,11 @@ namespace DDI.Conversion.Statics
         public static string GL_SegmentFile => "Segment.csv";
         public static string GL_AccountGroupFile => "AccountGroup.csv";
         public static string GL_AccountFile => "Account.csv";
-        public static string GL_AccountPriorYear => "AccountPriorYear.csv";
-        public static string GL_AccountSegment => "AccountSegment.csv";
-        public static string GL_LedgerAccount => "LedgerAccount.csv";
-        public static string GL_LedgerAccountMerge => "LedgerAccountMerge.csv";
-        public static string GL_LedgerAccountYear => "LedgerAccountYear.csv";
+        public static string GL_AccountPriorYearFile => "AccountPriorYear.csv";
+        public static string GL_AccountSegmentFile => "AccountSegment.csv";
+        public static string GL_LedgerAccountFile => "LedgerAccount.csv";
+        public static string GL_LedgerAccountMergeFile => "LedgerAccountMerge.csv";
+        public static string GL_LedgerAccountYearFile => "LedgerAccountYear.csv";
         
         #endregion
 
