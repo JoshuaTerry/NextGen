@@ -15,24 +15,20 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [Index("IX_Code", IsUnique = true, Order = 1)]
-        [Index("IX_Name", IsUnique = true, Order = 1)]
         public Guid? FiscalYearId { get; set; }
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
-        [Index("IX_Code", IsUnique = true, Order = 2)]
-        [Index("IX_Name", IsUnique = true, Order = 2)]
         public Guid? SegmentLevelId { get; set; }
         [ForeignKey(nameof(SegmentLevelId))]
         public SegmentLevel SegmentLevel { get; set; }
 
         public int Level { get; set; }
 
-        [Index("IX_Code", IsUnique = true, Order = 3), MaxLength(30)]
+        [MaxLength(30)]
         public string Code { get; set; }
 
-        [Index("IX_Name", IsUnique = true, Order = 3), MaxLength(128)]
+        [MaxLength(128)]
         public string Name { get; set; } 
 
         public Guid? ParentSegmentId { get; set; }
