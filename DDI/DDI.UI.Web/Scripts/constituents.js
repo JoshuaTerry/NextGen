@@ -153,7 +153,6 @@ function LoadDropDowns() {
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
     PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
-    EducationModalDropDowns();
 }
 
 function GetConstituentData(id) {
