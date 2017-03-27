@@ -646,7 +646,7 @@ function LoadAddressesGrid() {
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
 
-    LoadGrid('constituentaddressgrid',
+    CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/constituentaddresses',
@@ -713,25 +713,15 @@ function NewAddressModal() {
                 }
             }
 
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
+            MakeServiceCall('POST', 'constituentaddresses', item, function () {
 
-                    DisplaySuccessMessage('Success', 'Address saved successfully.');
+                DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                    CloseModal(modal);
+                CloseModal(modal);
 
-                    LoadAddressesGrid();
+                LoadAddressesGrid();
 
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                }
-            });
+            }, null);
 
         });
 
@@ -815,23 +805,11 @@ function EditAddressModal(id) {
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
 
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
-            data: fields,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
+        MakeServiceCall('PATCH', 'constituentaddresses/' + id, fields, function () {
+            DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                DisplaySuccessMessage('Success', 'Address saved successfully.');
-
-                CloseModal(modal);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        })
+            CloseModal(modal);
+        }, null);
 
     });
 
@@ -872,46 +850,35 @@ function GetEditedAddressFields() {
 
 function LoadAddress(id) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'constituentaddresses/' + id, null, function (data) {
+        currentaddress = data.Data;
 
-            currentaddress = data.Data;
+        $('.hidconstituentaddressid').val(data.Data.Id);
+        $('.hidaddressid').val(data.Data.Address.Id);
 
-            $('.hidconstituentaddressid').val(data.Data.Id);
-            $('.hidaddressid').val(data.Data.Address.Id);
+        $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+        $('.na-Comment').val(data.Data.Comment);
+        $('.na-StartDate').val(data.Data.StartDate);
+        $('.na-EndDate').val(data.Data.EndDate);
+        $('.na-ResidentType').val(data.Data.ResidentType);
 
-            $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
-            $('.na-Comment').val(data.Data.Comment);
-            $('.na-StartDate').val(data.Data.StartDate);
-            $('.na-EndDate').val(data.Data.EndDate);
-            $('.na-ResidentType').val(data.Data.ResidentType);
+        $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
+        $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
+        $('.na-City').val(data.Data.Address.City);
 
-            $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
-            $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
-            $('.na-City').val(data.Data.Address.City);
+        $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
-            $('.na-PostalCode').val(data.Data.Address.PostalCode);
+        PopulateAddressTypesInModal(data.Data.AddressTypeId);
+        PopulateCountriesInModal(data.Data.Address.CountryId);
 
-            PopulateAddressTypesInModal(data.Data.AddressTypeId);
-            PopulateCountriesInModal(data.Data.Address.CountryId);
+        PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
+            PopulateCountiesInModal(null)
+        });
 
-            PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
-                PopulateCountiesInModal(null)
-            });
+        PopulateCountiesInModal(data.Data.Address.CountyId);
 
-            PopulateCountiesInModal(data.Data.Address.CountyId);
-
-            LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
+        LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
+    }, null);
 
 }
 
