@@ -33,7 +33,7 @@ function DisplayCustomFieldsGrid(container, entity) {
         { dataField: 'DisplayOrder', caption: 'Display Order' }
     ]
 
-    MakeServiceCall('GET', route + 'entity/' + entity, item, function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
 
         if (data.Data) {
             $(datagrid).dxDataGrid({
@@ -80,7 +80,7 @@ function DisplayCustomFields(container, entity, callback) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
-    MakeServiceCall('GET', route + 'entity/' + entity, item, function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
 
         if (data && data.IsSuccessful) {
 

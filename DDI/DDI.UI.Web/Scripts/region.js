@@ -12,7 +12,7 @@ function LoadRegions(container, prefix) {
 
     $(container).html('');
 
-    MakeServiceCall('GET', 'regionlevels', item, function (data) {
+    MakeServiceCall('GET', 'regionlevels', null, function (data) {
 
         if (data.Data) {
             $.map(data.Data, function (item) {
@@ -91,7 +91,7 @@ function LoadRegionDropDown(container, prefix, level, parentid, selectedvalue) {
         route = route + parentid;
     }
 
-    MakeServiceCall('GET', route, item, function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
         if (data.Data) {
             var currentdropdown = $(container).find(prefix + 'Region' + level + 'Id');
