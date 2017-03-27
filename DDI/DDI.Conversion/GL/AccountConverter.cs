@@ -23,8 +23,8 @@ namespace DDI.Conversion.GL
             Accounts = 701002,
             LedgerAccounts = 701003,
             LedgerAccountYears = 701004,
-            LedgerAccountMerges = 701005,
-            AccountPriorYears = 701006,
+            AccountPriorYears = 701005,
+            LedgerAccountMerges = 701006,
         }
 
         private string _glDirectory;
@@ -33,16 +33,14 @@ namespace DDI.Conversion.GL
         private Dictionary<string, Guid> _fiscalYearIds;
         private Dictionary<int, Guid> _accountGroupIds;
         private Dictionary<string, Guid> _segmentIds;
+        private Dictionary<string, Guid> _accountIds;
+        private Dictionary<int, Guid> _ledgerAccountIds;
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
             _glDirectory = Path.Combine(baseDirectory, DirectoryName.GL);
             _outputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.GL);
-            _ledgerIds = new Dictionary<int, Guid>();
-            _fiscalYearIds = new Dictionary<string, Guid>();
-            _accountGroupIds = new Dictionary<int, Guid>();
-            _segmentIds = new Dictionary<string, Guid>();
 
             // Make sure the IS Payload directory exists.
             Directory.CreateDirectory(_outputDirectory);
@@ -51,6 +49,9 @@ namespace DDI.Conversion.GL
             RunConversion(ConversionMethod.AccountGroups, () => ConvertAccountGroups(InputFile.GL_AccountGroups));
             RunConversion(ConversionMethod.Accounts, () => ConvertAccounts(InputFile.GL_Accounts));
             RunConversion(ConversionMethod.LedgerAccounts, () => ConvertLedgerAccounts(InputFile.GL_LedgerAccounts));
+            RunConversion(ConversionMethod.LedgerAccountYears, () => ConvertLedgerAccountYears(InputFile.GL_LedgerAccountYears));
+            RunConversion(ConversionMethod.AccountPriorYears, () => ConvertAccountPriorYears(InputFile.GL_AccountPriorYears));
+            RunConversion(ConversionMethod.LedgerAccountMerges, () => ConvertLedgerAccountMerges(InputFile.GL_LedgerAccountMerges));
         }
 
 
@@ -384,6 +385,9 @@ namespace DDI.Conversion.GL
             DomainContext context = new DomainContext();
 
             LoadFiscalYearIds();
+            LoadLedgerAccountIds();
+            LoadAccountIds();
+
             var outputFile = new FileExport<LedgerAccountYear>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerAccountYearFile), false);
             var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerAccountYearIdMappingFile), false, true);
 
@@ -408,8 +412,27 @@ namespace DDI.Conversion.GL
                         continue;
                     }
 
+                    string accountKey = importer.GetString(5);
+                    int ledgerAccountKey = importer.GetInt(6);
+                    Guid accountId, ledgerAccountId;
+
+                    if (!_accountIds.TryGetValue(accountKey, out accountId))
+                    {
+                        importer.LogError($"Invalid account legacy key \"{accountKey}\".");
+                        continue;
+                    }
+
+                    if (!_ledgerAccountIds.TryGetValue(ledgerAccountKey, out ledgerAccountId))
+                    {
+                        importer.LogError($"Invalid ledger account legacy key \"{ledgerAccountKey}\".");
+                        continue;
+                    }
+
                     LedgerAccountYear account = new LedgerAccountYear();
                     account.FiscalYearId = fiscalYearId;
+                    account.AccountId = accountId;
+                    account.LedgerAccountId = ledgerAccountId;
+                    account.IsMerge = importer.GetBool(4);
                     
                     account.AssignPrimaryKey();
                     outputFile.AddRow(account);
@@ -419,9 +442,133 @@ namespace DDI.Conversion.GL
             }
             legacyIdFile.Dispose();
             outputFile.Dispose();
-
         }
 
+        private void ConvertAccountPriorYears(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadFiscalYearIds();
+            LoadAccountIds();
+
+            var outputFile = new FileExport<AccountPriorYear>(Path.Combine(_outputDirectory, OutputFile.GL_AccountPriorYearFile), false);
+
+            outputFile.AddHeaderRow();
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    Guid? fiscalYearId = GetFiscalYearId(importer, 0);
+
+                    if (fiscalYearId == null)
+                    {
+                        continue;
+                    }
+
+                    string accountKey = importer.GetString(2);
+                    string priorAccountKey = importer.GetString(4);
+                    Guid accountId, priorAccountId;
+
+                    if (!_accountIds.TryGetValue(accountKey, out accountId))
+                    {
+                        importer.LogError($"Invalid account legacy key \"{accountKey}\".");
+                        continue;
+                    }
+
+                    if (!_accountIds.TryGetValue(priorAccountKey, out priorAccountId))
+                    {
+                        importer.LogError($"Invalid account legacy key \"{priorAccountKey}\".");
+                        continue;
+                    }
+
+                    AccountPriorYear account = new AccountPriorYear();
+                    account.AccountId = accountId;
+                    account.PriorAccountId = priorAccountId;
+                    account.Percentage = importer.GetDecimal(6);
+
+                    account.AssignPrimaryKey();
+                    outputFile.AddRow(account);
+                    count++;
+                }
+            }
+
+            outputFile.Dispose();
+        }
+
+        private void ConvertLedgerAccountMerges(string filename)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadFiscalYearIds();
+            LoadLedgerAccountIds();
+            IList<User> users = LoadEntities(context.Users);
+
+            var outputFile = new FileExport<LedgerAccountMerge>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerAccountMergeFile), false);
+
+            outputFile.AddHeaderRow();
+
+            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    Guid? fiscalYearId = GetFiscalYearId(importer, 0);
+
+                    if (fiscalYearId == null)
+                    {
+                        continue;
+                    }
+
+                    int fromKey = importer.GetInt(2);
+                    int toKey = importer.GetInt(3);
+                    Guid fromLedgerId, toLedgerId;
+
+                    if (!_ledgerAccountIds.TryGetValue(fromKey, out fromLedgerId))
+                    {
+                        importer.LogError($"Invalid ledger account legacy key \"{fromKey}\".");
+                        continue;
+                    }
+
+                    if (!_ledgerAccountIds.TryGetValue(toKey, out toLedgerId))
+                    {
+                        importer.LogError($"Invalid ledger account legacy key \"{toKey}\".");
+                        continue;
+                    }
+
+                    LedgerAccountMerge merge = new LedgerAccountMerge();
+                    merge.FiscalYearId = fiscalYearId;
+                    merge.FromAccountId = fromLedgerId;
+                    merge.ToAccountId = toLedgerId;
+                    merge.FromAccountNumber = importer.GetString(4, 128);
+                    merge.ToAccountNumber = importer.GetString(5, 128);
+                    string userName = importer.GetString(6);
+                    merge.MergedOn = importer.GetDateTime(7);
+
+                    if (!string.IsNullOrWhiteSpace(userName))
+                    {
+                        User user = GetUserByName(users, userName);
+                        if (user == null)
+                        {
+                            importer.LogError($"Invalid user name \"{userName}\".");
+                        }
+                        else
+                        {
+                            merge.MergedById = user.Id;
+                        }
+                    }
+
+                    merge.AssignPrimaryKey();
+                    outputFile.AddRow(merge);
+                    count++;
+                }
+            }
+
+            outputFile.Dispose();
+        }
 
         private Guid? GetAccountGroup(FileImport importer, int column)
         {
@@ -441,48 +588,77 @@ namespace DDI.Conversion.GL
         }
 
         /// <summary>
-        /// Load legacy ledger IDs into dictionary.
+        /// Load legacy ledger IDs into a dictionary.
         /// </summary>
         private void LoadLedgerIds()
         {
-            if (_ledgerIds.Count == 0)
+            if (_ledgerIds == null)
             {
+                _ledgerIds = new Dictionary<int, Guid>();
                 _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.LedgerIdMappingFile);
             }
         }
 
         /// <summary>
-        /// Load legacy fiscal year IDs into dictionary.
+        /// Load legacy fiscal year IDs into a dictionary.
         /// </summary>
         private void LoadFiscalYearIds()
         {
-            if (_fiscalYearIds.Count == 0)
+            if (_fiscalYearIds == null)
             {
+                _fiscalYearIds = new Dictionary<string, Guid>();
                 _fiscalYearIds = LoadLegacyIds(_outputDirectory, OutputFile.FiscalYearIdMappingFile);
             }
         }
 
         /// <summary>
-        /// Load legacy account group IDs into dictionary.
+        /// Load legacy account group IDs into a dictionary.
         /// </summary>
         private void LoadAccountGroupIds()
         {
-            if (_accountGroupIds.Count == 0)
+            if (_accountGroupIds == null)
             {
+                _accountGroupIds = new Dictionary<int, Guid>();
                 _accountGroupIds = LoadIntLegacyIds(_outputDirectory, OutputFile.AccountGroupIdMappingFile);
             }
         }
 
         /// <summary>
-        /// Load legacy segment IDs into dictionary.
+        /// Load legacy segment IDs into a dictionary.
         /// </summary>
         private void LoadSegmentIds()
         {
-            if (_segmentIds.Count == 0)
+            if (_segmentIds == null)
             {
+                _segmentIds = new Dictionary<string, Guid>();
                 _segmentIds = LoadLegacyIds(_outputDirectory, OutputFile.SegmentIdMappingFile);
             }
         }
+
+        /// <summary>
+        /// Load legacy ledger account IDs into a dictionary.
+        /// </summary>
+        private void LoadLedgerAccountIds()
+        {
+            if (_ledgerAccountIds == null)
+            {
+                _ledgerAccountIds = new Dictionary<int, Guid>();
+                _ledgerAccountIds = LoadIntLegacyIds(_outputDirectory, OutputFile.LedgerAccountIdMappingFile);
+            }
+        }
+
+        /// <summary>
+        /// Load legacy account IDs into a dictionary.
+        /// </summary>
+        private void LoadAccountIds()
+        {
+            if (_accountIds == null)
+            {
+                _accountIds = new Dictionary<string, Guid>();
+                _accountIds = LoadLegacyIds(_outputDirectory, OutputFile.AccountIdMappingFile);
+            }
+        }
+
 
         private Guid? GetFiscalYearId(FileImport importer, int column)
         {
@@ -492,10 +668,17 @@ namespace DDI.Conversion.GL
 
         private Guid? GetFiscalYearId(FileImport importer, int column, out Guid? ledgerId)
         {
-            ledgerId = GetLedgerId(importer, column);
-            if (ledgerId == null)
+            if (_ledgerIds != null)
             {
-                return null;
+                ledgerId = GetLedgerId(importer, column);
+                if (ledgerId == null)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                ledgerId = null;
             }
 
             string code = importer.GetString(column);
@@ -522,7 +705,7 @@ namespace DDI.Conversion.GL
                 return null;
             }
 
-            if (_ledgerIds.Count > 0)
+            if (_ledgerIds != null)
             {
                 int cid = 0;
                 Guid id;
