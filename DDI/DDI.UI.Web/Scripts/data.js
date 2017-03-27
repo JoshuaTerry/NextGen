@@ -9,7 +9,7 @@ function AddDefaultOption(e, text, val) {
 function GetApiHeaders() {
 
     var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    var headers = {};
+    var headers = {}; 
 
     if (token) {
         headers.Authorization = 'Bearer ' + token;
@@ -222,7 +222,7 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
     LoadGridData(container, gridClass, columns, getRoute, selected, showFilter, showGroup, function () {
         if (newModalClass) {
             // Add link for new modal
-            NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid)
+            NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
         }
     });
 
@@ -615,7 +615,7 @@ function LoadEntity(route, id, prefix) {
         currentEntity = data.Data;
 
         for (var property in data.Data) {
-
+            
             if ($(prefix + property).is('select')) {
 
                 var classes = $(prefix + property).attr('class').split(' ');
@@ -630,9 +630,13 @@ function LoadEntity(route, id, prefix) {
                 }
 
             }
+            else if ($(prefix + property).is('input[type="checkbox"]')) {
+                $(prefix + property).prop('checked', data.Data[property]);
+            }
             else {
                 $(prefix + property).val(data.Data[property]);
             }
+            
 
         }
 

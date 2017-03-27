@@ -12,7 +12,7 @@ function LoadRegions(container, prefix) {
 
     $(container).html('');
 
-    MakeServiceCall('GET', 'regionlevels', item, function (data) {
+    MakeServiceCall('GET', 'regionlevels', null, function (data) {
 
         if (data.Data) {
             $.map(data.Data, function (item) {
@@ -70,11 +70,11 @@ function LoadAllRegionDropDowns(container, prefix, address) {
         if (address.Region2 && address.Region2.Id && address.Region2.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 2, address.Region2.ParentRegionId, address.Region2.Id);
         }
-    
+
         if (address.Region3 && address.Region3.Id && address.Region3.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 3, address.Region3.ParentRegionId, address.Region3.Id);
         }
-    
+
         if (address.Region4 && address.Region4.Id && address.Region4.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 4, address.Region4.ParentRegionId, address.Region4.Id);
         }
@@ -91,7 +91,7 @@ function LoadRegionDropDown(container, prefix, level, parentid, selectedvalue) {
         route = route + parentid;
     }
 
-    MakeServiceCall('GET', route, item, function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
         if (data.Data) {
             var currentdropdown = $(container).find(prefix + 'Region' + level + 'Id');
