@@ -118,7 +118,7 @@ function GetSystemSettings(category, callback) {
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
 
-    var container = $('<div>').addClass('twocolumn');
+    var container = $('<div>').addClass('threecolumn');
 
     var activeSection = $('<div>').addClass('fieldblock');
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
