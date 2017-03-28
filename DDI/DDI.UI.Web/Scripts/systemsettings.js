@@ -41,8 +41,6 @@ $(document).ready(function () {
 
     });
 
-    // CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
-
 });
 
 function LoadSettingsGrid(grid, container, columns, route) {
@@ -104,7 +102,6 @@ function GetSystemSettings(category, callback) {
 /* SECTION SETTINGS */
 function LoadSectionSettings(category, section, route, sectionKey) {
 
-   // route = route + '?fields=all';
     var container = $('<div>').addClass('twocolumn');
 
     var activeSection = $('<div>').addClass('fieldblock');

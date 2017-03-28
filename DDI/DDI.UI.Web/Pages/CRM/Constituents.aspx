@@ -1136,6 +1136,9 @@
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
 
         <div class="modalcontent">
+<%--            <input type="hidden" class="hidrelationshipid" />--%>
+            <input type="hidden" class="nd-hidparententityid" />
+            <input type="hidden" class="hidentitytype" />
 
             <div class="fieldblock">
                 <label>Title</label>
@@ -1177,7 +1180,7 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Note code</label>
+                    <label>Note Code</label>
                     <select class="nd-NoteCode"></select>
                 </div>
 
@@ -1253,7 +1256,7 @@
 
     </div>
 
-    <div class="notealertmodal" title="NotesAlert" style="display: none;">
+    <div class="notealertmodal" title="Note Alerts" style="display: none;">
 
         <div class="modalcontent">
 

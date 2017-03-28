@@ -42,7 +42,7 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
         },
         error: function (xhr, status, err) {
-           // DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             if (errorCallback) {
                 errorCallback();
             }

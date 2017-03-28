@@ -153,7 +153,6 @@ function LoadDropDowns() {
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
     PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
-    EducationModalDropDowns();
 }
 
 function GetConstituentData(id) {
@@ -1032,7 +1031,7 @@ function LoadRelationshipsGrid() {
 
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
-    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
+    //EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
 }
 /*
 function EditRelationship(getUrl, patchUrl) {
@@ -1041,7 +1040,7 @@ function EditRelationship(getUrl, patchUrl) {
 */
 
 function NewRelationshipModal() {
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
+    //NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
 }
 
 /*function LoadRelationship(url, modal) {
