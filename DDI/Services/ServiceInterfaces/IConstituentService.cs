@@ -12,5 +12,6 @@ namespace DDI.Shared
         IDataResponse AddTagsToConstituent(Constituent id, JObject tagIds);
         IDataResponse RemoveTagFromConstituent(Constituent id, Guid tagId);
         IDataResponse Test();
+        IDataResponse GetConstituentPrimaryContactInfo(Constituent constituent);
     }
 }

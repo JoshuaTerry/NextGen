@@ -7,11 +7,13 @@ using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using WebGrease.Css.Extensions;
 
 namespace DDI.Services
@@ -203,6 +205,35 @@ namespace DDI.Services
                 Data = UnitOfWork.GetById<Constituent>(constituent.Id),
                 IsSuccessful = true
 
+            };
+
+            return response;
+        }
+
+        public IDataResponse GetConstituentPrimaryContactInfo(Constituent constituent)
+        {
+            IDataResponse response = null;
+
+            var primaryContactInfo = constituent.ContactInfo.Where<ContactInfo>(ci => ci.IsPreferred);
+            var address = constituent.ConstituentAddresses.FirstOrDefault<ConstituentAddress>(a => a.IsPrimary);
+            var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
+            var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(primaryaddress.AddressLine1 + "\r\n");
+            sb.Append(primaryaddress.PostalCode + "\r\n");
+            sb.Append(primaryaddress.City + "\r\n");
+            sb.Append(state + "\r\n");
+
+            foreach (ContactInfo info in primaryContactInfo)
+            {
+                sb.Append(info.Info + "\r\n");
+            }
+
+            response = new DataResponse<string>()
+            {
+                Data = sb.ToString(),
+                IsSuccessful = true
             };
 
             return response;
