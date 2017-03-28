@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DDI.EFAudit.Contexts;
+﻿using DDI.EFAudit.Contexts;
 using DDI.Shared.Attributes.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DDI.EFAudit.Filter
 {
-    
+
     public class BlacklistLoggingFilter : AttributeBasedLoggingFilter, ILoggingFilter
     {
         public BlacklistLoggingFilter(IAuditLogContext context) : base(context) { }

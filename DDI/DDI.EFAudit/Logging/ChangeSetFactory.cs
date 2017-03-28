@@ -1,5 +1,4 @@
 ﻿using DDI.Shared.Models.Client.Audit;
-using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
 using System.Collections.Generic;
 

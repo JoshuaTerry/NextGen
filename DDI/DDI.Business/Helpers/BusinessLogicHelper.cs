@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared;
+﻿using DDI.Shared;
+using DDI.Shared.Extensions;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
-using DDI.Shared.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace DDI.Business.Helpers
 {

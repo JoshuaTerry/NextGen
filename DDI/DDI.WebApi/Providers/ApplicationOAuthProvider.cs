@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using DDI.WebApi.Models;
+﻿using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.Security;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace DDI.WebApi.Providers
 {

@@ -1,17 +1,12 @@
+using DDI.Data.Helpers;
+using DDI.EFAudit;
+using DDI.Logger;
 using DDI.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Logger;
-using DDI.Shared.Caching;
-using System.Web.Configuration;
-using DDI.EFAudit;
-using System.Threading;
-using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
@@ -275,11 +270,12 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
+
             var user = EntityFrameworkHelpers.GetCurrentUser();
             if (EFAuditModule.IsAuditEnabled && user != null)
             {
 
-                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) + 
+                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
             else

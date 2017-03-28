@@ -102,14 +102,14 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
             CommonContext commonContext = new CommonContext();
 
-            context.RegionLevels.Load();
-            context.Regions.Load();
+            context.CRM_RegionLevels.Load();
+            context.CRM_Regions.Load();
 
             var countries = commonContext.Countries.Local;
             var states = commonContext.States.Local;
             var counties = commonContext.Counties.Local;
-            var regionLevels = context.RegionLevels.Local;
-            var regions = context.Regions.Local;
+            var regionLevels = context.CRM_RegionLevels.Local;
+            var regions = context.CRM_Regions.Local;
 
             RegionLevel regionLevel1 = regionLevels.FirstOrDefault(p => p.Level == 1);
             RegionLevel regionLevel2 = regionLevels.FirstOrDefault(p => p.Level == 2);
@@ -260,18 +260,18 @@ namespace DDI.Conversion.CRM
             nameFormatter = uow.GetBusinessLogic<NameFormatter>();
 
             // Load entity sets that will be queried often...
-            var constituentTypes = LoadEntities(context.ConstituentTypes);
-            var ethnicities = LoadEntities(context.Ethnicities);
-            var denominations = LoadEntities(context.Denominations);
-            var genders = LoadEntities(context.Genders);
-            var prefixes = LoadEntities(context.Prefixes, nameof(Prefix.Gender));
-            var incomelevels = LoadEntities(context.IncomeLevels);
-            var educationLevels = LoadEntities(context.EducationLevels);
-            var professions = LoadEntities(context.Professions);
-            var clergyTypes = LoadEntities(context.ClergyTypes);
-            var clergyStatuses = LoadEntities(context.ClergyStatuses);
-            var maritalStatuses = LoadEntities(context.MaritalStatuses);
-            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
+            var constituentTypes = LoadEntities(context.CRM_ConstituentTypes);
+            var ethnicities = LoadEntities(context.CRM_Ethnicities);
+            var denominations = LoadEntities(context.CRM_Denominations);
+            var genders = LoadEntities(context.CRM_Genders);
+            var prefixes = LoadEntities(context.CRM_Prefixes, nameof(Prefix.Gender));
+            var incomelevels = LoadEntities(context.CRM_IncomeLevels);
+            var educationLevels = LoadEntities(context.CRM_EducationLevels);
+            var professions = LoadEntities(context.CRM_Professions);
+            var clergyTypes = LoadEntities(context.CRM_ClergyTypes);
+            var clergyStatuses = LoadEntities(context.CRM_ClergyStatuses);
+            var maritalStatuses = LoadEntities(context.CRM_MaritalStatuses);
+            var constituentStatuses = LoadEntities(context.CRM_ConstituentStatuses);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -406,7 +406,7 @@ namespace DDI.Conversion.CRM
                     codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        Denomination denomination = context.CRM_Denominations.Local.FirstOrDefault(p => p.Code == code);
                         if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
@@ -651,10 +651,10 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
 
             // Load entity sets that will be queried often...
-            var constituentTypes = LoadEntities(context.ConstituentTypes);
-            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
-            var ethnicities = LoadEntities(context.Ethnicities);
-            var denominations = LoadEntities(context.Denominations);
+            var constituentTypes = LoadEntities(context.CRM_ConstituentTypes);
+            var constituentStatuses = LoadEntities(context.CRM_ConstituentStatuses);
+            var ethnicities = LoadEntities(context.CRM_Ethnicities);
+            var denominations = LoadEntities(context.CRM_Denominations);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -750,7 +750,7 @@ namespace DDI.Conversion.CRM
                     codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        Denomination denomination = context.CRM_Denominations.Local.FirstOrDefault(p => p.Code == code);
                         if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
@@ -851,7 +851,7 @@ namespace DDI.Conversion.CRM
         {
             DomainContext context = new DomainContext();
 
-            var addressTypes = LoadEntities<AddressType>(context.AddressTypes);
+            var addressTypes = LoadEntities<AddressType>(context.CRM_AddressTypes);
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -991,8 +991,8 @@ namespace DDI.Conversion.CRM
         private void ConvertEducation(string filename, bool append)
         {
             DomainContext context = new DomainContext();
-            var schools = LoadEntities(context.Schools);
-            var degrees = LoadEntities(context.Degrees);
+            var schools = LoadEntities(context.CRM_Schools);
+            var degrees = LoadEntities(context.CRM_Degrees);
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -1141,7 +1141,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
             
             // Load contact types
-            var contactTypes = LoadEntities(context.ContactTypes, nameof(ContactType.ContactCategory));
+            var contactTypes = LoadEntities(context.CRM_ContactTypes, nameof(ContactType.ContactCategory));
 
             // Because contact info self-relates, conversion requires two passes.  The first pass builds a dictionary of Guids for the parents.
             var parentDict = new Dictionary<int, Guid>();
@@ -1274,7 +1274,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
 
             // Load the relationship types
-            var types = LoadEntities<RelationshipType>(context.RelationshipTypes);
+            var types = LoadEntities<RelationshipType>(context.CRM_RelationshipTypes);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -1355,7 +1355,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
 
             // Load the tags
-            var tags = LoadEntities(context.Tags);
+            var tags = LoadEntities(context.CRM_Tags);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {

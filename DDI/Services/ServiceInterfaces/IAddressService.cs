@@ -1,7 +1,6 @@
-﻿using DDI.Shared.Models.Common;
-using DDI.Shared;
-using System;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
+using System;
 
 namespace DDI.Services.ServiceInterfaces
 {

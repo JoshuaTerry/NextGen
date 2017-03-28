@@ -1,15 +1,15 @@
-﻿using System;
-using DDI.EFAudit.Exceptions;
-using DDI.Shared.Models.Client.Audit;
+﻿using DDI.EFAudit.Exceptions;
+using DDI.EFAudit.Logging;
 using DDI.EFAudit.Transactions;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Data.Entity.Core.Objects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using DDI.EFAudit.Logging;
 
 namespace DDI.EFAudit
-{ 
+{
     public partial class EFAuditModule<TChangeSet, TPrincipal>
         where TChangeSet : IChangeSet<TPrincipal>
     {

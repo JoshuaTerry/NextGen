@@ -1,16 +1,11 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http.Routing;
-using DDI.Shared;
-using DDI.Shared.Helpers;
-using DDI.Shared.Models;
-using DDI.Shared.Statics;
-using Microsoft.Ajax.Utilities;
 
 namespace DDI.WebApi.Helpers
 {

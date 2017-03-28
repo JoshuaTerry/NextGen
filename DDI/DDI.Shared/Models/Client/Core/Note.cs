@@ -1,12 +1,9 @@
-﻿using System;
+﻿using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Security;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Shared.Models.Client.Core
 {

@@ -1,20 +1,15 @@
-using System;
+using DDI.Data.Helpers;
+using DDI.Logger;
 using DDI.Shared;
-using System.Collections;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Models;
-using DDI.Logger;
-using DDI.Shared.Helpers;
-using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Data.Helpers;
 
 namespace DDI.Data
 {
@@ -96,6 +91,13 @@ namespace DDI.Data
 
         #region Public Methods       
 
+        public DDI.Shared.EntityState GetEntityState(T entity)
+        {
+            DbEntityEntry<T> entry = _context.Entry(entity);
+
+            return (DDI.Shared.EntityState)entry.State;
+        }
+
         public virtual void Delete(T entity)
         {
             try
@@ -171,7 +173,7 @@ namespace DDI.Data
         /// </summary>
         public T Attach(T entity)
         {
-            return Attach(entity, EntityState.Unchanged);
+            return Attach(entity, System.Data.Entity.EntityState.Unchanged);
         }
 
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
@@ -230,7 +232,7 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                if (_context.Entry(entity).State != EntityState.Added)
+                if (_context.Entry(entity).State != System.Data.Entity.EntityState.Added)
                 {
                     IAuditableEntity auditableEntity = entity as IAuditableEntity;
                     if (auditableEntity != null)
@@ -277,8 +279,8 @@ namespace DDI.Data
 
                     auditableEntity.LastModifiedOn = DateTime.UtcNow;
                 }
-                Attach(entity, EntityState.Modified);
-                _context.Entry(entity).State = EntityState.Modified;
+                Attach(entity, System.Data.Entity.EntityState.Modified);
+                _context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
 
                 return entity;
             }
@@ -318,7 +320,7 @@ namespace DDI.Data
             var list = new List<string>();
             DbEntityEntry<T> entry = _context.Entry(entity);
 
-            if (entry.State != EntityState.Detached)
+            if (entry.State != System.Data.Entity.EntityState.Detached)
             {
                 foreach (string property in entry.OriginalValues.PropertyNames)
                 {
@@ -342,9 +344,9 @@ namespace DDI.Data
         /// <param name="entity"></param>
         /// <param name="entityState"></param>
         /// <returns></returns>
-        private T Attach(T entity, EntityState entityState)
+        private T Attach(T entity, System.Data.Entity.EntityState entityState)
         {
-            if (entity != null && _context.Entry(entity).State == EntityState.Detached)
+            if (entity != null && _context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
             {
                 if (entity is IEntity)
                 {

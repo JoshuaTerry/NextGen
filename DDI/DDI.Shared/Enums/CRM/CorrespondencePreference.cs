@@ -1,7 +1,7 @@
 ﻿
 namespace DDI.Shared.Enums.CRM
 {
-	public enum CorrespondencePreference
+    public enum CorrespondencePreference
 	{
 		None = 0,
 		Paper = 1,

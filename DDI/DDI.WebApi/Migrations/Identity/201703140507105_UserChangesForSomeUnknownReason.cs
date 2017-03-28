@@ -1,8 +1,7 @@
 namespace DDI.WebApi.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class UserChangesForSomeUnknownReason : DbMigration
     {
         public override void Up()

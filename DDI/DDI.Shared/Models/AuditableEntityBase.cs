@@ -1,9 +1,7 @@
-using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Attributes.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Attributes.Logging;
+using System.ComponentModel.DataAnnotations;
 
 namespace DDI.Shared.Models
 {
@@ -23,10 +21,12 @@ namespace DDI.Shared.Models
 
         #region Properties 
 
+        [MaxLength(64)]
         public virtual string CreatedBy { get; set; }
 
         public virtual DateTime? CreatedOn { get; set; }
 
+        [MaxLength(64)]
         public virtual string LastModifiedBy { get; set; }
 
         public virtual DateTime? LastModifiedOn { get; set; }

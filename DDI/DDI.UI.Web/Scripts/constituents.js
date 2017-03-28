@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
 
     DisplayConstituentCustomFields();
-
+    
     CreateEditControls();
 
     SetupEditControls();
@@ -894,6 +894,8 @@ function GenerateContactInfoSection() {
 
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
             var header = $('<h3>').text(category.SectionTitle).addClass(category.DisplayName + 'header').appendTo($('.contactinfocontainer'));
+
+                class: 'new' + category.DisplayName.toLowerCase() + 'modallink' + ' newbutton',
 
             $('<div>').attr('id', category.Id).addClass('constituent' + category.DisplayName + 'gridcontainer').appendTo($('.contactinfocontainer'));
 

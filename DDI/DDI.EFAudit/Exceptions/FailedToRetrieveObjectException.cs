@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace DDI.EFAudit.Exceptions
-{        
+{
     public class FailedToRetrieveObjectException : Exception
     {
         public readonly Type Type;

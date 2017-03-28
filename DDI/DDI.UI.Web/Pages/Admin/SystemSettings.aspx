@@ -102,7 +102,7 @@
             <h1>Custom Fields</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadCRMClientCustomFields">Client Custom Fields</a></li>
+                    <li><a href="#" class="LoadCRMClientCustomFields">CRM Custom Fields</a></li>
                     <li><a href="#" class="LoadDonationClientCustomFields">Donation Custom Fields</a></li>
                     <li><a href="#" class="LoadGLClientCustomFields">GL Format Custom Fields</a></li>
                 </ul>
@@ -216,19 +216,9 @@
                 <div class="tagselect consttype-tagselect"></div>
             </div>
 
-            <div class="fieldblock">
-                <label></label>
-            </div>
-            <div class="fieldblock">
-                <label></label>
-            </div>
-            <div class="fieldblock">
-                <label></label>
-            </div>
-
             <div class="modalbuttons">
                 <input type="button" class="submitconsttype" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="canceltypemodal">Cancel</a>
             </div>
 
 
@@ -963,10 +953,6 @@
                 <input type="text" class="t-Name" />
             </div>
 
-            <div class="fieldblock">
-                <label>Is Active</label>
-                <input type="checkbox" class="t-IsActive" />
-            </div>
 
             <div class="modalbuttons">
                 <input type="button" class="savetag" value="Save" />
@@ -976,6 +962,124 @@
         </div>
 
     </div>
+ <div class="addresstypemodal" title="Address Types" style="display: none;">
 
+        <div class="modalcontent">
+
+            <input type="hidden" class="addrtype-Id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="addrtype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="addrtype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="addrtype-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitaddrtype" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="contactcategorymodal" title="Contact Categories" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="contcat-Id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="contcat-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="contcat-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Section Title</label>
+                <input type="text" class="contcat-SectionTitle" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Text Box Label</label>
+                <input type="text" class="contcat-TextBoxLabel" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Default Contact Type</label>
+                <select class="contcat-DefaultContactTypeId" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="contcat-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitcontcat" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="contacttypemodal" title="Contact Types" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="conttype-Id" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="conttype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="conttype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Contact Category</label>
+                <select class="conttype-ContactCategoryId" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Always Show</label>
+                <input type="checkbox" class="conttype-IsAlwaysShown" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Can Delete</label>
+                <input type="checkbox" class="conttype-CanDelete" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="conttype-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitconttype" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 
 </asp:Content>

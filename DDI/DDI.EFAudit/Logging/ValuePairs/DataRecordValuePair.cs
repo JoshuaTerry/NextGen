@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 
 namespace DDI.EFAudit.Logging.ValuePairs
-{ 
+{
     internal class DataRecordValuePair : ValuePair
     {
         internal DataRecordValuePair(IValuePair pair)
