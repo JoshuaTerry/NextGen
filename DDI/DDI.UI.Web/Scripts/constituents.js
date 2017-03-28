@@ -957,24 +957,11 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 function LoadRelationshipsQuickView() {
     var quickviewdata;
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            quickviewdata = data;
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
+    MakeServiceCall('GET', 'constituents/' + currentEntity.Id + '/relationships', null, function (data) {
 
-    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+        var formattedData = $('<ul>').addClass('relationshipQuickViewData');
 
-    if (quickviewdata) {
-
-        $.map(quickviewdata, function (item) {
+        $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
 
@@ -990,16 +977,16 @@ function LoadRelationshipsQuickView() {
                 $(link).appendTo($(li));
 
                 $(li).appendTo($(formattedData));
-                
+
             }
 
         });
 
-    }
+        $('.relationshipsQuickView').empty();
 
-    $('.relationshipsQuickView').empty();
+        $(formattedData).appendTo($('.relationshipsQuickView'));
 
-    $(formattedData).appendTo($('.relationshipsQuickView'));
+    }, null);
 
 }
 
