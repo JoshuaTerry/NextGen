@@ -895,7 +895,11 @@ function GenerateContactInfoSection() {
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
             var header = $('<h3>').text(category.SectionTitle).addClass(category.DisplayName + 'header').appendTo($('.contactinfocontainer'));
 
+            $('<a>', {
+                title: 'New',
                 class: 'new' + category.DisplayName.toLowerCase() + 'modallink' + ' newbutton',
+                href: '#'
+            }).appendTo($(header));
 
             $('<div>').attr('id', category.Id).addClass('constituent' + category.DisplayName + 'gridcontainer').appendTo($('.contactinfocontainer'));
 

@@ -697,8 +697,6 @@ function LoadConstituentType(id) {
 
 function LoadContactInformationSectionSettings() {
 
-
-
     LoadSectionSettings(SettingsCategories.CRM, 'Contact Information', 'sectionpreferences', SystemSettings.ContactInformation);
 
     var accordion = $('<div>').addClass('accordions');
@@ -904,7 +902,7 @@ function LoadAddressTypeSettingsGrid() {
        { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('addresstypesgrid', 'addresstypescontainer', addresstypecolumns, 'addresstypes', null, EditAddressType, DeleteAddressType);
+    CustomLoadGrid('addresstypesgrid', 'addresstypescontainer', addresstypecolumns, 'addresstypes?fields=all', null, EditAddressType, DeleteAddressType);
 
 }
 
@@ -920,7 +918,7 @@ function LoadContactCategorySettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('contactcategoriesgrid', 'contactcategoriescontainer', contactcategorycolumns, 'contactcategory', null, EditContactCategory, DeleteContactCategory);
+    CustomLoadGrid('contactcategoriesgrid', 'contactcategoriescontainer', contactcategorycolumns, 'contactcategory?fields=all', null, EditContactCategory, DeleteContactCategory);
 }
 
 function LoadContactTypeSettingsGrid() {
@@ -935,7 +933,7 @@ function LoadContactTypeSettingsGrid() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('contacttypesgrid', 'contacttypescontainer', contacttypecolumns, 'contacttypes', null, EditContactType, DeleteContactType);
+    CustomLoadGrid('contacttypesgrid', 'contacttypescontainer', contacttypecolumns, 'contacttypes?fields=all', null, EditContactType, DeleteContactType);
 
 }
 
@@ -1369,8 +1367,7 @@ function LoadDenominationSettingsGrid() {
        },
        { dataField: 'IsActive', caption: 'Active' }
     ];
-    LoadGrid('denominationsgrid', 'denominationscontainer', denominationcolumns, 'denominations?fields=all', null, EditDenomination, DeleteDenomination);
-
+    
     LoadGrid('.denominationscontainer', 'denominationsgrid', denominationcolumns, 'denominations?fields=all', 'denominations', null, 'den-',
         '.denominationmodal', '.denominationmodal', 250, true, false, false, null);
 
