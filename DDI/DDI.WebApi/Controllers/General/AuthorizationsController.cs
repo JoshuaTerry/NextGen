@@ -227,7 +227,7 @@ namespace DDI.WebApi.Controllers.General
 
             try
             {
-                IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, model.Code);
+                IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, HttpUtility.UrlDecode(model.Code));
             }
             catch (Exception ex)
             {
