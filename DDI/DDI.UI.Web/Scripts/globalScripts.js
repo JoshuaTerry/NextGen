@@ -204,6 +204,8 @@ function CloseModal(modal) {
 
     ClearFields('.modalcontent');
 
+    RemoveValidation($(modal).attr('class').split(" ")[0]);
+
     $(modal).dialog('close');
 
 }
@@ -970,3 +972,41 @@ function DisplayMessage(heading, text, icon) {
 }
 //
 // END MESSAGING
+
+// FORM VALIDATION
+//
+function InitRequiredLabels(formClassName) {
+    formClassName.replace(".", "");
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var labelElement = $(this).prev();
+        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+    });
+}
+
+function ValidateForm(formClassName) {
+    var validform = true;
+    formClassName.replace(".", "");
+    // required items
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+        $("#" + errorId).remove();
+        if ($(this).val() === "") {
+            $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
+            validform = false;
+        }
+    });
+    return validform;
+}
+
+function RemoveValidation(formClassName) {
+    formClassName.replace(".", "");
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+        $("#" + errorId).remove();
+    });
+}
+//
+// END FORM VALIDATION
+
+
+

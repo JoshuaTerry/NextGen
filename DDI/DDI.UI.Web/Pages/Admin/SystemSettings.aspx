@@ -422,12 +422,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="eduLev-Code" />
+                <input type="text" class="eduLev-Code required" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="eduLev-Name" />
+                <input type="text" class="eduLev-Name required" />
             </div>
 
             <div class="fieldblock">
