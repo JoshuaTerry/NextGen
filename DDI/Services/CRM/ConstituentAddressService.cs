@@ -20,10 +20,15 @@ namespace DDI.Services
 
 
         public ConstituentAddressService()
-            :this(new AddressService(), new UnitOfWorkEF(), new ConstituentAddressLogic())
+            : this(new AddressService(), new UnitOfWorkEF())
         {
 
         }
+
+        internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork) : this(addressService, unitOfWork, new ConstituentAddressLogic(unitOfWork))
+        {
+        }
+
 
         internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork, ConstituentAddressLogic logic)
         {
