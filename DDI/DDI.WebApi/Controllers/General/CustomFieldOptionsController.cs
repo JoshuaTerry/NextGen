@@ -7,19 +7,7 @@ using System.Web.Http;
 namespace DDI.WebApi.Controllers.General
 {
     public class CustomFieldOptionsController : GenericController<CustomFieldOption>
-    {
-        ServiceBase<CustomFieldOption> _service;
-
-        public CustomFieldOptionsController()
-            :this(new ServiceBase<CustomFieldOption>())
-        {
-        }
-
-        internal CustomFieldOptionsController(ServiceBase<CustomFieldOption> service)
-        {
-            _service = service;
-        }
-
+    {     
         [HttpGet]
         [Route("api/v1/customfieldoptions")]
         public IHttpActionResult GetAll()
