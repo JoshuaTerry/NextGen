@@ -130,6 +130,8 @@ function LoadSectionSettings(category, section, route, sectionKey) {
     var label = $('<input>').attr('type', 'text').addClass('sectionLabel').appendTo(sectionLabel);
     $(sectionLabel).appendTo(container);
 
+    var id = $('<input>').attr('type', 'hidden').addClass('hidSettingId').appendTo(container);
+
     GetSetting(category, sectionKey, route, id, checkbox, label);
 
     var controlContainer = $('<div>').addClass('controlContainer');
@@ -149,8 +151,6 @@ function LoadSectionSettings(category, section, route, sectionKey) {
         .appendTo(controlContainer);
 
     $(controlContainer).appendTo(container);
-
-    var id = $('<input>').attr('type', 'hidden').addClass('hidSettingId').appendTo(container);
 
     $(container).appendTo($('.contentcontainer'));
 
