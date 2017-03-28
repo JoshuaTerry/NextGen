@@ -80,7 +80,7 @@
                     <li><a href="#" class="LoadAccounting">Accounting Settings</a></li>
                     <li><a href="#" class="LoadBudget">Budget Settings</a></li>
                     <li><a href="#" class="LoadChartAccounts">Chart of Accounts Settings</a></li>
-                    <li><a href="#" class="LoadEntities">Entities</a></li>
+                    <li><a href="#" class="LoadEntities"></a></li>
                     <li><a href="#" class="LoadFiscalYear">Fiscal Year Settings</a></li>
                     <li><a href="#" class="LoadFundAccounting">Fund Accounting Settings</a></li>
                     <li><a href="#" class="LoadGLFormat">GL Format Settings</a></li>
