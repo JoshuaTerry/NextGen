@@ -66,6 +66,10 @@ namespace DDI.Conversion.Statics
         public static string GL_LedgerAccounts => "LedgerAccount.csv";
         public static string GL_LedgerAccountYears => "LedgerAccountYear.csv";
         public static string GL_LedgerAccountMerges => "LedgerAccountMerge.csv";
+        public static string GL_AccountBudgets => "Budget.csv";
+        public static string GL_Funds => "Fund.csv";
+        public static string GL_FundFromTos => "FundXref.csv";
+        public static string GL_BusinessUnitFromTos => "EntityXref.csv";
 
         #endregion
 

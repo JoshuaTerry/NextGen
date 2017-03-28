@@ -36,5 +36,7 @@ namespace DDI.Shared.Models.Client.GL
         public LedgerAccount ClosingExpenseAccount { get; set; }
 
         public ICollection<FundFromTo> FundTransfers { get; set; }
+
+        public override string DisplayName => FundSegment?.Code ?? string.Empty;
     }
 }
