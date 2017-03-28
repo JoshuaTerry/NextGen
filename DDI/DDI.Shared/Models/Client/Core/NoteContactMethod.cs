@@ -21,5 +21,7 @@ namespace DDI.Shared.Models.Client.Core
         public bool IsActive { get; set; }
 
         public ICollection<Note> Notes { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

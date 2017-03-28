@@ -1,9 +1,9 @@
-﻿
 var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
 var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
 var currentEntity = null;
+var previousEntity = null;
 var modal = null;
 
 $(document).ready(function () {
@@ -316,14 +316,9 @@ function LoadBusinessDate() {
     }
     else {
 
-        $.ajax({
-            url: WEB_API_ADDRESS + 'businessdate',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
-                
+        MakeServiceCall('GET', 'businessdate', null, function (data) {
+
+            if (data.Data) {
                 var date = FormatJSONDate(data.Data);
 
                 if (date) {
@@ -331,11 +326,10 @@ function LoadBusinessDate() {
                 }
 
                 $('.businessdate').text(date);
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
+
     }
 }
 
@@ -348,24 +342,17 @@ function LoadEnvironment() {
         $('.environment').text(sessionStorage.getItem('environment'));
     }
     else {
-        $.ajax({
-            url: WEB_API_ADDRESS + 'environment',
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('GET', 'environment', null, function (data) {
 
+            if (data.Data) {
                 if (data.Data.length > 0) {
                     sessionStorage.setItem('environment', data.Data);
                 }
 
                 $('.environment').text(data.Data);
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
             }
-        });
+
+        }, null);
     }
 }
 
@@ -387,18 +374,7 @@ function LoadNewConstituentModalDropDowns() {
 
 }
 
-function GetApiHeaders() {
 
-    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    var headers = {};
-
-    if (token) {
-        headers.Authorization = 'Bearer ' + token;
-    }
-
-    return headers;
-
-}
 
 function GetQueryString() {
 
@@ -414,10 +390,59 @@ function GetQueryString() {
     return vars;
 }
 
+function SaveNewConstituent(modal) {
+
+    // Get the fields
+    var fields = GetNewFields();
+
+    // Save the Constituent
+    MakeServiceCall('POST', 'constituents', fields, function (data) {
+
+        if (data.Data) {
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+
+            ClearFields();
+
+            CloseModal(modal);
+        }
+
+    }, null);
+
+}
+
+function GetNewFields() {
+
+    var p = [];
+
+    $(modal).find('.modalcontent div.fieldblock input').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    $(modal).find('.modalcontent div.fieldblock select').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+
 function CloseModal(modal) {
 
     ClearFields('.modalcontent');
-    
+
     $(modal).dialog('close');
 
 }
@@ -497,9 +522,9 @@ function LoadAccordions() {
 
             ).insertBefore(this);
         }
-        
+
     });
-    
+
 
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
@@ -517,7 +542,7 @@ function LoadAccordions() {
 
         $(".ui-accordion-content").show('fast');
         $('.ui-accordion-header').addClass('ui-state-active');
-        
+
     });
 
 }
@@ -531,19 +556,19 @@ function LoadDatePickers() {
 function LoadDatePair() {
 
     // if ($.timepicker) {
-        //$('.datepair .time').timepicker({
-        //    'showDuration': true,
-        //    'timeFormat': 'g:ia'
-        //});
+    //$('.datepair .time').timepicker({
+    //    'showDuration': true,
+    //    'timeFormat': 'g:ia'
+    //});
 
-        //$('.datepair .date').datepicker({
-        //    'format': 'm/d/yyyy',
-        //    'autoclose': true
-        //});
+    //$('.datepair .date').datepicker({
+    //    'format': 'm/d/yyyy',
+    //    'autoclose': true
+    //});
 
-        // $('.datepair').datepair();
+    // $('.datepair').datepair();
     // }
-    
+
 }
 
 function FormatJSONDate(jsonDate) {
@@ -553,7 +578,7 @@ function FormatJSONDate(jsonDate) {
     if (jsonDate) {
         date = new Date(jsonDate).toDateString();
     }
-    
+
     return date;
 }
 
@@ -576,7 +601,7 @@ function ClearElement(e) {
         }
 
     }
-    
+
     if ($(e).is('textarea')) {
 
         $(e).text('');
@@ -608,38 +633,27 @@ function GetAutoZipData(container, prefix) {
                 '&stateId=' +
                 '&zip=' + $(container).find('.autozip').val();
 
-        $.ajax({
-            url: WEB_API_ADDRESS + 'addresses/zip/?' + fields,
-            method: 'GET',
-            contentType: 'application/json; charset-utf-8',
-            dataType: 'json',
-            crossDomain: true,
-            success: function (data) {
+        MakeServiceCall('GET', 'addresses/zip/?' + fields, null, function (data) {
 
-                if (data && data.Data) {
+            if (data && data.Data) {
 
-                    $(container).find('.autozip').val(data.Data.PostalCode);
+                $(container).find('.autozip').val(data.Data.PostalCode);
 
-                    if (data.Data.State) {
-                        $(container).find('.autocountry').val(data.Data.State.CountryId);
-                        
-                        PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
+                if (data.Data.State) {
+                    $(container).find('.autocountry').val(data.Data.State.CountryId);
 
-                        PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
-                    }
+                    PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
-                    $(container).find('.autocity').val(data.Data.City);
-                    
-                    LoadAllRegionDropDowns(modal, prefix, data.Data);
-
+                    PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
                 }
-            
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
 
+                $(container).find('.autocity').val(data.Data.City);
+
+                LoadAllRegionDropDowns(modal, prefix, data.Data);
+
+            }
+
+        }, null);
     }
 
 }
@@ -678,17 +692,10 @@ function LoadTagSelector(type, container) {
 
                     });
 
-                    $.ajax({
-                        url: WEB_API_ADDRESS + path1 + '/' + currentEntity.Id + '/' + path2,
-                        method: 'POST',
-                        headers: GetApiHeaders(),
-                        data: JSON.stringify({ tags: tagIds }),
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('POST', path1 + '/' + currentEntity.Id + '/' + path2, JSON.stringify({ tags: tagIds }), function (data) {
 
-                            // Display success
+                        if (data.Data) {
+
                             DisplaySuccessMessage('Success', 'Tags saved successfully.');
 
                             CloseModal(modal);
@@ -697,11 +704,9 @@ function LoadTagSelector(type, container) {
 
                             DisplaySelectedTags(container);
 
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
-                    });
+
+                    }, null);
 
                 });
 
@@ -718,56 +723,43 @@ function LoadTagSelector(type, container) {
 
 function LoadAvailableTags(container) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'taggroups',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'taggroups', null, function (data) {
 
-            if (data) {
-                if (data.IsSuccessful) {
-                    if (data.Data) {
+        if (data.Data) {
 
-                        $(container).find('.tagselectgridcontainer').html('');
+            $(container).find('.tagselectgridcontainer').html('');
 
-                        $.map(data.Data, function (group) {
+            $.map(data.Data, function (group) {
 
-                            var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
-                            var tagsContainer = $('<div>').addClass('tagSelectorContainer');
+                var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
+                var tagsContainer = $('<div>').addClass('tagSelectorContainer');
 
-                            if (group.Tags) {
+                if (group.Tags) {
 
-                                switch (group.TagSelectionType) {
+                    switch (group.TagSelectionType) {
 
-                                    case 0:
-                                        CreateMultiSelectTags(group.Tags, tagsContainer);
-                                        break;
-                                    case 1:
-                                        CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
-                                        break;
-                                    default:
-                                        break;
-                                }
+                        case 0:
+                            CreateMultiSelectTags(group.Tags, tagsContainer);
+                            break;
+                        case 1:
+                            CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
+                            break;
+                        default:
+                            break;
+                    }
 
-                            }
+                }
 
                             $(header).appendTo($(container).find('.tagselectgridcontainer'));
                             $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
 
-                        });
+            });
 
-                        RefreshTags();
+            RefreshTags();
 
-                    }
-                }
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -797,24 +789,16 @@ function DisplaySelectedTags(container) {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    $.ajax({
-                        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/tag/' + tag.Id,
-                        method: 'DELETE',
-                        headers: GetApiHeaders(),
-                        contentType: 'application/json; charset-utf-8',
-                        dataType: 'json',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('DELETE', 'constituents/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
+
+                        if (data.Data) {
 
                             currentEntity = data.Data;
 
                             DisplaySelectedTags(container);
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                         }
-                    });
+
+                    }, null);
                 })
                 .appendTo($(t));
 
@@ -839,23 +823,16 @@ function DisplaySelectedTagsConstituentType() {
             $('<span>').text(tag.DisplayName).appendTo($(t));
             $('<div>').addClass('dx-tag-remove-button')
                 .click(function () {
-                    $.ajax({
-                        url: WEB_API_ADDRESS + 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id,
-                        method: 'DELETE',
-                        headers: GetApiHeaders(),
-                        contentType: 'application/json; charset-utf-8',
-                        crossDomain: true,
-                        success: function (data) {
+                    MakeServiceCall('DELETE', 'constituenttypes/' + currentEntity.Id + '/tag/' + tag.Id, null, function (data) {
+
+                        if (data.Data) {
 
                             currentEntity = data.Data;
 
                             DisplaySelectedTagsConstituentType();
-
-                        },
-                        error: function (xhr, status, err) {
-                            DisplayErrorMessage('Error', 'An error occurred during saving the tags.');
                         }
-                    });
+
+                    }, null);
                 })
                 .appendTo($(t));
 
@@ -902,23 +879,13 @@ function CreateMultiSelectTags(tags, container) {
 
 function GetFile(id, callback) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'filestorage/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'filestorage/' + id, null, function (data) {
 
-            if (data.Data && callback) {
-                callback(data.Data);
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        if (data.Data && callback) {
+            callback(data.Data);
         }
-    });
+
+    }, null);
 
 }
 
@@ -990,7 +957,7 @@ function SetupEditControls() {
             });
 
         }
-                
+
     });
 
     $('.savebutton').click(function (e) {
@@ -1020,10 +987,10 @@ function SetupEditControls() {
 }
 
 function StartEdit(editcontainer) {
-   
+
     editing = true;
     // Get the index of the section that was previously edited
-    lastActiveSection = $('.accordions').accordion('option', 'active'); 
+    lastActiveSection = $('.accordions').accordion('option', 'active');
 
     $(editcontainer).find('.editmode-active').show();
     $(editcontainer).find('.editmode-inactive').hide();
@@ -1035,7 +1002,7 @@ function StartEdit(editcontainer) {
 
     });
 
-    $(editcontainer).find('.dx-tagbox').each(function() {
+    $(editcontainer).find('.dx-tagbox').each(function () {
         $(this).dxTagBox({
             disabled: false
         });
@@ -1079,16 +1046,9 @@ function SaveEdit(editcontainer) {
     SaveTagBoxes(editcontainer);
 
     // Save the entity
-    $.ajax({
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id,
-        method: 'PATCH',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
 
+        if (data.Data) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
@@ -1096,11 +1056,9 @@ function SaveEdit(editcontainer) {
             currentEntity = data.Data;
 
             RefreshEntity();
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -1179,24 +1137,15 @@ function SaveTagBoxes(editcontainer) {
 }
 
 function SaveChildCollection(children, route) {
-    $.ajax({
-        url: route,
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: JSON.stringify({ChildIds: children}),
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
 
+        if (data.Data) {
             // Display success
             DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 }
 
 function CancelEdit() {
@@ -1213,20 +1162,15 @@ function DeleteEntity(url, method, confirmationMessage) {
     var okToDelete = confirm(confirmationMessage);
     if (okToDelete === true) {
         // delete the entity
-        $.ajax({
-            url: url,
-            method: method,
-            headers: GetApiHeaders(),
-            contentType: 'application/json; charset-utf-8',
-            crossDomain: true,
-            success: function() {
+        MakeServiceCall(method, url, null, function (data) {
+
+            if (data.Data) {
                 // Display success
-                DisplaySuccessMessage('Success', 'The item was deleted.');
-            },
-            error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                DisplaySuccessMessage('Success', 'This item was deleted.');
+
             }
-        });
+
+        }, null);
     };
 
 }

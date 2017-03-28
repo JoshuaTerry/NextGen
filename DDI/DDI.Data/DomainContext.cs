@@ -247,13 +247,7 @@ namespace DDI.Data
       
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<UserLogin>().ToTable("UserLogins"); ;
-            modelBuilder.Entity<Role>().ToTable("Roles"); ;
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles"); ;
-            modelBuilder.Entity<UserClaim>().ToTable("UserClaims"); ;
-            modelBuilder.Ignore<Claim>();
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());             
         }
 
         public ISaveResult<ChangeSet> Save(User author)
