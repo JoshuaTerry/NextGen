@@ -76,62 +76,6 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\Client\201703260034361_GL_v3.cs" />
-    <Compile Include="Migrations\Client\201703260034361_GL_v3.Designer.cs">
-      <DependentUpon>201703260034361_GL_v3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703241853454_GL_v2.cs" />
-    <Compile Include="Migrations\Client\201703241853454_GL_v2.Designer.cs">
-      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703241755260_GL_v1.cs" />
-    <Compile Include="Migrations\Client\201703241755260_GL_v1.Designer.cs">
-      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.cs" />
-    <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.Designer.cs">
-      <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.cs" />
-    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.Designer.cs">
-      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.cs" />
-    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.Designer.cs">
-      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.cs" />
-    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.Designer.cs">
-      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.cs" />
-    <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.Designer.cs">
-      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.cs" />
-    <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.Designer.cs">
-      <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703061846001_TestingForChanges.cs" />
-    <Compile Include="Migrations\Client\201703061846001_TestingForChanges.Designer.cs">
-      <DependentUpon>201703061846001_TestingForChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703051400387_IsActive.cs" />
-    <Compile Include="Migrations\Client\201703051400387_IsActive.Designer.cs">
-      <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703022141401_Initial.cs" />
-    <Compile Include="Migrations\Client\201703022141401_Initial.Designer.cs">
-      <DependentUpon>201703022141401_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.cs" />
-    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.Designer.cs">
-      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201703061608079_AddingMemoCodeTables.cs" />
-    <Compile Include="Migrations\Client\201703061608079_AddingMemoCodeTables.Designer.cs">
-      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
@@ -165,48 +109,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Client\201703260034361_GL_v3.resx">
-      <DependentUpon>201703260034361_GL_v3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703241853454_GL_v2.resx">
-      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703241755260_GL_v1.resx">
-      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703211657318_AddingUniqueIndexes.resx">
-      <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703092024348_Note_Notecode.resx">
-      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703092005534_NoteCodeMaxLength.resx">
-      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703091702142_RenamesAndUsers.resx">
-      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703081713520_AddNoteRelatedTables.resx">
-      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703062337318_ConstituentPictureTable.resx">
-      <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703061846001_TestingForChanges.resx">
-      <DependentUpon>201703061846001_TestingForChanges.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703051400387_IsActive.resx">
-      <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703022141401_Initial.resx">
-      <DependentUpon>201703022141401_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703030506257_ChangeCreatedOn.resx">
-      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201703061608079_AddingMemoCodeTables.resx">
-      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
     </EmbeddedResource>

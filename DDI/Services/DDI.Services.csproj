@@ -87,6 +87,8 @@
     <Compile Include="CRM\DenominationsService.cs" />
     <Compile Include="CRM\EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
+    <Compile Include="Security\RoleService.cs" />
+    <Compile Include="Security\UserService.cs" />
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
     <Compile Include="ServiceInterfaces\ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
