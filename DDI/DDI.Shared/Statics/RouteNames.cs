@@ -37,6 +37,7 @@
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
         public const string Language = "Language";
+        public const string Ledger = "Ledger";
         public const string Level = "Level";
         public const string MaritalStatus = "MaritalStatus";
         public const string SectionName = "SectionName";
