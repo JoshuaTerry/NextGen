@@ -7,17 +7,10 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
-    public class BusinessUnitControllers : GenericController<BusinessUnit>
+    public class BusinessUnitsController : GenericController<BusinessUnit>
     {
 
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(BusinessUnitControllers));
-
-        [HttpGet]
-        [Route("api/v1/businessunit", Name = RouteNames.BusinessUnit)]
-        public IHttpActionResult Get()
-        {
-            return Ok();
-        }
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(BusinessUnitsController));
 
         [HttpGet]
         [Route("api/v1/businessunit", Name = RouteNames.BusinessUnit)]
