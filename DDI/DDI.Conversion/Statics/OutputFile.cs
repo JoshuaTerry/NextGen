@@ -26,6 +26,7 @@ namespace DDI.Conversion.Statics
         public static string LedgerAccountIdMappingFile => "LedgerAccountId.csv";
         public static string LedgerAccountYearIdMappingFile => "LedgerAccountYearId.csv";
         public static string FundIdMappingFile => "FundId.csv";
+        public static string PostedTransactionMappingFile => "PostedTransactionId.csv";
 
         #endregion
 
@@ -74,6 +75,7 @@ namespace DDI.Conversion.Statics
         public static string GL_FundFile => "Fund.csv";
         public static string GL_FundFromToFile => "FundFromTo.csv";
         public static string GL_BusinessUnitFromToFile => "BusinessUnitFromTo.csv";
+        public static string GL_PostedTransactionFile => "PostedTransaction.csv";
         
         #endregion
 

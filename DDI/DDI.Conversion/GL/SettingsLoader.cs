@@ -292,8 +292,8 @@ namespace DDI.Conversion.GL
                         year.Name = yearName;
                     }
 
-                    year.StartDate = importer.GetDateTime(2);
-                    year.EndDate = importer.GetDateTime(3);
+                    year.StartDate = importer.GetDate(2);
+                    year.EndDate = importer.GetDate(3);
                     year.NumberOfPeriods = importer.GetInt(4);
                     year.Status = importer.GetEnum<FiscalYearStatus>(5);
                     year.CurrentPeriodNumber = importer.GetInt(8);
@@ -364,8 +364,8 @@ namespace DDI.Conversion.GL
                         period.PeriodNumber = periodNumber;
                     }
 
-                    period.StartDate = importer.GetDateTime(3);
-                    period.EndDate = importer.GetDateTime(4);
+                    period.StartDate = importer.GetDate(3);
+                    period.EndDate = importer.GetDate(4);
                     period.IsAdjustmentPeriod = importer.GetBool(5);
                     period.Status = importer.GetEnum<FiscalPeriodStatus>(6);
 

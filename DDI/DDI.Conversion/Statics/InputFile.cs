@@ -70,6 +70,7 @@ namespace DDI.Conversion.Statics
         public static string GL_Funds => "Fund.csv";
         public static string GL_FundFromTos => "FundXref.csv";
         public static string GL_BusinessUnitFromTos => "EntityXref.csv";
+        public static string GL_PostedTransactions => "PostedTran.csv";
 
         #endregion
 

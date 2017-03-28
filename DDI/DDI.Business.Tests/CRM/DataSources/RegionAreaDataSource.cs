@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Tests.Common.DataSources;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
 
@@ -36,7 +36,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 State = indiana,
                 Priority = 1,
                 Level = 1,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             areas.Add(new RegionArea()
@@ -46,7 +46,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 State = ohio,
                 Priority = 1,
                 Level = 1,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             areas.Add(new RegionArea()
@@ -57,7 +57,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 PostalCodeHigh = "46299",
                 Priority = 1,
                 Level = 2,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             areas.Add(new RegionArea()
@@ -68,7 +68,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 State = indiana,
                 Priority = 1,
                 Level = 2,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             areas.Add(new RegionArea()
@@ -80,7 +80,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 City = "Fishers",
                 Priority = 2,
                 Level = 2,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             uow.CreateRepositoryForDataSource(areas);

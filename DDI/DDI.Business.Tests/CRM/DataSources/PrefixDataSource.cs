@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.Tests.CRM.DataSources
@@ -46,7 +46,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 LabelPrefix = labelPrefix,
                 Name = name,
                 Salutation = salutation,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
             if (!string.IsNullOrWhiteSpace(genderCode))
             {

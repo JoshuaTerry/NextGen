@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DDI.Conversion.Statics;
+using DDI.Data;
+using DDI.Shared.Enums.GL;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
+
+namespace DDI.Conversion.GL
+{    
+    internal class TransactionConverter : GLConversionBase
+    {
+        private Dictionary<string, Guid> _ledgerAccountYearIds;
+
+        public enum ConversionMethod
+        {
+            PostedTransactions = 70300,
+        }
+
+        public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
+        {
+            MethodsToRun = conversionMethods;
+            Initialize(baseDirectory);
+            
+            RunConversion(ConversionMethod.PostedTransactions, () => ConvertPostedTransactions(InputFile.GL_PostedTransactions, false));
+        }
+
+
+        private void ConvertPostedTransactions(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            LoadFiscalYearIds();
+            LoadLedgerAccountYearIds();
+            
+            var outputFile = new FileExport<PostedTransaction>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionFile), append);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.PostedTransactionMappingFile), append, true);
+
+            if (!append)
+            {
+                outputFile.AddHeaderRow();
+            }
+
+            using (var importer = CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)))
+            {
+                int count = 1;
+
+                while (importer.GetNextRow())
+                {
+                    Guid? fiscalYearId = GetFiscalYearId(importer, 0);
+
+                    if (fiscalYearId == null)
+                    {
+                        continue;
+                    }
+
+                    int legacyKey = importer.GetInt(13);
+                    string legacyAccountKey = importer.GetString(2);
+
+                    Guid accountId;
+                    if (!_ledgerAccountYearIds.TryGetValue(legacyAccountKey, out accountId))
+                    {
+                        importer.LogError($"Invalid account legacy key \"{legacyAccountKey}\".");
+                        continue;
+                    }
+
+                    PostedTransaction transaction = new PostedTransaction();
+                    transaction.FiscalYearId = fiscalYearId;
+                    transaction.LedgerAccountYearId = accountId;
+                    transaction.PeriodNumber = importer.GetInt(3);
+                    transaction.TransactionType = importer.GetEnum<PostedTranType>(4);
+                    transaction.TransactionDate = importer.GetDate(5);
+                    transaction.Amount = importer.GetDecimal(6);
+                    transaction.DocumentType = importer.GetString(7);
+                    transaction.TransactionNumber = importer.GetInt64(8);
+                    transaction.LineNumber = importer.GetInt(9);
+                    transaction.Description = importer.GetString(10);
+                    transaction.TransactionId = importer.GetInt(11);
+                    transaction.IsAdjustment = importer.GetBool(12);
+
+                    transaction.AssignPrimaryKey();
+
+                    outputFile.AddRow(transaction);
+                    legacyIdFile.AddRow(new LegacyToID(legacyKey, transaction.Id));
+
+                    count++;
+                    if (count >= 1000) break;
+                }
+            }
+
+            legacyIdFile.Dispose();
+            outputFile.Dispose();
+        }
+
+
+
+        /// <summary>
+        /// Load legacy LedgerAccountYear IDs into a dictionary.
+        /// </summary>
+        private void LoadLedgerAccountYearIds()
+        {
+            if (_ledgerAccountYearIds == null)
+            {
+                _ledgerAccountYearIds = new Dictionary<string, Guid>();
+                _ledgerAccountYearIds = LoadLegacyIds(OutputDirectory, OutputFile.LedgerAccountYearIdMappingFile);
+            }
+        }
+
+    }
+}

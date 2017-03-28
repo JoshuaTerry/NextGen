@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
@@ -215,7 +215,7 @@ namespace DDI.Business.Tests.CRM
             BuildConstituentDataSource();
             ContactInfo isPreferredContactInfo1 = new ContactInfo()
             {
-                Id = GuidHelper.NextGuid(),
+                Id = GuidHelper.NewSequentialGuid(),
                 ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
                 ContactTypeId = _usPhoneContactInfo.ContactType.Id,
                 Constituent = _constituents[0],
@@ -232,7 +232,7 @@ namespace DDI.Business.Tests.CRM
 
             ContactInfo isPreferredContactInfo2 = new ContactInfo()
             {
-                Id = GuidHelper.NextGuid(),
+                Id = GuidHelper.NewSequentialGuid(),
                 ContactType = _contactTypes.FirstOrDefault(p => p.Code == "H" && p.ContactCategory.Code == ContactCategoryCodes.Phone),
                 ContactTypeId = _usPhoneContactInfo.ContactType.Id,
                 Constituent = _constituents[0],
@@ -276,7 +276,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "M"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _constituents.Add(new Constituent()
@@ -290,7 +290,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "M"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _uow.CreateRepositoryForDataSource(_constituents);
@@ -303,7 +303,7 @@ namespace DDI.Business.Tests.CRM
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
                 IsPrimary = true,
                 ResidentType = ResidentType.Primary,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _constituentAddresses.Add(new ConstituentAddress()
@@ -313,7 +313,7 @@ namespace DDI.Business.Tests.CRM
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
                 IsPrimary = true,
                 ResidentType = ResidentType.Primary,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
 
