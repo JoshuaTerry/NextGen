@@ -236,7 +236,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
-                return Ok();
+                return Ok(response);
             }
             catch (Exception ex)
             {
