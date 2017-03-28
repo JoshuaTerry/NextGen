@@ -2731,13 +2731,13 @@ function LoadChartAccountsSettingsSectionSettings() {
 
 
 }
-
+    /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
 
 
 }
-
+/// End Entities/Business Untis Settings
 function LoadFiscalYearSectionSettings() {
 
 
