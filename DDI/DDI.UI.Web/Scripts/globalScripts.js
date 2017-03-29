@@ -22,6 +22,8 @@ $(document).ready(function () {
 
     NewConstituentModal();
 
+    BusinessUnitModal();
+
     $('.logout').click(function (e) {
 
         e.preventDefault();
@@ -1209,3 +1211,43 @@ function DisplayMessage(heading, text, icon) {
 }
 //
 // END MESSAGING
+
+// BUSINESS UNIT
+//
+
+function BusinessUnitModal() {
+    $('.businessunit').click(function (e) {
+
+        e.preventDefault();
+
+        var modal = $('.businessunitmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false,
+        });
+
+        LoadBusinessUnit();
+
+        $('.savebusinessunit').click(function (e) { });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+    });
+
+}
+
+function LoadBusinessUnit() {
+
+    PopulateDropDown('.bu-currentbu', 'businessunit', '', '', null);
+
+}
+
+//
+// END BUSINESS UNIT

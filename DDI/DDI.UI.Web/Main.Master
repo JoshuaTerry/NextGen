@@ -66,7 +66,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Edit Business Unit"><a href ="#"><img src ="Images/Edit_16.png"/></a></li>
+                    <li title="Edit Business Unit"><a href ="#" class="businessunit"><img src ="Images/Edit_16.png"/></a></li>
                     <li title="Business Unit"><a href="#" >BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
@@ -369,11 +369,11 @@
             
         <div class="fieldblock">
             <label>Selected Business Unit</label>
-            <select class="editable BusinessUnit"></select>
+            <select class="bu-currentbu editable BusinessUnit"></select>
         </div>
 
         <div class="modalbuttons">
-            <input type="button" class="savebutton" value="Save" />
+            <input type="button" class="savebusinessunit" value="Save" />
             <a href="#" class="cancelmodal">Cancel</a>
         </div>
                             
