@@ -1,5 +1,7 @@
-﻿using DDI.Shared.Models.Client.Security;
+﻿using DDI.Services.Search;
+using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models;
+using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -16,6 +18,11 @@ namespace DDI.WebApi
             : base(store)
         {
         }
+
+        public UserManager() : base(new UserService())
+        {
+        }
+
         public override async Task<User> FindByIdAsync(Guid userId)
         {
             var user = await Store.FindByIdAsync(userId);
@@ -24,8 +31,7 @@ namespace DDI.WebApi
 
         public static UserManager Create(IdentityFactoryOptions<UserManager> options, IOwinContext context)
         {
-            //var manager = new UserManager(new UserStore(new ServiceBase<User>()));
-            var manager = new UserManager(new UserStore(context.Get<ApplicationDbContext>()));
+            var manager = new UserManager(); 
             // Configure validation logic for usernames 
             manager.UserValidator = new UserValidator<User, Guid>(manager)
             {
