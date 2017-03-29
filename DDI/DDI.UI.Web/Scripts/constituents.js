@@ -895,12 +895,6 @@ function GenerateContactInfoSection() {
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
             var header = $('<h3>').text(category.SectionTitle).addClass(category.DisplayName + 'header').appendTo($('.contactinfocontainer'));
 
-            $('<a>', {
-                title: 'New',
-                class: 'new' + category.DisplayName.toLowerCase() + 'modallink' + ' newbutton',
-                href: '#'
-            }).appendTo($(header));
-
             $('<div>').attr('id', category.Id).addClass('constituent' + category.DisplayName + 'gridcontainer').appendTo($('.contactinfocontainer'));
 
             LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.DisplayName);
@@ -908,7 +902,6 @@ function GenerateContactInfoSection() {
         });
         
         $('.accordions').accordion('refresh');
-        // LoadAccordions will not work here
 
     });
 
@@ -916,20 +909,12 @@ function GenerateContactInfoSection() {
 
 function LoadCategories(CategoryTitles) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactcategory',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'contactcategory', null, function (data) {
 
-            CategoryTitles(data);
+        CategoryTitles(data);
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
+    }, null);
+
 }
 
 function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
@@ -942,7 +927,7 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    PopulateDropDown($('.'+ name.toLowerCase() + "-ContactTypeId"), 'contacttypes/'+categoryid, null)
+    PopulateDropDown($('.' + name.toLowerCase() + "-ContactTypeId"), 'contacttypes/category/' + categoryid, null)
    
     LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
         , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
@@ -957,24 +942,11 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 function LoadRelationshipsQuickView() {
     var quickviewdata;
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            quickviewdata = data;
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
+    MakeServiceCall('GET', 'constituents/' + currentEntity.Id + '/relationships', null, function (data) {
 
-    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+        var formattedData = $('<ul>').addClass('relationshipQuickViewData');
 
-    if (quickviewdata) {
-
-        $.map(quickviewdata, function (item) {
+        $.map(data.Data, function (item) {
 
             if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
 
@@ -990,16 +962,16 @@ function LoadRelationshipsQuickView() {
                 $(link).appendTo($(li));
 
                 $(li).appendTo($(formattedData));
-                
+
             }
 
         });
 
-    }
+        $('.relationshipsQuickView').empty();
 
-    $('.relationshipsQuickView').empty();
+        $(formattedData).appendTo($('.relationshipsQuickView'));
 
-    $(formattedData).appendTo($('.relationshipsQuickView'));
+    }, null);
 
 }
 
