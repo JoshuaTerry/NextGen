@@ -149,11 +149,14 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (response.Data == null)
                 {
-                    return NotFound();
+                    if (response.ErrorMessages.Count > 0)
+                        return  BadRequest(string.Join(",", response.ErrorMessages));
+                    else
+                        return NotFound();
                 }
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(",", response.ErrorMessages));
                 }
 
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
@@ -182,6 +185,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Add(entity);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
             }
             catch (Exception ex)
