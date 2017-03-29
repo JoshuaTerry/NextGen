@@ -8,31 +8,9 @@ using System.Web.Http;
 namespace DDI.WebApi.Controllers.CRM
 {
     public class CountiesController : GenericController<County>
-    {
-        #region Private Fields
-
-        private CountyService _service;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CountiesController()
-            : this(new CountyService())
-        {
-        }
-
-        #endregion Public Constructors
-
-        #region Internal Constructors
-
-        internal CountiesController(CountyService service)
-        {
-            _service = service;
-        }
-
-        #endregion Internal Constructors
-
+    { 
+        protected new CountyService Service => (CountyService)base.Service; 
+   
         #region Public Methods
 
         [HttpGet]
@@ -49,7 +27,7 @@ namespace DDI.WebApi.Controllers.CRM
 
             try
             {
-                var result = _service.GetAll(search);
+                var result = Service.GetAll(search);
 
                 try
                 {

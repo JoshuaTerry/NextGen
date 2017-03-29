@@ -21,7 +21,7 @@ namespace DDI.WebApi.Controllers.GL
         {
         }
 
-        public IHttpActionResult GetAll(string routeName, Guid businessUnit, Guid fiscalYear, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(string routeName, Guid businessUnit, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
         {
             var search = new PageableSearch()
             {
@@ -30,10 +30,10 @@ namespace DDI.WebApi.Controllers.GL
                 OrderBy = orderBy
             };
 
-            return GetAll(routeName, businessUnit, fiscalYear, search, fields, urlHelper ?? GetUrlHelper());
+            return GetAll(routeName, businessUnit, search, fields, urlHelper ?? GetUrlHelper());
         }
 
-        public IHttpActionResult GetAll(string routeName, Guid businessUnit, Guid fiscalYear, IPageable search, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(string routeName, Guid businessUnit, IPageable search, string fields = null, UrlHelper urlHelper = null)
         {
             try
             {
