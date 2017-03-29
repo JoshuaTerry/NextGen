@@ -3,14 +3,13 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     public class BusinessUnitsController : GenericController<BusinessUnit>
     {
-
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(BusinessUnitsController));
 
         [HttpGet]
         [Route("api/v1/businessunit", Name = RouteNames.BusinessUnit)]
