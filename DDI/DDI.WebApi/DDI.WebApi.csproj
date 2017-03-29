@@ -243,7 +243,7 @@
     <Compile Include="Controllers\General\AuthorizationsController.cs" />
     <Compile Include="Controllers\CRM\AddressTypesController.cs" />
     <Compile Include="Controllers\General\BusinessDateController.cs" />
-    <Compile Include="Controllers\General\BusinessUnitControllers.cs" />
+    <Compile Include="Controllers\General\BusinessUnitsController.cs" />
     <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
     <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
     <Compile Include="Controllers\CRM\AddressesController.cs" />
