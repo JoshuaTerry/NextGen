@@ -1,11 +1,7 @@
-﻿using DDI.Shared.Models.Client.Audit;
+﻿using DDI.EFAudit.Helpers;
+using DDI.Shared.Models.Client.Audit;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.EFAudit.Helpers;
 
 namespace DDI.EFAudit.Contexts
 {

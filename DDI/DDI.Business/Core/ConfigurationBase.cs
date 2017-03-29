@@ -1,13 +1,9 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Enums;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models;
-using DDI.Shared.Enums;
 
 namespace DDI.Business.Core
 {

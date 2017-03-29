@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace DDI.EFAudit.Helpers
-{    
+{
     public class ReferenceEqualityComparer : EqualityComparer<Object>
     {
         public override bool Equals(object x, object y)

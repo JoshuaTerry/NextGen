@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
@@ -14,10 +10,12 @@ namespace DDI.Shared.Models.Client.Security
     {
         [Key]
         public Guid Id { get; set; }
+        [MaxLength(64)]
         public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
-        public string DisplayName { get; set; } 
+        public string DisplayName { get; set; }
+        [MaxLength(64)]
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }

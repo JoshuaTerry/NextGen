@@ -1,17 +1,16 @@
-﻿using System;
+﻿using DDI.EFAudit.Helpers;
+using DDI.EFAudit.Translation.Serializers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Audit;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
-using DDI.EFAudit.Helpers;
-using DDI.Shared.Models.Client.Audit;
-using DDI.EFAudit.Translation.Serializers;
-using System.Data.Entity;
-using DDI.Shared.Models;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.EFAudit.Logging
 {

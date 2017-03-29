@@ -1,12 +1,9 @@
 ﻿using DDI.Shared;
+using DDI.Shared.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Models;
 
 namespace DDI.Services.ServiceInterfaces
 {

@@ -1,13 +1,13 @@
 ﻿using DDI.EFAudit.Contexts;
 using DDI.EFAudit.Exceptions;
 using DDI.EFAudit.Helpers;
+using DDI.EFAudit.Translation;
+using DDI.EFAudit.Translation.Binders;
 using DDI.Shared.Models.Client.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DDI.EFAudit.Translation;
-using DDI.EFAudit.Translation.Binders;
 
 namespace DDI.EFAudit.History
 {

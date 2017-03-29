@@ -1,32 +1,25 @@
-﻿using System;
+﻿using DDI.Logger;
+using DDI.Services;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
+using DDI.Shared.Models;
+using DDI.WebApi.Helpers;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using DDI.Services;
-using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
-
-using DDI.Shared.Models;
-using DDI.Shared.Statics;
-using DDI.WebApi.Helpers;
-using Newtonsoft.Json.Linq;
-using System.Web.Http.Results;
-using DDI.Logger;
 
 namespace DDI.WebApi.Controllers
 {
-    public class ControllerBase<T> : ApiController
-        where T : class, IEntity
+    public abstract class ControllerBase<T> : ApiController where T : class, IEntity
     {
-        private IPagination _pagination;
-        private DynamicTransmogrifier _dynamicTransmogrifier;
-        private readonly IService<T> _service;
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ControllerBase<T>));
+        protected IPagination _pagination;
+        protected DynamicTransmogrifier _dynamicTransmogrifier;
+        protected readonly IService<T> _service;
+        protected readonly ILogger _logger = LoggerManager.GetLogger(typeof(ControllerBase<T>));
         protected IService<T> Service => _service;
         protected ILogger Logger => _logger;
 
@@ -102,35 +95,7 @@ namespace DDI.WebApi.Controllers
             var urlHelper = new UrlHelper(Request);
             return urlHelper;
         }
-
-        public IHttpActionResult GetAll(string routeName, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
-        {
-            var search = new PageableSearch()
-            {
-                Limit = limit,
-                Offset = offset,
-                OrderBy = orderBy
-            };
-
-            return GetAll(routeName, search, fields, urlHelper ?? GetUrlHelper());
-
-        }
-
-        public IHttpActionResult GetAll(string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
-        {
-            try
-            {                
-                urlHelper = urlHelper ?? GetUrlHelper();
-                return FinalizeResponse(_service.GetAll(fields, search), routeName, search, ConvertFieldList(fields, FieldsForList), urlHelper);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
-
-        }
-
+          
         public IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)
         {
             try
@@ -139,7 +104,7 @@ namespace DDI.WebApi.Controllers
                 var response = _service.GetById(id);
                 if (!response.IsSuccessful)
                 {
-                    throw new Exception(response.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", response.ErrorMessages));
                 }
                 return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle), urlHelper);
             }
@@ -158,7 +123,7 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
                 var totalCount = response.TotalResults;
@@ -167,7 +132,7 @@ namespace DDI.WebApi.Controllers
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", dynamicResponse.ErrorMessages));
                 }
                 return Ok(dynamicResponse);
             }
@@ -195,7 +160,7 @@ namespace DDI.WebApi.Controllers
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {
-                    throw new Exception(dynamicResponse.ErrorMessages.ToString());
+                    throw new Exception(string.Join(", ", dynamicResponse.ErrorMessages));
                 }
 
                 return Ok(dynamicResponse);
@@ -262,13 +227,13 @@ namespace DDI.WebApi.Controllers
 
                 if (!entity.IsSuccessful)
                 {
-                    return BadRequest(entity.ErrorMessages.ToString());
+                    return BadRequest(string.Join(",", entity.ErrorMessages));
                 }
 
                 var response = _service.Delete(entity.Data);
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
                 return Ok(response);

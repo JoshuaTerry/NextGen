@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -16,10 +14,10 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(16)]
+        [Index("IX_Code", IsUnique = true), MaxLength(16)]
         public string Code { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         public Guid? TagGroupId { get; set; }

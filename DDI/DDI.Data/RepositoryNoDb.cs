@@ -1,12 +1,9 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared;
-using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -75,6 +72,11 @@ namespace DDI.Data
         }
 
         #region Public Methods
+
+        public EntityState GetEntityState(T entity)
+        {
+            return EntityState.Unchanged;
+        }
 
         /// <summary>
         /// Clear all entities in the repository.

@@ -1,5 +1,4 @@
-﻿using System;
-using DDI.WebApi.Models;
+﻿using DDI.WebApi.Models;
 using DDI.WebApi.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -7,6 +6,7 @@ using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using System;
 
 namespace DDI.WebApi
 {
@@ -20,9 +20,9 @@ namespace DDI.WebApi
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context and user manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            //app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
-            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+            app.CreatePerOwinContext<RoleManager>(RoleManager.Create);
 
             app.UseCors(CorsOptions.AllowAll);
 

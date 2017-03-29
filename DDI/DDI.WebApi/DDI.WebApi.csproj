@@ -189,7 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\ApplicationRoleManager.cs" />
+    <Compile Include="App_Start\RoleManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IApplicationUserManager.cs" />
@@ -225,64 +225,66 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AuditController.cs" />
-    <Compile Include="Controllers\ConstituentPictureController.cs" />
-    <Compile Include="Controllers\RelationshipCategoriesController.cs" />
-    <Compile Include="Controllers\EFTFormatsController.cs" />
-    <Compile Include="Controllers\FileStorageController.cs" />
-    <Compile Include="Controllers\NoteCategoriesController.cs" />
-    <Compile Include="Controllers\NoteCodesController.cs" />
-    <Compile Include="Controllers\NoteContactMethodsController.cs" />
-    <Compile Include="Controllers\NotesController.cs" />
-    <Compile Include="Controllers\NoteTopicsController.cs" />
-    <Compile Include="Controllers\RelationshipTypesController.cs" />
-    <Compile Include="Controllers\RelationshipsController.cs" />
-    <Compile Include="Controllers\AuthorizationsController.cs" />
-    <Compile Include="Controllers\AddressTypesController.cs" />
-    <Compile Include="Controllers\BusinessDateController.cs" />
-    <Compile Include="Controllers\BusinessUnitControllers.cs" />
-    <Compile Include="Controllers\ClergyStatusesController.cs" />
-    <Compile Include="Controllers\ClergyTypesController.cs" />
-    <Compile Include="Controllers\AddressesController.cs" />
-    <Compile Include="Controllers\ConstituentAddressesController.cs" />
-    <Compile Include="Controllers\ConstituentsController.cs" />
-    <Compile Include="Controllers\ConstituentStatusesController.cs" />
-    <Compile Include="Controllers\ConstituentTypesController.cs" />
-    <Compile Include="Controllers\AlternateIdsController.cs" />
-    <Compile Include="Controllers\ContactCategoryController.cs" />
-    <Compile Include="Controllers\DegreesController.cs" />
-    <Compile Include="Controllers\DoingBusinessAsController.cs" />
-    <Compile Include="Controllers\ContactTypesController.cs" />
+    <Compile Include="Controllers\General\AuditController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\GL\GeneralLedgerController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipCategoriesController.cs" />
+    <Compile Include="Controllers\CRM\EFTFormatsController.cs" />
+    <Compile Include="Controllers\General\FileStorageController.cs" />
+    <Compile Include="Controllers\General\NoteCategoriesController.cs" />
+    <Compile Include="Controllers\General\NoteCodesController.cs" />
+    <Compile Include="Controllers\General\NoteContactMethodsController.cs" />
+    <Compile Include="Controllers\General\NotesController.cs" />
+    <Compile Include="Controllers\General\NoteTopicsController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipTypesController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipsController.cs" />
+    <Compile Include="Controllers\General\AuthorizationsController.cs" />
+    <Compile Include="Controllers\CRM\AddressTypesController.cs" />
+    <Compile Include="Controllers\General\BusinessDateController.cs" />
+    <Compile Include="Controllers\General\BusinessUnitControllers.cs" />
+    <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
+    <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
+    <Compile Include="Controllers\CRM\AddressesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentAddressesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentsController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentStatusesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentTypesController.cs" />
+    <Compile Include="Controllers\CRM\AlternateIdsController.cs" />
+    <Compile Include="Controllers\CRM\ContactCategoryController.cs" />
+    <Compile Include="Controllers\CRM\DegreesController.cs" />
+    <Compile Include="Controllers\CRM\DoingBusinessAsController.cs" />
+    <Compile Include="Controllers\CRM\ContactTypesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
-    <Compile Include="Controllers\CountiesController.cs" />
-    <Compile Include="Controllers\CountriesController.cs" />
-    <Compile Include="Controllers\CustomFieldDataController.cs" />
-    <Compile Include="Controllers\CustomFieldOptionsController.cs" />
-    <Compile Include="Controllers\CustomFieldsController.cs" />
-    <Compile Include="Controllers\ContactInfoController.cs" />
-    <Compile Include="Controllers\DenominationsController.cs" />
-    <Compile Include="Controllers\EnvironmentController.cs" />
-    <Compile Include="Controllers\PaymentMethodController.cs" />
-    <Compile Include="Controllers\SchoolsController.cs" />
-    <Compile Include="Controllers\TagGroupsController.cs" />
-    <Compile Include="Controllers\TagsController.cs" />
-    <Compile Include="Controllers\EducationsController.cs" />
-    <Compile Include="Controllers\EducationLevelsController.cs" />
-    <Compile Include="Controllers\EthnicitiesController.cs" />
-    <Compile Include="Controllers\GendersController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IncomeLevelsController.cs" />
-    <Compile Include="Controllers\LanguagesController.cs" />
-    <Compile Include="Controllers\MaritalStatusesController.cs" />
-    <Compile Include="Controllers\PrefixesController.cs" />
-    <Compile Include="Controllers\ProfessionsController.cs" />
-    <Compile Include="Controllers\RegionLevelsController.cs" />
-    <Compile Include="Controllers\RegionsController.cs" />
-    <Compile Include="Controllers\RolesController.cs" />
-    <Compile Include="Controllers\SectionPreferencesController.cs" />
-    <Compile Include="Controllers\StatesController.cs" />
-    <Compile Include="Controllers\UserRolesController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\CRM\CountiesController.cs" />
+    <Compile Include="Controllers\CRM\CountriesController.cs" />
+    <Compile Include="Controllers\General\CustomFieldDataController.cs" />
+    <Compile Include="Controllers\General\CustomFieldOptionsController.cs" />
+    <Compile Include="Controllers\General\CustomFieldsController.cs" />
+    <Compile Include="Controllers\CRM\ContactInfoController.cs" />
+    <Compile Include="Controllers\CRM\DenominationsController.cs" />
+    <Compile Include="Controllers\General\EnvironmentController.cs" />
+    <Compile Include="Controllers\CRM\PaymentMethodController.cs" />
+    <Compile Include="Controllers\CRM\SchoolsController.cs" />
+    <Compile Include="Controllers\General\TagGroupsController.cs" />
+    <Compile Include="Controllers\General\TagsController.cs" />
+    <Compile Include="Controllers\CRM\EducationsController.cs" />
+    <Compile Include="Controllers\CRM\EducationLevelsController.cs" />
+    <Compile Include="Controllers\CRM\EthnicitiesController.cs" />
+    <Compile Include="Controllers\CRM\GendersController.cs" />
+    <Compile Include="Controllers\General\HomeController.cs" />
+    <Compile Include="Controllers\CRM\IncomeLevelsController.cs" />
+    <Compile Include="Controllers\CRM\LanguagesController.cs" />
+    <Compile Include="Controllers\CRM\MaritalStatusesController.cs" />
+    <Compile Include="Controllers\CRM\PrefixesController.cs" />
+    <Compile Include="Controllers\CRM\ProfessionsController.cs" />
+    <Compile Include="Controllers\CRM\RegionLevelsController.cs" />
+    <Compile Include="Controllers\CRM\RegionsController.cs" />
+    <Compile Include="Controllers\General\RolesController.cs" />
+    <Compile Include="Controllers\General\SectionPreferencesController.cs" />
+    <Compile Include="Controllers\CRM\StatesController.cs" />
+    <Compile Include="Controllers\General\UserRolesController.cs" />
+    <Compile Include="Controllers\General\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -290,20 +292,6 @@
     <Compile Include="Helpers\IPagination.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
-    <Compile Include="Helpers\PatchUpdateUser.cs" />
-    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.cs" />
-    <Compile Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.Designer.cs">
-      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.cs" />
-    <Compile Include="Migrations\Identity\201703022119126_AddingIdentityTables.Designer.cs">
-      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.cs" />
-    <Compile Include="Migrations\Identity\201703030459149_CreatedOnChange.Designer.cs">
-      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -315,7 +303,6 @@
     <Compile Include="Models\BindingModels\RolesBindingModel.cs" />
     <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\UserRolesBindingModel.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\HttpCacheProvider.cs" />
@@ -399,17 +386,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\Identity\201703140507105_UserChangesForSomeUnknownReason.resx">
-      <DependentUpon>201703140507105_UserChangesForSomeUnknownReason.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Identity\201703022119126_AddingIdentityTables.resx">
-      <DependentUpon>201703022119126_AddingIdentityTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Identity\201703030459149_CreatedOnChange.resx">
-      <DependentUpon>201703030459149_CreatedOnChange.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,6 +1,4 @@
-using System;
-using System.Data.Entity.Migrations; 
-using DDI.Shared.Models.Client.CRM;
+using System.Data.Entity.Migrations;
 
 namespace DDI.Data.Migrations.Client
 {

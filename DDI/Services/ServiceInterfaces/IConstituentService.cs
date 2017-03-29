@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.CRM;
-using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace DDI.Shared
-{ 
+{
     public interface IConstituentService : IService<Constituent>
     {
         IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum);

@@ -1,4 +1,4 @@
-﻿var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
+var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
 var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
@@ -20,6 +20,23 @@ $(document).ready(function () {
 
     LoadAccordions();
 
+    NewConstituentModal();
+
+    $('.logout').click(function (e) {
+
+        e.preventDefault();
+
+        sessionStorage.removeItem(AUTH_TOKEN_KEY);
+        auth_token = null;
+
+        location.href = "/Login.aspx";
+    });
+
+});
+
+/* NEW CONSTITUENT */
+function NewConstituentModal() {
+
     $('.addconstituent').click(function (e) {
 
         e.preventDefault();
@@ -27,15 +44,29 @@ $(document).ready(function () {
         modal = $('.addconstituentmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 900,
+            width: 925,
             height: 625,
-            resizable: false
+            resizable: false,
+            beforeClose: function (event, ui) {
+                $('.constituenttypeselect').show();
+                $('.constituentdetails').hide();
+            }
         });
 
+        SetupConstituentTypeSelector();
+
+        // Save Constituent
+        $('.savenewconstituent').unbind('click');
+
         $('.savenewconstituent').click(function () {
+            SaveNewConstituent(modal, false);
+        });
 
-            SaveNewConstituent(modal);
+        // Save & New Constituent
+        $('.saveandnewconstituent').unbind('click');
 
+        $('.saveandnewconstituent').click(function () {
+            SaveNewConstituent(modal, true);
         });
 
         $('.cancelmodal').click(function (e) {
@@ -52,17 +83,225 @@ $(document).ready(function () {
 
     });
 
-    $('.logout').click(function (e) {
+}
 
-        e.preventDefault();
+function SetupConstituentTypeSelector() {
 
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        auth_token = null;
+    var container = $('.constituenttypeselect');
+    var details = $('.constituentdetails');
 
-        location.href = "/Login.aspx";
+    $(container).empty();
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituenttypes',
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+                
+                $.map(data.Data, function (item) {
+
+                    var option = $('<div>')
+                    .attr('id', item.Id)
+                    .click(function (e) {
+
+                        // Might be implemented later...  Issue with getting the inner container to sit correctly in the modal when opened. - MR 3/13/2017
+                        // $('.constituenttypeinner').stop().animate({ left: '-895px' }, 250);
+
+                        $(container).hide('fast');
+                        $(details).show('fast');
+
+                        ConstituentTypeLayout(item.Name);
+
+                        SetupNewConstituent(item.Id);
+
+                    });
+
+                    var label = $('<label>').text(item.Name);
+                    var img = $('<img>').attr('src', GetConstituentTypeImage(item.Name)).attr('alt', item.Name);
+
+                    $(img).appendTo($(option));
+                    $(label).appendTo($(option));
+
+                    $(option).appendTo($(container));
+
+                });
+
+            }
+
+        },
+        failure: function (response) {
+            
+        }
     });
 
-});
+}
+
+function GetConstituentTypeImage(name) {
+    
+    var path = 'default';
+
+    switch (name) {
+        case 'Church':
+            path = '../../Images/church.png';
+            break;
+        case 'Family':
+            path = '../../Images/family.png';
+            break;
+        case 'Individual':
+            path = '../../Images/male.png';
+            break;
+        case 'Organization':
+            path = '../../Images/organization.png';
+            break;
+        default:
+            path = '../../Images/male.png';
+            break;
+    }
+
+    return path;
+
+}
+
+function ConstituentTypeLayout(name) {
+
+    switch (name) {
+        case 'Individual':
+            IndividualLayout();
+            break;
+        case 'Church':
+            NonindividualLayout();
+            break;
+        case 'Family':
+            NonindividualLayout();
+            break;
+        case 'Organization':
+            NonindividualLayout();
+            break;
+        default:
+            IndividualLayout();
+            break;
+    }
+
+}
+
+function IndividualLayout() {
+
+    $('.IndividualContainer').show();
+    $('.OrganizationContainer').hide();
+
+    $('.nc-TaxID').mask('000-00-0000');
+}
+
+function NonindividualLayout() {
+
+    $('.IndividualContainer').hide();
+    $('.OrganizationContainer').show();
+
+    $('.nc-TaxID').mask('00-0000000');
+}
+
+function SetupNewConstituent(constituenttypeid) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituents/new/' + constituenttypeid,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $('.nc-ConstituentNumber').val(data.Data.ConstituentNumber);
+                $('.nc-ConstituentTypeId').val(data.Data.ConstituentType.Id);
+            }
+
+        },
+        failure: function (response) {
+
+        }
+    })
+
+}
+
+function SaveNewConstituent(modal, addnew) {
+
+    // Get the fields
+    var fields = GetNewFields();
+
+    // Save the Constituent
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituents',
+        method: 'POST',
+        headers: GetApiHeaders(),
+        data: fields,
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.IsSuccessful) {
+
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+                
+                if (addnew) {
+                    ClearFields('.modalcontent');
+
+                    $(modal).find('.constituenttypeselect').show('fast');
+                    $(modal).find('.constituentdetails').hide('fast');
+                }
+                else {
+                    CloseModal(modal);
+
+                    currentEntity = data.Data;
+
+                    sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
+                    location.href = "Constituents.aspx";
+                }
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
+function GetNewFields() {
+
+    var p = [];
+
+    $(modal).find('.modalcontent div.fieldblock input').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    $(modal).find('.modalcontent div.fieldblock select').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0].replace('nc-', '');
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+/* NEW CONSTITUENT */
 
 function LoadHeaderInfo() {
     LoadBusinessDate();
@@ -513,8 +752,8 @@ function LoadAvailableTags(container) {
 
                 }
 
-                $(header).appendTo($(modal).find('.tagselectgridcontainer'));
-                $(tagsContainer).appendTo($(modal).find('.tagselectgridcontainer'));
+                            $(header).appendTo($(container).find('.tagselectgridcontainer'));
+                            $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
 
             });
 

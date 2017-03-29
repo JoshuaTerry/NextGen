@@ -1,8 +1,5 @@
-using DDI.Shared.Models.Client.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models
 {

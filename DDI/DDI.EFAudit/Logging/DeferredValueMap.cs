@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DDI.EFAudit.Exceptions;
+using System;
 using System.Collections.Generic;
-using DDI.EFAudit.Exceptions;
 
 namespace DDI.EFAudit.Logging
 {

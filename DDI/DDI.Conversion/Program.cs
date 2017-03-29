@@ -37,7 +37,7 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-    
+
             // These can be uncommented to run individual conversions.
 
             //Run<Core.Initialize>();
@@ -61,6 +61,9 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
+
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
+            Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));

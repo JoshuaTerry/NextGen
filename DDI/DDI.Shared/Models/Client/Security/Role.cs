@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace DDI.Shared.Models.Client.Security
 {
     [Table("Roles")]
     public class Role : IdentityRole<Guid, UserRole>, IEntity, IAuditableEntity
     {
-          
+
+        [MaxLength(64)]
         public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
         [NotMapped]
         public string DisplayName => Name;
+        [MaxLength(64)]
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedOn { get; set; }

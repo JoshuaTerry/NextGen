@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Models;
+﻿using DDI.Shared.Models;
 namespace DDI.Shared.Statics
 {
     public static class FieldLists

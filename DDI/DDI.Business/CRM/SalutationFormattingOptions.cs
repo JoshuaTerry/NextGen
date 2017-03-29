@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Enums.CRM;
+﻿using DDI.Shared.Enums.CRM;
 
 namespace DDI.Business.CRM
 {
