@@ -19,6 +19,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.ModelConfiguration;
 
 namespace DDI.Data
 {
@@ -95,6 +96,7 @@ namespace DDI.Data
         #region GL Entities
 
         public DbSet<Shared.Models.Client.GL.Account> GL_Accounts { get; set; }
+        public DbSet<Shared.Models.Client.GL.AccountBalance> GL_AccountBalances { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBudget> GL_AccountBudgets { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountClose> GL_AccountCloses { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountGroup> GL_AccountGroups { get; set; }
@@ -247,7 +249,8 @@ namespace DDI.Data
       
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());             
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
+            modelBuilder.Entity<Shared.Models.Client.GL.AccountBalance>().ToTable("dbo.AccountBalanceByPeriod"); 
         }
 
         public ISaveResult<ChangeSet> Save(User author)

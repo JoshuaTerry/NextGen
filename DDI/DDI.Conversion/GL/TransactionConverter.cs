@@ -89,8 +89,7 @@ namespace DDI.Conversion.GL
                     outputFile.AddRow(transaction);
                     legacyIdFile.AddRow(new LegacyToID(legacyKey, transaction.Id));
 
-                    count++;
-                    if (count >= 1000) break;
+                    count++;                    
                 }
             }
 
