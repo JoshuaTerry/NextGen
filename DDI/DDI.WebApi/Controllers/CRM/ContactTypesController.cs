@@ -32,6 +32,28 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
+        [Route("api/v1/contacttypes/category/{categoryid}")]
+        public IHttpActionResult GetByCategoryId(Guid categoryid)
+        {
+            try
+            {
+                var result = _service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
         [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
