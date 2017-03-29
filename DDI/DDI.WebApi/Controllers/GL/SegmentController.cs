@@ -10,9 +10,9 @@ namespace DDI.WebApi.Controllers.GL
     {
         [HttpGet]
         [Route("api/v1/segments", Name = RouteNames.Segment)]
-        public IHttpActionResult GetAll(Guid businessUnitId, Guid fiscalYearId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Segment, businessUnitId, fiscalYearId, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.Segment, businessUnitId, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
