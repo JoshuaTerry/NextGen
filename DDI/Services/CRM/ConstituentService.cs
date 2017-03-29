@@ -214,7 +214,7 @@ namespace DDI.Services
         {
             IDataResponse response = null;
 
-            var primaryContactInfo = constituent.ContactInfo.Where<ContactInfo>(ci => ci.IsPreferred);
+            
             var address = constituent.ConstituentAddresses.FirstOrDefault<ConstituentAddress>(a => a.IsPrimary);
             var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
             var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
@@ -224,6 +224,8 @@ namespace DDI.Services
             sb.Append(primaryaddress.PostalCode + "\r\n");
             sb.Append(primaryaddress.City + "\r\n");
             sb.Append(state + "\r\n");
+
+            var primaryContactInfo = constituent.ContactInfo.Where<ContactInfo>(ci => ci.IsPreferred);
 
             foreach (ContactInfo info in primaryContactInfo)
             {
