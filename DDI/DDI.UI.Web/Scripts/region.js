@@ -12,13 +12,9 @@ function LoadRegions(container, prefix) {
 
     $(container).html('');
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'regionlevels',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'regionlevels', null, function (data) {
 
+        if (data.Data) {
             $.map(data.Data, function (item) {
 
                 var currentRegion = CreateRegionControl(container, prefix, item.Level);
@@ -41,12 +37,9 @@ function LoadRegions(container, prefix) {
                 }
 
             });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -77,11 +70,11 @@ function LoadAllRegionDropDowns(container, prefix, address) {
         if (address.Region2 && address.Region2.Id && address.Region2.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 2, address.Region2.ParentRegionId, address.Region2.Id);
         }
-    
+
         if (address.Region3 && address.Region3.Id && address.Region3.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 3, address.Region3.ParentRegionId, address.Region3.Id);
         }
-    
+
         if (address.Region4 && address.Region4.Id && address.Region4.ParentRegionId) {
             LoadRegionDropDown(container, prefix, 4, address.Region4.ParentRegionId, address.Region4.Id);
         }
@@ -98,13 +91,9 @@ function LoadRegionDropDown(container, prefix, level, parentid, selectedvalue) {
         route = route + parentid;
     }
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + route,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
+        if (data.Data) {
             var currentdropdown = $(container).find(prefix + 'Region' + level + 'Id');
             ClearElement(currentdropdown);
             AddDefaultOption($(currentdropdown), '', '');
@@ -121,10 +110,7 @@ function LoadRegionDropDown(container, prefix, level, parentid, selectedvalue) {
                 $(currentdropdown).val(selectedvalue);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 }

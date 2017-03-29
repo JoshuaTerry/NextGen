@@ -18,14 +18,14 @@ namespace DDI.WebApi.Controllers.General
     public class UsersController : GenericController<User>
     {
         private UserManager _userManager;
-        private ApplicationRoleManager _roleManager;
+        private RoleManager _roleManager;
 
         public UsersController()
         {
             
         }
 
-        public UsersController(UserManager userManager, ApplicationRoleManager roleManager)
+        public UsersController(UserManager userManager, RoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
@@ -43,11 +43,11 @@ namespace DDI.WebApi.Controllers.General
             }
         }
 
-        public ApplicationRoleManager RoleManager
+        public RoleManager RoleManager
         {
             get
             {
-                return _roleManager ?? Request.GetOwinContext().Get<ApplicationRoleManager>();
+                return _roleManager ?? Request.GetOwinContext().Get<RoleManager>();
             }
             private set
             {
@@ -89,9 +89,7 @@ namespace DDI.WebApi.Controllers.General
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
-
         }
-
 
         [AllowAnonymous]
         [HttpPost]
@@ -118,6 +116,7 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                code = HttpUtility.UrlEncode(code);
                 var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
 
                 var service = new EmailService();
@@ -136,24 +135,21 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }        
         }
-
-        [HttpPatch]
+         
+        [HttpPost]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(Guid id, [FromBody] JObject userPropertiesChanged)
-        {
-            User user = null;
+        public async Task<IHttpActionResult> Update(Guid id, User user)
+        {             
             try
-            {
-                user = await  UserManager.FindByIdAsync(id);
+            {               
                 if (user == null)
                 {
                     return NotFound();
                 }
 
-                var patchUpdateUser = new PatchUpdateUser<User>();
-                patchUpdateUser.UpdateUser(id, userPropertiesChanged);
-
-                return Ok(UserManager.FindByIdAsync(user.Id).Result);
+                UserManager.Update(user);
+                var result = await UserManager.FindByIdAsync(user.Id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
