@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.Tests.CRM.DataSources
@@ -33,7 +33,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "{P}{F}{MI}{L}{S}",
                 SalutationFormal = "Dear {P}{L}",
                 SalutationInformal = "Dear {F}",
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             constituentTypes.Add(new ConstituentType()
@@ -47,7 +47,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "",
                 SalutationFormal = "Dear Friends",
                 SalutationInformal = "Dear Friends",
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             constituentTypes.Add(new ConstituentType()
@@ -61,7 +61,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 NameFormat = "",
                 SalutationFormal = "Dear Friends",
                 SalutationInformal = "Dear Friends",
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             uow.CreateRepositoryForDataSource(constituentTypes);

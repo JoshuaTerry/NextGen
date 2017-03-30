@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,7 +67,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "M"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _constituents.Add(new Constituent()
@@ -81,7 +81,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "F"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             // Organization
@@ -92,7 +92,7 @@ namespace DDI.Business.Tests.CRM
                 Name = "St. Mark's Church",
                 ConstituentType = _constituentTypes.FirstOrDefault(p => p.Code == ConstituentTypeCodes.Organization),
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             // Individual unrelated to John or Jane Public
@@ -107,7 +107,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "F"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _uow.CreateRepositoryForDataSource(_constituents);
@@ -120,7 +120,7 @@ namespace DDI.Business.Tests.CRM
                 Constituent1 = _constituents[0],
                 Constituent2 = _constituents[1],
                 RelationshipType = _relationshipTypes.FirstOrDefault(p => p.Code == "SPOU"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _uow.CreateRepositoryForDataSource(_relationships);
@@ -145,7 +145,7 @@ namespace DDI.Business.Tests.CRM
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
                 IsPrimary = true,
                 ResidentType = ResidentType.Primary,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             // Populate the ConstituentAddresses collection for each constituent.
@@ -172,7 +172,7 @@ namespace DDI.Business.Tests.CRM
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Home),
                 IsPrimary = true,
                 ResidentType = ResidentType.Primary,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             // Second address is work
@@ -183,7 +183,7 @@ namespace DDI.Business.Tests.CRM
                 AddressType = _addressTypes.FirstOrDefault(p => p.Code == AddressTypeCodes.Work),
                 IsPrimary = false,
                 ResidentType = ResidentType.Primary,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
         }
 

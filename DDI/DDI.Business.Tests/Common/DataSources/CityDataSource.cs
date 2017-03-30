@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
 
@@ -76,7 +76,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 PopulationPercentageChange = (decimal)popPctCng,
                 CoordinateEW = (decimal)coordinateEW,
                 CoordinateNS = (decimal)coordinateNS,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
 
             var cityName = new CityName()
@@ -84,7 +84,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 City = city,
                 Description = description,
                 IsPreferred = true,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
 
             city.CityNames = new List<CityName>() { cityName };

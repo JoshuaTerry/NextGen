@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -58,7 +58,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "M"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _constituents.Add(new Constituent()
@@ -72,7 +72,7 @@ namespace DDI.Business.Tests.CRM
                 ConstituentType = individualType,
                 ConstituentStatus = _statuses.FirstOrDefault(p => p.BaseStatus == ConstituentBaseStatus.Active),
                 Gender = _genders.FirstOrDefault(p => p.Code == "F"),
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             _uow.CreateRepositoryForDataSource(_constituents);

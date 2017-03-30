@@ -136,6 +136,7 @@
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="FixedSizeList.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
     <Compile Include="Helpers\PathHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
+    <Compile Include="Models\Client\GL\AccountBalance.cs" />
     <Compile Include="Models\Client\GL\AccountClose.cs" />
     <Compile Include="Models\Client\GL\Account.cs" />
     <Compile Include="Models\Client\GL\AccountPriorYear.cs" />
