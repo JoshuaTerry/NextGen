@@ -5,6 +5,8 @@ var lastActiveSection = null;
 var currentEntity = null;
 var previousEntity = null;
 var modal = null;
+var currentUser = null;
+var currentBusinessUnit = null;
 
 $(document).ready(function () {
 
@@ -1216,20 +1218,31 @@ function DisplayMessage(heading, text, icon) {
 //
 
 function BusinessUnitModal() {
-    $('.businessunit').click(function (e) {
+
+    DummyUser();
+
+    $('.editbusinessunit').click(function (e) {
+
+        LoadBusinessUnitDropDown(currentBusinessUnit);
 
         e.preventDefault();
 
-        var modal = $('.businessunitmodal').dialog({
+        var modal = $('.changebusinessunitmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 250,
             resizable: false,
         });
 
-        LoadBusinessUnit();
+        $('.savebusinessunit').unbind('click');
 
-        $('.savebusinessunit').click(function (e) { });
+        $('.savebusinessunit').click(function (e) {
+
+            currentBusinessUnit = $('.bu-currentbu').val();
+
+            CloseModal(modal);
+
+        });
 
         $('.cancelmodal').click(function (e) {
 
@@ -1243,10 +1256,25 @@ function BusinessUnitModal() {
 
 }
 
-function LoadBusinessUnit() {
+function LoadBusinessUnitDropDown(currentBusinessUnit) {
 
-    PopulateDropDown('.bu-currentbu', 'businessunit', '', '', null);
+    PopulateDropDown('.bu-currentbu', 'businessunit', '', '', currentBusinessUnit);
 
+}
+
+function DummyUser() {
+
+    var dummyUserId = 'D3BFB26C-4603-E711-80E5-005056B7555A';
+
+    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
+        
+        currentUser = data.Data;
+
+        currentBusinessUnit = data.Data.DefaultBusinessUnitId;
+
+        LoadBusinessUnitDropDown(currentBusinessUnit);
+
+    });
 }
 
 //

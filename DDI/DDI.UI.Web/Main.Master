@@ -66,7 +66,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Edit Business Unit"><a href ="#" class="businessunit"><img src ="Images/Edit_16.png"/></a></li>
+                    <li title="Edit Business Unit"><a href ="#" class="editbusinessunit"><img src ="Images/Edit_16.png"/></a></li>
                     <li title="Business Unit"><a href="#" >BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
@@ -364,12 +364,17 @@
         </div>        
     </div>
 
-    <div class="businessunitmodal" title="Change Business Unit" style="display: none;">
+    <div class="changebusinessunitmodal" title="Change Business Unit" style="display: none;">
         <div class="modalcontent">
             
         <div class="fieldblock">
             <label>Selected Business Unit</label>
             <select class="bu-currentbu editable BusinessUnit"></select>
+        </div>
+
+        <div class="fieldblock">
+            <label>Make Default</label>
+            <input type="checkbox" class="editable" /> <%--how would I get the default-ness?--%>
         </div>
 
         <div class="modalbuttons">

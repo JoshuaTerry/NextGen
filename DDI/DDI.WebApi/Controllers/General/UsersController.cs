@@ -96,7 +96,13 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                return Ok(user);
+                var response = new DataResponse<User>
+                {
+                    Data = user,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
