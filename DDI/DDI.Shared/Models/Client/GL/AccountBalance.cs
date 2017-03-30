@@ -13,6 +13,9 @@ namespace DDI.Shared.Models.Client.GL
         [Key,Column(Order = 1)]
         public Guid Id { get; set; }
 
+        [ForeignKey(nameof(Id))]
+        public Account Account { get; set; }
+
         [Key, Column(Order = 2)]
         public int PeriodNumber { get; set; }
 
