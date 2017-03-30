@@ -229,6 +229,7 @@
     <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
+    <Compile Include="Controllers\GL\AccountController.cs" />
     <Compile Include="Controllers\GL\GeneralLedgerController.cs" />
     <Compile Include="Controllers\CRM\RelationshipCategoriesController.cs" />
     <Compile Include="Controllers\CRM\EFTFormatsController.cs" />
@@ -286,6 +287,8 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\General\UserRolesController.cs" />
     <Compile Include="Controllers\General\UsersController.cs" />
+    <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\SegmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

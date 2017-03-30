@@ -41,6 +41,8 @@ $(document).ready(function () {
 
         ExecuteFunction(functionToCall, window);
 
+        InitRequiredLabels("educationLevelmodal")
+
     });
 
 });
