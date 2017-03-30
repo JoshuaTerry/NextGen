@@ -159,9 +159,9 @@ namespace DDI.Conversion.GL
                         continue;
                     }
 
-                    FundFromTo fundFromTo = new FundFromTo();
-                    fundFromTo.FiscalYearId = fiscalYearId;
-                    fundFromTo.FundId = fundId;
+                    FundFromTo fromTo = new FundFromTo();
+                    fromTo.FiscalYearId = fiscalYearId;
+                    fromTo.FundId = fundId;
 
                     string offsettingFundLegacyKey = importer.GetString(5);
                     if (!string.IsNullOrWhiteSpace(offsettingFundLegacyKey))
@@ -172,7 +172,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid offsetting fund legacy key \"{offsettingFundLegacyKey}\".");
                             continue;
                         }
-                        fundFromTo.OffsettingFundId = offsettingFundId;
+                        fromTo.OffsettingFundId = offsettingFundId;
                     }
 
                     int fromAccountKey = importer.GetInt(6);
@@ -184,7 +184,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
                             continue;
                         }
-                        fundFromTo.FromAccountId = accountId;
+                        fromTo.FromAccountId = accountId;
                     }
 
                     int toAccountKey = importer.GetInt(7);
@@ -196,12 +196,12 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
                             continue;
                         }
-                        fundFromTo.ToAccountId = accountId;
+                        fromTo.ToAccountId = accountId;
                     }
 
-                    fundFromTo.AssignPrimaryKey();
+                    fromTo.AssignPrimaryKey();
 
-                    outputFile.AddRow(fundFromTo);
+                    outputFile.AddRow(fromTo);
 
                     count++;
                 }
@@ -244,10 +244,10 @@ namespace DDI.Conversion.GL
                         continue;
                     }
 
-                    BusinessUnitFromTo buFromTo = new BusinessUnitFromTo();
-                    buFromTo.FiscalYearId = fiscalYearId;
-                    buFromTo.BusinessUnitId = businessUnitId;
-                    buFromTo.OffsettingBusinessUnitId = GetBusinessUnitId(importer, 2, ledgers);
+                    BusinessUnitFromTo fromTo = new BusinessUnitFromTo();
+                    fromTo.FiscalYearId = fiscalYearId;
+                    fromTo.BusinessUnitId = businessUnitId;
+                    fromTo.OffsettingBusinessUnitId = GetBusinessUnitId(importer, 2, ledgers);
 
                     int fromAccountKey = importer.GetInt(3);
                     if (fromAccountKey > 0)
@@ -258,7 +258,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
                             continue;
                         }
-                        buFromTo.FromAccountId = accountId;
+                        fromTo.FromAccountId = accountId;
                     }
 
                     int toAccountKey = importer.GetInt(4);
@@ -270,12 +270,12 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
                             continue;
                         }
-                        buFromTo.ToAccountId = accountId;
+                        fromTo.ToAccountId = accountId;
                     }
 
-                    buFromTo.AssignPrimaryKey();
+                    fromTo.AssignPrimaryKey();
 
-                    outputFile.AddRow(buFromTo);
+                    outputFile.AddRow(fromTo);
 
                     count++;
                 }

@@ -299,6 +299,7 @@ namespace DDI.Conversion.GL
 
                     account.AssignPrimaryKey();
 
+                    // Dump AccountSegment rows
                     string[] segmentKeys = importer.GetString(2).Split(',');
                     int level = 0;
                     foreach (string key in segmentKeys)

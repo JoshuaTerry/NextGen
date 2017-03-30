@@ -407,24 +407,24 @@ namespace DDI.Conversion.GL
 
                     int level = importer.GetInt(1);
 
-                    SegmentLevel slev = context.GL_SegmentLevels.FirstOrDefault(p => p.LedgerId == ledgerId && p.Level == level);
-                    if (slev == null)
+                    SegmentLevel segmentLevel = context.GL_SegmentLevels.FirstOrDefault(p => p.LedgerId == ledgerId && p.Level == level);
+                    if (segmentLevel == null)
                     {
-                        slev = new SegmentLevel();
-                        context.GL_SegmentLevels.Add(slev);
-                        slev.LedgerId = ledgerId;
-                        slev.Level = level;
+                        segmentLevel = new SegmentLevel();
+                        context.GL_SegmentLevels.Add(segmentLevel);
+                        segmentLevel.LedgerId = ledgerId;
+                        segmentLevel.Level = level;
                     }
 
-                    slev.Type = importer.GetEnum<SegmentType>(2);
-                    slev.Format = importer.GetEnum<SegmentFormat>(3);
-                    slev.Length = importer.GetInt(4);
-                    slev.IsLinked = importer.GetBool(5);
-                    slev.IsCommon = importer.GetBool(6);
-                    slev.Name = importer.GetString(7, 40);
-                    slev.Abbreviation = importer.GetString(8, 16);
-                    slev.Separator = importer.GetString(9, 1);
-                    slev.SortOrder = importer.GetInt(10);
+                    segmentLevel.Type = importer.GetEnum<SegmentType>(2);
+                    segmentLevel.Format = importer.GetEnum<SegmentFormat>(3);
+                    segmentLevel.Length = importer.GetInt(4);
+                    segmentLevel.IsLinked = importer.GetBool(5);
+                    segmentLevel.IsCommon = importer.GetBool(6);
+                    segmentLevel.Name = importer.GetString(7, 40);
+                    segmentLevel.Abbreviation = importer.GetString(8, 16);
+                    segmentLevel.Separator = importer.GetString(9, 1);
+                    segmentLevel.SortOrder = importer.GetInt(10);
 
                     count++;
                 }
