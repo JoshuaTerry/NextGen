@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
 
@@ -68,7 +68,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 IsAlwaysShown = isAlwaysShown,
                 IsActive = true,
                 CanDelete = canDelete,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
 
             if (isDefault && category != null)

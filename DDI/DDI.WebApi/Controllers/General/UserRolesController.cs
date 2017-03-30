@@ -13,14 +13,14 @@ namespace DDI.WebApi.Controllers.General
     public class UserRolesController : GenericController<UserRole>
     {
         private UserManager _userManager;
-        private ApplicationRoleManager _roleManager;
+        private RoleManager _roleManager;
 
         public UserRolesController()
         {
 
         }
 
-        internal UserRolesController(UserManager userManager, ApplicationRoleManager roleManager)
+        internal UserRolesController(UserManager userManager, RoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
@@ -38,11 +38,11 @@ namespace DDI.WebApi.Controllers.General
             }
         }
 
-        public ApplicationRoleManager RoleManager
+        public RoleManager RoleManager
         {
             get
             {
-                return _roleManager ?? Request.GetOwinContext().Get<ApplicationRoleManager>();
+                return _roleManager ?? Request.GetOwinContext().Get<RoleManager>();
             }
             private set
             {

@@ -78,6 +78,10 @@
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
     <Compile Include="CRM\SettingsLoader.cs" />
+    <Compile Include="GL\TransactionConverter.cs" />
+    <Compile Include="GL\GLConversionBase.cs" />
+    <Compile Include="GL\FundConverter.cs" />
+    <Compile Include="GL\AccountConverter.cs" />
     <Compile Include="GL\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

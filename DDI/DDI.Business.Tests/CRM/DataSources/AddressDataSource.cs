@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 
@@ -52,7 +52,7 @@ namespace DDI.Business.Tests.CRM.DataSources
                 AddressLine2 = line2,
                 PostalCode = postalCode,
                 City = city,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
 
             address.Country = uow.FirstOrDefault<Country>(p => p.ISOCode == countryCode);

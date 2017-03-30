@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DDI.Shared.Helpers;
 
 namespace DDI.Shared.Models
 {
@@ -40,7 +41,9 @@ namespace DDI.Shared.Models
         public void AssignPrimaryKey()
         {
             if (this.Id == default(Guid))
-                this.Id = Guid.NewGuid();
+            {
+                this.Id = GuidHelper.NewGuid();
+            }
         }
 
         #endregion

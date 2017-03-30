@@ -43,5 +43,6 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(Account.Group4))]
         public ICollection<Account> Group4Accounts { get; set; }
 
+        public override string DisplayName => Name;
     }
 }

@@ -214,6 +214,14 @@ namespace DDI.Conversion
                 {
                     converter = p => BoolNullableToString((bool?)p);
                 }
+                else if (propType == typeof(decimal))
+                {
+                    converter = p => DecimalToString((decimal)p);
+                }
+                else if (propType == typeof(decimal?))
+                {
+                    converter = p => DecimalNullableToString((decimal)p);
+                }
                 else if (propType.IsPrimitive)
                 {
                     converter = p => p.ToString();
@@ -263,6 +271,19 @@ namespace DDI.Conversion
                     (b.Value ? "1" : "0")
                     :
                     null;
+        }
+
+        private string DecimalToString(decimal d)
+        {
+            return d.ToString("G");
+        }
+        
+        private string DecimalNullableToString(decimal? d)
+        {
+            return (d.HasValue) ?
+                (d.Value.ToString("G"))
+                :
+                null;
         }
 
         #endregion

@@ -116,16 +116,16 @@ namespace DDI.Conversion.Core
                     int sequenceNum = importer.GetInt(3);
                     string title = importer.GetString(4);
                     string text = importer.GetString(5).Replace(@"\#", "#");
-                    DateTime? alertStart = importer.GetDateTime(6);
-                    DateTime? alertEnd = importer.GetDateTime(7);
-                    DateTime? contactDt = importer.GetDateTime(8);
+                    DateTime? alertStart = importer.GetDate(6);
+                    DateTime? alertEnd = importer.GetDate(7);
+                    DateTime? contactDt = importer.GetDate(8);
                     string categoryCode = importer.GetString(9);
                     string noteCodeCode = importer.GetString(10);
                     string userResponsible = importer.GetString(11);
                     int primaryContactNum = importer.GetInt(12);
                     string contactMethodCode = importer.GetString(13);
                     string topicCodes = importer.GetString(14);
-                    DateTime? deleteDt = importer.GetDateTime(15);
+                    DateTime? deleteDt = importer.GetDate(15);
                     
                     Note note = new Note();
                     note.EntityType = entityTypeName;

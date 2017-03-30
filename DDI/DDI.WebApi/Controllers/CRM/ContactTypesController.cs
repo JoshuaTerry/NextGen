@@ -1,15 +1,8 @@
-﻿using System.Web.Http;
-using DDI.Shared.Models.Client.CRM;
-﻿using DDI.Services;
-using DDI.Services.Search;
-using DDI.Shared.Models.Client.CRM;
 ﻿using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
-using System.Web.Http;
-using Newtonsoft.Json.Linq;
-
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
@@ -29,6 +22,28 @@ namespace DDI.WebApi.Controllers.CRM
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.ContactType, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/contacttypes/category/{categoryid}")]
+        public IHttpActionResult GetByCategoryId(Guid categoryid)
+        {
+            try
+            {
+                var result = _service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]
