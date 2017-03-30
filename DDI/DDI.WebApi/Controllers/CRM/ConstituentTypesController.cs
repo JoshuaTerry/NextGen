@@ -12,9 +12,7 @@ using System.Web.Routing;
 namespace DDI.WebApi.Controllers.CRM
 {
     public class ConstituentTypesController : GenericController<ConstituentType>
-    {
-        private string _allFields = null;
-
+    {       
         protected override Expression<Func<ConstituentType, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<ConstituentType, object>>[]

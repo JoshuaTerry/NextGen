@@ -30,5 +30,17 @@ namespace DDI.Shared.Models.Client.GL
 
         public FiscalPeriodStatus Status { get; set; }
 
+        public override string DisplayName
+        {
+            get
+            {
+                if (FiscalYear != null)
+                {
+                    return $"{FiscalYear.DisplayName}:{PeriodNumber}";
+                }
+                return PeriodNumber.ToString();
+            }
+        }
+
     }
 }

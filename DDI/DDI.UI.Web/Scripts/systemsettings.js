@@ -39,6 +39,8 @@ $(document).ready(function () {
 
         ExecuteFunction(functionToCall, window);
 
+        InitRequiredLabels("educationLevelmodal")
+
     });
 
 });
@@ -464,6 +466,20 @@ function DisplayConstituentTypeTags(tags) {
         $('<div>').addClass('dx-tag-remove-button')
             .click(function () {
                 MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
+
+                    if (data.Data) {
+                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+                    }
+
+                },
+                {
+                    CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+
+                    }
+                });
 
                     if (data.Data) {
                         DisplaySuccessMessage('Success', 'Tag was deleted successfully.');

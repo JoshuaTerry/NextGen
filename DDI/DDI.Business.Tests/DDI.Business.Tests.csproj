@@ -88,7 +88,6 @@
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
     <Compile Include="Helpers\AbbreviationHelperTest.cs" />
-    <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Helpers\CodeEntityHelperTest.cs" />
     <Compile Include="Helpers\LinkedEntityHelperTest.cs" />
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
