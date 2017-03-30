@@ -1,5 +1,6 @@
 ﻿
-.systemsettings {  }
+
+.systemsettings { vertical-align: top; }
 .systemsettings div.contentcontainer { padding-top: 10px; margin-left: 1%; width: 86%; display: inline-block; vertical-align: top; }
 .systemsettings div.ui-accordion-content { padding: 0px; }
 .systemsettings div.left-accordions { width: 12%; display: inline-block; }
@@ -14,6 +15,8 @@
 
 .systemsettings div.controlContainer { width: 10%; text-align: right; display: inline-block; }
 .systemsettings div.controlContainer a { margin-left: 10px; }
+
+.systemsettingsheader { display: inline-block; width: 86%; margin-bottom: 10px; }
 
 div.options div.threecolumn > div { width: auto; }
 

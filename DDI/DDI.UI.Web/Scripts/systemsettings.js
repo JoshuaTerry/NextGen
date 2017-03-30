@@ -29,13 +29,15 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        $('.contentcontainer').html('');
+        $('.gridcontainer').html('');
 
         $('.systemsettings a').removeClass('selected');
 
         var functionToCall = $(this).attr('class') + 'SectionSettings';
 
         $(this).addClass('selected');
+
+        $('.systemsettingsheader').text($(this).text());
 
         ExecuteFunction(functionToCall, window);
 
@@ -136,7 +138,7 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
 }
 
@@ -312,7 +314,7 @@ function LoadNoteSectionSettings() {
     LoadGrid('.noteTopiccontainer', 'noteTopicgrid', noteTopiccolumns, 'notetopics?fields=all', 'notetopics', null, 'noteTopic-',
         '.noteTopicmodal', '.noteTopicmodal', 250, true, false, false, null);
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -371,7 +373,7 @@ function LoadClergySectionSettings() {
     LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes?fields=all', 'clergytypes', null, 'ctype-',
         '.clergytypemodal', '.clergytypemodal', 250, true, false, false, null);
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -443,7 +445,7 @@ function LoadConstituentTypesSectionSettings() {
 
     LoadConstituentTypeSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -886,7 +888,7 @@ function LoadContactInformationSectionSettings() {
 
     LoadContactTypeSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -1294,7 +1296,7 @@ function LoadDemographicsSectionSettings() {
     $(language).appendTo($(accordion));
     LoadLanguageSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -1429,7 +1431,7 @@ function LoadEducationSectionSettings() {
     $(schools).appendTo($(accordion));
     LoadSchoolsSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 }
@@ -1487,7 +1489,7 @@ function LoadGenderSectionSettings() {
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
-    LoadGrid('.contentcontainer', 'gendergridcontainer', columns, 'genders?fields=all', 'genders', null, 'gen-',
+    LoadGrid('.gridcontainer', 'gendergridcontainer', columns, 'genders?fields=all', 'genders', null, 'gen-',
     '.gendermodal', '.gendermodal', 250, true, false, false, null);
 }
 
@@ -1526,7 +1528,7 @@ function LoadPrefixSectionSettings() {
        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
-    LoadGrid('.contentcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
+    LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
         '.prefixmodal', '.prefixmodal', 250, true, false, false, null);
 }
 
@@ -1546,7 +1548,7 @@ function LoadProfessionalSectionSettings() {
     $(professions).appendTo($(accordion));
     LoadProfessionSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 }
@@ -1582,12 +1584,12 @@ function LoadProfessionSettingsGrid() {
 /* REGIONS SETTINGS */
 function LoadRegionsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
     var lc = $('<div>').addClass('regionlevelcontainer');
     var rc = $('<div>').addClass('regioncontainer');
     var rgc = $('<div>').addClass('regiongridcontainer');
-    $(lc).appendTo($('.contentcontainer'));
-    $(rc).appendTo($('.contentcontainer'));
+    $(lc).appendTo($('.gridcontainer'));
+    $(rc).appendTo($('.gridcontainer'));
     $(rgc).appendTo($(rc));
 
     CreateRegionLevelSelector(lc);
@@ -2094,7 +2096,7 @@ function LoadRelationshipSectionSettings() {
     $(type).appendTo($(accordion));
     LoadRelationshipTypeSettingsGrid();
 
-    $(accordion).appendTo($('.contentcontainer'));
+    $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -2166,14 +2168,14 @@ function LoadTagGroupSectionSettings() {
     ];
 
     CustomLoadGrid('taggroupsgrid',
-        'contentcontainer',
+        'gridcontainer',
         columns,
         'taggroups?fields=all',
         TagGroupSelected,
         EditTagGroup,
         null,
         function () {
-            CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.contentcontainer', 'newtaggroupmodal')
+            CreateNewModalLink("New Tag Group", NewTagGroupModal, '.taggroupsgrid', '.gridcontainer', 'newtaggroupmodal')
         });
 
 }
@@ -2205,7 +2207,7 @@ function TagGroupSelected(info) {
         { dataField: 'Order', caption: 'Order' },
         { dataField: 'Code', caption: "Code" },
         { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     CustomLoadGrid('tagsgrid',
@@ -2369,7 +2371,48 @@ function LoadEntitiesSectionSettings() {
 
 function LoadFiscalYearSectionSettings() {
 
+    //var container = $('<div>').addClass('fiscalyearsettings');
 
+    //var fiscalYear = $('<select>').addClass('fy-FiscalYear');
+    //var status = $('<label>').addClass('fy-Status');
+    //var numOfPeriods = $('<select>').addClass('fy-NumberOfPeriods');
+    //var currentPeriod = $('<select>').addClass('fy-CurrentPeriod');
+
+    //$(container).append($('.contentcontainr'));
+
+    var ledgerid = '7BAFBB1E-A2DC-4D85-9542-229378F8DBC7';
+
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'Name', caption: 'Name' },
+        { dataField: 'Status', caption: 'Status' }
+    ];
+
+    LoadGrid('gridcontainer', 'fiscalyeargrid', columns, 'fiscalyear/ledger/' + ledgerid + '?fields=all', 'fiscalyear', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+
+}
+
+function LoadFiscalPeriods(info) {
+
+    var fycontainer = $('<div>').addClass('fiscalperiodscontainer');
+    $('.gridcontainer').append($(fycontainer));
+
+    if (!info) {
+        var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
+        info = dataGrid.getSelectedRowsData();
+        selectedRow = info[0];
+    } else {
+        selectedRow = info.data;
+    }
+
+    var columns = [
+        { dataField: 'Id', width: "0px" },
+        { dataField: 'PeriodNumber', caption: '' },
+        { dataField: 'StartDate', caption: 'Start Date' },
+        { dataField: 'EndDate', caption: 'End Date' }
+    ]
+
+    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiod/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiod', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
 
 }
 
@@ -2432,7 +2475,7 @@ var options = [];
 
 function LoadCRMClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.CRM); // CRM = 19
+    DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.CRM); // CRM = 19
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
 
@@ -2440,7 +2483,7 @@ function LoadCRMClientCustomFieldsSectionSettings() {
 
 function LoadDonationClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.Gifts); // Gifts = 9
+    DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.Gifts); // Gifts = 9
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.Gifts, 'New Donations Custom Field');
 
@@ -2448,7 +2491,7 @@ function LoadDonationClientCustomFieldsSectionSettings() {
 
 function LoadGLClientCustomFieldsSectionSettings() {
 
-    DisplayCustomFieldsGrid('contentcontainer', CustomFieldEntity.GeneralLedger); // GeneralLedger = 1
+    DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.GeneralLedger); // GeneralLedger = 1
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.GeneralLedger, 'New General Ledger Custom Field');
     
@@ -2456,15 +2499,15 @@ function LoadGLClientCustomFieldsSectionSettings() {
 
 function RefreshCustomFieldsGrid() {
 
-    $('.contentcontainer').html('');
+    $('.gridcontainer').html('');
 
-    DisplayCustomFieldsGrid('contentcontainer', currentCustomFieldEntity);
+    DisplayCustomFieldsGrid('gridcontainer', currentCustomFieldEntity);
 
 }
 
 function CreateNewCustomFieldModalLink(entity, title) {
 
-    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.contentcontainer'));
+    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.gridcontainer'));
     $('.gridcontainer').before($(modallink));
 
     $(modallink).unbind('click');

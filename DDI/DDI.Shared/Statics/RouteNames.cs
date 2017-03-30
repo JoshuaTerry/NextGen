@@ -34,6 +34,7 @@
         public const string Education = "Education";
         public const string EducationLevel = "EducationLevel";
         public const string Ethnicity = "Ethnicity";
+        public const string FiscalYear = "FiscalYear";
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
         public const string Language = "Language";
