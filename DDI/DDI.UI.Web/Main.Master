@@ -367,20 +367,15 @@
     <div class="changebusinessunitmodal" title="Change Business Unit" style="display: none;">
         <div class="modalcontent">
             
-        <div class="fieldblock">
-            <label>Selected Business Unit</label>
-            <select class="bu-currentbu editable BusinessUnit"></select>
-        </div>
+            <div class="fieldblock">
+                <label>Selected Business Unit</label>
+                <select class="bu-currentbu BusinessUnit"></select>
+            </div>
 
-        <div class="fieldblock">
-            <label>Make Default</label>
-            <input type="checkbox" class="editable" /> <%--how would I get the default-ness?--%>
-        </div>
-
-        <div class="modalbuttons">
-            <input type="button" class="savebusinessunit" value="Save" />
-            <a href="#" class="cancelmodal">Cancel</a>
-        </div>
+            <div class="modalbuttons">
+                <input type="button" class="savebusinessunit" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
                             
         </div>        
     </div>

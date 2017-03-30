@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Mail;
@@ -146,7 +147,13 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                return Ok(result);
+                var response = new DataResponse<ICollection<BusinessUnit>>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

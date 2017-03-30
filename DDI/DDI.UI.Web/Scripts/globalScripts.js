@@ -1258,7 +1258,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown(currentBusinessUnit) {
 
-    PopulateDropDown('.bu-currentbu', 'businessunit', '', '', currentBusinessUnit);
+    PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit);
 
 }
 
