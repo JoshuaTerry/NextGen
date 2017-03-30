@@ -29,6 +29,7 @@
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";
+        public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
         public const string Degree = "Degree";
         public const string Denomination = "Denomination";
@@ -36,7 +37,6 @@
         public const string Education = "Education";
         public const string EducationLevel = "EducationLevel";
         public const string Ethnicity = "Ethnicity";
-        public const string FiscalYear = "FiscalYear";
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
         public const string Language = "Language";

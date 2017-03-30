@@ -228,6 +228,7 @@
     <Compile Include="Controllers\General\AuditController.cs" />
     <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
     <Compile Include="Controllers\GL\GeneralLedgerController.cs" />
