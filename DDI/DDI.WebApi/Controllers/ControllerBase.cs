@@ -183,6 +183,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Add(entity);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
             }
             catch (Exception ex)
@@ -204,6 +208,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Update(id, changes);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
 
             }

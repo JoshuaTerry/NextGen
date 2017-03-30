@@ -7,5 +7,7 @@
         public static string CodeMaxLengthError => "The Business Unit Code is greater than 8 characters.";
         public static string CodeAlphaNumericRequired => "The Business Unit Code can only contain Letters and Numbers";
         public static string CodeIsNotUnique => "The Business Unit Code must be unique.";
+        public static string BusinessUnitTypeNotEditable => "The Business Unit Type is not editable.";
+
     }
 }

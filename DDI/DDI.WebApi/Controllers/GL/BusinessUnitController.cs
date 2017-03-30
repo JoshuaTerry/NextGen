@@ -9,14 +9,11 @@ namespace DDI.WebApi.Controllers.GL
 {
     public class BusinessUnitController : GenericController<BusinessUnit> 
     {
-
-
-
         [HttpGet]
         [Route("api/v1/businessunit")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.DoingBusinessAs, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.BusinessUnit, limit, offset, orderBy, fields);
         }
 
         [HttpGet]

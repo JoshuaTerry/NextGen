@@ -80,7 +80,7 @@
                     <li><a href="#" class="LoadAccounting">Accounting Settings</a></li>
                     <li><a href="#" class="LoadBudget">Budget Settings</a></li>
                     <li><a href="#" class="LoadChartAccounts">Chart of Accounts Settings</a></li>
-                    <li><a href="#" class="LoadEntities"></a></li>
+                    <li><a href="#" class="LoadEntities">Business Unit Settings</a></li>
                     <li><a href="#" class="LoadFiscalYear">Fiscal Year Settings</a></li>
                     <li><a href="#" class="LoadFundAccounting">Fund Accounting Settings</a></li>
                     <li><a href="#" class="LoadGLFormat">GL Format Settings</a></li>
@@ -1080,6 +1080,35 @@
 
         </div>
 
+    </div>
+
+    <div class="entitymodal" title="Business Units" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="en-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="en-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Entity Type</label>
+                <select class="en-BusinessUnitType">
+                        <option value="1">Common</option>
+                        <option value="2">Separate</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+        </div>
     </div>
 
 </asp:Content>
