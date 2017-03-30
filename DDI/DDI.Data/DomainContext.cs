@@ -160,7 +160,7 @@ namespace DDI.Data
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             // Why is this false?
-            this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;            
         }       
         #endregion Public Constructors
 
@@ -250,7 +250,6 @@ namespace DDI.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
-            modelBuilder.Entity<Shared.Models.Client.GL.AccountBalance>().ToTable("dbo.AccountBalanceByPeriod"); 
         }
 
         public ISaveResult<ChangeSet> Save(User author)
