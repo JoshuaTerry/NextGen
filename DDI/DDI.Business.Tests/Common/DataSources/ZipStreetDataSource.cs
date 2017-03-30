@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
 
 namespace DDI.Business.Tests.Common.DataSources
@@ -1614,7 +1614,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 AddressType = addressType,
                 SecondaryType = secondaryType,
                 IsRange = isRange,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
         }
         private static ZipStreet AddZipStreet(Zip zip, string prefix, string street, string suffix, string suffix2, string urbKey, string cityKey)
@@ -1628,7 +1628,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 Suffix2 = suffix2,
                 UrbanizationKey = urbKey,
                 CityKey = cityKey,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
         }
 

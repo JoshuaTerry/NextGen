@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Business.Tests.CRM.DataSources
@@ -20,8 +20,8 @@ namespace DDI.Business.Tests.CRM.DataSources
             }
             
             var levels = new List<RegionLevel>();
-            levels.Add(new RegionLevel() { Level = 1, Abbreviation = "Reg", Label = "Region", IsChildLevel = false,  Id = GuidHelper.NextGuid() });
-            levels.Add(new RegionLevel() { Level = 2, Abbreviation = "Comm", Label = "Community", IsChildLevel = true, Id = GuidHelper.NextGuid() });
+            levels.Add(new RegionLevel() { Level = 1, Abbreviation = "Reg", Label = "Region", IsChildLevel = false,  Id = GuidHelper.NewSequentialGuid() });
+            levels.Add(new RegionLevel() { Level = 2, Abbreviation = "Comm", Label = "Community", IsChildLevel = true, Id = GuidHelper.NewSequentialGuid() });
 
             uow.CreateRepositoryForDataSource(levels);
             return levels;

@@ -38,6 +38,8 @@ namespace DDI.Shared.Models.Client.GL
         public ICollection<LedgerAccountYear> LedgerAccounts { get; set; }
 
         public ICollection<Segment> Segments { get; set; }
-         
+
+        public override string DisplayName => Name;
+
     }
 }
