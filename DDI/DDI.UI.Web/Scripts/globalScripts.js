@@ -1246,9 +1246,7 @@ function BusinessUnitModal() {
                     currentBusinessUnit = value;
                 }
                 
-             }); //make sure value is ACTUALLY a businessunit
-
-
+             }); 
 
             $('.editbusinessunit').text(currentBusinessUnit.DisplayName); 
 
