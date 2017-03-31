@@ -19,8 +19,8 @@ var SystemSettings = {
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings',
-    PaymentPreferences: 'PaymentPreferencesSettings'
-
+    PaymentPreferences: 'PaymentPreferencesSettings',
+    Accounting: 'AccountingSettings'
 }
 
 $(document).ready(function () {
@@ -473,19 +473,19 @@ function DisplayConstituentTypeTags(tags) {
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
 
-                },
-                {
-                    CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
+                //},
+                //{
+                //    CloseModal(modal);
+                //        EditConstituentType($(modal).find('.consttype-Id').val());
 
-                    }
-                });
+                //    }
+                //});
 
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-                    }
+                //    if (data.Data) {
+                //        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                //        CloseModal(modal);
+                //        EditConstituentType($(modal).find('.consttype-Id').val());
+                //    }
                 });
             })
             .appendTo($(t));
@@ -2359,8 +2359,9 @@ function LoadDonationHomeScreenSectionSettings() {
 
 
 /* GENERAL LEDGER SETTINGS */
-function LoadAccountingSettingsSectionSettings() {
+function LoadAccountingSettingsSectionSettings() { 
 
+    LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
 
 
 }
