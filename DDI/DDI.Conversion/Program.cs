@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.GL;
 using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.GL;
 using log4net;
 
 namespace DDI.Conversion
@@ -81,7 +83,7 @@ namespace DDI.Conversion
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
-            Run<GL.TransactionConverter>(new ConversionMethodArgs(GL.TransactionConverter.ConversionMethod.PostedTransactions));
+            //Run<GL.TransactionConverter>(new ConversionMethodArgs(GL.TransactionConverter.ConversionMethod.PostedTransactions));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
@@ -89,6 +91,13 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
+
+            using (var uow = new UnitOfWorkEF())
+            {
+                var bl = uow.GetBusinessLogic<AccountLogic>();
+                var rslt = bl.CalculateAccountNumber(uow.FirstOrDefault<Account>(p => p.FiscalYear.Name == "2013" && p.FiscalYear.Ledger.Code == "DCEF" && p.AccountNumber == "01-100-10-10"));
+                rslt = bl.CalculateAccountNumber(uow.FirstOrDefault<Account>(p => p.FiscalYear.Name == "2013" && p.FiscalYear.Ledger.Code == "DCEF" && p.AccountNumber == "01-515-64-21-05"));
+            }
 
         }
 
