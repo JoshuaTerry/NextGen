@@ -118,7 +118,13 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                return Ok(result);
+                var response = new DataResponse<BusinessUnit>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
