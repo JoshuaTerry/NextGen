@@ -19,7 +19,8 @@ var SystemSettings = {
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings',
-    PaymentPreferences: 'PaymentPreferencesSettings'
+    PaymentPreferences: 'PaymentPreferencesSettings',
+    User: 'UserSettings'
 
 }
 
