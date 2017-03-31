@@ -1,4 +1,5 @@
-﻿using DDI.Shared.Models.Client.GL;
+﻿using DDI.Services.Search;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
@@ -18,7 +19,8 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var result = _service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId);
+                var search = new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, "PeriodNumber");
+                var result = _service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
 
                 if (result == null)
                 {

@@ -87,6 +87,7 @@
     <Compile Include="CRM\DenominationsService.cs" />
     <Compile Include="CRM\EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
+    <Compile Include="GL\FiscalYearService.cs" />
     <Compile Include="Security\RoleService.cs" />
     <Compile Include="Security\UserService.cs" />
     <Compile Include="ServiceInterfaces\IAddressService.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentTypeService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IFiscalYearService.cs" />
     <Compile Include="ServiceInterfaces\INoteService.cs" />
     <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
     <Compile Include="ServiceInterfaces\IDenominationsService.cs" />

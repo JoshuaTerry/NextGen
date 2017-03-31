@@ -1,4 +1,6 @@
-﻿using DDI.Shared.Models.Client.GL;
+﻿using DDI.Services.GL;
+using DDI.Services.Search;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
@@ -19,7 +21,8 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var result = _service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId);
+                var search = new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, "Name DESC");
+                var result = _service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search);
 
                 if (result == null)
                 {

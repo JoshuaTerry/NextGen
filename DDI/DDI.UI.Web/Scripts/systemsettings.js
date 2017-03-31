@@ -2384,8 +2384,7 @@ function LoadFiscalYearSectionSettings() {
     var columns = [
         { dataField: 'Id', width: "0px" },
         { dataField: 'Name', caption: 'Name' },
-        {
-            caption: 'Status', cellTemplate: function (container, options) {
+        { caption: 'Status', cellTemplate: function (container, options) {
 
                 var status;
 
@@ -2431,11 +2430,37 @@ function LoadFiscalPeriods(info) {
         selectedRow = info.data;
     }
 
+    /*
+    <option value="0">Open</option>
+    <option value="1">Closed</option>
+    <option value="2">Reopened</option>
+    */
+
     var columns = [
         { dataField: 'Id', width: "0px" },
         { dataField: 'PeriodNumber', caption: '' },
         { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
-        { dataField: 'EndDate', caption: 'End Date', dataType: 'date' }
+        { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
+        {
+            caption: 'Status', cellTemplate: function (container, options) {
+
+                var status;
+
+                switch (options.data.Status) {
+                    case 0:
+                        status = "Open";
+                        break;
+                    case 1:
+                        status = "Closed";
+                        break;
+                    case 2:
+                        status = "Reopened";
+                        break;
+                }
+
+                $('<label>').text(status).appendTo(container);
+            }
+        }
     ]
 
     LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiod/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiod', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);

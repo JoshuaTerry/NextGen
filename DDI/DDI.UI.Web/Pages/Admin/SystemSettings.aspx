@@ -1093,6 +1093,23 @@
                 <input type="text" class="fy-Name" />
             </div>
 
+            <div class="fieldblock">
+                <label>Number Of Periods</label>
+                <select class="fy-NumberOfPeriods">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Use final accounting period for year end adjustments only</label>
+                <input type="checkbox" class="fy-HasAdjustmentPeriod" />
+            </div>
+
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
