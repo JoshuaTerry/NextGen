@@ -20,8 +20,6 @@ var SystemSettings = {
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings',
     PaymentPreferences: 'PaymentPreferencesSettings',
-    User: 'UserSettings'
-
 }
 
 $(document).ready(function () {

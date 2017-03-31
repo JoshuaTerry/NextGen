@@ -66,7 +66,6 @@
             </div>
             <div class="info">
                 <ul>
-                    <%--<li title="Edit Business Unit"><a href ="#" class="editbusinessunit"><img src ="Images/Edit_16.png"/></a></li>--%>
                     <li title="Business Unit"><a href="#" class="editbusinessunit">BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
