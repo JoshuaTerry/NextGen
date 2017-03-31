@@ -475,20 +475,7 @@ function DisplayConstituentTypeTags(tags) {
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
 
-                },
-                {
-                    CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-
-                    }
-                });
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-                    }
-                });
+                }, null);
             })
             .appendTo($(t));
 
@@ -2387,31 +2374,54 @@ function LoadEntitiesSectionSettings() {
 
 function LoadFiscalYearSectionSettings() {
 
-    //var container = $('<div>').addClass('fiscalyearsettings');
-
-    //var fiscalYear = $('<select>').addClass('fy-FiscalYear');
-    //var status = $('<label>').addClass('fy-Status');
-    //var numOfPeriods = $('<select>').addClass('fy-NumberOfPeriods');
-    //var currentPeriod = $('<select>').addClass('fy-CurrentPeriod');
-
-    //$(container).append($('.contentcontainr'));
-
     var ledgerid = '7BAFBB1E-A2DC-4D85-9542-229378F8DBC7';
+
+    $('.fiscalyearcontainer').remove();
+    var fycontainer = $('<div>').addClass('fiscalyearcontainer');
+    $('.gridcontainer').append($(fycontainer));
+    $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
 
     var columns = [
         { dataField: 'Id', width: "0px" },
         { dataField: 'Name', caption: 'Name' },
-        { dataField: 'Status', caption: 'Status' }
+        {
+            caption: 'Status', cellTemplate: function (container, options) {
+
+                var status;
+
+                switch (options.data.Status) {
+                    case 0:
+                        status = "Empty";
+                        break;
+                    case 1:
+                        status = "Open";
+                        break;
+                    case 2:
+                        status = "Closed";
+                        break;
+                    case 3:
+                        status = "Reopened";
+                        break;
+                    case 4:
+                        status = "Locked";
+                        break;
+                }
+
+                $('<label>').text(status).appendTo(container);
+            }
+        },
     ];
 
-    LoadGrid('gridcontainer', 'fiscalyeargrid', columns, 'fiscalyear/ledger/' + ledgerid + '?fields=all', 'fiscalyear', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+    LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyear/ledger/' + ledgerid + '?fields=all', 'fiscalyear', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
 
 }
 
 function LoadFiscalPeriods(info) {
 
-    var fycontainer = $('<div>').addClass('fiscalperiodscontainer');
-    $('.gridcontainer').append($(fycontainer));
+    $('.fiscalperiodscontainer').remove();
+    var fpcontainer = $('<div>').addClass('fiscalperiodscontainer');
+    $('.gridcontainer').append($(fpcontainer));
+    $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
 
     if (!info) {
         var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
@@ -2424,8 +2434,8 @@ function LoadFiscalPeriods(info) {
     var columns = [
         { dataField: 'Id', width: "0px" },
         { dataField: 'PeriodNumber', caption: '' },
-        { dataField: 'StartDate', caption: 'Start Date' },
-        { dataField: 'EndDate', caption: 'End Date' }
+        { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
+        { dataField: 'EndDate', caption: 'End Date', dataType: 'date' }
     ]
 
     LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiod/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiod', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
