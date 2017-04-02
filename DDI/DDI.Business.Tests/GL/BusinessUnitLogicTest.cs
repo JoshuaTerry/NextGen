@@ -2,6 +2,7 @@
 using DDI.Business.GL;
 using DDI.Business.Tests.Helpers;
 using DDI.Data;
+using DDI.Shared;
 using DDI.Business.Tests.GL.DataSources;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Common;
@@ -35,18 +36,19 @@ namespace DDI.Business.Tests.GL
 
             AssertNoException(() => _bl.Validate(unit), "Valid Business Unit Code example.");
 
-            unit.Code = "M&KMinstries";
-            AssertThrowsExceptionMessageContains<Exception>(() => _bl.Validate(unit), "Invalid Business Unit Code", UserMessagesGL.CodeAlphaNumericRequired);
+            unit.Code = "M&KM";
+
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeAlphaNumericRequired, UserMessagesGL.CodeAlphaNumericRequired);
 
             unit.Code = "";
-            AssertThrowsExceptionMessageContains<Exception>(() => _bl.Validate(unit), "Invalid Business Unit Code", UserMessagesGL.CodeIsRequired);
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeIsRequired, UserMessagesGL.CodeIsRequired);
 
             unit.Code = "123456789";
-            AssertThrowsExceptionMessageContains<Exception>(() => _bl.Validate(unit), "Invalid Business Unit Code", UserMessagesGL.CodeMaxLengthError);
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeMaxLengthError, UserMessagesGL.CodeMaxLengthError);
 
             unit.Name = "";
             unit.Code = "MKM";
-            AssertThrowsExceptionMessageContains<Exception>(() => _bl.Validate(unit), "Invalid Business Unit Name", UserMessagesGL.NameIsRequired);     
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.NameIsRequired, UserMessagesGL.NameIsRequired);     
         }
     }
 }
