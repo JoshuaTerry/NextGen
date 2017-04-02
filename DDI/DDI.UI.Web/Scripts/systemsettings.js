@@ -473,20 +473,7 @@ function DisplayConstituentTypeTags(tags) {
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
 
-                },
-                {
-                    CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-
-                    }
-                });
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-                    }
-                });
+                }, null)
             })
             .appendTo($(t));
 

@@ -81,6 +81,7 @@
     <Compile Include="General\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="General\CustomFieldService.cs" />
+    <Compile Include="General\GroupService.cs" />
     <Compile Include="General\NoteService.cs" />
     <Compile Include="CRM\PaymentMethodService.cs" />
     <Compile Include="CRM\RelationshipService.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="ServiceBase.cs" />
     <Compile Include="ServiceInterfaces\IConstituentTypeService.cs" />
     <Compile Include="ServiceInterfaces\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IGroupService.cs" />
     <Compile Include="ServiceInterfaces\INoteService.cs" />
     <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
     <Compile Include="ServiceInterfaces\IDenominationsService.cs" />

@@ -192,6 +192,7 @@
     <Compile Include="Models\Client\Core\NoteTopic.cs" />
     <Compile Include="Models\Client\CP\EFTFormat.cs" />
     <Compile Include="Models\Client\CP\PaymentMethod.cs" />
+    <Compile Include="Models\Client\Security\Group.cs" />
     <Compile Include="Models\Client\Security\Role.cs" />
     <Compile Include="Models\Client\Security\User.cs" />
     <Compile Include="Models\Client\Security\UserClaim.cs" />
