@@ -67,7 +67,7 @@ namespace DDI.EFAudit.Logging
             }
 
             Type type = entity.GetType();
-            bool isModifiedSet = false;
+         
 
             if (!_filter.ShouldLog(type))
             {

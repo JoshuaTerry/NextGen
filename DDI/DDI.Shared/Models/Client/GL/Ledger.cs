@@ -76,7 +76,10 @@ namespace DDI.Shared.Models.Client.GL
 
         public ICollection<SegmentLevel> SegmentLevels { get; set; }
         public ICollection<LedgerAccount> LedgerAccounts { get; set; }
+
+        [InverseProperty(nameof(FiscalYear.Ledger))]
         public ICollection<FiscalYear> FiscalYears { get; set; }
-       
+
+        public override string DisplayName => Code;
     }
 }

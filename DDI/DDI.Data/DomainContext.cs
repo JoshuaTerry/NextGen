@@ -19,6 +19,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.ModelConfiguration;
 
 namespace DDI.Data
 {
@@ -95,6 +96,7 @@ namespace DDI.Data
         #region GL Entities
 
         public DbSet<Shared.Models.Client.GL.Account> GL_Accounts { get; set; }
+        public DbSet<Shared.Models.Client.GL.AccountBalance> GL_AccountBalances { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBudget> GL_AccountBudgets { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountClose> GL_AccountCloses { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountGroup> GL_AccountGroups { get; set; }
@@ -125,7 +127,6 @@ namespace DDI.Data
 
         #endregion
 
-
         #region Security Entities
 
         public DbSet<User> Users { get; set; }
@@ -133,6 +134,8 @@ namespace DDI.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
 
         #endregion
 
@@ -158,7 +161,7 @@ namespace DDI.Data
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             // Why is this false?
-            this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;            
         }       
         #endregion Public Constructors
 
@@ -247,7 +250,7 @@ namespace DDI.Data
       
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());             
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
         }
 
         public ISaveResult<ChangeSet> Save(User author)

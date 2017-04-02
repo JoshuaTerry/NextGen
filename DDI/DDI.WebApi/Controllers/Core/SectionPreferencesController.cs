@@ -9,8 +9,7 @@ using System.Web.Http;
 namespace DDI.WebApi.Controllers.General
 {
     public class SectionPreferencesController : GenericController<SectionPreference>
-    {
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(SectionPreferencesController));
+    {         
         [HttpGet]
         [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

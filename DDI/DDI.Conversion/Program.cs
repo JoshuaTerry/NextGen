@@ -8,6 +8,7 @@ using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using log4net;
 
@@ -37,6 +38,7 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
+            GuidHelper.GenerateSequentialGuids = true;
 
             // These can be uncommented to run individual conversions.
 
@@ -63,7 +65,23 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
 
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
-            Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.Ledgers));
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.FiscalYears));
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.FiscalPeriods));
+            //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.SegmentLevels));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.Segments));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountGroups));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.Accounts));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccounts));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccountYears));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountPriorYears));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccountMerges));
+            //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountBudgets));
+            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
+            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
+            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
+            Run<GL.TransactionConverter>(new ConversionMethodArgs(GL.TransactionConverter.ConversionMethod.PostedTransactions));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
