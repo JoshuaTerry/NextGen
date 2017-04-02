@@ -15,15 +15,14 @@ namespace DDI.Business.GL
 {
     class BusinessUnitLogic : EntityLogicBase<BusinessUnit>
     {
-        private IRepository<BusinessUnit> _businessUnitRepo = null;
-
+      
         #region Constructors 
 
         public BusinessUnitLogic() : this(new UnitOfWorkEF()) { }
 
         public BusinessUnitLogic(IUnitOfWork uow) : base(uow)
         {
-            _businessUnitRepo = UnitOfWork.GetRepository<BusinessUnit>();
+           
         }
 
         #endregion
@@ -66,6 +65,11 @@ namespace DDI.Business.GL
             if (existing != null && existing.Id != unit.Id)
             {
                 throw new ValidationException(UserMessagesGL.CodeIsNotUnique);
+            }
+
+            if (string.IsNullOrWhiteSpace(unit.Name))
+            {
+                throw new ValidationException(UserMessagesGL.NameIsRequired);
             }
 
             //Logic to check for changing the BusinessUnitType on an edit. this needs to change once where validations are called changes
