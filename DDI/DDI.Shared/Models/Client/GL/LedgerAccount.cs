@@ -22,6 +22,8 @@ namespace DDI.Shared.Models.Client.GL
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; } 
+        public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
+
+        public override string DisplayName => AccountNumber;
     }
 }

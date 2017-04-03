@@ -39,5 +39,7 @@ namespace DDI.Shared.Models.Client.GL
         public ICollection<Segment> ChildSegments { get; set; }
 
         public ICollection<AccountSegment> AccountSegments { get; set; }
+
+        public override string DisplayName => Code;
     }
 }

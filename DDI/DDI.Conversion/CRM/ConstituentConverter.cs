@@ -324,20 +324,20 @@ namespace DDI.Conversion.CRM
                     string educationLevelCode = importer.GetString(20);
                     string employer = importer.GetString(21, 128);
                     string position = importer.GetString(22, 128);
-                    DateTime? employmentStartDate = importer.GetDateTime(23);
-                    DateTime? employmentEndDate = importer.GetDateTime (24);
-                    DateTime? firstEmploymentDate = importer.GetDateTime(25);
+                    DateTime? employmentStartDate = importer.GetDate(23);
+                    DateTime? employmentEndDate = importer.GetDate (24);
+                    DateTime? firstEmploymentDate = importer.GetDate(25);
                     bool isClientEmployee = (importer.GetString(26) == "yes");
                     string professionCode = importer.GetString(27);
                     string clergyTypeCode = importer.GetString(28);
                     string clergyStatusCode = importer.GetString(29);
-                    DateTime? ordinationDate = importer.GetDateTime(30);
+                    DateTime? ordinationDate = importer.GetDate(30);
                     string ordinationPlace = importer.GetString(31, 128);
-                    DateTime? prospectDate = importer.GetDateTime(32);
+                    DateTime? prospectDate = importer.GetDate(32);
                     string maritalStatusCode = importer.GetString(33);
-                    DateTime? marriageDate = importer.GetDateTime(34);
-                    DateTime? divorceDate = importer.GetDateTime(35);
-                    DateTime? deceasedDate = importer.GetDateTime(36);
+                    DateTime? marriageDate = importer.GetDate(34);
+                    DateTime? divorceDate = importer.GetDate(35);
+                    DateTime? deceasedDate = importer.GetDate(36);
                     int birthMonth = importer.GetInt(37);
                     int birthDay = importer.GetInt(38);
                     int birthYear1 = importer.GetInt(39);
@@ -702,7 +702,7 @@ namespace DDI.Conversion.CRM
                     int membership = importer.GetInt(15);
                     int yearEstablished = importer.GetInt(16);
                     string deletionCode = importer.GetString(17);
-                    DateTime? deleteDate = importer.GetDateTime(18);
+                    DateTime? deleteDate = importer.GetDate(18);
                     if (deletionCode == "YBD") deletionCode = "DEL";
 
                     ConstituentType constituentType = constituentTypes.FirstOrDefault(p => p.Code == constituentTypeCode);
@@ -908,8 +908,8 @@ namespace DDI.Conversion.CRM
                     constituentAddress.AddressId = addressId;                   
                     constituentAddress.AddressTypeId = addressType.Id;
                     constituentAddress.Comment = importer.GetString(3);
-                    constituentAddress.StartDate = importer.GetDateTime(4);
-                    constituentAddress.EndDate = importer.GetDateTime(5);
+                    constituentAddress.StartDate = importer.GetDate(4);
+                    constituentAddress.EndDate = importer.GetDate(5);
                     constituentAddress.StartDay = importer.GetInt(6);
                     constituentAddress.EndDay = importer.GetInt(7);
                     constituentAddress.IsPrimary = importer.GetBool(8);
@@ -977,8 +977,8 @@ namespace DDI.Conversion.CRM
                     doingBusinessAs.AssignPrimaryKey();
                     doingBusinessAs.ConstituentId = constituentId;
                     doingBusinessAs.Name = importer.GetString(1, 128);
-                    doingBusinessAs.StartDate = importer.GetDateTime(2);
-                    doingBusinessAs.EndDate = importer.GetDateTime(3);
+                    doingBusinessAs.StartDate = importer.GetDate(2);
+                    doingBusinessAs.EndDate = importer.GetDate(3);
 
                     outputFile.AddRow(doingBusinessAs);
 
@@ -1057,8 +1057,8 @@ namespace DDI.Conversion.CRM
                     education.ConstituentId = constituentId;
                     education.Name = string.Empty;
                     education.Major = string.Empty;
-                    education.StartDate = importer.GetDateTime(2);
-                    education.EndDate = importer.GetDateTime(4);
+                    education.StartDate = importer.GetDate(2);
+                    education.EndDate = importer.GetDate(4);
                     education.SchoolId = school?.Id;
                     education.SchoolOther = importer.GetString(6, 128);
                     education.DegreeId = degree?.Id;

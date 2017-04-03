@@ -313,6 +313,30 @@ namespace DDI.Conversion
         }
 
         /// <summary>
+        /// Get a nullable DateTime value (with TimeOfDay set to zero) from the current import row at specified column (zero-based)
+        /// </summary>
+        public DateTime? GetDate(int fieldNum)
+        {
+            string dtstr = (_data == null || _data.Length <= fieldNum ? null : _data[fieldNum]);
+
+            if (dtstr == null || dtstr.Length == 0 || dtstr[0] == '?')
+            {
+                return null;
+            }
+
+            try
+            {
+                DateTime dt = Convert.ToDateTime(dtstr);                
+                // Convert local times (which is what's stored in legacy db) to UTC
+                return dt.Date;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get a nullable int value from the current import row at specified column (zero-based)
         /// </summary>
         public int? GetIntNullable(int fieldNum)

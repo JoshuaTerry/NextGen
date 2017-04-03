@@ -38,6 +38,8 @@ $(document).ready(function () {
 
         ExecuteFunction(functionToCall, window);
 
+        InitRequiredLabels("educationLevelmodal")
+
     });
 
 });
@@ -469,7 +471,8 @@ function DisplayConstituentTypeTags(tags) {
                         CloseModal(modal);
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
-                });
+
+                }, null)
             })
             .appendTo($(t));
 
