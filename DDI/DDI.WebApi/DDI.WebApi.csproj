@@ -288,6 +288,7 @@
     <Compile Include="Controllers\Core\UserRolesController.cs" />
     <Compile Include="Controllers\Core\UsersController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

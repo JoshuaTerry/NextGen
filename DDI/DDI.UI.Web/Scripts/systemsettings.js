@@ -473,7 +473,20 @@ function DisplayConstituentTypeTags(tags) {
                         EditConstituentType($(modal).find('.consttype-Id').val());
                     }
 
-                }, null)
+                },
+                {
+                    CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+
+                    }
+                });
+
+                    if (data.Data) {
+                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+                        CloseModal(modal);
+                        EditConstituentType($(modal).find('.consttype-Id').val());
+                    }
+                });
             })
             .appendTo($(t));
 
@@ -2384,7 +2397,149 @@ function LoadFundAccountingSectionSettings() {
 
 function LoadGLFormatSectionSettings() {
 
+    var container = $('<div>').addClass('fieldblock');
+    $('<label>').text('Ledger: ').appendTo(container);
+    var label = $('<input>').attr('type', 'select').addClass('container').appendTo(coontainer);
 
+    PopulateDropDown('.contcat-DefaultContactTypeId', 'ledgers', '', '');
+    
+    //var container = $('<div>').addClass('threecolumn');
+
+    //var activeSection = $('<div>').addClass('fieldblock');
+    //var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
+    //$('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
+    //$(activeSection).appendTo(container);
+
+    //var sectionLabel = $('<div>').addClass('fieldblock');
+    //$('<label>').text('Section Label: ').appendTo(sectionLabel);
+    //var label = $('<input>').attr('type', 'text').addClass('sectionLabel').appendTo(sectionLabel);
+    //$(sectionLabel).appendTo(container);
+
+    //var id = $('<input>').attr('type', 'hidden').addClass('hidSettingId').appendTo(container);
+
+    //GetSetting(category, sectionKey, route, id, checkbox, label);
+
+    //var controlContainer = $('<div>').addClass('controlContainer');
+
+    //$('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
+    //    .click(function () {
+    //        SaveSetting($('.hidSettingId'), route, category, sectionKey, $('.sectionLabel').val(), $('.sectionAvailable').prop('checked'));
+    //    })
+    //    .appendTo(controlContainer);
+
+    //$('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+    //    .click(function (e) {
+    //        e.preventDefault();
+
+    //        GetSetting(category, sectionKey, route, id, checkbox, label);
+    //    })
+    //    .appendTo(controlContainer);
+
+    //$(controlContainer).appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+
+    var glformatcolumns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'LedgerId', caption: 'Ledger' },
+        { dataField: 'Level', caption: 'Level' },
+        { 
+            caption: 'Type', cellTemplate: function (container, options) {
+                var type = "None";
+
+                switch (options.data.Type) {
+                    case 1:
+                        type = "Fund";
+                        break;
+                    case 2:
+                        type = "Account";
+                        break;
+                }
+
+                $('<label>').text(type).appendTo(container);
+            }
+        },
+        { 
+            caption: 'Format', cellTemplate: function (container, options) {
+                var format;
+
+                switch (options.data.Format) {
+                    case 0: 
+                        format = "Both";
+                        break;
+                    case 1:
+                        format = "Numeric";
+                        break;
+                    case 2:
+                        format = "Alpha";
+                        break;
+                }
+
+                $('<label>').text(format).appendTo(container);
+        }},
+        { dataField: 'Length', caption: 'Length' },
+        { dataField: 'IsLinked', caption: 'Linked' },
+        { dataField: 'IsCommon', caption: 'Common' },
+        { dataField: 'Name', caption: 'Name' },
+        { dataField: 'Abbreviation', caption: 'Abbreviation' },
+        {
+            caption: 'Separator', cellTemplate: function (container, options) {
+                var separator = 'None';
+
+                switch (options.data.Separator) {
+                    case " ":
+                        separator = "(Space)";
+                        break;
+                    case "-":
+                        separator = "-";
+                        break;
+                    case ".":
+                        separator = ".";
+                        break;
+                    case ",":
+                        separator = ",";
+                        break;
+                    case "/":
+                        separator = "/";
+                        break;
+                    case "(":
+                        separator = "(";
+                        break;
+                    case ")":
+                        separator = ")";
+                        break;
+                    case "[":
+                        separator = "[";
+                        break;
+                    case "]":
+                        separator = "]";
+                        break;
+                }
+
+                $('<label>').text(separator).appendTo(container);
+            }
+        },
+        {
+            caption: 'Sort Order', cellTemplate: function (container, options) {
+                var order = 'None';
+
+                switch (options.data.SortOrder) {
+                    case 0:
+                        order = "Ascending";
+                        break;
+                    case 1:
+                        order = "Unaffiliated";
+                        break;
+                }
+
+                $('<label>').text(order).appendTo(container);
+            }
+        }
+    ];
+
+    LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels', 'segmentlevels', null, 'glformat-',
+        '.glformatmodal', '.glformatmodal', 250, true, false, false, null);
 
 }
 
