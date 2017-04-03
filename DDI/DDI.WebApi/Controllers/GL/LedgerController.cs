@@ -9,7 +9,7 @@ namespace DDI.WebApi.Controllers.GL
     public class LedgerController : GeneralLedgerController<Ledger>
     {
         [HttpGet]
-        [Route("api/v1/ledgers", Name = RouteNames.Ledger)]
+        [Route("api/v1/businessunit/{businessUnitId}/ledgers", Name = RouteNames.Ledger)]
         public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Ledger, businessUnitId, limit, offset, orderBy, fields);
