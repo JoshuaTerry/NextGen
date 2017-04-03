@@ -229,7 +229,7 @@
     <Compile Include="Controllers\Core\AuditController.cs" />
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
     <Compile Include="Controllers\Core\BusinessDateController.cs" />
-    <Compile Include="Controllers\Core\BusinessUnitControllers.cs" />
+    <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
     <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
     <Compile Include="Controllers\Core\CustomFieldsController.cs" />
@@ -251,6 +251,7 @@
     <Compile Include="Controllers\CRM\AddressesController.cs" />
     <Compile Include="Controllers\CRM\AddressTypesController.cs" />
     <Compile Include="Controllers\CRM\AlternateIdsController.cs" />
+    <Compile Include="Controllers\Core\BusinessDateController.cs" />
     <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
     <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
     <Compile Include="Controllers\CRM\ConstituentAddressesController.cs" />
