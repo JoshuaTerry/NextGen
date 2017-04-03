@@ -86,24 +86,17 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> GetById(Guid id)
+        public IHttpActionResult GetById(Guid id)
         {
-            User user;
             try
             {
-                user = await UserManager.FindByIdAsync(id);
+                var user = Service.GetById(id);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
-                var response = new DataResponse<User>
-                {
-                    Data = user,
-                    IsSuccessful = true
-                };
-
-                return Ok(response);
+                return Ok(user);
             }
             catch (Exception ex)
             {
@@ -125,7 +118,13 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                return Ok(result);
+                var response = new DataResponse<BusinessUnit>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

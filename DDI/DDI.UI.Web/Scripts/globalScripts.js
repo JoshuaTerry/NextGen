@@ -339,6 +339,7 @@ function LoadBusinessDate() {
 
 function LoadBusinessUnit() {
     /* Will be implemented with Business Unit */
+
 }
 
 function LoadEnvironment() {
@@ -1279,7 +1280,16 @@ function BusinessUnitModal() {
 
         $('.savebusinessunit').click(function (e) {
 
-            currentBusinessUnit = $('.bu-currentbu').val();
+             $.each(currentUser.BusinessUnits, function(index, value) {
+                
+                if(value.Id === $('.bu-currentbu').val()) {
+
+                    currentBusinessUnit = value;
+                }
+                
+             }); 
+
+            $('.editbusinessunit').text(currentBusinessUnit.DisplayName); 
 
             CloseModal(modal);
 
@@ -1299,11 +1309,24 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown(currentBusinessUnit) {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit);
+    if (currentBusinessUnit != null) {
+
+        PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit.Id);
+
+        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
+
+    } else {
+        
+        $('.editbusinessunit').text('BU');
+
+    }
+
+   
 
 }
 
 function DummyUser() {
+    //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
 
     var dummyUserId = 'D3BFB26C-4603-E711-80E5-005056B7555A';
 
@@ -1311,7 +1334,7 @@ function DummyUser() {
         
         currentUser = data.Data;
 
-        currentBusinessUnit = data.Data.DefaultBusinessUnitId;
+        currentBusinessUnit = data.Data.DefaultBusinessUnit;
 
         LoadBusinessUnitDropDown(currentBusinessUnit);
 
