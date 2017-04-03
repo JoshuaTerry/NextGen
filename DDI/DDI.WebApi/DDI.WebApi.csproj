@@ -226,6 +226,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
+    <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
     <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
@@ -244,7 +245,6 @@
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
     <Compile Include="Controllers\CRM\AddressTypesController.cs" />
     <Compile Include="Controllers\Core\BusinessDateController.cs" />
-    <Compile Include="Controllers\Core\BusinessUnitControllers.cs" />
     <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
     <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
     <Compile Include="Controllers\CRM\AddressesController.cs" />
