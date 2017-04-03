@@ -55,14 +55,14 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.CodeMaxLengthError);
             }
 
-            if (!Regex.IsMatch(unit.Code, @"(^[a-zA-Z0-9]+$)", RegexOptions.IgnoreCase))
+            if (!Regex.IsMatch(unit.Code, @"(^[a-zA-Z0-9]+$)"))
             {
                 throw new ValidationException(UserMessagesGL.CodeAlphaNumericRequired);
             }
 
+            var existing = UnitOfWork.FirstOrDefault<BusinessUnit>(bu => bu.Code == unit.Code && bu.Id != unit.Id);
+            if (existing != null)
 
-            var existing = UnitOfWork.GetRepository<BusinessUnit>().Entities.FirstOrDefault(bu => bu.Code.ToUpper() == unit.Code.ToUpper());
-            if (existing != null && existing.Id != unit.Id)
             {
                 throw new ValidationException(UserMessagesGL.CodeIsNotUnique);
             }
@@ -73,16 +73,12 @@ namespace DDI.Business.GL
             }
 
             //Logic to check for changing the BusinessUnitType on an edit. this needs to change once where validations are called changes
-            var businessUnit = UnitOfWork.GetRepository<BusinessUnit>().Entities.FirstOrDefault(bu => bu.Id == unit.Id);
-            if (businessUnit != null)
+            var repository = UnitOfWork.GetRepository<BusinessUnit>();
+            if (repository.GetEntityState(unit) == EntityState.Modified &&
+                UnitOfWork.GetRepository<BusinessUnit>().GetModifiedProperties(unit).Contains(nameof(BusinessUnit.BusinessUnitType)))
             {
-                if(businessUnit.BusinessUnitType != unit.BusinessUnitType)
-                {
-                    throw new ValidationException(UserMessagesGL.BusinessUnitTypeNotEditable);
-                }
+                throw new ValidationException(UserMessagesGL.BusinessUnitTypeNotEditable);
             }
-            
-
         }
         #endregion
     }
