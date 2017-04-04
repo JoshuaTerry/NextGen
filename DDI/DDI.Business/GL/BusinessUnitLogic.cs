@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Caching;
+using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Common;
@@ -13,9 +15,10 @@ using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
-    class BusinessUnitLogic : EntityLogicBase<BusinessUnit>
+    public class BusinessUnitLogic : EntityLogicBase<BusinessUnit>
     {
-      
+        public static string IsMultipleCacheKey => "IsMultipleBusinessUnits";
+
         #region Constructors 
 
         public BusinessUnitLogic() : this(new UnitOfWorkEF()) { }
@@ -29,6 +32,24 @@ namespace DDI.Business.GL
 
         #region Validate Logic
 
+
+        public bool IsMultiple
+        {
+            get
+            {
+                object result = CacheHelper.GetEntry<object>(IsMultipleCacheKey, () => GetIsMultiple());
+                if (result is bool)
+                {
+                    return (bool)result;
+                }
+                return false;
+            }
+        }
+
+        private object GetIsMultiple()
+        {
+            return UnitOfWork.FirstOrDefault<BusinessUnit>(p => p.BusinessUnitType != BusinessUnitType.Organization) != null;
+        }
 
         public override void Validate(BusinessUnit unit)
         {
@@ -78,6 +99,9 @@ namespace DDI.Business.GL
                 UnitOfWork.GetRepository<BusinessUnit>().GetModifiedProperties(unit).Contains(nameof(BusinessUnit.BusinessUnitType))) { 
                     throw new ValidationException(UserMessagesGL.BusinessUnitTypeNotEditable);
             }
+
+            CacheHelper.RemoveEntry(IsMultipleCacheKey);
+
         }
         #endregion
     }

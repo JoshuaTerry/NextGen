@@ -17,15 +17,34 @@ namespace DDI.Business.GL
 {
     public class LedgerLogic : EntityLogicBase<Ledger>
     {
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AccountLogic));
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(LedgerLogic));
         public LedgerLogic() : this(new UnitOfWorkEF()) { }
-        private CachedRepository<Ledger> _ledgerCache;
         private IRepository<Ledger> _ledgerRepository;
         
         public LedgerLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _ledgerRepository = unitOfWork.GetRepository<Ledger>();
         }
+
+        private CachedRepository<Ledger> _ledgerCache = null;
+        internal CachedRepository<Ledger> LedgerCache
+        {
+            get
+            {
+                if (_ledgerCache == null)
+                {
+                    _ledgerCache = new CachedRepository<Ledger>(UnitOfWork.GetRepository<Ledger>(),
+                        p => p.SegmentLevels,
+                        p => p.FiscalYears.First().FiscalPeriods,
+                        p => p.OrgLedger,
+                        p => p.DefaultFiscalYear,
+                        p => p.BusinessUnit
+                    );
+                }
+                return _ledgerCache;
+            }
+        }
+
 
         public override void Validate(Ledger ledger)
         {
@@ -58,7 +77,7 @@ namespace DDI.Business.GL
                 }
             }            
         }
-
+        
         public Ledger GetCachedLedger(Guid? ledgerId)
         {
             if (ledgerId == null)
@@ -66,18 +85,36 @@ namespace DDI.Business.GL
                 return null;
             }
 
-            if (_ledgerCache == null)
-            {
-                _ledgerCache = new CachedRepository<Ledger>(UnitOfWork.GetRepository<Ledger>(), 
-                    p => p.SegmentLevels, 
-                    p => p.FiscalYears.First().FiscalPeriods, 
-                    p => p.OrgLedger, 
-                    p => p.DefaultFiscalYear, 
-                    p => p.BusinessUnit
-                );
-            }
+            return LedgerCache.GetById(ledgerId.Value);
+        }
 
-            return _ledgerCache.GetById(ledgerId.Value);
+        /// <summary>
+        /// Get the ledger that contains a valid fiscal year for a specified date.
+        /// </summary>
+        public Ledger GetCurrentLedger(Guid businessUnitId, DateTime dt)
+        {
+            return LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnitId == businessUnitId && p.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt));
+        }
+
+        /// <summary>
+        /// Get the ledger that contains a valid fiscal year for the current business date, or if no year defined, the latest year.
+        /// </summary>
+        public Ledger GetCurrentLedger(Guid businessUnitId)
+        {
+            Ledger ledger = GetCurrentLedger(businessUnitId, DateTime.Now.Date);
+            if (ledger != null)
+                return ledger;
+            IEnumerable<Ledger> unitLedgers = LedgerCache.Entities.Where(p => p.BusinessUnitId == businessUnitId);
+            IEnumerable<FiscalYear> years = unitLedgers.Select(p => p.FiscalYears.OrderByDescending(q => q.StartDate)
+                                                                             .FirstOrDefault()); // Get the latest fiscal year for each ledger.
+            // If there aren't multiple years, return any ledger.
+            if (years.Count() <= 1)
+                return unitLedgers.FirstOrDefault();
+
+            // Otherwise:
+            return years.OrderByDescending(p => p.StartDate) // Order selected fiscal years in descending order
+                        .FirstOrDefault()                  // Get latest overall
+                        ?.Ledger;                          // Get the ledger
         }
 
         public SegmentLevel[] GetSegmentLevels(Ledger ledger)
@@ -85,6 +122,10 @@ namespace DDI.Business.GL
             if (ledger == null)
             {
                 throw new ArgumentNullException(nameof(ledger));
+            }
+            if (ledger.SegmentLevels == null)
+            {
+                UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
             }
             return ledger.SegmentLevels.OrderBy(p => p.Level).ToArray();
         }

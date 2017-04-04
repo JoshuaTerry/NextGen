@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DDI.Business.Helpers;
 using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
@@ -25,6 +26,67 @@ namespace DDI.Business.GL
         {
             base.Validate(entity);
 
+        }
+
+        /// <summary>
+        /// Account number prefixed by business unit code.
+        /// </summary>
+        public string GetPrefixedAccountNumber(Account account)
+        {
+            if (account == null)
+            {
+                return string.Empty;
+            }
+
+            if (BusinessUnitHelper.IsMultiple)
+            {
+                Ledger ledger = GetLedgerForAccount(account);
+                if (ledger != null)
+                {
+                    return ledger.Code + ":" + account.AccountNumber;
+                }
+            }
+            return account.AccountNumber;                
+        }
+
+
+        /// <summary>
+        /// Return the account number.  If a ledger Id or business unit Id can be specified and the account belongs to another ledger/business unit, the 
+        /// account number will be prefixed by the account's business unit code.
+        /// </summary>
+        public string GetPrefixedAccountNumber(Account account, Guid? defaultId)
+        {
+            if (account == null)
+            {
+                return string.Empty;
+            }
+
+            if (defaultId == null)
+            {
+                return account.AccountNumber;
+            }
+
+            Ledger ledger = GetLedgerForAccount(account);
+
+            if (ledger == null || defaultId == ledger.Id || defaultId == ledger.BusinessUnitId)
+            {
+                return account.AccountNumber;
+            }
+            return ledger.Code + ":" + account.AccountNumber;            
+        }
+
+        private Ledger GetLedgerForAccount(Account account)
+        {
+            Ledger ledger = account.FiscalYear?.Ledger;
+            if (ledger == null)
+            {
+                var year = UnitOfWork.GetReference(account, p => p.FiscalYear);
+                if (year != null)
+                {
+                    ledger = UnitOfWork.GetReference(year, p => p.Ledger);
+                }
+            }
+            return ledger;
         }
 
         /// <summary>
@@ -99,6 +161,49 @@ namespace DDI.Business.GL
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Calculate the account sorting key from the segments.
+        /// </summary>
+        public string CalculateSortKey(Account account)
+        {
+
+            var ledgerLogic = UnitOfWork.GetBusinessLogic<LedgerLogic>();
+
+            // Ensure account's referenced entities are fully populated.
+            if (account.AccountSegments == null || account.FiscalYear == null || account.AccountSegments.FirstOrDefault()?.Segment == null)
+            {
+                account = UnitOfWork.GetEntities<Account>(p => p.AccountSegments.First().Segment, p => p.FiscalYear).FirstOrDefault(p => p.Id == account.Id);
+            }
+
+            var segmentLevels = ledgerLogic.GetSegmentLevels(account.FiscalYear.LedgerId.Value);
+
+            var tmp = segmentLevels.FirstOrDefault(p => p.Level == 2);
+            tmp.SortOrder = 1;
+
+            // Array to hold keys.
+            string[] keys = new string[segmentLevels.Length - 1];
+
+            // Initialize it to empty strings.
+            for (int idx = 0; idx < keys.Length; idx++)
+            {
+                keys[idx] = string.Empty;
+            }
+
+            
+            foreach (var entry in segmentLevels.OrderBy(p => p.SortOrder > 0 ? p.SortOrder : 100 + p.Level) // Order the segments by sort order, or if zero by their level - although sort order takes precedence.
+                                               .Zip(Enumerable.Range(0, keys.Length), 
+                                                    (segmentLevel, n) => new { Index = n, Level = segmentLevel.Level }) // Assign a numeric order (0 thru n - 1) to the levels (1 - n)
+                                               .Join(account.AccountSegments, outer => outer.Level, 
+                                                     accountSegment => accountSegment.Level, 
+                                                     (outer, accountSegment) => new { Index = outer.Index, Segment = accountSegment.Segment})) // Join with account.AccountSegments
+            {
+                keys[entry.Index] = entry.Segment?.Code ?? string.Empty;  // Assign each segment code to keys.
+            }
+
+            // Return the sort key.
+            return string.Join(" ", keys);
         }
 
     }
