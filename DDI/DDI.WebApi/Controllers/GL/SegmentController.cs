@@ -9,7 +9,7 @@ namespace DDI.WebApi.Controllers.GL
     public class SegmentController : GeneralLedgerController<Segment>
     {
         [HttpGet]
-        [Route("api/v1/segments", Name = RouteNames.Segment)]
+        [Route("api/v1/businessunit/{businessUnitId}/segments", Name = RouteNames.Segment)]
         public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Segment, businessUnitId, limit, offset, orderBy, fields);

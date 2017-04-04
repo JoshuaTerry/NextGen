@@ -127,7 +127,6 @@ namespace DDI.Data
 
         #endregion
 
-
         #region Security Entities
 
         public DbSet<User> Users { get; set; }
@@ -135,6 +134,8 @@ namespace DDI.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
 
         #endregion
 
