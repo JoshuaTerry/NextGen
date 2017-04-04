@@ -25,6 +25,7 @@ namespace DDI.WebApi.Controllers.General
     {
         private UserManager _userManager;
         private RoleManager _roleManager;
+        private ServiceBase<BusinessUnit> _buService;
 
         public UsersController()
         {
@@ -241,6 +242,14 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
+                _buService = new ServiceBase<BusinessUnit>();
+                var defaultbu = _buService.GetWhereExpression(b => b.Id == defaultbuid).Data;
+
+                if(!result.BusinessUnits.Contains(defaultbu))
+                {
+                    result.BusinessUnits.Add(defaultbu);
+                }
+
                 result.DefaultBusinessUnitId = defaultbuid;
                 Service.Update(result);
 
@@ -267,11 +276,14 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                var buservice = new ServiceBase<BusinessUnit>();
-                var bu = buservice.GetById(buid).Data;
+                _buService = new ServiceBase<BusinessUnit>();
+                var bu = _buService.GetById(buid).Data;
 
-                result.BusinessUnits.Add(bu);
-                Service.Update(result);
+                if(!result.BusinessUnits.Contains(bu))
+                {
+                    result.BusinessUnits.Add(bu);
+                    Service.Update(result);
+                }
 
                 return Ok(result);
             }
