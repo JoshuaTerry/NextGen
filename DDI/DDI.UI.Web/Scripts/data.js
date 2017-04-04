@@ -82,7 +82,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
 }
 
-function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, callback) {
+function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
 
     ClearElement(element);
 
@@ -102,20 +102,27 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
                 $(element).val(selectedValue);
             }
 
+            if (completecallback) {
+
+                completecallback();
+
+            }
+
         }
     }, null);
 
-    if (callback) {
+    if (changecallback) {
 
         $(element).unbind('change');
 
         $(element).change(function () {
-            callback();
+            changecallback();
         });
 
     }
 
 }
+
 /* END POPULATE DROPDOWN CONTROLS */
 
 
