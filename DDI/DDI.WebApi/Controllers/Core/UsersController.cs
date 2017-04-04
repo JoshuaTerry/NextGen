@@ -78,8 +78,16 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users")]
         public IHttpActionResult Get()
         {
-            try { 
-                return Ok(UserManager.Users);
+            try {
+                userService = new UserService();
+                var results = userService.GetAll();
+
+                if (results == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -264,7 +272,7 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 userService = new UserService();
-                var result = userService.GetById(id).Data;
+                var result = userService.AddBusinessUnitToUser(id, buid);
 
                 if (result == null)
                 {

@@ -26,7 +26,7 @@ namespace DDI.Services.Security
 
         public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
         {
-            var result = _uow.GetById<User>(id);
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
             var defaultbu = _uow.GetById<BusinessUnit>(defaultbuid);
 
             if (!result.BusinessUnits.Contains(defaultbu))
@@ -49,7 +49,7 @@ namespace DDI.Services.Security
 
         public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
         {
-            var result = _uow.GetById<User>(id);
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
             var bu = _uow.GetById<BusinessUnit>(buid);
 
             if (!result.BusinessUnits.Contains(bu))
