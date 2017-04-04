@@ -35,75 +35,24 @@
             
             <!-- Users Tab -->
             <div id="tab-users">
-
-                <div class="newlinkcontainer">
-                    <a href="#" class="newlink addnewuser">New User</a>
+                <div class="usersgridcontainer">
+                    <div class="usergrid"></div>
                 </div>
-
-                <div class="usersgridcontainer"></div>
-
-                <fieldset>
-                    <legend>User Information</legend>
-
-                    <div class="userinfocontainer">
-
-                        <div class="twocolumn">
-
-                            <div class="fieldblock">
-                                <label>User ID</label>
-                                <input type="text" class="userid" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Name</label>
-                                <input type="text" class="username" />
-                            </div>
-
-                        </div>
-                        
-                        <div class="twocolumn">
-
-                            <div class="fieldblock">
-                                <label>Email</label>
-                                <input type="text" class="useremail" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Status</label>
-                                <input type="checkbox" class="userstatus" />
-                            </div>
-
-                        </div>
-                        
-                    </div>
-                    
-                </fieldset>
-
-                <div class="usergroupsgridcontainer"></div>
-
             </div>
-
         </div>
-
     </div>
 
     <div class="newgroupmodal" title="New Group" style="display: none;">
-
         <div class="modalcontent">
-
-
-
         </div>
-
     </div>
 
-    <div class="newusermodal" title="New User" style="display: none;">
-
+    <div class="usermodal" title="New User" style="display: none;">
         <div class="modalcontent">
 
             <div class="fieldblock">
                 <label>Email</label>
-                <input type="email" name="email" class="newusername" />
+                <input type="email" name="email" class="user-FullName" />
             </div>
 
             <div class="fieldblock">
@@ -116,8 +65,19 @@
                 <input type="password" name="confirmpassword" class="newconfirmpassword" />
             </div>
 
+           <div class="fieldblock">
+                <label>Default Business Unit:</label>
+                <select class="user-DefaultBusinessUnitId"></select>
+            </div>
+
+            <div class="fieldblock">
+                <div class="businessUnits">
+                </div>
+            </div>
+
             <div class="modalbuttons">
-                <input type="button" class="submitnewuser" value="Submit" />
+                <input type="button" class="savebutton" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>
