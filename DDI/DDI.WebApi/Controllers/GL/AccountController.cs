@@ -9,7 +9,7 @@ namespace DDI.WebApi.Controllers.GL
     public class AccountController : GeneralLedgerController<Account>
     {
         [HttpGet]
-        [Route("api/v1/accounts", Name = RouteNames.Account)]
+        [Route("api/v1/businessunit/{businessUnitId}/accounts", Name = RouteNames.Account)]
         public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Account, businessUnitId, limit, offset, orderBy, fields);
