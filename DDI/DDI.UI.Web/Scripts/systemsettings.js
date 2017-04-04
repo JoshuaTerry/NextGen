@@ -2077,18 +2077,19 @@ function DeleteRegionLevel(id) {
 
 }
 
+
 function LoadRegionLevel(id) {
 
     MakeServiceCall('GET', 'regionlevels/' + id, null, function (data) {
+
         if (data && data.Data && data.IsSuccessful) {
+
             $(modal).find('.rl-Level').val(data.Data.Level);
             $(modal).find('.rl-Label').val(data.Data.Label);
             $(modal).find('.rl-Abbreviation').val(data.Data.Abbreviation);
             $(modal).find('.rl-IsRequired').prop('checked', data.Data.IsRequired);
             $(modal).find('.rl-IsChildLevel').prop('checked', data.Data.IsChildLevel);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
         }
 
     }, null);
@@ -2108,9 +2109,6 @@ function LoadRegion(id) {
             $(modal).find('.reg-Name').val(data.Data.Name);
             $(modal).find('.reg-IsActive').prop('checked', data.Data.IsActive);
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
 
     }, null);
@@ -2274,8 +2272,8 @@ function LoadRelationshipTypeSettingsGrid() {
         { dataField: 'Id', width: '0px' },
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
-        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal'},
-        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal'},
+        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal' },
+        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal' },
         {
             caption: 'Constituent Category', cellTemplate: function (container, options) {
                 var category = 'Individual';
@@ -2292,13 +2290,14 @@ function LoadRelationshipTypeSettingsGrid() {
                 $('<label>').text(category).appendTo(container);
             }
         },
-        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category'},
-        { dataField: 'IsSpouse', caption: 'Spouse'},
-        { dataField: 'IsActive', caption: 'Active'}
+        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category' },
+        { dataField: 'IsSpouse', caption: 'Spouse' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.relationshiptypecontainer', 'relationshiptypegrid', relationshiptypecolumns, 'relationshiptypes?fields=all', 'relationshiptypes', null, 'reltype-',
         '.reltypemodal', '.reltypemodal', 250, true, false, false, null);
+}
 
 /* RELATIONSHIP CATEGORY SYSTEM SETTINGS */
 function EditRelationshipCategory(id) {
@@ -2733,13 +2732,45 @@ function LoadChartAccountsSettingsSectionSettings() {
 
 
 }
-
+    /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
+    var entityColumns = [
+      { dataField: 'Id', width: '0px' },
+      { dataField: 'Code', caption: 'Code' },
+      { dataField: 'Name', caption: 'Description' },
+      {
+          caption: 'Entity Type', cellTemplate: function (container, options) {
+              var entity = 'None';
 
+              switch (options.data.BusinessUnitType) {
+                  case 0:
+                      entity = "Organization";
+                      break;
+                  case 1:
+                      entity = "Common";
+                      break;
+                  case 2:
+                      entity = "Separate";
+                      break;
+              }
+
+              $('<label>').text(entity).appendTo(container);
+          }
+      },
+      {
+          caption: '', cellTemplate: function (container, options) {
+              
+
+          }
+      }
+    ];
+
+    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunit', 'businessunit', null, 'en-',
+        '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
-
+/// End Entities/Business Untis Settings
 function LoadFiscalYearSectionSettings() {
 
 

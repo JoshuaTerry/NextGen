@@ -49,6 +49,7 @@
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="GL\AccountLogic.cs" />
+    <Compile Include="GL\BusinessUnitLogic.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="CRM\AddressCategory.cs" />

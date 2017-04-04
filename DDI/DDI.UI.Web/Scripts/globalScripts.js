@@ -1261,7 +1261,9 @@ function RemoveValidation(formClassName) {
 
 function BusinessUnitModal() {
 
-    DummyUser();
+    // DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
+    // Uncomment this to use currentBusinessUnit
+    // Add the guid of the user you want to use
 
     $('.editbusinessunit').click(function (e) {
 
@@ -1325,10 +1327,8 @@ function LoadBusinessUnitDropDown(currentBusinessUnit) {
 
 }
 
-function DummyUser() {
+function DummyUser(dummyUserId) {
     //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
-
-    var dummyUserId = 'D3BFB26C-4603-E711-80E5-005056B7555A';
 
     MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
         
