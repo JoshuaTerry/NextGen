@@ -19,8 +19,8 @@ var SystemSettings = {
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings',
-    PaymentPreferences: 'PaymentPreferencesSettings'
-
+    PaymentPreferences: 'PaymentPreferencesSettings',
+    Accounting: 'AccountingSettings'
 }
 
 $(document).ready(function () {
@@ -2346,8 +2346,9 @@ function LoadDonationHomeScreenSectionSettings() {
 
 
 /* GENERAL LEDGER SETTINGS */
-function LoadAccountingSettingsSectionSettings() {
+function LoadAccountingSettingsSectionSettings() { 
 
+    LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
 
 
 }

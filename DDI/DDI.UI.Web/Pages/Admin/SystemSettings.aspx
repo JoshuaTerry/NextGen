@@ -77,7 +77,7 @@
             <h1>General Ledger</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadAccounting">Accounting Settings</a></li>
+                    <li><a href="#" class="LoadAccountingSettings">Accounting Settings</a></li>
                     <li><a href="#" class="LoadBudget">Budget Settings</a></li>
                     <li><a href="#" class="LoadChartAccounts">Chart of Accounts Settings</a></li>
                     <li><a href="#" class="LoadEntities">Entities</a></li>
