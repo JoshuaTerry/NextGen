@@ -26,6 +26,8 @@ namespace DDI.WebApi.Controllers.General
         private UserManager _userManager;
         private RoleManager _roleManager;
         private ServiceBase<BusinessUnit> _buService;
+        private ServiceBase<User> _userService;
+
 
         public UsersController()
         {
@@ -75,8 +77,16 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users")]
         public IHttpActionResult Get()
         {
-            try { 
-                return Ok(UserManager.Users);
+            try {
+                _userService = new ServiceBase<User>();
+                var results = _userService.GetAll();
+
+                if (results == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -346,6 +356,5 @@ namespace DDI.WebApi.Controllers.General
 
             return null;
         }
-
     }
 }

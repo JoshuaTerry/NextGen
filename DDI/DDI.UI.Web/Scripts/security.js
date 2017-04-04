@@ -145,7 +145,6 @@ function LoadSecuritySettingsGrid() {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
         { dataField: 'FullName', caption: 'Name' },
         { dataField: 'Email', caption: 'Email Address' },
         { caption: 'Active', cellTemplate: function (container, options) {
@@ -160,10 +159,16 @@ function LoadUsersGrid() {
     ];
 
     PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-
+    
     LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
        , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
    
+
+}
+
+function LoadBusinessUnits(userId)
+{
+
 
 }
 

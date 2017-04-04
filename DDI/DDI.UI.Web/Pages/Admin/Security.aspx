@@ -57,18 +57,17 @@
 
             <div class="fieldblock">
                 <label>Password</label>
-                <input type="password" name="password" class="newpassword" />
+                <input type="password" name="password" class="user-newpassword" />
             </div>
 
             <div class="fieldblock">
                 <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="newconfirmpassword" />
+                <input type="password" name="confirmpassword" class="user-newconfirmpassword" />
             </div>
 
            <div class="fieldblock">
                 <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select>
-            </div>
+                <select class="user-DefaultBusinessUnitId"></select></div>
 
             <div class="fieldblock">
                 <div class="businessUnits">
