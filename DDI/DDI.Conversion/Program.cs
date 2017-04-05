@@ -95,10 +95,10 @@ namespace DDI.Conversion
             using (var uow = new UnitOfWorkEF())
             {
                 var bu = uow.FirstOrDefault<BusinessUnit>(p => p.Code == "DCEF");
-                var acct = uow.FirstOrDefault<Account>(p => p.AccountNumber == "01-100-10-10" && p.FiscalYear.Name == "2015" && p.FiscalYear.Ledger.Code == "DCEF");
-                var bl = uow.GetBusinessLogic<AccountLogic>();
-                acct.Name = "John";
-                bl.Validate(acct);
+                var ledger = uow.FirstOrDefault<Ledger>(p => p.Code == "DCEF");
+                var bl = uow.GetBusinessLogic<LedgerLogic>();
+                ledger.AccountGroupLevels = 4;
+                bl.Validate(ledger);
             }
 
         }

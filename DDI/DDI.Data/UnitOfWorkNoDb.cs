@@ -140,6 +140,14 @@ namespace DDI.Data
         }
 
         /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
+        }
+
+        /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
         public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class

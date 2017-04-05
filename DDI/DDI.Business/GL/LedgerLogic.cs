@@ -12,6 +12,7 @@ using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
@@ -48,6 +49,82 @@ namespace DDI.Business.GL
 
         public override void Validate(Ledger ledger)
         {
+            if (string.IsNullOrWhiteSpace(ledger.FixedBudgetName))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Fixed budget"));
+            }
+
+            if (string.IsNullOrWhiteSpace(ledger.WorkingBudgetName))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Working budget"));
+            }
+
+            if (string.IsNullOrWhiteSpace(ledger.WhatIfBudgetName))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "\"What If\" budget"));
+            }
+
+            if (ledger.AccountGroupLevels >= 1 && string.IsNullOrWhiteSpace(ledger.AccountGroup1Title))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 1 title"));
+            }
+
+            if (ledger.AccountGroupLevels >= 2 && string.IsNullOrWhiteSpace(ledger.AccountGroup2Title))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 2 title"));
+            }
+
+            if (ledger.AccountGroupLevels >= 3 && string.IsNullOrWhiteSpace(ledger.AccountGroup3Title))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 3 title"));
+            }
+
+            if (ledger.AccountGroupLevels == 4 && string.IsNullOrWhiteSpace(ledger.AccountGroup4Title))
+            {
+                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 4 title"));
+            }
+
+            if (ledger.AccountGroupLevels < 0 || ledger.AccountGroupLevels > 4)
+            {
+                throw new ValidationException(UserMessagesGL.AccountGroupLevelsRange);
+            }
+
+            // Account group titles must be unique
+            var titles = new List<string>();
+            if (ledger.AccountGroupLevels >= 1)
+            {
+                titles.Add(ledger.AccountGroup1Title.ToUpper());
+            }
+            if (ledger.AccountGroupLevels >= 2)
+            {
+                titles.Add(ledger.AccountGroup2Title.ToUpper());
+            }
+            if (ledger.AccountGroupLevels >= 3)
+            {
+                titles.Add(ledger.AccountGroup3Title.ToUpper());
+            }
+            if (ledger.AccountGroupLevels == 4)
+            {
+                titles.Add(ledger.AccountGroup4Title.ToUpper());
+            }
+            if (titles.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct().Count() < ledger.AccountGroupLevels)
+            {
+                throw new ValidationException(UserMessagesGL.AccountGroupLevelsUnique);
+            }
+
+            // Budget names must be non-blank and unique.
+            titles = new List<string>
+            {
+                ledger.FixedBudgetName.ToUpper(), ledger.WorkingBudgetName.ToUpper(), ledger.WhatIfBudgetName.ToUpper()
+            };
+
+            if (titles.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct().Count() != 3)
+            {
+                throw new ValidationException(UserMessagesGL.BudgetNamesUnique);
+            }
+
+            // Additional validation based on modified properties.
+
             bool isModified = false;
             List<string> modifiedProperties = null;
             if (_ledgerRepository.GetEntityState(ledger) != EntityState.Added)
@@ -59,12 +136,21 @@ namespace DDI.Business.GL
             {
                 isModified = true;
             }
-
+            
             if (isModified)
             {
                 if (_ledgerCache != null)
                 {
                     _ledgerCache.InvalidateCache();
+                }
+
+                if (modifiedProperties.Contains(nameof(ledger.AccountGroupLevels)))
+                {
+                    // # of account group levels changing - ensure no G/L accounts exist.
+                    if (UnitOfWork.Any<Account>(p => p.LedgerAccountYears.Any(q => q.FiscalYear.LedgerId == ledger.Id)))
+                    {
+                        throw new ValidationException(UserMessagesGL.AccountGroupLevelsChanged);
+                    }
                 }
 
                 // If modifying a ledger for an organizational business unit, the settings should be copied to all the other common business units.

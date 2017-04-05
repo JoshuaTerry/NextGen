@@ -68,29 +68,29 @@ namespace DDI.Business.GL
 
             if (string.IsNullOrWhiteSpace(unit.Code))
             {
-                throw new ValidationException(UserMessagesGL.CodeIsRequired);
+                throw new ValidationException(string.Format(UserMessagesGL.CodeIsRequired, "Business unit"));
             }
 
             if (unit.Code.Length > 8)
             {
-                throw new ValidationException(UserMessagesGL.CodeMaxLengthError);
+                throw new ValidationException(string.Format(UserMessagesGL.CodeMaxLengthError, "Business unit", 8));
             }
 
             if (!Regex.IsMatch(unit.Code, @"(^[a-zA-Z0-9]+$)"))
             {
-                throw new ValidationException(UserMessagesGL.CodeAlphaNumericRequired);
+                throw new ValidationException(string.Format(UserMessagesGL.CodeAlphaNumericRequired, "Business unit"));
             }
 
 
             var existing = UnitOfWork.FirstOrDefault<BusinessUnit>(bu => bu.Code == unit.Code && bu.Id != unit.Id);
             if (existing != null)
             {
-                throw new ValidationException(UserMessagesGL.CodeIsNotUnique);
+                throw new ValidationException(string.Format(UserMessagesGL.CodeIsNotUnique, "Business unit"));
             }
 
             if (string.IsNullOrWhiteSpace(unit.Name))
             {
-                throw new ValidationException(UserMessagesGL.NameIsRequired);
+                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Business unit"));
             }
 
             //Logic to check for changing the BusinessUnitType on an edit. this needs to change once where validations are called changes
