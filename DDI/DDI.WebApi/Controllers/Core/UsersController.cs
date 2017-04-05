@@ -189,10 +189,10 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 var result = UserManager.Create(user, model.Password);
-                var userId = user.Id;
-
-                
-
+                if (user.DefaultBusinessUnitId.HasValue)
+                {
+                    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
+                }
             }
             catch(Exception ex)
             {
