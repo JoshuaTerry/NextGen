@@ -94,9 +94,11 @@ namespace DDI.Conversion
 
             using (var uow = new UnitOfWorkEF())
             {
+                var bu = uow.FirstOrDefault<BusinessUnit>(p => p.Code == "DCEF");
+                var acct = uow.FirstOrDefault<Account>(p => p.AccountNumber == "01-100-10-10" && p.FiscalYear.Name == "2015" && p.FiscalYear.Ledger.Code == "DCEF");
                 var bl = uow.GetBusinessLogic<AccountLogic>();
-                var rslt = bl.CalculateAccountNumber(uow.FirstOrDefault<Account>(p => p.FiscalYear.Name == "2013" && p.FiscalYear.Ledger.Code == "DCEF" && p.AccountNumber == "01-100-10-10"));
-                rslt = bl.CalculateAccountNumber(uow.FirstOrDefault<Account>(p => p.FiscalYear.Name == "2013" && p.FiscalYear.Ledger.Code == "DCEF" && p.AccountNumber == "01-515-64-21-05"));
+                acct.Name = "John";
+                bl.Validate(acct);
             }
 
         }

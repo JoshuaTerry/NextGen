@@ -12,6 +12,7 @@ using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
@@ -384,6 +385,79 @@ namespace DDI.Business.GL
                                                     .FirstOrDefault();
         }
 
+        /// <summary>
+        /// Validate a transaction date, including ability to post to closed fiscal periods.
+        /// </summary>
+        /// <param name="ledger">Ledger</param>
+        /// <param name="dt">Transaction date</param>
+        /// <returns>Fiscal year for transaction date.</returns>
+        public FiscalYear ValidateTransactionDate(Ledger ledger, DateTime? dt)
+        {
+            if (ledger == null)
+            {
+                return null;
+            }
+            return ValidateTransactionDate(ledger.Id, dt);
+        }
+
+        /// <summary>
+        /// Validate a transaction date, including ability to post to closed fiscal periods.
+        /// </summary>
+        /// <param name="unit">Business unit</param>
+        /// <param name="dt">Transaction date</param>
+        /// <returns>Fiscal year for transaction date.</returns>
+        public FiscalYear ValidateTransactionDate(BusinessUnit unit, DateTime? dt)
+        {
+            if (unit == null)
+            {
+                return null;
+            }
+            return ValidateTransactionDate(unit.Id, dt);
+        }
+
+        /// <summary>
+        /// Validate a transaction date, including ability to post to closed fiscal periods.
+        /// </summary>
+        /// <param name="id">Id of business unit or ledger.</param>
+        /// <param name="dt">Transaction date</param>
+        /// <returns>Fiscal year for transaction date.</returns>
+        public FiscalYear ValidateTransactionDate(Guid id, DateTime? dt)
+        {
+            FiscalYear year = GetFiscalYear(id, dt);
+            if (year == null)
+                throw new ValidationException(UserMessagesGL.TranDateInvalid);
+
+            FiscalPeriod prd = GetFiscalPeriod(year, dt.Value);
+            if (prd == null)
+                throw new ValidationException(UserMessagesGL.TranDateInvalid);
+
+            bool allowPriorPeriod = false;
+
+            switch (year.Ledger.PriorPeriodPostingMode)
+            {
+                case PriorPeriodPostingMode.Allow:
+                    allowPriorPeriod = true;
+                    break;
+                case PriorPeriodPostingMode.Prohibit:
+                    allowPriorPeriod = false;
+                    break;
+                case PriorPeriodPostingMode.Security:
+                    //allowPriorPeriod = ApplicationHelper.SecurityModule.CheckSecurityFunction(SecurityFunctions.GL.PostPriorPeriodTransactions);
+                    break;
+            }
+
+            if (!allowPriorPeriod)
+            {
+                if (year.Status == FiscalYearStatus.Closed)
+                    throw new ValidationException(string.Format(UserMessagesGL.FiscalPeriodClosed, year.Name));
+
+
+                if (prd.Status == FiscalPeriodStatus.Closed)
+                    throw new ValidationException(string.Format(UserMessagesGL.FiscalYearClosed, prd.PeriodNumber, year.Name));
+            }
+
+            return year;
+        }
 
         /// <summary>
         /// Calculate a list of default start and end dates for a fiscal year based on a number of periods.  

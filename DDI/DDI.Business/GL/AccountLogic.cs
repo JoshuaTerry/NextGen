@@ -9,7 +9,9 @@ using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Caching;
+using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
@@ -24,7 +26,58 @@ namespace DDI.Business.GL
 
         public override void Validate(Account entity)
         {
-            base.Validate(entity);
+            if (string.IsNullOrWhiteSpace(entity.AccountNumber))
+            {
+                throw new ValidationException(UserMessagesGL.GLAcctNumBlank);
+            }
+
+            if (string.IsNullOrWhiteSpace(entity.Name))
+            {
+                throw new ValidationException(UserMessagesGL.GLAcctDescrBlank);
+            }
+
+            if (entity.Category == AccountCategory.None)
+            {
+                throw new ValidationException(UserMessagesGL.GLAcctCategoryNone);
+            }
+
+            if (entity.BeginningBalance != 0m && (entity.Category == AccountCategory.Revenue || entity.Category == AccountCategory.Expense))
+            {
+                throw new ValidationException(UserMessagesGL.GLAcctBeginBalRandE);
+            }
+
+            //Logic to check for changing the account number or name (description).
+            var repository = UnitOfWork.GetRepository<Account>();
+            if (repository.GetEntityState(entity) == EntityState.Modified)
+            {
+                List<string> modifiedProperties = repository.GetModifiedProperties(entity);
+                if (modifiedProperties.Contains(nameof(Account.AccountNumber)) ||
+                    modifiedProperties.Contains(nameof(Account.Name)))
+                {
+
+                    LedgerAccount ledgerAccount = GetLedgerAccount(entity);
+                    if (ledgerAccount.AccountNumber != entity.AccountNumber || 
+                        ledgerAccount.Name != entity.Name)
+                    {
+                        DateTime? yearStartDt = UnitOfWork.GetReference(entity, p => p.FiscalYear).StartDate;
+                        if (yearStartDt.HasValue)
+                        {
+                            // Does the ledger account have any fiscal years that start after this date?
+                            DateTime? maxYearStartDt = UnitOfWork.Where<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccount.Id && p.FiscalYear.StartDate != null)
+                                                                 .OrderByDescending(p => p.FiscalYear.StartDate)
+                                                                 .Select(p => p.FiscalYear.StartDate)
+                                                                 .FirstOrDefault();
+                            if (yearStartDt == maxYearStartDt)
+                            {
+                                // If so, update the ledger account.
+                                ledgerAccount.Name = entity.Name;
+                                ledgerAccount.AccountNumber = entity.AccountNumber;
+                            }
+
+                        }
+                    }
+                }
+            }
 
         }
 
@@ -48,8 +101,7 @@ namespace DDI.Business.GL
             }
             return account.AccountNumber;                
         }
-
-
+        
         /// <summary>
         /// Return the account number.  If a ledger Id or business unit Id can be specified and the account belongs to another ledger/business unit, the 
         /// account number will be prefixed by the account's business unit code.
@@ -73,6 +125,31 @@ namespace DDI.Business.GL
                 return account.AccountNumber;
             }
             return ledger.Code + ":" + account.AccountNumber;            
+        }
+
+        /// <summary>
+        /// Return the account number.  If a ledger Id or business unit Id can be specified and the account belongs to another ledger/business unit, the 
+        /// account number will be prefixed by the account's business unit code.
+        /// </summary>
+        public string GetPrefixedAccountNumber(LedgerAccount account, Guid? defaultId)
+        {
+            if (account == null)
+            {
+                return string.Empty;
+            }
+
+            if (defaultId == null)
+            {
+                return account.AccountNumber;
+            }
+
+            Ledger ledger = UnitOfWork.GetReference(account, p => p.Ledger);
+
+            if (defaultId == ledger.Id || defaultId == ledger.BusinessUnitId)
+            {
+                return account.AccountNumber;
+            }
+            return ledger.Code + ":" + account.AccountNumber;
         }
 
         private Ledger GetLedgerForAccount(Account account)
@@ -205,6 +282,107 @@ namespace DDI.Business.GL
             // Return the sort key.
             return string.Join(" ", keys);
         }
+
+        /// <summary>
+        /// Get the default ledger account for an account.
+        /// </summary>
+        public LedgerAccount GetLedgerAccount(Account account)
+        {
+            var ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
+            if (ledgerAccountYear != null)
+            {
+                return UnitOfWork.GetReference(ledgerAccountYear, p => p.LedgerAccount);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get a specific account for specfied fiscal year.
+        /// </summary>
+        /// <param name="ledgerAccount">Ledger account</param>
+        /// <param name="year">Fiscal year</param>
+        /// <param name="anyEntity">TRUE if fiscal year can be in another ledger or business unit.</param>
+        public Account GetAccount(LedgerAccount ledgerAccount, FiscalYear year, bool anyLedger = false)
+        {
+            if (ledgerAccount == null || year == null)
+            {
+                return null;
+            }
+            if (ledgerAccount.LedgerAccountYears == null || ledgerAccount.LedgerAccountYears.FirstOrDefault()?.Account == null)
+            {
+                // Ensure all necessary navigation properties are loaded.
+                ledgerAccount = UnitOfWork.GetById<LedgerAccount>(ledgerAccount.Id, p => p.LedgerAccountYears, p => p.LedgerAccountYears.First().Account);
+            }
+            if (!anyLedger || ledgerAccount.LedgerId == year.LedgerId)
+            {
+                return ledgerAccount.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id)?.Account;
+            }
+            
+            // Ledgers are different.  Get fiscal year for the other ledger's business unit, then return the acocunt for that year.
+            Ledger ledger = UnitOfWork.GetReference(ledgerAccount, p => p.Ledger);
+            year = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForBusinessUnit(year, ledger.BusinessUnitId.Value);
+            return GetAccount(ledgerAccount, year);
+        }
+
+        /// <summary>
+        /// Get a specific account for the fiscal year containing the specified date.
+        /// </summary>
+        public Account GetAccount(LedgerAccount ledgerAccount, DateTime tranDt)
+        {
+            if (ledgerAccount == null)
+            {
+                return null;
+            }
+            if (ledgerAccount.LedgerAccountYears == null || 
+                ledgerAccount.LedgerAccountYears.FirstOrDefault()?.Account == null || 
+                ledgerAccount.LedgerAccountYears.FirstOrDefault()?.FiscalYear == null)
+            {
+                // Ensure all necessary navigation properties are loaded.
+                ledgerAccount = UnitOfWork.GetById<LedgerAccount>(ledgerAccount.Id, p => p.LedgerAccountYears, p => p.LedgerAccountYears.First().Account, p => p.LedgerAccountYears.First().FiscalYear);
+            }
+            return ledgerAccount.LedgerAccountYears.FirstOrDefault(p => p.FiscalYear.StartDate <= tranDt && p.FiscalYear.EndDate >= tranDt)?.Account;
+        }
+
+
+        public string GetAccountNumber(LedgerAccount ledgerAccount, FiscalYear year)
+        {
+            if (ledgerAccount == null)
+            {
+                return string.Empty;
+            }
+
+            if (year != null)
+            {
+                Account account = GetAccount(ledgerAccount, year, true);
+                if (account != null)
+                {
+                    return GetPrefixedAccountNumber(account, year.LedgerId);
+                }
+            }
+
+            return ledgerAccount.AccountNumber;
+        }
+
+
+        public string GetAccountDescription(LedgerAccount ledgerAccount, FiscalYear year)
+        {
+            if (ledgerAccount == null)
+            {
+                return string.Empty;
+            }
+
+            if (year != null)
+            {
+                Account account = GetAccount(ledgerAccount, year, true);
+                if (account != null)
+                {
+                    return account.Name;
+                }
+            }
+
+            return ledgerAccount.Name;
+        }
+
 
     }
 }
