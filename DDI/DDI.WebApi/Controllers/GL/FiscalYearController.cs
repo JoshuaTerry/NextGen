@@ -16,7 +16,7 @@ namespace DDI.WebApi.Controllers.GL
     public class FiscalYearController : GenericController<FiscalYear>
     {
         [HttpGet]
-        [Route("api/v1/fiscalyear/ledger/{ledgerId}")]
+        [Route("api/v1/fiscalyears/ledger/{ledgerId}")]
         public IHttpActionResult GetAllByLedgerId(Guid ledgerId)
         {
             try
@@ -39,28 +39,28 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/fiscalyear/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Get)]
+        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/fiscalyear", Name = RouteNames.FiscalYear + RouteVerbs.Post)]
+        [Route("api/v1/fiscalyears", Name = RouteNames.FiscalYear + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] FiscalYear entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/fiscalyear/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Patch)]
+        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/fiscalyear/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Delete)]
+        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

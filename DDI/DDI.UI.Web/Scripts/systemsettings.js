@@ -2814,7 +2814,7 @@ function LoadFiscalYearSectionSettings() {
         },
     ];
 
-    LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyear/ledger/' + ledgerid + '?fields=all', 'fiscalyear', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+    LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=all', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
 
 }
 
@@ -2866,7 +2866,7 @@ function LoadFiscalPeriods(info) {
         }
     ]
 
-    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiod/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiod', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
+    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
 
 }
 
