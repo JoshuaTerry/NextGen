@@ -20,6 +20,7 @@
         public static string AccountGroupLevelsChanged => "The number of account groups cannot be modified if any G/L accounts have been defined for this ledger.";
         public static string AccountGroupLevelsUnique => "Account group titles must be unique.";
         public static string BudgetNamesUnique => "Budget names cannot be blank and must be unique.";
+        public static string SgmentLevelsChanged => "The number of segment levels cannot be modified if any G/L account segments have been defined for this ledger.";
 
     }
 }

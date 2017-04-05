@@ -153,6 +153,15 @@ namespace DDI.Business.GL
                     }
                 }
 
+                if (modifiedProperties.Contains(nameof(ledger.SegmentLevels)))
+                {
+                    // # of segment levels changing - ensure no segments exist.
+                    if (UnitOfWork.Any<Segment>(p => p.FiscalYear.LedgerId == ledger.Id))
+                    {
+                        throw new ValidationException(UserMessagesGL.SgmentLevelsChanged);
+                    }
+                }
+
                 // If modifying a ledger for an organizational business unit, the settings should be copied to all the other common business units.
                 if (ledger != null && UnitOfWork.GetReference(ledger, p => p.BusinessUnit).BusinessUnitType == BusinessUnitType.Organization)
                 {
