@@ -76,7 +76,7 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.CodeMaxLengthError);
             }
 
-            if (!Regex.IsMatch(unit.Code, @"(^\w+$)"))
+            if (!Regex.IsMatch(unit.Code, @"(^[a-zA-Z0-9]+$)"))
             {
                 throw new ValidationException(UserMessagesGL.CodeAlphaNumericRequired);
             }
