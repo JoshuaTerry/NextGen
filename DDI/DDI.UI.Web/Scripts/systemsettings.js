@@ -2718,8 +2718,42 @@ function LoadDonationHomeScreenSectionSettings() {
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() { 
 
-    LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
+    // LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
+    var currentLedger = null;
+    // generate controls dynamically here 
+    // 1. load settings by current busienss unit
+    MakeServiceCall('GET', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, function (data) {
 
+        if (data.TotalResults > 1) {
+
+            var abc = data.Data;
+
+        }
+
+        currentLedger = data.Data;
+
+
+    },
+    null);
+
+    var acctsettingscontainer = $('div').addClass('accountingsettingscontainer onecolumn');
+
+    var ledgernamegroup = $('<div>');
+    $('<label>').text('ledger: ').appendTo(ledgernamegroup); // where he has br's, just add the proper class
+    $('<hr>').addClass('').appendTo(ledgernamegroup);
+    // var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(fiscalYearSelect);
+    $(ledgernamegroup).append('<br />').appendTo(acctsettingscontainer);
+
+    // 2. fiscal year
+    // 3. transaction posted automatially
+    // 4. how many days in advane recurring journals will be processed
+    // 5. disable or enable approvals for journals
+    // 6. if approval is enabled: load users and select who can approve
+    // 7. viewable edit history
+
+}
+
+function PickLedger() {
 
 }
 

@@ -22,6 +22,28 @@ namespace DDI.WebApi.Controllers.GL
             return base.GetById(id, fields);
         }
 
+        [HttpGet]
+        [Route("api/v1/ledgers/{buid}/businessunit")]
+        public IHttpActionResult GetByBusinessUnit(Guid buid)
+        {
+            try
+            {
+                var result = Service.GetWhereExpression(l => l.BusinessUnitId == buid);
+
+                if(result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+
+            } catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
         [HttpPost]
         [Route("api/v1/ledgers", Name = RouteNames.Ledger + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Ledger item)

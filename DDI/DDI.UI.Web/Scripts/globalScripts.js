@@ -1222,7 +1222,7 @@ function DisplayMessage(heading, text, icon) {
 
 function BusinessUnitModal() {
 
-    // DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
+    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
     // Uncomment this to use currentBusinessUnit
     // Add the guid of the user you want to use
 
