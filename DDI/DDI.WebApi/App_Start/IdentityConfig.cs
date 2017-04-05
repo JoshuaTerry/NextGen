@@ -1,4 +1,5 @@
 ﻿using DDI.Services.Search;
+using DDI.Services.Security;
 using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models;
 using DDI.WebApi.Services;

@@ -1,5 +1,7 @@
 ﻿using DDI.Data;
 using DDI.Services;
+using DDI.Services.Search;
+using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -26,7 +28,7 @@ namespace DDI.WebApi.Controllers.General
         private UserManager _userManager;
         private RoleManager _roleManager;
         private ServiceBase<BusinessUnit> _buService;
-        private ServiceBase<User> _userService;
+        private UserService userService;
 
 
         public UsersController()
@@ -78,8 +80,8 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult Get()
         {
             try {
-                _userService = new ServiceBase<User>();
-                var results = _userService.GetAll();
+                userService = new UserService();
+                var results = userService.GetAll();
 
                 if (results == null)
                 {
@@ -101,6 +103,7 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
+                userService = new UserService();
                 var user = Service.GetById(id);
                 if (user == null)
                 {
@@ -248,23 +251,13 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var result = Service.GetById(id).Data;
+                userService = new UserService();
+                var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
 
                 if (result == null)
                 {
                     return NotFound();
                 }
-
-                _buService = new ServiceBase<BusinessUnit>();
-                var defaultbu = _buService.GetWhereExpression(b => b.Id == defaultbuid).Data;
-
-                if(!result.BusinessUnits.Contains(defaultbu))
-                {
-                    result.BusinessUnits.Add(defaultbu);
-                }
-
-                result.DefaultBusinessUnitId = defaultbuid;
-                Service.Update(result);
 
                 return Ok(result);
             }
@@ -282,20 +275,12 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var result = Service.GetById(id).Data;
+                userService = new UserService();
+                var result = userService.AddBusinessUnitToUser(id, buid);
 
                 if (result == null)
                 {
                     return NotFound();
-                }
-
-                _buService = new ServiceBase<BusinessUnit>();
-                var bu = _buService.GetById(buid).Data;
-
-                if(!result.BusinessUnits.Contains(bu))
-                {
-                    result.BusinessUnits.Add(bu);
-                    Service.Update(result);
                 }
 
                 return Ok(result);
