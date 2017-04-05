@@ -41,7 +41,8 @@ namespace DDI.Shared.Models.Client.Security
 
         [InverseProperty(nameof(BusinessUnit.Users))]
         public ICollection<BusinessUnit> BusinessUnits { get; set; }
-
+        [InverseProperty(nameof(Group.Users))]
+        public ICollection<Group> Groups { get; set; }
         public string DisplayName
         {
             get

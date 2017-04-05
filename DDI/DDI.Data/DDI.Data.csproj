@@ -77,6 +77,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201703301855584_AddingGroups.cs" />
+    <Compile Include="Migrations\Client\201703301855584_AddingGroups.Designer.cs">
+      <DependentUpon>201703301855584_AddingGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201703301358533_GL_v6.cs" />
     <Compile Include="Migrations\Client\201703301358533_GL_v6.Designer.cs">
       <DependentUpon>201703301358533_GL_v6.cs</DependentUpon>
@@ -186,6 +190,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201703301855584_AddingGroups.resx">
+      <DependentUpon>201703301855584_AddingGroups.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201703301358533_GL_v6.resx">
       <DependentUpon>201703301358533_GL_v6.cs</DependentUpon>
     </EmbeddedResource>

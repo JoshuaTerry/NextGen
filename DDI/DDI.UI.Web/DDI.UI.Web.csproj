@@ -88,6 +88,7 @@
     <Content Include="CSS\search.css" />
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
+    <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
