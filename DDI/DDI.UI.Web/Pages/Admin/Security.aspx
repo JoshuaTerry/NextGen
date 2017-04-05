@@ -52,17 +52,17 @@
 
             <div class="fieldblock">
                 <label>Email</label>
-                <input type="email" name="email" class="user-FullName" />
+                <input type="email" name="email" class="user-Email" />
             </div>
 
             <div class="fieldblock">
                 <label>Password</label>
-                <input type="password" name="password" class="user-newpassword" />
+                <input type="password" name="password" class="user-Password" />
             </div>
 
             <div class="fieldblock">
                 <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="user-newconfirmpassword" />
+                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
             </div>
 
            <div class="fieldblock">

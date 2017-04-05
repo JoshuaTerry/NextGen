@@ -145,7 +145,8 @@ function LoadSecuritySettingsGrid() {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'FullName', caption: 'Name' },
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'DisplayName', caption: 'User Name' },
         { dataField: 'Email', caption: 'Email Address' },
         { caption: 'Active', cellTemplate: function (container, options) {
                 var type = 'Yes';
@@ -159,14 +160,19 @@ function LoadUsersGrid() {
     ];
 
     PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    
+   // PopulateBusinessUnits();
     LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
        , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
    
 
 }
 
-function LoadBusinessUnits(userId)
+function LoadBusinessUnits()
+{
+   
+}
+
+function CreateBusinessUnitCheckBoxes(data)
 {
 
 

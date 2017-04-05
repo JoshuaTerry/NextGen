@@ -182,10 +182,13 @@ namespace DDI.WebApi.Controllers.General
                 return BadRequest(ModelState);
             }
 
-            var user = new User() { UserName = model.Email, Email = model.Email };
+            var user = new User() { UserName = model.Email, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
             try
             {
                 var result = UserManager.Create(user, model.Password);
+                var userId = user.Id;
+
+                
 
             }
             catch(Exception ex)
