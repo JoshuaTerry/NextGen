@@ -36,8 +36,6 @@ namespace DDI.Business.GL
 
             ValidateLedgerNames(unit);
 
-            ValidateLedgerGroupLevels(unit);
-
         }
 
         private void ValidateLedgerNames(Ledger unit)
@@ -94,16 +92,6 @@ namespace DDI.Business.GL
 
         }
 
-        private void ValidateLedgerGroupLevels(Ledger unit)
-        {
-            //Logic to check for changing the LedgerType on an edit. this needs to change once where validations are called changes
-            //var repository = UnitOfWork.GetRepository<Ledger>();
-            //if (repository.GetEntityState(unit) == EntityState.Modified &&
-            //    UnitOfWork.GetRepository<Ledger>().GetModifiedProperties(unit).Contains(nameof(Ledger.LedgerType)))
-            //{
-            //    throw new ValidationException(UserMessagesGL.LedgerTypeNotEditable);
-            //}
-        }
         #endregion
     }
 }

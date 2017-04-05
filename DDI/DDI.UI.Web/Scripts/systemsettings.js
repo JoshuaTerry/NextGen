@@ -2360,7 +2360,7 @@ function LoadBudgetSettingsSectionSettings() {
 }
 
 function LoadChartAccountsSectionSettings() {
-    var businessunitid = 'D66ECFF2-990D-4A5A-8CD6-5C6AB63B89DF';      // replace with global variable
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
@@ -2381,13 +2381,11 @@ function LoadChartAccountsSectionSettings() {
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
-        //update on dropdown change
-        ledgerid = $('.LedgerId').val();
-        GetChartSetting(ledgerid, ledgernamedisplay, capitalizeheaderscheckbox, groupLevels, group1title, group2title, group3title, group4title);
+        //update on change
+        GetChartSetting();
     }, function () {
         //retrieve initial value on populate complete
-        ledgerid = $('.LedgerId').val();
-        GetChartSetting(ledgerid, ledgernamedisplay, capitalizeheaderscheckbox, groupLevels, group1title, group2title, group3title, group4title);
+        GetChartSetting();
     });
 
     var capitalizeheadersgroup = $('<div>').addClass('fieldblock');
@@ -2397,41 +2395,41 @@ function LoadChartAccountsSectionSettings() {
 
     var grouplevelsgroup = $('<div>').addClass('');
     $('<label>').text('Number of account groups: ').appendTo(grouplevelsgroup);
-    var groupLevels = $('<select>').addClass('grouplevels').appendTo(grouplevelsgroup).change(function () {
+    var grouplevels = $('<select>').addClass('groupLevels').appendTo(grouplevelsgroup).change(function () {
         GroupLevelsChange();
     });
-    groupLevels.append('<option value="1">1</option>');
-    groupLevels.append('<option value="2">2</option>');
-    groupLevels.append('<option value="3">3</option>');
-    groupLevels.append('<option value="4">4</option>');
-    groupLevels.appendTo(grouplevelsgroup);
+    grouplevels.append('<option value="1">1</option>');
+    grouplevels.append('<option value="2">2</option>');
+    grouplevels.append('<option value="3">3</option>');
+    grouplevels.append('<option value="4">4</option>');
+    grouplevels.appendTo(grouplevelsgroup);
     $(grouplevelsgroup).append('<br />').append('<br />').appendTo(container);
 
     var group1 = $('<div>').addClass('fieldblock AccountGroup1group');
     $('<label>').text('Account Group 1: ').appendTo(group1);
-    var group1title = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup1').appendTo(group1);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup1Title').appendTo(group1);
     $(group1).appendTo(container);
 
     var group2 = $('<div>').addClass('fieldblock AccountGroup2group');
     $('<label>').text('Account Group 2: ').appendTo(group2);
-    var group2title = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup2').appendTo(group2);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup2Title').appendTo(group2);
     $(group2).hide().appendTo(container);
 
     var group3 = $('<div>').addClass('fieldblock AccountGroup3group');
     $('<label>').text('Account Group 3: ').appendTo(group3);
-    var group3title = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup3').appendTo(group3);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup3Title').appendTo(group3);
     $(group3).hide().appendTo(container);
 
     var group4 = $('<div>').addClass('fieldblock AccountGroup4group');
     $('<label>').text('Account Group 4: ').appendTo(group4);
-    var group4title = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup4').appendTo(group4);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup4Title').appendTo(group4);
     $(group4).hide().appendTo(container);
 
     var errorgroup = $('<div>').addClass('fieldblock');
     $('<label>').text('').addClass('validateerror chartsettingerror').append('<br />').appendTo(errorgroup);
     $(errorgroup).append('<br />').appendTo(container);
 
-    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+    //var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
 
     var controlContainer = $('<div>').addClass('controlContainer');
 
@@ -2449,7 +2447,7 @@ function LoadChartAccountsSectionSettings() {
             $('.chartsettingerror').text('');
             RemoveValidation('chartsettingscontainer')
 
-            GetChartSetting(ledgerid, ledgernamedisplay, capitalizeheaderscheckbox, groupLevels, group1title, group2title, group3title, group4title);
+            GetChartSetting();
         })
         .appendTo(controlContainer);
 
@@ -2460,6 +2458,7 @@ function LoadChartAccountsSectionSettings() {
     InitRequiredLabels("chartsettingscontainer")
 
 }
+
 
 function ValidChartSettingForm() {
     var validform = true;
@@ -2472,21 +2471,23 @@ function ValidChartSettingForm() {
     return validform;
 }
 
-function GetChartSetting(ledgerid, ledgernamedisplay, capitalizeheaderscheckbox, groupLevels, group1title, group2title, group3title, group4title) {
+function GetChartSetting() {
+
+    var ledgerid = $('.LedgerId').val();
 
     MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
 
-                $('.hidLedgerId').val(data.Data.Id);
-                $(ledgernamedisplay).text(data.Data.Name)
-                $(capitalizeheaderscheckbox).prop('checked', data.Data.CapitalizeHeaders);
-                $(groupLevels).val(data.Data.AccountGroupLevels);
-                $(group1title).val(data.Data.AccountGroup1Title)
-                $(group2title).val(data.Data.AccountGroup2Title)
-                $(group3title).val(data.Data.AccountGroup3Title)
-                $(group4title).val(data.Data.AccountGroup4Title)
+                //$('.hidLedgerId').val(data.Data.Id);
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
+                $('.groupLevels').val(data.Data.AccountGroupLevels);
+                $('.accountGroup1Title').val(data.Data.AccountGroup1Title)
+                $('.accountGroup2Title').val(data.Data.AccountGroup2Title)
+                $('.accountGroup3Title').val(data.Data.AccountGroup3Title)
+                $('.accountGroup4Title').val(data.Data.AccountGroup4Title)
                 GroupLevelsChange();
 
             }
@@ -2500,11 +2501,11 @@ function SaveChartSetting(id) {
     var data = {
         Id: $(id).val(),
         CapitalizeHeaders: $('.capitalizeheaders').prop('checked'),
-        AccountGroupLevels: $('.grouplevels').val(),
-        AccountGroup1Title: $('.accountGroup1').val(),
-        AccountGroup2Title: $('.accountGroup2').val(),
-        AccountGroup3Title: $('.accountGroup3').val(),
-        AccountGroup4Title: $('.accountGroup4').val(),
+        AccountGroupLevels: $('.groupLevels').val(),
+        AccountGroup1Title: $('.accountGroup1Title').val(),
+        AccountGroup2Title: $('.accountGroup2Title').val(),
+        AccountGroup3Title: $('.accountGroup3Title').val(),
+        AccountGroup4Title: $('.accountGroup4Title').val(),
     }
 
     MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
@@ -2517,7 +2518,7 @@ function SaveChartSetting(id) {
 }
 
 function GroupLevelsChange() {
-    var groupLevels = $('.grouplevels').val();
+    var groupLevels = $('.groupLevels').val();
     switch (groupLevels) {
         case '1':
             $('.AccountGroup2group').hide();
