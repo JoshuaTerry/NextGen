@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
         [HttpGet]
