@@ -2812,18 +2812,6 @@ function ValidBudgetSettingForm() {
         return false;
     }
 
-    var workingbudgetname = $('.workingBudgetName').val();
-    var fixedbudgetname = $('.fixedBudgetName').val();
-    var whatifbudgetname = $('.whatifBudgetName').val();
-    var budgetsettingerror = $('.budgetsettingerror')
-
-    if (workingbudgetname === fixedbudgetname || workingbudgetname === whatifbudgetname || fixedbudgetname === whatifbudgetname) {
-        $(budgetsettingerror).text('Error: Names must be unique.');
-        validform = false;
-    }
-    else {
-        $(budgetsettingerror).text('');
-    }
     return validform;
 }
 
