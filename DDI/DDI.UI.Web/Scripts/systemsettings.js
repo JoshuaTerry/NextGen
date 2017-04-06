@@ -2718,38 +2718,91 @@ function LoadDonationHomeScreenSectionSettings() {
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() { 
 
-    // LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
-    var currentLedger = null;
-    // generate controls dynamically here 
-    // 1. load settings by current busienss unit
-    MakeServiceCall('GET', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, function (data) {
+    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
 
-        if (data.TotalResults > 1) {
+    // 1. Select the ledger
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer); // probably will need Dave's onchange function
 
-            var abc = data.Data;
-
-        }
-
-        currentLedger = data.Data;
-
-
-    },
-    null);
-
-    var acctsettingscontainer = $('div').addClass('accountingsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>');
-    $('<label>').text('ledger: ').appendTo(ledgernamegroup); // where he has br's, just add the proper class
-    $('<hr>').addClass('').appendTo(ledgernamegroup);
-    // var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(fiscalYearSelect);
-    $(ledgernamegroup).append('<br />').appendTo(acctsettingscontainer);
+    PopulateDropDown('.as-ledgerselect', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, null, currentBusinessUnit.Id, null);
 
     // 2. fiscal year
+    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer);
+
+    PopulateDropDown('.as-fiscalyear', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, null, currentBusinessUnit.Id, null);
+
     // 3. transaction posted automatially
+    CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer);
+
     // 4. how many days in advane recurring journals will be processed
+    CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer);
+
     // 5. disable or enable approvals for journals
+    CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer);
+
     // 6. if approval is enabled: load users and select who can approve
+    $('.as-approval').change(function () {
+
+        if (this.checked) {
+
+            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
+            PopulateDropDown(); // users with permissions to post approvals
+
+        } else {
+
+            $('.as-approvedusers').parent().remove();
+
+        }
+        
+    });
+
     // 7. viewable edit history
+    // idk
+
+    LoadAccountingSettings();
+
+    CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
+
+        e.preventDefault();
+
+        var data = {
+
+            Id: $('.as-ledgerselect').val(),
+            DefaultFiscalYearId: $('.as-fiscalyear').val(),
+            PostAutomatically: $('.as-postedtransaction').prop('checked'),
+            PriorPeriodPostingMind: $('.as-daysinadvance').val(), // ?
+            ApproveJournals: $('.as-approval').prop('checked')
+
+        };
+
+        MakeServiceCall('PATCH', 'ledgers/' + ledgerid, data, function () {
+
+            LoadAccountingSettings();
+
+        }); 
+
+
+    }, function (e) {
+
+        e.preventDefault();
+
+        LoadAcountingSettings();
+
+    },
+
+    acctsettingscontainer);
+}
+
+function LoadAccountingSettings(id) {
+
+    MakeServiceCall('GET', 'ledgers/' + id, null, function (data) { // will need to be ledger id
+
+        $('.as-ledgerselect').val(data.Data.Id);
+        $('.as-fiscalyear').val();
+        $('.as-postedtransaction').prop('checked');
+        $('.as-daysinadvance').val(); // ?
+        $('.as-approval').prop('checked');
+
+    }, null);
 
 }
 

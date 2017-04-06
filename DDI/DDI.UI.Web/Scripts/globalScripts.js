@@ -1340,5 +1340,27 @@ function RemoveValidation(formClassName) {
 //
 // END FORM VALIDATION
 
+// DYNAMIC MARKUP
+//
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+
+    var fieldblock = $('<div>').addClass('fieldblock');
+    $('<label>').text(labelText).appendTo(fieldblock);
+    $(controlType).addClass(controlClass).appendTo(fieldblock);
+    $(fieldblock).appendTo(appendContainer);
+
+}
+
+function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelFunction, appendContainer) {
+
+    var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
+
+    $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
+
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+
+}
+//
+// END DYNAMIC MARKUP
 
 

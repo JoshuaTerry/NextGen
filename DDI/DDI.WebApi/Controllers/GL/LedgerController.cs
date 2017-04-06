@@ -28,7 +28,7 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var result = Service.GetWhereExpression(l => l.BusinessUnitId == buid);
+                var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid);
 
                 if(result == null)
                 {
