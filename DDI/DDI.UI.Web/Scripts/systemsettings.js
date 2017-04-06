@@ -2724,8 +2724,7 @@ function LoadAccountingSettingsSectionSettings() {
 }
 
 function LoadBudgetSectionSettings() {
-    var businessunitid = 'D66ECFF2-990D-4A5A-8CD6-5C6AB63B89DF';      // replace with global variable
-    var ledgerid;
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
 
@@ -2746,12 +2745,10 @@ function LoadBudgetSectionSettings() {
 
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
         //update on dropdown change
-        ledgerid = $('.LedgerId').val();
-        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+        GetBudgetSetting();
     }, function () {
         //retrieve initial value on populate complete
-        ledgerid = $('.LedgerId').val();
-        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+        GetBudgetSetting();
     });
 
     var workingbudgetgroup = $('<div>').addClass('fieldblock');
@@ -2826,18 +2823,18 @@ function ValidBudgetSettingForm() {
     return validform;
 }
 
-function GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname) {
+function GetBudgetSetting() {
 
-    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+    MakeServiceCall('GET', 'ledgers/' + $('.LedgerId').val(), null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $(ledgernamedisplay).text(data.Data.Name)
-                $(workingbudgetname).val(data.Data.WorkingBudgetName)
-                $(fixedbudgetname).val(data.Data.FixedBudgetName)
-                $(whatifbudgetname).val(data.Data.WhatIfBudgetName)
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.workingbudgetname').val(data.Data.WorkingBudgetName)
+                $('.fixedbudgetname').val(data.Data.FixedBudgetName)
+                $('.whatifbudgetname').val(data.Data.WhatIfBudgetName)
 
             }
         }
