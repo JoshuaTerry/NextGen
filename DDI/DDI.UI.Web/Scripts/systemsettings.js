@@ -744,6 +744,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -806,6 +807,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -868,6 +870,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -977,6 +980,7 @@ function EditAddressType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -1002,6 +1006,7 @@ function DeleteAddressType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Address Type deleted successfully.');
@@ -1026,6 +1031,7 @@ function LoadAddressType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1086,6 +1092,7 @@ function EditContactCategory(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -1111,6 +1118,7 @@ function DeleteContactCategory(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Category deleted successfully.');
@@ -1135,6 +1143,7 @@ function LoadContactCategory(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1200,6 +1209,7 @@ function EditContactType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -1225,6 +1235,7 @@ function DeleteContactType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Type deleted successfully.');
@@ -1249,6 +1260,7 @@ function LoadContactType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {

@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class DoingBusinessAsController : GenericController<DoingBusinessAs>
     {
         [HttpGet]
@@ -23,6 +24,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] DoingBusinessAs entityToSave)
@@ -30,6 +32,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/doingbusinessas/{id}", Name = RouteNames.DoingBusinessAs + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -37,6 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/doingbusinessas/{id}", Name = RouteNames.DoingBusinessAs + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -44,6 +48,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/doingbusinessas/constituents/{id}")]
         [Route("api/v1/constituents/{id}/doingbusinessas", Name = RouteNames.Constituent + RouteNames.DoingBusinessAs)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link

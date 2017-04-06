@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class SectionPreferencesController : GenericController<SectionPreference>
     {         
         [HttpGet]

@@ -37,6 +37,7 @@ function SetupNewUserModal() {
                 data: model,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
+                headers: GetApiHeaders(),
                 success: function () {
 
                     AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
@@ -86,6 +87,7 @@ function LoadGroupMembersGrid() {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             $(datagrid).dxDataGrid({
@@ -172,6 +174,7 @@ function DisplayUserInfo(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (IsSuccessful) {
@@ -210,6 +213,7 @@ function AddUsersToRoles(user, roles) {
         data: data,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
         },
