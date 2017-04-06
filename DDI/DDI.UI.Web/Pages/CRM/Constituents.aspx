@@ -53,6 +53,7 @@
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
+                <li><a href="#tab-investments">Investments</a></li>
             </ul>
 
             <!-- Individual Tab -->
@@ -631,6 +632,79 @@
                 </div>
 
             </div>
+
+            <!-- Investment Tab -->
+            <div id="tab-investments" class="scrollable">
+
+                <div class="investmenttopinfo editcontainer">
+
+                    <div class="threecolumn">
+                        
+                        <div class="fieldblock">
+                            <label>ID</label>
+                            <input type="text" class="editable investmentNumber" maxlength="9" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Name</label>
+                            <label class="editable FormattedName"></label>
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Status</label>
+                            <select class="editable investmentStatusId"></select>
+                        </div>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Tags</label>
+                        <div class="tagselect investmenttagselect disabled"></div>
+                    </div>
+
+                    <div class="fieldlock">
+                        Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
+                    </div>
+                    
+                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
+
+                </div>
+
+                <div class="accordions">
+                    
+                    <h1>Attributes</h1>
+
+                    <div class="editcontainer">
+                    </div>
+
+                    <h1>Automatic Transactions</h1>
+
+                    <div class="editcontainer">
+                    </div>
+
+                   <h1 class="InterestSection"><span class="InterestSectionLabel">Interest</span></h1>
+                    
+                    <div class="editcontainer">
+                    </div>
+
+
+                    <h1 class="LinkedAccountsSection"><span class="LinkedAccountsLabel">Linked Accounts</span></h1> 
+
+                    <div class="editcontainer">
+
+                    </div>
+
+                   <h1 class="MaturitySection"><span class="MaturitySectionLabel">Maturity</span></h1>
+                    <div class="editcontainer">
+
+                    </div>
+
+                    <h1 class ="PaymentPreferencesSettingsSection"> 
+                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span></h1>
+                    <div class="editcontainer">
+
+                    </div>
+
+                </div>
 
         </div>
 
