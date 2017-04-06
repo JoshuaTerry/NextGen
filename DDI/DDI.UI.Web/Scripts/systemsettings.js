@@ -2740,14 +2740,18 @@ function LoadBudgetSectionSettings() {
 
     var selectledgergroup = $('<div>'); 
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    var selectledgername = $('<select>').addClass('LedgerId').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
-        //update on dropdown change
-        GetBudgetSetting();
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetBudgetSetting();
     }, function () {
         //retrieve initial value on populate complete
+        GetBudgetSetting();
+    });
+
+    selectledgername.change(function () {
         GetBudgetSetting();
     });
 
@@ -2788,7 +2792,7 @@ function LoadBudgetSectionSettings() {
             $('.budgetsettingerror').text('');
             RemoveValidation('budgetsettingscontainer')
 
-            GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+            GetBudgetSetting();
         })
         .appendTo(controlContainer);
 
@@ -2824,17 +2828,18 @@ function ValidBudgetSettingForm() {
 }
 
 function GetBudgetSetting() {
+    var ledgerid = $('.budgetLedgerId').val();
 
-    MakeServiceCall('GET', 'ledgers/' + $('.LedgerId').val(), null, function (data) {
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
                 $('.ledgernamedisplay').text(data.Data.Name)
-                $('.workingbudgetname').val(data.Data.WorkingBudgetName)
-                $('.fixedbudgetname').val(data.Data.FixedBudgetName)
-                $('.whatifbudgetname').val(data.Data.WhatIfBudgetName)
+                $('.workingBudgetName').val(data.Data.WorkingBudgetName)
+                $('.fixedBudgetName').val(data.Data.FixedBudgetName)
+                $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
 
             }
         }
