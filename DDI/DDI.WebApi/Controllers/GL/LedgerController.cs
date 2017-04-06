@@ -8,18 +8,26 @@ namespace DDI.WebApi.Controllers.GL
 {
     public class LedgerController : GeneralLedgerController<Ledger>
     {
-        [HttpGet]
-        [Route("api/v1/businessunit/{businessUnitId}/ledgers", Name = RouteNames.Ledger)]
-        public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
-            return base.GetAll(RouteNames.Ledger, businessUnitId, limit, offset, orderBy, fields);
-        }
+        //[HttpGet]
+        //[Route("api/v1/businessunit/{businessUnitId}/ledgers", Name = RouteNames.Ledger)]
+        //public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        //{
+        //    return base.GetAll(RouteNames.Ledger, businessUnitId, limit, offset, orderBy, fields);
+        //}
 
         [HttpGet]
         [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/ledgers/businessunit/{id}", Name = RouteNames.Ledger)]
+        public IHttpActionResult GetByBusinessUnit(Guid id, string fields = null)
+        {
+            var response = Service.GetAllWhereExpression(l => l.BusinessUnitId == id);
+            return Ok(response);
         }
 
         [HttpPost]
