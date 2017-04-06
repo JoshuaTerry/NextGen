@@ -12,6 +12,8 @@ $(document).ready(function () {
 
     $.support.cors = true;
 
+    LoadDefaultAuthToken();
+
     LoadDatePickers();
 
     LoadDatePair();
@@ -37,6 +39,29 @@ $(document).ready(function () {
     });
 
 });
+
+function LoadDefaultAuthToken() {
+
+    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+
+    if (!token) {
+
+        $.ajax({
+            type: 'POST',
+            url: 'Default.aspx/GetAuthToken',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+            },
+            error: function (error) {
+                var err = error;
+            }
+        });
+
+    }
+
+}
 
 /* NEW CONSTITUENT */
 function NewConstituentModal() {
