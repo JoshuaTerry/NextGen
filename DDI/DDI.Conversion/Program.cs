@@ -91,17 +91,6 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
-            var user2 = Data.Helpers.EntityFrameworkHelpers.GetCurrentUser();
-
-            using (var uow = new UnitOfWorkEF())
-            {
-                var ledger = uow.FirstOrDefault<Ledger>(p => p.Code == "DCEF");
-
-                var fy = uow.FirstOrDefault<FiscalYear>(p => p.Name == "2014" && p.LedgerId == ledger.Id);
-
-                var bl = uow.GetBusinessLogic<AccountLogic>();
-                var rslt = bl.ValidateAccountNumber(fy, "011001010", true, false, true);
-            }
 
         }
 

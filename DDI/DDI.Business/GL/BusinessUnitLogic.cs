@@ -34,7 +34,9 @@ namespace DDI.Business.GL
 
         #region Validate Logic
 
-
+        /// <summary>
+        /// Returns TRUE if multiple business units have been defined.
+        /// </summary>
         public bool IsMultiple
         {
             get
@@ -53,10 +55,19 @@ namespace DDI.Business.GL
             return UnitOfWork.FirstOrDefault<BusinessUnit>(p => p.BusinessUnitType != BusinessUnitType.Organization) != null;
         }
 
+        /// <summary>
+        /// Return the default business unit for the currently logged in user.
+        /// </summary>
+        /// <returns></returns>
         public BusinessUnit GetDefaultBusinessUnit()
         {
-            User user = EntityFrameworkHelpers.GetCurrentUser(UnitOfWork);
-            return UnitOfWork.GetReference(user, p => p.DefaultBusinessUnit);
+            if (IsMultiple)
+            {
+                User user = EntityFrameworkHelpers.GetCurrentUser(UnitOfWork);
+                return UnitOfWork.GetReference(user, p => p.DefaultBusinessUnit);
+            }
+
+            return UnitOfWork.FirstOrDefault<BusinessUnit>(p => p.BusinessUnitType == BusinessUnitType.Organization);
         }
 
         public override void Validate(BusinessUnit unit)

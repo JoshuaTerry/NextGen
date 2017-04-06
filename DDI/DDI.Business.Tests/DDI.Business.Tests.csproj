@@ -87,7 +87,9 @@
     <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
+    <Compile Include="GL\LedgerLogicTest.cs" />
     <Compile Include="GL\BusinessUnitLogicTest.cs" />
+    <Compile Include="GL\DataSources\LedgerDataSource.cs" />
     <Compile Include="GL\DataSources\BusinessUnitDataSource.cs" />
     <Compile Include="Helpers\AbbreviationHelperTest.cs" />
     <Compile Include="Helpers\CodeEntityHelperTest.cs" />

@@ -19,14 +19,15 @@ namespace DDI.Business.Tests.GL.DataSources
                 return existing;
             }
             
-            var busnessunits = new List<BusinessUnit>();
-            busnessunits.Add(new BusinessUnit() { Code = "PAR", Name = "Parent Entity CEFMR",  BusinessUnitType= Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
-            busnessunits.Add(new BusinessUnit() { Code = "DCEF", Name = "Disciples Church Extension Fund", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
-            busnessunits.Add(new BusinessUnit() { Code = "HOPE", Name = "Hope Partnership", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
-            busnessunits.Add(new BusinessUnit() { Code = "CE", Name = "Church Extension", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
+            var businessUnits = new List<BusinessUnit>();
+            businessUnits.Add(new BusinessUnit() { Code = "*", Name = "Organizational Business Unit", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Organization, Id = GuidHelper.NewSequentialGuid() });
+            businessUnits.Add(new BusinessUnit() { Code = "PAR", Name = "Parent Entity CEFMR",  BusinessUnitType= Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
+            businessUnits.Add(new BusinessUnit() { Code = "DCEF", Name = "Disciples Church Extension Fund", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
+            businessUnits.Add(new BusinessUnit() { Code = "HOPE", Name = "Hope Partnership", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
+            businessUnits.Add(new BusinessUnit() { Code = "CE", Name = "Church Extension", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common, Id = GuidHelper.NewSequentialGuid() });
 
-            uow.CreateRepositoryForDataSource(busnessunits);
-            return busnessunits;
+            uow.CreateRepositoryForDataSource(businessUnits);
+            return businessUnits;
         }    
 
     }

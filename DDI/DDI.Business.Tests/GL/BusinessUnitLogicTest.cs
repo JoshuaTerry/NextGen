@@ -8,6 +8,9 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DDI.Shared.Helpers;
+using System.Collections.Generic;
+using DDI.Shared.Caching;
 
 namespace DDI.Business.Tests.GL
 {
@@ -26,10 +29,9 @@ namespace DDI.Business.Tests.GL
             BusinessUnitDataSource.GetDataSource(_uow);
            
             _bl = new BusinessUnitLogic(_uow);
-
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TESTDESCR)]
         public void BusinessUnitLogic_ValidatingCodeAndNameTest()
         {
             BusinessUnit unit = new BusinessUnit() { Code = "MKM", Name = "Methodist Kare Ministries ", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common };
@@ -49,6 +51,26 @@ namespace DDI.Business.Tests.GL
             unit.Name = "";
             unit.Code = "MKM";
             AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.NameIsRequired, UserMessagesGL.NameIsRequired);     
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void BusinessUnitLogic_IsMultiple()
+        {
+            Assert.AreEqual(true, _bl.IsMultiple, "Multiple business objects defined.");
+
+            // Set up tests for a single business unit.
+            using (var uow2 = new UnitOfWorkNoDb())
+            {
+                var businessUnits = new List<BusinessUnit>();
+                businessUnits.Add(new BusinessUnit() { Code = "*", Name = "Organizational Business Unit", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Organization, Id = GuidHelper.NewSequentialGuid() });
+                uow2.CreateRepositoryForDataSource(businessUnits);
+
+                var bl2 = new BusinessUnitLogic(uow2);
+                Assert.AreEqual(true, bl2.IsMultiple, "IsMultiple uses cached value");
+                CacheHelper.RemoveAllEntries();
+                Assert.AreEqual(false, bl2.IsMultiple, "IsMultiple revaluated resturns false for single business unit.");
+
+            }
         }
     }
 }

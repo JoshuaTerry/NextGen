@@ -24,7 +24,7 @@ namespace DDI.Data.Helpers
         public static User GetCurrentUser(Repository<User> repository)
         {
             User user = GetCurrentUser((userId) => repository.Entities.FirstOrDefault(u => u.UserName == userId));
-            return repository.Attach(user);
+            return (user != null ? repository.Attach(user) : null);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace DDI.Data.Helpers
         public static User GetCurrentUser(IUnitOfWork unitOfWork)
         {
             User user = GetCurrentUser((userId) => unitOfWork.FirstOrDefault<User>(p => p.UserName == userId));
-            return unitOfWork.Attach(user);
+            return (user != null ? unitOfWork.Attach(user) : null);
         }
 
         /// <summary>
