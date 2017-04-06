@@ -165,7 +165,7 @@ namespace DDI.Data
         }       
         #endregion Public Constructors
 
-        #region Method Overrides 
+        #region Method Overrides  
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
             IEntity entity = entityEntry.Entity as IEntity;

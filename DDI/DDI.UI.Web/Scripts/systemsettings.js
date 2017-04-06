@@ -744,6 +744,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -806,6 +807,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -868,6 +870,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -977,6 +980,7 @@ function EditAddressType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -1002,6 +1006,7 @@ function DeleteAddressType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Address Type deleted successfully.');
@@ -1026,6 +1031,7 @@ function LoadAddressType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1086,6 +1092,7 @@ function EditContactCategory(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -1111,6 +1118,7 @@ function DeleteContactCategory(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Category deleted successfully.');
@@ -1135,6 +1143,7 @@ function LoadContactCategory(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1200,6 +1209,7 @@ function EditContactType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -1225,6 +1235,7 @@ function DeleteContactType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Type deleted successfully.');
@@ -1249,6 +1260,7 @@ function LoadContactType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -2724,8 +2736,7 @@ function LoadAccountingSettingsSectionSettings() {
 }
 
 function LoadBudgetSectionSettings() {
-    var businessunitid = 'D66ECFF2-990D-4A5A-8CD6-5C6AB63B89DF';      // replace with global variable
-    var ledgerid;
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
 
@@ -2741,17 +2752,19 @@ function LoadBudgetSectionSettings() {
 
     var selectledgergroup = $('<div>'); 
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    var selectledgername = $('<select>').addClass('LedgerId').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
-        //update on dropdown change
-        ledgerid = $('.LedgerId').val();
-        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetBudgetSetting();
     }, function () {
         //retrieve initial value on populate complete
-        ledgerid = $('.LedgerId').val();
-        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+        GetBudgetSetting();
+    });
+
+    selectledgername.change(function () {
+        GetBudgetSetting();
     });
 
     var workingbudgetgroup = $('<div>').addClass('fieldblock');
@@ -2791,7 +2804,7 @@ function LoadBudgetSectionSettings() {
             $('.budgetsettingerror').text('');
             RemoveValidation('budgetsettingscontainer')
 
-            GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+            GetBudgetSetting();
         })
         .appendTo(controlContainer);
 
@@ -2811,22 +2824,11 @@ function ValidBudgetSettingForm() {
         return false;
     }
 
-    var workingbudgetname = $('.workingBudgetName').val();
-    var fixedbudgetname = $('.fixedBudgetName').val();
-    var whatifbudgetname = $('.whatifBudgetName').val();
-    var budgetsettingerror = $('.budgetsettingerror')
-
-    if (workingbudgetname === fixedbudgetname || workingbudgetname === whatifbudgetname || fixedbudgetname === whatifbudgetname) {
-        $(budgetsettingerror).text('Error: Names must be unique.');
-        validform = false;
-    }
-    else {
-        $(budgetsettingerror).text('');
-    }
     return validform;
 }
 
-function GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname) {
+function GetBudgetSetting() {
+    var ledgerid = $('.budgetLedgerId').val();
 
     MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
 
@@ -2834,10 +2836,10 @@ function GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedb
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $(ledgernamedisplay).text(data.Data.Name)
-                $(workingbudgetname).val(data.Data.WorkingBudgetName)
-                $(fixedbudgetname).val(data.Data.FixedBudgetName)
-                $(whatifbudgetname).val(data.Data.WhatIfBudgetName)
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.workingBudgetName').val(data.Data.WorkingBudgetName)
+                $('.fixedBudgetName').val(data.Data.FixedBudgetName)
+                $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
 
             }
         }
