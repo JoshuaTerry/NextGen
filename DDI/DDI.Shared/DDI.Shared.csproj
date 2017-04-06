@@ -182,6 +182,7 @@
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
     <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />
     <Compile Include="Models\Client\GL\SubLedgerXref.cs" />
+    <Compile Include="Models\Client\GL\ValidatedAccount.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />

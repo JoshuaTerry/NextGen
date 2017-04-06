@@ -6,10 +6,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DDI.Business.Helpers;
 using DDI.Data;
+using DDI.Data.Helpers;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 
@@ -17,6 +19,8 @@ namespace DDI.Business.GL
 {
     public class AccountLogic : EntityLogicBase<Account>
     {
+        public const string BusinessUnitSeparator = ":";
+
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AccountLogic));
         public AccountLogic() : this(new UnitOfWorkEF()) { }
 
@@ -96,7 +100,7 @@ namespace DDI.Business.GL
                 Ledger ledger = GetLedgerForAccount(account);
                 if (ledger != null)
                 {
-                    return ledger.Code + ":" + account.AccountNumber;
+                    return ledger.Code + BusinessUnitSeparator + account.AccountNumber;
                 }
             }
             return account.AccountNumber;                
@@ -124,7 +128,7 @@ namespace DDI.Business.GL
             {
                 return account.AccountNumber;
             }
-            return ledger.Code + ":" + account.AccountNumber;            
+            return ledger.Code + BusinessUnitSeparator + account.AccountNumber;            
         }
 
         /// <summary>
@@ -149,7 +153,7 @@ namespace DDI.Business.GL
             {
                 return account.AccountNumber;
             }
-            return ledger.Code + ":" + account.AccountNumber;
+            return ledger.Code + BusinessUnitSeparator + account.AccountNumber;
         }
 
         private Ledger GetLedgerForAccount(Account account)
@@ -381,6 +385,263 @@ namespace DDI.Business.GL
             }
 
             return ledgerAccount.Name;
+        }
+
+        /// <summary>
+        /// Validate a G/L account number.
+        /// </summary>
+        /// <param name="ledgerObject">A ledger or fiscal year.</param>
+        /// <param name="accountNumber">G/L account as a string value.</param>
+        /// <param name="allowBusinessUnitOverride">True to allow XXXX: business unit prefix.</param>
+        /// <param name="allowNewSegments">True to allow for new G/L account segments</param>
+        /// <param name="validateAccount">True to throw an exception of G/L account doesn't exist.</param>
+        public ValidatedAccount ValidateAccountNumber(IEntity ledgerObject, string accountNumber, bool allowBusinessUnitOverride = true, bool allowNewSegments = false, bool validateAccount = true)
+        {
+            ValidatedAccount result = new ValidatedAccount();
+            Ledger ledger = null;
+            FiscalYear fiscalYear = null;
+            LedgerLogic _ledgerLogic = UnitOfWork.GetBusinessLogic<LedgerLogic>();
+            BusinessUnitLogic _businessUnitLogic = UnitOfWork.GetBusinessLogic<BusinessUnitLogic>();
+
+            if (string.IsNullOrWhiteSpace(accountNumber))
+            {
+                return result;
+            }
+
+            if (ledgerObject == null)
+            {
+                BusinessUnit unit = _businessUnitLogic.GetDefaultBusinessUnit();
+                if (unit != null)
+                {
+                    ledger = _ledgerLogic.GetCurrentLedger(unit.Id);
+                }
+            }
+            else if (ledgerObject is Ledger)
+            {
+                ledger = (Ledger)ledgerObject;
+            }
+            else if (ledgerObject is FiscalYear)
+            {
+                fiscalYear = (FiscalYear)ledgerObject;
+                ledger = UnitOfWork.GetReference(fiscalYear, p => p.Ledger);
+            }
+
+            if (ledger == null)
+            {
+                throw new InvalidOperationException("Cannot determine ledger.");
+            }
+
+            SegmentLevel[] segmentInfo = _ledgerLogic.GetSegmentLevels(ledger);
+
+            // Handle explicit business unit separator.
+            if (_businessUnitLogic.IsMultiple)
+            {
+                int index = accountNumber.IndexOf(BusinessUnitSeparator[0]);
+                if (index > 0)
+                {
+                    // Extract the business unit code from the front of the account number.
+                    string unitCode = accountNumber.Substring(0, index);
+                    accountNumber = accountNumber.Substring(index + 1);
+
+                    // Look up the explicit business unit 
+                    result.ExplicitBusinesUnit = _ledgerLogic.LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnit.Code == unitCode)?.BusinessUnit;
+                    if (result.ExplicitBusinesUnit == null)
+                    {
+                        throw new ValidationException(string.Format(UserMessagesGL.BadBusinessUnitCode, "Business unit", unitCode));
+                    }
+
+                    if (!allowBusinessUnitOverride && result.ExplicitBusinesUnit.Id != ledger.BusinessUnitId)
+                    {
+                        throw new ValidationException(string.Format(UserMessagesGL.AccountMustBeInBusinessUnit, "Business unit", UnitOfWork.GetReference(ledger, p => p.BusinessUnit).Code));
+                    }
+
+                    if (fiscalYear != null)
+                    {
+                        // Find the same fiscal year in the explicit business unit.
+                        FiscalYear otherYear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForBusinessUnit(fiscalYear, result.ExplicitBusinesUnit);
+                        if (otherYear == null)
+                        {
+                            throw new ValidationException(string.Format(UserMessagesGL.BadFiscalYearForBusinessUnit, fiscalYear.Name, "Business unit", result.ExplicitBusinesUnit.Code));
+                        }
+
+                        fiscalYear = otherYear;
+                    }
+                }
+            }
+
+            // Break out accountNumber into segments and populate result.SegmentCodes
+            bool separators = true;
+            for (int segmentNumber = 0; segmentNumber < segmentInfo.Length; )
+            {
+                int length = accountNumber.Length;
+                int position = 0;
+                string code = string.Empty;
+
+                if (separators && segmentInfo[segmentNumber].Separator.Length > 0)
+                {
+                    position = accountNumber.IndexOf(segmentInfo[segmentNumber].Separator) + 1;
+                    if (position == 0)
+                    {
+                        position = length + 1;
+                    }
+                }
+                else
+                {
+                    if (segmentInfo[segmentNumber].Length > 0)
+                    {
+                        position = segmentInfo[segmentNumber].Length;
+                    }
+                    else
+                    {
+                        position = length;
+                    }
+                }
+
+                if (segmentNumber == 0 && separators && position > length)
+                {
+                    separators = false;
+                    continue;
+                }
+
+                if (separators && segmentInfo[segmentNumber].Separator.Length > 0)
+                {
+                    if (position > length)
+                    {
+                        code = accountNumber;
+                        accountNumber = string.Empty;
+                    }
+                    else
+                    {
+                        code = accountNumber.Substring(0, position - 1);
+                        accountNumber = accountNumber.Substring(position);
+                    }
+                }
+                else
+                {
+                    if (position > length)
+                    {
+                        position = length;
+                    }
+                    code = accountNumber.Substring(0, position);
+                    accountNumber = accountNumber.Substring(position);
+                }
+
+                if (string.IsNullOrWhiteSpace(code))
+                {
+                    break;
+                }
+
+                result.SegmentCodes.Add(code);
+                if (string.IsNullOrWhiteSpace(accountNumber))
+                {
+                    break;
+                }
+
+                segmentNumber++;
+            }
+
+            Segment parentSegment = null;
+            // Validate individual segments
+            for (int segmentNumber = 0; segmentNumber < result.SegmentCodes.Count; segmentNumber++)
+            {
+                string code = result.SegmentCodes[segmentNumber];
+
+                // Validate format
+                if (segmentInfo[segmentNumber].Format == SegmentFormat.Numeric && Regex.IsMatch(code, "[^0-9]"))
+                {
+                    throw new ValidationException(UserMessagesGL.GLSegmentNumeric);
+                }
+                else if (segmentInfo[segmentNumber].Format == SegmentFormat.Alpha && Regex.IsMatch(code, "[^A-Z]"))
+                {
+                    throw new ValidationException(UserMessagesGL.GLSegmentAlpha);
+                }
+                else if (Regex.IsMatch(code, "[^A-Z0-9]"))
+                {
+                    throw new ValidationException(UserMessagesGL.GLSegmentAlphaNumeric);
+                }
+
+                // Validate length
+                if (segmentInfo[segmentNumber].Length > 0 && code.Length != segmentInfo[segmentNumber].Length)
+                {
+                    throw new ValidationException(string.Format(UserMessagesGL.GLSegmentLength, segmentInfo[segmentNumber].Length));
+                }
+
+                // Validate segment in db
+
+                if (fiscalYear != null)
+                {
+                    Segment segment = null;
+
+                    if (segmentInfo[segmentNumber].IsLinked)
+                    {
+                        if (parentSegment != null)
+                        {
+                            segment = parentSegment.ChildSegments?.FirstOrDefault(p => p.Code == code)
+                                      ??
+                                      UnitOfWork.FirstOrDefault<Segment>(p => p.ParentSegmentId == parentSegment.Id && p.Code == code);
+                        }
+                    }
+                    else
+                    {
+                        parentSegment = null;
+                        segment = UnitOfWork.GetLocal<Segment>().FirstOrDefault(p => p.Level == segmentNumber + 1 && p.FiscalYearId == fiscalYear.Id && p.Code == code)
+                                  ??
+                                  UnitOfWork.FirstOrDefault<Segment>(p => p.Level == segmentNumber + 1 && p.FiscalYearId == fiscalYear.Id && p.Code == code);
+                    }
+
+                    if (segment == null && !allowNewSegments)
+                    {
+                        throw new ValidationException(string.Format(UserMessagesGL.InvalidCode, segmentInfo[segmentNumber].Name, code));
+                    }
+
+                    result.Segments.Add(segment);
+                    parentSegment = segment;
+                }
+            }
+
+            // Reformat the G/L account
+            StringBuilder sb = new StringBuilder();
+
+            for (int index = 0; index < result.SegmentCodes.Count; index++)
+            {
+                if (index > 0)
+                {
+                    sb.Append(segmentInfo[index].Separator);
+                }
+                sb.Append(result.SegmentCodes[index]);
+            }
+
+            accountNumber = sb.ToString();
+
+            if (result.ExplicitBusinesUnit != null)
+            {
+                sb.Insert(0, result.ExplicitBusinesUnit.Code + BusinessUnitSeparator);
+            }
+
+            result.AccountNumber = sb.ToString();
+
+            if (fiscalYear != null)
+            {
+                // Try to find the account in the fiscal year.
+                result.Account = UnitOfWork.FirstOrDefault<Account>(p => p.AccountNumber == accountNumber && p.FiscalYearId == fiscalYear.Id);
+                if (validateAccount && result.Account == null)
+                {
+                    throw new ValidationException(string.Format(UserMessagesGL.GLAccountNumberInvalid, accountNumber));
+                }
+                result.LedgerAccount = GetLedgerAccount(result.Account);
+            }
+            else if (ledger != null)
+            {
+                // No fiscal year, but try to find the LedgerAccount for this account number.
+                result.LedgerAccount = UnitOfWork.FirstOrDefault<LedgerAccount>(p => p.AccountNumber == accountNumber);
+                if (validateAccount && result.LedgerAccount == null)
+                {
+                    throw new ValidationException(string.Format(UserMessagesGL.GLAccountNumberInvalid, accountNumber));
+                }
+            }
+
+            return result;
+
         }
 
 

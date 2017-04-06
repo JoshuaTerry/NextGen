@@ -290,7 +290,7 @@ namespace DDI.Data
         public int SaveChanges()
         {
 
-            var user = EntityFrameworkHelpers.GetCurrentUser();
+            var user = EntityFrameworkHelpers.GetCurrentUser(this);
             if (EFAuditModule.IsAuditEnabled && user != null)
             {
 

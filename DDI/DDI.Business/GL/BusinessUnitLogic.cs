@@ -5,11 +5,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DDI.Business.Helpers;
 using DDI.Data;
+using DDI.Data.Helpers;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.GL;
 
@@ -49,6 +51,12 @@ namespace DDI.Business.GL
         private object GetIsMultiple()
         {
             return UnitOfWork.FirstOrDefault<BusinessUnit>(p => p.BusinessUnitType != BusinessUnitType.Organization) != null;
+        }
+
+        public BusinessUnit GetDefaultBusinessUnit()
+        {
+            User user = EntityFrameworkHelpers.GetCurrentUser(UnitOfWork);
+            return UnitOfWork.GetReference(user, p => p.DefaultBusinessUnit);
         }
 
         public override void Validate(BusinessUnit unit)

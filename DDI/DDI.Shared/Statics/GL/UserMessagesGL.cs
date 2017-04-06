@@ -21,6 +21,16 @@
         public static string AccountGroupLevelsUnique => "Account group titles must be unique.";
         public static string BudgetNamesUnique => "Budget names cannot be blank and must be unique.";
         public static string SgmentLevelsChanged => "The number of segment levels cannot be modified if any G/L account segments have been defined for this ledger.";
+        public static string BadBusinessUnitCode => "Invalid {0} \"{1}\".";
+        public static string AccountMustBeInBusinessUnit => "G/L account must be in {0} \"{1}\".";
+        public static string BadFiscalYearForBusinessUnit => "Fiscal year {0} not defined for {1} \"{2}\".";
+        public static string GLSegmentAlpha => "Segment code must contain only letters.";
+        public static string GLSegmentAlphaNumeric => "Segment code must contain only letters and numbers.";
+        public static string GLSegmentLength => "Segment code must be {0} characters long.";
+        public static string GLSegmentNumeric => "Segment code must contain only numbers.";
+        public static string InvalidCode => "Invalid {0} code {1}";
+        public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
+
 
     }
 }
