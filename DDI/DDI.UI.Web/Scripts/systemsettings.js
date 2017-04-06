@@ -2810,11 +2810,146 @@ function PickLedger() {
 
 }
 
-function LoadBudgetSettingsSectionSettings() {
+function LoadBudgetSectionSettings() {
+    var businessunitid = 'D66ECFF2-990D-4A5A-8CD6-5C6AB63B89DF';      // replace with global variable
+    var ledgerid;
 
+    var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
 
+    var ledgernamegroup = $('<div>');
+    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
+    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
+    $('<hr>').addClass('').appendTo(ledgernamegroup);
+    $(ledgernamegroup).append('<br />').appendTo(container);
+
+    var headinggroup = $('<div>');
+    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
+    $(headinggroup).append('<br />').append('<br />').appendTo(container);
+
+    var selectledgergroup = $('<div>'); 
+    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('LedgerId').appendTo(selectledgergroup);
+    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on dropdown change
+        ledgerid = $('.LedgerId').val();
+        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+    }, function () {
+        //retrieve initial value on populate complete
+        ledgerid = $('.LedgerId').val();
+        GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+    });
+
+    var workingbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of working budget: ').appendTo(workingbudgetgroup);
+    var workingbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('workingBudgetName required').appendTo(workingbudgetgroup);
+    $(workingbudgetgroup).appendTo(container);
+
+    var fixedbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of fixed budget: ').appendTo(fixedbudgetgroup);
+    var fixedbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('fixedBudgetName required').appendTo(fixedbudgetgroup);
+    $(fixedbudgetgroup).appendTo(container);
+
+    var whatifbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of "what if" budget: ').appendTo(whatifbudgetgroup);
+    var whatifbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('whatifBudgetName required').appendTo(whatifbudgetgroup);
+    $(whatifbudgetgroup).append('<br />').appendTo(container);
+
+    var errorgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('').addClass('validateerror budgetsettingerror').append('<br />').appendTo(errorgroup);
+    $(errorgroup).append('<br />').appendTo(container);
+
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+
+    var controlContainer = $('<div>').addClass('controlContainer');
+
+    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
+        .click(function () {
+            if (ValidBudgetSettingForm() === true) {
+                SaveBudgetSetting(id);
+            }
+        })
+        .appendTo(controlContainer);
+
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+        .click(function (e) {
+            e.preventDefault();
+            $('.budgetsettingerror').text('');
+            RemoveValidation('budgetsettingscontainer')
+
+            GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);
+        })
+        .appendTo(controlContainer);
+
+    $(controlContainer).appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+    InitRequiredLabels('budgetsettingscontainer')
 
 }
+
+function ValidBudgetSettingForm() {
+    var validform = true;
+
+    // required items
+    if (ValidateForm('budgetsettingscontainer') === false) {
+        return false;
+    }
+
+    var workingbudgetname = $('.workingBudgetName').val();
+    var fixedbudgetname = $('.fixedBudgetName').val();
+    var whatifbudgetname = $('.whatifBudgetName').val();
+    var budgetsettingerror = $('.budgetsettingerror')
+
+    if (workingbudgetname === fixedbudgetname || workingbudgetname === whatifbudgetname || fixedbudgetname === whatifbudgetname) {
+        $(budgetsettingerror).text('Error: Names must be unique.');
+        validform = false;
+    }
+    else {
+        $(budgetsettingerror).text('');
+    }
+    return validform;
+}
+
+function GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname) {
+
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+
+                $('.hidLedgerId').val(data.Data.Id);
+                $(ledgernamedisplay).text(data.Data.Name)
+                $(workingbudgetname).val(data.Data.WorkingBudgetName)
+                $(fixedbudgetname).val(data.Data.FixedBudgetName)
+                $(whatifbudgetname).val(data.Data.WhatIfBudgetName)
+
+            }
+        }
+
+    }, null);
+}
+
+function SaveBudgetSetting(id) {
+
+    var data = {
+        Id: $(id).val(),
+        WorkingBudgetName: $('.workingBudgetName').val(),
+        FixedBudgetName: $('.fixedBudgetName').val(),
+        WhatIfBudgetName: $('.whatifBudgetName').val(),
+    }
+
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
+        }
+
+    }, null);
+}
+
 
 function LoadChartAccountsSettingsSectionSettings() {
 
