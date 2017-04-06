@@ -210,6 +210,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Update(id, changes);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
 
             }

@@ -1,6 +1,7 @@
 ﻿using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity;
 using System;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 
-namespace DDI.Services.Search
+namespace DDI.Services.Security
 {
     public class UserService : ServiceBase<User>, IUserStore<User, Guid>,
                                                   IUserRoleStore<User, Guid>,
@@ -27,6 +28,49 @@ namespace DDI.Services.Search
             {
                u => u.Roles
             };
+        }
+
+        public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        {
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
+            var defaultbu = _uow.GetById<BusinessUnit>(defaultbuid);
+
+            if (!result.BusinessUnits.Contains(defaultbu))
+            {
+                result.BusinessUnits.Add(defaultbu);
+            }
+
+            result.DefaultBusinessUnitId = defaultbuid;
+
+            _uow.SaveChanges();
+
+            DataResponse<User> response = new DataResponse<User>
+            {
+                Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+        public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
+        {
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
+            var bu = _uow.GetById<BusinessUnit>(buid);
+
+            if (!result.BusinessUnits.Contains(bu))
+            {
+                result.BusinessUnits.Add(bu);
+                _uow.SaveChanges();
+            }
+
+            IDataResponse response = new DataResponse<User>
+            {
+                Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
         }
 
         private void CheckUser(User user)
@@ -124,6 +168,7 @@ namespace DDI.Services.Search
         #endregion
 
         #region IUserStore Implementation
+
         Task IUserStore<User, Guid>.CreateAsync(User user)
         {
 

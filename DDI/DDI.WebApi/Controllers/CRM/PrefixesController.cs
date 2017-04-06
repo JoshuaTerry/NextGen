@@ -25,23 +25,7 @@ namespace DDI.WebApi.Controllers.CRM
         [HttpGet]
         [Route("api/v1/prefixes", Name = RouteNames.Prefix)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
-
-            if (this.User != null)
-            {
-                var userService = new UserService();
-                var currentUser = userService.GetUserByUsername(this.User.Identity.Name);
-
-                if (currentUser != null)
-                {
-                    IUserRoleStore<User, Guid> serviceTransform = userService;
-                    var roles = serviceTransform.GetRolesAsync(currentUser).Result;
-
-                    string a = "a";
-                }
-            }
-
-
+        {            
             return base.GetAll(RouteNames.Prefix, limit, offset, orderBy, fields);
         }
 

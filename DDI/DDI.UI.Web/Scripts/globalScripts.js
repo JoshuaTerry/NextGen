@@ -5,6 +5,8 @@ var lastActiveSection = null;
 var currentEntity = null;
 var previousEntity = null;
 var modal = null;
+var currentUser = null;
+var currentBusinessUnit = null;
 
 $(document).ready(function () {
 
@@ -21,6 +23,8 @@ $(document).ready(function () {
     LoadAccordions();
 
     NewConstituentModal();
+
+    BusinessUnitModal();
 
     $('.logout').click(function (e) {
 
@@ -337,6 +341,7 @@ function LoadBusinessDate() {
 
 function LoadBusinessUnit() {
     /* Will be implemented with Business Unit */
+
 }
 
 function LoadEnvironment() {
@@ -1213,6 +1218,94 @@ function DisplayMessage(heading, text, icon) {
 }
 //
 // END MESSAGING
+
+// BUSINESS UNIT
+//
+
+function BusinessUnitModal() {
+
+    // DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
+    // Uncomment this to use currentBusinessUnit
+    // Add the guid of the user you want to use
+
+    $('.editbusinessunit').click(function (e) {
+
+        LoadBusinessUnitDropDown(currentBusinessUnit);
+
+        e.preventDefault();
+
+        var modal = $('.changebusinessunitmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 250,
+            resizable: false,
+        });
+
+        $('.savebusinessunit').unbind('click');
+
+        $('.savebusinessunit').click(function (e) {
+
+             $.each(currentUser.BusinessUnits, function(index, value) {
+                
+                if(value.Id === $('.bu-currentbu').val()) {
+
+                    currentBusinessUnit = value;
+                }
+                
+             }); 
+
+            $('.editbusinessunit').text(currentBusinessUnit.DisplayName); 
+
+            CloseModal(modal);
+
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+    });
+
+}
+
+function LoadBusinessUnitDropDown(currentBusinessUnit) {
+
+    if (currentBusinessUnit != null) {
+
+        PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit.Id);
+
+        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
+
+    } else {
+        
+        $('.editbusinessunit').text('BU');
+
+    }
+
+   
+
+}
+
+function DummyUser(dummyUserId) {
+    //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
+
+    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
+        
+        currentUser = data.Data;
+
+        currentBusinessUnit = data.Data.DefaultBusinessUnit;
+
+        LoadBusinessUnitDropDown(currentBusinessUnit);
+
+    });
+}
+
+//
+// END BUSINESS UNIT
 
 // FORM VALIDATION
 //
