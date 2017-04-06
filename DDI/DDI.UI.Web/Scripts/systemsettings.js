@@ -2720,32 +2720,39 @@ function LoadAccountingSettingsSectionSettings() {
 
     var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
 
-    // 1. Select the ledger
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer); // probably will need Dave's onchange function
+    $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, null, currentBusinessUnit.Id, null);
+    // Select the ledger
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer); 
 
-    // 2. fiscal year
+    PopulateDropDown('.as-ledgerselect', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', '', '', '', function () {
+        
+        $('.hidLedgerId').val($('.as-ledgerselect').val());
+        LoadAccountingSettings($('.hidLedgerId').val());
+
+    }, null);
+
+    // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer);
 
-    PopulateDropDown('.as-fiscalyear', 'ledgers/' + currentBusinessUnit.Id + '/businessunit', null, null, currentBusinessUnit.Id, null);
+    // PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger' + $('.hidLedgerId').val(), '', '', '',); // need fiscalyearscontroller
 
-    // 3. transaction posted automatially
+    // transaction posted automatially
     CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer);
 
-    // 4. how many days in advane recurring journals will be processed
+    // how many days in advane recurring journals will be processed
     CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer);
 
-    // 5. disable or enable approvals for journals
+    // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer);
 
-    // 6. if approval is enabled: load users and select who can approve
+    // if approval is enabled: load users and select who can approve
     $('.as-approval').change(function () {
 
         if (this.checked) {
 
             CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
-            PopulateDropDown(); // users with permissions to post approvals
+            // PopulateDropDown(); // users with permissions to post approvals
 
         } else {
 
@@ -2754,11 +2761,6 @@ function LoadAccountingSettingsSectionSettings() {
         }
         
     });
-
-    // 7. viewable edit history
-    // idk
-
-    LoadAccountingSettings();
 
     CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
 
@@ -2769,23 +2771,23 @@ function LoadAccountingSettingsSectionSettings() {
             Id: $('.as-ledgerselect').val(),
             DefaultFiscalYearId: $('.as-fiscalyear').val(),
             PostAutomatically: $('.as-postedtransaction').prop('checked'),
-            PriorPeriodPostingMind: $('.as-daysinadvance').val(), // ?
+            //PostingDaysInAdvance: $('.as-daysinadvance').val(), 
             ApproveJournals: $('.as-approval').prop('checked')
 
         };
 
-        MakeServiceCall('PATCH', 'ledgers/' + ledgerid, data, function () {
+        MakeServiceCall('PATCH', 'ledgers/' + $('.hidLedgerId').val(), JSON.stringify(data), function () {
 
-            LoadAccountingSettings();
+            LoadAccountingSettings($('.hidLedgerId').val());
 
-        }); 
+        }, null); 
 
 
     }, function (e) {
 
         e.preventDefault();
 
-        LoadAcountingSettings();
+        LoadAccountingSettings($('.hidLedgerId').val());
 
     },
 
@@ -2794,13 +2796,20 @@ function LoadAccountingSettingsSectionSettings() {
 
 function LoadAccountingSettings(id) {
 
-    MakeServiceCall('GET', 'ledgers/' + id, null, function (data) { // will need to be ledger id
+    MakeServiceCall('GET', 'ledgers/' + id, null, function (data) { 
 
-        $('.as-ledgerselect').val(data.Data.Id);
-        $('.as-fiscalyear').val();
-        $('.as-postedtransaction').prop('checked');
-        $('.as-daysinadvance').val(); // ?
-        $('.as-approval').prop('checked');
+        $('.hidLedgerId').val(data.Data.Id);
+        $('.as-fiscalyear').val(data.Data.DefaultFiscalYearId);
+        $('.as-postedtransaction').prop('checked', data.Data.PostAutomatically);
+        $('.as-daysinadvance').val(); 
+        $('.as-approval').prop('checked', data.Data.ApproveJournals);
+
+        if ($('.as-approval').checked) {
+
+            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
+            // PopulateDropDown(); // users with permissions to post approvals
+
+        } 
 
     }, null);
 
@@ -2808,10 +2817,12 @@ function LoadAccountingSettings(id) {
 
 function PickLedger() {
 
+
+
 }
 
 function LoadBudgetSectionSettings() {
-    var businessunitid = 'D66ECFF2-990D-4A5A-8CD6-5C6AB63B89DF';      // replace with global variable
+    var businessunitid = currentBusinessUnit.Id;
     var ledgerid;
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
@@ -2831,7 +2842,7 @@ function LoadBudgetSectionSettings() {
     var selectledgername = $('<select>').addClass('LedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+    PopulateDropDown('.LedgerId', 'ledgers/' + businessunitid + '/businessunit/', '', '', '', function () {
         //update on dropdown change
         ledgerid = $('.LedgerId').val();
         GetBudgetSetting(ledgerid, ledgernamedisplay, workingbudgetname, fixedbudgetname, whatifbudgetname);

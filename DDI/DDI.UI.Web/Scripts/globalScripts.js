@@ -1355,9 +1355,20 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelFunction, app
 
     var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
 
-    $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
+    var save = $('<input>').attr('type', 'button').addClass(saveClass).val('Save').appendTo(buttons);
 
-    $('<a>').addClass('cancel').text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+    if (saveFunction) {
+
+        save.click(saveFunction);
+
+    }
+
+    var cancel = $('<a>').addClass('cancel').text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+
+    if (cancelFunction) {
+
+        cancel.click(cancelFunction);
+    }
 
 }
 //
