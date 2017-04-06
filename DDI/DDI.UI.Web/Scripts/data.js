@@ -42,7 +42,9 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            if (xhr.responseJSON.ExceptionMessage) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
             if (errorCallback) {
                 errorCallback();
             }
@@ -223,6 +225,9 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
         if (newModalClass) {
             // Add link for new modal
             NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
+        }
+        if (onComplete) {
+            onComplete();
         }
     });
 

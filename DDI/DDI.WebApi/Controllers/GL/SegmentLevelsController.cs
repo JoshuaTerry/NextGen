@@ -9,12 +9,6 @@ namespace DDI.WebApi.Controllers.GL
 {
     public class SegmentLevelsController : GeneralLedgerController<SegmentLevel>
     {
-        [HttpGet]
-        [Route("api/v1/segmentlevels/doesnotwork")]
-        public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
-            return base.GetAll(RouteNames.SegmentLevel, businessUnitId, limit, offset, orderBy, fields);
-        }
 
         [HttpGet]
         [Route("api/v1/segmentlevels/{id}", Name = RouteNames.SegmentLevel + RouteVerbs.Get)]
@@ -24,16 +18,15 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/segmentlevels/ledger/{id}", Name = RouteNames.Ledger + RouteNames.SegmentLevel + RouteVerbs.Get)]
-        //public IHttpActionResult GetByLedgerId(Guid id, string fields = null)
+        [Route("api/v1/segmentlevels/ledger/{id}", Name = RouteNames.SegmentLevel + RouteNames.Ledger + RouteVerbs.Get)]
         public IHttpActionResult GetByLedgerId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
 
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
+                var search = new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, "Level");
                 var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search);
-                return FinalizeResponse(response, RouteNames.Ledger + RouteNames.SegmentLevel, search, fields);
+                return Ok(response);
             }
             catch (Exception ex)
             {

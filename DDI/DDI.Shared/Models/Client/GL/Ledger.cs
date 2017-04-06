@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DDI.Shared.Models.Client.GL
 {
@@ -80,6 +81,61 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(FiscalYear.Ledger))]
         public ICollection<FiscalYear> FiscalYears { get; set; }
 
-        public override string DisplayName => Code;
+        public override string DisplayName
+        {
+            get
+            {
+                return Code + ": " + Name;
+            }
+        }
+
+        
+        [NotMapped]
+        public string DisplayFormat
+        {
+            get
+            {
+                if (SegmentLevels == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    string displayFormat = "";
+
+                    foreach (SegmentLevel sl in SegmentLevels.OrderBy(t => t.Level))
+                    {
+                        string character = "";
+                        switch (sl.Format)
+                        {
+                            case SegmentFormat.Both:
+                                character = "X";
+                                break;
+                            case SegmentFormat.Numeric:
+                                character = "9";
+                                break;
+                            case SegmentFormat.Alpha:
+                                character = "A";
+                                break;
+                        }
+
+                        for (int k = 1; k <= sl.Length; k++){
+
+                            displayFormat = displayFormat + character;
+                        }
+
+                        if (sl.Separator != null)
+                        {
+                            displayFormat = displayFormat + sl.Separator;
+                        }
+                                    
+                    }
+
+                    return displayFormat;
+
+                }
+            }
+        }
+
     }
 }

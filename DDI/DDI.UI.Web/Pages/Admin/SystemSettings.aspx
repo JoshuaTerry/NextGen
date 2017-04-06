@@ -1086,10 +1086,8 @@
 
         <div class="modalcontent">
 
-            <div class="fieldblock">
-                <label>LedgerId</label>
-                <input type="text" class="glformat-LedgerId" />
-            </div>
+
+            <input type="hidden" class="glformat-LedgerId parentid" />
 
             <div class="fieldblock">
                 <label>Level</label>
@@ -1169,7 +1167,6 @@
             </div>
 
 
-        { dataField: 'SortOrder', caption: 'Sort Order' }
         </div>
 
     </div>
