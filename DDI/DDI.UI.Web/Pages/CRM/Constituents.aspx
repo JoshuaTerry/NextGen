@@ -716,6 +716,8 @@
 
     </div>
 
+    </div>
+
     <div class="addressmodal" title="Address" style="display: none;">
 
         <div class="modalcontent">
