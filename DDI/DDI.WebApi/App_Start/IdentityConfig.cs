@@ -23,7 +23,7 @@ namespace DDI.WebApi
         public UserManager() : base(new UserService())
         {
         }
-
+                
         public override async Task<User> FindByIdAsync(Guid userId)
         {
             var user = await Store.FindByIdAsync(userId);

@@ -6,14 +6,9 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
-        //[HttpGet]
-        //[Route("api/v1/businessunit/{businessUnitId}/ledgers", Name = RouteNames.Ledger)]
-        //public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        //{
-        //    return base.GetAll(RouteNames.Ledger, businessUnitId, limit, offset, orderBy, fields);
-        //}
 
         [HttpGet]
         [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Get)]

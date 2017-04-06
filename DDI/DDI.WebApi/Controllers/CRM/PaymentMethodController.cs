@@ -11,6 +11,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class PaymentMethodController : GenericController<PaymentMethod>
     {
         private IConstituentService ConstituentService;
@@ -39,6 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
@@ -75,6 +77,7 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -82,6 +85,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -89,6 +93,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/paymentmethods/constituents/{id}")]
         [Route("api/v1/constituents/{id}/paymentmethods", Name = RouteNames.Constituent + RouteNames.PaymentMethod)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link

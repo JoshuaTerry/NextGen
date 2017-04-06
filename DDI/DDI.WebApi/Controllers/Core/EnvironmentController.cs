@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
-    //When model is created for this controller change inheritance from APIController to ControllerBase<Environment>
+    [Authorize]
     public class EnvironmentController : ApiController
     {
         
