@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class EducationLevelsController : GenericController<EducationLevel>
     {
         protected override string FieldsForList => FieldLists.CodeFields;
@@ -24,6 +25,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/educationlevels", Name = RouteNames.EducationLevel + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] EducationLevel entityToSave)
@@ -31,6 +33,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/educationlevels/{id}", Name = RouteNames.EducationLevel + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -38,6 +41,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/educationlevels/{id}", Name = RouteNames.EducationLevel + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)

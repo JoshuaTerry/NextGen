@@ -226,6 +226,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
+    <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
     <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
@@ -244,7 +245,6 @@
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
     <Compile Include="Controllers\CRM\AddressTypesController.cs" />
     <Compile Include="Controllers\Core\BusinessDateController.cs" />
-    <Compile Include="Controllers\Core\BusinessUnitControllers.cs" />
     <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
     <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
     <Compile Include="Controllers\CRM\AddressesController.cs" />
@@ -365,6 +365,10 @@
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
       <Project>{0e7d7e11-80b4-4751-8c21-b05a08a19473}</Project>
       <Name>DDI.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
+      <Project>{7DD8C5F7-4F2D-4D54-B8B0-B4D136007663}</Project>
+      <Name>DDI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
       <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>

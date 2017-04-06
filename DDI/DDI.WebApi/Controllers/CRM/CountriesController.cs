@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize]
     public class CountriesController : GenericController<Country>
     {
         public CountriesController(ServiceBase<Country> service)

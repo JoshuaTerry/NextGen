@@ -10,6 +10,7 @@ using System.Web.Routing;
 namespace DDI.WebApi.Controllers.GL
 {
     
+    [Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
         protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()

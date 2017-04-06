@@ -84,7 +84,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
 }
 
-function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, callback) {
+function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
 
     ClearElement(element);
 
@@ -104,15 +104,21 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
                 $(element).val(selectedValue);
             }
 
+            if (completecallback) {
+
+                completecallback();
+
+            }
+
         }
     }, null);
 
-    if (callback) {
+    if (changecallback) {
 
         $(element).unbind('change');
 
         $(element).change(function () {
-            callback();
+            changecallback();
         });
 
     }
@@ -303,6 +309,7 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);

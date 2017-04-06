@@ -1,4 +1,5 @@
 ﻿using DDI.Services.Search;
+using DDI.Services.Security;
 using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models;
 using DDI.WebApi.Services;
@@ -22,7 +23,7 @@ namespace DDI.WebApi
         public UserManager() : base(new UserService())
         {
         }
-
+                
         public override async Task<User> FindByIdAsync(Guid userId)
         {
             var user = await Store.FindByIdAsync(userId);

@@ -19,8 +19,8 @@ var SystemSettings = {
     Personal: 'PersonalSettings',
     Professional: 'ProfessionalSettings',
     Note: 'NoteSettings',
-    PaymentPreferences: 'PaymentPreferencesSettings'
-
+    PaymentPreferences: 'PaymentPreferencesSettings',
+    Accounting: 'AccountingSettings'
 }
 
 $(document).ready(function () {
@@ -757,6 +757,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -819,6 +820,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -881,6 +883,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -990,6 +993,7 @@ function EditAddressType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -1015,6 +1019,7 @@ function DeleteAddressType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Address Type deleted successfully.');
@@ -1039,6 +1044,7 @@ function LoadAddressType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1099,6 +1105,7 @@ function EditContactCategory(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -1124,6 +1131,7 @@ function DeleteContactCategory(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Category deleted successfully.');
@@ -1148,6 +1156,7 @@ function LoadContactCategory(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1213,6 +1222,7 @@ function EditContactType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -1238,6 +1248,7 @@ function DeleteContactType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Type deleted successfully.');
@@ -1262,6 +1273,7 @@ function LoadContactType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1769,8 +1781,9 @@ function DisplayRegionLevels(container) {
 
         if (data.Data) {
             if (data && data.Data && data.IsSuccessful) {
-
+                
                 $.map(data.Data, function (level) {
+                    
                     var li = $('<li>').attr('id', level.Id).click(function () {
 
                         if ($('.parentregions').length) {
@@ -1794,6 +1807,19 @@ function DisplayRegionLevels(container) {
                             DisplayRegions(level.Level, null);
                         }
                     });
+
+                    $('<a>').attr('href', '#').addClass('deleteregionlevellink').click(function (e) {
+                            e.preventDefault();
+                        
+                            ConfirmModal('Are you sure you want to delete this Region Level?', function () {
+                          
+                            DeleteRegionLevel(level.Id);
+
+                        }, function () {
+                           
+                        });
+
+                    }).appendTo($(li));
 
                     $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
                         e.preventDefault();
@@ -1915,7 +1941,6 @@ function DisplayRegionLevels(container) {
 }
 
 function DisplayRegions(level, parentid) {
-
     $('.currentlevel').val(level);
 
     var route = 'regionlevels/' + level + '/regions/';
@@ -1932,7 +1957,6 @@ function DisplayRegions(level, parentid) {
     ];
 
     CustomLoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
-
         // Add the new link...
         var link = $('<a>')
             .attr('href', '#')
@@ -2057,6 +2081,28 @@ function DeleteRegion(id) {
     }, null);
 
 }
+function DeleteRegionLevel(id) {
+
+ 
+    $.ajax({
+        url: WEB_API_ADDRESS + 'regionlevels/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function (data) {
+            DisplaySuccessMessage('Success', 'Region Level deleted successfully.');
+
+            CloseModal(modal);
+
+            LoadRegionsSectionSettings();
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+}
+
 
 function LoadRegionLevel(id) {
 
@@ -2103,10 +2149,124 @@ function LoadRelationshipSectionSettings() {
     var type = $('<div>').addClass('relationshiptypecontainer');
     
     var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.relcatmodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitrelcat').unbind('click');
+
+            $('.submitrelcat').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.relcat-Code').val(),
+                    Name: $(modal).find('.relcat-Name').val(),
+                    IsActive: $(modal).find('.relcat-IsActive').prop('checked'),
+                    IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshipcategories',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipCategorySettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
     $(category).appendTo($(accordion));
     LoadRelationshipCategorySettingsGrid();
 
     header = $('<h1>').text('Relationship Types').appendTo($(accordion));
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+        .click(function (e) {
+            e.preventDefault();
+
+            modal = $('.reltypemodal').dialog({
+                closeOnEscape: false,
+                modal: true,
+                width: 250,
+                resizable: false
+            });
+
+            PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '');
+            PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '');
+
+            $('.cancelmodal').click(function (e) {
+
+                e.preventDefault();
+
+                CloseModal(modal);
+
+            });
+
+            $('.submitreltype').unbind('click');
+
+            $('.submitreltype').click(function () {
+
+                var item = {
+                    Code: $(modal).find('.reltype-Code').val(),
+                    Name: $(modal).find('.reltype-Name').val(),
+                    ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+                    ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+                    ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+                    RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+                    IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+                    IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: WEB_API_ADDRESS + 'relationshiptypes',
+                    data: item,
+                    contentType: 'application/x-www-form-urlencoded',
+                    crossDomain: true,
+                    success: function () {
+
+                        DisplaySuccessMessage('Success', 'Relationship type saved successfully.');
+
+                        CloseModal(modal);
+
+                        LoadRelationshipTypeSettingsGrid();
+
+                    },
+                    error: function (xhr, status, err) {
+                        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                    }
+                });
+
+            });
+        })
+        .appendTo($(header));
     $(type).appendTo($(accordion));
     LoadRelationshipTypeSettingsGrid();
 
@@ -2138,8 +2298,8 @@ function LoadRelationshipTypeSettingsGrid() {
         { dataField: 'Id', width: '0px' },
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
-        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal'},
-        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal'},
+        { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal' },
+        { dataField: 'ReciprocalTypeFemale.DisplayName', caption: 'Female Reciprocal' },
         {
             caption: 'Constituent Category', cellTemplate: function (container, options) {
                 var category = 'Individual';
@@ -2156,15 +2316,237 @@ function LoadRelationshipTypeSettingsGrid() {
                 $('<label>').text(category).appendTo(container);
             }
         },
-        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category'},
-        { dataField: 'IsSpouse', caption: 'Spouse'},
-        { dataField: 'IsActive', caption: 'Active'}
+        { dataField: 'RelationshipCategory.DisplayName', caption: 'Relationship Category' },
+        { dataField: 'IsSpouse', caption: 'Spouse' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.relationshiptypecontainer', 'relationshiptypegrid', relationshiptypecolumns, 'relationshiptypes?fields=all', 'relationshiptypes', null, 'reltype-',
         '.reltypemodal', '.reltypemodal', 250, true, false, false, null);
+}
+
+/* RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+function EditRelationshipCategory(id) {
+
+    LoadRelationshipCategory(id);
+
+    modal = $('.relcatmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitrelcat').unbind('click');
+
+    $('.submitrelcat').click(function () {
+
+        var item = {
+            Code: $(modal).find('.relcat-Code').val(),
+            Name: $(modal).find('.relcat-Name').val(),
+            IsShownInQuickView: $(modal).find('.relcat-IsShownInQuickView').prop('checked'),
+            IsActive: $(modal).find('.relcat-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Category saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipCategorySettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
 
 }
+
+function DeleteRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Category deleted successfully.');
+
+            LoadRelationshipCategorySettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+
+    });
+
+
+}
+
+function LoadRelationshipCategory(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshipcategories/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.relcat-Id').val(data.Data.Id);
+                $(modal).find('.relcat-Code').val(data.Data.Code);
+                $(modal).find('.relcat-Name').val(data.Data.Name);
+                $(modal).find('.relcat-IsShownInQuickView').prop('checked', data.Data.IsShownInQuickView);
+                $(modal).find('.relcat-IsActive').prop('checked', data.Data.IsActive);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship category.');
+        }
+    });
+
+}
+/* END RELATIONSHIP CATEGORY SYSTEM SETTINGS */
+
+/* RELATIONSHIP TYPE SYSTEM SETTINGS */
+function EditRelationshipType(id) {
+
+    LoadRelationshipType(id);
+
+    modal = $('.reltypemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 250,
+        resizable: false
+    });
+
+    
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.submitreltype').unbind('click');
+
+    $('.submitreltype').click(function () {
+
+        var item = {
+            Code: $(modal).find('.reltype-Code').val(),
+            Name: $(modal).find('.reltype-Name').val(),
+            ReciprocalTypeMaleId: $(modal).find('.reltype-ReciprocalTypeMaleId').val(),
+            ReciprocalTypeFemaleId: $(modal).find('.reltype-ReciprocalTypeFemaleId').val(),
+            ConstituentCategory: $(modal).find('.reltype-ConstituentCategory').val(),
+            RelationshipCategoryId: $(modal).find('.reltype-RelationshipCategoryId').val(),
+            IsSpouse: $(modal).find('.reltype-IsSpouse').prop('checked'),
+            IsActive: $(modal).find('.reltype-IsActive').prop('checked')
+        }
+
+        $.ajax({
+            method: 'PATCH',
+            url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            success: function () {
+
+                DisplaySuccessMessage('Success', 'Relationship Type saved successfully.');
+
+                CloseModal(modal);
+
+                LoadRelationshipTypeSettingsGrid();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', 'An error occurred while saving the relationship type.');
+            }
+        });
+
+    });
+
+}
+
+function DeleteRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'DELETE',
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        success: function () {
+
+            DisplaySuccessMessage('Success', 'Relationship Type deleted successfully.');
+
+            LoadRelationshipTypeSettingsGrid();
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Relationship Type.');
+        }
+
+    });
+
+}
+
+function LoadRelationshipType(id) {
+
+    $.ajax({
+        url: WEB_API_ADDRESS + 'relationshiptypes/' + id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.reltype-Id').val(data.Data.Id);
+                $(modal).find('.reltype-Code').val(data.Data.Code);
+                $(modal).find('.reltype-Name').val(data.Data.Name);
+                $(modal).find('.reltype-ConstituentCategory').val(data.Data.ConstituentCategory);
+                $(modal).find('.reltype-IsSpouse').prop('checked', data.Data.IsSpouse);
+                $(modal).find('.reltype-IsActive').prop('checked', data.Data.IsActive);
+
+                PopulateDropDown('.reltype-ReciprocalTypeMaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeMaleId);
+                PopulateDropDown('.reltype-ReciprocalTypeFemaleId', 'relationshiptypes', '', '', data.Data.ReciprocalTypeFemaleId);
+                PopulateDropDown('.reltype-RelationshipCategoryId', 'relationshipcategories', '', '', data.Data.RelationshipCategoryId);
+
+            }
+
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error loading relationship type.');
+        }
+    });
+
+}
+/* END RELATIONSHIP TYPE SYSTEM SETTINGS */
 
 function LoadTagGroupSectionSettings() {
 
@@ -2359,30 +2741,188 @@ function LoadDonationHomeScreenSectionSettings() {
 
 
 /* GENERAL LEDGER SETTINGS */
-function LoadAccountingSettingsSectionSettings() {
+function LoadAccountingSettingsSectionSettings() { 
 
-
-
-}
-
-function LoadBudgetSettingsSectionSettings() {
-
+    LoadSectionSettings(SettingsCategories.Accounting, 'Accounting', 'sectionpreferences', SystemSettings.Accounting);
 
 
 }
+
+function LoadBudgetSectionSettings() {
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
+
+    var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
+
+    var ledgernamegroup = $('<div>');
+    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
+    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
+    $('<hr>').addClass('').appendTo(ledgernamegroup);
+    $(ledgernamegroup).append('<br />').appendTo(container);
+
+    var headinggroup = $('<div>');
+    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
+    $(headinggroup).append('<br />').append('<br />').appendTo(container);
+
+    var selectledgergroup = $('<div>'); 
+    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
+    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetBudgetSetting();
+    }, function () {
+        //retrieve initial value on populate complete
+        GetBudgetSetting();
+    });
+
+    selectledgername.change(function () {
+        GetBudgetSetting();
+    });
+
+    var workingbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of working budget: ').appendTo(workingbudgetgroup);
+    var workingbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('workingBudgetName required').appendTo(workingbudgetgroup);
+    $(workingbudgetgroup).appendTo(container);
+
+    var fixedbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of fixed budget: ').appendTo(fixedbudgetgroup);
+    var fixedbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('fixedBudgetName required').appendTo(fixedbudgetgroup);
+    $(fixedbudgetgroup).appendTo(container);
+
+    var whatifbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of "what if" budget: ').appendTo(whatifbudgetgroup);
+    var whatifbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('whatifBudgetName required').appendTo(whatifbudgetgroup);
+    $(whatifbudgetgroup).append('<br />').appendTo(container);
+
+    var errorgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('').addClass('validateerror budgetsettingerror').append('<br />').appendTo(errorgroup);
+    $(errorgroup).append('<br />').appendTo(container);
+
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+
+    var controlContainer = $('<div>').addClass('controlContainer');
+
+    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
+        .click(function () {
+            if (ValidBudgetSettingForm() === true) {
+                SaveBudgetSetting(id);
+            }
+        })
+        .appendTo(controlContainer);
+
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+        .click(function (e) {
+            e.preventDefault();
+            $('.budgetsettingerror').text('');
+            RemoveValidation('budgetsettingscontainer')
+
+            GetBudgetSetting();
+        })
+        .appendTo(controlContainer);
+
+    $(controlContainer).appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+    InitRequiredLabels('budgetsettingscontainer')
+
+}
+
+function ValidBudgetSettingForm() {
+    var validform = true;
+
+    // required items
+    if (ValidateForm('budgetsettingscontainer') === false) {
+        return false;
+    }
+
+    return validform;
+}
+
+function GetBudgetSetting() {
+    var ledgerid = $('.budgetLedgerId').val();
+
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+
+                $('.hidLedgerId').val(data.Data.Id);
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.workingBudgetName').val(data.Data.WorkingBudgetName)
+                $('.fixedBudgetName').val(data.Data.FixedBudgetName)
+                $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
+
+            }
+        }
+
+    }, null);
+}
+
+function SaveBudgetSetting(id) {
+
+    var data = {
+        Id: $(id).val(),
+        WorkingBudgetName: $('.workingBudgetName').val(),
+        FixedBudgetName: $('.fixedBudgetName').val(),
+        WhatIfBudgetName: $('.whatifBudgetName').val(),
+    }
+
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
+        }
+
+    }, null);
+}
+
 
 function LoadChartAccountsSettingsSectionSettings() {
 
 
 
 }
-
+    /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
+    var entityColumns = [
+      { dataField: 'Id', width: '0px' },
+      { dataField: 'Code', caption: 'Code' },
+      { dataField: 'Name', caption: 'Description' },
+      {
+          caption: 'Entity Type', cellTemplate: function (container, options) {
+              var entity = 'None';
 
+              switch (options.data.BusinessUnitType) {
+                  case 0:
+                      entity = "Organization";
+                      break;
+                  case 1:
+                      entity = "Common";
+                      break;
+                  case 2:
+                      entity = "Separate";
+                      break;
+              }
+
+              $('<label>').text(entity).appendTo(container);
+          }
+      },
+      {
+          caption: '', cellTemplate: function (container, options) {
+              
+
+          }
+      }
+    ];
+
+    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunit', 'businessunit', null, 'en-',
+        '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
-
+/// End Entities/Business Untis Settings
 function LoadFiscalYearSectionSettings() {
 
 

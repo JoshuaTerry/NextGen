@@ -1,6 +1,7 @@
 ﻿using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity;
 using System;
@@ -8,8 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
-namespace DDI.Services.Search
+namespace DDI.Services.Security
 {
     public class UserService : ServiceBase<User>, IUserStore<User, Guid>,
                                                   IUserRoleStore<User, Guid>,
@@ -21,6 +23,54 @@ namespace DDI.Services.Search
         public UserService()
         {
             _uow = new UnitOfWorkEF();
+
+            IncludesForSingle = new Expression<Func<User, object>>[]
+            {
+               u => u.Roles
+            };
+        }
+
+        public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        {
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
+            var defaultbu = _uow.GetById<BusinessUnit>(defaultbuid);
+
+            if (!result.BusinessUnits.Contains(defaultbu))
+            {
+                result.BusinessUnits.Add(defaultbu);
+            }
+
+            result.DefaultBusinessUnitId = defaultbuid;
+
+            _uow.SaveChanges();
+
+            DataResponse<User> response = new DataResponse<User>
+            {
+                Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+        public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
+        {
+            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
+            var bu = _uow.GetById<BusinessUnit>(buid);
+
+            if (!result.BusinessUnits.Contains(bu))
+            {
+                result.BusinessUnits.Add(bu);
+                _uow.SaveChanges();
+            }
+
+            IDataResponse response = new DataResponse<User>
+            {
+                Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
         }
 
         private void CheckUser(User user)
@@ -51,6 +101,12 @@ namespace DDI.Services.Search
             return roles;
         }
 
+        public User GetUserByUsername(string username)
+        {
+            var user = _uow.GetRepository<User>().Entities.FirstOrDefault(u => u.UserName == username);
+            return user;
+        }
+
         #region IQueryableUserStore Implementation
         IQueryable<User> IQueryableUserStore<User, Guid>.Users
         {
@@ -78,8 +134,8 @@ namespace DDI.Services.Search
         Task<IList<string>> IUserRoleStore<User, Guid>.GetRolesAsync(User user)
         {
             CheckUser(user);
-
-            var roles = _uow.GetRepository<Role>().Entities.Where(r => user.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToList();
+            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();              
+            var roles = _uow.GetRepository<Role>().Entities.Where(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
             return Task.FromResult<IList<string>>(roles);
         }
 
@@ -112,6 +168,7 @@ namespace DDI.Services.Search
         #endregion
 
         #region IUserStore Implementation
+
         Task IUserStore<User, Guid>.CreateAsync(User user)
         {
 
@@ -133,7 +190,7 @@ namespace DDI.Services.Search
         {
             
         }
-
+         
         Task<User> IUserStore<User, Guid>.FindByIdAsync(Guid userId)
         {
             var response = base.GetById(userId);

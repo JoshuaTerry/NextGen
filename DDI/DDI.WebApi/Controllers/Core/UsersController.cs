@@ -1,4 +1,10 @@
-﻿using DDI.Shared.Models.Client.Security;
+﻿using DDI.Data;
+using DDI.Services;
+using DDI.Services.Search;
+using DDI.Services.Security;
+using DDI.Shared;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Helpers;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
@@ -6,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -19,6 +27,8 @@ namespace DDI.WebApi.Controllers.General
     {
         private UserManager _userManager;
         private RoleManager _roleManager;
+        private ServiceBase<BusinessUnit> _buService;
+        private UserService userService;
 
         public UsersController()
         {
@@ -55,12 +65,29 @@ namespace DDI.WebApi.Controllers.General
             }
         }
 
+        protected override Expression<Func<User, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<User, object>>[]
+            {
+                c => c.DefaultBusinessUnit,
+                c => c.BusinessUnits
+            };
+        }
+
         [HttpGet]
         [Route("api/v1/users")]
         public IHttpActionResult Get()
         {
-            try { 
-                return Ok(UserManager.Users);
+            try {
+                userService = new UserService();
+                var results = userService.GetAll();
+
+                if (results == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -71,18 +98,74 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> GetById(Guid id)
+        public IHttpActionResult GetById(Guid id)
         {
-            User user;
             try
             {
-                user = await UserManager.FindByIdAsync(id);
+                userService = new UserService();
+                var user = Service.GetById(id);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/users/{id}/default/businessunit")]
+        public IHttpActionResult GetDefaultBusinessUnitByUserId(Guid id)
+        {
+            try
+            {
+                var result = Service.GetById(id).Data.DefaultBusinessUnit;
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                var response = new DataResponse<BusinessUnit>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/users/{id}/businessunit")]
+        public IHttpActionResult GetBusinessUnitsByUserId(Guid id)
+        {
+            try
+            {
+                var result = Service.GetById(id).Data.BusinessUnits;
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                var response = new DataResponse<ICollection<BusinessUnit>>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -135,7 +218,7 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }        
         }
-         
+
         [HttpPost]
         [Route("api/v1/users/{id}")]
         public async Task<IHttpActionResult> Update(Guid id, User user)
@@ -156,6 +239,54 @@ namespace DDI.WebApi.Controllers.General
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
+        }
+
+        [HttpPatch]
+        [Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
+        public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        {
+            try
+            {
+                userService = new UserService();
+                var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+
+        }
+
+        [HttpPatch]
+        [Route("api/v1/users/{id}/businessunit/{buid}")]
+        public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
+        {
+            try
+            {
+                userService = new UserService();
+                var result = userService.AddBusinessUnitToUser(id, buid);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+
         }
 
         [HttpDelete]

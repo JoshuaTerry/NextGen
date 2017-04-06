@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class AddressTypesController : GenericController<AddressType>
     {
         protected override string FieldsForList => FieldLists.CodeFields;

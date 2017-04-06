@@ -1,44 +1,46 @@
-﻿using DDI.Shared.Models.Client.Core;
+﻿using DDI.Logger;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
-    [Authorize]
-    public class NoteCodesController : GenericController<NoteCode>
+    public class BusinessUnitController : GenericController<BusinessUnit>
     {
+
         [HttpGet]
-        [Route("api/v1/notecodes", Name = RouteNames.NoteCode)]
+        [Route("api/v1/businessunits", Name = RouteNames.BusinessUnit)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.NoteCode, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.BusinessUnit, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/notecodes/{id}", Name = RouteNames.NoteCode + RouteVerbs.Get)]
+        [Route("api/v1/businessunits/{id}", Name = RouteNames.BusinessUnit + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/notecodes", Name = RouteNames.NoteCode + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] NoteCode entityToSave)
+        [Route("api/v1/businessunits", Name = RouteNames.BusinessUnit + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] BusinessUnit entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/notecodes/{id}", Name = RouteNames.NoteCode + RouteVerbs.Patch)]
+        [Route("api/v1/businessunits/{id}", Name = RouteNames.BusinessUnit + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/notecodes/{id}", Name = RouteNames.NoteCode + RouteVerbs.Delete)]
+        [Route("api/v1/businessunits/{id}", Name = RouteNames.BusinessUnit + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
