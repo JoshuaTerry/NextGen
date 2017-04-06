@@ -2377,14 +2377,18 @@ function LoadChartAccountsSectionSettings() {
 
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    var selectledgername = $('<select>').addClass('LedgerId').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
-        //update on change
-        GetChartSetting();
-    }, function () {
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetChartSetting();
+        }, function () {
         //retrieve initial value on populate complete
+        GetChartSetting();
+    });
+
+    selectledgername.change(function () {
         GetChartSetting();
     });
 
@@ -2393,7 +2397,7 @@ function LoadChartAccountsSectionSettings() {
     $('<span>').text('Capitalize account group descriptions').appendTo(capitalizeheadersgroup);
     $(capitalizeheadersgroup).append('<br />').appendTo(container);
 
-    var grouplevelsgroup = $('<div>').addClass('');
+    var grouplevelsgroup = $('<div>');
     $('<label>').text('Number of account groups: ').appendTo(grouplevelsgroup);
     var grouplevels = $('<select>').addClass('groupLevels').appendTo(grouplevelsgroup).change(function () {
         GroupLevelsChange();
@@ -2429,7 +2433,7 @@ function LoadChartAccountsSectionSettings() {
     $('<label>').text('').addClass('validateerror chartsettingerror').append('<br />').appendTo(errorgroup);
     $(errorgroup).append('<br />').appendTo(container);
 
-    //var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
 
     var controlContainer = $('<div>').addClass('controlContainer');
 
@@ -2473,14 +2477,14 @@ function ValidChartSettingForm() {
 
 function GetChartSetting() {
 
-    var ledgerid = $('.LedgerId').val();
+    var ledgerid = $('.chartLedgerId').val();
 
     MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
 
-                //$('.hidLedgerId').val(data.Data.Id);
+                $('.hidLedgerId').val(data.Data.Id);
                 $('.ledgernamedisplay').text(data.Data.Name)
                 $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
                 $('.groupLevels').val(data.Data.AccountGroupLevels);
