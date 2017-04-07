@@ -90,6 +90,7 @@
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
+    <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
     <Content Include="Pages\GL\AccountsPayable.aspx" />
@@ -314,6 +315,13 @@
     </Compile>
     <Compile Include="Pages\GL\Accounting.aspx.designer.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\INV\InvestmentDetails.aspx.cs">
+      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\INV\InvestmentDetails.aspx.designer.cs">
+      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Reports\AccountingReports.aspx.cs">
       <DependentUpon>AccountingReports.aspx</DependentUpon>
