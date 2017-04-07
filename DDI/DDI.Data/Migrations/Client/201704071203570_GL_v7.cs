@@ -2,26 +2,32 @@ namespace DDI.Data.Migrations.Client
 {
     using System;
     using System.Data.Entity.Migrations;
+    using System.Text;
     using Extensions;
 
     public partial class GL_v7 : DbMigration
     {
         public override void Up()
         {
-            this.CreateView("AccountGLSelector",
-               "WITH T AS (SELECT a.Id, pt.PeriodNumber, CASE WHEN pt.Amount < 0 THEN 'CR' ELSE 'DB' END AS DebitCredit, pt.Amount " +
-               "FROM PostedTransaction AS pt INNER JOIN " +
-               "LedgerAccountYear AS lay ON lay.Id = pt.LedgerAccountYearId INNER JOIN " +
-               "Account AS a ON a.Id = lay.AccountId " +
-               "WHERE (pt.TransactionType = 0)) " +
-               "SELECT Id, PeriodNumber, DebitCredit, ABS(SUM(Amount)) AS TotalAmount " +
-               "FROM T AS T_1 " +
-               "GROUP BY Id, PeriodNumber, DebitCredit");
+
+            StringBuilder sqlStatement = new StringBuilder();
+            sqlStatement.Append("select l.AccountGroup1Title + ': ' + ag1.Name as Level1, l.AccountGroup2Title + ': ' + ag2.Name as Level2, l.AccountGroup3Title + ': ' + ag3.Name as Level3, ");
+            sqlStatement.Append("l.AccountGroup4Title + ': ' + ag4.Name as Level4, acct.AccountNumber,	acct.Id ");
+            sqlStatement.Append("FROM Account acct ");
+            sqlStatement.Append("LEFT Outer join AccountGroup ag1 on ag1.Id = acct.Group1Id ");
+            sqlStatement.Append("left outer join AccountGroup ag2 on ag2.Id = acct.Group2Id ");
+            sqlStatement.Append("left outer join AccountGroup ag3 on ag3.Id = acct.Group3Id ");
+            sqlStatement.Append("left outer join AccountGroup ag4 on ag4.Id = acct.Group4Id ");
+            sqlStatement.Append("inner join Ledger l on fy.LedgerId = l.Id ");
+            sqlStatement.Append("group by ag1.Sequence, ag2.Sequence, Ag3.Sequence, Ag4.Sequence,");
+            sqlStatement.Append("l.AccountGroup1Title + ': ' + ag1.Name,	l.AccountGroup2Title + ': ' + ag2.Name,	l.AccountGroup3Title + ': ' + ag3.Name,	l.AccountGroup4Title + ': ' + ag4.Name, ");
+            sqlStatement.Append("acct.AccountNumber,	acct.Id");
+            this.CreateView("GLAccountSelection",sqlStatement.ToString());
         }
         
         public override void Down()
         {
-           
+            this.DropView("GLAccountSelection");
         }
     }
 }
