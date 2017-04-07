@@ -118,6 +118,8 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.GL.PostedTransaction> GL_PostedTransactions { get; set; }
         public DbSet<Shared.Models.Client.GL.Segment> GL_Segments { get; set; }
         public DbSet<Shared.Models.Client.GL.SegmentLevel> GL_SegmentLevels { get; set; }
+        public DbSet<Shared.Models.Client.GL.Journal> GL_Journals { get; set; }
+        public DbSet<Shared.Models.Client.GL.JournalLine> GL_JournalLines { get; set; }
 
         #endregion
 

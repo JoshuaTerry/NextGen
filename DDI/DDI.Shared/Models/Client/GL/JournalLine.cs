@@ -9,7 +9,7 @@ using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("Journal")]
+    [Table("JournalLine")]
     public class JournalLine : AuditableEntityBase
     {
         [Key]
