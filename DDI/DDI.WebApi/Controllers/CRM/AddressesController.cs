@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    //[Authorize]
+    [Authorize(Roles = Permissions.CRM_Read)]
     public class AddressesController : GenericController<Address>
     {
         protected new IAddressService Service => (IAddressService) base.Service;
@@ -47,6 +47,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/addresses", Name = RouteNames.Address + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Address item)
@@ -54,6 +55,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(item);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
@@ -61,6 +63,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, changes);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)

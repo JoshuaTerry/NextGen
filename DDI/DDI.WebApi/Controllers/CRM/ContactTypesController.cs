@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize]
     public class ContactTypesController : GenericController<ContactType>
     {
         protected override Expression<Func<ContactType, object>>[] GetDataIncludesForList()
@@ -53,6 +54,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/contacttypes", Name = RouteNames.ContactType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ContactType entityToSave)
@@ -60,6 +62,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -67,6 +70,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)

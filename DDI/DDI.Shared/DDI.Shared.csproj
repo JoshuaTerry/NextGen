@@ -127,6 +127,9 @@
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
     <Compile Include="Enums\GL\TransactionXferCategory.cs" />
+    <Compile Include="Enums\INV\InvestorRelationshipType.cs" />
+    <Compile Include="Enums\INV\InvestmentStatus.cs" />
+    <Compile Include="Enums\INV\InvestorStatus.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
@@ -181,6 +184,10 @@
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
     <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />
     <Compile Include="Models\Client\GL\SubLedgerXref.cs" />
+    <Compile Include="Models\Client\INV\InvestmentType.cs" />
+    <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
+    <Compile Include="Models\Client\INV\InvestmentRelationship.cs" />
+    <Compile Include="Models\Client\INV\Investment.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
@@ -265,6 +272,7 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+    <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
     <Compile Include="Statics\CRM\UserMessagesCRM.cs" />

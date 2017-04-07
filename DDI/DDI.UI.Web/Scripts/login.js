@@ -53,6 +53,7 @@
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'Register',
                 data: model,
+                headers: GetApiHeaders(),
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
                 success: function () {
@@ -80,6 +81,7 @@ function Login() {
         url: WEB_API_ADDRESS + 'Login',
         data: loginData,
         contentType: 'application/x-www-form-urlencoded',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 

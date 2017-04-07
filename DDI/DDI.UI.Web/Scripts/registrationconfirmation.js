@@ -45,6 +45,7 @@ function ConfirmEmail(email, code) {
         url: WEB_API_ADDRESS + 'authorizations/confirmemail',
         data: model,
         contentType: 'application/x-www-form-urlencoded',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function () {
 

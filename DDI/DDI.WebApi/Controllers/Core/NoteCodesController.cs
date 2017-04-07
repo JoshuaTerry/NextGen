@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class NoteCodesController : GenericController<NoteCode>
     {
         [HttpGet]

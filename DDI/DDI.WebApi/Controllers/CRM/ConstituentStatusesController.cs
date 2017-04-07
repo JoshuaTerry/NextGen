@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class ConstituentStatusesController : GenericController<ConstituentStatus>
     {
         protected override string FieldsForList => FieldLists.CodeFields;
@@ -17,6 +18,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetAll(RouteNames.ConstituentStatus, limit, offset, orderBy, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituentstatuses", Name = RouteNames.ConstituentStatus + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentStatus item)
@@ -24,6 +26,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(item);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituentstatuses/{id}", Name = RouteNames.ConstituentStatus + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)

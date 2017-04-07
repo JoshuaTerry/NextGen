@@ -304,6 +304,7 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
