@@ -7,13 +7,13 @@ namespace DDI.Data.Migrations.Client
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class GL_v7 : IMigrationMetadata
+    public sealed partial class GL_v8 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(GL_v6));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(GL_v8));
         
         string IMigrationMetadata.Id
         {
-            get { return "201703301358533_GL_v6"; }
+            get { return "201704072115338_GL_v8"; }
         }
         
         string IMigrationMetadata.Source
