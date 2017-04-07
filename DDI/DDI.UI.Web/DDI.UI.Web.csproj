@@ -308,6 +308,8 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Code\ApiRoleProvider.cs" />
+    <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
