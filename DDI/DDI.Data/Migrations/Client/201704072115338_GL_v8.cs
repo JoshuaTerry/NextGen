@@ -1,11 +1,13 @@
+
+
 namespace DDI.Data.Migrations.Client
 {
     using System;
+    using Extensions;
     using System.Data.Entity.Migrations;
     using System.Text;
-    using Extensions;
 
-    public partial class GL_v7 : DbMigration
+    public partial class GL_v8 : DbMigration
     {
         public override void Up()
         {
@@ -20,13 +22,14 @@ namespace DDI.Data.Migrations.Client
             sqlStatement.Append("left outer join AccountGroup ag2 on ag2.Id = acct.Group2Id ");
             sqlStatement.Append("left outer join AccountGroup ag3 on ag3.Id = acct.Group3Id ");
             sqlStatement.Append("left outer join AccountGroup ag4 on ag4.Id = acct.Group4Id ");
+            sqlStatement.Append("left outer join FiscalYear fy on fy.Id = acct.FiscalYearId ");
             sqlStatement.Append("inner join Ledger l on fy.LedgerId = l.Id ");
-            sqlStatement.Append("group by ag1.Sequence, ag2.Sequence, Ag3.Sequence, Ag4.Sequence,");
+            sqlStatement.Append("group by ag1.Sequence, ag2.Sequence, Ag3.Sequence, Ag4.Sequence, ");
             sqlStatement.Append("l.AccountGroup1Title + ': ' + ag1.Name,	l.AccountGroup2Title + ': ' + ag2.Name,	l.AccountGroup3Title + ': ' + ag3.Name,	l.AccountGroup4Title + ': ' + ag4.Name, ");
-            sqlStatement.Append("acct.AccountNumber,	acct.Id");
-            this.CreateView("GLAccountSelection",sqlStatement.ToString());
+            sqlStatement.Append("acct.AccountNumber,	acct.Id ");
+            this.CreateView("GLAccountSelection", sqlStatement.ToString());
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.Ledger", "PostDaysInAdvance");
