@@ -8,6 +8,7 @@ namespace DDI.UI.Web.Code
 {
     public class ApiRoleProvider : RoleProvider
     {
+        #region Properties
         public override string ApplicationName
         {
             get
@@ -21,6 +22,10 @@ namespace DDI.UI.Web.Code
             }
         }
 
+        #endregion
+
+        #region Unsupported Methods
+        
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
             throw new NotImplementedException();
@@ -56,11 +61,6 @@ namespace DDI.UI.Web.Code
             throw new NotImplementedException();
         }
 
-        public override bool IsUserInRole(string username, string roleName)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
             throw new NotImplementedException();
@@ -70,5 +70,17 @@ namespace DDI.UI.Web.Code
         {
             throw new NotImplementedException();
         }
+
+        #endregion
+
+        #region Supported Methods
+
+        public override bool IsUserInRole(string username, string roleName)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
     }
 }
