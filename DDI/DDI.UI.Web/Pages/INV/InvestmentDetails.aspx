@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
-<%--    <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>--%>
+    <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -12,8 +12,8 @@
 
     <input id="hidinvestmentid" runat="server" type="hidden" class="hidinvestmentid" enableviewstate="true" />
 
-    <div class="investmentcontainer">
-
+    <div class="constituentcontainer">
+        <%--Named for css styles. How do we want to do CSS? Separate page or just use constituents.css?--%>
         <div class="constituentinfocontainer"> 
             <%--Do we want to keep this here, or have a separate page for this container? --%>
             <h1>Photo</h1>
@@ -56,7 +56,7 @@
 
             <div id="tab-main" class="scrollable">
 
-                <div class="investmenttopinfo editcontainer">
+                <div class="investmenttopinfo editcontainer"> 
 
                     <div class="twocolumn">
                         
