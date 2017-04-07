@@ -1363,7 +1363,7 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
     
     if (cancelFunction) {
 
-        var cancel = $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+        $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
 
     }
 
