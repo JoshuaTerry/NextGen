@@ -179,6 +179,7 @@
     <Compile Include="Models\Client\GL\BusinessUnitFromTo.cs" />
     <Compile Include="Models\Client\GL\Fund.cs" />
     <Compile Include="Models\Client\GL\FundFromTo.cs" />
+    <Compile Include="Models\Client\GL\GLAccountSelection.cs" />
     <Compile Include="Models\Client\GL\Ledger.cs" />
     <Compile Include="Models\Client\GL\LedgerAccount.cs" />
     <Compile Include="Models\Client\GL\LedgerAccountMerge.cs" />
