@@ -51,6 +51,8 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool PostAutomatically { get; set; }
 
+        public int PostDaysInAdvance { get; set; }
+
         public Guid? OrgLedgerId { get; set; }
         [ForeignKey(nameof(OrgLedgerId))]
         public Ledger OrgLedger { get; set; } 

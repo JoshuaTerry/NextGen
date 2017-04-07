@@ -30,6 +30,7 @@ namespace DDI.WebApi.Controllers.General
         private ServiceBase<BusinessUnit> _buService;
         private UserService userService;
 
+
         public UsersController()
         {
             
@@ -184,11 +185,14 @@ namespace DDI.WebApi.Controllers.General
                 return BadRequest(ModelState);
             }
 
-            var user = new User() { UserName = model.Email, Email = model.Email };
+            var user = new User() { UserName = model.Email, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
             try
             {
                 var result = UserManager.Create(user, model.Password);
-
+                if (user.DefaultBusinessUnitId.HasValue)
+                {
+                    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
+                }
             }
             catch(Exception ex)
             {
@@ -340,6 +344,5 @@ namespace DDI.WebApi.Controllers.General
 
             return null;
         }
-
     }
 }
