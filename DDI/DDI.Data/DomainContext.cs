@@ -97,6 +97,7 @@ namespace DDI.Data
 
         public DbSet<Shared.Models.Client.GL.Account> GL_Accounts { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBalance> GL_AccountBalances { get; set; }
+        public DbSet<Shared.Models.Client.GL.GLAccountSelection> GL_GLAccountSelection { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBudget> GL_AccountBudgets { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountClose> GL_AccountCloses { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountGroup> GL_AccountGroups { get; set; }
