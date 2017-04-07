@@ -636,7 +636,7 @@
             <!-- Investment Tab -->
             <div id="tab-investments" class="scrollable">
 
-                <div class="investmenttopinfo editcontainer">
+                <div class="investmenttopinfo">
 
                     <div class="">
                         
@@ -670,8 +670,10 @@
 
                     </div>
 
-                </div>
+                    <div class="investmentgridcontainer"></div>
 
+                </div>
+                
                 <div class="accordions">
                     
                     <h1>Primary Owner</h1>

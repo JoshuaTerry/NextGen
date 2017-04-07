@@ -43,8 +43,8 @@ $(document).ready(function () {
     });
 
     // check for any investments
-    if (true != false) { 
-        $('#tab-investments').hide();
+    if (true != true) { 
+        $('#tab-investments-main').hide();
     }
 
 });
