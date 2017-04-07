@@ -13,8 +13,8 @@ namespace DDI.Shared.Enums.Core
     {
         Owner = 0,      // The owner entity, which created the transaction.
         OwnerLine = 1,  // An owner entity line item from which the transaction was created.
-        FundingSource = 2,  // A funding source such as a cash receipt that funded the transaction.
-        Parent = 3,     // A parent entity affected by the transaction based on the EntityTransactionCategory and TransactionAmountType.
+        Parent = 2,     // A parent entity affected by the transaction based on the EntityTransactionCategory and TransactionAmountType.
+        Reversal = 3,   // An owner entity is being reversed by this transaction.
         Settings = 4    // A settings entity that was used to generate the transaction.
     }
 }

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Enums.Core
 { 
-    public enum TransactionStatus { NonPosting = 0, Unposted = 1, Posted = 2, Deleted = 3 }
+    public enum TransactionStatus { NonPosting = 0, Pending = 1, Unposted = 2, Posted = 3, Reversed = 4 }
 }
