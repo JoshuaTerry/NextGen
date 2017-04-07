@@ -45,6 +45,8 @@ namespace DDI.Data
         public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<EntityTransaction> EntityTransactions { get; set; }
 
         #endregion
 
@@ -115,7 +117,6 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.GL.PostedTransaction> GL_PostedTransactions { get; set; }
         public DbSet<Shared.Models.Client.GL.Segment> GL_Segments { get; set; }
         public DbSet<Shared.Models.Client.GL.SegmentLevel> GL_SegmentLevels { get; set; }
-        public DbSet<Shared.Models.Client.GL.SubledgerTransaction> GL_SubledgerTransactions { get; set; }
 
         #endregion
 

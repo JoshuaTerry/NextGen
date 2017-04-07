@@ -35,7 +35,7 @@ namespace DDI.Business.Helpers
             return GetEntityTypeName(typeof(T));
         }
 
-        public static EntityBase GetParentEntity(LinkedEntityBase childEntity, IUnitOfWork unitOfWork)
+        public static EntityBase GetParentEntity(ILinkedEntityBase childEntity, IUnitOfWork unitOfWork)
         {
             if (childEntity.ParentEntityId == null)
             {
@@ -52,7 +52,7 @@ namespace DDI.Business.Helpers
             return null;
         }
 
-        public static void SetParentEntity(LinkedEntityBase childEntity, EntityBase parentEntity)
+        public static void SetParentEntity(ILinkedEntityBase childEntity, EntityBase parentEntity)
         {
             if (parentEntity == null)
             {

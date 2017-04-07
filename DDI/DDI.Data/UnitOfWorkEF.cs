@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data
 {
@@ -24,6 +25,9 @@ namespace DDI.Data
         private Dictionary<Type, object> _repositories;
         private string _commonNamespace;
         private List<object> _businessLogic;
+        private bool _isAuditStatusInitialized;
+        private bool _auditModuleEnabled;
+        private bool _auditingEnabled;
 
         #endregion Private Fields
          
@@ -49,9 +53,37 @@ namespace DDI.Data
             _repositories = new Dictionary<Type, object>();
             _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
             _businessLogic = new List<object>();
+            _isAuditStatusInitialized = false;          
         }
 
         #endregion Public Constructors
+
+        #region Public Properties
+
+        /// <summary>
+        /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
+        /// </summary>
+        public bool AuditingEnabled
+        {
+            get
+            {
+                if (!_isAuditStatusInitialized)
+                {
+                    InitializeAuditStatus();
+                }
+                return _auditingEnabled;
+            }
+            set
+            {
+                if (!_isAuditStatusInitialized)
+                {
+                    InitializeAuditStatus();
+                }
+                _auditingEnabled = _auditModuleEnabled && value;
+            }
+        }
+
+        #endregion
 
         #region Public Methods
 
@@ -270,11 +302,10 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
+            User user;
 
-            var user = EntityFrameworkHelpers.GetCurrentUser();
-            if (EFAuditModule.IsAuditEnabled && user != null)
+            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser()) != null)
             {
-
                 return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
@@ -335,6 +366,19 @@ namespace DDI.Data
         }
 
         #endregion Protected Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Determine if the audit module is enabled.
+        /// </summary>
+        private void InitializeAuditStatus()
+        {
+            _auditingEnabled = _auditModuleEnabled = EFAuditModule.IsAuditEnabled;
+            _isAuditStatusInitialized = true;
+        }
+
+        #endregion
     }
 
 }

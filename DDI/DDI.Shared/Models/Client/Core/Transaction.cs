@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DDI.Shared.Attributes.Models;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Enums.Core;
 
-namespace DDI.Shared.Models.Client.GL
+namespace DDI.Shared.Models.Client.Core
 {
-    [Table("SubledgerTransaction")]
-    public class SubledgerTransaction : EntityBase
+    [Table("Transaction")]
+    public class Transaction : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -22,27 +24,15 @@ namespace DDI.Shared.Models.Client.GL
 
         public int LineNumber { get; set; }
 
-        public int TransactionId { get; set; }
+        public TransactionType TransactionType { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? TransactionDate { get; set; }
 
         public DateTime? PostDate { get; set; }
-
-        [MaxLength(4)]
-        public string DocumentType { get; set; }
-
-        // TBD
-        // public BaseDocument Document { get; set; }
-
-        // TBD
-        // public BaseDocumentLine DocumentLine { get; set; }
-
+        
         [DecimalPrecision(14, 2)]
         public decimal Amount { get; set; }
-
-        // TBD
-        // public string AmountType { get; set; }
 
         public Guid? DebitAccountId { get; set; }
         [ForeignKey(nameof(DebitAccountId))]
@@ -52,13 +42,18 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(CreditAccountId))]
         public LedgerAccountYear CreditAccount { get; set; }
 
-        public SubLedgerTransactionStatus Status { get; set; }
+        public TransactionStatus Status { get; set; }
 
         public bool IsAdjustment { get; set; }
 
         [MaxLength(255)]
         public string Description { get; set; }
-        
+
+        [MaxLength(64)]
+        public virtual string CreatedBy { get; set; }
+
+        public virtual DateTime? CreatedOn { get; set; }
+
         // TBD 
         // public Guid? ReconciliationId { get; set; }
         // [ForeignKey(nameof(ReconciliationId))]
@@ -67,11 +62,8 @@ namespace DDI.Shared.Models.Client.GL
         // public DateTime? DateCleared { get; set; }
 
         public ICollection<PostedTransaction> PostedTransactions { get; set; }
+        
+        public ICollection<EntityTransaction> EntityTransactions { get; set; }
 
-        // TBD
-        // public ICollection<SubLedgerXref> SubLedgerXrefs { get; set; }
-         
-        // TBD
-        // public IList<BaseDocumentTran> DocumentTrans { get; set; }
     }
 }
