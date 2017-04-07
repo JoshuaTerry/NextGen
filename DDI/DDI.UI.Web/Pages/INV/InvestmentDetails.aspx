@@ -178,6 +178,10 @@
                                         <input type="text" class="editable" />
                                     </div>
 
+                                     <div class="modalbuttons">
+                                        <input type="button" class="processstepup editable" value="Process Step-up" />
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
