@@ -8,10 +8,9 @@ namespace DDI.Shared.Models.Client.GL
     [Table("GLAccountSelection")]
     public class GLAccountSelection : ICanTransmogrify
     {
-        [Key, Column(Order = 1)]
+        [Key]
         public Guid Id { get; set; }
 
-        [ForeignKey(nameof(Id))]
         public Account Account { get; set; }
         public string AccountNumber { get; set; }
         public string Level1 { get; set; }
