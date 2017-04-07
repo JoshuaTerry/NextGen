@@ -453,31 +453,44 @@ function LoadConstituentTypesSectionSettings() {
 
 function DisplayConstituentTypeTags(tags) {
 
-    $(modal).find('.tagselect').empty();
-    $(modal).find('.consttype-tagselect').empty();
+    //$(modal).find('.tagselect').empty();
+    //$(modal).find('.consttype-tagselect').empty();
 
-    $(tags).each(function (i, tag) {
+    //$(tags).each(function (i, tag) {
 
-        var id = tag.Id;
-        var name = tag.Name;
+    //    var id = tag.Id;
+    //    var name = tag.Name;
 
-        var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
-        $('<span>').text(name).appendTo($(t));
-        $('<div>').addClass('dx-tag-remove-button')
-            .click(function () {
-                MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
+    //    var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
+    //    $('<span>').text(name).appendTo($(t));
+    //    $('<div>').addClass('dx-tag-remove-button')
+    //        .click(function () {
+    //            MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
 
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-                    }
+    //                if (data.Data) {
+    //                    DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+    //                    CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
+    //                }
 
-                }, null)
-            })
-            .appendTo($(t));
+    //            },
+    //            {
+    //                CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
 
-    });
+    //                }
+    //            });
+
+    //                if (data.Data) {
+    //                    DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+    //                    CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
+    //                }
+    //            });
+    //        })
+    //        .appendTo($(t));
+
+    //});
     
 
 }
@@ -2905,7 +2918,7 @@ function LoadEntitiesSectionSettings() {
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunit', 'businessunit', null, 'en-',
+    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
@@ -2924,8 +2937,176 @@ function LoadFundAccountingSectionSettings() {
 
 function LoadGLFormatSectionSettings() {
 
+    var container = $('<div>'); 
+
+    //var businessUnitId = 'd66ecff2-990d-4a5a-8cd6-5c6ab63b89df'; //CE needs to be replaced with the global variable when it is available
+    var businessUnitId = 'd63d404a-1bdd-40e4-ac19-b9354bd11d16'; //DCEF
+    var glaccountformat = '';
+    
+    var selectledgergroup = $('<div>').addClass('twocolumn');   
+    var selectledgername = $('<h1>').text('GL Format for Ledger: ');
+    $('<select>').addClass('LedgerId').appendTo(selectledgername);
+    $(selectledgername).appendTo(selectledgergroup);
+    $(selectledgergroup).appendTo(container);
+
+    var glformat = $('<div>').addClass('glformatcontainer');
+    $(glformat).appendTo($(container));
+
+    
+    $(container).appendTo($('.contentcontainer'));
+
+    
+
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessUnitId, '', '', $('.LedgerId').val(), function () {
+
+        var ledgerId = $('.LedgerId').val();
+        var canDeleteSegmentLevels = false;
+        var editModalClass = '';
+        
+        var modalLinkClass = 'glformat-newmodallink';
+        $('.' + modalLinkClass).remove();
+
+        $('.glformat-LedgerId').val(ledgerId);
+
+        MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                glaccountformat = data.Data.DisplayFormat;
+
+                if (data.Data.LedgerAccounts === null || data.Data.LedgerAccounts.length === 0) {
+
+                    canDeleteSegmentLevels = true;
+                    editModalClass = '.glformatmodal';
+
+                    NewModalLink('.glformatcontainer', 'segmentlevels', 'glformat-', editModalClass, 250, '');
+
+                }
+                else {
+                    canDeleteSegmentLevels = false;
+                    editModalClass = '';
+                }
+
+                var glformatcolumns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Level', caption: 'Level' },
+            {
+                caption: 'Type', cellTemplate: function (container, options) {
+                    var type = "None";
+
+                    switch (options.data.Type) {
+                        case 1:
+                            type = "Fund";
+                            break;
+                        case 2:
+                            type = "Account";
+                            break;
+                    }
+
+                    $('<label>').text(type).appendTo(container);
+                }
+            },
+            {
+                caption: 'Format', cellTemplate: function (container, options) {
+                    var format;
+
+                    switch (options.data.Format) {
+                        case 0:
+                            format = "Both";
+                            break;
+                        case 1:
+                            format = "Numeric";
+                            break;
+                        case 2:
+                            format = "Alpha";
+                            break;
+                    }
+
+                    $('<label>').text(format).appendTo(container);
+                }
+            },
+            { dataField: 'Length', caption: 'Length' },
+            { dataField: 'IsLinked', caption: 'Linked' },
+            { dataField: 'IsCommon', caption: 'Common' },
+            { dataField: 'Name', caption: 'Name' },
+            { dataField: 'Abbreviation', caption: 'Abbreviation' },
+            {
+                caption: 'Separator', cellTemplate: function (container, options) {
+                    var separator = 'None';
+
+                    switch (options.data.Separator) {
+                        case " ":
+                            separator = "(Space)";
+                            break;
+                        case "-":
+                            separator = "-";
+                            break;
+                        case ".":
+                            separator = ".";
+                            break;
+                        case ",":
+                            separator = ",";
+                            break;
+                        case "/":
+                            separator = "/";
+                            break;
+                        case "(":
+                            separator = "(";
+                            break;
+                        case ")":
+                            separator = ")";
+                            break;
+                        case "[":
+                            separator = "[";
+                            break;
+                        case "]":
+                            separator = "]";
+                            break;
+                    }
+
+                    $('<label>').text(separator).appendTo(container);
+                }
+            },
+            {
+                caption: 'Sort Order', cellTemplate: function (container, options) {
+                    var order = 'None';
+
+                    switch (options.data.SortOrder) {
+                        case 0:
+                            order = "Ascending";
+                            break;
+                        case 1:
+                            order = "Unaffiliated";
+                            break;
+                    }
+
+                    $('<label>').text(order).appendTo(container);
+                }
+            }
+                ];
 
 
+                LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
+                    editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
+
+                        $('.AccountFormat').remove();
+                        $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+
+                    });
+            }
+            
+
+
+        }, null);
+        
+    });
+
+    
+
+
+    
+    
+    
 }
 
 function LoadJournalSectionSettings() {
