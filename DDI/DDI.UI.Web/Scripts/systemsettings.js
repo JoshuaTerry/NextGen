@@ -2783,7 +2783,7 @@ function LoadAccountingSettingsSectionSettings() {
         }, null); 
 
 
-    }, function (e) {
+    },'cancel', function (e) {
 
         e.preventDefault();
 

@@ -1351,23 +1351,20 @@ function CreateBasicFieldBlock(labelText, controlType, controlClass, appendConta
 
 }
 
-function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelFunction, appendContainer) {
+function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancelFunction, appendContainer) {
 
     var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
 
-    var save = $('<input>').attr('type', 'button').addClass(saveClass).val('Save').appendTo(buttons);
-
     if (saveFunction) {
 
-        save.click(saveFunction);
+        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
 
     }
-
-    var cancel = $('<a>').addClass('cancel').text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
-
+    
     if (cancelFunction) {
 
-        cancel.click(cancelFunction);
+        var cancel = $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+
     }
 
 }
