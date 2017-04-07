@@ -186,7 +186,92 @@
                         <div class="editcontainer"></div>
 
                         <h1>Interest</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Frequency:</label>
+                                </div>
+                                <div>
+                                    <select class="editable InterestFrequency"></select>
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Rate:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestRate editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Accrued Interest:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestAccrued editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Last Interest Calculation Dt:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestLastCalcDate editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Paid YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestPaidYTD editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Withheld YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestWithheldYTD editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Penalty Charged YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestPenaltyYTD editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="accordions">
+                            <h1>Interest Payment</h1>
+                                <div class="interestpaymentgridcontainer"></div>
+                            <h1>IRS Information</h1>
+                                <div class="interestIRSgridcontainer"></div>
+                            </div>
+
+                        </div>
 
                         <h1>Linked Accounts</h1>
                         <div class="editcontainer"></div>
@@ -202,8 +287,8 @@
             </div>
 
         </div>
+    </div>
 
-  </div>
 
 
 <%--    Modal section     --%>

@@ -4,8 +4,15 @@
 
     SetupEditControls();
     
+    LoadDropDowns();
+
 });
 
+
+function LoadDropDowns() {
+
+    PopulateInvestmentFrequency();
+}
 
 function RefreshEntity() {
 
