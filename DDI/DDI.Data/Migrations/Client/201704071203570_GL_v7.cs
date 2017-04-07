@@ -9,6 +9,8 @@ namespace DDI.Data.Migrations.Client
     {
         public override void Up()
         {
+            AddColumn("dbo.Ledger", "PostDaysInAdvance", c => c.Int(nullable: false));
+            AddColumn("dbo.FiscalYear", "HasAdjustmentPeriod", c => c.Boolean(nullable: true));
 
             StringBuilder sqlStatement = new StringBuilder();
             sqlStatement.Append("select l.AccountGroup1Title + ': ' + ag1.Name as Level1, l.AccountGroup2Title + ': ' + ag2.Name as Level2, l.AccountGroup3Title + ': ' + ag3.Name as Level3, ");
@@ -27,6 +29,8 @@ namespace DDI.Data.Migrations.Client
         
         public override void Down()
         {
+            DropColumn("dbo.Ledger", "PostDaysInAdvance");
+            DropColumn("dbo.FiscalYear", "HasAdjustmentPeriod");
             this.DropView("GLAccountSelection");
         }
     }
