@@ -668,6 +668,10 @@
                             Beneficiary: <span><label class="BeneficiaryInvestment"></label></span>
                         </div>
 
+                        <div>
+                            <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
+                        </div>
+
                     </div>
 
                     <div class="investmentgridcontainer"></div>
