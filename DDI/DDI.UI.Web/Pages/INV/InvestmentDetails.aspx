@@ -133,7 +133,54 @@
                     <div class="accordions">
 
                         <h1>Attributes</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Purchase Date</label>
+                                    <input type="text" class="editable" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Last Maintenance Date</label>
+                                    <input type="text" class="editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Issuance Method</label>
+                                    <input type="text" class="editable" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Last Transaction Date</label>
+                                    <input type="text" class="editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="accordions">
+                            <h1>Process Step-up</h1>
+                                <div class="editcontainer">
+                                <%--Not attached to doing this as a nested accordion, just one idea--%>
+
+                                    <div class="fieldblock">
+                                        <label>Step-up Eligible</label>
+                                        <input type="checkbox" class="editable" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Step-up Date</label>
+                                        <input type="text" class="editable" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
 
                         <h1>Automatic Transactions</h1>
                         <div class="editcontainer"></div>
