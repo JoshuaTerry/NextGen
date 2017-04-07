@@ -53,7 +53,7 @@
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
-                <li><a href="#tab-investments">Investments</a></li>
+                <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
             </ul>
 
             <!-- Individual Tab -->
@@ -636,75 +636,66 @@
             <!-- Investment Tab -->
             <div id="tab-investments" class="scrollable">
 
-                <div class="investmenttopinfo editcontainer">
+                <div class="investmenttopinfo">
 
-                    <div class="threecolumn">
+                    <div class="">
                         
                         <div class="fieldblock">
-                            <label>ID</label>
-                            <input type="text" class="editable investmentNumber" maxlength="9" />
+                            <h2>Investor Summary</h2>
+                        </div>
+                        <br />
+
+                        <div class="fieldblock">
+                            <label class="InvestorStatus"></label>
+                        </div>
+
+                        <div class="fieldlock">
                         </div>
 
                         <div class="fieldblock">
-                            <label>Name</label>
-                            <label class="editable FormattedName"></label>
+                            Investor Since: <span><label class="InvestorSince"></label></span>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Status</label>
-                            <select class="editable investmentStatusId"></select>
+                            Primary Owner Investment: <span><label class="PrimaryOwnerInvestment"></label></span>
                         </div>
+
+                        <div class="fieldblock">
+                            Joint Owner Investment: <span class="JointOwnerInvestment"></span>
+                        </div>
+
+                        <div class="fieldblock">
+                            Beneficiary: <span><label class="BeneficiaryInvestment"></label></span>
+                        </div>
+
+                        <div>
+                            <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
+                        </div>
+
                     </div>
 
-                    <div class="fieldblock">
-                        <label>Tags</label>
-                        <div class="tagselect investmenttagselect disabled"></div>
-                    </div>
-
-                    <div class="fieldlock">
-                        Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
-                    </div>
-                    
-                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
+                    <div class="investmentgridcontainer"></div>
 
                 </div>
-
+                
                 <div class="accordions">
                     
-                    <h1>Attributes</h1>
+                    <h1>Primary Owner</h1>
 
-                    <div class="editcontainer">
+                    <div class="">
                     </div>
 
-                    <h1>Automatic Transactions</h1>
+                    <h1>Joint Owner</h1>
 
-                    <div class="editcontainer">
+                    <div class="">
                     </div>
 
-                   <h1 class="InterestSection"><span class="InterestSectionLabel">Interest</span></h1>
-                    
-                    <div class="editcontainer">
+                    <h1>Beneficiary</h1>
+
+                    <div class="">
                     </div>
 
-
-                    <h1 class="LinkedAccountsSection"><span class="LinkedAccountsLabel">Linked Accounts</span></h1> 
-
-                    <div class="editcontainer">
-
                     </div>
-
-                   <h1 class="MaturitySection"><span class="MaturitySectionLabel">Maturity</span></h1>
-                    <div class="editcontainer">
-
-                    </div>
-
-                    <h1 class ="PaymentPreferencesSettingsSection"> 
-                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span></h1>
-                    <div class="editcontainer">
-
-                    </div>
-
-                </div>
 
         </div>
 
