@@ -130,6 +130,28 @@
 
                 </div>
 
+                    <div class="accordions">
+
+                        <h1>Attributes</h1>
+                        <div class="editcontainer"></div>
+
+                        <h1>Automatic Transactions</h1>
+                        <div class="editcontainer"></div>
+
+                        <h1>Interest</h1>
+                        <div class="editcontainer"></div>
+
+                        <h1>Linked Accounts</h1>
+                        <div class="editcontainer"></div>
+
+                        <h1>Maturity</h1>
+                        <div class="editcontainer"></div>
+
+                        <h1>Payment Preferences</h1>
+                        <div class="editcontainer"></div>
+
+                    </div>
+
             </div>
 
         </div>
