@@ -14,7 +14,7 @@ namespace DDI.UI.Web
 {
     public class Token
     {
-        private const string DDI_User_Token = "DDI_Authenticated_User_Token";
+        public const string DDI_User_Token = "DDI_Authenticated_User_Token";
 
         #region Properties
 
@@ -61,7 +61,7 @@ namespace DDI.UI.Web
             string data = "grant_type=password&username=" + username + "&password=" + password;
             byte[] bytes = Encoding.UTF8.GetBytes(data);
 
-            WebRequest request = WebRequest.Create("http://localhost:49490/api/v1/Login");
+            WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "Login");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = bytes.Length;

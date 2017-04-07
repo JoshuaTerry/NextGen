@@ -119,7 +119,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/users/{username}")]
+        [Route("api/v1/userbyname/{username}/")]
         public IHttpActionResult GetByName(string username)
         {
             try

@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $.support.cors = true;
 
-    LoadDefaultAuthToken();
+    // LoadDefaultAuthToken();
 
     LoadDatePickers();
 

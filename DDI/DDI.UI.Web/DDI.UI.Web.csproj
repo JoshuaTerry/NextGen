@@ -598,6 +598,12 @@
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

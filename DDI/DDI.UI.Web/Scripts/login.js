@@ -87,7 +87,23 @@ function Login() {
 
             sessionStorage.setItem(AUTH_TOKEN_KEY, data.access_token);
 
-            location.href = "/Default.aspx";
+            var user = {};
+            user.username = $('.username').val();
+            user.token = data.access_token;
+
+            $.ajax({
+                type: 'POST',
+                url: 'Default.aspx/AuthorizeUser',
+                data: JSON.stringify(user),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function () {
+                    location.href = "/Default.aspx";
+                },
+                error: function (error) {
+                    var err = error;
+                }
+            });
 
         },
         error: function (xhr, status, err) {
