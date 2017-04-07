@@ -42,6 +42,11 @@ $(document).ready(function () {
         UploadFiles();
     });
 
+    // check for any investments
+    if (true != false) { 
+        $('#tab-investments').hide();
+    }
+
 });
 
 function UploadFiles(callback) {
