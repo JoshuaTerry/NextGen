@@ -265,6 +265,10 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Statics\Permissions.cs" />
+>>>>>>> develop
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
     <Compile Include="Statics\CRM\UserMessagesCRM.cs" />

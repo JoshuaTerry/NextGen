@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize]
     public class StatesController : GenericController<State>
     {
 

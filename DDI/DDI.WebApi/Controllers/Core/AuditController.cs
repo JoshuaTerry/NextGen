@@ -11,6 +11,7 @@ using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class AuditController : ApiController
     {
         private AuditService _service = null;

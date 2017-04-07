@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace DDI.Services.Security
 {
@@ -22,6 +23,11 @@ namespace DDI.Services.Security
         public UserService()
         {
             _uow = new UnitOfWorkEF();
+
+            IncludesForSingle = new Expression<Func<User, object>>[]
+            {
+               u => u.Roles
+            };
         }
 
         public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
@@ -95,6 +101,12 @@ namespace DDI.Services.Security
             return roles;
         }
 
+        public User GetUserByUsername(string username)
+        {
+            var user = _uow.GetRepository<User>().Entities.FirstOrDefault(u => u.UserName == username);
+            return user;
+        }
+
         #region IQueryableUserStore Implementation
         IQueryable<User> IQueryableUserStore<User, Guid>.Users
         {
@@ -122,8 +134,8 @@ namespace DDI.Services.Security
         Task<IList<string>> IUserRoleStore<User, Guid>.GetRolesAsync(User user)
         {
             CheckUser(user);
-
-            var roles = _uow.GetRepository<Role>().Entities.Where(r => user.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToList();
+            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();              
+            var roles = _uow.GetRepository<Role>().Entities.Where(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
             return Task.FromResult<IList<string>>(roles);
         }
 
@@ -178,7 +190,7 @@ namespace DDI.Services.Security
         {
             
         }
-
+         
         Task<User> IUserStore<User, Guid>.FindByIdAsync(Guid userId)
         {
             var response = base.GetById(userId);
