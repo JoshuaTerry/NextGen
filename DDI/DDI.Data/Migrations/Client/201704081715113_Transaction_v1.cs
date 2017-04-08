@@ -40,21 +40,51 @@ namespace DDI.Data.Migrations.Client
                 c => new
                     {
                         Id = c.Guid(nullable: false),
+                        ParentEntityId = c.Guid(),
+                        EntityType = c.String(maxLength: 128),
+                        Relationship = c.Int(nullable: false),
                         Category = c.Int(nullable: false),
                         AmountType = c.Int(nullable: false),
                         TransactionId = c.Guid(),
-                        ParentEntityId = c.Guid(),
-                        EntityType = c.String(maxLength: 128),
-                        CreatedBy = c.String(maxLength: 64),
-                        CreatedOn = c.DateTime(),
-                        LastModifiedBy = c.String(maxLength: 64),
-                        LastModifiedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Transaction", t => t.TransactionId)
-                .Index(t => t.TransactionId)
                 .Index(t => t.ParentEntityId)
-                .Index(t => t.EntityType);
+                .Index(t => t.EntityType)
+                .Index(t => t.TransactionId);
+            
+            CreateTable(
+                "dbo.EntityApproval",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        ParentEntityId = c.Guid(),
+                        EntityType = c.String(maxLength: 128),
+                        AppprovedById = c.Guid(),
+                        ApprovedOn = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.AppprovedById)
+                .Index(t => t.ParentEntityId)
+                .Index(t => t.EntityType)
+                .Index(t => t.AppprovedById);
+            
+            CreateTable(
+                "dbo.EntityNumber",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        EntityNumberType = c.Int(nullable: false),
+                        BusinessUnitId = c.Guid(),
+                        FiscalYearId = c.Guid(),
+                        NextNumber = c.Int(nullable: false),
+                        PreviousNumber = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.BusinessUnit", t => t.BusinessUnitId)
+                .ForeignKey("dbo.FiscalYear", t => t.FiscalYearId)
+                .Index(t => t.BusinessUnitId)
+                .Index(t => t.FiscalYearId);
             
             CreateTable(
                 "dbo.JournalLine",
@@ -64,13 +94,14 @@ namespace DDI.Data.Migrations.Client
                         LineNumber = c.Int(nullable: false),
                         Comment = c.String(maxLength: 255),
                         LedgerAccountId = c.Guid(),
+                        TransactionDate = c.DateTime(storeType: "date"),
+                        DeletedOn = c.DateTime(storeType: "date"),
                         Amount = c.Decimal(nullable: false, precision: 14, scale: 2),
                         Percent = c.Decimal(nullable: false, precision: 5, scale: 2),
                         DueToMode = c.Int(nullable: false),
                         SourceBusinessUnitId = c.Guid(),
                         SourceFundId = c.Guid(),
                         JournalId = c.Guid(nullable: false),
-                        TransactionId = c.Guid(),
                         CreatedBy = c.String(maxLength: 64),
                         CreatedOn = c.DateTime(),
                         LastModifiedBy = c.String(maxLength: 64),
@@ -81,12 +112,10 @@ namespace DDI.Data.Migrations.Client
                 .ForeignKey("dbo.LedgerAccount", t => t.LedgerAccountId)
                 .ForeignKey("dbo.BusinessUnit", t => t.SourceBusinessUnitId)
                 .ForeignKey("dbo.Fund", t => t.SourceFundId)
-                .ForeignKey("dbo.Transaction", t => t.TransactionId)
                 .Index(t => t.LedgerAccountId)
                 .Index(t => t.SourceBusinessUnitId)
                 .Index(t => t.SourceFundId)
-                .Index(t => t.JournalId)
-                .Index(t => t.TransactionId);
+                .Index(t => t.JournalId);
             
             CreateTable(
                 "dbo.Journal",
@@ -133,13 +162,15 @@ namespace DDI.Data.Migrations.Client
         public override void Down()
         {
             AddColumn("dbo.PostedTransaction", "DocumentType", c => c.String(maxLength: 4));
-            DropForeignKey("dbo.JournalLine", "TransactionId", "dbo.Transaction");
             DropForeignKey("dbo.JournalLine", "SourceFundId", "dbo.Fund");
             DropForeignKey("dbo.JournalLine", "SourceBusinessUnitId", "dbo.BusinessUnit");
             DropForeignKey("dbo.JournalLine", "LedgerAccountId", "dbo.LedgerAccount");
             DropForeignKey("dbo.JournalLine", "JournalId", "dbo.Journal");
             DropForeignKey("dbo.Journal", "FiscalYearId", "dbo.FiscalYear");
             DropForeignKey("dbo.Journal", "ParentJournalId", "dbo.Journal");
+            DropForeignKey("dbo.EntityNumber", "FiscalYearId", "dbo.FiscalYear");
+            DropForeignKey("dbo.EntityNumber", "BusinessUnitId", "dbo.BusinessUnit");
+            DropForeignKey("dbo.EntityApproval", "AppprovedById", "dbo.Users");
             DropForeignKey("dbo.PostedTransaction", "TransactionId", "dbo.Transaction");
             DropForeignKey("dbo.Transaction", "FiscalYearId", "dbo.FiscalYear");
             DropForeignKey("dbo.EntityTransaction", "TransactionId", "dbo.Transaction");
@@ -147,14 +178,18 @@ namespace DDI.Data.Migrations.Client
             DropForeignKey("dbo.Transaction", "CreditAccountId", "dbo.LedgerAccountYear");
             DropIndex("dbo.Journal", new[] { "ParentJournalId" });
             DropIndex("dbo.Journal", new[] { "FiscalYearId" });
-            DropIndex("dbo.JournalLine", new[] { "TransactionId" });
             DropIndex("dbo.JournalLine", new[] { "JournalId" });
             DropIndex("dbo.JournalLine", new[] { "SourceFundId" });
             DropIndex("dbo.JournalLine", new[] { "SourceBusinessUnitId" });
             DropIndex("dbo.JournalLine", new[] { "LedgerAccountId" });
+            DropIndex("dbo.EntityNumber", new[] { "FiscalYearId" });
+            DropIndex("dbo.EntityNumber", new[] { "BusinessUnitId" });
+            DropIndex("dbo.EntityApproval", new[] { "AppprovedById" });
+            DropIndex("dbo.EntityApproval", new[] { "EntityType" });
+            DropIndex("dbo.EntityApproval", new[] { "ParentEntityId" });
+            DropIndex("dbo.EntityTransaction", new[] { "TransactionId" });
             DropIndex("dbo.EntityTransaction", new[] { "EntityType" });
             DropIndex("dbo.EntityTransaction", new[] { "ParentEntityId" });
-            DropIndex("dbo.EntityTransaction", new[] { "TransactionId" });
             DropIndex("dbo.Transaction", new[] { "CreditAccountId" });
             DropIndex("dbo.Transaction", new[] { "DebitAccountId" });
             DropIndex("dbo.Transaction", new[] { "FiscalYearId" });
@@ -163,6 +198,8 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.PostedTransaction", "PostedTransactionType");
             DropTable("dbo.Journal");
             DropTable("dbo.JournalLine");
+            DropTable("dbo.EntityNumber");
+            DropTable("dbo.EntityApproval");
             DropTable("dbo.EntityTransaction");
             DropTable("dbo.Transaction");
         }

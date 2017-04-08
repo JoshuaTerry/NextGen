@@ -69,6 +69,13 @@ namespace DDI.Shared.Enums.Core
         GLJPConverted = 70001,
         [TransactionType("Miscellaneous revenue transaction (Converted)", ModuleType = ModuleType.GeneralLedger)]
         GLMRConverted = 70002,
+        Journal = 70010,
+        JournalReversal = 70013,
+        JournalCancel = 70012,
+        JournalPriorPeriod = 70020,
+        JournalPriorPeriodCancel = 70022,
+
+        
 
         // Donations:  100000 - 109999
         [TransactionType("Donation transaction (Converted)", ModuleType = ModuleType.Donations)]

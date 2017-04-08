@@ -13,7 +13,7 @@ namespace DDI.Data.Migrations.Client
         
         string IMigrationMetadata.Id
         {
-            get { return "201704072142043_Transaction_v1"; }
+            get { return "201704081715113_Transaction_v1"; }
         }
         
         string IMigrationMetadata.Source

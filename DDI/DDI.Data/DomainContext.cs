@@ -46,6 +46,8 @@ namespace DDI.Data
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<EntityApproval> EntityApprovals { get; set; }
+        public DbSet<EntityNumber> EntityNumbers { get; set; }
         public DbSet<EntityTransaction> EntityTransactions { get; set; }
 
         #endregion

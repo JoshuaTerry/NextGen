@@ -25,6 +25,12 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(LedgerAccountId))]
         public LedgerAccount LedgerAccount { get; set; }
 
+        [Column(TypeName = "date")]
+        public DateTime? TransactionDate { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? DeletedOn { get; set; }
+
         [DecimalPrecision(14, 2)]
         public decimal Amount { get; set; }
 
@@ -44,10 +50,6 @@ namespace DDI.Shared.Models.Client.GL
         public Guid JournalId { get; set; }
         [ForeignKey(nameof(JournalId))]
         public Journal Journal { get; set; }
-
-        public Guid? TransactionId { get; set; }
-        [ForeignKey(nameof(TransactionId))]
-        public Transaction Transaction { get; set;  } 
 
     }
 }
