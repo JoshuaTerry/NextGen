@@ -77,9 +77,9 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\Client\201704081715113_Transaction_v1.cs" />
-    <Compile Include="Migrations\Client\201704081715113_Transaction_v1.Designer.cs">
-      <DependentUpon>201704081715113_Transaction_v1.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704081739053_Transaction_v1.cs" />
+    <Compile Include="Migrations\Client\201704081739053_Transaction_v1.Designer.cs">
+      <DependentUpon>201704081739053_Transaction_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201704072130391_Transaction_v0.cs" />
     <Compile Include="Migrations\Client\201704072130391_Transaction_v0.Designer.cs">
@@ -188,6 +188,7 @@
     <Compile Include="Migrations\Customizations\CreateViewOperation.cs" />
     <Compile Include="Migrations\Customizations\CustomSqlGenerator.cs" />
     <Compile Include="Extensions\DbMigrationExtensions.cs" />
+    <Compile Include="Models\TransactionXref.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryNoDb.cs" />
     <Compile Include="Repository.cs" />
@@ -202,8 +203,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Client\201704081715113_Transaction_v1.resx">
-      <DependentUpon>201704081715113_Transaction_v1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704081739053_Transaction_v1.resx">
+      <DependentUpon>201704081739053_Transaction_v1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201704072130391_Transaction_v0.resx">
       <DependentUpon>201704072130391_Transaction_v0.cs</DependentUpon>

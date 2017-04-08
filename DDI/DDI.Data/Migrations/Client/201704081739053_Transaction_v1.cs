@@ -152,6 +152,15 @@ namespace DDI.Data.Migrations.Client
                 .Index(t => t.FiscalYearId)
                 .Index(t => t.ParentJournalId);
             
+            CreateTable(
+                "dbo.TransactionXref",
+                c => new
+                    {
+                        PostedTransactionId = c.Guid(nullable: false),
+                        TransactionId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.PostedTransactionId, t.TransactionId });
+            
             AddColumn("dbo.PostedTransaction", "PostedTransactionType", c => c.Int(nullable: false));
             AddColumn("dbo.PostedTransaction", "TransactionId", c => c.Guid());
             CreateIndex("dbo.PostedTransaction", "TransactionId");
@@ -196,6 +205,7 @@ namespace DDI.Data.Migrations.Client
             DropIndex("dbo.PostedTransaction", new[] { "TransactionId" });
             DropColumn("dbo.PostedTransaction", "TransactionId");
             DropColumn("dbo.PostedTransaction", "PostedTransactionType");
+            DropTable("dbo.TransactionXref");
             DropTable("dbo.Journal");
             DropTable("dbo.JournalLine");
             DropTable("dbo.EntityNumber");

@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
+using System.Threading;
+using System.Threading.Tasks;
 using DDI.Data.Conventions;
 using DDI.EFAudit;
 using DDI.EFAudit.Contexts;
@@ -10,16 +18,6 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Data.Entity.ModelConfiguration;
 
 namespace DDI.Data
 {
@@ -49,6 +47,12 @@ namespace DDI.Data
         public DbSet<EntityApproval> EntityApprovals { get; set; }
         public DbSet<EntityNumber> EntityNumbers { get; set; }
         public DbSet<EntityTransaction> EntityTransactions { get; set; }
+
+        #endregion
+
+        #region Internal Entities for tables not used in this solution.
+
+        private DbSet<Models.TransactionXref> TransactionXrefs { get; set; }
 
         #endregion
 
