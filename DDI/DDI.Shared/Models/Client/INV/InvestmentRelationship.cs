@@ -20,10 +20,13 @@ namespace DDI.Shared.Models.Client.INV
         [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
 
+        public Guid? ConstituentId { get; set; }
+
 
         [ForeignKey("InvestmentId")]
         public Investment Investment { get; set; }
 
+        public Guid? InvestmentId { get; set; }
 
         public InvestmentRelationshipType InvestmentRelationshipType { get; set; }
 
