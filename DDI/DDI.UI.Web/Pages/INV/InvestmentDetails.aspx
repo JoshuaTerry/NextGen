@@ -4,6 +4,7 @@
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
+    <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -193,7 +194,15 @@
                                     <label>Interest Frequency:</label>
                                 </div>
                                 <div>
-                                    <select class="editable InterestFrequency"></select>
+                                    <select class="editable InterestFrequency">
+                                        <option value=""></option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Quarter">Quarter</option>
+                                        <option value="Semi-Annual">Semi-Annual</option>
+                                        <option value="Annual">Annual</option>
+                                        <option value="Maturity Only">Maturity Only</option>
+                                        <option value="None">None</option>
+                                    </select>
                                 </div>
 
                             </div>
@@ -204,7 +213,7 @@
                                     <label>Rate:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestRate editable" />
+                                    <input type="number" class="InterestRate editable" />
                                 </div>
 
                             </div>
@@ -215,7 +224,7 @@
                                     <label>Accrued Interest:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestAccrued editable readonly" />
+                                    <input type="text" class="InterestAccrued readonly" readonly="read-only" />
                                 </div>
 
                             </div>
@@ -226,7 +235,7 @@
                                     <label>Last Interest Calculation Dt:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestLastCalcDate editable" />
+                                    <input type="text" class="InterestLastCalcDate readonly"  readonly="read-only" />
                                 </div>
 
                             </div>
@@ -237,7 +246,7 @@
                                     <label>Interest Paid YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPaidYTD editable" />
+                                    <input type="text" class="InterestPaidYTD readonly"  readonly="read-only" />
                                 </div>
 
                             </div>
@@ -248,7 +257,7 @@
                                     <label>Interest Withheld YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestWithheldYTD editable" />
+                                    <input type="text" class="InterestWithheldYTD readonly"  readonly="read-only" />
                                 </div>
 
                             </div>
@@ -259,7 +268,7 @@
                                     <label>Penalty Charged YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPenaltyYTD editable" />
+                                    <input type="text" class="InterestPenaltyYTD readonly"  readonly="read-only" />
                                 </div>
 
                             </div>
@@ -292,5 +301,57 @@
 
 
 <%--    Modal section     --%>
+
+    <div class="interestmodal" title="Interest Payment" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="interest-Id" />
+
+            <div class="fieldblock">
+                <label>Priority</label>
+                <input type="number" class="interest-Priority" />
+
+                <label>Method</label>
+                <select class="interest-Category">
+                    <option value="0">Individual</option>
+                    <option value="1">Organization</option>
+                    <option value="2">Both</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Category</label>
+            </div>
+
+            <div class="fieldblock">
+                <label>Name Format</label>
+                <input type="text" class="interest-NameFormat" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Formal Salutation</label>
+                <input type="text" class="interest-SalutationFormal" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Informal Salutation</label>
+                <input type="text" class="interest-SalutationInformal" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Tags</label>
+                <div class="tagselect interest-tagselect"></div>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitinterest" value="Save" />
+                <a href="#" class="canceltypemodal">Cancel</a>
+            </div>
+
+
+        </div>
+
+    </div>
 
 </asp:Content>
