@@ -2860,7 +2860,6 @@ function GetBudgetSetting() {
     }, null);
 }
 
-<<<<<<< HEAD
 function LoadChartAccountsSectionSettings() {
     var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
     var ledgerid;
@@ -2885,7 +2884,7 @@ function LoadChartAccountsSectionSettings() {
     PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
         //update on change  (not working so added .change logic below
         //GetChartSetting();
-        }, function () {
+    }, function () {
         //retrieve initial value on populate complete
         GetChartSetting();
     });
@@ -2962,7 +2961,8 @@ function LoadChartAccountsSectionSettings() {
     $(container).appendTo($('.contentcontainer'));
 
     InitRequiredLabels("chartsettingscontainer")
-=======
+}
+
 function SaveBudgetSetting(id) {
 
     var data = {
@@ -2977,13 +2977,11 @@ function SaveBudgetSetting(id) {
         if (data.Data) {
             DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
         }
->>>>>>> develop
 
     }, null);
 }
 
 
-<<<<<<< HEAD
 function ValidChartSettingForm() {
     var validform = true;
 
@@ -3069,9 +3067,10 @@ function GroupLevelsChange() {
 
 
 function LoadEntitiesSectionSettings() {
-=======
+
+
+}
 function LoadChartAccountsSettingsSectionSettings() {
->>>>>>> develop
 
 
 
