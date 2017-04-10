@@ -196,7 +196,65 @@
                         <div class="editcontainer"></div>
 
                         <h1>Maturity</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Maturity Date</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                                 <div class="fieldblock">
+                                    <label>Original Maturity Date</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Maturity Method</label>
+                                    <input type="text" class="editable" />
+                                </div>
+                                
+                                <div class="fieldblock">
+                                    <label>Last Maturity Date</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Renewal Investment Type</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Maturity Response Date</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Number of Renewals</label>
+                                    <input type="text" class="editable datepicker" />
+                                </div>
+
+                            </div>
+
+
+                        </div>
 
                         <h1>Payment Preferences</h1>
                         <div class="editcontainer"></div>
