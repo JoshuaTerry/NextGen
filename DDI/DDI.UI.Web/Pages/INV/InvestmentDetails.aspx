@@ -215,7 +215,7 @@
                                     <label>Accrued Interest:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestAccrued editable" />
+                                    <input type="text" class="InterestAccrued editable readonly" />
                                 </div>
 
                             </div>
