@@ -2749,8 +2749,6 @@ function LoadAccountingSettingsSectionSettings() {
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer);
 
-    // PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger' + $('.hidLedgerId').val(), '', '', '',); // need fiscalyearscontroller
-
     // transaction posted automatially
     CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer);
 
@@ -2814,10 +2812,11 @@ function LoadAccountingSettings(id) {
     MakeServiceCall('GET', 'ledgers/' + id, null, function (data) { 
 
         $('.hidLedgerId').val(data.Data.Id);
-        $('.as-fiscalyear').val(data.Data.DefaultFiscalYearId);
         $('.as-postedtransaction').prop('checked', data.Data.PostAutomatically);
         $('.as-daysinadvance').val(data.Data.PostDaysInAdvance); 
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
+
+        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
 
         if ($('.as-approval').checked) {
 
