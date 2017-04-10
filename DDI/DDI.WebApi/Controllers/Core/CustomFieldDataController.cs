@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class CustomFieldDataController : ApiController
     {
         ServiceBase<CustomFieldData> _service;

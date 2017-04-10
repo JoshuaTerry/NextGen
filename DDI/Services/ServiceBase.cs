@@ -45,13 +45,13 @@ namespace DDI.Services
             get { return _unitOfWork; }
         }
 
-        public Expression<Func<T, object>>[] IncludesForSingle
+        public virtual Expression<Func<T, object>>[] IncludesForSingle
         {
             protected get { return _includesForSingle; }
             set { _includesForSingle = value; }
         }
 
-        public Expression<Func<T, object>>[] IncludesForList
+        public virtual Expression<Func<T, object>>[] IncludesForList
         {
             protected get { return _includesForList; }
             set { _includesForList = value; }
@@ -205,7 +205,7 @@ namespace DDI.Services
 
         public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
         {
-            IDataResponse<T> response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForList).Where(expression).FirstOrDefault());
+            IDataResponse<T> response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForSingle).Where(expression).FirstOrDefault());
             FormatEntityForGet(response.Data);
             return response;
         }

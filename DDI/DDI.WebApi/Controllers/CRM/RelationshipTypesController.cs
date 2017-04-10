@@ -8,7 +8,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RelationshipTypesController : GenericController<RelationshipType>
     {
         private string _allFields = null;
@@ -27,6 +27,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/relationshiptypes", Name = RouteNames.RelationshipTypes + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] RelationshipType entityToSave)
@@ -34,6 +35,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -41,6 +43,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)

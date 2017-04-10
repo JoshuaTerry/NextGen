@@ -455,31 +455,44 @@ function LoadConstituentTypesSectionSettings() {
 
 function DisplayConstituentTypeTags(tags) {
 
-    $(modal).find('.tagselect').empty();
-    $(modal).find('.consttype-tagselect').empty();
+    //$(modal).find('.tagselect').empty();
+    //$(modal).find('.consttype-tagselect').empty();
 
-    $(tags).each(function (i, tag) {
+    //$(tags).each(function (i, tag) {
 
-        var id = tag.Id;
-        var name = tag.Name;
+    //    var id = tag.Id;
+    //    var name = tag.Name;
 
-        var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
-        $('<span>').text(name).appendTo($(t));
-        $('<div>').addClass('dx-tag-remove-button')
-            .click(function () {
-                MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
+    //    var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
+    //    $('<span>').text(name).appendTo($(t));
+    //    $('<div>').addClass('dx-tag-remove-button')
+    //        .click(function () {
+    //            MakeServiceCall('GET', 'DELETE' + $(modal).find('.consttype-Id').val() + '/tag/' + tag.Id, null, function (data) {
 
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.consttype-Id').val());
-                    }
+    //                if (data.Data) {
+    //                    DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+    //                    CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
+    //                }
 
-                }, null);
-            })
-            .appendTo($(t));
+    //            },
+    //            {
+    //                CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
 
-    });
+    //                }
+    //            });
+
+    //                if (data.Data) {
+    //                    DisplaySuccessMessage('Success', 'Tag was deleted successfully.');
+    //                    CloseModal(modal);
+    //                    EditConstituentType($(modal).find('.consttype-Id').val());
+    //                }
+    //            });
+    //        })
+    //        .appendTo($(t));
+
+    //});
     
 
 }
@@ -746,6 +759,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -808,6 +822,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -870,6 +885,7 @@ function LoadContactInformationSectionSettings() {
                     data: item,
                     contentType: 'application/x-www-form-urlencoded',
                     crossDomain: true,
+                    headers: GetApiHeaders(),
                     success: function () {
 
                         DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -979,6 +995,7 @@ function EditAddressType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Address Type saved successfully.');
@@ -1004,6 +1021,7 @@ function DeleteAddressType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Address Type deleted successfully.');
@@ -1028,6 +1046,7 @@ function LoadAddressType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1088,6 +1107,7 @@ function EditContactCategory(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Category saved successfully.');
@@ -1113,6 +1133,7 @@ function DeleteContactCategory(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Category deleted successfully.');
@@ -1137,6 +1158,7 @@ function LoadContactCategory(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1202,6 +1224,7 @@ function EditContactType(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function () {
 
                 DisplaySuccessMessage('Success', 'Contact Type saved successfully.');
@@ -1227,6 +1250,7 @@ function DeleteContactType(id) {
         method: 'DELETE',
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
             DisplaySuccessMessage('Success', 'Contact Type deleted successfully.');
@@ -1251,6 +1275,7 @@ function LoadContactType(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -2725,11 +2750,136 @@ function LoadAccountingSettingsSectionSettings() {
 
 }
 
-function LoadBudgetSettingsSectionSettings() {
+function LoadBudgetSectionSettings() {
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
 
+    var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
 
+    var ledgernamegroup = $('<div>');
+    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
+    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
+    $('<hr>').addClass('').appendTo(ledgernamegroup);
+    $(ledgernamegroup).append('<br />').appendTo(container);
+
+    var headinggroup = $('<div>');
+    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
+    $(headinggroup).append('<br />').append('<br />').appendTo(container);
+
+    var selectledgergroup = $('<div>'); 
+    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
+    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetBudgetSetting();
+    }, function () {
+        //retrieve initial value on populate complete
+        GetBudgetSetting();
+    });
+
+    selectledgername.change(function () {
+        GetBudgetSetting();
+    });
+
+    var workingbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of working budget: ').appendTo(workingbudgetgroup);
+    var workingbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('workingBudgetName required').appendTo(workingbudgetgroup);
+    $(workingbudgetgroup).appendTo(container);
+
+    var fixedbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of fixed budget: ').appendTo(fixedbudgetgroup);
+    var fixedbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('fixedBudgetName required').appendTo(fixedbudgetgroup);
+    $(fixedbudgetgroup).appendTo(container);
+
+    var whatifbudgetgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('Name of "what if" budget: ').appendTo(whatifbudgetgroup);
+    var whatifbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('whatifBudgetName required').appendTo(whatifbudgetgroup);
+    $(whatifbudgetgroup).append('<br />').appendTo(container);
+
+    var errorgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('').addClass('validateerror budgetsettingerror').append('<br />').appendTo(errorgroup);
+    $(errorgroup).append('<br />').appendTo(container);
+
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+
+    var controlContainer = $('<div>').addClass('controlContainer');
+
+    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
+        .click(function () {
+            if (ValidBudgetSettingForm() === true) {
+                SaveBudgetSetting(id);
+            }
+        })
+        .appendTo(controlContainer);
+
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+        .click(function (e) {
+            e.preventDefault();
+            $('.budgetsettingerror').text('');
+            RemoveValidation('budgetsettingscontainer')
+
+            GetBudgetSetting();
+        })
+        .appendTo(controlContainer);
+
+    $(controlContainer).appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+    InitRequiredLabels('budgetsettingscontainer')
 
 }
+
+function ValidBudgetSettingForm() {
+    var validform = true;
+
+    // required items
+    if (ValidateForm('budgetsettingscontainer') === false) {
+        return false;
+    }
+
+    return validform;
+}
+
+function GetBudgetSetting() {
+    var ledgerid = $('.budgetLedgerId').val();
+
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+
+                $('.hidLedgerId').val(data.Data.Id);
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.workingBudgetName').val(data.Data.WorkingBudgetName)
+                $('.fixedBudgetName').val(data.Data.FixedBudgetName)
+                $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
+
+            }
+        }
+
+    }, null);
+}
+
+function SaveBudgetSetting(id) {
+
+    var data = {
+        Id: $(id).val(),
+        WorkingBudgetName: $('.workingBudgetName').val(),
+        FixedBudgetName: $('.fixedBudgetName').val(),
+        WhatIfBudgetName: $('.whatifBudgetName').val(),
+    }
+
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
+        }
+
+    }, null);
+}
+
 
 function LoadChartAccountsSettingsSectionSettings() {
 
@@ -2770,7 +2920,7 @@ function LoadEntitiesSectionSettings() {
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunit', 'businessunit', null, 'en-',
+    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
@@ -2878,8 +3028,176 @@ function LoadFundAccountingSectionSettings() {
 
 function LoadGLFormatSectionSettings() {
 
+    var container = $('<div>'); 
+
+    //var businessUnitId = 'd66ecff2-990d-4a5a-8cd6-5c6ab63b89df'; //CE needs to be replaced with the global variable when it is available
+    var businessUnitId = 'd63d404a-1bdd-40e4-ac19-b9354bd11d16'; //DCEF
+    var glaccountformat = '';
+    
+    var selectledgergroup = $('<div>').addClass('twocolumn');   
+    var selectledgername = $('<h1>').text('GL Format for Ledger: ');
+    $('<select>').addClass('LedgerId').appendTo(selectledgername);
+    $(selectledgername).appendTo(selectledgergroup);
+    $(selectledgergroup).appendTo(container);
+
+    var glformat = $('<div>').addClass('glformatcontainer');
+    $(glformat).appendTo($(container));
+
+    
+    $(container).appendTo($('.contentcontainer'));
+
+    
+
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessUnitId, '', '', $('.LedgerId').val(), function () {
+
+        var ledgerId = $('.LedgerId').val();
+        var canDeleteSegmentLevels = false;
+        var editModalClass = '';
+        
+        var modalLinkClass = 'glformat-newmodallink';
+        $('.' + modalLinkClass).remove();
+
+        $('.glformat-LedgerId').val(ledgerId);
+
+        MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
+
+            if (data && data.Data && data.IsSuccessful) {
+
+                glaccountformat = data.Data.DisplayFormat;
+
+                if (data.Data.LedgerAccounts === null || data.Data.LedgerAccounts.length === 0) {
+
+                    canDeleteSegmentLevels = true;
+                    editModalClass = '.glformatmodal';
+
+                    NewModalLink('.glformatcontainer', 'segmentlevels', 'glformat-', editModalClass, 250, '');
+
+                }
+                else {
+                    canDeleteSegmentLevels = false;
+                    editModalClass = '';
+                }
+
+                var glformatcolumns = [
+            { dataField: 'Id', width: '0px' },
+            { dataField: 'Level', caption: 'Level' },
+            {
+                caption: 'Type', cellTemplate: function (container, options) {
+                    var type = "None";
+
+                    switch (options.data.Type) {
+                        case 1:
+                            type = "Fund";
+                            break;
+                        case 2:
+                            type = "Account";
+                            break;
+                    }
+
+                    $('<label>').text(type).appendTo(container);
+                }
+            },
+            {
+                caption: 'Format', cellTemplate: function (container, options) {
+                    var format;
+
+                    switch (options.data.Format) {
+                        case 0:
+                            format = "Both";
+                            break;
+                        case 1:
+                            format = "Numeric";
+                            break;
+                        case 2:
+                            format = "Alpha";
+                            break;
+                    }
+
+                    $('<label>').text(format).appendTo(container);
+                }
+            },
+            { dataField: 'Length', caption: 'Length' },
+            { dataField: 'IsLinked', caption: 'Linked' },
+            { dataField: 'IsCommon', caption: 'Common' },
+            { dataField: 'Name', caption: 'Name' },
+            { dataField: 'Abbreviation', caption: 'Abbreviation' },
+            {
+                caption: 'Separator', cellTemplate: function (container, options) {
+                    var separator = 'None';
+
+                    switch (options.data.Separator) {
+                        case " ":
+                            separator = "(Space)";
+                            break;
+                        case "-":
+                            separator = "-";
+                            break;
+                        case ".":
+                            separator = ".";
+                            break;
+                        case ",":
+                            separator = ",";
+                            break;
+                        case "/":
+                            separator = "/";
+                            break;
+                        case "(":
+                            separator = "(";
+                            break;
+                        case ")":
+                            separator = ")";
+                            break;
+                        case "[":
+                            separator = "[";
+                            break;
+                        case "]":
+                            separator = "]";
+                            break;
+                    }
+
+                    $('<label>').text(separator).appendTo(container);
+                }
+            },
+            {
+                caption: 'Sort Order', cellTemplate: function (container, options) {
+                    var order = 'None';
+
+                    switch (options.data.SortOrder) {
+                        case 0:
+                            order = "Ascending";
+                            break;
+                        case 1:
+                            order = "Unaffiliated";
+                            break;
+                    }
+
+                    $('<label>').text(order).appendTo(container);
+                }
+            }
+                ];
 
 
+                LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
+                    editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
+
+                        $('.AccountFormat').remove();
+                        $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+
+                    });
+            }
+            
+
+
+        }, null);
+        
+    });
+
+    
+
+
+    
+    
+    
 }
 
 function LoadJournalSectionSettings() {

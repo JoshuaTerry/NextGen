@@ -7,7 +7,7 @@ namespace DDI.Shared.Models.Client.Security
 {
     [Table("UserRoles")]
     public class UserRole : IdentityUserRole<Guid>, IEntity, IAuditableEntity
-    {
+    {        
         [Key]
         public Guid Id { get; set; }
         [MaxLength(64)]

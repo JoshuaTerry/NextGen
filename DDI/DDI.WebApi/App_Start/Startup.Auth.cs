@@ -19,8 +19,7 @@ namespace DDI.WebApi
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            // Configure the db context and user manager to use a single instance per request
-            //app.CreatePerOwinContext(ApplicationDbContext.Create);
+            // Configure the db context and user manager to use a single instance per request 
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
             app.CreatePerOwinContext<RoleManager>(RoleManager.Create);
 
@@ -34,7 +33,7 @@ namespace DDI.WebApi
             // Configure the application for OAuth based flow
             PublicClientId = "self";
             OAuthOptions = new OAuthAuthorizationServerOptions
-            {
+            {                
                 TokenEndpointPath = new PathString("/api/v1/Login"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),

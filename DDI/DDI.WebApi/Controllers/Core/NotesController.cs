@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class NotesController : GenericController<Note>
     {
         #region Public Properties

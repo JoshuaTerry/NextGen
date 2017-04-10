@@ -33,8 +33,7 @@ namespace DDI.Shared.Models.Client.GL
          
         public int CurrentPeriodNumber { get; set; }
 
-        [NotMapped]
-        public bool HasAdjustmentPeriod { get; set; }
+        public int HasAdjustmentPeriod { get; set; }
 
         public ICollection<FiscalPeriod> FiscalPeriods { get; set; }
 

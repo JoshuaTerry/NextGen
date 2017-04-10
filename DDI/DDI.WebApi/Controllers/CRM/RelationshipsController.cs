@@ -11,6 +11,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RelationshipsController : GenericController<Relationship>
     {
         protected new IRelationshipService Service => (IRelationshipService)base.Service;
@@ -89,6 +90,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituents/{constituentId}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Post)]
         public IHttpActionResult Post(Guid constituentId, [FromBody] Relationship entityToSave)
@@ -98,6 +100,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -105,6 +108,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid constituentId, Guid id, JObject entityChanges)
@@ -114,6 +118,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -121,6 +126,8 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_Read)]
+        [HttpGet]
         [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid constituentId, Guid id, string fields = null)
         {
@@ -135,6 +142,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
 
+        [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/relationships/constituents/{id}")]
         [Route("api/v1/constituents/{id}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link

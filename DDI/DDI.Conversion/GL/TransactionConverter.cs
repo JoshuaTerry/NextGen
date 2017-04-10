@@ -81,7 +81,6 @@ namespace DDI.Conversion.GL
                     transaction.TransactionNumber = importer.GetInt64(8);
                     transaction.LineNumber = importer.GetInt(9);
                     transaction.Description = importer.GetString(10);
-                    transaction.TransactionId = importer.GetInt(11);
                     transaction.IsAdjustment = importer.GetBool(12);
 
                     transaction.AssignPrimaryKey();
