@@ -2771,7 +2771,7 @@ function LoadAccountingSettingsSectionSettings() {
             Id: $('.as-ledgerselect').val(),
             DefaultFiscalYearId: $('.as-fiscalyear').val(),
             PostAutomatically: $('.as-postedtransaction').prop('checked'),
-            //PostingDaysInAdvance: $('.as-daysinadvance').val(), 
+            PostDaysInAdvance: $('.as-daysinadvance').val(), 
             ApproveJournals: $('.as-approval').prop('checked')
 
         };
@@ -2801,7 +2801,7 @@ function LoadAccountingSettings(id) {
         $('.hidLedgerId').val(data.Data.Id);
         $('.as-fiscalyear').val(data.Data.DefaultFiscalYearId);
         $('.as-postedtransaction').prop('checked', data.Data.PostAutomatically);
-        $('.as-daysinadvance').val(); 
+        $('.as-daysinadvance').val(data.Data.PostDaysInAdvance); 
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
         if ($('.as-approval').checked) {

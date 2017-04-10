@@ -17,7 +17,7 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/ledgers/{buid}/businessunit")]
+        [Route("api/v1/ledgers/businessunit/{buid}")]
         public IHttpActionResult GetByBusinessUnit(Guid buid)
         {
             try
