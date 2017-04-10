@@ -15,14 +15,22 @@ namespace DDI.Business.GL
 {
     class LedgerLogic : EntityLogicBase<Ledger>
     {
+<<<<<<< HEAD
+      
+=======
 
+>>>>>>> develop
         #region Constructors 
 
         public LedgerLogic() : this(new UnitOfWorkEF()) { }
 
         public LedgerLogic(IUnitOfWork uow) : base(uow)
         {
+<<<<<<< HEAD
+           
+=======
 
+>>>>>>> develop
         }
 
         #endregion
@@ -36,8 +44,11 @@ namespace DDI.Business.GL
 
             ValidateLedgerNames(unit);
 
+<<<<<<< HEAD
+=======
             ValidateBudgetNames(unit);
 
+>>>>>>> develop
         }
 
         private void ValidateLedgerNames(Ledger unit)
@@ -94,6 +105,8 @@ namespace DDI.Business.GL
 
         }
 
+<<<<<<< HEAD
+=======
         private void ValidateBudgetNames(Ledger unit)
         {
             if (string.IsNullOrWhiteSpace(unit.FixedBudgetName) || string.IsNullOrWhiteSpace(unit.WhatIfBudgetName)
@@ -109,6 +122,7 @@ namespace DDI.Business.GL
 
         }
 
+>>>>>>> develop
         #endregion
     }
 }

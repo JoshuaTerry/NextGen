@@ -2860,6 +2860,109 @@ function GetBudgetSetting() {
     }, null);
 }
 
+<<<<<<< HEAD
+function LoadChartAccountsSectionSettings() {
+    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
+    var ledgerid;
+
+    var container = $('<div>').addClass('chartsettingscontainer onecolumn');
+
+    var ledgernamegroup = $('<div>').addClass('');
+    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
+    ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
+    $('<hr>').appendTo(ledgernamegroup);
+    $(ledgernamegroup).append('<br />').appendTo(container);
+
+    var headinggroup = $('<div>');
+    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
+    $(headinggroup).append('<br />').append('<br />').appendTo(container);
+
+    var selectledgergroup = $('<div>');
+    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
+    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+        //update on change  (not working so added .change logic below
+        //GetChartSetting();
+        }, function () {
+        //retrieve initial value on populate complete
+        GetChartSetting();
+    });
+
+    selectledgername.change(function () {
+        GetChartSetting();
+    });
+
+    var capitalizeheadersgroup = $('<div>').addClass('fieldblock');
+    var capitalizeheaderscheckbox = $('<input>').attr('type', 'checkbox').addClass('capitalizeheaders').appendTo(capitalizeheadersgroup);
+    $('<span>').text('Capitalize account group descriptions').appendTo(capitalizeheadersgroup);
+    $(capitalizeheadersgroup).append('<br />').appendTo(container);
+
+    var grouplevelsgroup = $('<div>');
+    $('<label>').text('Number of account groups: ').appendTo(grouplevelsgroup);
+    var grouplevels = $('<select>').addClass('groupLevels').appendTo(grouplevelsgroup).change(function () {
+        GroupLevelsChange();
+    });
+    grouplevels.append('<option value="1">1</option>');
+    grouplevels.append('<option value="2">2</option>');
+    grouplevels.append('<option value="3">3</option>');
+    grouplevels.append('<option value="4">4</option>');
+    grouplevels.appendTo(grouplevelsgroup);
+    $(grouplevelsgroup).append('<br />').append('<br />').appendTo(container);
+
+    var group1 = $('<div>').addClass('fieldblock AccountGroup1group');
+    $('<label>').text('Account Group 1: ').appendTo(group1);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup1Title').appendTo(group1);
+    $(group1).appendTo(container);
+
+    var group2 = $('<div>').addClass('fieldblock AccountGroup2group');
+    $('<label>').text('Account Group 2: ').appendTo(group2);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup2Title').appendTo(group2);
+    $(group2).hide().appendTo(container);
+
+    var group3 = $('<div>').addClass('fieldblock AccountGroup3group');
+    $('<label>').text('Account Group 3: ').appendTo(group3);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup3Title').appendTo(group3);
+    $(group3).hide().appendTo(container);
+
+    var group4 = $('<div>').addClass('fieldblock AccountGroup4group');
+    $('<label>').text('Account Group 4: ').appendTo(group4);
+    $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup4Title').appendTo(group4);
+    $(group4).hide().appendTo(container);
+
+    var errorgroup = $('<div>').addClass('fieldblock');
+    $('<label>').text('').addClass('validateerror chartsettingerror').append('<br />').appendTo(errorgroup);
+    $(errorgroup).append('<br />').appendTo(container);
+
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+
+    var controlContainer = $('<div>').addClass('controlContainer');
+
+    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
+        .click(function () {
+            if (ValidChartSettingForm() === true) {
+                SaveChartSetting(id);
+            }
+        })
+        .appendTo(controlContainer);
+
+    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
+        .click(function (e) {
+            e.preventDefault();
+            $('.chartsettingerror').text('');
+            RemoveValidation('chartsettingscontainer')
+
+            GetChartSetting();
+        })
+        .appendTo(controlContainer);
+
+    $(controlContainer).appendTo(container);
+
+    $(container).appendTo($('.contentcontainer'));
+
+    InitRequiredLabels("chartsettingscontainer")
+=======
 function SaveBudgetSetting(id) {
 
     var data = {
@@ -2874,12 +2977,101 @@ function SaveBudgetSetting(id) {
         if (data.Data) {
             DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
         }
+>>>>>>> develop
 
     }, null);
 }
 
 
+<<<<<<< HEAD
+function ValidChartSettingForm() {
+    var validform = true;
+
+    // required items
+    if (ValidateForm('budgetsettingscontainer') === false) {
+        return false;
+    }
+
+    return validform;
+}
+
+function GetChartSetting() {
+
+    var ledgerid = $('.chartLedgerId').val();
+
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+
+                $('.hidLedgerId').val(data.Data.Id);
+                $('.ledgernamedisplay').text(data.Data.Name)
+                $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
+                $('.groupLevels').val(data.Data.AccountGroupLevels);
+                $('.accountGroup1Title').val(data.Data.AccountGroup1Title)
+                $('.accountGroup2Title').val(data.Data.AccountGroup2Title)
+                $('.accountGroup3Title').val(data.Data.AccountGroup3Title)
+                $('.accountGroup4Title').val(data.Data.AccountGroup4Title)
+                GroupLevelsChange();
+
+            }
+        }
+
+    }, null);
+}
+
+function SaveChartSetting(id) {
+
+    var data = {
+        Id: $(id).val(),
+        CapitalizeHeaders: $('.capitalizeheaders').prop('checked'),
+        AccountGroupLevels: $('.groupLevels').val(),
+        AccountGroup1Title: $('.accountGroup1Title').val(),
+        AccountGroup2Title: $('.accountGroup2Title').val(),
+        AccountGroup3Title: $('.accountGroup3Title').val(),
+        AccountGroup4Title: $('.accountGroup4Title').val(),
+    }
+
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Chart of Accounts Settings saved successfully.');
+        }
+
+    }, null);
+}
+
+function GroupLevelsChange() {
+    var groupLevels = $('.groupLevels').val();
+    switch (groupLevels) {
+        case '1':
+            $('.AccountGroup2group').hide();
+            $('.AccountGroup3group').hide();
+            $('.AccountGroup4group').hide();
+            break;
+        case '2':
+            $('.AccountGroup2group').show();
+            $('.AccountGroup3group').hide();
+            $('.AccountGroup4group').hide();
+            break;
+        case '3':
+            $('.AccountGroup2group').show();
+            $('.AccountGroup3group').show();
+            $('.AccountGroup4group').hide();
+            break;
+        case '4':
+            $('.AccountGroup2group').show();
+            $('.AccountGroup3group').show();
+            $('.AccountGroup4group').show();
+            break;
+    }
+}
+
+
+function LoadEntitiesSectionSettings() {
+=======
 function LoadChartAccountsSettingsSectionSettings() {
+>>>>>>> develop
 
 
 
