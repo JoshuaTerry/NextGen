@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RegionLevelsController : GenericController<RegionLevel>
     {
 
@@ -23,6 +24,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] RegionLevel item)
@@ -30,6 +32,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(item);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
@@ -37,6 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, changes);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/regionlevels/{id}", Name = RouteNames.RegionLevel + RouteVerbs.Delete)]
         public new IHttpActionResult Delete(Guid id)

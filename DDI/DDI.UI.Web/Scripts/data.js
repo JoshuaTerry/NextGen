@@ -42,7 +42,9 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            if (xhr.responseJSON.ExceptionMessage) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
             if (errorCallback) {
                 errorCallback();
             }
@@ -230,6 +232,9 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
             // Add link for new modal
             NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
         }
+        if (onComplete) {
+            onComplete();
+        }
     });
 
 }
@@ -304,6 +309,7 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);

@@ -2,12 +2,25 @@
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
+using System.Web.Routing;
+
 
 namespace DDI.WebApi.Controllers.GL
 {
+    
+    //[Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
+        protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Ledger, object>>[]
+            {
+                c => c.LedgerAccounts,
+                c => c.SegmentLevels
+            };
+        }
 
         [HttpGet]
         [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Get)]

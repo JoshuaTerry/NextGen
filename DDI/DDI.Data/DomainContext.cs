@@ -97,6 +97,7 @@ namespace DDI.Data
 
         public DbSet<Shared.Models.Client.GL.Account> GL_Accounts { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBalance> GL_AccountBalances { get; set; }
+        public DbSet<Shared.Models.Client.GL.GLAccountSelection> GL_GLAccountSelection { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountBudget> GL_AccountBudgets { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountClose> GL_AccountCloses { get; set; }
         public DbSet<Shared.Models.Client.GL.AccountGroup> GL_AccountGroups { get; set; }
@@ -115,7 +116,6 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.GL.PostedTransaction> GL_PostedTransactions { get; set; }
         public DbSet<Shared.Models.Client.GL.Segment> GL_Segments { get; set; }
         public DbSet<Shared.Models.Client.GL.SegmentLevel> GL_SegmentLevels { get; set; }
-        public DbSet<Shared.Models.Client.GL.SubledgerTransaction> GL_SubledgerTransactions { get; set; }
 
         #endregion
 
@@ -165,7 +165,7 @@ namespace DDI.Data
         }       
         #endregion Public Constructors
 
-        #region Method Overrides 
+        #region Method Overrides  
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
             IEntity entity = entityEntry.Entity as IEntity;

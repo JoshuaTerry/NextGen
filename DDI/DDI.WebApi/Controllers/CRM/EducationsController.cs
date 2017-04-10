@@ -10,6 +10,7 @@ namespace DDI.WebApi.Controllers.CRM
 {
     public class EducationsController : GenericController<Education>
     {
+        [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
         protected override Expression<Func<Education, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<Education, object>>[]
@@ -33,6 +34,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/educations", Name = RouteNames.Education + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Education entityToSave)
@@ -40,6 +42,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(entityToSave);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/educations/{id}", Name = RouteNames.Education + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -47,6 +50,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, entityChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/educations/{id}", Name = RouteNames.Education + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -54,6 +58,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/educations/constituents/{id}")]
         [Route("api/v1/constituents/{id}/educations", Name = RouteNames.Constituent + RouteNames.Education)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
