@@ -1,6 +1,7 @@
 using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.GL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,11 @@ namespace DDI.Shared.Models.Client.INV
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
         
+        [ForeignKey("BusinessUnitId")]
+        public BusinessUnit BusinessUnit { get; set; }
+
+        public Guid? BusinessUnitId { get; set; }
+
         public string CUSIP { get; set; }
 
         [MaxLength(256)]
@@ -24,7 +30,9 @@ namespace DDI.Shared.Models.Client.INV
         //per Pat, need to be able to add to these types
         [ForeignKey("InvestmentOwnershipTypeId")]
         public InvestmentOwnershipType InvestmentOwnershipType { get; set; }
-        
+
+        public Guid? InvestmentOwnershipTypeId { get; set; }
+
         public int InvestmentNumber { get; set; }
         
         public InvestmentStatus InvestmentStatus { get; set; }
@@ -33,6 +41,8 @@ namespace DDI.Shared.Models.Client.INV
 
         [ForeignKey("InvestmentTypeId")]
         public InvestmentType InvestmentType { get; set; }
+
+        public Guid? InvestmentTypeId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? CurrentMaturityDate { get; set; }
@@ -45,6 +55,9 @@ namespace DDI.Shared.Models.Client.INV
 
 
         #region Navigation Properties
+
+        public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
+
         #endregion
 
         #region NotMapped Properties
@@ -63,7 +76,7 @@ namespace DDI.Shared.Models.Client.INV
         {
             get
             {
-                return 0;
+                return new decimal(45.54);
             }
         }
 
