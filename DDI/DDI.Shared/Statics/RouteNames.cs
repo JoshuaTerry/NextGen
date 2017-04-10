@@ -29,6 +29,7 @@
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";
+        public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
         public const string Degree = "Degree";
         public const string Denomination = "Denomination";
@@ -60,6 +61,7 @@
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";
         public const string Segment = "Segment";
+        public const string SegmentLevel = "SegmentLevel";
         public const string State = "State";
         public const string Tag = "Tag";
         public const string TagGroup = "TagGroup";

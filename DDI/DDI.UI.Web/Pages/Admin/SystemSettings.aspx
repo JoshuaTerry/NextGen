@@ -108,8 +108,9 @@
                 </ul>
             </div>
         </div>
-
+        
         <div class="contentcontainer">
+            <h1 class="systemsettingsheader"></h1>
             <div class="gridcontainer"></div>
         </div>
 
@@ -1082,6 +1083,167 @@
 
     </div>
 
+    <div class="fiscalyearmodal" title="Fiscal Year" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fy-LedgerId" />
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="fy-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Number Of Periods</label>
+                <select class="fy-NumberOfPeriods">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Use final accounting period for year end adjustments only</label>
+                <input type="checkbox" class="fy-HasAdjustmentPeriod" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fp-Id" />
+            <input type="hidden" class="fp-FiscalYearId" />
+
+            <div class="fieldblock">
+                <label>Period Number</label>
+                <input type="text" maxlength="2" class="fp-PeriodNumber number" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Start Date</label>
+                <input type="text" class="fp-StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>End Date</label>
+                <input type="text" class="fp-EndDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Status</label>
+                <select class="fp-Status">
+                    <option value="0">Open</option>
+                    <option value="1">Closed</option>
+                    <option value="2">Reopened</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="glformatmodal" title="GL Format" style="display: none;">
+
+        <div class="modalcontent">
+
+
+            <input type="hidden" class="glformat-LedgerId parentid" />
+
+            <div class="fieldblock">
+                <label>Level</label>
+                <input type="text" class="glformat-Level" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Type</label>
+                <select class="glformat-Type">  
+                   <option value="0">None</option>
+                   <option value="1">Fund</option>
+                   <option value="2">Account</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Format</label>
+                <select class="glformat-Format">  
+                   <option value="0">Both</option>
+                   <option value="1">Numberic</option>
+                   <option value="2">Alpha</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Length</label>
+                <input type="text" class="glformat-Length" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Linked</label>
+                <input type="checkbox" class="glformat-IsLinked" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Common</label>
+                <input type="checkbox" class="glformat-IsCommon" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="glformat-Name" />
+            </div>
+            
+            <div class="fieldblock">
+                <label>Abbreviation</label>
+                <input type="text" class="glformat-Abbreviation" />
+            </div>
+            
+            <div class="fieldblock">
+                <label>Separator</label>
+                <select class="glformat-Separator">  
+                   <option value="">None</option>
+                   <option value=" ">(Space)</option>
+                   <option value="-">-</option>
+                   <option value=".">.</option>
+                   <option value=",">,</option>
+                   <option value="/">/</option>
+                   <option value="(">(</option>
+                   <option value=")">)</option>
+                   <option value="[">[</option>
+                   <option value="]">]</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Sort Order</label>
+                <select class="glformat-SortOrder">  
+                   <option value="0">Ascending</option>
+                   <option value="1">Descending</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+
+        </div>
+
+    </div>
     <div class="entitymodal" title="Business Units" style="display: none;">
 
         <div class="modalcontent">

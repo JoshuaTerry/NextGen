@@ -13,6 +13,7 @@
         public static string FiscalYearClosed => "Fiscal year {0} has been closed.";
         public static string TranDateInvalid => "A valid transaction date is required.";
         public static string GLAcctDescrBlank => "G/L account description cannot be blank.";
+        public static string DuplicateGroupName => "Group names must be unique.";
         public static string GLAcctNumBlank => "G/L account number cannot be blank.";
         public static string GLAcctCategoryNone => "G/L account category cannot be set to \"None\".";
         public static string GLAcctBeginBalRandE => "Revenue and expense accounts cannot have a beginning balance.";
@@ -30,6 +31,10 @@
         public static string GLSegmentNumeric => "Segment code must contain only numbers.";
         public static string InvalidCode => "Invalid {0} code {1}";
         public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
+		 public static string BlankGroupName => "Group names are required for each level.";
+    public static string DuplicateBudgetName => "Budget names must be unique.";
+    public static string BlankBudgetName => "Budget names are required.";
+
 
 
     }
