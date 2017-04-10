@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class NoteTopicsController : GenericController<NoteTopic>
     {
         protected override string FieldsForList => FieldLists.CodeFields;

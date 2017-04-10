@@ -1,11 +1,11 @@
 ﻿
 $(document).ready(function () {
 
-    SetupNewUserModal();
+   // SetupNewUserModal();
 
     LoadGroupsGrid();
 
-    // LoadUsersGrid();
+     LoadUsersGrid();
 
 });
 
@@ -37,6 +37,7 @@ function SetupNewUserModal() {
                 data: model,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
+                headers: GetApiHeaders(),
                 success: function () {
 
                     AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
@@ -86,6 +87,7 @@ function LoadGroupMembersGrid() {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             $(datagrid).dxDataGrid({
@@ -145,11 +147,36 @@ function LoadSecuritySettingsGrid() {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'DisplayName', caption: 'User Name' },
+        { dataField: 'Email', caption: 'Email Address' },
+        { caption: 'Active', cellTemplate: function (container, options) {
+                var type = 'Yes';
+
+                if (options.data.IsActive != '1') {
+                    type = 'No';
+                }
+                $('<label>').text(type).appendTo(container);
+            }
+        }
     ];
 
-    LoadGrid('usersgrid', 'usersgridcontainer', columns, 'users');
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+   // PopulateBusinessUnits();
+    LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
+       , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
+   
+
+}
+
+function LoadBusinessUnits()
+{
+   
+}
+
+function CreateBusinessUnitCheckBoxes(data)
+{
+
 
 }
 
@@ -172,6 +199,7 @@ function DisplayUserInfo(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (IsSuccessful) {
@@ -210,6 +238,7 @@ function AddUsersToRoles(user, roles) {
         data: data,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
         },

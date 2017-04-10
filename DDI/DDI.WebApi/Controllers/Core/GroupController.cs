@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
 {
+    [Authorize]
     public class GroupController : GenericController<Group>
     {
 

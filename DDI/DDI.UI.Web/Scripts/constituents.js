@@ -172,6 +172,7 @@ function GetConstituentData(id) {
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
@@ -283,6 +284,7 @@ function DisplayConstituentPicture() {
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
@@ -324,6 +326,7 @@ function DisplayConstituentPicture() {
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset-utf-8',
                 dataType: 'json',
+                headers: GetApiHeaders(),
                 crossDomain: true,
                 success: function (data) {
 
@@ -381,6 +384,7 @@ function GetConstituentPrimaryAddress() {
         url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
         contentType: 'application/json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             currentaddress = data.Data;
@@ -414,6 +418,7 @@ function GetConstituentPreferredContactInfo() {
         url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             currentcontactinfo = data.Data.ContactInfo;
@@ -580,6 +585,7 @@ function ShowAuditData(id) {
             data: item,
             contentType: 'application/x-www-form-urlencoded',
             crossDomain: true,
+            headers: GetApiHeaders(),
             success: function (data) {
 
                 LoadAuditTable();
