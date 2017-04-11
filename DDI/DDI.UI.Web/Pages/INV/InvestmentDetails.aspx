@@ -315,6 +315,7 @@
         <div class="modalcontent">
 
             <input type="hidden" class="interest-Id" />
+            <input type="hidden" class="hidconstituentlookupid" />
 
             <div class="fieldblock fourcolumn">
                 <label>Priority</label>
@@ -336,6 +337,11 @@
                 <input type="radio" name="gender" value="Percent"/>Percent<br />
                 <input type="radio" name="gender" value="Amount"/>Amount
                 <input type="number" class="interest-AmtPct" />
+            </div>
+
+            <div class="fieldblock">
+                <label></label>
+                <input type="text" class="rs-FormattedName2 constituentlookup" />
             </div>
 
             <div class="fieldblock interestOptionACHWire fourcolumn">
