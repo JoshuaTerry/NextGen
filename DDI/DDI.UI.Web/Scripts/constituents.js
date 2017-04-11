@@ -257,6 +257,8 @@ function DisplayConstituentData() {
 
         LoadRelationshipsTab();
 
+        LoadInvestmentsGrid();
+
         PopulateMonthDays();
 
         AmendMonthDays();
@@ -1069,6 +1071,25 @@ function LoadRelationshipData(data, modal) {
 }
 /* End Relationships Tab */
 
+
+/* Investment Tab */
+
+function LoadInvestmentsGrid() {
+    var columns = [
+    { dataField: 'InvestorRelationship', width: '0px', },
+    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'InvestmentNumber', caption: 'Inv Num' },
+    { dataField: 'CurrentMaturityDate', caption: 'Maturity' },
+    { dataField: 'Rate', caption: 'Rate' },
+    { dataField: 'Balance', caption: 'Balance' },
+    { dataField: 'OwnershipType', caption: 'Ownership' }
+    ];
+
+    //LoadGrid('.investmentstable', 'investmentgrid', columns, 'investments/businessunit/' + currentEntity.Id, null, null
+    //    , '', '', '', 0, false, false, false, null);
+}
+
+/* End Investment Tab */
 
 
 

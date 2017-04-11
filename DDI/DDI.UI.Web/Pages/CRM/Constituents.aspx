@@ -653,19 +653,19 @@
                         </div>
 
                         <div class="fieldblock">
-                            Investor Since: <span><label class="InvestorSince"></label></span>
+                            Investor Since: <span><label class="InvestorStartDate"></label></span>
                         </div>
 
                         <div class="fieldblock">
-                            Primary Owner Investment: <span><label class="PrimaryOwnerInvestment"></label></span>
+                            Primary Owner Investment: <span><label class="PrimaryInvestorTotal"></label></span>
                         </div>
 
                         <div class="fieldblock">
-                            Joint Owner Investment: <span class="JointOwnerInvestment"></span>
+                            Joint Owner Investment: <span class="JointInvestorTotal"></span>
                         </div>
 
                         <div class="fieldblock">
-                            Beneficiary: <span><label class="BeneficiaryInvestment"></label></span>
+                            Total Investment Balance: <span><label class="InvestorTotal"></label></span>
                         </div>
 
                         <div>
@@ -674,28 +674,9 @@
 
                     </div>
 
-                    <div class="investmentgridcontainer"></div>
-
                 </div>
                 
-                <div class="accordions">
-                    
-                    <h1>Primary Owner</h1>
-
-                    <div class="">
-                    </div>
-
-                    <h1>Joint Owner</h1>
-
-                    <div class="">
-                    </div>
-
-                    <h1>Beneficiary</h1>
-
-                    <div class="">
-                    </div>
-
-                    </div>
+                <div class="investmentstable"></div>
 
         </div>
 
