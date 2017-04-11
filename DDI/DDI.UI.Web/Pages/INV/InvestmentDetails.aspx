@@ -284,6 +284,9 @@
                                 <div class="interestIRSgridcontainer"></div>
                             </div>
 
+                            <div>
+                                <div class="interestpaymenttable"></div>
+                            </div>
                         </div>
 
                         <h1>Linked Accounts</h1>
@@ -293,7 +296,8 @@
                         <div class="editcontainer"></div>
 
                         <h1>Payment Preferences</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+                        </div>
 
                     </div>
 
@@ -306,53 +310,57 @@
 
 <%--    Modal section     --%>
 
-    <div class="interestmodal" title="Interest Payment" style="display: none;">
+    <div class="interestpaymentmodal" title="Interest Payment" style="display: none;">
 
         <div class="modalcontent">
 
             <input type="hidden" class="interest-Id" />
 
-            <div class="fieldblock">
+            <div class="fieldblock fourcolumn">
                 <label>Priority</label>
                 <input type="number" class="interest-Priority" />
 
                 <label>Method</label>
                 <select class="interest-Category">
-                    <option value="0">Individual</option>
-                    <option value="1">Organization</option>
-                    <option value="2">Both</option>
+                    <option value=""></option>
+                    <option value="ACH">ACH</option>
+                    <option value="Check">Check</option>
+                    <option value="Compound">Compound</option>
+                    <option value="Donation">Donation</option>
+                    <option value="Investment Deposit">Investment Deposit</option>
+                    <option value="Wire">Wire</option>
                 </select>
             </div>
 
-            <div class="fieldblock">
-                <label>Category</label>
+            <div class="fieldblock fourcolumn">
+                <input type="radio" name="gender" value="Percent"/>Percent<br />
+                <input type="radio" name="gender" value="Amount"/>Amount
+                <input type="number" class="interest-AmtPct" />
             </div>
 
-            <div class="fieldblock">
-                <label>Name Format</label>
-                <input type="text" class="interest-NameFormat" />
+            <div class="fieldblock interestOptionACHWire fourcolumn">
+                <label>Payment Preference:</label>
+                <select class="interest-PaymentPreference">
+                    <option value=""></option>
+                    <option value="Default">Default</option>
+                </select>
             </div>
 
-            <div class="fieldblock">
-                <label>Formal Salutation</label>
-                <input type="text" class="interest-SalutationFormal" />
+            <div class="fieldblock interestOptionCheck fourcolumn">
+                <label>Id:</label>
+                <input type="text" class="interest-CheckId" />
+                <label>Name:</label>
+                <input type="text" class="interest-CheckName" />
             </div>
 
-            <div class="fieldblock">
-                <label>Informal Salutation</label>
-                <input type="text" class="interest-SalutationInformal" />
+            <div class="fieldblock interestOptionDonation">
+                <fieldset>
+                    <legend>Dontation Template</legend>
+                </fieldset>            
             </div>
 
-            <div class="fieldblock">
-                <label>Tags</label>
-                <div class="tagselect interest-tagselect"></div>
+            <div class="fieldblock interestOptionCompound">
             </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitinterest" value="Save" />
-                <a href="#" class="canceltypemodal">Cancel</a>
-            </div>
-
 
         </div>
 
