@@ -191,7 +191,7 @@
                         <div class="editcontainer"></div>
 
                         <h1>Interest</h1>
-                        <div class="editcontainer">
+                        <div class="editcontainer interestgridcontainer">
                             <div class="threecolumn">
 
                                 <div class="fieldblock">

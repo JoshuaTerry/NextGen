@@ -38,7 +38,7 @@ function LoadInterestPaymentGrid() {
     { dataField: 'Amount', caption: 'Amount' }
 ];
 
-    //LoadGrid('.interestpayment', 'interestpaymentgrid', columns, 'investmentpayments/' + currentEntity.Id + '/interestpaymentmodal', 'interestpaymentmodal'
+    //LoadGrid('.interestpayment', 'interestgridcontainer', columns, 'investmentpayments/' + currentEntity.Id, 'interestpaymentmodal'
     //    , null, 'int-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 }
 
