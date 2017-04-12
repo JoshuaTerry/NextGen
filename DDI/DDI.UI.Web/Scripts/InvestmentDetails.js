@@ -7,6 +7,8 @@
     LoadDropDowns();
 
     LoadInterestPaymentGrid();
+
+    LoadLinkedAccountsGrid();
     
 });
 
@@ -38,8 +40,20 @@ function LoadInterestPaymentGrid() {
     { dataField: 'Amount', caption: 'Amount' }
 ];
 
-    //LoadGrid('.interestpayment', 'interestpaymentgrid', columns, 'investmentpayments/' + currentEntity.Id + '/interestpaymentmodal', 'interestpaymentmodal'
-    //    , null, 'int-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
+    //LoadGrid('.interestpayment', 'interestpaymentgrid', columns, 'investmentpayments/' + currentEntity.Id + '/interestpayment', 'interestpaymentmodal'
+    //    , null, 'intpmt-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 }
 
+
+function LoadLinkedAccountsGrid() {
+    var columns = [
+    { dataField: 'Id', width: '0px', },
+    { dataField: 'Type', caption: 'Type' },
+    { dataField: 'LinkNumber', caption: 'Link Number' },
+    { dataField: 'Name', caption: 'Name' },
+    ];
+
+    //LoadGrid('.linkedaccountsgridcontainer', 'linkedaccountsgrid', columns, 'investmentlinkedaccounts/' + currentEntity.Id + '/????', 'linkedaccountsmodal'
+    //    , null, 'intlink-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
+}
 

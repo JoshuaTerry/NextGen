@@ -290,7 +290,13 @@
                         </div>
 
                         <h1>Linked Accounts</h1>
-                        <div class="editcontainer"></div>
+                            <div class="editcontainer">
+                                <div class="accordions">
+
+                                <div class="linkedaccountsgridcontainer"></div>
+                            </div>
+
+                        </div>
 
                         <h1>Maturity</h1>
                         <div class="editcontainer"></div>
@@ -366,6 +372,52 @@
             </div>
 
             <div class="fieldblock interestOptionCompound">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="linkedaccountsmodal" title="Linked Accounts" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="interest-Id" />
+            <input type="hidden" class="hidconstituentlookupid" />
+
+            <div class="fieldblock twocolumn">
+
+                <label>Method</label>
+                <select class="linkedAccounts-Type">
+                    <option value=""></option>
+                    <option value="Down Payment">Down Payment</option>
+                    <option value="Grant">Grant</option>
+                    <option value="Loan Support">Loan Support</option>
+                    <option value="Pool">Pool</option>
+                </select>
+            </div>
+
+            <div class="fieldblock fourcolumn">
+                <label>Loan</label>
+                <input type="checkbox" class="editable LinkedAccountsLoan" />
+                <label>Loan Number:</label>
+                <input type="text" class="rs-LoanName loanlookup" />
+            </div>
+
+            <div class="fieldblock interestOptionACHWire fourcolumn">
+                <label>Collateral on Loan</label>
+                <input type="checkbox" class="editable LinkedAccountsLoanCollateral" />
+                <div class="fieldblock loanCollateralOption">
+                    <fieldset>
+                        <input type="radio" name="loancollateral" value="Percent"/>Percent<br />
+                        <input type="radio" name="loancollateral" value="Amount"/>Amount
+                    </fieldset>            
+                </div>
+            </div>
+
+            <div>
+                <label>Block Investments from linking to other loans:</label>
+                <input type="checkbox" class="editable LoanBlockLinkedInvestments" />
             </div>
 
         </div>
