@@ -293,6 +293,7 @@
                             <div class="editcontainer">
                                 <div class="accordions">
 
+                                <h1>Linked Account Detail<a href="#" title="New" class="newlinkedaccountsmodallink newbutton"></a></h1>
                                 <div class="linkedaccountsgridcontainer"></div>
                             </div>
 
