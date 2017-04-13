@@ -44,7 +44,10 @@ function LoadDepositsAndWithdrawalsSection() {
         { dataField: 'IsActive', caption: 'Status' }
     ];
 
-    LoadGrid('.depositswithdrawalsgrid', 'dwgrid', columns);
+    //LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) 
+
+
+    LoadGrid('.dwgridcontainer', 'dwgrid', columns, null, null, null, null, null, null, null, null, null, null, null); // probly needs grid
 
 }
 
