@@ -187,7 +187,11 @@
                         </div>
 
                         <h1>Deposits and Withdrawals</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+
+                            <div class="dwgridcontainer"></div>
+
+                        </div>
 
                         <h1>Interest</h1>
                         <div class="editcontainer"></div>

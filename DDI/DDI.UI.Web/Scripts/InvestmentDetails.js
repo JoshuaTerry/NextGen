@@ -1,18 +1,17 @@
 ﻿$(document).ready(function () {
 
-    // investment id will probably be coming from constituent (and elsewhere?)
-    // set in sessionstorage and set hid investment id
-
     // apply system settings?
 
-    // see roughly line 45 in constituents.js - will have to implement as part of investments tab
+    if (sessionStorage.getItem('investmentid')) {
 
+        $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
 
-    CreateEditControls();
+    }
 
-    SetupEditControls();
+    GetInvestmentData();
 
-    LoadDepositsAndWithdrawalsSection();
+    DisplayInvestmentData(id);
+    // RefreshEntity(); ?
     
 });
 
@@ -23,10 +22,25 @@ function RefreshEntity() {
 
 }
 
+function GetInvestmentData(id) {
+
+    MakeServiceCall('GET', '' + id, null, function () {
+
+        DisplayInvestmentData();
+
+    }); 
+
+}
+
 
 function DisplayInvestmentData() {
 
 
+    CreateEditControls();
+
+    SetupEditControls();
+
+    LoadDepositsAndWithdrawalsSection();
 
 }
 
@@ -44,7 +58,10 @@ function LoadDepositsAndWithdrawalsSection() {
         { dataField: 'IsActive', caption: 'Status' }
     ];
 
-    LoadGrid('.depositswithdrawalsgrid', 'dwgrid', columns);
+    //LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) 
+
+
+    LoadGrid('.dwgridcontainer', 'dwgrid', columns, null, null, null, null, null, null, null, null, null, null, null);
 
 }
 
