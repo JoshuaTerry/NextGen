@@ -1,8 +1,11 @@
-﻿using DDI.Services.Search;
+﻿using DDI.Data;
+using DDI.Services.Search;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.INV;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 
@@ -31,6 +34,10 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
+            
+            Investment inv = new Investment();
+            
+
             return base.GetById(id, fields);
         }
 

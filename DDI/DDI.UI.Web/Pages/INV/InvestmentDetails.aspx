@@ -186,7 +186,7 @@
                             </div>
                         </div>
 
-                        <h1>Automatic Transactions</h1>
+                        <h1>Deposits and Withdrawals</h1>
                         <div class="editcontainer"></div>
 
                         <h1>Interest</h1>

@@ -41,7 +41,8 @@ namespace DDI.Shared.Models.Client.INV
         {
             get
             {
-                return InvestmentRelationshipType.ToString() + " for " + Investment.InvestmentNumber + ": " + Investment.InvestmentDescription;
+                return "Testing";
+                //return InvestmentRelationshipType.ToString() + " for " + Investment.InvestmentNumber + ": " + Investment.InvestmentDescription;
             }
         }
 
