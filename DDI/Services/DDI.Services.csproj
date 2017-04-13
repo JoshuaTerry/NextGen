@@ -81,6 +81,7 @@
     <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="INV\InvestmentService.cs" />
     <Compile Include="INV\InvestmentRelationshipService.cs" />
     <Compile Include="Security\GroupService.cs" />
     <Compile Include="Core\NoteService.cs" />

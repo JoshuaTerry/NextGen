@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Client.INV
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-        
+
         [ForeignKey("BusinessUnitId")]
         public BusinessUnit BusinessUnit { get; set; }
 
@@ -34,9 +34,9 @@ namespace DDI.Shared.Models.Client.INV
         public Guid? InvestmentOwnershipTypeId { get; set; }
 
         public int InvestmentNumber { get; set; }
-        
+
         public InvestmentStatus InvestmentStatus { get; set; }
-        
+
         public DateTime? InvestmentStatusDate { get; set; }
 
         [ForeignKey("InvestmentTypeId")]
@@ -50,7 +50,20 @@ namespace DDI.Shared.Models.Client.INV
         [Column(TypeName = "date")]
         public DateTime? OriginalMaturityDate { get; set; }
 
+        [Column(TypeName = "date")]
+        public DateTime? PurchaseDate { get; set; }
+
+        public IssuanceMethod IssuanceMethod { get; set; }
+
+        public decimal OriginalPurchaseAmount { get; set; }
+
         public decimal Rate { get; set; }
+
+        public bool StepUpEligible { get; set; }
+
+        public DateTime? StepUpDate { get; set; }
+
+        public InterestFrequency InterestFrequency { get; set; }
 
 
 
@@ -90,6 +103,68 @@ namespace DDI.Shared.Models.Client.INV
             }
         }
 
+        [NotMapped]
+        public DateTime LastMaintenanceDate
+        {
+            get
+            {
+                return new DateTime(2004, 03, 14);
+            }
+        }
+
+        [NotMapped]
+        public DateTime LastTransactionDate
+        {
+            get
+            {
+                return new DateTime(2016, 12, 31);
+            }
+        }
+
+        [NotMapped]
+        public decimal AccruedInterest
+        {
+            get
+            {
+                return new decimal(34.32);
+            }
+        }
+
+        [NotMapped]
+        public DateTime LastInterestCalculatedDate
+        {
+            get
+            {
+                return new DateTime(2017, 05, 02);
+            }
+        }
+
+        [NotMapped]
+        public decimal InterestPaidYTD
+        {
+            get
+            {
+                return new decimal(234.43);
+            }
+        }
+
+        [NotMapped]
+        public decimal InterestWithheldYTD
+        {
+            get
+            {
+                return new decimal(232.43);
+            }
+        }
+
+        [NotMapped]
+        public decimal PenaltyChargedYTD
+        {
+            get
+            {
+                return new decimal(2.43);
+            }
+        }
         #endregion
 
         #endregion Public Properties

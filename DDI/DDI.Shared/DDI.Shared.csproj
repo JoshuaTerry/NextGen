@@ -127,6 +127,8 @@
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
     <Compile Include="Enums\GL\TransactionXferCategory.cs" />
+    <Compile Include="Enums\INV\InterestFrequency.cs" />
+    <Compile Include="Enums\INV\IssuanceMethod.cs" />
     <Compile Include="Enums\INV\InvestorRelationshipType.cs" />
     <Compile Include="Enums\INV\InvestmentStatus.cs" />
     <Compile Include="Enums\INV\InvestorStatus.cs" />

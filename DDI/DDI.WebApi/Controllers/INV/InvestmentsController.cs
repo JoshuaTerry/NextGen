@@ -41,25 +41,7 @@ namespace DDI.WebApi.Controllers.INV
             return base.GetById(id, fields);
         }
 
-        [Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
-        [HttpGet]
-        [Route("api/v1/investments/businessunit/{id}", Name = RouteNames.Investment + RouteNames.Constituent + RouteVerbs.Get)]
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.BusinessUnitId == id, search);
-                return FinalizeResponse(response, RouteNames.Investment + RouteNames.Constituent, search, fields);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
-        }
-    
-
+        
         //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
         //[HttpPost]
         //[Route("api/v1/investments", Name = RouteNames.Investment + RouteVerbs.Post)]
