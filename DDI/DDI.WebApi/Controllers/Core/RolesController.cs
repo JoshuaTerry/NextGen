@@ -92,6 +92,7 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
         }
+
         [HttpGet]
         [Route("api/v1/roles/{roleId}/users")]
         public async Task<IHttpActionResult> GetUsersInRole(Guid roleId)
@@ -111,6 +112,30 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
 
+        }
+
+        [HttpGet]
+        [Route("api/v1/roles/user/{username}")]
+        public async Task<IHttpActionResult> GetRolesByUserName(string username)
+        {
+            try
+            {
+                IList<string> roles;
+                var user = await UserManager.FindByNameAsync(username);
+                
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                roles = await UserManager.GetRolesAsync(user.Id);
+                return Ok(roles);
+            }
+            catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPatch]

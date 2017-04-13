@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Web.Services;
 using System.Web.Script.Serialization;
 using System.Web.Security;
@@ -16,7 +17,14 @@ namespace DDI.UI.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string foo = string.Empty;
+            if (User.IsInRole("Notes-Read"))
+            {
+                string success = string.Empty;
+            }
+            else
+            {
+                string failure = string.Empty;
+            }
         }
 
         [WebMethod]
@@ -24,7 +32,8 @@ namespace DDI.UI.Web
         {
             try
             {
-                WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "userbyname/" + HttpUtility.HtmlEncode(username) + "/");
+                //api/v1/roles/user/{username}
+                WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "roles/user/" + HttpUtility.HtmlEncode(username) + "/");
                 request.Method = "GET";
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = 0;
@@ -38,16 +47,17 @@ namespace DDI.UI.Web
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         string responseData = reader.ReadToEnd();
                         
-                        DataResponse<User> data = (DataResponse<User>)js.Deserialize(responseData, typeof(DataResponse<User>));
+                        List<string> data = (List<string>)js.Deserialize(responseData, typeof(List<string>));
+                        string roles = string.Join(",", data.ToArray());
 
-                        if (data != null && data.IsSuccessful)
-                        {
-                            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, data.Data.DisplayName, DateTime.Now, DateTime.Now.AddMinutes(60), false, responseData);
+                        //if (data != null && data.IsSuccessful)
+                        //{
+                            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(60), false, roles);
                             string encryptedTicket = FormsAuthentication.Encrypt(ticket);
                             HttpCookie fatCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
 
                             HttpContext.Current.Response.Cookies.Add(fatCookie);
-                        }
+                        //}
                     }
                 }
 

@@ -25,11 +25,11 @@ namespace DDI.UI.Web
             if (authCookie != null)
             {
                 FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                JavaScriptSerializer js = new JavaScriptSerializer();
+                var roles = ticket.UserData.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
                 FormsIdentity fi = new FormsIdentity(ticket);
 
-                HttpContext.Current.User = new GenericPrincipal(fi, null);
+                HttpContext.Current.User = new GenericPrincipal(fi, roles);
             }
         }
     }
