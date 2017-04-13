@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class CustomFieldsController : GenericController<CustomField>
     {
         protected new ICustomFieldService Service => (ICustomFieldService)base.Service;

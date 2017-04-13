@@ -2,17 +2,24 @@
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq.Expressions;
 using System.Web.Http;
+using System.Web.Routing;
+
 
 namespace DDI.WebApi.Controllers.GL
 {
+    
+    //[Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
-        [HttpGet]
-        [Route("api/v1/businessunit/{businessUnitId}/ledgers", Name = RouteNames.Ledger)]
-        public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
         {
-            return base.GetAll(RouteNames.Ledger, businessUnitId, limit, offset, orderBy, fields);
+            return new Expression<Func<Ledger, object>>[]
+            {
+                c => c.LedgerAccounts,
+                c => c.SegmentLevels
+            };
         }
 
         [HttpGet]
@@ -20,6 +27,28 @@ namespace DDI.WebApi.Controllers.GL
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/ledgers/businessunit/{buid}")]
+        public IHttpActionResult GetByBusinessUnit(Guid buid)
+        {
+            try
+            {
+                var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid);
+
+                if(result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+
+            } catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPost]

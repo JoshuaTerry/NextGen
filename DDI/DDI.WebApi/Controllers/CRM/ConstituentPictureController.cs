@@ -1,12 +1,15 @@
 ﻿using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize]
     public class ConstituentPictureController : GenericController<ConstituentPicture>
     {
+        [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/constituentpicture/{constituentid}")]
         public IHttpActionResult GetByConstituentId(Guid constituentId)
@@ -22,6 +25,7 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituentpicture")]
         public IHttpActionResult Post([FromBody] ConstituentPicture item)
@@ -36,6 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(item);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituentpicture/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)

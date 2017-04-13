@@ -42,7 +42,9 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            if (xhr.responseJSON.ExceptionMessage) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
             if (errorCallback) {
                 errorCallback();
             }
@@ -82,7 +84,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
 }
 
-function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, callback) {
+function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
 
     ClearElement(element);
 
@@ -102,20 +104,27 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
                 $(element).val(selectedValue);
             }
 
+            if (completecallback) {
+
+                completecallback();
+
+            }
+
         }
     }, null);
 
-    if (callback) {
+    if (changecallback) {
 
         $(element).unbind('change');
 
         $(element).change(function () {
-            callback();
+            changecallback();
         });
 
     }
 
 }
+
 /* END POPULATE DROPDOWN CONTROLS */
 
 
@@ -224,6 +233,9 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
             // Add link for new modal
             NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
         }
+        if (onComplete) {
+            onComplete();
+        }
     });
 
 }
@@ -298,6 +310,7 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);

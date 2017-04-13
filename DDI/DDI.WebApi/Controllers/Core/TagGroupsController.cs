@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class TagGroupsController : GenericController<TagGroup>
     {
         protected new ITagGroupService Service => (ITagGroupService)base.Service;

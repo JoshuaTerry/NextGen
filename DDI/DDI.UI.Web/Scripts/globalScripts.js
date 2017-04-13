@@ -127,6 +127,7 @@ function SetupConstituentTypeSelector() {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -241,6 +242,7 @@ function SetupNewConstituent(constituenttypeid) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (data && data.Data && data.IsSuccessful) {
@@ -1242,12 +1244,51 @@ function DisplayMessage(heading, text, icon) {
 //
 // END MESSAGING
 
+// FORM VALIDATION
+//
+function InitRequiredLabels(formClassName) {
+    formClassName.replace(".", "");
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var labelElement = $(this).prev();
+        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+    });
+}
+
+function ValidateForm(formClassName) {
+    var validform = true;
+    formClassName.replace(".", "");
+    // required items
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+        $("#" + errorId).remove();
+        if ($(this).val() === "") {
+            $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
+            validform = false;
+        }
+    });
+    return validform;
+}
+
+function RemoveValidation(formClassName) {
+    formClassName.replace(".", "");
+    $('.' + formClassName).find('.required').each(function (index, el) {
+        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+        $("#" + errorId).remove();
+    });
+}
+//
+// END FORM VALIDATION
+
+
+
+// END MESSAGING
+
 // BUSINESS UNIT
 //
 
 function BusinessUnitModal() {
 
-    // DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
+    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
     // Uncomment this to use currentBusinessUnit
     // Add the guid of the user you want to use
 
@@ -1365,5 +1406,35 @@ function RemoveValidation(formClassName) {
 //
 // END FORM VALIDATION
 
+// DYNAMIC MARKUP
+//
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+
+    var fieldblock = $('<div>').addClass('fieldblock');
+    $('<label>').text(labelText).appendTo(fieldblock);
+    $(controlType).addClass(controlClass).appendTo(fieldblock);
+    $(fieldblock).appendTo(appendContainer);
+
+}
+
+function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancelFunction, appendContainer) {
+
+    var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
+
+    if (saveFunction) {
+
+        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
+
+    }
+    
+    if (cancelFunction) {
+
+        $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+
+    }
+
+}
+//
+// END DYNAMIC MARKUP
 
 

@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize]
     public class CountiesController : GenericController<County>
     { 
         protected new CountyService Service => (CountyService)base.Service; 
