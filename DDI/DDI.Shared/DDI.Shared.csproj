@@ -185,8 +185,6 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
-    <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />
-    <Compile Include="Models\Client\GL\SubLedgerXref.cs" />
     <Compile Include="Models\Client\INV\InterestPayout.cs" />
     <Compile Include="Models\Client\INV\InvestmentType.cs" />
     <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
