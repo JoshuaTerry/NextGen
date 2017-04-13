@@ -12,25 +12,60 @@ using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
     public class FiscalYearLogic : EntityLogicBase<FiscalYear>
     {
+        #region Fields
+
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(FiscalYearLogic));
         public FiscalYearLogic() : this(new UnitOfWorkEF()) { }
         private IRepository<FiscalYear> _fiscalYearRepository;
-        private LedgerLogic _ledgerLogic;       
+        private IRepository<FiscalPeriod> _fiscalPeriodRepository;
+        private LedgerLogic _ledgerLogic;
+
+        #endregion
+
+        #region Constructors
 
         public FiscalYearLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _fiscalYearRepository = unitOfWork.GetRepository<FiscalYear>();
+            _fiscalPeriodRepository = UnitOfWork.GetRepository<FiscalPeriod>();
             _ledgerLogic = unitOfWork.GetBusinessLogic<LedgerLogic>();
         }
 
+        #endregion
+
+        #region Public Methods
+
         public override void Validate(FiscalYear fiscalYear)
         {
+            if (string.IsNullOrWhiteSpace(fiscalYear.Name))
+            {
+                throw new ValidationException(UserMessages.MustBeNonBlank, "Fiscal year name");
+            }
+
+            if (fiscalYear.NumberOfPeriods < 1 || fiscalYear.NumberOfPeriods > ConstantsGL.MaxFiscalPeriods)
+            {
+                throw new ValidationException(UserMessagesGL.FiscalPeriodsRange);
+            }
+
+            if ((fiscalYear.CurrentPeriodNumber < 1 && fiscalYear.Status != FiscalYearStatus.Empty) || fiscalYear.CurrentPeriodNumber > fiscalYear.NumberOfPeriods)
+            {
+                throw new ValidationException(UserMessagesGL.CurrentPeriodRange, fiscalYear.NumberOfPeriods.ToString());
+            }
+
+            if (fiscalYear.StartDate == null || fiscalYear.EndDate == null || fiscalYear.StartDate > fiscalYear.EndDate)
+            {
+                throw new ValidationException(UserMessagesGL.FiscalYearDatesInvalid);
+            }
+            
+            // Validate other modified properties
+
             bool isModified = false;
             List<string> modifiedProperties = null;
             if (_fiscalYearRepository.GetEntityState(fiscalYear) != EntityState.Added)
@@ -43,10 +78,91 @@ namespace DDI.Business.GL
                 isModified = true;
             }
 
-            if (isModified)
+            if (isModified && fiscalYear.Status != FiscalYearStatus.Empty)
             {
-              
-            }            
+                // See if any properties were modified that would affect posted transactions.
+                if (modifiedProperties.Intersect(new string[] {
+                    nameof(FiscalYear.EndDate), nameof(FiscalYear.StartDate), nameof(FiscalYear.NumberOfPeriods),
+                    nameof(FiscalYear.HasAdjustmentPeriod)}).Count() > 0)
+                {
+                    throw new ValidationException(UserMessagesGL.FiscalYearNotEditable);
+                }
+            }   
+            
+            // Validate fiscal periods
+            if (fiscalYear.FiscalPeriods != null)
+            {
+                DateTime nextStartDate = fiscalYear.StartDate.Value;
+                for (int periodNumber = 1; periodNumber <= fiscalYear.NumberOfPeriods; periodNumber++)
+                {
+                    var periods = fiscalYear.FiscalPeriods.Where(p => p.PeriodNumber == periodNumber);
+                    if (periods.Count() == 0)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodMissing, periodNumber.ToString(), fiscalYear.Name);
+                    }
+
+                    if (periods.Count() > 1)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodDuplicate, periodNumber.ToString(), fiscalYear.Name);
+                    }
+
+                    FiscalPeriod period = periods.First();
+
+                    if (period.StartDate == null || period.EndDate == null || period.StartDate > period.EndDate)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodDatesInvalid, periodNumber.ToString(), fiscalYear.Name);
+                    }
+                    // Adjustment period must be the final period and have a date range matching the last day of the year.
+                    if (period.IsAdjustmentPeriod)
+                    {
+                        if (periodNumber < fiscalYear.NumberOfPeriods)
+                        {
+                            throw new ValidationException(UserMessagesGL.AdjustmentPeriodNotLast, fiscalYear.Name);
+                        }
+
+                        if (period.StartDate != fiscalYear.EndDate || period.EndDate != fiscalYear.EndDate)
+                        {                            
+                            throw new ValidationException(UserMessagesGL.AdjustmentPeriodDates, fiscalYear.Name,  fiscalYear.EndDate.ToShortDateString());
+                        }
+                    }
+                    else
+                    {
+                        // Start/end dates must be contiguous.
+                        if (period.StartDate != nextStartDate)
+                        {
+                            throw new ValidationException(UserMessagesGL.FiscalPeriodStartDate, periodNumber.ToString(), fiscalYear.Name, 
+                                nextStartDate.ToShortDateString());
+                        }
+                    }
+                    nextStartDate = period.EndDate.Value.AddDays(1);
+                }
+            }
+
+            // Determine if any fiscal periods were modified in a non-empty fiscal year.
+
+            if (fiscalYear.Status != FiscalYearStatus.Empty && fiscalYear.FiscalPeriods != null)
+            {
+                string[] propertiesToCheck = new string[] { nameof(FiscalPeriod.EndDate), nameof(FiscalPeriod.StartDate), nameof(FiscalPeriod.IsAdjustmentPeriod), nameof(FiscalPeriod.PeriodNumber) };
+
+                foreach (var period in fiscalYear.FiscalPeriods)
+                {
+                    bool isAdded = false;
+                    if (_fiscalPeriodRepository.GetEntityState(period) != EntityState.Added)
+                    {
+                        modifiedProperties = _fiscalPeriodRepository.GetModifiedProperties(period);                        
+                    }
+                    else
+                    {
+                        isAdded = true;
+                        modifiedProperties.Clear();
+                    }
+                    if (isAdded || modifiedProperties.Intersect(propertiesToCheck).Count() > 0)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalYearNotEditable);
+                    }
+                }
+
+            }
         }
         
         public FiscalYear GetCachedFiscalYear(Guid? fiscalYearId)
@@ -59,36 +175,12 @@ namespace DDI.Business.GL
             return _ledgerLogic.LedgerCache.Entities.SelectMany(p => p.FiscalYears).FirstOrDefault(p => p.Id == fiscalYearId);
         }
 
-        private CachedDates GetFiscalPeriodDates(FiscalYear year)
-        {
-            if (year == null)
-            {
-                throw new ArgumentNullException(nameof(year));
-            }
-
-            var dates = new CachedDates(year.NumberOfPeriods);
-            foreach (var period in UnitOfWork.GetReference(year, p => p.FiscalPeriods)
-                                             .Where(p => p.PeriodNumber > 0 && p.PeriodNumber <= year.NumberOfPeriods)
-                                             .OrderBy(p => p.PeriodNumber))
-            {
-                dates.StartDates[period.PeriodNumber - 1] = period.StartDate;
-                dates.EndDates[period.PeriodNumber - 1] = period.EndDate;
-            }
-            return dates;
-        }
-
-        private CachedDates GetCachedPeriodDates(FiscalYear year)
-        {
-            string cacheKey = year.Id.ToString();
-            return CacheHelper.GetEntry(cacheKey, () => GetFiscalPeriodDates(year));
-        }
-
         /// <summary>
         /// Get an array of start dates for each accounting period in the fiscal year.
         /// </summary>
         public DateTime?[] GetFiscalPeriodStartDates(FiscalYear year)
         {
-            return GetCachedPeriodDates(year).StartDates;
+            return GetCachedPeriodDates(year).Select(p => p.StartDate).ToArray();
         }
 
         /// <summary>
@@ -96,7 +188,7 @@ namespace DDI.Business.GL
         /// </summary>
         public DateTime?[] GetFiscalPeriodEndDates(FiscalYear year)
         {
-            return GetCachedPeriodDates(year).EndDates;
+            return GetCachedPeriodDates(year).Select(p => p.EndDate).ToArray();
         }
 
         public FiscalYear GetFiscalYear (BusinessUnit unit, DateTime? date)
@@ -134,11 +226,19 @@ namespace DDI.Business.GL
         
         public FiscalPeriod GetFiscalPeriod(FiscalYear year, int periodNumber)
         {
+            if (year == null)
+            {
+                return null;
+            }
             return UnitOfWork.GetReference(year, p => p.FiscalPeriods).FirstOrDefault(p => p.PeriodNumber == periodNumber);
         }
 
         public FiscalPeriod GetFiscalPeriod(FiscalYear year, DateTime date)
         {
+            if (year == null)
+            {
+                return null;
+            }
             int periodNumber = GetFiscalPeriodNumber(year, date);
             if (periodNumber >= 1)
             {
@@ -152,6 +252,11 @@ namespace DDI.Business.GL
         /// </summary>
         public int GetFiscalPeriodNumber(FiscalYear year, DateTime date)
         {
+            if (year == null)
+            {
+                throw new ArgumentNullException(nameof(year));
+            }
+
             date = date.Date;
 
             if (date < year.StartDate || date > year.EndDate)
@@ -159,17 +264,8 @@ namespace DDI.Business.GL
                 return 0;
             }
 
-            CachedDates dates = GetCachedPeriodDates(year);
-
-            for (int period = 0; period < year.NumberOfPeriods; period++)
-            {
-                if (dates.StartDates[period].HasValue && dates.EndDates[period].HasValue && dates.StartDates[period].Value <= date && dates.EndDates[period].Value >= date)
-                {
-                    return period + 1;
-                }
-            }
-
-            return 0;
+            var dates = GetCachedPeriodDates(year);
+            return dates.FirstOrDefault(p => p.StartDate <= date && p.EndDate >= date).PeriodNumber;            
         }
 
         /// <summary>
@@ -177,6 +273,11 @@ namespace DDI.Business.GL
         /// </summary>
         public int GetDaysInFiscalPeriod(FiscalYear year, int period)
         {
+            if (year == null)
+            {
+                throw new ArgumentNullException(nameof(year));
+            }
+
             int days = 0;
 
             if (period <= 0 || period > year.NumberOfPeriods)
@@ -184,10 +285,10 @@ namespace DDI.Business.GL
                 return days;
             }
 
-            CachedDates dates = GetCachedPeriodDates(year);
+            var dates = GetCachedPeriodDates(year);
 
-            DateTime? start = dates.StartDates[period - 1];
-            DateTime? end = dates.EndDates[period - 1];
+            DateTime? start = dates[period - 1].StartDate;
+            DateTime? end = dates[period - 1].EndDate;
 
             if (start.HasValue && end.HasValue)
             {
@@ -425,11 +526,11 @@ namespace DDI.Business.GL
         {
             FiscalYear year = GetFiscalYear(id, dt);
             if (year == null)
-                throw new ValidationException(UserMessagesGL.TranDateInvalid);
+                throw new ValidationException(UserMessages.TranDateInvalid);
 
             FiscalPeriod prd = GetFiscalPeriod(year, dt.Value);
             if (prd == null)
-                throw new ValidationException(UserMessagesGL.TranDateInvalid);
+                throw new ValidationException(UserMessages.TranDateInvalid);
 
             bool allowPriorPeriod = false;
 
@@ -449,11 +550,11 @@ namespace DDI.Business.GL
             if (!allowPriorPeriod)
             {
                 if (year.Status == FiscalYearStatus.Closed)
-                    throw new ValidationException(string.Format(UserMessagesGL.FiscalPeriodClosed, year.Name));
+                    throw new ValidationException(UserMessagesGL.FiscalPeriodClosed, year.Name);
 
 
                 if (prd.Status == FiscalPeriodStatus.Closed)
-                    throw new ValidationException(string.Format(UserMessagesGL.FiscalYearClosed, prd.PeriodNumber, year.Name));
+                    throw new ValidationException(UserMessagesGL.FiscalYearClosed, prd.PeriodNumber.ToString(), year.Name);
             }
 
             return year;
@@ -526,24 +627,10 @@ namespace DDI.Business.GL
                     day = 31;
                 }
 
-                // Determine how many months each period has
                 int increment = 1;
-
-                if (numPeriods == 2)
+                if (numPeriods >= 1 && numPeriods <= 12)
                 {
-                    increment = 6;
-                }
-                else if (numPeriods == 3)
-                {
-                    increment = 4;
-                }
-                else if (numPeriods == 4)
-                {
-                    increment = 3;
-                }
-                else if (numPeriods <= 6)
-                {
-                    increment = 2;
+                    increment = 12 / numPeriods;  // 12, 6, 4, 3, 2, 2, 1...
                 }
 
                 // Calculate start/end dates, advancing (increment) number of months.
@@ -565,21 +652,60 @@ namespace DDI.Business.GL
             return result;
         }
 
+        #endregion
 
-        /// <summary>
-        /// Nested class that holds a set of start and end dates for all fiscal periods in a year.
-        /// </summary>
-        private class CachedDates
+        #region Private Methods
+
+        private Period[] GetFiscalPeriodDates(FiscalYear year)
         {
-            public DateTime?[] StartDates { get; private set; }
-            public DateTime?[] EndDates { get; private set; }
-
-            public CachedDates(int numberOfPeriods)
+            if (year == null)
             {
-                StartDates = new DateTime?[numberOfPeriods];
-                EndDates = new DateTime?[numberOfPeriods];
+                throw new ArgumentNullException(nameof(year));
             }
+
+            // The array must have an entry for each period, even though the year's FiscalPeriods collection might have missing entries.
+            var dates = new Period[year.NumberOfPeriods];
+            foreach (var period in UnitOfWork.GetReference(year, p => p.FiscalPeriods)
+                                             .Where(p => p.PeriodNumber > 0 && p.PeriodNumber <= year.NumberOfPeriods)
+                                             .OrderBy(p => p.PeriodNumber))
+            {
+                dates[period.PeriodNumber - 1] = period;
+            }
+            return dates;
         }
 
+        private Period[] GetCachedPeriodDates(FiscalYear year)
+        {
+            string cacheKey = year.Id.ToString();
+            return CacheHelper.GetEntry(cacheKey, () => GetFiscalPeriodDates(year));
+        }
+
+        #endregion
+
+
+        #region Nested Classes
+
+        /// <summary>
+        /// Nested struct for use with GetCachedDates.
+        /// </summary>
+
+        public struct Period
+        {
+            public int PeriodNumber;
+            public DateTime? StartDate;
+            public DateTime? EndDate;
+
+            public static implicit operator Period(FiscalPeriod fp)
+            {
+                return new Period()
+                {
+                    PeriodNumber = fp.PeriodNumber,
+                    StartDate = fp.StartDate,
+                    EndDate = fp.EndDate
+                };
+            }                        
+        }
+
+        #endregion
     }
 }

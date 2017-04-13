@@ -266,6 +266,7 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+    <Compile Include="Statics\GL\ConstantsGL.cs" />
     <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
+    <Compile Include="Statics\UserMessages.cs" />
     <Compile Include="TaskScheduler.cs" />
     <Compile Include="ValidationException.cs" />
   </ItemGroup>

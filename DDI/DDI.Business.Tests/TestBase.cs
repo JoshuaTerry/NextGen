@@ -21,9 +21,9 @@ namespace DDI.Business.Tests
             {
                 action.Invoke();
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Fail(message);
+                Assert.Fail(message + ": " + ex.ToString());
             }
         }
 
@@ -43,7 +43,12 @@ namespace DDI.Business.Tests
             {
                 return;
             }
-            Assert.Fail(message);
+            catch (Exception ex)
+            {                
+                Assert.Fail(message + ": " + ex.ToString());
+            }
+
+            Assert.Fail(message + ": No exception thrown.");
         }
 
         /// <summary>
@@ -79,7 +84,12 @@ namespace DDI.Business.Tests
                 }
             }
 
-            Assert.Fail(message);
+            catch (Exception ex)
+            {
+                Assert.Fail(message + ": " + ex.ToString());
+            }
+
+            Assert.Fail(message + ": No exception thrown.");
         }
 
 

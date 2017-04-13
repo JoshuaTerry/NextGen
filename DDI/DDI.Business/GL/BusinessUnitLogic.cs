@@ -13,6 +13,7 @@ using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Models.Common;
+using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
@@ -78,7 +79,7 @@ namespace DDI.Business.GL
 
             if (string.IsNullOrWhiteSpace(unit.Name))
             {
-                throw new ValidationException(UserMessagesGL.NameIsRequired);
+                throw new ValidationException(UserMessages.NameIsRequired);
             }
         }
 
@@ -87,29 +88,29 @@ namespace DDI.Business.GL
 
             if (string.IsNullOrWhiteSpace(unit.Code))
             {
-                throw new ValidationException(string.Format(UserMessagesGL.CodeIsRequired, "Business unit"));
+                throw new ValidationException(string.Format(UserMessages.CodeIsRequired, "Business unit"));
             }
 
             if (unit.Code.Length > 8)
             {
-                throw new ValidationException(string.Format(UserMessagesGL.CodeMaxLengthError, "Business unit", 8));
+                throw new ValidationException(string.Format(UserMessages.CodeMaxLengthError, "Business unit", 8));
             }
 
             if (!Regex.IsMatch(unit.Code, @"(^[a-zA-Z0-9]+$)"))
             {
-                throw new ValidationException(string.Format(UserMessagesGL.CodeAlphaNumericRequired, "Business unit"));
+                throw new ValidationException(string.Format(UserMessages.CodeAlphaNumericRequired, "Business unit"));
             }
 
 
             var existing = UnitOfWork.FirstOrDefault<BusinessUnit>(bu => bu.Code == unit.Code && bu.Id != unit.Id);
             if (existing != null)
             {
-                throw new ValidationException(string.Format(UserMessagesGL.CodeIsNotUnique, "Business unit"));
+                throw new ValidationException(string.Format(UserMessages.CodeIsNotUnique, "Business unit"));
             }
 
             if (string.IsNullOrWhiteSpace(unit.Name))
             {
-                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Business unit"));
+                throw new ValidationException(string.Format(UserMessages.NameIsRequired, "Business unit"));
             }
 
             //Logic to check for changing the BusinessUnitType on an edit. this needs to change once where validations are called changes

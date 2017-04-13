@@ -14,22 +14,22 @@ namespace DDI.Business.Helpers
     /// </summary>
     public static class BusinessUnitHelper
     {
-        public static bool IsMultiple
+        public static bool GetIsMultiple(IUnitOfWork unitOfWork)
         {
-            get
+            object result = CacheHelper.GetEntry<object>(BusinessUnitLogic.IsMultipleCacheKey, () =>
             {
-                object result = CacheHelper.GetEntry<object>(BusinessUnitLogic.IsMultipleCacheKey, () => GetIsMultiple());
-                if (result is bool)
+                if (unitOfWork == null)
                 {
-                    return (bool)result;
+                    return new BusinessUnitLogic().IsMultiple;
                 }
-                return false;
-            }
-        }
+                return unitOfWork.GetBusinessLogic<BusinessUnitLogic>().IsMultiple;
+            });
 
-        private static object GetIsMultiple()
-        {
-            return new BusinessUnitLogic().IsMultiple;
+            if (result is bool)
+            {
+                return (bool)result;
+            }
+            return false;
         }
     }
 }

@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
-using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
-using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 
@@ -21,10 +19,12 @@ namespace DDI.Business.GL
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(LedgerLogic));
         public LedgerLogic() : this(new UnitOfWorkEF()) { }
         private IRepository<Ledger> _ledgerRepository;
-        
+        private IRepository<SegmentLevel> _segmentLevelRepository;
+
         public LedgerLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _ledgerRepository = unitOfWork.GetRepository<Ledger>();
+            _segmentLevelRepository = unitOfWork.GetRepository<SegmentLevel>();
         }
 
         private CachedRepository<Ledger> _ledgerCache = null;
@@ -44,84 +44,34 @@ namespace DDI.Business.GL
                 }
                 return _ledgerCache;
             }
+            set
+            {
+                _ledgerCache = value;
+            }
         }
-
 
         public override void Validate(Ledger ledger)
         {
-            if (string.IsNullOrWhiteSpace(ledger.FixedBudgetName))
+            if (ledger == null)
             {
-                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Fixed budget"));
+                throw new ArgumentNullException(nameof(ledger));
             }
 
-            if (string.IsNullOrWhiteSpace(ledger.WorkingBudgetName))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "Working budget"));
-            }
+            ValidateNonBlankAndUnique(3, "Budget names", ledger.FixedBudgetName, ledger.WorkingBudgetName, ledger.WhatIfBudgetName);
 
-            if (string.IsNullOrWhiteSpace(ledger.WhatIfBudgetName))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.NameIsRequired, "\"What If\" budget"));
-            }
-
-            if (ledger.AccountGroupLevels >= 1 && string.IsNullOrWhiteSpace(ledger.AccountGroup1Title))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 1 title"));
-            }
-
-            if (ledger.AccountGroupLevels >= 2 && string.IsNullOrWhiteSpace(ledger.AccountGroup2Title))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 2 title"));
-            }
-
-            if (ledger.AccountGroupLevels >= 3 && string.IsNullOrWhiteSpace(ledger.AccountGroup3Title))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 3 title"));
-            }
-
-            if (ledger.AccountGroupLevels == 4 && string.IsNullOrWhiteSpace(ledger.AccountGroup4Title))
-            {
-                throw new ValidationException(string.Format(UserMessagesGL.IsRequired, "Account group 4 title"));
-            }
-
-            if (ledger.AccountGroupLevels < 0 || ledger.AccountGroupLevels > 4)
+            if (ledger.AccountGroupLevels < 0 || ledger.AccountGroupLevels > ConstantsGL.MaxAccountGroups)
             {
                 throw new ValidationException(UserMessagesGL.AccountGroupLevelsRange);
             }
 
-            // Account group titles must be unique
-            var titles = new List<string>();
-            if (ledger.AccountGroupLevels >= 1)
+            if (ledger.NumberOfSegments < 0 || ledger.NumberOfSegments > ConstantsGL.MaxAccountSegments)
             {
-                titles.Add(ledger.AccountGroup1Title.ToUpper());
-            }
-            if (ledger.AccountGroupLevels >= 2)
-            {
-                titles.Add(ledger.AccountGroup2Title.ToUpper());
-            }
-            if (ledger.AccountGroupLevels >= 3)
-            {
-                titles.Add(ledger.AccountGroup3Title.ToUpper());
-            }
-            if (ledger.AccountGroupLevels == 4)
-            {
-                titles.Add(ledger.AccountGroup4Title.ToUpper());
-            }
-            if (titles.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct().Count() < ledger.AccountGroupLevels)
-            {
-                throw new ValidationException(UserMessagesGL.AccountGroupLevelsUnique);
+                throw new ValidationException(UserMessagesGL.AccountSegmentsRange);
             }
 
-            // Budget names must be non-blank and unique.
-            titles = new List<string>
-            {
-                ledger.FixedBudgetName.ToUpper(), ledger.WorkingBudgetName.ToUpper(), ledger.WhatIfBudgetName.ToUpper()
-            };
+            ValidateNonBlankAndUnique(ledger.AccountGroupLevels, "Account group labels", ledger.AccountGroup1Title, ledger.AccountGroup2Title, ledger.AccountGroup3Title, ledger.AccountGroup4Title);
 
-            if (titles.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct().Count() != 3)
-            {
-                throw new ValidationException(UserMessagesGL.BudgetNamesUnique);
-            }
+            BusinessUnit unit = UnitOfWork.GetReference(ledger, p => p.BusinessUnit);
 
             // Additional validation based on modified properties.
 
@@ -136,7 +86,7 @@ namespace DDI.Business.GL
             {
                 isModified = true;
             }
-            
+
             if (isModified)
             {
                 if (_ledgerCache != null)
@@ -158,21 +108,35 @@ namespace DDI.Business.GL
                     // # of segment levels changing - ensure no segments exist.
                     if (UnitOfWork.Any<Segment>(p => p.FiscalYear.LedgerId == ledger.Id))
                     {
-                        throw new ValidationException(UserMessagesGL.SgmentLevelsChanged);
+                        throw new ValidationException(UserMessagesGL.SegmentLevelsChanged);
                     }
                 }
 
                 // If modifying a ledger for an organizational business unit, the settings should be copied to all the other common business units.
-                if (ledger != null && UnitOfWork.GetReference(ledger, p => p.BusinessUnit).BusinessUnitType == BusinessUnitType.Organization)
+                if (ledger.IsParent)
                 {
-                    foreach (Ledger child in UnitOfWork.Where<Ledger>(p => p.OrgLedgerId == ledger.Id && p.BusinessUnit.BusinessUnitType != BusinessUnitType.Organization))
-                    {
-                        CopyProperties(ledger, child);
-                    }
+                    CopyLedgerProperties(ledger, ledger.Id);
                 }
-            }            
+
+                else if (unit.BusinessUnitType == BusinessUnitType.Common && ledger.OrgLedgerId != null)
+                {
+                    CopyLedgerProperties(ledger, ledger.OrgLedgerId.Value);
+                }
+            }
+
+            ValidateSegmentLevels(ledger);
+
+            if (ledger.IsParent)
+            {
+                CopySegmentLevels(ledger, ledger.Id);
+            }
+
+            else if (unit.BusinessUnitType == BusinessUnitType.Common && ledger.OrgLedgerId != null)
+            {
+                CopySegmentLevels(ledger, ledger.OrgLedgerId.Value);
+            }
         }
-        
+
         public Ledger GetCachedLedger(Guid? ledgerId)
         {
             if (ledgerId == null)
@@ -188,7 +152,17 @@ namespace DDI.Business.GL
         /// </summary>
         public Ledger GetCurrentLedger(Guid businessUnitId, DateTime dt)
         {
-            return LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnitId == businessUnitId && p.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt));
+            //return LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnitId == businessUnitId && p.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt));
+
+            foreach (var ledger in LedgerCache.Entities)
+            {
+                if (ledger.BusinessUnitId == businessUnitId && ledger.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt))
+                {
+                    return ledger;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -196,9 +170,13 @@ namespace DDI.Business.GL
         /// </summary>
         public Ledger GetCurrentLedger(Guid businessUnitId)
         {
-            Ledger ledger = GetCurrentLedger(businessUnitId, DateTime.Now.Date);
-            if (ledger != null)
-                return ledger;
+            return GetCurrentLedger(businessUnitId, DateTime.Now.Date)
+                   ??
+                   GetMostRecentLedger(businessUnitId);
+        }
+
+        internal Ledger GetMostRecentLedger(Guid businessUnitId)
+        {
             IEnumerable<Ledger> unitLedgers = LedgerCache.Entities.Where(p => p.BusinessUnitId == businessUnitId);
             IEnumerable<FiscalYear> years = unitLedgers.Select(p => p.FiscalYears.OrderByDescending(q => q.StartDate)
                                                                              .FirstOrDefault()); // Get the latest fiscal year for each ledger.
@@ -271,26 +249,190 @@ namespace DDI.Business.GL
         /// <summary>
         /// Copy properties from one ledger to another.
         /// </summary>
-        private void CopyProperties(Ledger from, Ledger to)
+        private void CopyLedgerProperties(Ledger from, Guid orgLedgerId)
         {
-            to.AccountGroup1Title = from.AccountGroup1Title;
-            to.AccountGroup2Title = from.AccountGroup2Title;
-            to.AccountGroup3Title = from.AccountGroup3Title;
-            to.AccountGroup4Title = from.AccountGroup4Title;
-            to.AccountGroupLevels = from.AccountGroupLevels;
-            to.ApproveJournals = from.ApproveJournals;
-            to.CapitalizeHeaders = from.CapitalizeHeaders;
-            to.CopyCOAChanges = from.CopyCOAChanges;
-            to.FixedBudgetName = from.FixedBudgetName;
-            to.FundAccounting = from.FundAccounting;
-            to.NumberOfSegments = from.NumberOfSegments;
-            to.PostAutomatically = from.PostAutomatically;
-            to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
-            to.Status = from.Status;
-            to.WhatIfBudgetName = from.WhatIfBudgetName;
-            to.WorkingBudgetName = from.WorkingBudgetName;
+            foreach (Ledger to in UnitOfWork.Where<Ledger>(p => p.Id != from.Id &&
+                                 (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
+            {
+                to.AccountGroup1Title = from.AccountGroup1Title;
+                to.AccountGroup2Title = from.AccountGroup2Title;
+                to.AccountGroup3Title = from.AccountGroup3Title;
+                to.AccountGroup4Title = from.AccountGroup4Title;
+                to.AccountGroupLevels = from.AccountGroupLevels;
+                to.ApproveJournals = from.ApproveJournals;
+                to.CapitalizeHeaders = from.CapitalizeHeaders;
+                to.CopyCOAChanges = from.CopyCOAChanges;
+                to.FixedBudgetName = from.FixedBudgetName;
+                to.FundAccounting = from.FundAccounting;
+                to.NumberOfSegments = from.NumberOfSegments;
+                to.PostAutomatically = from.PostAutomatically;
+                to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
+                to.Status = from.Status;
+                to.WhatIfBudgetName = from.WhatIfBudgetName;
+                to.WorkingBudgetName = from.WorkingBudgetName;
+            }
         }
 
+        private LedgerStatus GetCommonLedgerStatus(Ledger ledger)
+        {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
 
+            BusinessUnit unit = UnitOfWork.GetReference(ledger, p => p.BusinessUnit);
+            if (unit.BusinessUnitType == BusinessUnitType.Separate)
+            {
+                return ledger.Status;
+            }
+
+            bool allEmpty = true;
+            bool allClosed = true;
+
+            foreach (var entry in UnitOfWork.Where<Ledger>(p => p.BusinessUnit.BusinessUnitType != BusinessUnitType.Separate))
+            {
+                allEmpty = allEmpty && entry.Status == LedgerStatus.Empty;
+                allClosed = allClosed && entry.Status == LedgerStatus.Closed;
+            }
+
+            if (allEmpty)
+            {
+                return LedgerStatus.Empty;
+            }
+            else if (allClosed)
+            {
+                return LedgerStatus.Closed;
+            }
+
+            return LedgerStatus.Active;
+
+        }
+
+        private void CopySegmentLevels(Ledger ledger)
+        {
+
+        }
+
+        private void ValidateSegmentLevels(Ledger ledger)
+        {
+            // Segment levels can be modified only if this ledger has a status of empty and if common, all other common ledgers are empty.
+            bool isEmpty = GetCommonLedgerStatus(ledger) == LedgerStatus.Empty;
+
+            if (ledger.SegmentLevels != null && !isEmpty)
+            {
+                string[] propertiesToCheck = new string[] { nameof(SegmentLevel.Format), nameof(SegmentLevel.IsCommon), nameof(SegmentLevel.IsLinked),
+                    nameof(SegmentLevel.Length), nameof(SegmentLevel.Separator), nameof(SegmentLevel.Type) };
+
+                foreach (var level in ledger.SegmentLevels)
+                {
+                    bool isModified = false;
+                    List<string> modifiedProperties = null;
+                    if (_segmentLevelRepository.GetEntityState(level) != EntityState.Added)
+                    {
+                        modifiedProperties = _segmentLevelRepository.GetModifiedProperties(level);
+                        isModified = (modifiedProperties.Count > 0);
+                    }
+                    else
+                    {
+                        isModified = true;
+                    }
+
+                    if (isModified && modifiedProperties.Intersect(propertiesToCheck).Count() > 0)
+                    {
+                        throw new ValidationException(UserMessagesGL.SegmentLevelsNotEditable);
+                    }
+                }
+            }
+
+            if (ledger.SegmentLevels != null)
+            {
+                // Validate each segment level
+                for (int level = 1; level <= ledger.NumberOfSegments; level++)
+                {
+                    var segments = ledger.SegmentLevels.Where(p => p.Level == level);
+                    if (segments.Count() == 0)
+                    {
+                        throw new ValidationException(UserMessagesGL.SegmentLevelMissing, level.ToString());
+                    }
+
+                    if (segments.Count() > 1)
+                    {
+                        throw new ValidationException(UserMessagesGL.SegmentLevelDuplicate, level.ToString());
+                    }
+
+                    SegmentLevel segment = segments.First();
+
+                    if (segment.IsLinked && segment.Level == 1)
+                    {
+                        throw new ValidationException(UserMessagesGL.SegmentLevelOneLinked);
+                    }
+
+                }
+
+                // Validate segment level type.
+
+                int fundSegments = ledger.SegmentLevels.Count(p => p.Type == SegmentType.Fund);
+
+                if (ledger.FundAccounting && fundSegments != 1)
+                {
+                    throw new ValidationException(UserMessagesGL.SegmentLevelFundOne);
+                }
+                else if (!ledger.FundAccounting && fundSegments != 0)
+                {
+                    throw new ValidationException(UserMessagesGL.SegmentLevelFundZero);
+                }
+
+                // Validate level abbreviation and name
+
+                ValidateNonBlankAndUnique(0, "Segment level abbreviation", ledger.SegmentLevels.Select(p => p.Abbreviation).ToArray());
+                ValidateNonBlankAndUnique(0, "Segment level label", ledger.SegmentLevels.Select(p => p.Name).ToArray());
+                
+            }
+        }
+
+        private void CopySegmentLevels(Ledger from, Guid orgLedgerId)
+        {
+            if (from.SegmentLevels == null)
+            {
+                return;
+            }
+
+            foreach (Ledger to in UnitOfWork.GetEntities<Ledger>(p => p.SegmentLevels)
+                                            .Where(p => p.Id != from.Id && 
+                                                (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
+            {
+                // add/update levels 
+                foreach (var fromLevel in from.SegmentLevels)
+                {
+                    SegmentLevel toLevel = to.SegmentLevels.FirstOrDefault(p => p.Level == fromLevel.Level);
+                    if (toLevel == null)
+                    {
+                        toLevel = new SegmentLevel()
+                        {
+                            Level = fromLevel.Level
+                        };
+                        to.SegmentLevels.Add(toLevel);
+                    }
+                    toLevel.Abbreviation = fromLevel.Abbreviation;
+                    toLevel.Format = fromLevel.Format;
+                    toLevel.IsCommon = fromLevel.IsCommon;
+                    toLevel.IsLinked = fromLevel.IsLinked;
+                    toLevel.Length = fromLevel.Length;
+                    toLevel.Name = fromLevel.Name;
+                    toLevel.Separator = fromLevel.Separator;
+                    toLevel.SortOrder = fromLevel.SortOrder;
+                    toLevel.Type = fromLevel.Type;                    
+                }
+
+                // Remove levels
+                foreach (var toLevel in to.SegmentLevels.ToList())
+                {
+                    if (!from.SegmentLevels.Any(p => p.Level == toLevel.Level))
+                    {
+                        to.SegmentLevels.Remove(toLevel);
+                    }
+                }
+            }
+        }
     }
 }

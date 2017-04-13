@@ -87,6 +87,12 @@
     <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
+    <Compile Include="GL\DataSources\AccountDataSource.cs" />
+    <Compile Include="GL\DataSources\AccountGroupDataSource.cs" />
+    <Compile Include="GL\DataSources\SegmentDataSource.cs" />
+    <Compile Include="GL\DataSources\FiscalYearDataSource.cs" />
+    <Compile Include="GL\AccountLogicTest.cs" />
+    <Compile Include="GL\FiscalYearLogicTest.cs" />
     <Compile Include="GL\LedgerLogicTest.cs" />
     <Compile Include="GL\BusinessUnitLogicTest.cs" />
     <Compile Include="GL\DataSources\LedgerDataSource.cs" />

@@ -40,5 +40,14 @@ public static class DateTimeExtensions
         return dt.TimeOfDay.Ticks > 0;
     }
 
+    /// <summary>
+    /// Converts the value of the current System.DateTime? object to its equivalent short time string representation.  If the value is null, 
+    /// an empty string is returned.
+    /// </summary>
+    public static string ToShortDateString(this DateTime? dt)
+    {
+        return dt.HasValue ? dt.Value.ToShortDateString() : string.Empty;
+    }
+
 }
 

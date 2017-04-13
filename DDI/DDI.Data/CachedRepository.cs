@@ -30,6 +30,12 @@ namespace DDI.Data
         {
         }
 
+        public CachedRepository(IRepository<T> repository, IQueryable<T> entities) :
+             this(repository, null, DEFAULT_TIMEOUT_SECONDS, false)
+        {
+            Entities = entities;
+        }
+
         public CachedRepository(IRepository<T> repository, params Expression<Func<T, object>>[] includes) :
             this(repository, includes, DEFAULT_TIMEOUT_SECONDS, false)
         {

@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using DDI.Business.GL;
-using DDI.Business.Tests.Helpers;
+using DDI.Business.Tests.GL.DataSources;
 using DDI.Data;
 using DDI.Shared;
-using DDI.Business.Tests.GL.DataSources;
-using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Statics.GL;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.Shared.Helpers;
-using System.Collections.Generic;
 using DDI.Shared.Caching;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.GL
 {
@@ -40,17 +38,17 @@ namespace DDI.Business.Tests.GL
 
             unit.Code = "M&KM";
 
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeAlphaNumericRequired, UserMessagesGL.CodeAlphaNumericRequired);
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessages.CodeAlphaNumericRequired, UserMessages.CodeAlphaNumericRequired);
 
             unit.Code = "";
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeIsRequired, UserMessagesGL.CodeIsRequired);
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessages.CodeIsRequired, UserMessages.CodeIsRequired);
 
             unit.Code = "123456789";
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.CodeMaxLengthError, UserMessagesGL.CodeMaxLengthError);
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessages.CodeMaxLengthError, UserMessages.CodeMaxLengthError);
 
             unit.Name = "";
             unit.Code = "MKM";
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessagesGL.NameIsRequired, UserMessagesGL.NameIsRequired);     
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(unit), UserMessages.NameIsRequired, UserMessages.NameIsRequired);     
         }
 
         [TestMethod, TestCategory(TESTDESCR)]

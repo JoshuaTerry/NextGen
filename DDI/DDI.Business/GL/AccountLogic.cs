@@ -6,27 +6,37 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DDI.Business.Helpers;
 using DDI.Data;
-using DDI.Data.Helpers;
 using DDI.Logger;
 using DDI.Shared;
-using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
     public class AccountLogic : EntityLogicBase<Account>
     {
+        #region Fields
+
         public const string BusinessUnitSeparator = ":";
 
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(AccountLogic));
+
+        #endregion
+
+        #region Constructors
+
         public AccountLogic() : this(new UnitOfWorkEF()) { }
 
         public AccountLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
         {            
         }
+
+        #endregion
+
+        #region Public Methods
 
         public override void Validate(Account entity)
         {
@@ -95,7 +105,7 @@ namespace DDI.Business.GL
                 return string.Empty;
             }
 
-            if (BusinessUnitHelper.IsMultiple)
+            if (BusinessUnitHelper.GetIsMultiple(UnitOfWork))
             {
                 Ledger ledger = GetLedgerForAccount(account);
                 if (ledger != null)
@@ -128,7 +138,8 @@ namespace DDI.Business.GL
             {
                 return account.AccountNumber;
             }
-            return ledger.Code + BusinessUnitSeparator + account.AccountNumber;            
+            BusinessUnit unit = UnitOfWork.GetReference(ledger, p => p.BusinessUnit);
+            return unit.Code + BusinessUnitSeparator + account.AccountNumber;            
         }
 
         /// <summary>
@@ -154,20 +165,6 @@ namespace DDI.Business.GL
                 return account.AccountNumber;
             }
             return ledger.Code + BusinessUnitSeparator + account.AccountNumber;
-        }
-
-        private Ledger GetLedgerForAccount(Account account)
-        {
-            Ledger ledger = account.FiscalYear?.Ledger;
-            if (ledger == null)
-            {
-                var year = UnitOfWork.GetReference(account, p => p.FiscalYear);
-                if (year != null)
-                {
-                    ledger = UnitOfWork.GetReference(year, p => p.Ledger);
-                }
-            }
-            return ledger;
         }
 
         /// <summary>
@@ -260,9 +257,6 @@ namespace DDI.Business.GL
 
             var segmentLevels = ledgerLogic.GetSegmentLevels(account.FiscalYear.LedgerId.Value);
 
-            var tmp = segmentLevels.FirstOrDefault(p => p.Level == 2);
-            tmp.SortOrder = 1;
-
             // Array to hold keys.
             string[] keys = new string[segmentLevels.Length - 1];
 
@@ -305,8 +299,8 @@ namespace DDI.Business.GL
         /// </summary>
         /// <param name="ledgerAccount">Ledger account</param>
         /// <param name="year">Fiscal year</param>
-        /// <param name="anyEntity">TRUE if fiscal year can be in another ledger or business unit.</param>
-        public Account GetAccount(LedgerAccount ledgerAccount, FiscalYear year, bool anyLedger = false)
+        /// <param name="anyBusinessUnit">TRUE if fiscal year can be in another business unit.</param>
+        public Account GetAccount(LedgerAccount ledgerAccount, FiscalYear year, bool anyBusinessUnit = false)
         {
             if (ledgerAccount == null || year == null)
             {
@@ -317,7 +311,7 @@ namespace DDI.Business.GL
                 // Ensure all necessary navigation properties are loaded.
                 ledgerAccount = UnitOfWork.GetById<LedgerAccount>(ledgerAccount.Id, p => p.LedgerAccountYears, p => p.LedgerAccountYears.First().Account);
             }
-            if (!anyLedger || ledgerAccount.LedgerId == year.LedgerId)
+            if (!anyBusinessUnit || ledgerAccount.LedgerId == year.LedgerId)
             {
                 return ledgerAccount.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id)?.Account;
             }
@@ -444,24 +438,24 @@ namespace DDI.Business.GL
                     accountNumber = accountNumber.Substring(index + 1);
 
                     // Look up the explicit business unit 
-                    result.ExplicitBusinesUnit = _ledgerLogic.LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnit.Code == unitCode)?.BusinessUnit;
-                    if (result.ExplicitBusinesUnit == null)
+                    result.ExplicitBusinessUnit = _ledgerLogic.LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnit.Code == unitCode)?.BusinessUnit;
+                    if (result.ExplicitBusinessUnit == null)
                     {
-                        throw new ValidationException(string.Format(UserMessagesGL.BadBusinessUnitCode, "Business unit", unitCode));
+                        throw new ValidationException(UserMessagesGL.BadBusinessUnitCode, "Business unit", unitCode);
                     }
 
-                    if (!allowBusinessUnitOverride && result.ExplicitBusinesUnit.Id != ledger.BusinessUnitId)
+                    if (!allowBusinessUnitOverride && result.ExplicitBusinessUnit.Id != ledger.BusinessUnitId)
                     {
-                        throw new ValidationException(string.Format(UserMessagesGL.AccountMustBeInBusinessUnit, "Business unit", UnitOfWork.GetReference(ledger, p => p.BusinessUnit).Code));
+                        throw new ValidationException(UserMessagesGL.AccountMustBeInBusinessUnit, "Business unit", UnitOfWork.GetReference(ledger, p => p.BusinessUnit).Code);
                     }
 
                     if (fiscalYear != null)
                     {
                         // Find the same fiscal year in the explicit business unit.
-                        FiscalYear otherYear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForBusinessUnit(fiscalYear, result.ExplicitBusinesUnit);
+                        FiscalYear otherYear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForBusinessUnit(fiscalYear, result.ExplicitBusinessUnit);
                         if (otherYear == null)
                         {
-                            throw new ValidationException(string.Format(UserMessagesGL.BadFiscalYearForBusinessUnit, fiscalYear.Name, "Business unit", result.ExplicitBusinesUnit.Code));
+                            throw new ValidationException(UserMessagesGL.BadFiscalYearForBusinessUnit, fiscalYear.Name, "Business unit", result.ExplicitBusinessUnit.Code);
                         }
 
                         fiscalYear = otherYear;
@@ -563,7 +557,7 @@ namespace DDI.Business.GL
                 // Validate length
                 if (segmentInfo[segmentNumber].Length > 0 && code.Length != segmentInfo[segmentNumber].Length)
                 {
-                    throw new ValidationException(string.Format(UserMessagesGL.GLSegmentLength, segmentInfo[segmentNumber].Length));
+                    throw new ValidationException(UserMessagesGL.GLSegmentLength, segmentInfo[segmentNumber].Length.ToString());
                 }
 
                 // Validate segment in db
@@ -591,7 +585,7 @@ namespace DDI.Business.GL
 
                     if (segment == null && !allowNewSegments)
                     {
-                        throw new ValidationException(string.Format(UserMessagesGL.InvalidCode, segmentInfo[segmentNumber].Name, code));
+                        throw new ValidationException(UserMessages.InvalidCode, segmentInfo[segmentNumber].Name, code);
                     }
 
                     result.Segments.Add(segment);
@@ -606,16 +600,16 @@ namespace DDI.Business.GL
             {
                 if (index > 0)
                 {
-                    sb.Append(segmentInfo[index].Separator);
+                    sb.Append(segmentInfo[index - 1].Separator);
                 }
                 sb.Append(result.SegmentCodes[index]);
             }
 
             accountNumber = sb.ToString();
 
-            if (result.ExplicitBusinesUnit != null)
+            if (result.ExplicitBusinessUnit != null)
             {
-                sb.Insert(0, result.ExplicitBusinesUnit.Code + BusinessUnitSeparator);
+                sb.Insert(0, result.ExplicitBusinessUnit.Code + BusinessUnitSeparator);
             }
 
             result.AccountNumber = sb.ToString();
@@ -624,11 +618,17 @@ namespace DDI.Business.GL
             {
                 // Try to find the account in the fiscal year.
                 result.Account = UnitOfWork.FirstOrDefault<Account>(p => p.AccountNumber == accountNumber && p.FiscalYearId == fiscalYear.Id);
-                if (validateAccount && result.Account == null)
+                if (result.Account == null)
                 {
-                    throw new ValidationException(string.Format(UserMessagesGL.GLAccountNumberInvalid, accountNumber));
+                    if (validateAccount)
+                    {
+                        throw new ValidationException(UserMessagesGL.GLAccountNumberInvalid, accountNumber);
+                    }
                 }
-                result.LedgerAccount = GetLedgerAccount(result.Account);
+                else
+                {
+                    result.LedgerAccount = GetLedgerAccount(result.Account);
+                }
             }
             else if (ledger != null)
             {
@@ -636,13 +636,34 @@ namespace DDI.Business.GL
                 result.LedgerAccount = UnitOfWork.FirstOrDefault<LedgerAccount>(p => p.AccountNumber == accountNumber);
                 if (validateAccount && result.LedgerAccount == null)
                 {
-                    throw new ValidationException(string.Format(UserMessagesGL.GLAccountNumberInvalid, accountNumber));
+                    throw new ValidationException(UserMessagesGL.GLAccountNumberInvalid, accountNumber);
                 }
             }
 
             return result;
 
         }
+
+        #endregion
+
+        #region Private Methods
+
+        private Ledger GetLedgerForAccount(Account account)
+        {
+            Ledger ledger = account.FiscalYear?.Ledger;
+            if (ledger == null)
+            {
+                var year = UnitOfWork.GetReference(account, p => p.FiscalYear);
+                if (year != null)
+                {
+                    ledger = UnitOfWork.GetReference(year, p => p.Ledger);
+                }
+            }
+            return ledger;
+        }
+
+        #endregion
+
 
 
     }

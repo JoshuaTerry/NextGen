@@ -11,7 +11,7 @@ namespace DDI.Shared.Models.Client.GL
     /// </summary>
     public class ValidatedAccount
     {
-        public BusinessUnit ExplicitBusinesUnit { get; set; }
+        public BusinessUnit ExplicitBusinessUnit { get; set; }
         public Account Account { get; set; }
         public LedgerAccount LedgerAccount { get; set; }
         public List<Segment> Segments { get; set; }
