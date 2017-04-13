@@ -53,6 +53,7 @@
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
+                <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
             </ul>
 
             <!-- Individual Tab -->
@@ -632,6 +633,70 @@
 
             </div>
 
+            <!-- Investment Tab -->
+            <div id="tab-investments" class="scrollable">
+
+                <div class="investmenttopinfo">
+
+                    <div class="">
+                        
+                        <div class="fieldblock">
+                            <h2>Investor Summary</h2>
+                        </div>
+                        <br />
+
+                        <div class="fieldblock">
+                            <label class="InvestorStatus"></label>
+                        </div>
+
+                        <div class="fieldlock">
+                        </div>
+
+                        <div class="fieldblock">
+                            Investor Since: <span><label class="InvestorSince"></label></span>
+                        </div>
+
+                        <div class="fieldblock">
+                            Primary Owner Investment: <span><label class="PrimaryOwnerInvestment"></label></span>
+                        </div>
+
+                        <div class="fieldblock">
+                            Joint Owner Investment: <span class="JointOwnerInvestment"></span>
+                        </div>
+
+                        <div class="fieldblock">
+                            Beneficiary: <span><label class="BeneficiaryInvestment"></label></span>
+                        </div>
+
+                        <div>
+                            <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
+                        </div>
+
+                    </div>
+
+                    <div class="investmentgridcontainer"></div>
+
+                </div>
+                
+                <div class="accordions">
+                    
+                    <h1>Primary Owner</h1>
+
+                    <div class="">
+                    </div>
+
+                    <h1>Joint Owner</h1>
+
+                    <div class="">
+                    </div>
+
+                    <h1>Beneficiary</h1>
+
+                    <div class="">
+                    </div>
+
+                    </div>
+
         </div>
 
         <div class="dashboard" style="display: none;">
@@ -639,6 +704,8 @@
             <h1>Dashboard</h1>
 
         </div>
+
+    </div>
 
     </div>
 
