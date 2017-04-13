@@ -8,9 +8,9 @@
 
     }
 
-    GetInvestmentData();
+    //GetInvestmentData(id);
 
-    DisplayInvestmentData(id);
+    DisplayInvestmentData();
     // RefreshEntity(); ?
     
 });
