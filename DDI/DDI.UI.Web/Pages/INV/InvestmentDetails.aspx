@@ -386,39 +386,50 @@
             <input type="hidden" class="interest-Id" />
             <input type="hidden" class="hidconstituentlookupid" />
 
-            <div class="fieldblock twocolumn">
-
-                <label>Method</label>
-                <select class="linkedAccounts-Type">
-                    <option value=""></option>
-                    <option value="Down Payment">Down Payment</option>
-                    <option value="Grant">Grant</option>
-                    <option value="Loan Support">Loan Support</option>
-                    <option value="Pool">Pool</option>
-                </select>
+            <div>
+                <table>
+                    <tr>
+                        <td>
+                            <label>Type: </label>
+                        </td>
+                        <td>
+                            <select class="linkedAccounts-Type">
+                                <option value=""></option>
+                                <option value="Down Payment">Down Payment</option>
+                                <option value="Grant">Grant</option>
+                                <option value="Loan Support">Loan Support</option>
+                                <option value="Pool">Pool</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
-            <div class="fieldblock fourcolumn">
-                <label>Loan</label>
-                <input type="checkbox" class="editable LinkedAccountsLoan" />
-                <label>Loan Number:</label>
-                <input type="text" class="rs-LoanName loanlookup" />
+            <div class="fourcolumn">
+                <span>
+                    <input type="checkbox" class="editable LinkedAccountsLoanInd" />
+                    <label>Loan</label>
+                    <label>Loan Number:</label>
+                    <input type="text" class="rs-LoanName loanlookup" />
+                </span>
             </div>
 
-            <div class="fieldblock interestOptionACHWire fourcolumn">
-                <label>Collateral on Loan</label>
+            <div class="interestOptionACHWire threecolumn">
                 <input type="checkbox" class="editable LinkedAccountsLoanCollateral" />
+                <label>Collateral on Loan</label>
                 <div class="fieldblock loanCollateralOption">
                     <fieldset>
-                        <input type="radio" name="loancollateral" value="Percent"/>Percent<br />
-                        <input type="radio" name="loancollateral" value="Amount"/>Amount
+                        <span>
+                            <input type="radio" name="loancollateral" value="Percent"/>Percent<br />
+                            <input type="radio" name="loancollateral" value="Amount"/>Amount
+                        </span>
                     </fieldset>            
                 </div>
             </div>
 
             <div>
-                <label>Block Investments from linking to other loans:</label>
                 <input type="checkbox" class="editable LoanBlockLinkedInvestments" />
+                <label>Block Investments from linking to other loans:</label>
             </div>
 
         </div>

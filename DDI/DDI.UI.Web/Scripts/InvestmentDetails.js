@@ -8,7 +8,7 @@
 
     LoadInterestPaymentGrid();
 
-    LoadLinkedAccountsGrid();
+    InitLinkedAccounts();
 
 });
 
@@ -46,6 +46,12 @@ function LoadInterestPaymentGrid() {
 
 //linked accounts section
 
+function InitLinkedAccounts() {
+
+    LoadLinkedAccountsGrid();
+    NewLinkedAccountsModal();
+}
+
 function LoadLinkedAccountsGrid() {
     var columns = [
     { dataField: 'Id', width: '0px', },
@@ -54,13 +60,13 @@ function LoadLinkedAccountsGrid() {
     { dataField: 'Name', caption: 'Name' },
     ];
 
-    CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, currentEntity.Id + '/linkedaccounts/', null, EditLinkedAccounts, null, null);
+    //CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, currentEntity.Id + '/linkedaccounts/', null, EditLinkedAccounts, null, null);
 
 }
 
 function NewLinkedAccountsModal() {
 
-    $('.newnotesdetailmodallink').click(function (e) {
+    $('.newlinkedaccountsmodallink').click(function (e) {
 
         e.preventDefault();
 
@@ -152,20 +158,16 @@ function LoadLinkedAccounts(id) {
 
     MakeServiceCall('GET', 'linkedaccounts/' + id, null, function (data) {
 
-        $('.nd-Title').val(data.Data.Title),
-        $('.nd-Description').val(data.Data.Text),
-        $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
-        $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
-        $('.nd-ContactDate').val(data.Data.ContactDate),
-        $('.nd-ContactDate').val(data.Data.NoteCode),
-        $('.nd-CreatedBy').text(data.Data.CreatedBy),
-        $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
-        $('.nd-CreatedOn').text(data.Data.CreatedOn),
-        $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
+        $('.la-Type').val(data.Data.Type),
+        $('.la-LoadInd').val(data.Data.LoanInd),
+        $('.la-LoanNumber').val(data.Data.LoanNumber),
+        $('.la-CollateralInd').val(data.Data.CollateralInd),
+        $('.la-CollateralAmtPct').val(data.Data.CollateralIndAmtPct),
+        $('.la-BlockLink').val(data.Data.BlockLink)
 
 
     }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', 'An error occurred during loading the Note Details.');
+        DisplayErrorMessage('Error', 'An error occurred during loading the Linked Account.');
     });
 
 }
@@ -174,16 +176,12 @@ function GetLinkedAccountsToSave() {
 
     var rawitem = {
 
-        Title: $(modal).find('.nd-Title').val(),
-        AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
-        AlertEndDate: $(modal).find('.nd-AlertEndDate').val(),
-        Text: $(modal).find('.nd-Description').val(),
-        CategoryId: $(modal).find('.nd-Category').val(),
-        ContactDate: $(modal).find('.nd-ContactDate').val(),
-        NoteCodeId: $(modal).find('.nd-NoteCode').val(),
-        ParentEntityId: currentEntity.Id,
-        EntityType: NoteEntity[0],
-        ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
+        Type: $(modal).find('.al-Type').val(),
+        LoadInd: $(modal).find('.al-LoadInd').val(),
+        LoanNumber: $(modal).find('.al-LoanNumber').val(),
+        CollateralInd: $(modal).find('.al-CollateralInd').val(),
+        CollateralAmtPct: $(modal).find('.al-CollateralAmtPct').val(),
+        BlockLink: $(modal).find('.al-BlockLink').val()
 
     };
 
