@@ -1,4 +1,6 @@
-﻿using DDI.Services.Search;
+﻿using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.INV;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -8,8 +10,10 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.INV
 {
-    public class InvestmentRelationships : GenericController<InvestmentRelationship>
+    public class InvestmentRelationshipsController : GenericController<InvestmentRelationship>
     {
+
+        InvestmentRelationshipService _invrelService = new InvestmentRelationshipService();
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         //protected override Expression<Func<InvestmentRelationship, object>>[] GetDataIncludesForList()
         //{
@@ -34,16 +38,19 @@ namespace DDI.WebApi.Controllers.INV
             return base.GetById(id, fields);
         }
 
-        [Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
+        //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
         [HttpGet]
         [Route("api/v1/investmentrelationships/constituent/{id}", Name = RouteNames.InvestmentRelationship + RouteNames.Constituent + RouteVerbs.Get)]
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetByConstituentId(Guid id)
         {
+            
+
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
-                return FinalizeResponse(response, RouteNames.InvestmentRelationship + RouteNames.Constituent, search, fields);
+                //var search = new PageableSearch(offset, limit, orderBy);
+                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                var response = _invrelService.GetInvestmentByConstituentId(id);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -51,7 +58,7 @@ namespace DDI.WebApi.Controllers.INV
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-    
+
 
         //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
         //[HttpPost]

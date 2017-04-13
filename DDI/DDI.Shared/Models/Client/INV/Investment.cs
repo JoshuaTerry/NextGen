@@ -67,7 +67,8 @@ namespace DDI.Shared.Models.Client.INV
         {
             get
             {
-                return InvestmentNumber + ": " + InvestmentDescription;
+                return "Testing";
+                //return InvestmentNumber + ": " + InvestmentDescription;
             }
         }
 
