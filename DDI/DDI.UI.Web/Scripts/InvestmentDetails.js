@@ -11,6 +11,8 @@
     CreateEditControls();
 
     SetupEditControls();
+
+    LoadDepositsAndWithdrawalsSection();
     
 });
 
@@ -29,9 +31,20 @@ function DisplayInvestmentData() {
 }
 
 
-function LoadAutomaticTransactionsSection() {
+function LoadDepositsAndWithdrawalsSection() {
 
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'DepositWithdrawal', caption: 'Deposit/Withdrawal' }, // group by
+        { dataField: 'NextDate', caption: 'NextDate' }, //order by
+        { dataField: 'Frequency', caption: 'Frequency' }, // Enum?
+        { dataField: 'Method', caption: 'Degree' },
+        { dataField: 'PaymentInfo', caption: 'Payment Info' }, // similar to constituent payment prefs
+        { dataField: 'Amount', caption: 'Amount' },
+        { dataField: 'IsActive', caption: 'Status' }
+    ];
 
+    LoadGrid('.depositswithdrawalsgrid', 'dwgrid', columns);
 
 }
 
