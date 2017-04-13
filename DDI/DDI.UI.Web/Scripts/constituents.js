@@ -663,11 +663,7 @@ function LoadAddressesGrid() {
         null,
         EditAddressModal);
     
-    // LoadGrid(container, gridClass, columns, route, selected, prefix, editModalClass, newModalClass, modalWidth, 
-    // showDelete, showFilter, showGroup, onComplete)
-    //LoadGrid('.constituentaddressgridcontainer', 'constituentaddressgrid', columns, 'constituents/' + currentEntity.Id + '/constituentaddresses'
-    //    , null, 'na-', '.addressmodal', '.addressmodal', 250, false, true, false, null);
-
+    
 
 }
 
