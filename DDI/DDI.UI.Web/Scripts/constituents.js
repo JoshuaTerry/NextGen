@@ -1076,7 +1076,7 @@ function LoadRelationshipData(data, modal) {
 
 function LoadInvestmentsGrid() {
     var columns = [
-    { dataField: 'InvestorRelationship', width: '0px', },
+    { dataField: 'InvestmentRelationshipType', width: '0px', },
     { dataField: 'InvestmentId', width: '0px', },
     { dataField: 'InvestmentNumber', caption: 'Inv Num' },
     { dataField: 'CurrentMaturityDate', caption: 'Maturity' },
@@ -1085,8 +1085,8 @@ function LoadInvestmentsGrid() {
     { dataField: 'OwnershipType', caption: 'Ownership' }
     ];
 
-    //LoadGrid('.investmentstable', 'investmentgrid', columns, 'investments/businessunit/' + currentEntity.Id, null, null
-    //    , '', '', '', 0, false, false, false, null);
+    LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, null
+        , '', '', '', 0, false, false, false, null);
 }
 
 /* End Investment Tab */

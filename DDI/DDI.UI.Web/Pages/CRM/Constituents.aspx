@@ -652,22 +652,27 @@
                         <div class="fieldlock">
                         </div>
 
-                        <div class="fieldblock">
-                            Investor Since: <span><label class="InvestorStartDate"></label></span>
+                        <div class="fieldblock threecolumn" >
+                            <label>Since: </label>
+                            <label class="InvestorStartDate"></label>
+                        </div>
+
+                        <div class="fieldblock threecolumn">
+                            <label>Primary Owner Investment: </label>
+                            <label class="PrimaryInvestorTotal"></label>
                         </div>
 
                         <div class="fieldblock">
-                            Primary Owner Investment: <span><label class="PrimaryInvestorTotal"></label></span>
+                            <label>Joint Owner Investment: </label>
+                            <label>class="JointInvestorTotal"</label> 
                         </div>
 
                         <div class="fieldblock">
-                            Joint Owner Investment: <span class="JointInvestorTotal"></span>
+                            <label>Total Investment Balance: </label>
+                            <label class="InvestorTotal"></label>
                         </div>
 
-                        <div class="fieldblock">
-                            Total Investment Balance: <span><label class="InvestorTotal"></label></span>
-                        </div>
-
+                        // initial testing only
                         <div>
                             <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
                         </div>
