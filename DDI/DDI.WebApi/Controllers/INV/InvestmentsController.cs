@@ -1,4 +1,5 @@
 ﻿using DDI.Data;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.INV;
@@ -11,8 +12,12 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.INV
 {
-    public class Investments : GenericController<Investment>
+    
+
+    public class InvestmentsController : GenericController<Investment>
     {
+        InvestmentService _invService = new InvestmentService();
+
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         //protected override Expression<Func<Investment, object>>[] GetDataIncludesForList()
         //{
@@ -34,11 +39,21 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            
-            Investment inv = new Investment();
-            
 
-            return base.GetById(id, fields);
+            //return base.GetById(id, fields);
+
+            try
+            {
+                //var search = new PageableSearch(offset, limit, orderBy);
+                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                var response = _invService.GetInvestmentById(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         

@@ -97,9 +97,11 @@ namespace DDI.Services
             invest.OriginalPurchaseAmount = new decimal (2345.43);
             invest.StepUpEligible = true;
             invest.StepUpDate = new DateTime (2017, 07,12);
-                
+
             //interest section
-            
+            invest.InterestFrequency = InterestFrequency.Monthly;
+            invest.Rate = new decimal(4.5);
+
 
 
 
