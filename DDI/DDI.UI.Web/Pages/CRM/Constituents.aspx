@@ -649,7 +649,7 @@
                             <label class="InvestorStatus"></label>
                         </div>
 
-                        <div class="fieldlock">
+                        <div class="fieldblock">
                         </div>
 
                         <div class="fieldblock threecolumn" >
@@ -662,19 +662,18 @@
                             <label class="PrimaryInvestorTotal"></label>
                         </div>
 
-                        <div class="fieldblock">
+                        <div class="fieldblock threecolumn">
                             <label>Joint Owner Investment: </label>
                             <label>class="JointInvestorTotal"</label> 
                         </div>
 
-                        <div class="fieldblock">
+                        <div class="fieldblock threecolumn">
                             <label>Total Investment Balance: </label>
                             <label class="InvestorTotal"></label>
                         </div>
 
-                        // initial testing only
                         <div>
-                            <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
+                            <a href="../INV/InvestmentDetails.aspx">Investment Detail Test</a>
                         </div>
 
                     </div>

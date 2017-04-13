@@ -177,6 +177,7 @@ function GetConstituentData(id) {
         success: function (data) {
 
             currentEntity = data.Data;
+            $('InvestorTotal').val = (data.Data.PrimaryInvestorTotal + data.Data.JointInvestorTotal);
 
             DisplayConstituentData();
             
@@ -1078,11 +1079,11 @@ function LoadInvestmentsGrid() {
     var columns = [
     { dataField: 'InvestmentRelationshipType', width: '0px', },
     { dataField: 'InvestmentId', width: '0px', },
-    { dataField: 'InvestmentNumber', caption: 'Inv Num' },
-    { dataField: 'CurrentMaturityDate', caption: 'Maturity' },
-    { dataField: 'Rate', caption: 'Rate' },
-    { dataField: 'Balance', caption: 'Balance' },
-    { dataField: 'OwnershipType', caption: 'Ownership' }
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num' },
+    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity' },
+    { dataField: 'Investment.Rate', caption: 'Rate' },
+    { dataField: 'Investment.Balance', caption: 'Balance' },
+    { dataField: 'Investment.OwnershipType', caption: 'Ownership' }
     ];
 
     LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, null
