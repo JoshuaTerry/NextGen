@@ -1083,7 +1083,7 @@ function LoadInvestmentsGrid() {
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity' },
     { dataField: 'Investment.Rate', caption: 'Rate' },
     { dataField: 'Investment.Balance', caption: 'Balance' },
-    { dataField: 'Investment.OwnershipType', caption: 'Ownership' }
+    { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 
     LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, null

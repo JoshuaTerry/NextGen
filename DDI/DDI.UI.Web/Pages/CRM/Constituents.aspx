@@ -664,7 +664,7 @@
 
                         <div class="fieldblock threecolumn">
                             <label>Joint Owner Investment: </label>
-                            <label>class="JointInvestorTotal"</label> 
+                            <label class="JointInvestorTotal"></label> 
                         </div>
 
                         <div class="fieldblock threecolumn">
