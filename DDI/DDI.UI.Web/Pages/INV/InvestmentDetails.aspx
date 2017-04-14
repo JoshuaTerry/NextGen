@@ -165,7 +165,7 @@
                             </div>
 
                             <div class="accordions">
-                            <h1>Process Step-up</h1>
+                            <h1>Step-Up</h1>
                                 <div class="editcontainer">
                                 <%--Not attached to doing this as a nested accordion, just one idea--%>
 
@@ -187,8 +187,12 @@
                             </div>
                         </div>
 
-                        <h1>Automatic Transactions</h1>
-                        <div class="editcontainer"></div>
+                        <h1>Deposits and Withdrawals</h1>
+                        <div class="editcontainer">
+
+                            <div class="dwgridcontainer"></div>
+
+                        </div>
 
                         <h1>Interest</h1>
                         <div class="editcontainer interestgridcontainer">

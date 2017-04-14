@@ -42,13 +42,7 @@ namespace DDI.Shared.Models.Client.GL
         [MaxLength(255)]
         public string Description { get; set; }
 
-        public int TransactionId { get; set; }
-
-        public bool IsAdjustment { get; set; }
-
-        public Guid? SubledgerTransactionId { get; set; }        
-        [ForeignKey(nameof(SubledgerTransactionId))]
-        public SubledgerTransaction SubledgerTransaction { get; set; }
+        public bool IsAdjustment { get; set; }     
 
     }
 }
