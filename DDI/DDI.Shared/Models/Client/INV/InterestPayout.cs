@@ -9,26 +9,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.INV
 {
-    [Table("InvestmentRelationship")]
-    public class InvestmentRelationship : AuditableEntityBase, IEntity
+    [Table("InterestPayout")]
+    public class InterestPayout : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [ForeignKey("ConstituentId")]
-        public Constituent Constituent { get; set; }
-
-        public Guid? ConstituentId { get; set; }
-
-
         [ForeignKey("InvestmentId")]
         public Investment Investment { get; set; }
 
         public Guid? InvestmentId { get; set; }
 
-        public InvestmentRelationshipType InvestmentRelationshipType { get; set; }
+        public int Priority { get; set; }
 
 
         #endregion

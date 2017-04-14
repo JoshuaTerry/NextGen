@@ -127,6 +127,8 @@
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
     <Compile Include="Enums\GL\TransactionXferCategory.cs" />
+    <Compile Include="Enums\INV\InterestFrequency.cs" />
+    <Compile Include="Enums\INV\IssuanceMethod.cs" />
     <Compile Include="Enums\INV\InvestorRelationshipType.cs" />
     <Compile Include="Enums\INV\InvestmentStatus.cs" />
     <Compile Include="Enums\INV\InvestorStatus.cs" />
@@ -174,6 +176,7 @@
     <Compile Include="Models\Client\GL\BusinessUnitFromTo.cs" />
     <Compile Include="Models\Client\GL\Fund.cs" />
     <Compile Include="Models\Client\GL\FundFromTo.cs" />
+    <Compile Include="Models\Client\GL\GLAccountSelection.cs" />
     <Compile Include="Models\Client\GL\Ledger.cs" />
     <Compile Include="Models\Client\GL\LedgerAccount.cs" />
     <Compile Include="Models\Client\GL\LedgerAccountMerge.cs" />
@@ -182,8 +185,7 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
-    <Compile Include="Models\Client\GL\SubledgerTransaction.cs" />
-    <Compile Include="Models\Client\GL\SubLedgerXref.cs" />
+    <Compile Include="Models\Client\INV\InterestPayout.cs" />
     <Compile Include="Models\Client\INV\InvestmentType.cs" />
     <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
     <Compile Include="Models\Client\INV\InvestmentRelationship.cs" />
