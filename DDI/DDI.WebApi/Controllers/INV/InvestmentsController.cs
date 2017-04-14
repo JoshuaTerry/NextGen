@@ -1,4 +1,5 @@
 ﻿using DDI.Data;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.INV;
@@ -11,8 +12,12 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.INV
 {
-    public class Investments : GenericController<Investment>
+    
+
+    public class InvestmentsController : GenericController<Investment>
     {
+        InvestmentService _invService = new InvestmentService();
+
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         //protected override Expression<Func<Investment, object>>[] GetDataIncludesForList()
         //{
@@ -34,23 +39,15 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            
-            Investment inv = new Investment();
-            
 
-            return base.GetById(id, fields);
-        }
+            //return base.GetById(id, fields);
 
-        [Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
-        [HttpGet]
-        [Route("api/v1/investments/businessunit/{id}", Name = RouteNames.Investment + RouteNames.Constituent + RouteVerbs.Get)]
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
-        {
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.BusinessUnitId == id, search);
-                return FinalizeResponse(response, RouteNames.Investment + RouteNames.Constituent, search, fields);
+                //var search = new PageableSearch(offset, limit, orderBy);
+                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                var response = _invService.GetInvestmentById(id);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -58,8 +55,8 @@ namespace DDI.WebApi.Controllers.INV
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-    
 
+        
         //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
         //[HttpPost]
         //[Route("api/v1/investments", Name = RouteNames.Investment + RouteVerbs.Post)]

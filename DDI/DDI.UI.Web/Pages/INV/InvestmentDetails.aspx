@@ -164,7 +164,7 @@
                             </div>
 
                             <div class="accordions">
-                            <h1>Process Step-up</h1>
+                            <h1>Step-Up</h1>
                                 <div class="editcontainer">
                                 <%--Not attached to doing this as a nested accordion, just one idea--%>
 
