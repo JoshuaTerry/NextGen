@@ -14,6 +14,11 @@ namespace DDI.Business.Helpers
     /// </summary>
     public static class BusinessUnitHelper
     {
+        /// <summary>
+        /// Returns TRUE if multiple business units have been defined.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <returns></returns>
         public static bool GetIsMultiple(IUnitOfWork unitOfWork)
         {
             object result = CacheHelper.GetEntry<object>(BusinessUnitLogic.IsMultipleCacheKey, () =>

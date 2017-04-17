@@ -16,10 +16,17 @@ namespace DDI.Business.GL
 {
     public class LedgerLogic : EntityLogicBase<Ledger>
     {
+        #region Fields
+
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(LedgerLogic));
         public LedgerLogic() : this(new UnitOfWorkEF()) { }
         private IRepository<Ledger> _ledgerRepository;
         private IRepository<SegmentLevel> _segmentLevelRepository;
+        private CachedRepository<Ledger> _ledgerCache = null;
+
+        #endregion
+
+        #region Constructors
 
         public LedgerLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
@@ -27,7 +34,10 @@ namespace DDI.Business.GL
             _segmentLevelRepository = unitOfWork.GetRepository<SegmentLevel>();
         }
 
-        private CachedRepository<Ledger> _ledgerCache = null;
+        #endregion
+
+        #region Properties
+
         internal CachedRepository<Ledger> LedgerCache
         {
             get
@@ -49,6 +59,10 @@ namespace DDI.Business.GL
                 _ledgerCache = value;
             }
         }
+
+        #endregion
+
+        #region Public Methods
 
         public override void Validate(Ledger ledger)
         {
@@ -152,17 +166,7 @@ namespace DDI.Business.GL
         /// </summary>
         public Ledger GetCurrentLedger(Guid businessUnitId, DateTime dt)
         {
-            //return LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnitId == businessUnitId && p.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt));
-
-            foreach (var ledger in LedgerCache.Entities)
-            {
-                if (ledger.BusinessUnitId == businessUnitId && ledger.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt))
-                {
-                    return ledger;
-                }
-            }
-
-            return null;
+            return LedgerCache.Entities.FirstOrDefault(p => p.BusinessUnitId == businessUnitId && p.FiscalYears.Any(q => q.StartDate <= dt && q.EndDate >= dt));
         }
 
         /// <summary>
@@ -246,34 +250,7 @@ namespace DDI.Business.GL
             return string.Empty;
         }
 
-        /// <summary>
-        /// Copy properties from one ledger to another.
-        /// </summary>
-        private void CopyLedgerProperties(Ledger from, Guid orgLedgerId)
-        {
-            foreach (Ledger to in UnitOfWork.Where<Ledger>(p => p.Id != from.Id &&
-                                 (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
-            {
-                to.AccountGroup1Title = from.AccountGroup1Title;
-                to.AccountGroup2Title = from.AccountGroup2Title;
-                to.AccountGroup3Title = from.AccountGroup3Title;
-                to.AccountGroup4Title = from.AccountGroup4Title;
-                to.AccountGroupLevels = from.AccountGroupLevels;
-                to.ApproveJournals = from.ApproveJournals;
-                to.CapitalizeHeaders = from.CapitalizeHeaders;
-                to.CopyCOAChanges = from.CopyCOAChanges;
-                to.FixedBudgetName = from.FixedBudgetName;
-                to.FundAccounting = from.FundAccounting;
-                to.NumberOfSegments = from.NumberOfSegments;
-                to.PostAutomatically = from.PostAutomatically;
-                to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
-                to.Status = from.Status;
-                to.WhatIfBudgetName = from.WhatIfBudgetName;
-                to.WorkingBudgetName = from.WorkingBudgetName;
-            }
-        }
-
-        private LedgerStatus GetCommonLedgerStatus(Ledger ledger)
+        public LedgerStatus GetCommonLedgerStatus(Ledger ledger)
         {
             if (ledger == null)
             {
@@ -308,10 +285,37 @@ namespace DDI.Business.GL
 
         }
 
-        private void CopySegmentLevels(Ledger ledger)
-        {
+        #endregion
 
+        #region Private Methods
+
+        /// <summary>
+        /// Copy properties from one ledger to another.
+        /// </summary>
+        private void CopyLedgerProperties(Ledger from, Guid orgLedgerId)
+        {
+            foreach (Ledger to in UnitOfWork.Where<Ledger>(p => p.Id != from.Id &&
+                                 (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
+            {
+                to.AccountGroup1Title = from.AccountGroup1Title;
+                to.AccountGroup2Title = from.AccountGroup2Title;
+                to.AccountGroup3Title = from.AccountGroup3Title;
+                to.AccountGroup4Title = from.AccountGroup4Title;
+                to.AccountGroupLevels = from.AccountGroupLevels;
+                to.ApproveJournals = from.ApproveJournals;
+                to.CapitalizeHeaders = from.CapitalizeHeaders;
+                to.CopyCOAChanges = from.CopyCOAChanges;
+                to.FixedBudgetName = from.FixedBudgetName;
+                to.FundAccounting = from.FundAccounting;
+                to.NumberOfSegments = from.NumberOfSegments;
+                to.PostAutomatically = from.PostAutomatically;
+                to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
+                to.Status = from.Status;
+                to.WhatIfBudgetName = from.WhatIfBudgetName;
+                to.WorkingBudgetName = from.WorkingBudgetName;
+            }
         }
+
 
         private void ValidateSegmentLevels(Ledger ledger)
         {
@@ -434,5 +438,7 @@ namespace DDI.Business.GL
                 }
             }
         }
+
+        #endregion
     }
 }
