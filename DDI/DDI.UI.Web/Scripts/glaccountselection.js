@@ -37,10 +37,14 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
         }
     });
 
-    LoadGLAccounts(ledgerId, fiscalYearId)
+    
     $(".accountselectionsearch").click(function () {
-
-        $("#gridcontainer").show();
+        var grid = $('#gridContainer .dx-widget').length;
+        if(grid == 0)
+        {
+            LoadGLAccounts(ledgerId, fiscalYearId);
+        }
+        $("#gridContainer").show();
     });
 
     $(".accountnumber").focus();
@@ -67,11 +71,11 @@ function CreateGLAccountSelector(container)
     
     hidAccountNumber.attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
     var glcontrol = glcontainer.addClass("inline-block");
-    accountNumber.attr("type", "text").attr("maxlength", "25").attr("style", "width:15%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
+    accountNumber.attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
     accountDescription.addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
     search.addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
     glcontrol.appendTo($(container));
-    grid.attr("Id", "gridcontainer").addClass("accountselectiongrid").appendTo($(container));
+    grid.attr("Id", "gridContainer").addClass("accountselectiongrid").appendTo($(container));
 
 }
 
@@ -108,9 +112,9 @@ function LoadGLAccounts(ledgerId,fiscalYearId) {
 function LoadGLAcountGrid(data, columns)
 {
     //create grid
-    $("#gridcontainer").dxDataGrid({
+    $("#gridContainer").dxDataGrid({
         dataSource: data,
-        cacheEnabled: true,
+        //cacheEnabled: true,
         scrolling: {
             mode: "virtual"
         },
@@ -126,11 +130,10 @@ function LoadGLAcountGrid(data, columns)
              var data = selectedItems.selectedRowsData[0];
              if (data) {
                  $(".accountnumber").val(data.AccountNumber);
-                 $(".hidaccountpid").val(data.Id);
+                 $(".hidaccountid").val(data.Id);
                  $(".accountdescription").text(data.Description)
                  $(".accountnumber").focus();
-                 $("#gridcontainer").hide();
-              
+                 $("#gridContainer").hide();
              }
          }
        
