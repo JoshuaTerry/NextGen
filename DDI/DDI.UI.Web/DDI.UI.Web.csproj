@@ -89,7 +89,6 @@
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
-    <Content Include="Pages\Common\GLAccountSelection.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
@@ -309,13 +308,6 @@
   <ItemGroup>
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Common\GLAccountSelection.aspx.cs">
-      <DependentUpon>GLAccountSelection.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Common\GLAccountSelection.aspx.designer.cs">
-      <DependentUpon>GLAccountSelection.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
@@ -597,6 +589,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Pages\Common\" />
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />
