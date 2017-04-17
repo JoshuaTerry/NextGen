@@ -15,14 +15,12 @@ namespace DDI.Business.GL
 {
     class LedgerLogic : EntityLogicBase<Ledger>
     {
-
         #region Constructors 
 
         public LedgerLogic() : this(new UnitOfWorkEF()) { }
 
         public LedgerLogic(IUnitOfWork uow) : base(uow)
         {
-
         }
 
         #endregion

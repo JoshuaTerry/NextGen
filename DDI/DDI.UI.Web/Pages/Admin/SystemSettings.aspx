@@ -108,8 +108,9 @@
                 </ul>
             </div>
         </div>
-
+        
         <div class="contentcontainer">
+            <h1 class="systemsettingsheader"></h1>
             <div class="gridcontainer"></div>
         </div>
 
@@ -1080,6 +1081,79 @@
 
         </div>
 
+    </div>
+
+    <div class="fiscalyearmodal" title="Fiscal Year" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fy-LedgerId" />
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="fy-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Number Of Periods</label>
+                <select class="fy-NumberOfPeriods">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Use final accounting period for year end adjustments only</label>
+                <input type="checkbox" class="fy-HasAdjustmentPeriod" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fp-Id" />
+            <input type="hidden" class="fp-FiscalYearId" />
+
+            <div class="fieldblock">
+                <label>Period Number</label>
+                <input type="text" maxlength="2" class="fp-PeriodNumber number" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Start Date</label>
+                <input type="text" class="fp-StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>End Date</label>
+                <input type="text" class="fp-EndDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Status</label>
+                <select class="fp-Status">
+                    <option value="0">Open</option>
+                    <option value="1">Closed</option>
+                    <option value="2">Reopened</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
     </div>
 
     <div class="glformatmodal" title="GL Format" style="display: none;">
