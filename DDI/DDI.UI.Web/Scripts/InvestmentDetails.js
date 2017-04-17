@@ -2,7 +2,6 @@
 
     // apply system settings?
 
-<<<<<<< HEAD
     SetupEditControls();
 
     LoadDropDowns();
@@ -11,7 +10,6 @@
 
     InitLinkedAccounts();
 
-=======
     if (sessionStorage.getItem('investmentid')) {
 
         $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
@@ -23,7 +21,6 @@
     DisplayInvestmentData();
     // RefreshEntity(); ?
     
->>>>>>> DC-629-632_Investment_Screens
 });
 
 
@@ -158,7 +155,6 @@ function NewLinkedAccountsModal() {
 
         });
 
-<<<<<<< HEAD
     });
 }
 
@@ -242,7 +238,6 @@ function GetLinkedAccountsToSave() {
     return item;
 
 }
-=======
 function LoadAttributesSection() {
 
 
