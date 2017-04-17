@@ -659,7 +659,7 @@
 
                         <div class="threecolumn">
                             <label>Primary Owner Investment: </label>
-                            <label class="PrimaryInvestorTotal"></label>
+                            <input type="text" class="PrimaryInvestorTotal readonly"/>
                         </div>
 
                         <div class="threecolumn">
@@ -680,7 +680,7 @@
 
                 </div>
                 
-                <div class="investmentstable"></div>
+                <div class="investmentstable gridcontainer scrollable"></div>
 
         </div>
 
