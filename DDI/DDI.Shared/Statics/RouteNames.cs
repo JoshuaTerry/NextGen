@@ -29,6 +29,7 @@
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";
+        public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
         public const string Degree = "Degree";
         public const string Denomination = "Denomination";

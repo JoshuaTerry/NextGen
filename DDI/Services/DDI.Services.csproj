@@ -89,6 +89,7 @@
     <Compile Include="CRM\DenominationsService.cs" />
     <Compile Include="CRM\EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
+    <Compile Include="GL\FiscalYearService.cs" />
     <Compile Include="Security\RoleService.cs" />
     <Compile Include="Security\UserService.cs" />
     <Compile Include="CRM\IAddressService.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Core\ITagGroupService.cs" />
     <Compile Include="Common\StateService.cs" />
     <Compile Include="Core\TagGroupService.cs" />
+	<Compile Include="ServiceInterfaces\IFiscalYearService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
