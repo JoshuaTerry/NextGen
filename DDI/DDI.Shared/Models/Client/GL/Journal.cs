@@ -19,6 +19,10 @@ namespace DDI.Shared.Models.Client.GL
 
         public JournalType JournalType { get; set; }
 
+        public Guid? BusinessUnitId { get; set; }
+        [ForeignKey(nameof(BusinessUnitId))]
+        public BusinessUnit BusinessUnit { get; set; }
+
         public Guid? FiscalYearId { get; set; }
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
@@ -37,7 +41,8 @@ namespace DDI.Shared.Models.Client.GL
 
         public bool IsReversed { get; set; }
 
-        public bool IsDeleted { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? DeletionDate { get; set; }
 
         // Recurring journal properties
 

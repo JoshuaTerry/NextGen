@@ -124,13 +124,14 @@ namespace DDI.Data.Migrations.Client
                         Id = c.Guid(nullable: false),
                         JournalNumber = c.Int(nullable: false),
                         JournalType = c.Int(nullable: false),
+                        BusinessUnitId = c.Guid(),
                         FiscalYearId = c.Guid(),
                         Comment = c.String(maxLength: 255),
                         Amount = c.Decimal(nullable: false, precision: 14, scale: 2),
                         TransactionDate = c.DateTime(storeType: "date"),
                         ReverseOnDate = c.DateTime(storeType: "date"),
                         IsReversed = c.Boolean(nullable: false),
-                        IsDeleted = c.Boolean(nullable: false),
+                        DeletionDate = c.DateTime(storeType: "date"),
                         RecurringType = c.Int(nullable: false),
                         RecurringDay = c.Int(nullable: false),
                         PreviousDate = c.DateTime(storeType: "date"),
@@ -147,8 +148,10 @@ namespace DDI.Data.Migrations.Client
                         LastModifiedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.BusinessUnit", t => t.BusinessUnitId)
                 .ForeignKey("dbo.Journal", t => t.ParentJournalId)
                 .ForeignKey("dbo.FiscalYear", t => t.FiscalYearId)
+                .Index(t => t.BusinessUnitId)
                 .Index(t => t.FiscalYearId)
                 .Index(t => t.ParentJournalId);
             
@@ -163,6 +166,7 @@ namespace DDI.Data.Migrations.Client
             
             AddColumn("dbo.PostedTransaction", "PostedTransactionType", c => c.Int(nullable: false));
             AddColumn("dbo.PostedTransaction", "TransactionId", c => c.Guid());
+            AlterColumn("dbo.FiscalYear", "HasAdjustmentPeriod", c => c.Boolean(nullable: false));
             CreateIndex("dbo.PostedTransaction", "TransactionId");
             AddForeignKey("dbo.PostedTransaction", "TransactionId", "dbo.Transaction", "Id");
             DropColumn("dbo.PostedTransaction", "DocumentType");
@@ -177,6 +181,7 @@ namespace DDI.Data.Migrations.Client
             DropForeignKey("dbo.JournalLine", "JournalId", "dbo.Journal");
             DropForeignKey("dbo.Journal", "FiscalYearId", "dbo.FiscalYear");
             DropForeignKey("dbo.Journal", "ParentJournalId", "dbo.Journal");
+            DropForeignKey("dbo.Journal", "BusinessUnitId", "dbo.BusinessUnit");
             DropForeignKey("dbo.EntityNumber", "FiscalYearId", "dbo.FiscalYear");
             DropForeignKey("dbo.EntityNumber", "BusinessUnitId", "dbo.BusinessUnit");
             DropForeignKey("dbo.EntityApproval", "AppprovedById", "dbo.Users");
@@ -187,6 +192,7 @@ namespace DDI.Data.Migrations.Client
             DropForeignKey("dbo.Transaction", "CreditAccountId", "dbo.LedgerAccountYear");
             DropIndex("dbo.Journal", new[] { "ParentJournalId" });
             DropIndex("dbo.Journal", new[] { "FiscalYearId" });
+            DropIndex("dbo.Journal", new[] { "BusinessUnitId" });
             DropIndex("dbo.JournalLine", new[] { "JournalId" });
             DropIndex("dbo.JournalLine", new[] { "SourceFundId" });
             DropIndex("dbo.JournalLine", new[] { "SourceBusinessUnitId" });
@@ -203,6 +209,7 @@ namespace DDI.Data.Migrations.Client
             DropIndex("dbo.Transaction", new[] { "DebitAccountId" });
             DropIndex("dbo.Transaction", new[] { "FiscalYearId" });
             DropIndex("dbo.PostedTransaction", new[] { "TransactionId" });
+            AlterColumn("dbo.FiscalYear", "HasAdjustmentPeriod", c => c.Int(nullable: false));
             DropColumn("dbo.PostedTransaction", "TransactionId");
             DropColumn("dbo.PostedTransaction", "PostedTransactionType");
             DropTable("dbo.TransactionXref");
