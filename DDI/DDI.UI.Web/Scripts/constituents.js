@@ -1075,10 +1075,10 @@ function LoadInvestmentsGrid() {
     var columns = [
     { dataField: 'InvestmentRelationshipType', width: '0px', },
     { dataField: 'InvestmentId', width: '0px', },
-    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num' },
-    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity' },
-    { dataField: 'Investment.Rate', caption: 'Rate' },
-    { dataField: 'Investment.Balance', caption: 'Balance' },
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', alignment: 'left' },
+    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
+    { dataField: 'Investment.Rate', caption: 'Rate', format: 'percent' },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency' },
     { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 

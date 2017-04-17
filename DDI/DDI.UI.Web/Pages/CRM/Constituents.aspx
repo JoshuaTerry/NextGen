@@ -652,22 +652,22 @@
                         <div class="fieldblock">
                         </div>
 
-                        <div class="fieldblock threecolumn" >
+                        <div class="threecolumn" >
                             <label>Since: </label>
                             <label class="InvestorStartDate"></label>
                         </div>
 
-                        <div class="fieldblock threecolumn">
+                        <div class="threecolumn">
                             <label>Primary Owner Investment: </label>
                             <label class="PrimaryInvestorTotal"></label>
                         </div>
 
-                        <div class="fieldblock threecolumn">
+                        <div class="threecolumn">
                             <label>Joint Owner Investment: </label>
                             <label class="JointInvestorTotal"></label> 
                         </div>
 
-                        <div class="fieldblock threecolumn">
+                        <div class="threecolumn">
                             <label>Total Investment Balance: </label>
                             <label class="InvestorTotal"></label>
                         </div>
