@@ -1,6 +1,9 @@
 ﻿$(document).ready(function () {
 
+    
     // apply system settings?
+
+    TestCurrentEntity();
 
     if (sessionStorage.getItem('investmentid')) {
 
@@ -14,6 +17,22 @@
     // RefreshEntity(); ?
     
 });
+
+function TestCurrentEntity() {
+    // testing purposes only, until we have an investmentid set up
+    investid = 'FFD6D1A4-D7FE-41A0-9ECA-0439EFB7B7AA';
+    // not actually an investment id, 
+
+    MakeServiceCall('GET', 'investments/' + investid, null, function (data) {
+
+        currentEntity = data.Data;
+
+        DisplayInvestmentData();
+        // not necessarily where we want to put this...
+
+    });
+
+}
 
 
 function RefreshEntity() {
@@ -32,18 +51,54 @@ function GetInvestmentData(id) {
 
 }
 
-
 function DisplayInvestmentData() {
 
+    if (currentEntity) {
 
-    CreateEditControls();
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
-    SetupEditControls();
+        $.map(currentEntity, function (value, key) {
 
-    LoadDepositsAndWithdrawalsSection();
+            if (typeof (value) == 'string')
+                value = value.replace('"', '').replace('"', '');
 
+            if (key != '$id') {
+
+                var classname = '.' + key;
+
+                if ($(classname).is('input')) {
+                    if ($(classname).is(':checkbox')) {
+                        $(classname).prop('checked', value);
+                    }
+                    else {
+                        $(classname).val(value);
+                    }
+                }
+
+                if ($(classname).is('select')) {
+                    $(classname).val(value);
+                }
+
+                if (key.toLowerCase().indexOf('date') !== -1) {
+
+                    var date = FormatJSONDate(value);
+
+                    $(classname).text(date);
+                }
+
+            }
+        });
+
+        CreateEditControls();
+
+        SetupEditControls();
+
+        LoadDepositsAndWithdrawalsSection();
+
+    }
 }
-
 
 function LoadDepositsAndWithdrawalsSection() {
 
