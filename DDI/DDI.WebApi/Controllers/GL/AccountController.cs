@@ -1,5 +1,8 @@
-﻿using DDI.Shared.Models.Client.GL;
+﻿using DDI.Services;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
+using DDI.Services.Search;
+using DevExtreme.AspNet.Data;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
@@ -9,11 +12,47 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class AccountController : GeneralLedgerController<Account>
     {
+        private ServiceBase<GLAccountSelection> _glAccount = new ServiceBase<GLAccountSelection>();
+        private ServiceBase<Ledger> _ledger = new ServiceBase<Ledger>();
+
         [HttpGet]
         [Route("api/v1/businessunit/{businessUnitId}/accounts", Name = RouteNames.Account)]
         public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.Account, businessUnitId, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/accounts/fiscalyear/{id}")]
+        public IHttpActionResult GetAllLedgerAccounts(Guid Id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
+            var search = new PageableSearch(null, 25000, null);
+           
+            var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id , search);
+
+            if (accounts == null)
+            {
+                NotFound();
+            }
+
+            return Ok(accounts);
+        }
+
+        [HttpGet]
+        [Route("api/v1/accounts/lookup/{name}/{ledgerId}/{fiscalYearId}")]
+        public IHttpActionResult AccountLookup(string name, Guid ledgerId, Guid fiscalYearId)
+        {
+            string fields = "Id,AccountNumber,Description";
+
+            var search = new AccountNumberSearch()
+            {
+                QuickSearch = name,
+                Offset = SearchParameters.OffsetDefault,
+                Limit = 500,
+                Fields = fields,
+            };
+
+            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId),search),null,search, search.Fields, null);
         }
 
         [HttpGet]

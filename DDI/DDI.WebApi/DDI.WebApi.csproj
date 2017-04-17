@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExtreme.AspNet.Data, Version=1.2.0.0, Culture=neutral, PublicKeyToken=982f5dab1439d0f7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
     <Reference Include="LinqKit, Version=1.1.8.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.1.8.0\lib\net452\LinqKit.dll</HintPath>
       <Private>True</Private>

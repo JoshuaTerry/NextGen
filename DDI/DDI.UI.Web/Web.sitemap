@@ -11,6 +11,7 @@
         <siteMapNode url="~/Pages/GL/GeneralLedger.aspx" title="General Ledger" description="General Ledger">
           <siteMapNode url="~/Pages/GL/Accounts.aspx" title="Accounts" description="Accounts" />
           <siteMapNode url="~/Pages/GL/Journals.aspx" title="Journals" description="Journals" />
+          <siteMapNode url="~/Pages/Common/GLAccountSelection.aspx" title="GL Accounts" description="GL Accounts" />
         </siteMapNode>
       </siteMapNode>
       
