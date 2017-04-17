@@ -1072,18 +1072,18 @@ function LoadRelationshipData(data, modal) {
 /* Investment Tab */
 
 function DisplayInvestmentHeader() {
-    $('.InvestorStatus').innerhtml = 'Testing 123' // (currentEntity.InvestorStatus);
+    $('.InvestorStatus').val (currentEntity.InvestorStatus);
+    $('.InvestorStartDate').val(currentEntity.InvestorStartDate);
     $('.PrimaryInvestorTotal').val = (currentEntity.PrimaryInvestorTotal);
-    $('.JointInvestorTotal').innerhtml = (currentEntity.JointInvestorTotal);
-    $('.InvestorTotal').innerhtml = (currentEntity.PrimaryInvestorTotal + currentEntity.JointInvestorTotal);
+    $('.JointInvestorTotal').val = (currentEntity.JointInvestorTotal);
+    $('.InvestorTotal').val = ((currentEntity.PrimaryInvestorTotal + currentEntity.JointInvestorTotal));
 }
 
 function LoadInvestmentsGrid() {
     var columns = [
     { 
         dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, caption: '', calculateCellValue: function (data) {
-            return
-            [data.InvestmentRelationshipType];
+            return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
     { dataField: 'InvestmentId', width: '0px', },
@@ -1094,19 +1094,35 @@ function LoadInvestmentsGrid() {
             return [data.Investment.Rate + '%']
         }
     },
-    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency', alignment: 'right' },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'usd', alignment: 'right' },
     { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 
-    LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail 
-        , '', '', '', 0, false, false, false, null);
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail);
+    //LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail
+    //    , '', '', '', 0, false, false, false, null);
 }
 
-function DisplayInvestmentDetail(info) {
+function GetRelationshipType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Primary Owner";
+            break;
+        case 1:
+            typeDesc = "Joint Owner";
+            break;
+        case 2:
+            typeDesc = "Beneficiary";
+            break;
+    }
+    return typeDesc;
+}
 
-    if (info) {
-        selectedRow = info.data;
-        sessionStorage.setItem("investmentid", selectedRow.Investment.InvestmentId);
+function DisplayInvestmentDetail(id) {
+
+    if (id) {
+        sessionStorage.setItem("investmentid", id);
         location.href = "../INV/InvestmentDetails.aspx";
     }
 

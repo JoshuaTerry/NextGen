@@ -638,49 +638,56 @@
 
                 <div class="investmenttopinfo">
 
-                    <div class="">
-                        
                         <div class="fieldblock">
                             <h2>Investor Summary</h2>
                         </div>
                         <br />
 
                         <div class="fieldblock">
-                            <label class="InvestorStatus"></label>
+                            <input type="text" class="InvestorStatus disabled"/>
                         </div>
 
-                        <div class="fieldblock">
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Since: </label>
+                            </div>
+                            <div>
+                                <input type="date" class="InvestorStartDate disabled"/>
+                            </div>
                         </div>
 
-                        <div class="threecolumn" >
-                            <label>Since: </label>
-                            <label class="InvestorStartDate"></label>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Primary Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="PrimaryInvestorTotal disabled"/>
+                            </div>
                         </div>
 
-                        <div class="threecolumn">
-                            <label>Primary Owner Investment: </label>
-                            <input type="text" class="PrimaryInvestorTotal readonly"/>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Joint Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="JointInvestorTotal disabled"/>
+                            </div>
                         </div>
 
-                        <div class="threecolumn">
-                            <label>Joint Owner Investment: </label>
-                            <label class="JointInvestorTotal"></label> 
-                        </div>
-
-                        <div class="threecolumn">
-                            <label>Total Investment Balance: </label>
-                            <label class="InvestorTotal"></label>
-                        </div>
-
-                        <div>
-                            <a href="../INV/InvestmentDetails.aspx">Investment Detail Test</a>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Total Investment Balance: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorTotal disabled"/>
+                            </div>
                         </div>
 
                     </div>
 
-                </div>
+                <hr />
                 
-                <div class="investmentstable gridcontainer scrollable"></div>
+                <div class="investmentstable scrollable"></div>
 
         </div>
 
