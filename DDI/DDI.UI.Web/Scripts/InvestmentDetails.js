@@ -64,26 +64,36 @@ function DisplayInvestmentData() {
             if (typeof (value) == 'string')
                 value = value.replace('"', '').replace('"', '');
 
+
+
             if (key != '$id') {
+
+                var display = '';
+
+                if (typeof (value) == 'object' && !!value) {
+                    display = value.DisplayName;
+                } else {
+                    display = value;
+                }
 
                 var classname = '.' + key;
 
                 if ($(classname).is('input')) {
                     if ($(classname).is(':checkbox')) {
-                        $(classname).prop('checked', value);
+                        $(classname).prop('checked', display);
                     }
                     else {
-                        $(classname).val(value);
+                        $(classname).val(display);
                     }
                 }
 
                 if ($(classname).is('select')) {
-                    $(classname).val(value);
+                    $(classname).val(display);
                 }
 
                 if (key.toLowerCase().indexOf('date') !== -1) {
 
-                    var date = FormatJSONDate(value);
+                    var date = FormatJSONDate(display);
 
                     $(classname).text(date);
                 }
