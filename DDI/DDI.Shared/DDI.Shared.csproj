@@ -132,6 +132,7 @@
     <Compile Include="Enums\INV\InvestorRelationshipType.cs" />
     <Compile Include="Enums\INV\InvestmentStatus.cs" />
     <Compile Include="Enums\INV\InvestorStatus.cs" />
+    <Compile Include="Enums\INV\InterestPaymentMethod.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
+    <Compile Include="Models\Client\INV\IRSInformation.cs" />
     <Compile Include="Models\Client\INV\InterestPayout.cs" />
     <Compile Include="Models\Client\INV\InvestmentType.cs" />
     <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />

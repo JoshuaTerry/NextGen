@@ -18,28 +18,28 @@ using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
-    public class InvestmentService : ServiceBase<Investment>
+    public class InterestPayoutService : ServiceBase<InterestPayout>
     {
         #region Private Fields
 
-        private readonly IRepository<Investment> _repository;
+        private readonly IRepository<InterestPayout> _repository;
         // private readonly InvestmentRelationshipLogic _investmentrelationshiplogic; 
 
         #endregion
 
         #region Constructors
 
-        public InvestmentService()
+        public InterestPayoutService()
             : this(new UnitOfWorkEF())
         {
         }
 
-        public InvestmentService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<Investment>())
+        public InterestPayoutService(IUnitOfWork uow)
+            : this(uow,  uow.GetRepository<InterestPayout>())
         {
         }
 
-        private InvestmentService(IUnitOfWork uow, IRepository<Investment> repository)
+        private InterestPayoutService(IUnitOfWork uow, IRepository<InterestPayout> repository)
             : base(uow)
         {
            // _investmentrelationshiplogic = investmentRelationshipLogic;
@@ -75,40 +75,45 @@ namespace DDI.Services
         //    return GetById(constituent?.Id ?? Guid.Empty);
         //}
 
-        public IDataResponse<Investment> GetInvestmentById(Guid Id)
+        public IDataResponse<List<InterestPayout>> GetInterestPayoutByInvestmentId(Guid Id)
         {
-            Investment invest = new Investment();
-            invest.Id = new Guid();
-
-            //main investment information
-            invest.InvestmentNumber = 123456;
-            invest.InvestmentType = new InvestmentType();
-            invest.InvestmentType.Type = 403;
-            invest.InvestmentType.Description = "Fund";
-            invest.InvestmentOwnershipType = new InvestmentOwnershipType();
-            invest.InvestmentOwnershipType.Code = "JT";
-            invest.InvestmentOwnershipType.Name = "Joint Tenancy";
-            invest.InvestmentStatus = InvestmentStatus.Current;
-            invest.CUSIP = "A4E8G4";
-
-            //attributes section
-            invest.PurchaseDate = new DateTime(2005, 12, 13);
-            invest.IssuanceMethod = IssuanceMethod.BookEntry;
-            invest.OriginalPurchaseAmount = new decimal (2345.43);
-            invest.StepUpEligible = true;
-            invest.StepUpDate = new DateTime (2017, 07,12);
-
-            //interest section
-            invest.InterestFrequency = InterestFrequency.Monthly;
-            invest.Rate = new decimal(4.5);
-            
 
 
+            InterestPayout[] intPayout;
+            intPayout = new InterestPayout[3];
 
+            intPayout[0] = new InterestPayout();
+            intPayout[0].Constituent = new Constituent();
+            intPayout[0].Constituent.Name = "Joe Smith";
+            intPayout[0].Priority = 1;
+            intPayout[0].InterestPaymentMethod = InterestPaymentMethod.ACH;
+            intPayout[0].Percent = new decimal(50);
 
-            var response = new DataResponse<Investment>()
+            intPayout[1] = new InterestPayout();
+            intPayout[1].Constituent = new Constituent();
+            intPayout[1].Constituent.Name = "Jane Smith";
+            intPayout[1].Priority = 2;
+            intPayout[1].InterestPaymentMethod = InterestPaymentMethod.ACH;
+            intPayout[1].Percent = new decimal(30);
+
+            intPayout[2] = new InterestPayout();
+            intPayout[2].Constituent = new Constituent();
+            intPayout[2].Constituent.Name = "Jack Smith";
+            intPayout[2].Priority = 3;
+            intPayout[2].InterestPaymentMethod = InterestPaymentMethod.ACH;
+            intPayout[2].Percent = new decimal(20);
+
+            List<InterestPayout> interestPayouts = new List<InterestPayout>();
+
+            foreach (InterestPayout row in intPayout)
             {
-                Data = invest,
+                interestPayouts.Add(row);
+            }
+
+
+            var response = new DataResponse<List<InterestPayout>>()
+            {
+                Data = interestPayouts,
                 IsSuccessful = true
             };
 

@@ -65,11 +65,13 @@ namespace DDI.Shared.Models.Client.INV
 
         public InterestFrequency InterestFrequency { get; set; }
 
-
+        
 
         #region Navigation Properties
 
         public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
+
+        public ICollection<InterestPayout> InterestPayout { get; set; }
 
         #endregion
 
