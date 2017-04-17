@@ -90,8 +90,6 @@ namespace DDI.Services
 
         private List<InvestmentRelationship> MockData()
         {
-            List<InvestmentRelationship> investmentRelationshipList = new List<InvestmentRelationship>();
-
             InvestmentRelationship[] invrelate;
             invrelate = new InvestmentRelationship[10];
 
@@ -225,6 +223,7 @@ namespace DDI.Services
             invrelate[9].InvestmentId = Guid.NewGuid();
             invrelate[9].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
+            List<InvestmentRelationship> investmentRelationshipList = new List<InvestmentRelationship>();
 
             foreach (InvestmentRelationship row in invrelate)
             {
