@@ -20,8 +20,12 @@
 
             <!-- Groups Tab -->
             <div id="tab-groups">
-                
-                <div class="newlinkcontainer">
+                <h1 class ="GroupsSectionLabel">Groups</h1>
+                    <div>
+                        <div class="groupstable"></div>
+                    </div>
+
+              <%--  <div class="newlinkcontainer">
                     <a href="#" class="newlink addnewgroup">New Group</a>
                 </div>
 
@@ -29,10 +33,50 @@
 
                 <div class="groupmembersgridcontainer"></div>
 
-                <div class="securitysettingsgridcontainer"></div>
+                <div class="securitysettingsgridcontainer"></div>--%>
 
             </div>
-            
+
+            <div class="groupmodal" title="Groups" style="display: none;">
+
+        <div class="modalcontent">
+             
+            <div class="fieldblock">
+                <label>Name:</label>
+                <input type="text" class="dba-Name" />
+            </div>
+
+            <div class="threecolumn">
+
+                <div class="fieldblock">
+                    <label>Assigned Roles</label>
+                    <select class="gp-Roles" size="5"> 
+                    </select>
+
+                </div>
+                 
+                <div>
+                    <input type="button" value="Add" /> <br />
+                    <input type="button" value="Remove" /> <br />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Available Roles</label>
+                    <select class="AllRoles" size="5"> 
+                    </select>
+                </div>
+
+                <div class="modalbuttons">
+                    <input type="button" class="savebutton" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
             <!-- Users Tab -->
             <div id="tab-users">
                 <div class="usersgridcontainer">
