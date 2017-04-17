@@ -2,13 +2,11 @@
 
     // apply system settings?
 
-<<<<<<< HEAD
     SetupEditControls();
 
     LoadDropDowns();
 
     LoadInterestPaymentGrid();
-=======
     if (sessionStorage.getItem('investmentid')) {
 
         $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
@@ -19,7 +17,6 @@
 
     DisplayInvestmentData();
     // RefreshEntity(); ?
->>>>>>> DC-629-632_Investment_Screens
     
 });
 
@@ -78,7 +75,6 @@ function LoadDropDowns() {
 
 }
 
-<<<<<<< HEAD
 function LoadInterestPaymentGrid() {
     var columns = [
     { dataField: 'Id', width: '0px', },
@@ -92,7 +88,6 @@ function LoadInterestPaymentGrid() {
     //LoadGrid('.interestpayment', 'interestgridcontainer', columns, 'investmentpayments/' + currentEntity.Id, 'interestpaymentmodal'
     //    , null, 'int-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 }
-=======
 function LoadAttributesSection() {
 
 
@@ -125,7 +120,6 @@ function LoadMaturitySection() {
 
 function LoadPaymentPreferencesSectioon() {
 
->>>>>>> DC-629-632_Investment_Screens
 
 
 }
