@@ -46,6 +46,7 @@
         public const string Language = "Language";
         public const string Ledger = "Ledger";
         public const string Level = "Level";
+        public const string LinkedAccount = "LinkedAccount";
         public const string MaritalStatus = "MaritalStatus";
         public const string SectionName = "SectionName";
         public const string Note = "Note";
