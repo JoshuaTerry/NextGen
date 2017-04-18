@@ -17,61 +17,7 @@ namespace DDI.UI.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.IsInRole("Notes-Read"))
-            {
-                string success = string.Empty;
-            }
-            else
-            {
-                string failure = string.Empty;
-            }
-        }
 
-        [WebMethod]
-        public static void AuthorizeUser(string username, string token)
-        {
-            try
-            {
-                //api/v1/roles/user/{username}
-                WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "roles/user/" + HttpUtility.HtmlEncode(username) + "/");
-                request.Method = "GET";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = 0;
-                request.PreAuthenticate = true;
-                request.Headers.Add("Authorization", "Bearer " + token);
-
-                using (WebResponse response = request.GetResponse())
-                {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        string responseData = reader.ReadToEnd();
-                        
-                        List<string> data = (List<string>)js.Deserialize(responseData, typeof(List<string>));
-                        string roles = string.Join(",", data.ToArray());
-
-                        //if (data != null && data.IsSuccessful)
-                        //{
-                            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(60), false, roles);
-                            string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                            HttpCookie fatCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-
-                            HttpContext.Current.Response.Cookies.Add(fatCookie);
-                        //}
-                    }
-                }
-
-            }
-            catch(Exception ex)
-            {
-                string foo = ex.ToString();
-            }
-        }
-
-        [WebMethod]
-        public static string GetAuthToken()
-        {
-            return Token.GetToken();
         }
     }
 }

@@ -20,26 +20,31 @@ namespace DDI.UI.Web
 
         public string Access_Token { get; set; }     
         public string UserName { get; set; }
+        public string Password { get; set; }
 
         #endregion
 
         #region Methods
         
-        public static string GetToken()
+        public static Token GetToken()
         {
+            var token = new Token();
+
             try
             {
                 if (HttpContext.Current.Session[DDI_User_Token] == null)
                 {
                     Configuration config = GetConfiguration();
 
-                    string username = config.AppSettings.Settings["username"].Value;
-                    string password = config.AppSettings.Settings["password"].Value;
+                    token.UserName = config.AppSettings.Settings["username"].Value;
+                    token.Password = config.AppSettings.Settings["password"].Value;
 
-                    AuthenticateUser(username, password);
+                    AuthenticateUser(token);
                 }
 
-                return HttpContext.Current.Session[DDI_User_Token].ToString();
+                token.Access_Token = HttpContext.Current.Session[DDI_User_Token].ToString();
+
+                return token;
             }
             catch (Exception ex)
             {
@@ -56,9 +61,9 @@ namespace DDI.UI.Web
             return config;
         }
 
-        private static void AuthenticateUser(string username, string password)
+        private static void AuthenticateUser(Token token)
         {
-            string data = "grant_type=password&username=" + username + "&password=" + password;
+            string data = "grant_type=password&username=" + token.UserName + "&password=" + token.Password;
             byte[] bytes = Encoding.UTF8.GetBytes(data);
 
             WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "Login");
@@ -77,11 +82,11 @@ namespace DDI.UI.Web
                 {
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     string responseData = reader.ReadToEnd();
-                    Token token = (Token)js.Deserialize(responseData, typeof(Token));
+                    Token t = (Token)js.Deserialize(responseData, typeof(Token));
 
-                    if (token != null && !string.IsNullOrWhiteSpace(token.Access_Token))
+                    if (t != null && !string.IsNullOrWhiteSpace(t.Access_Token))
                     {
-                        HttpContext.Current.Session[DDI_User_Token] = token.Access_Token;
+                        HttpContext.Current.Session[DDI_User_Token] = t.Access_Token;
                     }
                 }
             }

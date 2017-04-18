@@ -93,7 +93,7 @@ function Login() {
 
             $.ajax({
                 type: 'POST',
-                url: 'Default.aspx/AuthorizeUser',
+                url: 'Login.aspx/AuthorizeUser',
                 data: JSON.stringify(user),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',

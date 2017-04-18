@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $.support.cors = true;
 
-    // LoadDefaultAuthToken();
+    LoadDefaultAuthToken();
 
     LoadDatePickers();
 
@@ -48,11 +48,13 @@ function LoadDefaultAuthToken() {
 
         $.ajax({
             type: 'POST',
-            url: 'Default.aspx/GetAuthToken',
+            url: 'Login.aspx/GetAuthToken',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (data) {
                 sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+
+                location.href = "/Default.aspx";
             },
             error: function (error) {
                 var err = error;
