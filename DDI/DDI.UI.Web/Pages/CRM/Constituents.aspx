@@ -644,7 +644,7 @@
                         <br />
 
                         <div class="fieldblock">
-                            <input type="text" class="InvestorStatus disabled"/>
+                            <label class="InvestorStatus"/>
                         </div>
 
                         <div class="fivecolumn" >
@@ -652,7 +652,7 @@
                                 <label>Since: </label>
                             </div>
                             <div>
-                                <input type="date" class="InvestorStartDate disabled"/>
+                                <label class="InvestorStartDate disabled"/>
                             </div>
                         </div>
 
@@ -661,7 +661,7 @@
                                 <label>Primary Owner Investment: </label>
                             </div>
                             <div>
-                                <input type="text" class="PrimaryInvestorTotal disabled"/>
+                                <label class="PrimaryInvestorTotal"/>
                             </div>
                         </div>
 
@@ -670,7 +670,7 @@
                                 <label>Joint Owner Investment: </label>
                             </div>
                             <div>
-                                <input type="text" class="JointInvestorTotal disabled"/>
+                                <label class="JointInvestorTotal"/>
                             </div>
                         </div>
 
@@ -679,7 +679,7 @@
                                 <label>Total Investment Balance: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorTotal disabled"/>
+                                <label class="InvestorTotal"/>
                             </div>
                         </div>
 

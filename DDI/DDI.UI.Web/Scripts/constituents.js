@@ -256,8 +256,6 @@ function DisplayConstituentData() {
 
         LoadRelationshipsTab();
 
-        DisplayInvestmentHeader();
-
         LoadInvestmentsGrid();
 
         PopulateMonthDays();
@@ -1071,14 +1069,6 @@ function LoadRelationshipData(data, modal) {
 
 /* Investment Tab */
 
-function DisplayInvestmentHeader() {
-    $('.InvestorStatus').val (currentEntity.InvestorStatus);
-    $('.InvestorStartDate').val(currentEntity.InvestorStartDate);
-    $('.PrimaryInvestorTotal').val = (currentEntity.PrimaryInvestorTotal);
-    $('.JointInvestorTotal').val = (currentEntity.JointInvestorTotal);
-    $('.InvestorTotal').val = ((currentEntity.PrimaryInvestorTotal + currentEntity.JointInvestorTotal));
-}
-
 function LoadInvestmentsGrid() {
     var columns = [
     { 
@@ -1094,7 +1084,7 @@ function LoadInvestmentsGrid() {
             return [data.Investment.Rate + '%']
         }
     },
-    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'usd', alignment: 'right' },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
     { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 
