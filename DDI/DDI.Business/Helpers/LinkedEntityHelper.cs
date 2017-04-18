@@ -22,12 +22,7 @@ namespace DDI.Business.Helpers
         
         public static string GetEntityTypeName(Type type)
         {
-            if (_namespacePrefix == null)
-            {
-                _namespacePrefix = typeof(EntityBase).FullName.Replace("EntityBase", string.Empty);
-            }
-
-            return type.FullName.Replace(_namespacePrefix, string.Empty).Substring(7); // Substring(7) removes leading Common. or Client.
+            return type.Name;
         }
 
         public static string GetEntityTypeName<T>() where T : EntityBase
