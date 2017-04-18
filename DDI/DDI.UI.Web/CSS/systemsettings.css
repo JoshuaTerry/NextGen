@@ -1,5 +1,6 @@
 ﻿
-.systemsettings {  }
+
+.systemsettings { vertical-align: top; }
 .systemsettings div.contentcontainer { padding-top: 10px; margin-left: 1%; width: 86%; display: inline-block; vertical-align: top; }
 .systemsettings div.ui-accordion-content { padding: 0px; }
 .systemsettings div.left-accordions { width: 12%; display: inline-block; }
@@ -12,8 +13,12 @@
 .systemsettings div.fieldblock label { display: inline-block; margin-right: 1%; }
 .systemsettings div.fieldblock input.sectionLabel { width: 50%; }
 
-.systemsettings div.controlContainer { width: 90%; text-align: right; }
+.systemsettings div.controlContainer { width: 10%; text-align: right; display: inline-block; }
 .systemsettings div.controlContainer a { margin-left: 10px; }
+
+.systemsettingsheader { display: inline-block; width: 86%; margin-bottom: 10px; }
+
+.gridcontainer { vertical-align: top; }
 
 div.options div.threecolumn > div { width: auto; }
 
@@ -33,7 +38,6 @@ div.tagscontainer { height: 50vh }
 
 
 /* REGION SETTINGS */
-
 .regionlevelcontainer { display: inline-block; width: 15%; vertical-align: top; }
 .regionlevellist { list-style: none; }
 .regionlevellist li { font-weight: bold; display: block; padding: 8px 15px; text-align: right; }
@@ -44,10 +48,14 @@ div.tagscontainer { height: 50vh }
 .regioncontainer { display: inline-block; width: 70%; background-color: white; vertical-align: top; min-height: 250px; }
 
 .editregionlevellink { background: url('../../Images/Edit_11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
-
+.deleteregionlevellink { background: url('../../Images/trashcan-11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
 /* END REGION SETTINGS */
 .tagselect { width: 85% !important; }
 .tagSelectorContainer ul li input { width: auto; }
 .consttype-tagselect { position: absolute; z-index: 950; background-color: white; border: solid 1px #333333; width: 85%; }
 .tagselectgridcontainer { height: 175px; }
 .tagSelectImage { margin-left: 350px; }
+
+
+.fiscalyearcontainer { width: 30%; display: inline-block; margin-right: 3%; }
+.fiscalperiodscontainer { display: inline-block; width: 50%; }

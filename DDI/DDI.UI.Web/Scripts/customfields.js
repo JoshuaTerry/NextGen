@@ -6,7 +6,8 @@ var CustomFieldEntity = {
     'Inventory': 5, 'CashProcessing': 6, 'CashDisbursements': 7, 'CashReceipting': 8, 'Gifts': 9,
     'NamedFunds': 10, 'CropEvents': 11, 'PlannedGiving': 12, 'Campaigns': 13, 'Investments': 14,
     'LineOfCredit': 15, 'Loans': 16, 'Portfolio': 17, 'Pools': 18, 'CRM': 19,
-    'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25 };
+    'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25
+};
 var currentCustomFieldEntity = 0;
 
 $(document).ready(function () {
@@ -33,14 +34,9 @@ function DisplayCustomFieldsGrid(container, entity) {
         { dataField: 'DisplayOrder', caption: 'Display Order' }
     ]
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + 'entity/' + entity,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
 
+        if (data.Data) {
             $(datagrid).dxDataGrid({
                 dataSource: data.Data,
                 columns: columns,
@@ -68,11 +64,9 @@ function DisplayCustomFieldsGrid(container, entity) {
 
             $(datagrid).appendTo($(container));
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -87,33 +81,22 @@ function DisplayCustomFields(container, entity, callback) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
-    $.ajax({
-        url: WEB_API_ADDRESS + route + 'entity/' + entity,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
 
-            if (data && data.IsSuccessful) {
+        if (data && data.IsSuccessful) {
 
-                $.map(data.Data, function (item) {
+            $.map(data.Data, function (item) {
 
-                    $(container).append(CreateCustomField(item));
+                $(container).append(CreateCustomField(item));
 
-                });
+            });
 
-                if (callback) {
-                    callback();
-                }
-
+            if (callback) {
+                callback();
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+
+    }, null);
 
 }
 
@@ -194,7 +177,7 @@ function CreateTextAreaField(item) {
 function CreateDropDownField(item) {
 
     var dropdown = $('<select>').addClass('editable');
-    
+
     if (item.Options) {
         AddDefaultOption(dropdown, '', '');
 
@@ -221,7 +204,7 @@ function CreateRadioField(item) {
 
             var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
             $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
-            
+
             if (item.Answer && item.Answer.Value == $(i).val()) {
                 $(i).attr('checked', 'checked');
             }

@@ -17,7 +17,7 @@ namespace DDI.Shared.Models.Client.Security
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
-            // Add custom user claims here
+            // Add custom user claims here 
             return userIdentity;
         }
         [Key]
@@ -41,7 +41,9 @@ namespace DDI.Shared.Models.Client.Security
 
         [InverseProperty(nameof(BusinessUnit.Users))]
         public ICollection<BusinessUnit> BusinessUnits { get; set; }
-
+        [InverseProperty(nameof(Group.Users))]
+        public ICollection<Group> Groups { get; set; }
+                
         public string DisplayName
         {
             get

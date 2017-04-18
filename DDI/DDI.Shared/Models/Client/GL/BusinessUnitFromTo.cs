@@ -26,7 +26,7 @@ namespace DDI.Shared.Models.Client.GL
         [Index("IX_FiscalYear_BUs", IsUnique = true, Order = 3)]
         public Guid? OffsettingBusinessUnitId { get; set; }
         [ForeignKey(nameof(OffsettingBusinessUnitId))]
-        public Fund OffsettingFund { get; set; }
+        public BusinessUnit OffsettingBusinessUnit { get; set; }
 
         public Guid? FromAccountId { get; set; }
         [ForeignKey(nameof(FromAccountId))]

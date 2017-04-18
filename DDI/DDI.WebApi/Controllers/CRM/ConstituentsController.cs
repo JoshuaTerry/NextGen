@@ -13,7 +13,7 @@ using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    //[Authorize]
+    [Authorize(Roles=Permissions.CRM_Read)]
     public class ConstituentsController : GenericController<Constituent>
     {
         protected new IConstituentService Service => (IConstituentService) base.Service;
@@ -22,12 +22,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
         }
 
-        [HttpGet]
-        [Route("api/v1/constituents/test", Name = "Foodiddy" + RouteVerbs.Get)]
-        public void JambaJuice()
-        {
-            Service.Test(); 
-        }
+     
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Constituent, object>>[]
@@ -200,6 +195,7 @@ namespace DDI.WebApi.Controllers.CRM
             }
         } 
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Constituent constituent)
@@ -207,11 +203,11 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(constituent);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Post(Guid id)
-        {
-            JambaJuice();
+        { 
             try
             {
                 if (!ModelState.IsValid)
@@ -230,14 +226,15 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
-        {
-            JambaJuice();
+        { 
             return base.Patch(id, constituentChanges);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -245,6 +242,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituents/{id}/constituenttags")]
         public IHttpActionResult AddTagsToConstituent(Guid id, [FromBody] JObject tags)
@@ -269,6 +267,7 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
+        [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/constituents/{id}/tag/{tagId}")]
         public IHttpActionResult RemoveTagFromConstituent(Guid id, Guid tagId)

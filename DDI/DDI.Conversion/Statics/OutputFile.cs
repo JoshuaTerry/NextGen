@@ -13,10 +13,20 @@ namespace DDI.Conversion.Statics
     {
         #region ID Mapping Files
 
-        public static string ConstituentIdMappingFile = "ConstituentId.csv";
-        public static string AddressIdMappingFile = "AddressId.csv";
-        public static string PaymentMethodIdMappingFile = "PaymentMethodId.csv";
-        public static string NoteIdMappingFile = "NoteId.csv";
+        public static string ConstituentIdMappingFile => "ConstituentId.csv";
+        public static string AddressIdMappingFile => "AddressId.csv";
+        public static string PaymentMethodIdMappingFile => "PaymentMethodId.csv";
+        public static string NoteIdMappingFile => "NoteId.csv";
+        public static string BusinessUnitIdMappingFile => "BusinessUnitId.csv";
+        public static string LedgerIdMappingFile => "LedgerId.csv";
+        public static string FiscalYearIdMappingFile => "FiscalYearId.csv";
+        public static string SegmentIdMappingFile => "SegmentId.csv";
+        public static string AccountGroupIdMappingFile => "AccountGroupId.csv";
+        public static string AccountIdMappingFile => "AccountId.csv";
+        public static string LedgerAccountIdMappingFile => "LedgerAccountId.csv";
+        public static string LedgerAccountYearIdMappingFile => "LedgerAccountYearId.csv";
+        public static string FundIdMappingFile => "FundId.csv";
+        public static string PostedTransactionMappingFile => "PostedTransactionId.csv";
 
         #endregion
 
@@ -49,6 +59,24 @@ namespace DDI.Conversion.Statics
         public static string CP_PaymentMethodFile => "PaymentMethod.csv";
         public static string CP_PaymentMethodConstituentFile => "PaymentMethodConstituents.csv";
 
+        #endregion
+
+        #region GL SSIS Files
+
+        public static string GL_SegmentFile => "Segment.csv";
+        public static string GL_AccountGroupFile => "AccountGroup.csv";
+        public static string GL_AccountFile => "Account.csv";
+        public static string GL_AccountPriorYearFile => "AccountPriorYear.csv";
+        public static string GL_AccountSegmentFile => "AccountSegment.csv";
+        public static string GL_LedgerAccountFile => "LedgerAccount.csv";
+        public static string GL_LedgerAccountMergeFile => "LedgerAccountMerge.csv";
+        public static string GL_LedgerAccountYearFile => "LedgerAccountYear.csv";
+        public static string GL_AccountBudgetFile => "AccountBudget.csv";
+        public static string GL_FundFile => "Fund.csv";
+        public static string GL_FundFromToFile => "FundFromTo.csv";
+        public static string GL_BusinessUnitFromToFile => "BusinessUnitFromTo.csv";
+        public static string GL_PostedTransactionFile => "PostedTransaction.csv";
+        
         #endregion
 
 

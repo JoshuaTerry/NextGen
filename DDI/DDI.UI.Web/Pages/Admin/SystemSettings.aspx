@@ -77,10 +77,10 @@
             <h1>General Ledger</h1>
             <div>
                 <ul>
-                    <li><a href="#" class="LoadAccounting">Accounting Settings</a></li>
+                    <li><a href="#" class="LoadAccountingSettings">Accounting Settings</a></li>
                     <li><a href="#" class="LoadBudget">Budget Settings</a></li>
                     <li><a href="#" class="LoadChartAccounts">Chart of Accounts Settings</a></li>
-                    <li><a href="#" class="LoadEntities">Entities</a></li>
+                    <li><a href="#" class="LoadEntities">Business Unit Settings</a></li>
                     <li><a href="#" class="LoadFiscalYear">Fiscal Year Settings</a></li>
                     <li><a href="#" class="LoadFundAccounting">Fund Accounting Settings</a></li>
                     <li><a href="#" class="LoadGLFormat">GL Format Settings</a></li>
@@ -108,9 +108,121 @@
                 </ul>
             </div>
         </div>
-
+        
         <div class="contentcontainer">
+            <h1 class="systemsettingsheader"></h1>
             <div class="gridcontainer"></div>
+        </div>
+
+    </div>
+
+    <div class="clergystatusmodal" title="Clergy Status" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="cstat-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="cstat-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="cstat-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clergytypemodal" title="Clergy Type" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="ctype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="ctype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="ctype-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="constituenttypemodal" title="Constituent Type" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="consttype-Id" />
+            <input type="hidden" class="consttype-IsActive" />
+            <input type="hidden" class="consttype-IsRequired" />
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="consttype-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="consttype-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Category</label>
+                <select class="consttype-Category">
+                    <option value="0">Individual</option>
+                    <option value="1">Organization</option>
+                    <option value="2">Both</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Name Format</label>
+                <input type="text" class="consttype-NameFormat" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Formal Salutation</label>
+                <input type="text" class="consttype-SalutationFormal" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Informal Salutation</label>
+                <input type="text" class="consttype-SalutationInformal" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Tags</label>
+                <div class="tagselect consttype-tagselect"></div>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="submitconsttype" value="Save" />
+                <a href="#" class="canceltypemodal">Cancel</a>
+            </div>
+
+
         </div>
 
     </div>
@@ -209,202 +321,38 @@
         </div>
 
     </div>
-
-    <div class="constituenttypemodal" title="Constituent Type" style="display: none;">
+    
+    <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
 
-            <input type="hidden" class="consttype-Id" />
-            <input type="hidden" class="consttype-IsActive" />
-            <input type="hidden" class="consttype-IsRequired" />
-
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="consttype-Code" />
+                <input type="text" class="deg-Code" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="consttype-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Category</label>
-                <select class="consttype-Category">
-                    <option value="0">Individual</option>
-                    <option value="1">Organization</option>
-                    <option value="2">Both</option>
-                </select>
-            </div>
-
-            <div class="fieldblock">
-                <label>Name Format</label>
-                <input type="text" class="consttype-NameFormat" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Formal Salutation</label>
-                <input type="text" class="consttype-SalutationFormal" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Informal Salutation</label>
-                <input type="text" class="consttype-SalutationInformal" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Tags</label>
-                <div class="tagselect consttype-tagselect"></div>
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitconsttype" value="Save" />
-                <a href="#" class="canceltypemodal">Cancel</a>
-            </div>
-
-
-        </div>
-
-    </div>
-
-
-    <div class="clergystatusmodal" title="Clergy Status" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="cstat-id" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="cstat-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="cstat-Name" />
+                <input type="text" class="deg-Name" />
             </div>
 
             <div class="fieldblock">
                 <label>Active</label>
-                <input type="checkbox" class="cstat-IsActive" />
+                <input type="checkbox" class="deg-IsActive" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitcstat" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="clergytypemodal" title="Clergy Type" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="ctype-id" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="ctype-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="ctype-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="ctype-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitctype" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="taggroupmodal" title="Tag Group" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="hidtaggroupid" />
-
-            <div class="fieldblock">
-                <label>Order</label>
-                <input type="text" class="tg-Order" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="tg-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Multi/Single Select</label>
-                <select class="tg-Select">  
-                   <option value="0">Single</option>
-                   <option value="1">Multiple</option>
-                </select>
-            </div>
-
-            <div class="fieldblock">
-                <label>Is Active</label>
-                <input type="checkbox" class="tg-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savetaggroup" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>
 
     </div>
-
-    <div class="tagmodal" title="Tag" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="hidtagid" />
-            <input type="hidden" class="hidtagparentgroupid" />
-
-            <div class="fieldblock">
-                <label>Order</label>
-                <input type="text" class="t-Order" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="t-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="t-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Is Active</label>
-                <input type="checkbox" class="t-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savetag" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
+    
     <div class="denominationmodal" title="Denomination" style="display: none;">
 
         <div class="modalcontent">
-
-            <input type="hidden" class="den-Id" />
 
             <div class="fieldblock">
                 <label>Code</label>
@@ -451,7 +399,35 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitden" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="educationLevelmodal" title="Education Level" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="eduLev-Code required" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="eduLev-Name required" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="eduLev-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -462,8 +438,6 @@
     <div class="ethnicitymodal" title="Ethnicity" style="display: none;">
 
         <div class="modalcontent">
-
-            <input type="hidden" class="eth-Id" />
 
             <div class="fieldblock">
                 <label>Code</label>
@@ -481,7 +455,68 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submiteth" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="gendermodal" title="Gender" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="gen-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="gen-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Masculine</label>
+                <input type="checkbox" class="gen-IsMasculine" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="gen-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="incomeLevelmodal" title="Income Level" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="inc-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="inc-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="inc-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -492,8 +527,6 @@
     <div class="languagemodal" title="Language" style="display: none;">
 
         <div class="modalcontent">
-
-            <input type="hidden" class="lang-Id" />
 
             <div class="fieldblock">
                 <label>Code</label>
@@ -511,7 +544,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitlang" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -519,29 +552,27 @@
 
     </div>
 
-    <div class="degreemodal" title="Degree" style="display: none;">
+    <div class="noteCategorymodal" title="Note Category" style="display: none;">
 
         <div class="modalcontent">
 
-            <input type="hidden" class="degreeId" />
-
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="deg-Code" />
+                <label>Label</label>
+                <input type="text" class="noteCategory-Label" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="deg-Name" />
+                <input type="text" class="noteCategory-Name" />
             </div>
 
             <div class="fieldblock">
                 <label>Active</label>
-                <input type="checkbox" class="deg-IsActive" />
+                <input type="checkbox" class="noteCategory-IsActive" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitdeg" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -549,66 +580,62 @@
 
     </div>
 
-    <div class="educationLevelmodal" title="Education Level" style="display: none;">
+    <div class="noteCodemodal" title="Note Code" style="display: none;">
 
         <div class="modalcontent">
 
-            <input type="hidden" class="educationLevelId" />
-
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="eduLev-Code" />
+                <input type="text" class="noteCode-Code" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="eduLev-Name" />
+                <input type="text" class="noteCode-Name" />
             </div>
 
             <div class="fieldblock">
                 <label>Active</label>
-                <input type="checkbox" class="eduLev-IsActive" />
+                <input type="checkbox" class="noteCode-IsActive" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submiteduLev" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>
 
     </div>
-
-    <div class="schoolmodal" title="Schools" style="display: none;">
+    
+    <div class="noteTopicmodal" title="Note Topic" style="display: none;">
 
         <div class="modalcontent">
 
-            <input type="hidden" class="schoolId" />
-
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="sch-Code" />
+                <input type="text" class="noteTopic-Code" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="sch-Name" />
+                <input type="text" class="noteTopic-Name" />
             </div>
 
             <div class="fieldblock">
                 <label>Active</label>
-                <input type="checkbox" class="sch-IsActive" />
+                <input type="checkbox" class="noteTopic-IsActive" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitsch" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>
 
     </div>
-       
+	
     <div class="prefixmodal" title="Prefix" style="display: none;">
 
         <div class="modalcontent">
@@ -641,37 +668,7 @@
             </div>
             
             <div class="modalbuttons">
-                <input type="button" class="submitprefix" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="incomeLevelmodal" title="Income Level" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="incomeLevelId" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="inc-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="inc-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="inc-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitinc" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -682,8 +679,6 @@
     <div class="professionmodal" title="Professions" style="display: none;">
 
         <div class="modalcontent">
-
-            <input type="hidden" class="professionId" />
 
             <div class="fieldblock">
                 <label>Code</label>
@@ -701,7 +696,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitpro" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -709,96 +704,6 @@
 
     </div>
 
-    <div class="noteCodemodal" title="Note Code" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="noteCodeId" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="noteCode-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="noteCode-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="noteCode-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitnoteCode" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="noteCategorymodal" title="Note Category" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="noteCategoryId" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="noteCategory-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="noteCategory-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="noteCategory-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitnoteCategory" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="noteTopicmodal" title="Note Topic" style="display: none;">
-
-        <div class="modalcontent">
-
-            <input type="hidden" class="noteTopicId" />
-
-            <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="noteTopic-Code" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="noteTopic-Name" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="noteTopic-IsActive" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="submitnoteTopic" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-	
 	<div class="regionlevelmodal" title="Region Level" style="display: none;">
 
         <div class="modalcontent">
@@ -875,8 +780,6 @@
 
         <div class="modalcontent">
 
-            <input type="hidden" class="relcat-Id" />
-
             <div class="fieldblock">
                 <label>Code</label>
                 <input type="text" class="relcat-Code" />
@@ -898,7 +801,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitrelcat" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -909,8 +812,6 @@
     <div class="reltypemodal" title="Relationship Type" style="display: none;">
 
         <div class="modalcontent">
-
-            <input type="hidden" class="reltype-Id" />
 
             <div class="fieldblock">
                 <label>Code</label>
@@ -924,12 +825,12 @@
 
             <div class="fieldblock">
                 <label>Male Reciprocal</label>
-                <select class="reltype-ReciprocalTypeMaleId"></select>
+                <select class="reltype-ReciprocalTypeMaleId relationshiptypes"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Female Reciprocal</label>
-                <select class="reltype-ReciprocalTypeFemaleId"></select>
+                <select class="reltype-ReciprocalTypeFemaleId relationshiptypes"></select>
             </div>
 
             <div class="fieldblock">
@@ -943,7 +844,7 @@
 
             <div class="fieldblock">
                 <label>Relationship Category</label>
-                <select class="reltype-RelationshipCategoryId"></select>
+                <select class="reltype-RelationshipCategoryId relationshipcategories"></select>
             </div>
 
             <div class="fieldblock">
@@ -957,7 +858,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitreltype" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -965,97 +866,104 @@
 
     </div>
 
-     <div class="noteCodemodal" title="Note Code" style="display: none;"> 
-         
-        <div class="modalcontent"> 
-         
-            <input type="hidden" class="noteCodeId" /> 
-         
-            <div class="fieldblock"> 
-                <label>Code</label> 
-                <input type="text" class="noteCode-Code" /> 
-            </div> 
-         
-            <div class="fieldblock"> 
-                <label>Description</label> 
-                <input type="text" class="noteCode-Name" /> 
-            </div> 
-       
-            <div class="fieldblock"> 
-                <label>Active</label> 
-                <input type="checkbox" class="noteCode-IsActive" /> 
-            </div> 
-         
-            <div class="modalbuttons"> 
-                <input type="button" class="submitnoteCode" value="Save" /> 
-                <a href="#" class="cancelmodal">Cancel</a> 
-            </div> 
-         
-       </div> 
+    <div class="schoolmodal" title="Schools" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="sch-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="sch-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Active</label>
+                <input type="checkbox" class="sch-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="taggroupmodal" title="Tag Group" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="hidtaggroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="tg-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="tg-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Multi/Single Select</label>
+                <select class="tg-Select">  
+                   <option value="0">Single</option>
+                   <option value="1">Multiple</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Is Active</label>
+                <input type="checkbox" class="tg-IsActive" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savetaggroup" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="noteCategorymodal" title="Note Category" style="display: none;"> 
-       
-        <div class="modalcontent"> 
-         
-            <input type="hidden" class="noteCategoryId" /> 
-         
-            <div class="fieldblock"> 
-                <label>Code</label> 
-                <input type="text" class="noteCategory-Code" /> 
-            </div> 
-         
-            <div class="fieldblock"> 
-                <label>Description</label> 
-                <input type="text" class="noteCategory-Name" /> 
-            </div> 
-         
-            <div class="fieldblock"> 
-                <label>Active</label> 
-                <input type="checkbox" class="noteCategory-IsActive" /> 
-            </div> 
-         
-            <div class="modalbuttons"> 
-                <input type="button" class="submitnoteCategory" value="Save" /> 
-                <a href="#" class="cancelmodal">Cancel</a> 
-            </div> 
-         
-        </div> 
-         
-     </div> 
+    <div class="tagmodal" title="Tag" style="display: none;">
 
-    <div class="noteTopicmodal" title="Topic" style="display: none;"> 
-        
-        <div class="modalcontent"> 
-         
-            <input type="hidden" class="noteTopicId" /> 
-         
-            <div class="fieldblock"> 
-                <label>Code</label> 
-                <input type="text" class="noteTopic-Code" /> 
-            </div> 
-         
-            <div class="fieldblock"> 
-                <label>Description</label> 
-                <input type="text" class="noteTopic-Name" /> 
-            </div> 
-       
-            <div class="fieldblock"> 
-                <label>Active</label> 
-                <input type="checkbox" class="noteTopic-IsActive" /> 
-            </div> 
-        
-            <div class="modalbuttons"> 
-                <input type="button" class="submitnoteTopic" value="Save" /> 
-                <a href="#" class="cancelmodal">Cancel</a> 
-            </div> 
-         
-        </div> 
-         
-      </div> 
+        <div class="modalcontent">
 
-    <div class="addresstypemodal" title="Address Types" style="display: none;">
+            <input type="hidden" class="hidtagid" />
+            <input type="hidden" class="hidtagparentgroupid" />
+
+            <div class="fieldblock">
+                <label>Order</label>
+                <input type="text" class="t-Order" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="t-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <input type="text" class="t-Name" />
+            </div>
+
+
+            <div class="modalbuttons">
+                <input type="button" class="savetag" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+ <div class="addresstypemodal" title="Address Types" style="display: none;">
 
         <div class="modalcontent">
 
@@ -1175,7 +1083,194 @@
 
     </div>
 
+    <div class="fiscalyearmodal" title="Fiscal Year" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fy-LedgerId" />
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="fy-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Number Of Periods</label>
+                <select class="fy-NumberOfPeriods">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Use final accounting period for year end adjustments only</label>
+                <input type="checkbox" class="fy-HasAdjustmentPeriod" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="fp-Id" />
+            <input type="hidden" class="fp-FiscalYearId" />
+
+            <div class="fieldblock">
+                <label>Period Number</label>
+                <input type="text" maxlength="2" class="fp-PeriodNumber number" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Start Date</label>
+                <input type="text" class="fp-StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>End Date</label>
+                <input type="text" class="fp-EndDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Status</label>
+                <select class="fp-Status">
+                    <option value="0">Open</option>
+                    <option value="1">Closed</option>
+                    <option value="2">Reopened</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="glformatmodal" title="GL Format" style="display: none;">
+
+        <div class="modalcontent">
 
 
+            <input type="hidden" class="glformat-LedgerId parentid" />
+
+            <div class="fieldblock">
+                <label>Level</label>
+                <input type="text" class="glformat-Level" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Type</label>
+                <select class="glformat-Type">  
+                   <option value="0">None</option>
+                   <option value="1">Fund</option>
+                   <option value="2">Account</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Format</label>
+                <select class="glformat-Format">  
+                   <option value="0">Both</option>
+                   <option value="1">Numberic</option>
+                   <option value="2">Alpha</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Length</label>
+                <input type="text" class="glformat-Length" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Linked</label>
+                <input type="checkbox" class="glformat-IsLinked" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Common</label>
+                <input type="checkbox" class="glformat-IsCommon" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="glformat-Name" />
+            </div>
+            
+            <div class="fieldblock">
+                <label>Abbreviation</label>
+                <input type="text" class="glformat-Abbreviation" />
+            </div>
+            
+            <div class="fieldblock">
+                <label>Separator</label>
+                <select class="glformat-Separator">  
+                   <option value="">None</option>
+                   <option value=" ">(Space)</option>
+                   <option value="-">-</option>
+                   <option value=".">.</option>
+                   <option value=",">,</option>
+                   <option value="/">/</option>
+                   <option value="(">(</option>
+                   <option value=")">)</option>
+                   <option value="[">[</option>
+                   <option value="]">]</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Sort Order</label>
+                <select class="glformat-SortOrder">  
+                   <option value="0">Ascending</option>
+                   <option value="1">Descending</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="entitymodal" title="Business Units" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Code</label>
+                <input type="text" class="en-Code" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Name</label>
+                <input type="text" class="en-Name" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Entity Type</label>
+                <select class="en-BusinessUnitType">
+                        <option value="1">Common</option>
+                        <option value="2">Separate</option>
+                </select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+        </div>
+    </div>
 
 </asp:Content>

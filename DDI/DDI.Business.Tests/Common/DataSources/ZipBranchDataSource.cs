@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
 
@@ -158,7 +158,7 @@ namespace DDI.Business.Tests.Common.DataSources
                 USPSKey = uspsKey,
                 FacilityCode = facilityCode,
                 IsPreferred = isPreferred,
-                Id = GuidHelper.NextGuid()
+                Id = GuidHelper.NewSequentialGuid()
             };
         }
 

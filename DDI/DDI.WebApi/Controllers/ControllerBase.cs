@@ -7,7 +7,6 @@ using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -150,11 +149,14 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (response.Data == null)
                 {
-                    return NotFound();
+                    if (response.ErrorMessages.Count > 0)
+                        return  BadRequest(string.Join(",", response.ErrorMessages));
+                    else
+                        return NotFound();
                 }
                 if (!response.IsSuccessful)
                 {
-                    return BadRequest(response.ErrorMessages.ToString());
+                    return BadRequest(string.Join(",", response.ErrorMessages));
                 }
 
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
@@ -183,6 +185,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Add(entity);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
             }
             catch (Exception ex)
@@ -204,6 +210,10 @@ namespace DDI.WebApi.Controllers
                 }
 
                 var response = _service.Update(id, changes);
+
+                if (!response.IsSuccessful)
+                    throw new Exception(string.Join(",", response.ErrorMessages));
+
                 return FinalizeResponse(response, string.Empty, urlHelper);
 
             }
@@ -236,7 +246,7 @@ namespace DDI.WebApi.Controllers
                     return BadRequest(string.Join(", ", response.ErrorMessages));
                 }
 
-                return Ok();
+                return Ok(response);
             }
             catch (Exception ex)
             {

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Services</RootNamespace>
     <AssemblyName>DDI.Services</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,9 +43,8 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LinqKit, Version=1.1.8.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinqKit.1.1.8.0\lib\net452\LinqKit.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -54,9 +54,8 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -73,40 +72,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="General\AuditService.cs" />
+    <Compile Include="Audit\AuditService.cs" />
     <Compile Include="CRM\ConstituentAddressService.cs" />
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
-    <Compile Include="General\CountryService.cs" />
-    <Compile Include="General\CountyService.cs" />
+    <Compile Include="Common\CountryService.cs" />
+    <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
-    <Compile Include="General\CustomFieldService.cs" />
-    <Compile Include="General\NoteService.cs" />
+    <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="Security\GroupService.cs" />
+    <Compile Include="Core\NoteService.cs" />
     <Compile Include="CRM\PaymentMethodService.cs" />
     <Compile Include="CRM\RelationshipService.cs" />
     <Compile Include="CRM\DenominationsService.cs" />
     <Compile Include="CRM\EthnicitiesService.cs" />
     <Compile Include="Extensions\PageableSearchExtensions.cs" />
-    <Compile Include="ServiceInterfaces\IAddressService.cs" />
-    <Compile Include="ServiceInterfaces\ICustomFieldService.cs" />
+    <Compile Include="GL\FiscalYearService.cs" />
+    <Compile Include="Security\RoleService.cs" />
+    <Compile Include="Security\UserService.cs" />
+    <Compile Include="CRM\IAddressService.cs" />
+    <Compile Include="Core\ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ConstituentSearch.cs" />
     <Compile Include="Search\PageableSearch.cs" />
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="ServiceBase.cs" />
-    <Compile Include="ServiceInterfaces\IConstituentTypeService.cs" />
-    <Compile Include="ServiceInterfaces\IConstituentService.cs" />
-    <Compile Include="ServiceInterfaces\INoteService.cs" />
-    <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
-    <Compile Include="ServiceInterfaces\IDenominationsService.cs" />
-    <Compile Include="ServiceInterfaces\IEthnicitiesService.cs" />
-    <Compile Include="ServiceInterfaces\IRegionService.cs" />
-    <Compile Include="ServiceInterfaces\IService.cs" />
+    <Compile Include="CRM\IConstituentTypeService.cs" />
+    <Compile Include="CRM\IConstituentService.cs" />
+    <Compile Include="Security\IGroupService.cs" />
+    <Compile Include="Core\INoteService.cs" />
+    <Compile Include="CRM\IRelationshipService.cs" />
+    <Compile Include="CRM\IDenominationsService.cs" />
+    <Compile Include="CRM\IEthnicitiesService.cs" />
+    <Compile Include="CRM\IRegionService.cs" />
+    <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
-    <Compile Include="ServiceInterfaces\ITagGroupService.cs" />
-    <Compile Include="General\StateService.cs" />
-    <Compile Include="General\TagGroupService.cs" />
+    <Compile Include="Core\ITagGroupService.cs" />
+    <Compile Include="Common\StateService.cs" />
+    <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="ServiceInterfaces\IFiscalYearService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
@@ -134,7 +139,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="General\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

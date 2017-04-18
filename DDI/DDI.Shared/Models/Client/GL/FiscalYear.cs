@@ -33,11 +33,15 @@ namespace DDI.Shared.Models.Client.GL
          
         public int CurrentPeriodNumber { get; set; }
 
+        public bool HasAdjustmentPeriod { get; set; }
+
         public ICollection<FiscalPeriod> FiscalPeriods { get; set; }
 
         public ICollection<LedgerAccountYear> LedgerAccounts { get; set; }
 
         public ICollection<Segment> Segments { get; set; }
-         
+
+        public override string DisplayName => Name;
+
     }
 }

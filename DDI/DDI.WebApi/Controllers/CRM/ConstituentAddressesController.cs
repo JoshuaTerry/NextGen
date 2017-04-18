@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    //[Authorize]
+    [Authorize]
     public class ConstituentAddressesController : GenericController<ConstituentAddress>
     {
 

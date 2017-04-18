@@ -40,14 +40,7 @@ namespace DDI.WebApi.Services
 
         public void SendMailMessage(MailMessage mailMessage)
         {
-            try
-            {
-                _smtpClient.Send(mailMessage);
-            }
-            catch (Exception)
-            {
-                throw new ServerException();
-            }
+            _smtpClient.Send(mailMessage);
         }
 
     }

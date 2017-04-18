@@ -20,8 +20,12 @@
 
             <!-- Groups Tab -->
             <div id="tab-groups">
-                
-                <div class="newlinkcontainer">
+                <h1 class ="GroupsSectionLabel">Groups</h1>
+                    <div>
+                        <div class="groupstable"></div>
+                    </div>
+
+              <%--  <div class="newlinkcontainer">
                     <a href="#" class="newlink addnewgroup">New Group</a>
                 </div>
 
@@ -29,95 +33,94 @@
 
                 <div class="groupmembersgridcontainer"></div>
 
-                <div class="securitysettingsgridcontainer"></div>
+                <div class="securitysettingsgridcontainer"></div>--%>
 
             </div>
-            
-            <!-- Users Tab -->
-            <div id="tab-users">
 
-                <div class="newlinkcontainer">
-                    <a href="#" class="newlink addnewuser">New User</a>
+            <div class="groupmodal" title="Groups" style="display: none;">
+
+        <div class="modalcontent">
+             
+            <div class="fieldblock">
+                <label>Name:</label>
+                <input type="text" class="dba-Name" />
+            </div>
+
+            <div class="threecolumn">
+
+                <div class="fieldblock">
+                    <label>Assigned Roles</label>
+                    <select class="gp-Roles" size="5"> 
+                    </select>
+
+                </div>
+                 
+                <div>
+                    <input type="button" value="Add" /> <br />
+                    <input type="button" value="Remove" /> <br />
                 </div>
 
-                <div class="usersgridcontainer"></div>
+                <div class="fieldblock">
+                    <label>Available Roles</label>
+                    <select class="AllRoles" size="5"> 
+                    </select>
+                </div>
 
-                <fieldset>
-                    <legend>User Information</legend>
-
-                    <div class="userinfocontainer">
-
-                        <div class="twocolumn">
-
-                            <div class="fieldblock">
-                                <label>User ID</label>
-                                <input type="text" class="userid" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Name</label>
-                                <input type="text" class="username" />
-                            </div>
-
-                        </div>
-                        
-                        <div class="twocolumn">
-
-                            <div class="fieldblock">
-                                <label>Email</label>
-                                <input type="text" class="useremail" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Status</label>
-                                <input type="checkbox" class="userstatus" />
-                            </div>
-
-                        </div>
-                        
-                    </div>
-                    
-                </fieldset>
-
-                <div class="usergroupsgridcontainer"></div>
+                <div class="modalbuttons">
+                    <input type="button" class="savebutton" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
 
             </div>
 
         </div>
 
+    </div>
+
+            <!-- Users Tab -->
+            <div id="tab-users">
+                <div class="usersgridcontainer">
+                    <div class="usergrid"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="newgroupmodal" title="New Group" style="display: none;">
-
         <div class="modalcontent">
-
-
-
         </div>
-
     </div>
 
-    <div class="newusermodal" title="New User" style="display: none;">
-
+    <div class="usermodal" title="New User" style="display: none;">
         <div class="modalcontent">
 
             <div class="fieldblock">
                 <label>Email</label>
-                <input type="email" name="email" class="newusername" />
+                <input type="email" name="email" class="user-Email" />
             </div>
 
             <div class="fieldblock">
                 <label>Password</label>
-                <input type="password" name="password" class="newpassword" />
+                <input type="password" name="password" class="user-Password" />
             </div>
 
             <div class="fieldblock">
                 <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="newconfirmpassword" />
+                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
+            </div>
+
+           <div class="fieldblock">
+                <label>Default Business Unit:</label>
+                <select class="user-DefaultBusinessUnitId"></select></div>
+
+            <div class="fieldblock">
+                <div class="businessUnits">
+                </div>
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitnewuser" value="Submit" />
+                <input type="button" class="savebutton" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>

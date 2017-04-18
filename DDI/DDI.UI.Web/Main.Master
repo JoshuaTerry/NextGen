@@ -56,6 +56,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager ID="scriptmanager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
 
         <header>
             <div class="globalnav"> 
@@ -66,7 +67,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Business Unit"><a href="#" >BU</a> </li>
+                    <li title="Business Unit"><a href="#" class="editbusinessunit">BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
                 </ul>
@@ -341,6 +342,7 @@
         </div>
 
         <div class="auditmodal" title="Audit History" style="display: none;">
+
             <div class="modalcontent">
             
            <%-- <div class="fieldblock range">
@@ -360,8 +362,56 @@
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>--%>
                             
-        </div>        
+        </div>      
+              
     </div>
+
+    <div class="changebusinessunitmodal" title="Change Current Business Unit" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Selected Business Unit</label>
+                <select class="bu-currentbu"></select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebusinessunit" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+                            
+        </div>        
+
+    </div>
+
+    <div class="userbusinessunitmodal" title="Edit Business Units" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Available Business Units</label>
+                <select class="bu-orgbu BusinessUnit"></select>
+            </div>
+            
+            <div class="fieldblock">
+                <label>Selected Business Unit</label>
+                <select class="bu-otherbu BusinessUnits"></select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Make Default</label>
+                <input type="checkbox"  class="default" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebusinessunit" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+                            
+        </div>      
+          
+    </div>
+
     </form>
 </body>
 </html>

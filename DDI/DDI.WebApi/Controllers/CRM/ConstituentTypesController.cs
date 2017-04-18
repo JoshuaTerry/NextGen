@@ -11,10 +11,9 @@ using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.CRM
 {
+    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class ConstituentTypesController : GenericController<ConstituentType>
-    {
-        private string _allFields = null;
-
+    {       
         protected override Expression<Func<ConstituentType, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<ConstituentType, object>>[]
@@ -45,6 +44,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetById(id, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] ConstituentType item)
@@ -52,6 +52,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Post(item);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)
@@ -59,6 +60,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Patch(id, changes);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/constituenttypes/{id}", Name = RouteNames.ConstituentType + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
@@ -66,6 +68,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.Delete(id);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituenttypes/{id}/constituenttypetags")]
         public IHttpActionResult AddTagsToConstituentType(Guid id, [FromBody] JObject tags)
@@ -90,6 +93,7 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/constituenttypes/{id}/tag/{tagId}")]
         public IHttpActionResult RemoveTagFromConstituentType(Guid id, Guid tagId)
