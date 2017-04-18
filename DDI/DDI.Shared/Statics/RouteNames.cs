@@ -39,11 +39,14 @@
         public const string Ethnicity = "Ethnicity";
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
+        public const string InterestPayout = "InterestPayout";
         public const string Investment = "Investment";
         public const string InvestmentRelationship = "InvestmentRelationship";
+        public const string IRSInformation = "IRSInformation";
         public const string Language = "Language";
         public const string Ledger = "Ledger";
         public const string Level = "Level";
+        public const string LinkedAccount = "LinkedAccount";
         public const string MaritalStatus = "MaritalStatus";
         public const string SectionName = "SectionName";
         public const string Note = "Note";
