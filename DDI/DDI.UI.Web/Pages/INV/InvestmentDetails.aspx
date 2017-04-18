@@ -139,12 +139,12 @@
 
                                 <div class="fieldblock">
                                     <label>Purchase Date</label>
-                                    <input type="text" class="editable PurchaseDate" />
+                                    <input type="date" class="editable PurchaseDate" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Last Maintenance Date</label>
-                                    <input type="text" class="editable LastMaintenanceDate" />
+                                    <input type="date" class="editable LastMaintenanceDate" />
                                 </div>
 
                             </div>
@@ -206,12 +206,12 @@
 
                                 <div class="fieldblock">
                                     <label>Maturity Date</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="CurrentMaturityDate editable datepicker" />
                                 </div>
 
                                  <div class="fieldblock">
                                     <label>Original Maturity Date</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="OriginalMaturityDate editable datepicker" />
                                 </div>
 
                             </div>
@@ -220,12 +220,12 @@
 
                                 <div class="fieldblock">
                                     <label>Maturity Method</label>
-                                    <input type="text" class="editable" />
+                                    <input type="text" class="MaturityMethod editable" />
                                 </div>
                                 
                                 <div class="fieldblock">
                                     <label>Last Maturity Date</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="LastMaturityDate editable datepicker" />
                                 </div>
 
                             </div>
@@ -234,7 +234,7 @@
 
                                  <div class="fieldblock">
                                     <label>Renewal Investment Type</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="RenewalInvestmentType editable datepicker" />
                                 </div>
 
                             </div>
@@ -243,7 +243,7 @@
 
                                  <div class="fieldblock">
                                     <label>Maturity Response Date</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="MaturityResponseDate editable datepicker" />
                                 </div>
 
                             </div>
@@ -252,7 +252,7 @@
 
                                  <div class="fieldblock">
                                     <label>Number of Renewals</label>
-                                    <input type="text" class="editable datepicker" />
+                                    <input type="text" class="NumberOfRenewals editable datepicker" />
                                 </div>
 
                             </div>
