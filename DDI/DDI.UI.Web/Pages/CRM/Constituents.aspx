@@ -643,8 +643,13 @@
                         </div>
                         <br />
 
-                        <div class="fieldblock">
-                            <label class="InvestorStatus"/>
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Status: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorStatus" disabled="disabled"/>
+                            </div>
                         </div>
 
                         <div class="fivecolumn" >
@@ -652,7 +657,7 @@
                                 <label>Since: </label>
                             </div>
                             <div>
-                                <label class="InvestorStartDate disabled"/>
+                                <input type="text" class="InvestorStartDate" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -661,7 +666,7 @@
                                 <label>Primary Owner Investment: </label>
                             </div>
                             <div>
-                                <label class="PrimaryInvestorTotal"/>
+                                <input type="text" class="PrimaryInvestorTotal" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -670,7 +675,7 @@
                                 <label>Joint Owner Investment: </label>
                             </div>
                             <div>
-                                <label class="JointInvestorTotal"/>
+                                <input type="text" class="JointInvestorTotal" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -679,7 +684,7 @@
                                 <label>Total Investment Balance: </label>
                             </div>
                             <div>
-                                <label class="InvestorTotal"/>
+                                <input type="text" class="InvestorTotal" disabled="disabled"/>
                             </div>
                         </div>
 
