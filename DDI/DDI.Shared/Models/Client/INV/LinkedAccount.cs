@@ -9,8 +9,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.INV
 {
-    [Table("InterestPayout")]
-    public class InterestPayout : AuditableEntityBase, IEntity
+    [Table("LinkedAccount")]
+    public class LinkedAccount : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]
@@ -22,17 +22,15 @@ namespace DDI.Shared.Models.Client.INV
 
         public Guid? InvestmentId { get; set; }
 
-        public int Priority { get; set; }
+        public LinkedAccountType LinkedAccountType { get; set; }
 
-        public InterestPaymentMethod InterestPaymentMethod { get; set; }
+        public int LinkedAccountNumber { get; set; }
+        
+        public CollateralType CollateralType { get; set; }
 
-        public Constituent Constituent { get; set; }
+        public decimal Collateral { get; set; }
 
-        public Guid? ConstituentId { get; set; }
-
-        public decimal Percent { get; set; }
-
-        public decimal Amount { get; set; }
+        public bool BlockOtherLoanLinks { get; set; }
 
         #endregion
         #region Navigation Properties

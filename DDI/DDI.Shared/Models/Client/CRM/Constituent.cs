@@ -247,6 +247,16 @@ namespace DDI.Shared.Models.Client.CRM
                 return new decimal(5042.43);
             }
         }
+
+        [NotMapped]
+        public decimal InvestorTotal
+        {
+            get
+            {
+                decimal investorTotal = (PrimaryInvestorTotal + JointInvestorTotal);
+                return new decimal(15042.86);
+            }
+        }
         #endregion
 
         #endregion Public Properties

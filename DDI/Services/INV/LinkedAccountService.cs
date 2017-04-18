@@ -18,28 +18,28 @@ using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
-    public class InvestmentService : ServiceBase<Investment>
+    public class LinkedAccountService : ServiceBase<LinkedAccount>
     {
         #region Private Fields
 
-        private readonly IRepository<Investment> _repository;
+        private readonly IRepository<LinkedAccount> _repository;
         // private readonly InvestmentRelationshipLogic _investmentrelationshiplogic; 
 
         #endregion
 
         #region Constructors
 
-        public InvestmentService()
+        public LinkedAccountService()
             : this(new UnitOfWorkEF())
         {
         }
 
-        public InvestmentService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<Investment>())
+        public LinkedAccountService(IUnitOfWork uow)
+            : this(uow,  uow.GetRepository<LinkedAccount>())
         {
         }
 
-        private InvestmentService(IUnitOfWork uow, IRepository<Investment> repository)
+        private LinkedAccountService(IUnitOfWork uow, IRepository<LinkedAccount> repository)
             : base(uow)
         {
            // _investmentrelationshiplogic = investmentRelationshipLogic;
@@ -75,40 +75,32 @@ namespace DDI.Services
         //    return GetById(constituent?.Id ?? Guid.Empty);
         //}
 
-        public IDataResponse<Investment> GetInvestmentById(Guid Id)
+        public IDataResponse<List<LinkedAccount>> GetLinkedAccountByInvestmentId(Guid Id)
         {
-            Investment invest = new Investment();
-            invest.Id = new Guid();
-
-            //main investment information
-            invest.InvestmentNumber = 123456;
-            invest.InvestmentType = new InvestmentType();
-            invest.InvestmentType.Type = 403;
-            invest.InvestmentType.Description = "Fund";
-            invest.InvestmentOwnershipType = new InvestmentOwnershipType();
-            invest.InvestmentOwnershipType.Code = "JT";
-            invest.InvestmentOwnershipType.Name = "Joint Tenancy";
-            invest.InvestmentStatus = InvestmentStatus.Current;
-            invest.CUSIP = "A4E8G4";
-
-            //attributes section
-            invest.PurchaseDate = new DateTime(2005, 12, 13);
-            invest.IssuanceMethod = IssuanceMethod.BookEntry;
-            invest.OriginalPurchaseAmount = new decimal (2345.43);
-            invest.StepUpEligible = true;
-            invest.StepUpDate = new DateTime (2017, 07,12);
-
-            //interest section
-            invest.InterestFrequency = InterestFrequency.Monthly;
-            invest.Rate = new decimal(4.5);
-            
 
 
+            LinkedAccount[] la;
+            la = new LinkedAccount[2];
 
+            la[0] = new LinkedAccount();
+            la[0].LinkedAccountType = LinkedAccountType.DownPayment;
+            la[0].LinkedAccountNumber = 123465;
 
-            var response = new DataResponse<Investment>()
+            la[1] = new LinkedAccount();
+            la[1].LinkedAccountType = LinkedAccountType.Pool;
+            la[1].LinkedAccountNumber = 4007;
+
+            List<LinkedAccount> linkedAccounts = new List<LinkedAccount>();
+
+            foreach (LinkedAccount row in la)
             {
-                Data = invest,
+                linkedAccounts.Add(row);
+            }
+
+
+            var response = new DataResponse<List<LinkedAccount>>()
+            {
+                Data = linkedAccounts,
                 IsSuccessful = true
             };
 
