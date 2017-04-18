@@ -3,31 +3,33 @@
     
     // apply system settings?
 
-    GetCurrentEntity();
+    CreateEditControls();
+
+    SetupEditControls();
 
     if (sessionStorage.getItem('investmentid')) {
 
         $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
 
-        GetCurrentEntity($('.hidinvestmentid').val());
+        GetInvestmentData($('.hidinvestmentid').val());
 
     }
 
-    //GetInvestmentData(id);
-
     DisplayInvestmentData();
+
     // RefreshEntity(); ?
     
 });
 
-function GetCurrentEntity(investid) {
+
+function GetInvestmentData(investid) {
 
     MakeServiceCall('GET', 'investments/' + investid, null, function (data) {
 
         currentEntity = data.Data;
 
         DisplayInvestmentData();
-        // not necessarily where we want to put this...
+        // not necessarily where we want to put this...?
 
     });
 
@@ -40,15 +42,6 @@ function RefreshEntity() {
 
 }
 
-function GetInvestmentData(id) {
-
-    MakeServiceCall('GET', '' + id, null, function () {
-
-        DisplayInvestmentData();
-
-    }); 
-
-}
 
 function DisplayInvestmentData() {
 
@@ -98,14 +91,11 @@ function DisplayInvestmentData() {
             }
         });
 
-        CreateEditControls();
-
-        SetupEditControls();
-
         LoadDepositsAndWithdrawalsSection();
 
     }
 }
+
 
 function LoadDepositsAndWithdrawalsSection() {
 
@@ -134,11 +124,13 @@ function LoadInterestSection() {
 
 }
 
+
 function LoadIRSInformationSection() {
 
 
 
 }
+
 
 function LoadLinkedAccountsSection() {
 
