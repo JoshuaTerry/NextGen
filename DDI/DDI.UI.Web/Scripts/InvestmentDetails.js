@@ -3,11 +3,13 @@
     
     // apply system settings?
 
-    TestCurrentEntity();
+    GetCurrentEntity();
 
     if (sessionStorage.getItem('investmentid')) {
 
         $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
+
+        GetCurrentEntity($('.hidinvestmentid').val());
 
     }
 
@@ -18,10 +20,7 @@
     
 });
 
-function TestCurrentEntity() {
-    // testing purposes only, until we have an investmentid set up
-    investid = 'FFD6D1A4-D7FE-41A0-9ECA-0439EFB7B7AA';
-    // not actually an investment id, 
+function GetCurrentEntity(investid) {
 
     MakeServiceCall('GET', 'investments/' + investid, null, function (data) {
 
@@ -63,8 +62,6 @@ function DisplayInvestmentData() {
 
             if (typeof (value) == 'string')
                 value = value.replace('"', '').replace('"', '');
-
-
 
             if (key != '$id') {
 
@@ -130,11 +127,6 @@ function LoadDepositsAndWithdrawalsSection() {
 
 }
 
-function LoadAttributesSection() {
-
-
-
-}
 
 function LoadInterestSection() {
 
@@ -154,14 +146,3 @@ function LoadLinkedAccountsSection() {
 
 }
 
-function LoadMaturitySection() {
-
-
-
-}
-
-function LoadPaymentPreferencesSectioon() {
-
-
-
-}
