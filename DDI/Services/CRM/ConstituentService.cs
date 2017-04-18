@@ -213,16 +213,18 @@ namespace DDI.Services
             var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(primaryaddress.AddressLine1 + "\r\n");
-            sb.Append(primaryaddress.PostalCode + "\r\n");
-            sb.Append(primaryaddress.City + "\r\n");
-            sb.Append(state + "\r\n");
+            sb.Append("Address: ");
+            sb.Append(primaryaddress.AddressLine1 + "\n");
+            sb.Append(primaryaddress.PostalCode + " ");
+            sb.Append(primaryaddress.City + ", ");
+            sb.Append(state + "\n");
 
-            var primaryContactInfo = constituent.ContactInfo.Where<ContactInfo>(ci => ci.IsPreferred);
+            var primaryContactInfo = constituent.ContactInfo.Where(ci => ci.IsPreferred);
 
             foreach (ContactInfo info in primaryContactInfo)
             {
-                sb.Append(info.Info + "\r\n");
+                sb.Append(info.ContactType + ": ");
+                sb.Append(info.Info + " ");
             }
 
             response = new DataResponse<string>()
