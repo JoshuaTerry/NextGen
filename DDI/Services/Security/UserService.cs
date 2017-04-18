@@ -108,13 +108,7 @@ namespace DDI.Services.Security
         }
 
         #region IQueryableUserStore Implementation
-        IQueryable<User> IQueryableUserStore<User, Guid>.Users
-        {
-            get
-            {
-                return _uow.GetRepository<User>().Entities;
-            }
-        }
+        IQueryable<User> IQueryableUserStore<User, Guid>.Users => _uow.GetRepository<User>().Entities; 
         #endregion
 
         #region IUserRoleStore Implementation

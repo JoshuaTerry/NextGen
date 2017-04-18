@@ -8,14 +8,7 @@ namespace DDI.Shared.Models
     /// Base class for all entity model classes.
     /// </summary>
     public abstract class EntityBase : IEntity
-    {
-        #region Fields
-
-        private string _entityType = null;
-        private static Dictionary<string, Type> _entityTypeDict = null;
-
-        #endregion
-
+    {       
         #region Properties 
 
         public abstract Guid Id { get; set; }

@@ -26,8 +26,7 @@ namespace DDI.WebApi.Controllers.General
     public class UsersController : GenericController<User>
     {
         private UserManager _userManager;
-        private RoleManager _roleManager;
-        private ServiceBase<BusinessUnit> _buService;
+        private RoleManager _roleManager;        
         private UserService userService;
 
 
