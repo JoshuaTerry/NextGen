@@ -638,64 +638,56 @@
 
                 <div class="investmenttopinfo">
 
-                    <div class="">
-                        
                         <div class="fieldblock">
                             <h2>Investor Summary</h2>
                         </div>
                         <br />
 
                         <div class="fieldblock">
-                            <label class="InvestorStatus"></label>
+                            <label class="InvestorStatus"/>
                         </div>
 
-                        <div class="fieldlock">
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Since: </label>
+                            </div>
+                            <div>
+                                <label class="InvestorStartDate disabled"/>
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            Investor Since: <span><label class="InvestorSince"></label></span>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Primary Owner Investment: </label>
+                            </div>
+                            <div>
+                                <label class="PrimaryInvestorTotal"/>
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            Primary Owner Investment: <span><label class="PrimaryOwnerInvestment"></label></span>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Joint Owner Investment: </label>
+                            </div>
+                            <div>
+                                <label class="JointInvestorTotal"/>
+                            </div>
                         </div>
 
-                        <div class="fieldblock">
-                            Joint Owner Investment: <span class="JointOwnerInvestment"></span>
-                        </div>
-
-                        <div class="fieldblock">
-                            Beneficiary: <span><label class="BeneficiaryInvestment"></label></span>
-                        </div>
-
-                        <div>
-                            <a href="../INV/InvestmentDetails.aspx">Investment Detail</a>
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Total Investment Balance: </label>
+                            </div>
+                            <div>
+                                <label class="InvestorTotal"/>
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="investmentgridcontainer"></div>
-
-                </div>
+                <hr />
                 
-                <div class="accordions">
-                    
-                    <h1>Primary Owner</h1>
-
-                    <div class="">
-                    </div>
-
-                    <h1>Joint Owner</h1>
-
-                    <div class="">
-                    </div>
-
-                    <h1>Beneficiary</h1>
-
-                    <div class="">
-                    </div>
-
-                    </div>
+                <div class="investmentstable scrollable"></div>
 
         </div>
 

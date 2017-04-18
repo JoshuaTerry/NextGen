@@ -50,6 +50,16 @@ namespace DDI.Shared.Models.Client.INV
         [Column(TypeName = "date")]
         public DateTime? OriginalMaturityDate { get; set; }
 
+        public MaturityMethod MaturityMethod { get; set; }
+
+        public InvestmentType RenewalInvestmentType { get; set; }
+
+        public DateTime? LastMaturityDate { get; set; }
+
+        public DateTime? MaturityResponseDate { get; set; }
+
+        public int NumberOfRenewals { get; set; }
+
         [Column(TypeName = "date")]
         public DateTime? PurchaseDate { get; set; }
 
@@ -65,11 +75,13 @@ namespace DDI.Shared.Models.Client.INV
 
         public InterestFrequency InterestFrequency { get; set; }
 
-
+        
 
         #region Navigation Properties
 
         public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
+
+        public ICollection<InterestPayout> InterestPayout { get; set; }
 
         #endregion
 

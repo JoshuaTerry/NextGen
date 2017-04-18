@@ -90,8 +90,6 @@ namespace DDI.Services
 
         private List<InvestmentRelationship> MockData()
         {
-            List<InvestmentRelationship> investmentRelationshipList = new List<InvestmentRelationship>();
-
             InvestmentRelationship[] invrelate;
             invrelate = new InvestmentRelationship[10];
 
@@ -105,7 +103,7 @@ namespace DDI.Services
             invrelate[0].Investment.InvestmentOwnershipType.Name = "Sole Ownership";
             invrelate[0].Investment.CurrentMaturityDate = new DateTime(2000, 05, 04);
             invrelate[0].Investment.Rate = new decimal(4.25);
-            invrelate[0].InvestmentId = new Guid();
+            invrelate[0].InvestmentId = Guid.NewGuid();
             invrelate[0].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[1] = new InvestmentRelationship();
@@ -118,7 +116,7 @@ namespace DDI.Services
             invrelate[1].Investment.InvestmentOwnershipType.Name = "Joint Ownership";
             invrelate[1].Investment.CurrentMaturityDate = new DateTime(2001, 05, 04);
             invrelate[1].Investment.Rate = new decimal(4.50);
-            invrelate[1].InvestmentId = new Guid();
+            invrelate[1].InvestmentId = Guid.NewGuid();
             invrelate[1].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[2] = new InvestmentRelationship();
@@ -131,7 +129,7 @@ namespace DDI.Services
             invrelate[2].Investment.InvestmentOwnershipType.Name = "Sole Ownership";
             invrelate[2].Investment.CurrentMaturityDate = new DateTime(2002, 05, 04);
             invrelate[2].Investment.Rate = new decimal(4.75);
-            invrelate[2].InvestmentId = new Guid();
+            invrelate[2].InvestmentId = Guid.NewGuid();
             invrelate[2].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[3] = new InvestmentRelationship();
@@ -144,7 +142,7 @@ namespace DDI.Services
             invrelate[3].Investment.InvestmentOwnershipType.Name = "Joint Ownership";
             invrelate[3].Investment.CurrentMaturityDate = new DateTime(2003, 05, 04);
             invrelate[3].Investment.Rate = new decimal(5);
-            invrelate[3].InvestmentId = new Guid();
+            invrelate[3].InvestmentId = Guid.NewGuid();
             invrelate[3].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[4] = new InvestmentRelationship();
@@ -157,7 +155,7 @@ namespace DDI.Services
             invrelate[4].Investment.InvestmentOwnershipType.Name = "Sole Ownership";
             invrelate[4].Investment.CurrentMaturityDate = new DateTime(2004, 05, 04);
             invrelate[4].Investment.Rate = new decimal(5.25);
-            invrelate[4].InvestmentId = new Guid();
+            invrelate[4].InvestmentId = Guid.NewGuid();
             invrelate[4].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[5] = new InvestmentRelationship();
@@ -170,7 +168,7 @@ namespace DDI.Services
             invrelate[5].Investment.InvestmentOwnershipType.Name = "Joint Ownership";
             invrelate[5].Investment.CurrentMaturityDate = new DateTime(2005, 05, 04);
             invrelate[5].Investment.Rate = new decimal(5.5);
-            invrelate[5].InvestmentId = new Guid();
+            invrelate[5].InvestmentId = Guid.NewGuid();
             invrelate[5].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[6] = new InvestmentRelationship();
@@ -183,7 +181,7 @@ namespace DDI.Services
             invrelate[6].Investment.InvestmentOwnershipType.Name = "Sole Ownership";
             invrelate[6].Investment.CurrentMaturityDate = new DateTime(2006, 05, 04);
             invrelate[6].Investment.Rate = new decimal(5.75);
-            invrelate[6].InvestmentId = new Guid();
+            invrelate[6].InvestmentId = Guid.NewGuid();
             invrelate[6].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
             invrelate[7] = new InvestmentRelationship();
@@ -196,7 +194,7 @@ namespace DDI.Services
             invrelate[7].Investment.InvestmentOwnershipType.Name = "Joint Ownership";
             invrelate[7].Investment.CurrentMaturityDate = new DateTime(2007, 05, 04);
             invrelate[7].Investment.Rate = new decimal(6);
-            invrelate[7].InvestmentId = new Guid();
+            invrelate[7].InvestmentId = Guid.NewGuid();
             invrelate[7].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
         
             invrelate[8] = new InvestmentRelationship();
@@ -209,7 +207,7 @@ namespace DDI.Services
             invrelate[8].Investment.InvestmentOwnershipType.Name = "Sole Ownership";
             invrelate[8].Investment.CurrentMaturityDate = new DateTime(2008, 05, 04);
             invrelate[8].Investment.Rate = new decimal(6.25);
-            invrelate[8].InvestmentId = new Guid();
+            invrelate[8].InvestmentId = Guid.NewGuid();
             invrelate[8].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
             invrelate[9] = new InvestmentRelationship();
@@ -222,9 +220,10 @@ namespace DDI.Services
             invrelate[9].Investment.InvestmentOwnershipType.Name = "Joint Ownership";
             invrelate[9].Investment.CurrentMaturityDate = new DateTime(2009, 05, 04);
             invrelate[9].Investment.Rate = new decimal(6.5);
-            invrelate[9].InvestmentId = new Guid();
+            invrelate[9].InvestmentId = Guid.NewGuid();
             invrelate[9].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
+            List<InvestmentRelationship> investmentRelationshipList = new List<InvestmentRelationship>();
 
             foreach (InvestmentRelationship row in invrelate)
             {

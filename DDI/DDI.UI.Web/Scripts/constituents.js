@@ -177,9 +177,8 @@ function GetConstituentData(id) {
         success: function (data) {
 
             currentEntity = data.Data;
-
             DisplayConstituentData();
-            
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -256,6 +255,8 @@ function DisplayConstituentData() {
         LoadAlternateIDTable();
 
         LoadRelationshipsTab();
+
+        LoadInvestmentsGrid();
 
         PopulateMonthDays();
 
@@ -1065,6 +1066,59 @@ function LoadRelationshipData(data, modal) {
 }
 /* End Relationships Tab */
 
+
+/* Investment Tab */
+
+function LoadInvestmentsGrid() {
+    var columns = [
+    { 
+        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, caption: '', calculateCellValue: function (data) {
+            return [GetRelationshipType(data.InvestmentRelationshipType)];
+        }
+    },
+    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', alignment: 'left' },
+    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
+    {
+        dataField: 'Investment.Rate', caption: 'Rate', alignment: 'right', calculateCellValue: function (data) {
+            return [data.Investment.Rate + '%']
+        }
+    },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'Investment.DisplayName', caption: 'Ownership' }
+    ];
+
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail);
+    //LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail
+    //    , '', '', '', 0, false, false, false, null);
+}
+
+function GetRelationshipType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Primary Owner";
+            break;
+        case 1:
+            typeDesc = "Joint Owner";
+            break;
+        case 2:
+            typeDesc = "Beneficiary";
+            break;
+    }
+    return typeDesc;
+}
+
+function DisplayInvestmentDetail(id) {
+
+    if (id) {
+        sessionStorage.setItem("investmentid", id);
+        location.href = "../INV/InvestmentDetails.aspx";
+    }
+
+}
+
+/* End Investment Tab */
 
 
 
