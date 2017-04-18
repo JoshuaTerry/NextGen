@@ -9,13 +9,14 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Text;
 using System.Web.Script.Serialization;
+using DDI.Logger;
 
 namespace DDI.UI.Web
 {
     public class Token
     {
         private const string DDI_User_Token = "DDI_Authenticated_User_Token";
-
+        private static readonly ILogger _logger = LoggerManager.GetLogger(typeof(Token));
         #region Properties
 
         public string Access_Token { get; set; }     
@@ -43,6 +44,7 @@ namespace DDI.UI.Web
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex);
                 return null;
             }
         }
