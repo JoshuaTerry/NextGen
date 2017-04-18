@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Conversion.Statics;
 using DDI.Data;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -74,13 +75,13 @@ namespace DDI.Conversion.GL
                     transaction.FiscalYearId = fiscalYearId;
                     transaction.LedgerAccountYearId = accountId;
                     transaction.PeriodNumber = importer.GetInt(3);
-                    transaction.TransactionType = importer.GetEnum<PostedTranType>(4);
+                    transaction.PostedTransactionType = importer.GetEnum<PostedTransactionType>(4);
                     transaction.TransactionDate = importer.GetDate(5);
                     transaction.Amount = importer.GetDecimal(6);
-                    transaction.DocumentType = importer.GetString(7);
                     transaction.TransactionNumber = importer.GetInt64(8);
                     transaction.LineNumber = importer.GetInt(9);
                     transaction.Description = importer.GetString(10);
+                    transaction.TransactionType = importer.GetEnum<TransactionType>(11);
                     transaction.IsAdjustment = importer.GetBool(12);
 
                     transaction.AssignPrimaryKey();
