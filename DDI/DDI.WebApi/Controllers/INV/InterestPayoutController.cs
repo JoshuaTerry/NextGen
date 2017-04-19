@@ -35,7 +35,19 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/interestpayouts/{id}", Name = RouteNames.InterestPayout + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            return base.GetById(id, fields);
+            try
+            {
+                //var search = new PageableSearch(offset, limit, orderBy);
+                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+                var response = _invpayService.GetInterestPayoutById(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+            //return base.GetById(id, fields);
         }
 
         //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
