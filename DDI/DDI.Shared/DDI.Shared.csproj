@@ -168,6 +168,8 @@
     <Compile Include="Models\Client\Core\EntityNumber.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
+    <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
+    <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />
     <Compile Include="Models\Client\GL\JournalLine.cs" />
     <Compile Include="Models\Client\GL\Journal.cs" />
     <Compile Include="Models\Client\GL\AccountBalance.cs" />

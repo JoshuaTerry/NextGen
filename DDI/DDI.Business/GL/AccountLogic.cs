@@ -26,6 +26,18 @@ namespace DDI.Business.GL
 
         }
 
+        public AccountActivitySummary GetAccountActivitySummary(Account account)
+        {
+            var summary = new AccountActivitySummary();
+            var detail = new List<AccountActivityDetail>();
+            summary.Detail = detail;
+
+            summary.AccountNumber = account.AccountNumber;
+            summary.AccountName = account.Name;
+
+            return summary;
+
+        }
         
     }
 }
