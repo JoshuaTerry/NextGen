@@ -1,18 +1,39 @@
 ﻿$(document).ready(function () {
 
-    
+
     // apply system settings?
+
+    CreateEditControls();
+
+    SetupEditControls();
 
     if (sessionStorage.getItem('investmentid')) {
 
         $('.hidinvestmentid').val(sessionStorage.getItem('investmentid'));
 
+        GetInvestmentData($('.hidinvestmentid').val());
+
     }
 
+    DisplayInvestmentData();
 
     // RefreshEntity(); ?
-    
+
 });
+
+
+function GetInvestmentData(investid) {
+
+    MakeServiceCall('GET', 'investments/' + investid, null, function (data) {
+
+        currentEntity = data.Data;
+
+        DisplayInvestmentData();
+        // not necessarily where we want to put this...?
+
+    });
+
+}
 
 
 function RefreshEntity() {
@@ -22,18 +43,59 @@ function RefreshEntity() {
 }
 
 
+function DisplayInvestmentData() {
 
+    if (currentEntity) {
 
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
+        $.map(currentEntity, function (value, key) {
 
+            if (typeof (value) == 'string')
+                value = value.replace('"', '').replace('"', '');
 
+            if (key != '$id') {
+
+                var display = '';
+
+                if (typeof (value) == 'object' && !!value) {
+                    display = value.DisplayName;
+                } else {
+                    display = value;
+                }
+
+                var classname = '.' + key;
+
+                if ($(classname).is('input')) {
+                    if ($(classname).is(':checkbox')) {
+                        $(classname).prop('checked', display);
+                    }
+                    else {
+                        $(classname).val(display);
+                    }
+                }
+
+                if ($(classname).is('select')) {
+                    $(classname).val(display);
+                }
+
+                if (key.toLowerCase().indexOf('date') !== -1) {
 
                     var date = FormatJSONDate(display);
 
+                    $(classname).text(date);
+                }
 
             }
         });
 
+        LoadDepositsAndWithdrawalsSection();
+
+        LoadInterestSection();
+
+        FormatFields();
 
     }
 }
@@ -59,18 +121,53 @@ function LoadDepositsAndWithdrawalsSection() {
 
 }
 
-
+//interest section
 function LoadInterestSection() {
 
+    var id = currentEntity.Id;
 
+    var columns = [
+    { dataField: 'Id', width: '0px', },
+    { dataField: 'Priority', caption: 'Priority', sortOrder: 'asc', sortIndex: 0, alignment: 'left' },
+    {
+        dataField: 'InterestPaymentMethod', caption: 'Method', calculateCellValue: function (data) {
+            return [GetInterestPaymentMethod(data.InterestPaymentMethod)];
+        }
+    },
+    { dataField: 'Constituent.Name', caption: 'Name' },
+    { dataField: 'Percent', caption: 'Percent/Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
+    ];
 
+    LoadGrid('.interestpaymentgridcontainer', 'interestpaymentgrid', columns, 'interestpayouts/investment/' + id, 'interestpayouts/investment/' + id, null, '',
+        '.interestpaymentmodal', '.interestpaymentmodal', 250, true, false, false, null);
 }
+
+function GetInterestPaymentMethod(method) {
+    var methodDesc;
+    switch (method) {
+        case 0:
+            methodDesc = "Compound";
+            break;
+        case 1:
+            methodDesc = "ACH";
+            break;
+        case 2:
+            methodDesc = "Investment Deposit";
+            break;
+        case 3:
+            methodDesc = "Wire";
+            break;
+    }
+    return methodDesc;
+}
+// end of interest section
 
 function LoadIRSInformationSection() {
 
 
 
 }
+
 
 function LoadLinkedAccountsSection() {
 

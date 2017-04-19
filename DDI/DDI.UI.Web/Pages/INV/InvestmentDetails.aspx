@@ -195,21 +195,20 @@
                         </div>
 
                         <h1>Interest</h1>
-                        <div class="editcontainer interestgridcontainer">
+                        <div class="editcontainer">
                             <div class="threecolumn">
 
                                 <div class="fieldblock">
                                     <label>Interest Frequency:</label>
                                 </div>
                                 <div>
-                                    <select class="editable InterestFrequency">
-                                        <option value=""></option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Quarter">Quarter</option>
-                                        <option value="Semi-Annual">Semi-Annual</option>
-                                        <option value="Annual">Annual</option>
-                                        <option value="Maturity Only">Maturity Only</option>
-                                        <option value="None">None</option>
+                                    <select class="InterestFrequency editable">
+                                        <option value="0">None</option>
+                                        <option value="1">Monthly</option>
+                                        <option value="2">Quarter</option>
+                                        <option value="3">Semi-Annual</option>
+                                        <option value="4">Annual</option>
+                                        <option value="5">Maturity Only</option>
                                     </select>
                                 </div>
 
@@ -221,7 +220,7 @@
                                     <label>Rate:</label>
                                 </div>
                                 <div>
-                                    <input type="number" class="InterestRate editable" />
+                                    <input type="number" class="Rate justright editable" />%
                                 </div>
 
                             </div>
@@ -232,7 +231,7 @@
                                     <label>Accrued Interest:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestAccrued readonly" readonly="read-only" />
+                                    <input type="text" class="AccruedInterest money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -243,7 +242,7 @@
                                     <label>Last Interest Calculation Dt:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestLastCalcDate readonly"  readonly="read-only" />
+                                    <input type="text" class="LastInterestCalculatedDate date" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -254,7 +253,7 @@
                                     <label>Interest Paid YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPaidYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="InterestPaidYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -265,7 +264,7 @@
                                     <label>Interest Withheld YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestWithheldYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="InterestWithheldYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -276,21 +275,22 @@
                                     <label>Penalty Charged YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPenaltyYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="PenaltyChargedYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
 
                             <div class="accordions">
-                            <h1>Interest Payment</h1>
-                                <div class="interestpaymentgridcontainer"></div>
-                            <h1>IRS Information</h1>
-                                <div class="interestIRSgridcontainer"></div>
+                                <h1>Interest Payment</h1>
+                                <div class="interestpaymentgridcontainer">
+                                    <div class="interestpaymentgrid"></div>
+                                </div>
+                                <h1>IRS Information</h1>
+                                <div class="interestIRSgridcontainer">
+                                    <div class="interestIRSgrid"></div>
+                                </div>
                             </div>
 
-                            <div>
-                                <div class="interestpaymenttable"></div>
-                            </div>
                         </div>
 
                         <h1>Linked Accounts</h1>

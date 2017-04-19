@@ -1090,8 +1090,8 @@ function LoadInvestmentsGrid() {
 }
 
 function InvestmentGridComplete(data) {
-    var grid = $('.investmentgrid').dxDataGrid('instance');
-    var rows = grid.totalCount();
+    //var grid = $('.investmentgrid').dxDataGrid('instance');
+    //var rows = grid.totalCount();
     if (data.Data.length < 1) {
         $('#tab-investments-main').hide();
         $('#tab-investments').hide();
