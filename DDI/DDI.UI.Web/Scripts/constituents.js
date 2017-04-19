@@ -42,11 +42,6 @@ $(document).ready(function () {
         UploadFiles();
     });
 
-    // check for any investments
-    if (true != true) { 
-        $('#tab-investments-main').hide();
-    }
-
 });
 
 function UploadFiles(callback) {
@@ -273,6 +268,9 @@ function DisplayConstituentData() {
         DisplaySelectedTags($('.constituenttagselect'));
 
 		ShowAuditData(currentEntity.Id);
+
+		FormatFields();
+
     }
 }
 
@@ -1072,12 +1070,12 @@ function LoadRelationshipData(data, modal) {
 function LoadInvestmentsGrid() {
     var columns = [
     { 
-        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, caption: '', calculateCellValue: function (data) {
+        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
     { dataField: 'InvestmentId', width: '0px', },
-    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', alignment: 'left' },
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
         dataField: 'Investment.Rate', caption: 'Rate', alignment: 'right', calculateCellValue: function (data) {
@@ -1088,10 +1086,18 @@ function LoadInvestmentsGrid() {
     { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 
-    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail);
-    //LoadGrid('.investmentstable', 'investmentgrid', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, DisplayInvestmentDetail
-    //    , '', '', '', 0, false, false, false, null);
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, CallInvestmentDetail, null, InvestmentGridComplete);
 }
+
+function InvestmentGridComplete(data) {
+    var grid = $('.investmentgrid').dxDataGrid('instance');
+    var rows = grid.totalCount();
+    if (data.Data.length < 1) {
+        $('#tab-investments-main').hide();
+        $('#tab-investments').hide();
+    }
+}
+
 
 function GetRelationshipType(type) {
     var typeDesc;
@@ -1109,7 +1115,7 @@ function GetRelationshipType(type) {
     return typeDesc;
 }
 
-function DisplayInvestmentDetail(id) {
+function CallInvestmentDetail(id) {
 
     if (id) {
         sessionStorage.setItem("investmentid", id);
