@@ -71,11 +71,37 @@ namespace DDI.Business.Tests.GL.DataSources
                     SetAccountGroups(year, "Expense", "", "");
                     AddAccount(year, "5001.CORP", "Office Supplies Corporate", AccountCategory.Expense);
                     AddAccount(year, "5001.MIDW", "Office Supplies Midwest", AccountCategory.Expense);
+
+                    // Create a mapping from 01-100-10-10 / 02-100-10-10 into 1001.CORP for the new ledger.
+                    Account current = _accounts.FirstOrDefault(p => p.FiscalYear == year && p.AccountNumber == "1001.CORP");
+                    Account prior1 = _accounts.FirstOrDefault(p => p.FiscalYear.Name == FiscalYearDataSource.OPEN_YEAR && 
+                            p.FiscalYear.Ledger.Code == BusinessUnitDataSource.UNIT_CODE_SEPARATE && 
+                            p.AccountNumber == "01-100-10-10");
+                    Account prior2 = _accounts.FirstOrDefault(p => p.FiscalYear.Name == FiscalYearDataSource.OPEN_YEAR &&
+                            p.FiscalYear.Ledger.Code == BusinessUnitDataSource.UNIT_CODE_SEPARATE &&
+                            p.AccountNumber == "02-100-10-10");
+
+                    _accountPriorYears.Add(new AccountPriorYear()
+                    {
+                        Account = current,
+                        PriorAccount = prior1,
+                        Percentage = 100m,
+                        Id = GuidHelper.NewGuid()
+                    });
+
+                    _accountPriorYears.Add(new AccountPriorYear()
+                    {
+                        Account = current,
+                        PriorAccount = prior2,
+                        Percentage = 100m,
+                        Id = GuidHelper.NewGuid()
+                    });                    
+   
                 }
                 else
                 {
                     SetAccountGroups(year, "ASSETS", "CASH", "CHECKING");
-                    AddAccount(year, "01-100-10-01", "Cash on Hand", AccountCategory.Asset );
+                    AddAccount(year, "01-100-10-01", "Cash on Hand", AccountCategory.Asset, 350m);
                     AddAccount(year, "01-100-10-10", "Regular Checking Account", AccountCategory.Asset);
                     AddAccount(year, "02-100-10-10", "Regular Checking Account", AccountCategory.Asset);
 
@@ -104,10 +130,10 @@ namespace DDI.Business.Tests.GL.DataSources
                     AddAccount(year, "01-150-50-55", "Due To DEF Entity", AccountCategory.Asset);
 
                     SetAccountGroups(year, "LIABILITIES", "NOTES", "");
-                    AddAccount(year, "01-200-00-20", "Demand Notes", AccountCategory.Liability);
+                    AddAccount(year, "01-200-00-20", "Demand Notes", AccountCategory.Liability, -125m);
 
                     SetAccountGroups(year, "FUND BALANCES", "GENERAL", "");
-                    AddAccount(year, "01-310-50-02", "Accumulated Revenue", AccountCategory.Fund);
+                    AddAccount(year, "01-310-50-02", "Accumulated Revenue", AccountCategory.Fund, -225m);
                     SetAccountGroups(year, "FUND BALANCES", "TEMPORARY", "");
                     AddAccount(year, "02-380-50-02", "Accumulated Revenue", AccountCategory.Fund);
                     SetAccountGroups(year, "FUND BALANCES", "PERMANENT", "");
@@ -134,7 +160,7 @@ namespace DDI.Business.Tests.GL.DataSources
             return _accounts;
         }
 
-        private static void AddAccount(FiscalYear year, string accountNumber, string description, AccountCategory category)
+        private static void AddAccount(FiscalYear year, string accountNumber, string description, AccountCategory category, decimal beginBalance = 0m)
         {
             var ledgerAccount = _ledgerAccounts.FirstOrDefault(p => p.Ledger == year.Ledger && p.AccountNumber == accountNumber);
             if (ledgerAccount == null)
@@ -144,7 +170,7 @@ namespace DDI.Business.Tests.GL.DataSources
                     AccountNumber = accountNumber,
                     Name = description,
                     Ledger = year.Ledger,
-                    LedgerAccountYears = new List<LedgerAccountYear>(),
+                    LedgerAccountYears = new List<LedgerAccountYear>(),                    
                     Id = GuidHelper.NewSequentialGuid()
                 };
 
@@ -157,7 +183,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 AccountNumber = accountNumber,
                 Name = description,
                 Category = category,
-                BeginningBalance = 0m,
+                BeginningBalance = beginBalance,
                 FiscalYear = year,
                 IsActive = true,
                 IsNormallyDebit = (category == AccountCategory.Asset || category == AccountCategory.Expense),

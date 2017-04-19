@@ -9,6 +9,7 @@ using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
@@ -643,9 +644,67 @@ namespace DDI.Business.GL
             return result;
 
         }
-		
-        public AccountActivitySummary GetAccountActivitySummary(Account account)
+
+        /// <summary>
+        /// Get the list of prior year accounts for a G/L account.  Prior year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
+        /// </summary>
+        /// <returns></returns>
+        public List<MappedAccount> GetPriorYearAccounts(Account account, FiscalYear priorYear = null)
         {
+            var list = new List<MappedAccount>();
+
+            if (priorYear == null)
+            {
+                priorYear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetPriorFiscalYear(UnitOfWork.GetReference(account, p => p.FiscalYear), true);
+                if (priorYear == null)
+                {
+                    return list;
+                }
+            }
+            // Look in PriorYearAccounts collection.
+            foreach (var entry in UnitOfWork.GetEntities<AccountPriorYear>(p => p.PriorAccount).Where(p => p.AccountId == account.Id))
+            {
+                    
+                if (!list.Any(p => p.Account.Id == entry.PriorAccount.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.PriorAccount, Factor = entry.Percentage / 100m });
+                }
+            }
+
+            LedgerAccount ledgerAccount = GetLedgerAccount(account);
+
+            // Get the account in the prior year.
+            foreach (var entry in UnitOfWork.GetEntities<LedgerAccountYear>(p => p.FiscalYear, p => p.Account)
+                                            .Where(p => p.LedgerAccountId == ledgerAccount.Id && p.FiscalYearId == priorYear.Id))
+            {
+                if (entry.Account != null && !list.Any(p => p.Account.Id == entry.Account.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.Account, Factor = 1m });
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Get calculated account activity for an account.
+        /// </summary>
+        public AccountActivitySummary GetAccountActivity(Account account)
+        {
+            FiscalYear currentYear;
+
+            if (account == null)
+            {
+                throw new ArgumentNullException(nameof(account));
+            }
+
+            // Load the budgets
+            var budgets = UnitOfWork.GetReference(account, p => p.Budgets);
+            AccountBudget workingBudget = budgets.FirstOrDefault(p => p.BudgetType == BudgetType.Working);
+            AccountBudget fixedBudget = budgets.FirstOrDefault(p => p.BudgetType == BudgetType.Fixed);
+            AccountBudget whatifBudget = budgets.FirstOrDefault(p => p.BudgetType == BudgetType.WhatIf);
+
+            // Create the objects to return.
             var summary = new AccountActivitySummary();
             var detail = new List<AccountActivityDetail>();
             summary.Detail = detail;
@@ -653,11 +712,155 @@ namespace DDI.Business.GL
             summary.AccountNumber = account.AccountNumber;
             summary.AccountName = account.Name;
 
-            return summary;
+            // Ensure the fiscal year is available and that the ledger and fiscal periods are populated.
+            if (account.FiscalYear?.Ledger != null && account.FiscalYear?.FiscalPeriods != null)
+            {
+                currentYear = account.FiscalYear;
+            }
+            else
+            {
+                currentYear = UnitOfWork.GetById<FiscalYear>(account.FiscalYearId ?? Guid.Empty, p => p.Ledger, p => p.FiscalPeriods);
+            }
 
+            if (currentYear == null)
+            {
+                throw new InvalidOperationException($"Account {account.Id} has no fiscal year.");
+            }
+
+            Ledger ledger = currentYear.Ledger;
+            if (ledger == null)
+            {
+                throw new InvalidOperationException($"Fiscal year {currentYear.Id} has no ledger.");
+            }
+
+            // Populate summary properties
+            summary.FiscalYearName = currentYear.Name;
+
+            FiscalYear priorYear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetPriorFiscalYear(currentYear);
+            summary.PriorYearName = priorYear?.Name ?? string.Empty;
+            summary.WorkingBudgetName = ledger.WorkingBudgetName;
+            summary.FixedBudgetName = ledger.FixedBudgetName;
+            summary.WhatIfBudgetName = ledger.WhatIfBudgetName;
+            summary.Id = GuidHelper.NewSequentialGuid();
+
+            // Build detail rows for each fical period
+            foreach (var period in currentYear.FiscalPeriods.OrderBy(p => p.PeriodNumber))
+            {
+                var row = new AccountActivityDetail();
+                row.Id = GuidHelper.NewSequentialGuid();
+                detail.Add(row);
+
+                row.PeriodNumber = period.PeriodNumber;
+                if (period.IsAdjustmentPeriod)
+                {
+                    row.PeriodName = "Adjustments";
+                }
+                else if (period.StartDate.HasValue)
+                {
+                    row.PeriodName = $"{period.PeriodNumber:D2}: {period.StartDate.Value:MMM yy}";  // e.g. Jan 14
+                }
+
+                // Load budget amounts (adjustment period has no budget)
+                if (!period.IsAdjustmentPeriod)
+                {
+                    if (workingBudget != null)
+                    {
+                        row.WorkingBudget = workingBudget.Budget.Amounts[period.PeriodNumber - 1];
+                    }
+                    if (fixedBudget != null)
+                    {
+                        row.FixedBudget = fixedBudget.Budget.Amounts[period.PeriodNumber - 1];
+                    }
+                    if (whatifBudget != null)
+                    {
+                        row.WhatIfBudget = whatifBudget.Budget.Amounts[period.PeriodNumber - 1];
+                    }
+                }
+
+                // Beginning balance
+                if (row.PeriodNumber == 1)
+                {
+                    row.BeginningBalance = account.BeginningBalance;
+                }
+
+            }
+
+            // Get current balances, then copy them into the detail rows.
+
+            var balances = UnitOfWork.Where<AccountBalance>(p => p.Id == account.Id);
+
+            foreach (var entry in balances)
+            {
+                var row = detail.FirstOrDefault(p => p.PeriodNumber == entry.PeriodNumber);
+                if (row != null)
+                {
+                    if (entry.DebitCredit.StartsWith("D"))
+                    {
+                        row.Debits = entry.TotalAmount;
+                    }
+                    else
+                    {
+                        row.Credits = entry.TotalAmount;
+                    }
+                }
+            }
+
+            // Get set of prior year accounts, then copy them into the detail rows.
+
+            var mappedAccounts = GetPriorYearAccounts(account, priorYear);
+            foreach (var priorAccount in mappedAccounts)
+            {
+                balances = UnitOfWork.Where<AccountBalance>(p => p.Id == priorAccount.Account.Id);
+
+                var firstPeriod = detail.FirstOrDefault(p => p.PeriodNumber == 1);
+
+                if (firstPeriod != null)
+                {
+                    firstPeriod.PriorBeginningBalance += priorAccount.Account.BeginningBalance * priorAccount.Factor;
+                }
+
+                foreach (var entry in balances)
+                {
+                    var row = detail.FirstOrDefault(p => p.PeriodNumber == entry.PeriodNumber);
+                    if (row != null)
+                    {
+                        if (entry.DebitCredit.StartsWith("D"))
+                        {
+                            row.PriorDebits += entry.TotalAmount * priorAccount.Factor;
+                        }
+                        else
+                        {
+                            row.PriorCredits += entry.TotalAmount * priorAccount.Factor;
+                        }
+                    }
+                }
+            }
+
+            // Generate all other calculated columns
+            decimal balance = 0m;
+            decimal priorBalance = 0m;
+
+            foreach (var row in detail.OrderBy(p => p.PeriodNumber))
+            {
+                row.BeginningBalance += balance;
+                row.Activity = row.Debits - row.Credits;
+                row.EndingBalance = row.BeginningBalance + row.Activity;
+
+                row.PriorBeginningBalance += priorBalance;
+                row.PriorActivity = row.PriorDebits - row.PriorCredits;
+                row.PriorEndingBalance = row.PriorBeginningBalance + row.PriorActivity;
+
+                row.WhatIfBudgetVariance = row.WhatIfBudget - row.Activity;
+                row.WorkingBudgetVariance = row.WorkingBudget - row.Activity;
+                row.FixedBudgetVariance = row.FixedBudget - row.Activity;
+
+                balance = row.EndingBalance;
+                priorBalance = row.PriorEndingBalance;
+            }
+
+            return summary;
         }
-        
-		
+        		
         #endregion
 
         #region Private Methods
@@ -678,7 +881,19 @@ namespace DDI.Business.GL
 
         #endregion
 
+        #region Nested Classes
 
+        /// <summary>
+        /// An account with a factor (1 or less) for mapping a prior year account to a current year account.
+        /// </summary>
+        public class MappedAccount
+        {
+            public Account Account { get; set; }
+            public decimal Factor { get; set; }
+
+        }
+
+        #endregion
 
     }
 }

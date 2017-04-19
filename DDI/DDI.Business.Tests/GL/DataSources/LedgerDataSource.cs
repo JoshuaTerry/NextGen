@@ -70,7 +70,7 @@ namespace DDI.Business.Tests.GL.DataSources
                         ApproveJournals = true,
                         BusinessUnit = unit,
                         IsParent = false,
-                        Code = "NEW",
+                        Code = NEW_LEDGER_CODE,
                         Name = "New ledger for " + unit.Code,
                         CapitalizeHeaders = false,
                         CopyCOAChanges = true,

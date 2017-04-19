@@ -300,5 +300,106 @@ namespace DDI.Business.Tests.GL
                 "No validation of segments.");
         }
 
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_GetPriorYearAccounts()
+        {
+            // Test a simple account
+            string unit = BusinessUnitDataSource.UNIT_CODE1;
+            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
+
+            var result = _bl.GetPriorYearAccounts(account);
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(1, result.Count, "Returns a single mapped account.");
+            Account priorAccount = result.First().Account;
+            Assert.IsNotNull(priorAccount, "Returned non-null prior year account.");
+            Assert.AreEqual(account.AccountNumber, priorAccount.AccountNumber, "Prior year account has same account number.");
+            Assert.AreEqual(FiscalYearDataSource.CLOSED_YEAR, priorAccount.FiscalYear.Name, "Prior year account is in correct fiscal year.");
+            Assert.AreEqual(1.00m, result.First().Factor, "Factor is 1.00");
+
+            // Test an account with no prior year account.
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.CLOSED_YEAR);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
+
+            result = _bl.GetPriorYearAccounts(account);
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(0, result.Count, "Returns no mapped accounts if no prior year.");
+
+
+            // Test an account that is mapped via AccountPriorYear
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == LedgerDataSource.NEW_LEDGER_CODE);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "1001.CORP");
+            result = _bl.GetPriorYearAccounts(account);
+
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(2, result.Count, "Returns two mapped accounts for 1001.CORP.");
+            Assert.AreEqual(FiscalYearDataSource.OPEN_YEAR, result.First().Account.FiscalYear.Name, "Prior year account is in correct fiscal year.");
+            
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_GetAccountActivity()
+        {
+            AccountBalanceDataSource.GetDataSource(_uow);
+           
+            string unit = BusinessUnitDataSource.UNIT_CODE1;
+            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == AccountBalanceDataSource.ACCOUNT_NUMBER);
+
+            var result = _bl.GetAccountActivity(account);
+
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(account.Name, result.AccountName, "Account name is correct.");
+            Assert.AreEqual(account.AccountNumber, result.AccountNumber, "Account number is correct.");
+            Assert.AreEqual(FiscalYearDataSource.OPEN_YEAR, result.FiscalYearName, "Fiscal year name is correct.");
+            Assert.AreEqual(FiscalYearDataSource.CLOSED_YEAR, result.PriorYearName, "Prior fiscal year name is correct.");
+            Assert.AreEqual(year.Ledger.WorkingBudgetName, result.WorkingBudgetName, "Working budget name is correct.");
+            Assert.AreEqual(year.Ledger.FixedBudgetName, result.FixedBudgetName, "Fixed budget name is correct.");
+            Assert.AreEqual(year.Ledger.WhatIfBudgetName, result.WhatIfBudgetName, "What if budget name is correct.");
+
+            Assert.AreEqual(year.NumberOfPeriods, result.Detail.Count, "Detail contains correct # of rows.");
+            Assert.AreEqual(AccountBalanceDataSource.TOTAL_DEBITS, result.Detail.Sum(p => p.Debits), $"Debits total {AccountBalanceDataSource.TOTAL_DEBITS}.");
+            Assert.AreEqual(AccountBalanceDataSource.TOTAL_CREDITS, result.Detail.Sum(p => p.Credits), $"Credits total {AccountBalanceDataSource.TOTAL_CREDITS}.");
+
+            Assert.AreEqual(AccountBalanceDataSource.TOTAL_DEBITS, result.Detail.Sum(p => p.PriorDebits), $"Prior year debits total {AccountBalanceDataSource.TOTAL_DEBITS}.");
+            Assert.AreEqual(AccountBalanceDataSource.TOTAL_CREDITS, result.Detail.Sum(p => p.PriorCredits), $"Prior year credits total {AccountBalanceDataSource.TOTAL_CREDITS}.");
+
+            Assert.AreEqual(account.BeginningBalance, result.Detail[0].BeginningBalance, "Beginning balance is correct.");
+            Assert.AreEqual(account.BeginningBalance, result.Detail[0].PriorBeginningBalance, "Prior beginning balance is correct.");
+
+            Assert.IsTrue(result.Detail.All(p => p.Activity == p.Debits - p.Credits), "Activity calculated correctly.");
+            Assert.IsTrue(result.Detail.All(p => p.EndingBalance == p.BeginningBalance + p.Activity), "Ending balance calculated correctly.");
+            Assert.IsTrue(result.Detail.All(p => p.PriorActivity == p.PriorDebits - p.PriorCredits), "Prior activity calculated correctly.");
+            Assert.IsTrue(result.Detail.All(p => p.PriorEndingBalance == p.PriorBeginningBalance + p.PriorActivity), "Prior ending balance calculated correctly.");
+
+            Assert.IsTrue(result.Detail.All(p => p.WorkingBudgetVariance == p.WorkingBudget - p.Activity), "Working budget variance calculated correctly.");
+            Assert.IsTrue(result.Detail.All(p => p.FixedBudgetVariance == p.FixedBudget - p.Activity), "Fixed budget variance calculated correctly.");
+            Assert.IsTrue(result.Detail.All(p => p.WhatIfBudgetVariance == p.WhatIfBudget - p.Activity), "What if budget variance calculated correctly.");
+
+            // Verify beginning balances and ending balances align.  Also verify period names.
+            decimal current = 0m;
+            decimal prior = 0m;
+            foreach (var entry in result.Detail.OrderBy(p => p.PeriodNumber))
+            {
+                if (entry.PeriodNumber > 1)
+                {
+                    Assert.AreEqual(current, entry.BeginningBalance, "Current period beginning balance is prior period ending balance.");
+                    Assert.AreEqual(prior, entry.PriorBeginningBalance, "Current period beginning balance is prior period ending balance.");
+                }
+                current = entry.EndingBalance;
+                prior = entry.PriorEndingBalance;
+
+                var period = account.FiscalYear.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == entry.PeriodNumber);
+                if (period.IsAdjustmentPeriod)
+                {
+                    Assert.AreEqual("Adjustments", entry.PeriodName, "Period name correct for adjustment period.");
+                }
+                else
+                {
+                    Assert.AreEqual($"{period.PeriodNumber:D2}: {period.StartDate.Value:MMM yy}", entry.PeriodName, "Period name is correct.");
+                }
+            }
+        }
+
     }
 }
