@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
 {
-    //[Authorize]
+    [Authorize]
     public class AccountController : GeneralLedgerController<Account>
     {
         protected new IAccountService Service => (IAccountService)base.Service;
