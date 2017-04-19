@@ -223,8 +223,9 @@ namespace DDI.Services
 
             foreach (ContactInfo info in primaryContactInfo)
             {
-                sb.Append(info.ContactType + ": ");
-                sb.Append(info.Info + " ");
+                var contactType = UnitOfWork.GetById<ContactType>(info.ContactTypeId.Value);
+                sb.Append(contactType + ": ");
+                sb.Append(info.Info + "\n");
             }
 
             response = new DataResponse<string>()
