@@ -62,12 +62,12 @@
                         
                         <div class="fieldblock">
                             <label>ID</label>
-                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
+                            <input type="text" class="editable Id" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Status</label>
-                            <input type="text" class="editable FormattedName" />
+                            <input type="text" class="editable InvestmentStatus" />
                         </div>
 
                     </div>
@@ -76,12 +76,12 @@
                         
                         <div class="fieldblock">
                             <label>Investment Number</label>
-                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
+                            <input type="text" class="editable InvestmentNumber"  />
                         </div>
 
                         <div class="fieldblock">
                             <label>Balance</label>
-                            <input type="text" class="editable FormattedName" />
+                            <input type="text" class="editable Balance" />
                         </div>
 
                     </div>
@@ -90,12 +90,12 @@
                         
                         <div class="fieldblock">
                             <label>Investment Type</label>
-                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
+                            <input type="text" class="editable InvestmentType" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Rate</label>
-                            <input type="text" class="editable FormattedName" />
+                            <input type="text" class="editable Rate" />
                         </div>
 
                     </div>
@@ -104,12 +104,12 @@
                         
                         <div class="fieldblock">
                             <label>Description</label>
-                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
+                            <input type="text" class="editable InvestmentDescription"  />
                         </div>
 
                         <div class="fieldblock">
                             <label>Maturity Date</label>
-                            <input type="text" class="editable FormattedName" />
+                            <input type="text" class="editable CurrentMaturityDate" />
                         </div>
 
                     </div>
@@ -118,12 +118,12 @@
                         
                         <div class="fieldblock">
                             <label>Ownership Type</label>
-                            <input type="text" class="editable ConstituentNumber" maxlength="9" />
+                            <input type="text" class="editable InvestmentOwnershipType" />
                         </div>
 
                         <div class="fieldblock">
                             <label>CUSIP</label>
-                            <input type="text" class="editable FormattedName" />
+                            <input type="text" class="editable CUSIP" />
                         </div>
 
                     </div>
@@ -139,12 +139,12 @@
 
                                 <div class="fieldblock">
                                     <label>Purchase Date</label>
-                                    <input type="text" class="editable" />
+                                    <input type="date" class="editable PurchaseDate" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Last Maintenance Date</label>
-                                    <input type="text" class="editable" />
+                                    <input type="date" class="editable LastMaintenanceDate" />
                                 </div>
 
                             </div>
@@ -153,12 +153,12 @@
 
                                 <div class="fieldblock">
                                     <label>Issuance Method</label>
-                                    <input type="text" class="editable" />
+                                    <input type="text" class="editable IssuanceMethod" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Last Transaction Date</label>
-                                    <input type="text" class="editable" />
+                                    <input type="text" class="editable LastTransactionDate" />
                                 </div>
 
                             </div>
@@ -170,12 +170,12 @@
 
                                     <div class="fieldblock">
                                         <label>Step-up Eligible</label>
-                                        <input type="checkbox" class="editable" />
+                                        <input type="checkbox" class="editable StepUpEligible" />
                                     </div>
 
                                     <div class="fieldblock">
                                         <label>Step-up Date</label>
-                                        <input type="text" class="editable" />
+                                        <input type="text" class="editable StepUpDate" />
                                     </div>
 
                                      <div class="modalbuttons">
@@ -200,7 +200,65 @@
                         <div class="editcontainer"></div>
 
                         <h1>Maturity</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Maturity Date</label>
+                                    <input type="text" class="CurrentMaturityDate editable datepicker" />
+                                </div>
+
+                                 <div class="fieldblock">
+                                    <label>Original Maturity Date</label>
+                                    <input type="text" class="OriginalMaturityDate editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                <div class="fieldblock">
+                                    <label>Maturity Method</label>
+                                    <input type="text" class="MaturityMethod editable" />
+                                </div>
+                                
+                                <div class="fieldblock">
+                                    <label>Last Maturity Date</label>
+                                    <input type="text" class="LastMaturityDate editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Renewal Investment Type</label>
+                                    <input type="text" class="RenewalInvestmentType editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Maturity Response Date</label>
+                                    <input type="text" class="MaturityResponseDate editable datepicker" />
+                                </div>
+
+                            </div>
+
+                            <div class="twocolumn">
+
+                                 <div class="fieldblock">
+                                    <label>Number of Renewals</label>
+                                    <input type="text" class="NumberOfRenewals editable datepicker" />
+                                </div>
+
+                            </div>
+
+
+                        </div>
 
                         <h1>Payment Preferences</h1>
                         <div class="editcontainer"></div>
