@@ -313,7 +313,7 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         headers: GetApiHeaders(),
         success: function (data) {
 
-            LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
+            LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
 
         },
         error: function (xhr, status, err) {
@@ -321,13 +321,9 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         }
     });
 
-    if (oncomplete) {
-        oncomplete(data);
-    }
-
 }
 
-function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
+function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete) {
     
     $(container).html('');
 
@@ -409,6 +405,10 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     });
 
     $(container).append($(datagrid));
+
+    if (oncomplete) {
+        oncomplete(data);
+    }
 
 }
 
