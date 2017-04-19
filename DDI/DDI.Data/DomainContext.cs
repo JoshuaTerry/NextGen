@@ -164,9 +164,12 @@ namespace DDI.Data
           
         #region Public Constructors
         public DomainContext() : this(null, null)
-        { }
+        {
+
+        }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
+            Database.SetInitializer<DomainContext>(new CreateDatabaseIfNotExists<DomainContext>());
             Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, this, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
