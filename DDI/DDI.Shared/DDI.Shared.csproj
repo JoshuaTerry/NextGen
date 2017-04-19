@@ -143,6 +143,7 @@
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="FixedSizeList.cs" />
+    <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
+    <Compile Include="Models\Client\GL\ValidatedAccount.cs" />
     <Compile Include="Models\Client\Core\Transaction.cs" />
     <Compile Include="Models\Client\Core\EntityTransaction.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
@@ -281,6 +283,7 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+    <Compile Include="Statics\GL\ConstantsGL.cs" />
     <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
@@ -289,6 +292,7 @@
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
+    <Compile Include="Statics\UserMessages.cs" />
     <Compile Include="TaskScheduler.cs" />
     <Compile Include="ValidationException.cs" />
   </ItemGroup>
