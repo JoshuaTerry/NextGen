@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Data;
 
 namespace DDI.Data
 {
@@ -276,6 +277,20 @@ namespace DDI.Data
         public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
         {
             return GetRepository<T>().GetById(id, includes);
+        }
+
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {           
+        }
+
+        public void RollbackTransaction()
+        {
+        }
+
+        public bool CommitTransaction()
+        {
+            SaveChanges();
+            return true;
         }
 
         #endregion Protected Methods
