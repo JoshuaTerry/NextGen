@@ -139,15 +139,19 @@ function LoadIRSInformationSection() {
 function InitLinkedAccounts() {
 
     LoadLinkedAccountsGrid();
-    NewLinkedAccountsModal();
+    //NewLinkedAccountsModal();
 }
 
 function LoadLinkedAccountsGrid() {
     var columns = [
     { dataField: 'Id', width: '0px', },
-    { dataField: 'Type', caption: 'Type' },
-    { dataField: 'LinkNumber', caption: 'Link Number' },
-    { dataField: 'Name', caption: 'Name' },
+    {
+        dataField: 'LinkedAccountType', caption: 'Type', sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+            return [GetLinkedType(data.LinkedAccountType)];
+        }
+    },
+    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left'},
+    { dataField: 'DisplayName', caption: 'Name' },
     ];
 
     CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, 'linkedaccounts/investment/' + currentEntity.Id, null, EditLinkedAccounts, null, null);
@@ -279,6 +283,25 @@ function GetLinkedAccountsToSave() {
 
     return item;
 
+}
+
+function GetLinkedType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Loan Support";
+            break;
+        case 1:
+            typeDesc = "Pool";
+            break;
+        case 2:
+            typeDesc = "Down Payment";
+            break;
+        case 3:
+            typeDesc = "Grant";
+            break;
+    }
+    return typeDesc;
 }
 //end linked accounts section
 
