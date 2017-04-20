@@ -29,7 +29,6 @@ function GetInvestmentData(investid) {
         currentEntity = data.Data;
 
         DisplayInvestmentData();
-        // not necessarily where we want to put this...?
 
     });
 
@@ -101,19 +100,20 @@ function LoadDepositsAndWithdrawalsSection() {
 
     var columns = [
         { dataField: 'Id', width: '0px' },
-        { dataField: 'DepositWithdrawal', caption: 'Deposit/Withdrawal' }, // group by
-        { dataField: 'NextDate', caption: 'NextDate' }, //order by
-        { dataField: 'Frequency', caption: 'Frequency' }, // Enum?
-        { dataField: 'Method', caption: 'Degree' },
-        { dataField: 'PaymentInfo', caption: 'Payment Info' }, // similar to constituent payment prefs
+        { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
+        { dataField: 'NextTransactionDate', caption: 'NextDate' }, //order by
+        { dataField: 'RecurringType', caption: 'Frequency' },
+       // { dataField: 'AutomatedTransactionMethod', caption: 'Method' },
+        { dataField: 'PaymentPreference.DisplayName', caption: 'Payment Info' }, // similar to constituent payment prefs
         { dataField: 'Amount', caption: 'Amount' },
         { dataField: 'IsActive', caption: 'Status' }
     ];
 
-    //LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) 
 
 
-    LoadGrid('.dwgridcontainer', 'dwgrid', columns, null, null, null, null, null, null, null, null, null, null, null);
+    LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'automatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 250, false, false, false);
+
+    PopulateDropDown(); // payment preferences
 
 }
 

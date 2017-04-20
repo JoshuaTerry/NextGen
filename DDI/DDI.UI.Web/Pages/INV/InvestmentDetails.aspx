@@ -186,7 +186,7 @@
                             </div>
                         </div>
 
-                        <h1>Deposits and Withdrawals</h1>
+                        <h1>Automated Transactions</h1>
                         <div class="editcontainer">
 
                             <div class="dwgridcontainer"></div>
@@ -257,11 +257,7 @@
 
                             </div>
 
-
                         </div>
-
-                        <h1>Payment Preferences</h1>
-                        <div class="editcontainer"></div>
 
                     </div>
 
@@ -273,5 +269,48 @@
 
 
 <%--    Modal section     --%>
+
+<div class="autotransmodal" title="Automated Transactions" style="display: none;">
+
+    <div class="modalcontent">
+            
+        <div class="fieldblock">
+            <label>Method:</label>
+            <select class="at-method"></select>
+            <!-- Dropdown with deposit/withdrawal/transfer-->
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Payment Method</label>
+                <select class="at-Info" />
+            </div>
+        <!-- will be the same as constituent paymet prefs-->
+
+            <div class="modalbuttons">
+                <input type="button" class="newpaymentmethod" value="New Payment Method" />
+            </div>
+
+        </div>
+
+        <div class="fieldblock">
+            <label>Is Preferred:</label>
+            <input type="checkbox"  class="at-IsPreferred" />
+        </div>
+
+        <div class="fieldblock">
+            <label>Comment:</label>
+            <input type="text"  class="at-Comment" />
+        </div>
+
+        <div class="modalbuttons">
+            <input type="button" class="submitsocmed" value="Save" />
+            <a href ="#" class="cancelmodal">Cancel</a>
+        </div>
+
+    </div>
+
+</div>
 
 </asp:Content>
