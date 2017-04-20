@@ -30,8 +30,7 @@ namespace DDI.Conversion.Core
             using (var context = new DomainContext())
             {
                 Guid id;
-                Guid? unitId;
-                Guid? fiscalYearId;
+                Guid? rangeId;
 
                 using (var importer = entityNumberImporter())
                 {           
@@ -39,8 +38,7 @@ namespace DDI.Conversion.Core
                     {
                         int unitKey = importer.GetInt(0);
                         string yearName = importer.GetString(1);
-                        unitId = null;
-                        fiscalYearId = null;
+                        rangeId = null;
 
                         if (unitKey > 0)
                         {
@@ -49,7 +47,7 @@ namespace DDI.Conversion.Core
                                 importer.LogError($"Invalid business unit legacy key {unitKey}.");
                                 continue;
                             }
-                            unitId = id;
+                            rangeId = id;
                         }
 
                         if (!string.IsNullOrWhiteSpace(yearName))
@@ -60,18 +58,17 @@ namespace DDI.Conversion.Core
                                 importer.LogError($"Invalid fiscal year legacy key \"{fiscalYearKey}\".");
                                 continue;
                             }
-                            fiscalYearId = id;
+                            rangeId = id;
                         }
 
                         EntityNumberType type = importer.GetEnum<EntityNumberType>(2);
                         int nextNumber = importer.GetInt(3);
 
-                        EntityNumber number = context.EntityNumbers.FirstOrDefault(p => p.EntityNumberType == type && p.BusinessUnitId == unitId && p.FiscalYearId == fiscalYearId);
+                        EntityNumber number = context.EntityNumbers.FirstOrDefault(p => p.EntityNumberType == type && p.RangeId == rangeId);
                         if (number == null)
                         {
                             number = new EntityNumber();
-                            number.BusinessUnitId = unitId;
-                            number.FiscalYearId = fiscalYearId;
+                            number.RangeId = rangeId;
                             number.EntityNumberType = type;
                             context.EntityNumbers.Add(number);
                         }
