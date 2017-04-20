@@ -657,7 +657,7 @@
                                 <label>Since: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStartDate" disabled="disabled"/>
+                                <input type="text" class="InvestorStartDate date" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -666,7 +666,7 @@
                                 <label>Primary Owner Investment: </label>
                             </div>
                             <div>
-                                <input type="text" class="PrimaryInvestorTotal" disabled="disabled"/>
+                                <input type="text" class="PrimaryInvestorTotal money justright" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -675,7 +675,7 @@
                                 <label>Joint Owner Investment: </label>
                             </div>
                             <div>
-                                <input type="text" class="JointInvestorTotal" disabled="disabled"/>
+                                <input type="text" class="JointInvestorTotal money justright" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -684,7 +684,7 @@
                                 <label>Total Investment Balance: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorTotal" disabled="disabled"/>
+                                <input type="text" class="InvestorTotal money justright" disabled="disabled"/>
                             </div>
                         </div>
 

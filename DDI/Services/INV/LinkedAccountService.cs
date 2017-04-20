@@ -75,6 +75,24 @@ namespace DDI.Services
         //    return GetById(constituent?.Id ?? Guid.Empty);
         //}
 
+        public IDataResponse<LinkedAccount> GetLinkedAccountById(Guid Id)
+        {
+
+            LinkedAccount la = new LinkedAccount();
+            la.LinkedAccountType = LinkedAccountType.DownPayment;
+            la.LinkedAccountNumber = 123465;
+
+            
+            var response = new DataResponse<LinkedAccount>()
+            {
+                Data = la,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+
         public IDataResponse<List<LinkedAccount>> GetLinkedAccountByInvestmentId(Guid Id)
         {
 
