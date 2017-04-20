@@ -381,12 +381,12 @@
 
             <div class="twocolumn">
                 <div>
-                    <label>Priority</label>
+                    <label>Priority: </label>
                     <input type="number" class="Priority" />
                 </div>
 
                 <div>
-                    <label>Method</label>
+                    <label>Method: </label>
                     <select class="interest-Category">
                         <option value="0">Compound</option>
                         <option value="1">ACH</option>
@@ -397,25 +397,31 @@
                 </div>
             </div>
 
-            <div class="fieldblock twocolumn">
+            <br />
+
+            <div class="twocolumn">
                 <div>
-                    <input type="radio" name="gender" value="Percent"/>Percent<br />
-                    <input type="radio" name="gender" value="Amount"/>Amount
+                    <input type="radio" name="interestpctamt" value="Percent"/>Percent
+                    <input type="radio" name="interestpctamt" value="Amount"/>Amount
                 </div>
                 <div>
                     <input type="number" class="interest-AmtPct" />
                 </div>
             </div>
 
+            <br />
+
             <div class="interestOptionACHWire twocolumn">
                 <div>
-                <label>Payment Preference:</label>
+                <label>Payment Preference: </label>
                     <select class="interest-PaymentPreference">
                         <option value=""></option>
                         <option value="Default">Default</option>
                     </select>
                 </div>
             </div>
+
+            <br />
 
 <%--            <div class="twocolumn">
                 <label></label>
@@ -432,6 +438,8 @@
                     <input type="text" class="interest-CheckName" />
                 </div>
             </div>
+
+            <br />
 
             <div class="fieldblock interestOptionDonation">
                 <fieldset>

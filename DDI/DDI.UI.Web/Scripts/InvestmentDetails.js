@@ -140,7 +140,7 @@ function LoadInterestSection() {
     { dataField: 'Percent', caption: 'Percent/Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
     ];
 
-    LoadGrid('.interestpaymentgridcontainer', 'interestpaymentgrid', columns, 'interestpayouts/investment/' + id, 'interestpayouts/investment/' + id, null, '',
+    LoadGrid('.interestpaymentgridcontainer', 'interestpaymentgrid', columns, 'interestpayouts/investment/' + id, 'interestpayouts', null, '',
         '.interestpaymentmodal', '.interestpaymentmodal', 450, true, false, false, null);
 }
 
