@@ -42,7 +42,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
         var grid = $('#gridContainer .dx-widget').length;
         if(grid == 0)
         {
-            LoadGLAccounts(ledgerId, fiscalYearId);
+            LoadGLAccounts('#gridContainer', ledgerId, fiscalYearId);
         }
         $("#gridContainer").show();
     });
@@ -61,58 +61,53 @@ function SelectAccountNumberLookup(item) {
 
 function CreateGLAccountSelector(container)
 {
-    var glcontainer = $('<div>');
-    var hidAccountNumber = $('<input>');
-    var accountNumber = $('<input>');
-    var accountDescription = $('<label>');
-    var search = $('<span>');
-    var grid = $('<div>')
+    var glcontrol = $('<div>').addClass("inline-block");
+        
+    $('<input>').attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
+    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
+    $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
+    $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
 
-    
-    hidAccountNumber.attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
-    var glcontrol = glcontainer.addClass("inline-block");
-    accountNumber.attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
-    accountDescription.addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
-    search.addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
     glcontrol.appendTo($(container));
-    grid.attr("Id", "gridContainer").addClass("accountselectiongrid").appendTo($(container));
+
+    $('<div>').attr("Id", "gridContainer").addClass("accountselectiongrid").appendTo($(container));
 
 }
 
-function LoadGLAccounts(ledgerId,fiscalYearId) {
+function LoadGLAccounts(container, ledgerId, fiscalYearId) {
    
     MakeServiceCall('GET', 'ledgers/' + ledgerId, null,
             
-                function (data) {
+        function (data) {
 
-                    var numberOfAccountGroups = data.Data.AccountGroupLevels
-                    var columns = "[";
-                    for(var i = 0; i<numberOfAccountGroups;i++)
-                    {
-                        columns = columns + '{ "dataField": "Level' + (i +1) + '", "caption": "", "groupIndex": "' + i +'" },'
-                    }
+            var numberOfAccountGroups = data.Data.AccountGroupLevels
+            var columns = "[";
+
+            for(var i = 0; i < numberOfAccountGroups; i++)
+            {
+                columns = columns + '{ "dataField": "Level' + (i +1) + '", "caption": "", "groupIndex": "' + i +'" },'
+            }
                    
-                    columns = columns +  '"AccountNumber", "Description"]';
+            columns = columns +  '"AccountNumber", "Description"]';
 
-                    MakeServiceCall('GET', 'accounts/fiscalyear/' +fiscalYearId, null,
+            MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
-                                function (data) {
-
-                                   
-                                    LoadGLAcountGrid(data.Data, columns);
-                                }
-
-                                , null)
-              
+                function (data) {
+                    LoadGLAcountGrid(container, data.Data, columns);
                 }
-                , null
+
+                , null)
+              
+        }
+        , null
     )
 }
 
-function LoadGLAcountGrid(data, columns)
+function LoadGLAcountGrid(container, data, columns)
 {
     //create grid
-    $("#gridContainer").dxDataGrid({
+    $(container).dxDataGrid({
+        columns: $.parseJSON(columns),
         dataSource: data,
         //cacheEnabled: true,
         scrolling: {
@@ -121,21 +116,19 @@ function LoadGLAcountGrid(data, columns)
         grouping: {
             autoExpandAll: false,
         },
-        
-        columns: $.parseJSON(columns),
-         selection: {
-            mode: 'single' // 'multiple'
-         },
-         onSelectionChanged: function (selectedItems) {
-             var data = selectedItems.selectedRowsData[0];
-             if (data) {
-                 $(".accountnumber").val(data.AccountNumber);
-                 $(".hidaccountid").val(data.Id);
-                 $(".accountdescription").text(data.Description)
-                 $(".accountnumber").focus();
-                 $("#gridContainer").hide();
-             }
-         }
+        selection: {
+           mode: 'single' // 'multiple'
+        },
+        onSelectionChanged: function (selectedItems) {
+            var data = selectedItems.selectedRowsData[0];
+            if (data) {
+                $(".accountnumber").val(data.AccountNumber);
+                $(".hidaccountid").val(data.Id);
+                $(".accountdescription").text(data.Description)
+                $(".accountnumber").focus();
+                $(container).hide();
+            }
+        }
        
     });
 
