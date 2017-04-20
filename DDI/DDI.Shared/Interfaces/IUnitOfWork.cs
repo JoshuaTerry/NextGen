@@ -9,6 +9,8 @@ namespace DDI.Shared
     {
         #region Public Methods
 
+        bool AuditingEnabled { get; set; }
+
         IRepository<T> GetRepository<T>() where T : class;
 
         IRepository<T> GetCachedRepository<T>() where T : class;

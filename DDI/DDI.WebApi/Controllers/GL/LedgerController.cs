@@ -10,7 +10,7 @@ using System.Web.Routing;
 namespace DDI.WebApi.Controllers.GL
 {
     
-    [Authorize]
+    //[Authorize]
     public class LedgerController : GeneralLedgerController<Ledger>
     {
         protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
@@ -30,11 +30,25 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/ledgers/businessunit/{id}", Name = RouteNames.Ledger)]
-        public IHttpActionResult GetByBusinessUnit (Guid id, string fields = null)
+        [Route("api/v1/ledgers/businessunit/{buid}")]
+        public IHttpActionResult GetByBusinessUnit(Guid buid)
         {
-            var response = Service.GetAllWhereExpression(l => l.BusinessUnitId == id);
-            return Ok(response);
+            try
+            {
+                var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid);
+
+                if(result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+
+            } catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPost]

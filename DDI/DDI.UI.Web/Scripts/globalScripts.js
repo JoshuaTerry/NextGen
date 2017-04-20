@@ -1290,7 +1290,7 @@ function RemoveValidation(formClassName) {
 
 function BusinessUnitModal() {
 
-    // DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
+    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
     // Uncomment this to use currentBusinessUnit
     // Add the guid of the user you want to use
 
@@ -1408,5 +1408,35 @@ function RemoveValidation(formClassName) {
 //
 // END FORM VALIDATION
 
+// DYNAMIC MARKUP
+//
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+
+    var fieldblock = $('<div>').addClass('fieldblock');
+    $('<label>').text(labelText).appendTo(fieldblock);
+    $(controlType).addClass(controlClass).appendTo(fieldblock);
+    $(fieldblock).appendTo(appendContainer);
+
+}
+
+function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancelFunction, appendContainer) {
+
+    var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
+
+    if (saveFunction) {
+
+        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
+
+    }
+    
+    if (cancelFunction) {
+
+        $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
+
+    }
+
+}
+//
+// END DYNAMIC MARKUP
 
 

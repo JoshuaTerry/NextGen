@@ -7,7 +7,7 @@ namespace DDI.Shared.Models
     /// <summary>
     /// Base class for entities like notes or custom data that can be linked to many other entity types.
     /// </summary>
-    public abstract class LinkedEntityBase : AuditableEntityBase
+    public abstract class LinkedEntityBase : AuditableEntityBase, ILinkedEntityBase
     {
 
         #region Properties
