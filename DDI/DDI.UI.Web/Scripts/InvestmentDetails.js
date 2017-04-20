@@ -95,6 +95,8 @@ function DisplayInvestmentData() {
 
         LoadInterestSection();
 
+        LoadIRSInformationSection();
+
         FormatFields();
 
     }
@@ -139,7 +141,7 @@ function LoadInterestSection() {
     ];
 
     LoadGrid('.interestpaymentgridcontainer', 'interestpaymentgrid', columns, 'interestpayouts/investment/' + id, 'interestpayouts/investment/' + id, null, '',
-        '.interestpaymentmodal', '.interestpaymentmodal', 250, true, false, false, null);
+        '.interestpaymentmodal', '.interestpaymentmodal', 450, true, false, false, null);
 }
 
 function GetInterestPaymentMethod(method) {
@@ -152,9 +154,12 @@ function GetInterestPaymentMethod(method) {
             methodDesc = "ACH";
             break;
         case 2:
-            methodDesc = "Investment Deposit";
+            methodDesc = "Check";
             break;
         case 3:
+            methodDesc = "Investment Deposit";
+            break;
+        case 4:
             methodDesc = "Wire";
             break;
     }
@@ -164,7 +169,18 @@ function GetInterestPaymentMethod(method) {
 
 function LoadIRSInformationSection() {
 
+    var id = currentEntity.Id;
 
+    var columns = [
+    { dataField: 'Id', width: '0px', },
+    { dataField: 'Year', caption: 'Priority', sortOrder: 'asc', sortIndex: 0, alignment: 'left' },
+    { dataField: 'InterestPaid', caption: 'Interest Paid', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'InterestWithheld', caption: 'Interest Withheld', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'PenaltyCharged', caption: 'Penalty Charged', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    ];
+
+    LoadGrid('.interestIRSgridcontainer', 'interestIRSgrid', columns, 'IRSInformations/investment/' + id, 'IRSInformations/investment/' + id, null, '',
+        '', '', 0, false, false, false, null);
 
 }
 

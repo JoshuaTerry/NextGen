@@ -376,58 +376,67 @@
 
         <div class="modalcontent">
 
-            <input type="hidden" class="interest-Id" />
+            <input type="hidden" class="interestPayout-Id" />
             <input type="hidden" class="hidconstituentlookupid" />
 
-            <div class="fieldblock fourcolumn">
-                <label>Priority</label>
-                <input type="number" class="interest-Priority" />
+            <div class="twocolumn">
+                <div>
+                    <label>Priority</label>
+                    <input type="number" class="Priority" />
+                </div>
 
-                <label>Method</label>
-                <select class="interest-Category">
-                    <option value=""></option>
-                    <option value="ACH">ACH</option>
-                    <option value="Check">Check</option>
-                    <option value="Compound">Compound</option>
-                    <option value="Donation">Donation</option>
-                    <option value="Investment Deposit">Investment Deposit</option>
-                    <option value="Wire">Wire</option>
-                </select>
+                <div>
+                    <label>Method</label>
+                    <select class="interest-Category">
+                        <option value="0">Compound</option>
+                        <option value="1">ACH</option>
+                        <option value="2">Check</option>
+                        <option value="3">Investment Deposit</option>
+                        <option value="4">Wire</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="fieldblock fourcolumn">
-                <input type="radio" name="gender" value="Percent"/>Percent<br />
-                <input type="radio" name="gender" value="Amount"/>Amount
-                <input type="number" class="interest-AmtPct" />
+            <div class="fieldblock twocolumn">
+                <div>
+                    <input type="radio" name="gender" value="Percent"/>Percent<br />
+                    <input type="radio" name="gender" value="Amount"/>Amount
+                </div>
+                <div>
+                    <input type="number" class="interest-AmtPct" />
+                </div>
             </div>
 
-            <div class="fieldblock">
+            <div class="interestOptionACHWire twocolumn">
+                <div>
+                <label>Payment Preference:</label>
+                    <select class="interest-PaymentPreference">
+                        <option value=""></option>
+                        <option value="Default">Default</option>
+                    </select>
+                </div>
+            </div>
+
+<%--            <div class="twocolumn">
                 <label></label>
                 <input type="text" class="rs-FormattedName2 constituentlookup" />
             </div>
-
-            <div class="fieldblock interestOptionACHWire fourcolumn">
-                <label>Payment Preference:</label>
-                <select class="interest-PaymentPreference">
-                    <option value=""></option>
-                    <option value="Default">Default</option>
-                </select>
-            </div>
-
-            <div class="fieldblock interestOptionCheck fourcolumn">
-                <label>Id:</label>
-                <input type="text" class="interest-CheckId" />
-                <label>Name:</label>
-                <input type="text" class="interest-CheckName" />
+--%>
+            <div class="fieldblock interestOptionCheck twocolumn">
+                <div>
+                    <label>Id:</label>
+                    <input type="text" class="interest-CheckId" />
+                </div>
+                <div>
+                    <label>Name:</label>
+                    <input type="text" class="interest-CheckName" />
+                </div>
             </div>
 
             <div class="fieldblock interestOptionDonation">
                 <fieldset>
                     <legend>Dontation Template</legend>
                 </fieldset>            
-            </div>
-
-            <div class="fieldblock interestOptionCompound">
             </div>
 
         </div>
