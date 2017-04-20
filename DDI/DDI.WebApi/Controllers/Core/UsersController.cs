@@ -119,6 +119,28 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
+        [Route("api/v1/userbyname/{username}/")]
+        public IHttpActionResult GetByName(string username)
+        {
+            try
+            {
+                userService = new UserService();
+                var user = Service.GetWhereExpression(u => u.UserName == username);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
         [Route("api/v1/users/{id}/default/businessunit")]
         public IHttpActionResult GetDefaultBusinessUnitByUserId(Guid id)
         {

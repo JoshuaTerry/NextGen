@@ -310,6 +310,9 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Code\ApiRoleProvider.cs" />
+    <Compile Include="Code\ApiUserProvider.cs" />
+    <Compile Include="Code\CustomSiteMapProvider.cs" />
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -597,6 +600,10 @@
     <Folder Include="Pages\MM\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
       <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
       <Name>DDI.Logger</Name>
@@ -617,7 +624,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:12345/</IISUrl>
+          <IISUrl>http://localhost:9281/</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
           <IISAppRootUrl>http://localhost:12345/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

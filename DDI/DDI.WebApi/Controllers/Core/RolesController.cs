@@ -1,4 +1,4 @@
-﻿using DDI.Shared;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity;
@@ -65,6 +65,7 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
         }
+
         [HttpGet]
         [Route("api/v1/roles/{roleId}/users")]
         public async Task<IHttpActionResult> GetUsersInRole(Guid roleId)
@@ -87,7 +88,92 @@ namespace DDI.WebApi.Controllers.General
             }
 
         }
-         
+
+        [HttpGet]
+        [Route("api/v1/roles/user/{username}")]
+        public async Task<IHttpActionResult> GetRolesByUserName(string username)
+        {
+            try
+            {
+                IList<string> roles;
+                var user = await UserManager.FindByNameAsync(username);
+                
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                roles = await UserManager.GetRolesAsync(user.Id);
+                return Ok(roles);
+            }
+            catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpPatch]
+        [Route("api/v1/roles/{id}/update")]
+        public async Task<IHttpActionResult> Update(Guid id, string newRoleName)
+        {
+            var roleToUpdate = RoleManager.FindByIdAsync(id).Result;
+            if (roleToUpdate == null)
+            {
+                ModelState.AddModelError("", $"Role not found.");
+                return BadRequest(ModelState);
+            }
+
+            if (string.IsNullOrWhiteSpace(newRoleName))
+            {
+                ModelState.AddModelError("", $"You must supply a new name for role {roleToUpdate.Name}");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                roleToUpdate.Name = newRoleName;
+                await RoleManager.UpdateAsync(roleToUpdate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [Route("api/v1/roles/remove")]
+        public async Task<IHttpActionResult> Delete([FromBody] RolesBindingModel model)
+        {
+            if (CanRolesBeRemoved(model.Roles) != null)
+            {
+                ModelState.AddModelError("", CanRolesBeRemoved(model.Roles));
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                foreach (var role in model.Roles)
+                {
+                    var roleToDelete = RoleManager.FindByNameAsync(role).Result;
+                    if (roleToDelete != null)
+                    {
+                        await RoleManager.DeleteAsync(roleToDelete);
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+
         private string CanRolesBeAdded(string[] roles)
         {
             return roles.Where(role => RoleManager.RoleExists(role)).Aggregate<string, string>(null, (current, role) => current + $"Role {role} has already been created.\n");
