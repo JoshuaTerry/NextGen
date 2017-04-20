@@ -21,6 +21,7 @@ using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data
 {
+    [DbConfigurationType(typeof(CustomDbConfiguration))]
     public class DomainContext : DbContext
     {
         private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";

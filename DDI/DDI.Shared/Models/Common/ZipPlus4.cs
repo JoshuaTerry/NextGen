@@ -46,5 +46,8 @@ namespace DDI.Shared.Models.Common
         // Navigation Properties
 
         public ZipStreet ZipStreet { get; set; }
+
+        public override string DisplayName => Plus4;
+
     }
 }
