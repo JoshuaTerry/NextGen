@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Conversion</RootNamespace>
     <AssemblyName>DDI.Conversion</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,6 +55,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -67,7 +71,10 @@
   <ItemGroup>
     <Compile Include="ConversionBase.cs" />
     <Compile Include="ConversionMethodArgs.cs" />
+    <Compile Include="Core\EntityNumberConverter.cs" />
     <Compile Include="Core\Initialize.cs" />
+    <Compile Include="Core\ApprovalConverter.cs" />
+    <Compile Include="Core\TransactionConverter.cs" />
     <Compile Include="Core\NoteConverter.cs" />
     <Compile Include="Core\SettingsLoader.cs" />
     <Compile Include="CP\PaymentMethodConverter.cs" />
@@ -78,7 +85,8 @@
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
     <Compile Include="CRM\SettingsLoader.cs" />
-    <Compile Include="GL\TransactionConverter.cs" />
+    <Compile Include="GL\JournalConverter.cs" />
+    <Compile Include="GL\PostedTransactionConverter.cs" />
     <Compile Include="GL\GLConversionBase.cs" />
     <Compile Include="GL\FundConverter.cs" />
     <Compile Include="GL\AccountConverter.cs" />

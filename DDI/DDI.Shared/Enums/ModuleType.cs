@@ -11,7 +11,7 @@
         CashProcessing = 6,
         CashDisbursements = 7,
         CashReceipting = 8,
-        Gifts = 9,
+        Donations = 9,
         NamedFunds = 10,
         CropEvents = 11,
         PlannedGiving = 12,

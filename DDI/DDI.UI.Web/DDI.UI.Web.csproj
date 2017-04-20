@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.UI.Web</RootNamespace>
     <AssemblyName>DDI.UI.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,8 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
       <Private>True</Private>
@@ -66,16 +69,14 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CSS\autocomplete.css" />
@@ -127,6 +128,7 @@
     <Content Include="CSS\icons\dxiconsios.ttf" />
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
+    <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <None Include="Web.Debug.config">
@@ -309,6 +311,9 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Code\ApiRoleProvider.cs" />
+    <Compile Include="Code\ApiUserProvider.cs" />
+    <Compile Include="Code\CustomSiteMapProvider.cs" />
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -586,6 +591,7 @@
     <Compile Include="RegistrationConfirmation.aspx.designer.cs">
       <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -593,6 +599,16 @@
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -609,7 +625,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:12345/</IISUrl>
+          <IISUrl>http://localhost:9281/</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
           <IISAppRootUrl>http://localhost:12345/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
