@@ -9,7 +9,6 @@
         public const string AddressType = "AddressType";
         public const string AlternateId = "AlternateId";
         public const string Audit = "Audit";
-        public const string AutomatedTransaction = "Automated Transaction";
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
         public const string Card = "Card";
@@ -40,10 +39,11 @@
         public const string Ethnicity = "Ethnicity";
         public const string Gender = "Gender";
         public const string IncomeLevel = "IncomeLevel";
-        public const string InterestPayout = "InterestPayout";
+        public const string InvestmentInterestPayout = "InvestmentInterestPayout";
         public const string Investment = "Investment";
+        public const string InvestmentAutomatedTransaction = "InvestmentAutomatedTransaction";
         public const string InvestmentRelationship = "InvestmentRelationship";
-        public const string IRSInformation = "IRSInformation";
+        public const string InvestmentIRSInformation = "InvestmentIRSInformation";
         public const string Language = "Language";
         public const string Ledger = "Ledger";
         public const string Level = "Level";

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace DDI.Shared.Enums.INV
 {
-    public enum AutomatedTransactionMethod
+    public enum InvestmentAutomatedTransactionMethod
     {
         [Description("Deposit")]
         Deposit = 0,

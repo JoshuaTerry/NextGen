@@ -54,10 +54,12 @@ namespace DDI.Shared.Models.Client.INV
 
         public InvestmentType RenewalInvestmentType { get; set; }
 
+        //may be able to be calculated as opposed to being stored on the model
         public DateTime? LastMaturityDate { get; set; }
 
         public DateTime? MaturityResponseDate { get; set; }
 
+        //may be able to be calculated as opposed to being stored on the model
         public int NumberOfRenewals { get; set; }
 
         [Column(TypeName = "date")]
@@ -65,8 +67,9 @@ namespace DDI.Shared.Models.Client.INV
 
         public IssuanceMethod IssuanceMethod { get; set; }
 
+        //may be able to be calculated as opposed to being stored on the model
         public decimal OriginalPurchaseAmount { get; set; }
-
+        
         public decimal Rate { get; set; }
 
         public bool StepUpEligible { get; set; }
@@ -81,7 +84,7 @@ namespace DDI.Shared.Models.Client.INV
 
         public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
 
-        public ICollection<InterestPayout> InterestPayout { get; set; }
+        public ICollection<InvestmentInterestPayout> InvestmentInterestPayout { get; set; }
 
         #endregion
 

@@ -19,14 +19,6 @@ namespace DDI.WebApi.Controllers.INV
         InvestmentService _invService = new InvestmentService();
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
-        //protected override Expression<Func<Investment, object>>[] GetDataIncludesForList()
-        //{
-        //    return new Expression<Func<Investment, object>>[]
-        //    {
-        //        e => e.Constituent,
-        //        e => e.DisplayName
-        //    };
-        //}
 
         [HttpGet]
         [Route("api/v1/investments", Name = RouteNames.Investment)]
@@ -44,8 +36,6 @@ namespace DDI.WebApi.Controllers.INV
 
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
                 var response = _invService.GetInvestmentById(id);
                 return Ok(response);
             }
@@ -56,30 +46,30 @@ namespace DDI.WebApi.Controllers.INV
             }
         }
 
-        
-        //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
-        //[HttpPost]
-        //[Route("api/v1/investments", Name = RouteNames.Investment + RouteVerbs.Post)]
-        //public IHttpActionResult Post([FromBody] Investment entityToSave)
-        //{
-        //    return base.Post(entityToSave);
-        //}
 
-        //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
-        //[HttpPatch]
-        //[Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Patch)]
-        //public IHttpActionResult Patch(Guid id, JObject entityChanges)
-        //{
-        //    return base.Patch(id, entityChanges);
-        //}
+        [Authorize] //(Roles = Permissions.INV_ReadWrite)]
+        [HttpPost]
+        [Route("api/v1/investments", Name = RouteNames.Investment + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] Investment entityToSave)
+        {
+            return base.Post(entityToSave);
+        }
 
-        //[Authorize] //(Roles = Permissions.INV_ReadWrite)]
-        //[HttpDelete]
-        //[Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Delete)]
-        //public override IHttpActionResult Delete(Guid id)
-        //{
-        //    return base.Delete(id);
-        //}
+        [Authorize] //(Roles = Permissions.INV_ReadWrite)]
+        [HttpPatch]
+        [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        {
+            return base.Patch(id, entityChanges);
+        }
+
+        [Authorize] //(Roles = Permissions.INV_ReadWrite)]
+        [HttpDelete]
+        [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Delete)]
+        public override IHttpActionResult Delete(Guid id)
+        {
+            return base.Delete(id);
+        }
 
     }
 }

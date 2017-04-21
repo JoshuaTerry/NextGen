@@ -4,6 +4,7 @@
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
+    <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -194,10 +195,115 @@
                         </div>
 
                         <h1>Interest</h1>
-                        <div class="editcontainer"></div>
+                        <div class="editcontainer">
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Frequency:</label>
+                                </div>
+                                <div>
+                                    <select class="editable InterestFrequency">
+                                        <option value=""></option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Quarter">Quarter</option>
+                                        <option value="Semi-Annual">Semi-Annual</option>
+                                        <option value="Annual">Annual</option>
+                                        <option value="Maturity Only">Maturity Only</option>
+                                        <option value="None">None</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Rate:</label>
+                                </div>
+                                <div>
+                                    <input type="number" class="InterestRate editable" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Accrued Interest:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestAccrued readonly" readonly="read-only" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Last Interest Calculation Dt:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestLastCalcDate readonly"  readonly="read-only" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Paid YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestPaidYTD readonly"  readonly="read-only" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Interest Withheld YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestWithheldYTD readonly"  readonly="read-only" />
+                                </div>
+
+                            </div>
+
+                            <div class="threecolumn">
+
+                                <div class="fieldblock">
+                                    <label>Penalty Charged YTD:</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="InterestPenaltyYTD readonly"  readonly="read-only" />
+                                </div>
+
+                            </div>
+
+                            <div class="accordions">
+                            <h1>Interest Payment</h1>
+                                <div class="interestpaymentgridcontainer"></div>
+                            <h1>IRS Information</h1>
+                                <div class="interestIRSgridcontainer"></div>
+                            </div>
+
+                            <div>
+                                <div class="interestpaymenttable"></div>
+                            </div>
+                        </div>
 
                         <h1>Linked Accounts</h1>
-                        <div class="editcontainer"></div>
+                            <div class="editcontainer">
+                                <div class="accordions">
+
+                                <h1>Linked Account Detail<a href="#" title="New" class="newlinkedaccountsmodallink newbutton"></a></h1>
+                                <div class="linkedaccountsgridcontainer">
+                                    <div class="linkedaccountsgrid"></div>
+                                </div>
+                            </div>
+
+                        </div>
 
                         <h1>Maturity</h1>
                         <div class="editcontainer">
@@ -264,8 +370,8 @@
             </div>
 
         </div>
+    </div>
 
-  </div>
 
 
 <%--    Modal section     --%>
@@ -329,5 +435,127 @@
     </div>
 
 </div>
+
+    <div class="interestpaymentmodal" title="Interest Payment" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="interest-Id" />
+            <input type="hidden" class="hidconstituentlookupid" />
+
+            <div class="fieldblock fourcolumn">
+                <label>Priority</label>
+                <input type="number" class="interest-Priority" />
+
+                <label>Method</label>
+                <select class="interest-Category">
+                    <option value=""></option>
+                    <option value="ACH">ACH</option>
+                    <option value="Check">Check</option>
+                    <option value="Compound">Compound</option>
+                    <option value="Donation">Donation</option>
+                    <option value="Investment Deposit">Investment Deposit</option>
+                    <option value="Wire">Wire</option>
+                </select>
+            </div>
+
+            <div class="fieldblock fourcolumn">
+                <input type="radio" name="gender" value="Percent"/>Percent<br />
+                <input type="radio" name="gender" value="Amount"/>Amount
+                <input type="number" class="interest-AmtPct" />
+            </div>
+
+            <div class="fieldblock">
+                <label></label>
+                <input type="text" class="rs-FormattedName2 constituentlookup" />
+            </div>
+
+            <div class="fieldblock interestOptionACHWire fourcolumn">
+                <label>Payment Preference:</label>
+                <select class="interest-PaymentPreference">
+                    <option value=""></option>
+                    <option value="Default">Default</option>
+                </select>
+            </div>
+
+            <div class="fieldblock interestOptionCheck fourcolumn">
+                <label>Id:</label>
+                <input type="text" class="interest-CheckId" />
+                <label>Name:</label>
+                <input type="text" class="interest-CheckName" />
+            </div>
+
+            <div class="fieldblock interestOptionDonation">
+                <fieldset>
+                    <legend>Dontation Template</legend>
+                </fieldset>            
+            </div>
+
+            <div class="fieldblock interestOptionCompound">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="linkedaccountsmodal" title="Linked Accounts" style="display: none;">
+
+        <div class="modalcontent">
+
+            <input type="hidden" class="interest-Id" />
+            <input type="hidden" class="hidconstituentlookupid" />
+
+            <div class="twocolumn">
+                <div>
+                    <label>Type: </label>
+                    <select class="linkedAccountType">
+                        <option value="0">Loan Support</option>
+                        <option value="1">Pool</option>
+                        <option value="2">Down Payment</option>
+                        <option value="3">Grant</option>
+                    </select>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="twocolumn">
+                <div>
+                    <input type="checkbox" class="editable LinkedAccountsLoanInd" />
+                    <label>Loan</label>
+                </div>
+                <div>
+                    <label>Loan Number:</label>
+                    <input type="text" class="rs-LoanName loanlookup" />
+                </div>
+            </div>
+
+            <br />
+
+            <div class="interestOptionACHWire twocolumn">
+                <div>
+                    <input type="checkbox" class="editable LinkedAccountsLoanCollateral" />
+                    <label>Collateral on Loan</label>
+                </div>
+                <div class="loanCollateralOption">
+                    <fieldset>
+                        <span>
+                            <input type="radio" name="loancollateral" value="Percent"/>Percent
+                            <input type="radio" name="loancollateral" value="Amount"/>Amount
+                        </span>
+                    </fieldset>            
+                </div>
+            </div>
+
+            <br />
+
+            <div class="interestBlockLinkedInvestments">
+                <input type="checkbox" class="editable LoanBlockLinkedInvestments" />
+                <label>Block Investments from linking to other loans:</label>
+            </div>
+
+        </div>
+
+    </div>
 
 </asp:Content>

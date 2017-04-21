@@ -1,10 +1,10 @@
-﻿
-namespace DDI.Shared.Enums.CRM
+﻿namespace DDI.Shared.Enums.INV
 {
-    public enum ConstituentBaseStatus
+    public enum InvestmentRelationshipType
     {
-        Active = 0,
-        Inactive = 1,
-        Blocked = 2
+        Primary = 0,
+        Joint = 1,
+        Beneficiary = 2
     }
 }
+
