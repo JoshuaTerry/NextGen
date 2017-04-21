@@ -23,6 +23,7 @@ namespace DDI.Business.Core
 
         IRepository<Transaction> _transactionRepo = null;
         AccountLogic _accountLogic = null;
+        const string TRANSACTION_HAS_NO_FISCAL_YEAR = "Transaction has no fiscal year defined.";
 
         #endregion
 
@@ -61,26 +62,54 @@ namespace DDI.Business.Core
         /// </summary>
         public void SetDebitAccount(Transaction transaction, Account acct)
         {
-            // transaction.DebitAccount = acct?.GetBaseLedgerAccountYear();
+            transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(acct);
+        }
+
+        /// <summary>
+        /// Set the credit G/L account to a specific Account.
+        /// </summary>
+        public void SetCreditAccount(Transaction transaction, Account acct)
+        {
+            transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(acct);
         }
 
         /// <summary>
         /// Set the debit G/L account to a LedgerAccount using the transaction's fiscal year.
         /// </summary>
-        public void SetDebitAccount(LedgerAccount acct)
+        public void SetDebitAccount(Transaction transaction, LedgerAccount account)
         {
-            /*
-            if (this.FiscalYear == null)
-                throw new InvalidOperationException("Fiscal year is null.");
-            if (acct == null)
-                DebitAccount = null;
+            if (account == null)
+            {
+                transaction.DebitAccount = null;
+            }
             else
-                DebitAccount =
-                    acct.AccountYears.FirstOrDefault(p => p.FiscalYear == this.FiscalYear && p.IsMerge == false) ??
-                    acct.AccountYears.FirstOrDefault(p => p.FiscalYear == this.FiscalYear);
-                    */
+            {
+                if (transaction.FiscalYearId == null)
+                {
+                    throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
+                }
+                transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+            }
         }
 
+        /// <summary>
+        /// Set the debit G/L account to a LedgerAccount using the transaction's fiscal year.
+        /// </summary>
+        public void SetCreditAccount(Transaction transaction, LedgerAccount account)
+        {
+            if (account == null)
+            {
+                transaction.CreditAccount = null;
+            }
+            else
+            {
+                if (transaction.FiscalYearId == null)
+                {
+                    throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
+                }
+                transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+            }
+        }
 
         /// <summary>
         /// Exchange the debit and credit G/L account values.
