@@ -53,6 +53,7 @@ namespace DDI.Conversion
             //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
             //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
+            //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.ConstituentEntityNumber)); 
 
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Individuals));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Organizations));
@@ -98,15 +99,6 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
-
-
-            using (var uow = new UnitOfWorkEF())
-            {
-                var bl = uow.GetBusinessLogic<EntityNumberLogic>();
-                int nextNumber = bl.GetNextEntityNumber(EntityNumberType.Constituent);
-                Console.WriteLine(nextNumber);
-                Console.ReadLine();
-            }
 
         }
 

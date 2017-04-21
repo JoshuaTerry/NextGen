@@ -37,58 +37,56 @@ namespace DDI.Business.Core
         /// <summary>
         /// Get the next entity number.
         /// </summary>
-        public int GetNextEntityNumber(EntityNumberType type)
+        public int GetNextEntityNumber(EntityNumberType type, Guid? rangeId = null)
         {
-            return GetSetNextEntityNumber(type, EntityNumberMode.Get, 0, null, null);
+            return GetSetNextEntityNumber(type, EntityNumberMode.Get, 0, rangeId);
         }
 
         /// <summary>
-        /// Get the next entity number, specific to a business unit.
+        /// Get the next entity number.
         /// </summary>
-        public int GetNextEntityNumber(EntityNumberType type, BusinessUnit unit)
+        public int GetNextEntityNumber(EntityNumberType type, IEntity entity)
         {
-            return GetSetNextEntityNumber(type, EntityNumberMode.Get, 0, unit.Id, null);
+            return GetSetNextEntityNumber(type, EntityNumberMode.Get, 0, entity?.Id);
         }
 
         /// <summary>
-        /// Get the next entity number, specific to a fiscal year.
+        /// Set the next entity number.
         /// </summary>
-        public int GetNextEntityNumber(EntityNumberType type, FiscalYear year)
+        public void SetNextEntityNumber(EntityNumberType type, int nextNumber, Guid? rangeId = null)
         {
-            return GetSetNextEntityNumber(type, EntityNumberMode.Get, 0, null, year.Id);
-        }
-        
-        public void SetNextEntityNumber(EntityNumberType type, int nextNumber)
-        {
-            GetSetNextEntityNumber(type, EntityNumberMode.Set, nextNumber, null, null);
+            GetSetNextEntityNumber(type, EntityNumberMode.Set, nextNumber, rangeId);
         }
 
-        public void SetNextEntityNumber(EntityNumberType type, int nextNumber, BusinessUnit unit)
+        /// <summary>
+        /// Set the next entity number.
+        /// </summary>
+        public void SetNextEntityNumber(EntityNumberType type, int nextNumber, IEntity entity)
         {
-            GetSetNextEntityNumber(type, EntityNumberMode.Set, nextNumber, unit.Id, null);
+            GetSetNextEntityNumber(type, EntityNumberMode.Set, nextNumber, entity?.Id);
         }
 
-        public void SetNextEntityNumber(EntityNumberType type, int nextNumber, FiscalYear year)
+        /// <summary>
+        /// Allow a discarded entity number to be reused.
+        /// </summary>
+        public void ReturnEntityNumber(EntityNumberType type, int number,  Guid? rangeId = null)
         {
-            GetSetNextEntityNumber(type, EntityNumberMode.Set, nextNumber, null, year.Id);
+            GetSetNextEntityNumber(type, EntityNumberMode.Return, number, rangeId);
         }
 
-        public void ReturnEntityNumber(EntityNumberType type, int number)
+        /// <summary>
+        /// Allow a discarded entity number to be reused.
+        /// </summary>
+        public void ReturnEntityNumber(EntityNumberType type, int number, IEntity entity)
         {
-            GetSetNextEntityNumber(type, EntityNumberMode.Return, number, null, null);
+            GetSetNextEntityNumber(type, EntityNumberMode.Return, number, entity?.Id);
         }
 
-        public void ReturnEntityNumber(EntityNumberType type, int number, BusinessUnit unit)
-        {
-            GetSetNextEntityNumber(type, EntityNumberMode.Return, number, unit.Id, null);
-        }
+        #endregion
 
-        public void ReturnEntityNumber(EntityNumberType type, int number, FiscalYear year)
-        {
-            GetSetNextEntityNumber(type, EntityNumberMode.Return, number, null, year.Id);
-        }
+        #region Private Methods
 
-        private int GetSetNextEntityNumber(EntityNumberType type, EntityNumberMode mode, int numberArgument, Guid? businessUnitId, Guid? fiscalYearId)
+        private int GetSetNextEntityNumber(EntityNumberType type, EntityNumberMode mode, int numberArgument, Guid? rangeId)
         {
             bool retry;
             int resultNumber = 0;
@@ -102,18 +100,13 @@ namespace DDI.Business.Core
                     UnitOfWork.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
                     EntityNumber entityNumber;
                     
-                    if (fiscalYearId.HasValue)
+                    if (rangeId.HasValue)
                     {
-                        businessUnitId = null;
-                        entityNumber = UnitOfWork.FirstOrDefault<EntityNumber>(p => p.EntityNumberType == type && p.FiscalYearId == fiscalYearId);
-                    }
-                    else if (businessUnitId.HasValue)
-                    {
-                        entityNumber = UnitOfWork.FirstOrDefault<EntityNumber>(p => p.EntityNumberType == type && p.BusinessUnitId == businessUnitId);
+                        entityNumber = UnitOfWork.FirstOrDefault<EntityNumber>(p => p.EntityNumberType == type && p.RangeId == rangeId);
                     }
                     else
                     {
-                        entityNumber = UnitOfWork.FirstOrDefault<EntityNumber>(p => p.EntityNumberType == type && p.BusinessUnitId == null && p.FiscalYearId == null);
+                        entityNumber = UnitOfWork.FirstOrDefault<EntityNumber>(p => p.EntityNumberType == type && p.RangeId == null);
                     }
 
                     if (entityNumber == null)
@@ -121,8 +114,7 @@ namespace DDI.Business.Core
                         entityNumber = new EntityNumber()
                         {
                             EntityNumberType = type,
-                            BusinessUnitId = businessUnitId,
-                            FiscalYearId = fiscalYearId,
+                            RangeId = rangeId,
                             NextNumber = 1,
                             PreviousNumber = 0
                         };
@@ -164,12 +156,6 @@ namespace DDI.Business.Core
 
             return resultNumber;
         }
-
-
-        #endregion
-
-        #region Private Methods
-
 
 
         #endregion
