@@ -276,32 +276,49 @@
             
         <div class="fieldblock">
             <label>Method:</label>
-            <select class="at-method"></select>
+            <select class="at-method">
+
+                <option value="0">Deposit</option>
+                <option value="1">Withdrawal</option>
+                <option value="2">Transfer</option>
+
+            </select>
+                
             <!-- Dropdown with deposit/withdrawal/transfer-->
         </div>
 
         <div class="twocolumn">
 
             <div class="fieldblock">
-                <label>Payment Method</label>
+                <label>Preferred Payment Method</label>
+                <select class="at-Info" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Preferred Payment Method</label>
                 <select class="at-Info" />
             </div>
         <!-- will be the same as constituent paymet prefs-->
 
-            <div class="modalbuttons">
+<%--            <div class="fieldblock">
+                <label></label>
                 <input type="button" class="newpaymentmethod" value="New Payment Method" />
+            </div>--%>
+
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Is Active:</label>
+                <input type="checkbox"  class="at-IsPreferred" />
             </div>
 
-        </div>
+            <div class="fieldblock">
+                <label>Comment:</label>
+                <input type="text"  class="at-Comment" />
+            </div>
 
-        <div class="fieldblock">
-            <label>Is Preferred:</label>
-            <input type="checkbox"  class="at-IsPreferred" />
-        </div>
-
-        <div class="fieldblock">
-            <label>Comment:</label>
-            <input type="text"  class="at-Comment" />
         </div>
 
         <div class="modalbuttons">
