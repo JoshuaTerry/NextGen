@@ -2,14 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script src="../../../Scripts/glaccountselection.js"></script>
-
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <select class="as-fiscalyear"></select>
-
-    <div class="as-accounts"></div>
+    <p>Account Selector Goes Here</p>
 
 </asp:Content>
