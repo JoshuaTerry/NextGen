@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+//this may be a more global concept. this definitely needs discussion. 
+//this model is here to help provide fake data to the investment detail 
+//screen before investments are fully fleshed out
 namespace DDI.Shared.Models.Client.INV
 {
     [Table("LinkedAccount")]

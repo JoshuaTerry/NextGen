@@ -1,3 +1,5 @@
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
@@ -9,8 +11,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.INV
 {
-    [Table("IRSInformation")]
-    public class IRSInformation : AuditableEntityBase, IEntity
+    [Table("InvestmentAutomatedTransaction")]
+    public class InvestmentAutomatedTransaction : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]
@@ -22,14 +24,21 @@ namespace DDI.Shared.Models.Client.INV
 
         public Guid? InvestmentId { get; set; }
 
-        public int Year { get; set; }
+        public InvestmentAutomatedTransactionMethod InvestmentAutomatedTransactionMethod { get; set; }
 
-        public decimal InterestPaid { get; set; }
-
-        public decimal InterestWithheld { get; set; }
-
-        public decimal PenaltyCharged { get; set; }
+        public DateTime NextTransactionDate { get; set; }
         
+        public RecurringType RecurringType { get; set; }
+
+        public decimal Amount { get; set; }
+
+        [ForeignKey("PaymentMedthodId")]
+        public PaymentMethod PaymentMethod { get; set; }
+
+        public Guid? PaymentMethodId { get; set; }
+
+        public bool IsActive { get; set; }
+
         #endregion
         #region Navigation Properties
 

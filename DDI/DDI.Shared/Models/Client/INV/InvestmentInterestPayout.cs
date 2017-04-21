@@ -9,8 +9,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.INV
 {
-    [Table("InterestPayout")]
-    public class InterestPayout : AuditableEntityBase, IEntity
+    [Table("InvestmentInterestPayout")]
+    public class InvestmentInterestPayout : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]

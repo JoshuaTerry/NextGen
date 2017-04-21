@@ -11,17 +11,14 @@ namespace DDI.Shared.Enums.INV
         [Description("Redeem Investment via Check")]
         Check = 1,
 
-        [Description("Redeem Investment via EFT to Checking")]
-        EFTChecking = 2,
-
-        [Description("Redeem Investment via EFT to Savings")]
-        EFTSavings = 3,
+        [Description("Redeem Investment via EFT")]
+        EFT = 2,
 
         [Description("Redeem Investment into Same Investment Type")]
-        SameType = 4,
+        SameType = 3,
 
         [Description("Redeem Investment into Other Investment Type")]
-        OtherType = 5
+        OtherType = 4
 
     }
 

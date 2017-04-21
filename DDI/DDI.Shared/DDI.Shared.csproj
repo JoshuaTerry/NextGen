@@ -127,7 +127,7 @@
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
     <Compile Include="Enums\GL\TransactionXferCategory.cs" />
-    <Compile Include="Enums\INV\AutomatedTransactionMethod.cs" />
+    <Compile Include="Enums\INV\InvestmentAutomatedTransactionMethod.cs" />
     <Compile Include="Enums\INV\CollateralType.cs" />
     <Compile Include="Enums\INV\LinkedAccountType.cs" />
     <Compile Include="Enums\INV\MaturityMethod.cs" />
@@ -190,10 +190,10 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
-    <Compile Include="Models\Client\INV\AutomatedTransaction.cs" />
+    <Compile Include="Models\Client\INV\InvestmentAutomatedTransaction.cs" />
     <Compile Include="Models\Client\INV\LinkedAccount.cs" />
-    <Compile Include="Models\Client\INV\IRSInformation.cs" />
-    <Compile Include="Models\Client\INV\InterestPayout.cs" />
+    <Compile Include="Models\Client\INV\InvestmentIRSInformation.cs" />
+    <Compile Include="Models\Client\INV\InvestmentInterestPayout.cs" />
     <Compile Include="Models\Client\INV\InvestmentType.cs" />
     <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
     <Compile Include="Models\Client\INV\InvestmentRelationship.cs" />
