@@ -292,6 +292,7 @@
     <Compile Include="Controllers\GL\LedgerController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
+    <Compile Include="Controllers\INV\AutomatedTransactionsController.cs" />
     <Compile Include="Controllers\INV\LinkedAccountController.cs" />
     <Compile Include="Controllers\INV\IRSInformationController.cs" />
     <Compile Include="Controllers\INV\InterestPayoutController.cs" />
