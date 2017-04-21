@@ -72,7 +72,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
 
     
     $(".accountselectionsearch").click(function () {
-        var grid = $('#gridContainer .dx-widget').length;
+        var grid = $('.gridContainer .dx-widget').length;
         if(grid == 0)
         {
             LoadGLAccounts('#gridContainer', ledgerId, fiscalYearId);
@@ -103,7 +103,7 @@ function CreateGLAccountSelector(container)
 
     glcontrol.appendTo($(container));
 
-    $('<div>').attr("Id", "gridContainer").addClass("accountselectiongrid").appendTo($(container));
+    $('<div>').addClass("gridContainer").addClass("accountselectiongrid").appendTo($(container));
 
 }
 
