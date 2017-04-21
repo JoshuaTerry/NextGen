@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.Common;
 using DDI.Business.Core;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.Shared.Enums;
 using DDI.Business.Tests.Core.DataSources;
+using DDI.Data;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.Core
 {

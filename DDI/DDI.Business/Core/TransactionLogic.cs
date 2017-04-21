@@ -1,18 +1,18 @@
-﻿using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Caching;
-using DDI.Shared.Enums;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using DDI.Shared.Enums.Core;
-using DDI.Shared.Models.Client.GL;
-using DDI.Data.Statics;
 using DDI.Business.GL;
+using DDI.Data;
+using DDI.Data.Statics;
+using DDI.Shared;
+using DDI.Shared.Caching;
+using DDI.Shared.Enums;
+using DDI.Shared.Enums.Core;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Business.Core
 {
@@ -23,7 +23,7 @@ namespace DDI.Business.Core
 
         IRepository<Transaction> _transactionRepo = null;
         AccountLogic _accountLogic = null;
-        const string TRANSACTION_HAS_NO_FISCAL_YEAR = "Transaction has no fiscal year defined.";
+        private const string TRANSACTION_HAS_NO_FISCAL_YEAR = "Transaction has no fiscal year defined.";
 
         #endregion
 
