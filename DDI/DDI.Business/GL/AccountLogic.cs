@@ -353,6 +353,26 @@ namespace DDI.Business.GL
         /// <summary>
         /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
         /// </summary>
+        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, Guid? yearId)
+        {
+            if (account == null || yearId == null)
+            {
+                return null;
+            }
+
+            if (account.LedgerAccountYears == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.LedgerAccountYears);
+            }
+
+            return account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId && p.IsMerge == false)
+                    ??
+                   account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId);
+        }
+
+        /// <summary>
+        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
+        /// </summary>
         public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, FiscalYear year)
         {
             return GetLedgerAccountYear(account, year?.Id);

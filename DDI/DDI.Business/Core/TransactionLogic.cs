@@ -63,6 +63,7 @@ namespace DDI.Business.Core
         public void SetDebitAccount(Transaction transaction, Account acct)
         {
             transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(acct);
+            transaction.DebitAccountId = transaction.DebitAccount?.Id;
         }
 
         /// <summary>
@@ -71,6 +72,7 @@ namespace DDI.Business.Core
         public void SetCreditAccount(Transaction transaction, Account acct)
         {
             transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(acct);
+            transaction.CreditAccountId = transaction.CreditAccount?.Id;
         }
 
         /// <summary>
@@ -81,6 +83,7 @@ namespace DDI.Business.Core
             if (account == null)
             {
                 transaction.DebitAccount = null;
+                transaction.DebitAccountId = null;
             }
             else
             {
@@ -89,6 +92,7 @@ namespace DDI.Business.Core
                     throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
                 }
                 transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+                transaction.DebitAccountId = transaction.DebitAccount?.Id;
             }
         }
 
@@ -100,6 +104,7 @@ namespace DDI.Business.Core
             if (account == null)
             {
                 transaction.CreditAccount = null;
+                transaction.CreditAccountId = null;
             }
             else
             {
@@ -108,6 +113,7 @@ namespace DDI.Business.Core
                     throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
                 }
                 transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+                transaction.CreditAccountId = transaction.CreditAccount?.Id;
             }
         }
 

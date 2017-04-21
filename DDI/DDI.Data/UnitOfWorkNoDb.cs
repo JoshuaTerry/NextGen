@@ -234,7 +234,7 @@ namespace DDI.Data
 
         public void Insert<T>(T entity) where T : class
         {
-            ((ICollection<T>)(GetRepository<T>().Entities)).Add(entity);
+            GetRepository<T>().Insert(entity);
         }
 
         public void Update<T>(T entity) where T : class
@@ -244,7 +244,7 @@ namespace DDI.Data
 
         public void Delete<T>(T entity) where T : class
         {
-            ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
+            GetRepository<T>().Delete(entity);
         }
 
         public void AddBusinessLogic(object logic)
