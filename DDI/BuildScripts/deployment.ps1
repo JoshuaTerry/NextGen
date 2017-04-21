@@ -141,6 +141,7 @@ function UpdateConfigFiles
 	    (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""SmtpHost"".*/>" , "<add key=""SmtpHost"" value=""$($Config.SmtpHost)"" />" } | Set-Content $file.FullName
 	    (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""WebRoot"".*/>" , "<add key=""WebRoot"" value=""$($Config.WebRoot)"" />" } | Set-Content $file.FullName
 	    (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""ElasticsearchURL"".*/>" , "<add key=""ElasticsearchURL"" value=""$($Config.ElasticsearchURL)"" />" } | Set-Content $file.FullName
+        (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add key=""ApiUrl"".*/>" , "<add key=""ApiUrl"" value=""$($Config.WEB_API_ADDRESS)"" />" }  | Set-Content $file.FullName
 
 	    (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add name=""CommonContext"".*/>" , "<add name=""CommonContext"" connectionString=""$($Config.CommonContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file.FullName
 	    (Get-Content $file.FullName) |  ForEach-Object { $_ -replace "<add name=""DomainContext"".*/>" , "<add name=""DomainContext"" connectionString=""$($Config.DomainContext)"" providerName=""System.Data.SqlClient"" />" } | Set-Content $file.FullName
