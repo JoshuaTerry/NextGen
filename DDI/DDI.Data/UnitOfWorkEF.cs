@@ -24,6 +24,7 @@ namespace DDI.Data
         private DbContext _commonContext;
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private Dictionary<Type, object> _cachedRepositories;
         private string _commonNamespace;
         private List<object> _businessLogic;
         private bool _isAuditStatusInitialized;
@@ -54,6 +55,7 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
+            _cachedRepositories = null;
             _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;
             _businessLogic = new List<object>();
             _isAuditStatusInitialized = false;
@@ -113,6 +115,14 @@ namespace DDI.Data
         public IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
         {
             return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
         }
 
         /// <summary>
@@ -253,25 +263,34 @@ namespace DDI.Data
             return repository;
         }
 
-        public IRepository<T> GetCachedRepository<T>() where T : class 
+        /// <summary>
+        /// Get a cached repository for an entity type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IRepository<T> GetCachedRepository<T>() where T : class
         {
             IRepository<T> repository = null;
 
             var type = typeof(T);
+            if (_cachedRepositories == null)
+            {
+                _cachedRepositories = new Dictionary<Type, object>();
+            }
 
-            if (!_repositories.ContainsKey(type))
+            if (!_cachedRepositories.ContainsKey(type))
             {
                 DbContext context = GetContext(type);
 
                 // Create a repository, then add it to the dictionary.
-                repository = new CachedRepository<T>(context);
+                repository = new CachedRepository<T>(GetRepository<T>());
 
-                _repositories.Add(type, repository);
+                _cachedRepositories.Add(type, repository);
             }
             else
             {
                 // Repository already exists...
-                repository = _repositories[type] as IRepository<T>;
+                repository = _cachedRepositories[type] as IRepository<T>;
             }
 
             return repository;
@@ -313,7 +332,7 @@ namespace DDI.Data
         {
             User user;
 
-            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser()) != null)
+            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
             {
                 return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);

@@ -212,3 +212,4 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 DDI/DDI.UI.Web/Scripts/configuration.js
+*.orig

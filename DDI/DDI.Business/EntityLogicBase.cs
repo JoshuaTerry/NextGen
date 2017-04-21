@@ -3,6 +3,8 @@ using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models;
 using System;
+using System.Linq;
+using DDI.Shared.Statics;
 
 namespace DDI.Business
 {
@@ -93,6 +95,36 @@ namespace DDI.Business
             if (typedEntity != null)
             {
                 UpdateSearchDocument(typedEntity);
+            }
+        }
+
+        /// <summary>
+        /// Validate a set of strings, ensuring they are non-blank and unique.
+        /// </summary>
+        /// <param name="numberOfStrings">If non-zero, validate only the first n strings.</param>
+        /// <param name="errorMessageParameter">Paramter to include in the error message (i.e. what the strings represent.)</param>
+        /// <param name="strings">List of strings to be validated.</param>
+        protected void ValidateNonBlankAndUnique(int numberOfStrings, string errorMessageParameter, params string[] strings)
+        {
+            if (strings.Length == 0)
+            {
+                return;
+            }
+
+            if (numberOfStrings == 0)
+            {
+                numberOfStrings = strings.Length;
+            }
+
+            var stringsToUpper = strings.Take(numberOfStrings).Select(p => p.ToUpper());
+
+            if (stringsToUpper.Any(p => string.IsNullOrWhiteSpace(p)))
+            {
+                throw new ValidationException(UserMessages.MustBeNonBlank, errorMessageParameter);
+            }
+            if (stringsToUpper.Distinct().Count() < numberOfStrings)
+            {
+                throw new ValidationException(UserMessages.MustBeUnique, errorMessageParameter);
             }
         }
         #endregion

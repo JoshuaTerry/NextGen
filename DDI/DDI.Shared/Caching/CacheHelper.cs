@@ -65,5 +65,20 @@ namespace DDI.Shared.Caching
             CacheProvider.RemoveEntry(key);
         }
 
+        /// <summary>
+        /// Remove all entries from the cache.  This is only supported for MemoryCacheProviders and not in an Web environment.
+        /// </summary>
+        public static void RemoveAllEntries()
+        {
+            if (CacheProvider is MemoryCacheProvider)
+            {
+                ((MemoryCacheProvider)CacheProvider).Clear();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
     }
 }

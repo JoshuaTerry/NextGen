@@ -12,6 +12,7 @@ using DDI.Shared;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.GL;
 using log4net;
 
 namespace DDI.Conversion
