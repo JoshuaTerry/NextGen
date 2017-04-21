@@ -139,7 +139,7 @@ function LoadIRSInformationSection() {
 function InitLinkedAccounts() {
 
     LoadLinkedAccountsGrid();
-    //NewLinkedAccountsModal();
+    NewLinkedAccountsModal();
 }
 
 function LoadLinkedAccountsGrid() {
@@ -252,7 +252,7 @@ function LoadLinkedAccounts(id) {
 
     MakeServiceCall('GET', 'linkedaccounts/' + id, null, function (data) {
 
-        $('.LinkedAccountType').val(data.Data.LinkedAccountType),
+        $('.linkedAccountType').val(data.Data.LinkedAccountType),
         $('.la-LoadInd').val(data.Data.LoanInd),
         $('.la-LoanNumber').val(data.Data.LoanNumber),
         $('.la-CollateralInd').val(data.Data.CollateralInd),
@@ -270,7 +270,7 @@ function GetLinkedAccountsToSave() {
 
     var rawitem = {
 
-        Type: $(modal).find('.al-Type').val(),
+        Type: $(modal).find('.linkedAccounts-Type').val(),
         LoadInd: $(modal).find('.al-LoadInd').val(),
         LoanNumber: $(modal).find('.al-LoanNumber').val(),
         CollateralInd: $(modal).find('.al-CollateralInd').val(),
