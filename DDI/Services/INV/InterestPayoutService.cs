@@ -75,6 +75,28 @@ namespace DDI.Services
         //    return GetById(constituent?.Id ?? Guid.Empty);
         //}
 
+        public IDataResponse<InterestPayout> GetInterestPayoutById(Guid Id)
+        {
+
+
+            InterestPayout intPayout = new InterestPayout();
+            intPayout.Constituent = new Constituent();
+            intPayout.Constituent.Name = "Joe Smith";
+            intPayout.Priority = 1;
+            intPayout.InterestPaymentMethod = InterestPaymentMethod.ACH;
+            intPayout.Percent = new decimal(50);
+
+            
+            var response = new DataResponse<InterestPayout>()
+            {
+                Data = intPayout,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+
         public IDataResponse<List<InterestPayout>> GetInterestPayoutByInvestmentId(Guid Id)
         {
 
