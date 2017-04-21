@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace DDI.Services.Security
 {
-    public class RoleService : ServiceBase<Role>, IRoleStore<Role, Guid>
+    public class RoleService : ServiceBase<Role>, IRoleStore<Role, Guid>,
+                                                  IQueryableRoleStore<Role, Guid>
     {
         private readonly IUnitOfWork _uow;
 
@@ -18,6 +19,11 @@ namespace DDI.Services.Security
         {
             _uow = new UnitOfWorkEF();
         }
+
+        #region IQueryableRoleStore Implementation
+        IQueryable<Role> IQueryableRoleStore<Role, Guid>.Roles => _uow.GetRepository<Role>().Entities;
+
+        #endregion  
 
         private void CheckRole(Role role)
         {

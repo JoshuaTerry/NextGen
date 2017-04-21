@@ -2,7 +2,6 @@
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Services.Search;
-using DevExtreme.AspNet.Data;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;

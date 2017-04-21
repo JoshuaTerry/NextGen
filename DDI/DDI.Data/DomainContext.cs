@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
+using System.Threading;
+using System.Threading.Tasks;
 using DDI.Data.Conventions;
 using DDI.EFAudit;
 using DDI.EFAudit.Contexts;
@@ -10,16 +18,6 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Data.Entity.ModelConfiguration;
 
 namespace DDI.Data
 {
@@ -45,6 +43,16 @@ namespace DDI.Data
         public DbSet<NoteTopic> NoteTopics { get; set; }
         public DbSet<SectionPreference> SectionPreferences { get; set; }
         public DbSet<FileStorage> FileStorage { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<EntityApproval> EntityApprovals { get; set; }
+        public DbSet<EntityNumber> EntityNumbers { get; set; }
+        public DbSet<EntityTransaction> EntityTransactions { get; set; }
+
+        #endregion
+
+        #region Internal Entities for tables not used in this solution.
+
+        private DbSet<Models.TransactionXref> TransactionXrefs { get; set; }
 
         #endregion
 
@@ -116,6 +124,8 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.GL.PostedTransaction> GL_PostedTransactions { get; set; }
         public DbSet<Shared.Models.Client.GL.Segment> GL_Segments { get; set; }
         public DbSet<Shared.Models.Client.GL.SegmentLevel> GL_SegmentLevels { get; set; }
+        public DbSet<Shared.Models.Client.GL.Journal> GL_Journals { get; set; }
+        public DbSet<Shared.Models.Client.GL.JournalLine> GL_JournalLines { get; set; }
 
         #endregion
 
@@ -154,9 +164,12 @@ namespace DDI.Data
           
         #region Public Constructors
         public DomainContext() : this(null, null)
-        { }
+        {
+
+        }
         public DomainContext(Action<DbContext> customSaveChangesLogic = null, ILoggingFilterProvider filterProvider = null) : base(ConnectionManager.Instance().Connections[DOMAIN_CONTEXT_CONNECTION_KEY])
         {
+            Database.SetInitializer<DomainContext>(new CreateDatabaseIfNotExists<DomainContext>());
             Logger = new EFAuditModule<ChangeSet, User>(new ChangeSetFactory(), AuditLogContext, this, filterProvider);
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
