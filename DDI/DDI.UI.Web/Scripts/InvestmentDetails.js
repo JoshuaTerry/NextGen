@@ -93,6 +93,8 @@ function DisplayInvestmentData() {
 
         LoadDepositsAndWithdrawalsSection();
 
+        InitLinkedAccounts();
+
     }
 }
 
@@ -132,9 +134,174 @@ function LoadIRSInformationSection() {
 }
 
 
-function LoadLinkedAccountsSection() {
+//linked accounts section
 
+function InitLinkedAccounts() {
 
+    LoadLinkedAccountsGrid();
+    NewLinkedAccountsModal();
+}
+
+function LoadLinkedAccountsGrid() {
+    var columns = [
+    { dataField: 'Id', width: '0px', },
+    {
+        dataField: 'LinkedAccountType', caption: 'Type', sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+            return [GetLinkedType(data.LinkedAccountType)];
+        }
+    },
+    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left'},
+    { dataField: 'DisplayName', caption: 'Name' },
+    ];
+
+    CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, 'linkedaccounts/investment/' + currentEntity.Id, null, EditLinkedAccounts, null, null);
 
 }
+
+function NewLinkedAccountsModal() {
+
+    $('.newlinkedaccountsmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.linkedaccountsmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 500,
+            resizable: false
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+        $('.savelinkedaccounts').unbind('click');
+
+        $('.savelinkedaccounts').click(function () {
+
+            var item = GetLinkedAccountsToSave();
+
+            MakeServiceCall('POST', 'linkedaccounts', item, function (data) {
+
+                DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
+
+                CloseModal(modal);
+
+                LoadLinkedAccountsGrid();
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+
+            });
+
+        });
+
+    });
+}
+
+function EditLinkedAccounts(id) {
+
+    var modal = $('.linkedaccountsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    LoadLinkedAccounts(id);
+
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.savelinkedaccounts').unbind('click');
+
+    $('.savelinkedaccounts').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetLinkedAccountsToSave();
+
+        MakeServiceCall('PATCH', 'linkedaccounts/' + id, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
+
+            CloseModal(modal);
+
+            LoadlinkedAccountsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+        });
+
+    });
+}
+
+function LoadLinkedAccounts(id) {
+
+    MakeServiceCall('GET', 'linkedaccounts/' + id, null, function (data) {
+
+        $('.linkedAccountType').val(data.Data.LinkedAccountType),
+        $('.la-LoadInd').val(data.Data.LoanInd),
+        $('.la-LoanNumber').val(data.Data.LoanNumber),
+        $('.la-CollateralInd').val(data.Data.CollateralInd),
+        $('.la-CollateralAmtPct').val(data.Data.CollateralIndAmtPct),
+        $('.la-BlockLink').val(data.Data.BlockLink)
+
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Linked Account.');
+    });
+
+}
+
+function GetLinkedAccountsToSave() {
+
+    var rawitem = {
+
+        Type: $(modal).find('.linkedAccounts-Type').val(),
+        LoadInd: $(modal).find('.al-LoadInd').val(),
+        LoanNumber: $(modal).find('.al-LoanNumber').val(),
+        CollateralInd: $(modal).find('.al-CollateralInd').val(),
+        CollateralAmtPct: $(modal).find('.al-CollateralAmtPct').val(),
+        BlockLink: $(modal).find('.al-BlockLink').val()
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
+}
+
+function GetLinkedType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Loan Support";
+            break;
+        case 1:
+            typeDesc = "Pool";
+            break;
+        case 2:
+            typeDesc = "Down Payment";
+            break;
+        case 3:
+            typeDesc = "Grant";
+            break;
+    }
+    return typeDesc;
+}
+//end linked accounts section
 
