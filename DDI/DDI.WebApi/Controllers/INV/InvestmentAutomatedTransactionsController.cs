@@ -8,30 +8,29 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Http;
 
+//commented out code may be used once tables and real data in place
 namespace DDI.WebApi.Controllers.INV
 {
-    public class LinkedAccountController : GenericController<LinkedAccount>
+    public class InvestmentAutomatedTransactionsController : GenericController<InvestmentAutomatedTransaction>
     {
 
-        LinkedAccountService _laService = new LinkedAccountService();
+        InvestmentAutomatedTransactionService _laService = new InvestmentAutomatedTransactionService();
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         
         [HttpGet]
-        [Route("api/v1/linkedaccounts", Name = RouteNames.LinkedAccount)]
+        [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.LinkedAccount, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.InvestmentInterestPayout, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/linkedaccounts/{id}", Name = RouteNames.LinkedAccount + RouteVerbs.Get)]
+        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
-                var response = _laService.GetLinkedAccountById(id);
+                var response = _laService.GetAutomatedTransactionById(id);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -44,7 +43,7 @@ namespace DDI.WebApi.Controllers.INV
 
         //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
         [HttpGet]
-        [Route("api/v1/linkedaccounts/investment/{id}", Name = RouteNames.LinkedAccount + RouteNames.Investment + RouteVerbs.Get)]
+        [Route("api/v1/investmentautomatedtransactions/investment/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteNames.Investment + RouteVerbs.Get)]
         public IHttpActionResult GetByInvestmentId(Guid id)
         {
             
@@ -52,8 +51,8 @@ namespace DDI.WebApi.Controllers.INV
             try
             {
                 //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
-                var response = _laService.GetLinkedAccountByInvestmentId(id);
+                //var response = Service.GetAllWhereExpression(a => a.InvestmentId == id, search);
+                var response = _laService.GetAutomatedTransactionByInvestmentId(id);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -66,15 +65,15 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/linkedaccounts", Name = RouteNames.LinkedAccount + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] LinkedAccount entityToSave)
+        [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] InvestmentAutomatedTransaction entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/linkedaccounts/{id}", Name = RouteNames.LinkedAccount + RouteVerbs.Patch)]
+        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -82,7 +81,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/linkedaccounts/{id}", Name = RouteNames.LinkedAccount + RouteVerbs.Delete)]
+        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

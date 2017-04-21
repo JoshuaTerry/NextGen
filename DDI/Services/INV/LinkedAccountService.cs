@@ -23,8 +23,7 @@ namespace DDI.Services
         #region Private Fields
 
         private readonly IRepository<LinkedAccount> _repository;
-        // private readonly InvestmentRelationshipLogic _investmentrelationshiplogic; 
-
+        
         #endregion
 
         #region Constructors
@@ -42,7 +41,6 @@ namespace DDI.Services
         private LinkedAccountService(IUnitOfWork uow, IRepository<LinkedAccount> repository)
             : base(uow)
         {
-           // _investmentrelationshiplogic = investmentRelationshipLogic;
             _repository = repository;
         }
 
@@ -50,31 +48,7 @@ namespace DDI.Services
 
         #region Public Methods
 
-        //protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
-
-
-        //public new IDataResponse<List<Investment>> GetAll(string fields, IPageable search)
-        //{
-        //    // new only for test
-
-        //    List<Investment> invest = MockData();
-
-        //    var response = new DataResponse<List<Investment>>()
-        //    {
-        //        Data = invest,
-        //        IsSuccessful = true
-        //    };
-
-        //    return response;
-        //}
-
-        //public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
-        //{
-        //    var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-        //    constituent = _constituentlogic.ConvertAgeRange(constituent);
-        //    return GetById(constituent?.Id ?? Guid.Empty);
-        //}
-
+        
         public IDataResponse<LinkedAccount> GetLinkedAccountById(Guid Id)
         {
 
@@ -125,7 +99,6 @@ namespace DDI.Services
             return response;
         }
 
-       
         
         #endregion
 

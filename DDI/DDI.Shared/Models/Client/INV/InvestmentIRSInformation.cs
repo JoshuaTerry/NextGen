@@ -1,4 +1,3 @@
-using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
@@ -10,8 +9,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.INV
 {
-    [Table("AutomatedTransaction")]
-    public class AutomatedTransaction : AuditableEntityBase, IEntity
+    [Table("InvestmentIRSInformation")]
+    public class InvestmentIRSInformation : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]
@@ -23,18 +22,14 @@ namespace DDI.Shared.Models.Client.INV
 
         public Guid? InvestmentId { get; set; }
 
-        public AutomatedTransactionMethod AutomatedTransactionMethod { get; set; }
+        public int Year { get; set; }
 
-        public DateTime NextTransactionDate { get; set; }
+        public decimal InterestPaid { get; set; }
+
+        public decimal InterestWithheld { get; set; }
+
+        public decimal PenaltyCharged { get; set; }
         
-        public RecurringType RecurringType { get; set; }
-
-        public decimal Amount { get; set; }
-
-        public string PaymentMethod { get; set; }
-
-        public bool IsActive { get; set; }
-
         #endregion
         #region Navigation Properties
 

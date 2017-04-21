@@ -23,8 +23,7 @@ namespace DDI.Services
         #region Private Fields
 
         private readonly IRepository<InvestmentRelationship> _repository;
-        // private readonly InvestmentRelationshipLogic _investmentrelationshiplogic; 
-
+        
         #endregion
 
         #region Constructors
@@ -42,7 +41,6 @@ namespace DDI.Services
         private InvestmentRelationshipService(IUnitOfWork uow, IRepository<InvestmentRelationship> repository)
             : base(uow)
         {
-           // _investmentrelationshiplogic = investmentRelationshipLogic;
             _repository = repository;
         }
 
@@ -50,13 +48,9 @@ namespace DDI.Services
 
         #region Public Methods
 
-        //protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
-
-
+        
         public new IDataResponse<List<InvestmentRelationship>> GetAll(string fields, IPageable search)
         {
-            // new only for test
-
             List<InvestmentRelationship> invrelationship = MockData();
 
             var response = new DataResponse<List<InvestmentRelationship>>()
@@ -68,13 +62,7 @@ namespace DDI.Services
             return response;
         }
 
-        //public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
-        //{
-        //    var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-        //    constituent = _constituentlogic.ConvertAgeRange(constituent);
-        //    return GetById(constituent?.Id ?? Guid.Empty);
-        //}
-
+        
         public IDataResponse<List<InvestmentRelationship>> GetInvestmentByConstituentId(Guid constituentId)
         {
             List<InvestmentRelationship> mockInvestmentRelationship1 = MockData();
@@ -94,9 +82,7 @@ namespace DDI.Services
             invrelate = new InvestmentRelationship[10];
 
             invrelate[0] = new InvestmentRelationship();
-            //invrelate[0].ConstituentId = constituentId;
             invrelate[0].Investment = new Investment();
-            //invrelate[0].Id = new Guid();
             invrelate[0].Investment.InvestmentNumber = 123456;
             invrelate[0].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[0].Investment.InvestmentOwnershipType.Code = "S";
@@ -107,9 +93,7 @@ namespace DDI.Services
             invrelate[0].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[1] = new InvestmentRelationship();
-            //invrelate[1].ConstituentId = constituentId;
             invrelate[1].Investment = new Investment();
-            //invrelate[1].Id = new Guid();
             invrelate[1].Investment.InvestmentNumber = 234567;
             invrelate[1].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[1].Investment.InvestmentOwnershipType.Code = "J";
@@ -120,9 +104,7 @@ namespace DDI.Services
             invrelate[1].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[2] = new InvestmentRelationship();
-            //invrelate[2].ConstituentId = constituentId;
             invrelate[2].Investment = new Investment();
-            //invrelate[2].Id = new Guid();
             invrelate[2].Investment.InvestmentNumber = 345678;
             invrelate[2].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[2].Investment.InvestmentOwnershipType.Code = "S";
@@ -133,9 +115,7 @@ namespace DDI.Services
             invrelate[2].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
 
             invrelate[3] = new InvestmentRelationship();
-            //invrelate[3].ConstituentId = constituentId;
             invrelate[3].Investment = new Investment();
-            //invrelate[3].Id = new Guid();
             invrelate[3].Investment.InvestmentNumber = 456789;
             invrelate[3].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[3].Investment.InvestmentOwnershipType.Code = "J";
@@ -146,9 +126,7 @@ namespace DDI.Services
             invrelate[3].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[4] = new InvestmentRelationship();
-            //invrelate[4].ConstituentId = constituentId;
             invrelate[4].Investment = new Investment();
-            //invrelate[4].Id = new Guid();
             invrelate[4].Investment.InvestmentNumber = 567890;
             invrelate[4].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[4].Investment.InvestmentOwnershipType.Code = "S";
@@ -159,9 +137,7 @@ namespace DDI.Services
             invrelate[4].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[5] = new InvestmentRelationship();
-            //invrelate[5].ConstituentId = constituentId;
             invrelate[5].Investment = new Investment();
-            //invrelate[5].Id = new Guid();
             invrelate[5].Investment.InvestmentNumber = 678901;
             invrelate[5].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[5].Investment.InvestmentOwnershipType.Code = "J";
@@ -172,9 +148,7 @@ namespace DDI.Services
             invrelate[5].InvestmentRelationshipType = InvestmentRelationshipType.Joint;
 
             invrelate[6] = new InvestmentRelationship();
-            //invrelate[6].ConstituentId = constituentId;
             invrelate[6].Investment = new Investment();
-            //invrelate[6].Id = new Guid();
             invrelate[6].Investment.InvestmentNumber = 789012;
             invrelate[6].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[6].Investment.InvestmentOwnershipType.Code = "S";
@@ -185,9 +159,7 @@ namespace DDI.Services
             invrelate[6].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
             invrelate[7] = new InvestmentRelationship();
-            //invrelate[7].ConstituentId = constituentId;
             invrelate[7].Investment = new Investment();
-            //invrelate[7].Id = new Guid();
             invrelate[7].Investment.InvestmentNumber = 890123;
             invrelate[7].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[7].Investment.InvestmentOwnershipType.Code = "J";
@@ -198,9 +170,7 @@ namespace DDI.Services
             invrelate[7].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
         
             invrelate[8] = new InvestmentRelationship();
-            //invrelate[8].ConstituentId = constituentId;
             invrelate[8].Investment = new Investment();
-            //invrelate[8].Id = new Guid();
             invrelate[8].Investment.InvestmentNumber = 901234;
             invrelate[8].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[8].Investment.InvestmentOwnershipType.Code = "S";
@@ -211,9 +181,7 @@ namespace DDI.Services
             invrelate[8].InvestmentRelationshipType = InvestmentRelationshipType.Primary;
 
             invrelate[9] = new InvestmentRelationship();
-            //invrelate[9].ConstituentId = constituentId;
             invrelate[9].Investment = new Investment();
-            //invrelate[9].Id = new Guid();
             invrelate[9].Investment.InvestmentNumber = 012345;
             invrelate[9].Investment.InvestmentOwnershipType = new InvestmentOwnershipType();
             invrelate[9].Investment.InvestmentOwnershipType.Code = "J";

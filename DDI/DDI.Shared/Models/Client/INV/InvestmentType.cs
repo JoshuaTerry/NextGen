@@ -9,43 +9,36 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.INV
 {
     [Table("InvestmentType")]
-    public class InvestmentType : AuditableEntityBase, IEntity
+    public class InvestmentType : AuditableEntityBase, ICodeEntity
     {
-        #region Public Properties        
+        #region Public Properties   
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        public bool IsActive { get; set; }
 
-        public int Type { get; set; }
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
+        public string Code { get; set; }
 
-        [MaxLength(256)]
-        public string Description { get; set; }
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; }
 
-        //more fields to be added later
-        #region Navigation Properties
-        #endregion
+        
 
-        #region NotMapped Properties
+        #endregion Public Properties
 
-        [NotMapped]
+        #region Public Methods
+
         public override string DisplayName
         {
             get
             {
-                return Type + ": " + Description;
+                return Name;
             }
         }
 
-        
         #endregion
 
-        #endregion Public Properties
-
-        #region Private Properties
-
-        //private IUser UserId { get; set; }
-
-        #endregion Private Properties
     }
 }

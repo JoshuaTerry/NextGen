@@ -9,16 +9,16 @@ namespace DDI.Shared.Enums.INV
         None = 0,
 
         [Description("Active Investor")]
-        INVA = 1,
+        ActiveInvestor = 1,
 
         [Description("Dormant Investor")]
-        INVD = 2,
+        DormantInvestor = 2,
 
         [Description("Holder of Extended Investment - No Recent Activity")]
-        INVI = 3,
+        ExtendedInvestor = 3,
 
         [Description("Former Investor = All Investments Paid")]
-        INVR = 4,
+        FormerInvestor = 4,
         
     }
 
