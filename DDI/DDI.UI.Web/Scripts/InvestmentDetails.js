@@ -113,7 +113,7 @@ function LoadDepositsAndWithdrawalsSection() {
 
 
 
-    LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'automatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 500, false, false, false);
+    LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 600, false, false, false);
 
     PopulateDropDown('.at-Info', 'paymentmethods/constituents/' + currentEntity.Id, '', ''); // payment preferences
 

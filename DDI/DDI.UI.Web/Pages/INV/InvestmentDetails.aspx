@@ -379,20 +379,27 @@
 <div class="autotransmodal" title="Automated Transactions" style="display: none;">
 
     <div class="modalcontent">
-            
-        <div class="fieldblock">
-            <label>Method:</label>
-            <select class="at-method">
 
-                <option value="0">Deposit</option>
-                <option value="1">Withdrawal</option>
-                <option value="2">Transfer</option>
+            <div class="fieldblock">
+                <label>Method:</label>
+                <select class="at-method">
 
-            </select>
+                    <option value="0">Deposit</option>
+                    <option value="1">Withdrawal</option>
+                    <option value="2">Transfer</option>
+
+                </select>
+            </div>
                 
             <!-- Dropdown with deposit/withdrawal/transfer-->
         </div>
 
+        
+
+            <div class="fieldblock">
+                <label>Preferred Payment Method</label>
+                <select class="at-Info" />
+            </div>
         <div class="twocolumn">
 
             <div class="fieldblock">
@@ -400,16 +407,19 @@
                 <select class="at-Info" />
             </div>
 
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>testing box but</label>
+                <input type="text" class="at-test" />
+            </div>
+
             <div class="fieldblock">
                 <label>Preferred Payment Method</label>
                 <select class="at-Info" />
             </div>
-        <!-- will be the same as constituent paymet prefs-->
-
-<%--            <div class="fieldblock">
-                <label></label>
-                <input type="button" class="newpaymentmethod" value="New Payment Method" />
-            </div>--%>
 
         </div>
 
