@@ -111,7 +111,7 @@ function GetConfigValues
 			$Config | add-member –membertype NoteProperty –name WebRoot –value "localhost:12345"
 			$Config | add-member –membertype NoteProperty –name ElasticsearchURL –value "http://10.200.10.173:9200"
 			$Config | add-member –membertype NoteProperty –name CommonContext –value "Data Source=tcp:10.200.10.173;Initial Catalog=DDI_Connect_Common_DEV;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
-			$Config | add-member –membertype NoteProperty –name DomainContext –value "Data Source=tcp:10.200.10.173;Initial Catalog=DDI_Connect_Demo_DEV;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
+			$Config | add-member –membertype NoteProperty –name DomainContext –value "Data Source=tcp:10.200.10.173;Initial Catalog=DDI_Connect_Demo_Migration_Test;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
 			$Config | add-member –membertype NoteProperty –name WEB_API_ADDRESS –value "http://172.20.10.22:81/api/v1/"
 		}
 		default  ##Locallhost
@@ -120,8 +120,8 @@ function GetConfigValues
 			$Config | add-member –membertype NoteProperty –name SmtpHost –value "localhost"
 			$Config | add-member –membertype NoteProperty –name WebRoot –value "localhost:12345"
 			$Config | add-member –membertype NoteProperty –name ElasticsearchURL –value "http://10.200.10.173:9200"
-			$Config | add-member –membertype NoteProperty –name CommonContext –value "Data Source=tcp:10.200.10.173;Initial Catalog=DDI_Connect_Common_DEV;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
-			$Config | add-member –membertype NoteProperty –name DomainContext –value "Data Source=tcp:10.200.10.173;Initial Catalog=DDI_Connect_Demo_DEV;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
+			$Config | add-member –membertype NoteProperty –name CommonContext –value "Data Source=DDI-DEVDB2;Initial Catalog=DDI_Connect_Common_DEV;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
+			$Config | add-member –membertype NoteProperty –name DomainContext –value "Data Source=DDI-DEVDB2;Initial Catalog=DDI_Connect_Demo_Migration_Test;User Id=nextgen_web;Password=UGKOIiH4QBJETecrquzP6g==;MultipleActiveResultSets=True"
 			$Config | add-member –membertype NoteProperty –name WEB_API_ADDRESS –value "http://localhost:49490/api/v1/"
 		}
 	}
