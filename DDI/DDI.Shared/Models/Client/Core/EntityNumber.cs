@@ -15,13 +15,7 @@ namespace DDI.Shared.Models.Client.Core
 
         public EntityNumberType EntityNumberType { get; set; }
 
-        public Guid? BusinessUnitId { get; set; }
-        [ForeignKey(nameof(BusinessUnitId))]
-        public BusinessUnit BusinessUnit { get; set; }
-
-        public Guid? FiscalYearId { get; set; }
-        [ForeignKey(nameof(FiscalYearId))]
-        public FiscalYear FiscalYear { get; set; }
+        public Guid? RangeId { get; set; }
 
         public int NextNumber { get; set; }
 

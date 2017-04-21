@@ -15,10 +15,8 @@ using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion.GL
 {    
-    internal class TransactionConverter : GLConversionBase
+    internal class PostedTransactionConverter : GLConversionBase
     {
-        private Dictionary<string, Guid> _ledgerAccountYearIds;
-
         public enum ConversionMethod
         {
             PostedTransactions = 70300,
@@ -41,7 +39,7 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountYearIds();
             
             var outputFile = new FileExport<PostedTransaction>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionFile), append);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.PostedTransactionMappingFile), append, true);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionMappingFile), append, true);
 
             if (!append)
             {
@@ -65,7 +63,7 @@ namespace DDI.Conversion.GL
                     string legacyAccountKey = importer.GetString(2);
 
                     Guid accountId;
-                    if (!_ledgerAccountYearIds.TryGetValue(legacyAccountKey, out accountId))
+                    if (!LedgerAccountYearIds.TryGetValue(legacyAccountKey, out accountId))
                     {
                         importer.LogError($"Invalid account legacy key \"{legacyAccountKey}\".");
                         continue;
@@ -95,20 +93,6 @@ namespace DDI.Conversion.GL
 
             legacyIdFile.Dispose();
             outputFile.Dispose();
-        }
-
-
-
-        /// <summary>
-        /// Load legacy LedgerAccountYear IDs into a dictionary.
-        /// </summary>
-        private void LoadLedgerAccountYearIds()
-        {
-            if (_ledgerAccountYearIds == null)
-            {
-                _ledgerAccountYearIds = new Dictionary<string, Guid>();
-                _ledgerAccountYearIds = LoadLegacyIds(OutputDirectory, OutputFile.LedgerAccountYearIdMappingFile);
-            }
         }
 
     }

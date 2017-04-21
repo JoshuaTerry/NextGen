@@ -61,72 +61,11 @@ function LoadGroupsGrid() {
 
     var columns = [
         { dataField: 'Id', visible: false },
-        { dataField: 'Name', caption: 'Group Name' }
+        { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
-    LoadGrid('groupsgrid', 'groupsgridcontainer', columns, 'roles', function () {
-
-        LoadGroupMembersGrid();
-
-    });
-
-}
-
-function LoadGroupMembersGrid() {
-
-    var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
-    ];
-
-    var datagrid = $('<div>').addClass(grid);
-
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function (data) {
-
-            $(datagrid).dxDataGrid({
-                dataSource: data,
-                columns: columns,
-                paging: {
-                    pageSize: 25
-                },
-                pager: {
-                    showNavigationButtons: true,
-                    showPageSizeSelector: true,
-                    showInfo: true,
-                    allowedPageSizes: [15, 25, 50, 100]
-                },
-                groupPanel: {
-                    visible: false,
-                    allowColumnDragging: true
-                },
-                filterRow: {
-                    visible: true,
-                    showOperationChooser: false
-                },
-                onRowClick: function (info) {
-
-                    if (selected) {
-                        selected();
-                    }
-
-                }
-            });
-
-            $(datagrid).appendTo($(container));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
+    LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
+        , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);   
 }
 
 function LoadSecuritySettingsGrid() {
@@ -140,7 +79,6 @@ function LoadSecuritySettingsGrid() {
 
 }
 /* END GROUPS TAB */
-
 
 
 /* USERS TAB */
