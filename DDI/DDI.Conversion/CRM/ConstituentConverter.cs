@@ -14,6 +14,7 @@ using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
+using DDI.Conversion.Core;
 
 namespace DDI.Conversion.CRM
 {    
@@ -37,7 +38,8 @@ namespace DDI.Conversion.CRM
             PaymentPreferences,
             Relationships,
             Tags,
-            CustomFieldData
+            CustomFieldData,
+            Notes
         }
 
         private string _crmDirectory;
@@ -72,7 +74,14 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo(InputFile.CRM_ContactInfoFW, true));
             RunConversion(ConversionMethod.Relationships, () => ConvertRelationships(InputFile.CRM_Relationship, false));
             RunConversion(ConversionMethod.Tags, () => ConvertTags(InputFile.CRM_ConstituentTag, false));
-            RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));            
+            RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));
+            RunConversion(ConversionMethod.Notes, () => ConvertNotes(InputFile.CRM_MemoConstituent, false));
+        }
+
+        private void ConvertNotes(string filename, bool append)
+        {
+            var noteConverter = new NoteConverter();
+            noteConverter.ConvertNotes(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)), "Constituent", null, false);
         }
 
         /// <summary>
@@ -82,7 +91,7 @@ namespace DDI.Conversion.CRM
         {
             if (_constituentIds.Count == 0)
             {
-                _constituentIds = LoadIntLegacyIds(_outputDirectory, OutputFile.ConstituentIdMappingFile);
+                _constituentIds = LoadIntLegacyIds(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile);
             }
         }
 
@@ -93,7 +102,7 @@ namespace DDI.Conversion.CRM
         {
             if (_addressIds.Count == 0)
             {
-                _addressIds = LoadIntLegacyIds(_outputDirectory, OutputFile.AddressIdMappingFile);
+                _addressIds = LoadIntLegacyIds(_outputDirectory, OutputFile.CRM_AddressIdMappingFile);
             }
         }
 
@@ -116,7 +125,7 @@ namespace DDI.Conversion.CRM
             RegionLevel regionLevel3 = regionLevels.FirstOrDefault(p => p.Level == 3);
             RegionLevel regionLevel4 = regionLevels.FirstOrDefault(p => p.Level == 4);
 
-            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.AddressIdMappingFile), append, true);
+            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_AddressIdMappingFile), append, true);
             FileExport<Address> addressFile = new FileExport<Address>(Path.Combine(_outputDirectory, OutputFile.CRM_AddressFile), append);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
@@ -275,7 +284,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
                 FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
                 FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF
@@ -658,7 +667,7 @@ namespace DDI.Conversion.CRM
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
                 FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
                 FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF

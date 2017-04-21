@@ -45,7 +45,7 @@ namespace DDI.Conversion.GL
             LoadSegmentIds();
 
             var outputFile = new FileExport<Fund>(Path.Combine(OutputDirectory, OutputFile.GL_FundFile), false);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.FundIdMappingFile), false, true);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_FundIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
 
@@ -313,8 +313,7 @@ namespace DDI.Conversion.GL
         {
             if (_fundIds == null)
             {
-                _fundIds = new Dictionary<string, Guid>();
-                _fundIds = LoadLegacyIds(OutputDirectory, OutputFile.FundIdMappingFile);
+                _fundIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_FundIdMappingFile);
             }
         }
 

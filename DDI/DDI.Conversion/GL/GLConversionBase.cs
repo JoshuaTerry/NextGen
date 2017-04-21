@@ -28,11 +28,17 @@ namespace DDI.Conversion.GL
         private Dictionary<int, Guid> _ledgerIds;
         protected Dictionary<int, Guid> LedgerIds => _ledgerIds;
 
+        private Dictionary<int, Guid> _businessUnitIds;
+        protected Dictionary<int, Guid> BusinessUnitIds => _businessUnitIds;
+
         private Dictionary<string, Guid> _fiscalYearIds;
         protected Dictionary<string, Guid> FiscalYearIds => _fiscalYearIds;
 
         private Dictionary<int, Guid> _ledgerAccountIds;
         protected Dictionary<int, Guid> LedgerAccountIds => _ledgerAccountIds;
+
+        private Dictionary<string, Guid> _ledgerAccountYearIds;
+        protected Dictionary<string, Guid> LedgerAccountYearIds => _ledgerAccountYearIds;
 
         private Dictionary<string, Guid> _segmentIds;
         protected Dictionary<string, Guid> SegmentIds => _segmentIds;
@@ -49,12 +55,22 @@ namespace DDI.Conversion.GL
         /// <summary>
         /// Load legacy ledger IDs into a dictionary.
         /// </summary>
+        protected void LoadBusinessUnitIds()
+        {
+            if (_businessUnitIds == null)
+            {
+                _businessUnitIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_BusinessUnitIdMappingFile);
+            }
+        }
+
+        /// <summary>
+        /// Load legacy ledger IDs into a dictionary.
+        /// </summary>
         protected void LoadLedgerIds()
         {
             if (_ledgerIds == null)
             {
-                _ledgerIds = new Dictionary<int, Guid>();
-                _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.LedgerIdMappingFile);
+                _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_LedgerIdMappingFile);
             }
         }
 
@@ -65,8 +81,7 @@ namespace DDI.Conversion.GL
         {
             if (_fiscalYearIds == null)
             {
-                _fiscalYearIds = new Dictionary<string, Guid>();
-                _fiscalYearIds = LoadLegacyIds(_outputDirectory, OutputFile.FiscalYearIdMappingFile);
+                _fiscalYearIds = LoadLegacyIds(_outputDirectory, OutputFile.GL_FiscalYearIdMappingFile);
             }
         }
 
@@ -78,8 +93,15 @@ namespace DDI.Conversion.GL
         {
             if (_ledgerAccountIds == null)
             {
-                _ledgerAccountIds = new Dictionary<int, Guid>();
-                _ledgerAccountIds = LoadIntLegacyIds(_outputDirectory, OutputFile.LedgerAccountIdMappingFile);
+                _ledgerAccountIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_LedgerAccountIdMappingFile);
+            }
+        }
+
+        protected void LoadLedgerAccountYearIds()
+        {
+            if (_ledgerAccountYearIds == null)
+            {
+                _ledgerAccountYearIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_LedgerAccountYearIdMappingFile);
             }
         }
 
@@ -90,18 +112,17 @@ namespace DDI.Conversion.GL
         {
             if (_segmentIds == null)
             {
-                _segmentIds = new Dictionary<string, Guid>();
-                _segmentIds = LoadLegacyIds(_outputDirectory, OutputFile.SegmentIdMappingFile);
+                _segmentIds = LoadLegacyIds(_outputDirectory, OutputFile.GL_SegmentIdMappingFile);
             }
         }
 
         protected Guid? GetFiscalYearId(FileImport importer, int column)
         {
             Guid? ledgerId;
-            return GetFiscalYearId(importer, column, out ledgerId);
+            return GetFiscalYearId(importer, column, false, out ledgerId);
         }
 
-        protected Guid? GetFiscalYearId(FileImport importer, int column, out Guid? ledgerId)
+        protected Guid? GetFiscalYearId(FileImport importer, int column, bool ignoreNullYear, out Guid? ledgerId)
         {
             if (_ledgerIds != null)
             {
@@ -118,6 +139,12 @@ namespace DDI.Conversion.GL
 
             string code = importer.GetString(column);
             string yearName = importer.GetString(column + 1);
+
+            if (ignoreNullYear && (string.IsNullOrWhiteSpace(yearName) || yearName == "0"))
+            {
+                return null;
+            }
+
             string legacyKey = $"{code},{yearName}";
             Guid fiscalYearId;
             if (_fiscalYearIds.TryGetValue(legacyKey, out fiscalYearId))
@@ -154,6 +181,32 @@ namespace DDI.Conversion.GL
             }
 
             return ledgerId;
+        }
+
+        protected Guid? GetLedgerAccountId(FileImport importer, int column)
+        {
+            Guid? accountId = null;
+
+            // Legacy account key
+            int legacyKey = importer.GetInt(column);
+            if (legacyKey == 0)
+            {
+                return null;
+            }
+
+            if (_ledgerAccountIds != null)
+            {
+                Guid id;
+                if (!_ledgerAccountIds.TryGetValue(legacyKey, out id))
+                {
+                    importer.LogError($"Invalid legacy G/L account ID \"{legacyKey}\"");
+                    return null;
+                }
+
+                accountId = id;
+            }
+
+            return accountId;
         }
 
     }

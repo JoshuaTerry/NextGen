@@ -66,8 +66,8 @@ namespace DDI.Business.Tests.GL
                 var bl2 = new BusinessUnitLogic(uow2);
                 Assert.AreEqual(true, bl2.IsMultiple, "IsMultiple uses cached value");
                 CacheHelper.RemoveAllEntries();
-                Assert.AreEqual(false, bl2.IsMultiple, "IsMultiple revaluated resturns false for single business unit.");
-
+                Assert.AreEqual(false, bl2.IsMultiple, "IsMultiple revaluated returns false for single business unit.");
+                CacheHelper.RemoveAllEntries();
             }
         }
     }
