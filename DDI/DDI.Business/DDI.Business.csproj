@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Business</RootNamespace>
     <AssemblyName>DDI.Business</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,9 +49,10 @@
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
-    <Compile Include="GL\AccountLogic.cs" />
     <Compile Include="GL\BusinessUnitLogic.cs" />
+    <Compile Include="GL\FiscalYearLogic.cs" />
     <Compile Include="GL\LedgerLogic.cs" />
+    <Compile Include="GL\AccountLogic.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="EntityLogicBase.cs" />
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
+    <Compile Include="Helpers\BusinessUnitHelper.cs" />
     <Compile Include="Helpers\BusinessLogicHelper.cs" />
     <Compile Include="Helpers\CodeEntityHelper.cs" />
     <Compile Include="Helpers\LinkedEntityHelper.cs" />

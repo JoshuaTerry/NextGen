@@ -16,7 +16,7 @@ namespace DDI.Data.Migrations.Client
                 "FROM PostedTransaction AS pt INNER JOIN " +
                 "LedgerAccountYear AS lay ON lay.Id = pt.LedgerAccountYearId INNER JOIN " +
                 "Account AS a ON a.Id = lay.AccountId " +
-                "WHERE (pt.TransactionType = 0)) " +
+                "WHERE (pt.PostedTransactionType = 0)) " +
                 "SELECT Id, PeriodNumber, DebitCredit, ABS(SUM(Amount)) AS TotalAmount " +
                 "FROM T AS T_1 " +
                 "GROUP BY Id, PeriodNumber, DebitCredit");            

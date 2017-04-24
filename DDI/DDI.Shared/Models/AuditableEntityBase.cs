@@ -11,14 +11,7 @@ namespace DDI.Shared.Models
     /// </summary>
     [DoLog]        
     public abstract class AuditableEntityBase : EntityBase, IAuditableEntity
-    {
-        #region Fields
-
-        private string _entityType = null;
-        private static Dictionary<string, Type> _entityTypeDict = null;
-
-        #endregion
-
+    {     
         #region Properties 
 
         [MaxLength(64)]

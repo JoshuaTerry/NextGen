@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,9 +21,9 @@ namespace DDI.Business.Tests
             {
                 action.Invoke();
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.Fail(message);
+                Assert.Fail(message + ": " + ex.ToString());
             }
         }
 
@@ -42,7 +43,12 @@ namespace DDI.Business.Tests
             {
                 return;
             }
-            Assert.Fail(message);
+            catch (Exception ex)
+            {                
+                Assert.Fail(message + ": " + ex.ToString());
+            }
+
+            Assert.Fail(message + ": No exception thrown.");
         }
 
         /// <summary>
@@ -58,11 +64,32 @@ namespace DDI.Business.Tests
             {
                 action.Invoke();
             }
-            catch (T ex) when (ex.Message.Contains(contains_text))
+            catch (T ex) 
             {
+                if (contains_text.IndexOf('{') >= 0)
+                {
+                    // Kludge to replace {0}, {1}, etc. with .* and use RegEx.
+                    for (int index = 0; index <= 9; index++)
+                    {
+                        contains_text = contains_text.Replace("{" + index.ToString() + "}", ".*");
+                    }
+                    if (Regex.IsMatch(ex.Message, contains_text))
+                    {
+                        return;
+                    }
+                }
+                else if (ex.Message.Contains(contains_text))
+                {
                     return;
+                }
             }
-            Assert.Fail(message);
+
+            catch (Exception ex)
+            {
+                Assert.Fail(message + ": " + ex.ToString());
+            }
+
+            Assert.Fail(message + ": No exception thrown.");
         }
 
 

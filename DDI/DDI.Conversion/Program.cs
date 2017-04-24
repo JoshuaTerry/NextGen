@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DDI.Business.GL;
 using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.GL;
 using log4net;
 
 namespace DDI.Conversion
@@ -81,7 +83,14 @@ namespace DDI.Conversion
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
-            Run<GL.TransactionConverter>(new ConversionMethodArgs(GL.TransactionConverter.ConversionMethod.PostedTransactions));
+            //Run<GL.PostedTransactionConverter>(new ConversionMethodArgs(GL.PostedTransactionConverter.ConversionMethod.PostedTransactions));
+
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.Journals));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalLines));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalTransactions));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalApprovals));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));

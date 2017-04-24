@@ -37,5 +37,8 @@ namespace DDI.Shared.Models.Common
         public Zip Zip { get; set; }
 
         public ICollection<ZipPlus4> ZipPlus4s { get; set; }
+
+        public override string DisplayName => Street;
+
     }
 }
