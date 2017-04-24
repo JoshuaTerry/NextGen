@@ -90,6 +90,7 @@
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\PaymentPreferences.html" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
@@ -161,6 +162,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\Notes.js" />
+    <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\region.js" />
     <Content Include="Scripts\registrationconfirmation.js" />
     <Content Include="Scripts\security.js" />
@@ -602,7 +604,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Pages\Common\" />
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />

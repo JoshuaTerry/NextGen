@@ -17,6 +17,8 @@
 
     DisplayInvestmentData();
 
+    $('.paymentpreferenceinclude').load("Pages\Common\PaymentPreference.html");
+
     // RefreshEntity(); ?
     
 });
@@ -93,11 +95,11 @@ function DisplayInvestmentData() {
 
         LoadDepositsAndWithdrawalsSection();
 
-        LoadInterestSection();
+        InitInterestPayouts();
 
         LoadIRSInformationSection();
 
-        //InitLinkedAccounts();
+        InitLinkedAccounts();
 
         FormatFields();
 
@@ -125,8 +127,15 @@ function LoadDepositsAndWithdrawalsSection() {
 
 }
 
+// interest payout section
+function InitInterestPayouts() {
 
-function LoadInterestSection() {
+    LoadInterestPayoutsGrid();
+    NewInterestPayoutsModal();
+    NewPaymentPreferencesModal('newinterestpayoutpaymentpreferences')
+}
+
+function LoadInterestPayoutsGrid() {
 
     var id = currentEntity.Id;
 
@@ -139,11 +148,142 @@ function LoadInterestSection() {
         }
     },
     { dataField: 'Constituent.Name', caption: 'Name' },
-    { dataField: 'Percent', caption: 'Percent/Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
+    { dataField: 'Percent', caption: 'Percent', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
+    { dataField: 'Amount', caption: 'Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
     ];
 
-    LoadGrid('.interestpaymentgridcontainer', 'interestpaymentgrid', columns, 'investmentinterestpayouts/investment/' + id, 'investmentinterestpayouts', null, '',
-        '.interestpaymentmodal', '.interestpaymentmodal', 450, true, false, false, null);
+    CustomLoadGrid('interestpayoutsgrid', '.interestpayoutsgridcontainer', columns, 'investmentinterestpayouts/investment/' + id, null, EditInterestPayouts);
+
+}
+
+function NewInterestPayoutsModal() {
+
+
+    $('.newinterestpayoutsmodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.interestpayoutsmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 500,
+            resizable: false
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+        $('.saveinterestpayouts').unbind('click');
+
+        $('.saveinterestpayouts').click(function () {
+
+            var item = GetInterestPayoutsToSave();
+
+            MakeServiceCall('POST', 'interestpayouts', item, function (data) {
+
+                DisplaySuccessMessage('Success', 'Interest Payout saved successfully.');
+
+                CloseModal(modal);
+
+                LoadInterestPayoutsGrid();
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+
+            });
+
+        });
+
+    });
+}
+
+function EditInterestPayouts(id) {
+
+    var modal = $('.interestpayoutsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    LoadInterestPayouts(id);
+
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.saveInterestPayouts').unbind('click');
+
+    $('.saveInterestPayouts').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetInterestPayoutsToSave();
+
+        MakeServiceCall('PATCH', 'InterestPayouts/' + id, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Interest Payout saved successfully.');
+
+            CloseModal(modal);
+
+            LoadInterestPayoutsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Interest Payout.');
+        });
+
+    });
+}
+
+function LoadInterestPayouts(id) {
+
+    MakeServiceCall('GET', 'investmentinterestpayouts/' + id, null, function (data) {
+
+        $('.Priority').val(data.Data.Priority),
+        $('.InterestPaymentMethod').val(data.Data.InterestPaymentMethod),
+        $('.ConstituentId').val(data.Data.Constituent.Id),
+        $('.ConstituentName').val(data.Data.Constituent.DisplayName),
+        $('.InterestPayoutOptionPercent').prop("checked", (data.Data.Percent === 0) ? false : true),
+        $('.InterestPayoutOptionAmount').prop("checked", (data.Data.Amount === 0) ? false : true),
+        $('.InterestPayoutPercentAmount').val($(data.Data.Percent === 0) ? data.Data.Amount : data.Data.Percent)
+
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Interest Payout.');
+    });
+
+}
+
+
+function GetInterestPayoutsToSave() {
+
+    var rawitem = {
+
+        Priority: $(modal).find('.Priority').val(),
+        InterestPaymentMethod: $(modal).find('.InterestPaymentMethod').val(),
+        ConstituentId: $(modal).find('.Constituent.Id').val(),
+        ConstituentName: $(modal).find('.Constituent.Name').val(),
+        Percent: ($('.InterestPayoutOptionPercent').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
+        Amount: ($('.InterestPayoutOptionAmount').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
 }
 
 function GetInterestPaymentMethod(method) {
@@ -153,16 +293,13 @@ function GetInterestPaymentMethod(method) {
             methodDesc = "Compound";
             break;
         case 1:
-            methodDesc = "ACH";
+            methodDesc = "EFT";
             break;
         case 2:
             methodDesc = "Check";
             break;
         case 3:
             methodDesc = "Investment Deposit";
-            break;
-        case 4:
-            methodDesc = "Wire";
             break;
     }
     return methodDesc;

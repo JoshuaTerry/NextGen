@@ -4,6 +4,7 @@
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\PaymentPreferencesModal.js"></script>
     <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -282,8 +283,9 @@
 
                             <div class="accordions">
                                 <h1>Interest Payment</h1>
-                                <div class="interestpaymentgridcontainer">
-                                    <div class="interestpaymentgrid"></div>
+                                <a href="#" class="newinterestpayoutsmodallink">New Item</a>
+                                <div class="interestpayoutsgridcontainer">
+                                    <div class="interestpayoutsgrid"></div>
                                 </div>
                                 <h1>IRS Information</h1>
                                 <div class="interestIRSgridcontainer">
@@ -376,7 +378,7 @@
 
 <%--    Modal section     --%>
 
-    <div class="interestpaymentmodal" title="Interest Payment" style="display: none;">
+    <div class="interestpayoutsmodal" title="Interest Payout" style="display: none;">
 
         <div class="modalcontent">
 
@@ -387,16 +389,15 @@
                 <div>
                     <label>Priority: </label>
                     <input type="number" class="Priority" />
+                    <label>Method: </label>
                 </div>
 
                 <div>
-                    <label>Method: </label>
-                    <select class="interest-Category">
+                    <select class="InterestPaymentMethod">
                         <option value="0">Compound</option>
-                        <option value="1">ACH</option>
+                        <option value="1">EFT</option>
                         <option value="2">Check</option>
                         <option value="3">Investment Deposit</option>
-                        <option value="4">Wire</option>
                     </select>
                 </div>
             </div>
@@ -404,53 +405,49 @@
             <br />
 
             <div class="twocolumn">
-                <div>
-                    <input type="radio" name="interestpctamt" value="Percent"/>Percent
-                    <input type="radio" name="interestpctamt" value="Amount"/>Amount
+                <div class="justright">
+                    <input type="radio" name="interestpayoutoption" class="InterestPayoutOptionPercent" value="Percent"/>Percent&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="interestpayoutoption" class="InterestPayoutOptionAmount" value="Amount"/>Amount&nbsp;&nbsp;
                 </div>
                 <div>
-                    <input type="number" class="interest-AmtPct" />
+                    <input type="number" class="InterestPayoutPercentAmount" />
                 </div>
             </div>
 
             <br />
 
-            <div class="interestOptionACHWire twocolumn">
+            <div class="interestpayoutpaymentpreference twocolumn">
+                <div class="justright">
+                    <label>Payment Preference: </label>
+                </div>
                 <div>
-                <label>Payment Preference: </label>
-                    <select class="interest-PaymentPreference">
+                    <select class="ConstituentPaymentPreference">                           
                         <option value=""></option>
                         <option value="Default">Default</option>
                     </select>
+                    <a href="#" title="" class="newinterestpayoutpaymentpreferences newbutton"></a>
                 </div>
             </div>
 
             <br />
 
-<%--            <div class="twocolumn">
-                <label></label>
-                <input type="text" class="rs-FormattedName2 constituentlookup" />
-            </div>
---%>
-            <div class="fieldblock interestOptionCheck twocolumn">
-                <div>
+            <div class="interestpayoutconstituent twocolumn">
+                <div class="justright">
                     <label>Id:</label>
-                    <input type="text" class="interest-CheckId" />
+                    <input type="text" class="Constituent.Id" />
+                    <label>Name:</label>
                 </div>
                 <div>
-                    <label>Name:</label>
-                    <input type="text" class="interest-CheckName" />
+                    <input type="text" class="ConstituentName constituentlookup" />
                 </div>
             </div>
 
             <br />
 
-            <div class="fieldblock interestOptionDonation">
-                <fieldset>
-                    <legend>Dontation Template</legend>
-                </fieldset>            
+            <div class="modalbuttons">
+                <input type="button" class="saveinterestpayouts" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
             </div>
-
         </div>
 
     </div>
@@ -520,4 +517,5 @@
 
     </div>
 
+    <div class="'paymentpreferencesinclude'"></div>
 </asp:Content>
