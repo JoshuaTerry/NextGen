@@ -204,16 +204,17 @@ function LoadLinkedAccountsGrid() {
             return [GetLinkedType(data.LinkedAccountType)];
         }
     },
-    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left'},
+    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left' },
     { dataField: 'DisplayName', caption: 'Name' },
     ];
 
-    CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, 'linkedaccounts/investment/' + currentEntity.Id, null, EditLinkedAccounts, null, null);
+    CustomLoadGrid('linkedaccountsgrid', '.linkedaccountsgridcontainer', columns, 'linkedaccounts/investment/' + currentEntity.Id, null, EditLinkedAccounts);
 
 }
 
 function NewLinkedAccountsModal() {
 
+                
     $('.newlinkedaccountsmodallink').click(function (e) {
 
         e.preventDefault();
@@ -306,12 +307,14 @@ function LoadLinkedAccounts(id) {
 
     MakeServiceCall('GET', 'linkedaccounts/' + id, null, function (data) {
 
-        $('.linkedAccountType').val(data.Data.LinkedAccountType),
-        $('.la-LoadInd').val(data.Data.LoanInd),
-        $('.la-LoanNumber').val(data.Data.LoanNumber),
-        $('.la-CollateralInd').val(data.Data.CollateralInd),
-        $('.la-CollateralAmtPct').val(data.Data.CollateralIndAmtPct),
-        $('.la-BlockLink').val(data.Data.BlockLink)
+        $('.LinkedAccountType').val(data.Data.LinkedAccountType),
+        $('.LinkedAccountInd').val((data.Data.LinkedAccountNumber > 0) ? 1 : 0),
+        $('.LinkedAccountNumber').val(data.Data.LinkedAccountNumber),
+        $('.CollateralTypePercent').prop("checked", (data.Data.CollateralType === 0) ? true : false),
+        $('.CollateralTypeAmount').prop("checked", (data.Data.CollateralType === 1) ? true : false),
+        $('.CollateralType').val(data.Data.CollateralType),
+        $('.Collateral').val(data.Data.Collateral),
+        $('.BlockOtherLoanLinks').val(data.Data.BlockOtherLoanLinks)
 
 
     }, function (xhr, status, err) {
@@ -324,12 +327,12 @@ function GetLinkedAccountsToSave() {
 
     var rawitem = {
 
-        Type: $(modal).find('.linkedAccounts-Type').val(),
-        LoadInd: $(modal).find('.al-LoadInd').val(),
-        LoanNumber: $(modal).find('.al-LoanNumber').val(),
-        CollateralInd: $(modal).find('.al-CollateralInd').val(),
-        CollateralAmtPct: $(modal).find('.al-CollateralAmtPct').val(),
-        BlockLink: $(modal).find('.al-BlockLink').val()
+        LinkedAccountType: $(modal).find('.LinkedAccountType').val(),
+        //LinkedAccountInd: ($.isNumeric($(modal).find('.LinkedAccountNumber').val()) ? 1 : 0),    // when the item is available
+        LinkedAccountNumber: $(modal).find('.LinkedAccountNumber').val(),
+        CollateralType: ($('.CollateralTypePercent').prop("checked" === true) ? 0 : 1),
+        Collateral: $(modal).find('.Collateral').val(),
+        BlockOtherLoanLinks: $(modal).find('.BlockOtherLoanLinks').val()
 
     };
 
