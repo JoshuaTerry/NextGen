@@ -1,43 +1,43 @@
 ﻿
 
-$(document).ready(function () {
+//$(document).ready(function () {
 
-    LoadFiscalYearSelect();
+//    LoadFiscalYearSelect();
 
-});
+//});
 
-function LoadFiscalYearSelect() {
+//function LoadFiscalYearSelect() {
 
-    PopulateDropDown('.as-fiscalyear', 'fiscalyears', '', '');
+//    PopulateDropDown('.as-fiscalyear', 'fiscalyears', '', '');
 
-}
+//}
 
-function LoadAccountSelectorGrid() {
+//function LoadAccountSelectorGrid() {
 
-    // LedgerId 7BAFBB1E-A2DC-4D85-9542-229378F8DBC7
-    // FY ID	1A67ED6F-0FD8-47CD-9476-DC09D94E5F28
+//    // LedgerId 7BAFBB1E-A2DC-4D85-9542-229378F8DBC7
+//    // FY ID	1A67ED6F-0FD8-47CD-9476-DC09D94E5F28
 
-    //GLAccountSelector(container, ledgerId, fiscalYearId)
-    // FiscalYear.Id
-    // FiscalYear.Ledger.Id
+//    //GLAccountSelector(container, ledgerId, fiscalYearId)
+//    // FiscalYear.Id
+//    // FiscalYear.Ledger.Id
 
-    // GLAccountSelector('.as-accounts', '7BAFBB1E-A2DC-4D85-9542-229378F8DBC7', '1A67ED6F-0FD8-47CD-9476-DC09D94E5F28');
-    //MakeServiceCall(method, route, item, successCallback, errorCallback)
-    MakeServiceCall('GET', 'fiscalyears/' + $('.as-fiscalyear').val(), null, function () {
+//    // GLAccountSelector('.as-accounts', '7BAFBB1E-A2DC-4D85-9542-229378F8DBC7', '1A67ED6F-0FD8-47CD-9476-DC09D94E5F28');
+//    //MakeServiceCall(method, route, item, successCallback, errorCallback)
+//    MakeServiceCall('GET', 'fiscalyears/' + $('.as-fiscalyear').val(), null, function () {
 
-        LoadGLAccounts('.as-accounts', data.Data.Id, data.Data.Ledger.Id);
+//        LoadGLAccounts('.as-accounts', data.Data.Id, data.Data.Ledger.Id);
 
-    }, null);
+//    }, null);
 
     
 
-}
+//}
 
 function GLAccountSelector(container, ledgerId, fiscalYearId) {
 
     CreateGLAccountSelector(container)
 
-    $('.accountnumberlookup').autocomplete({
+    $('.accountnumberlookup',container).autocomplete({
         source: function (request, response) {
             MakeServiceCall('GET', 'accounts/lookup/' + request.term + "/" + ledgerId + "/" + fiscalYearId, null, function (result) {
 
@@ -46,7 +46,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                         label: result.Data[0].AccountNumber,
                         value: result.Data[0].Id
                     };
-                    SelectAccountNumberLookup(item);
+                    SelectAccountNumberLookup(item, container);
                 }
                 else {
 
@@ -66,30 +66,30 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
         },
         select: function (event, ui) {
             event.preventDefault();
-            SelectAccountNumberLookup(ui.item);
+            SelectAccountNumberLookup(ui.item, container);
         }
     });
 
     
-    $(".accountselectionsearch").click(function () {
-        var grid = $('.gridContainer .dx-widget').length;
+    $(".accountselectionsearch",container).click(function () {
+        var grid = $(' .gridContainer .dx-widget', container).length;
+        var gridcontainer = $(container).find('.gridContainer');
         if(grid == 0)
         {
-            LoadGLAccounts('#gridContainer', ledgerId, fiscalYearId);
+            LoadGLAccounts(gridcontainer, ledgerId, fiscalYearId);
         }
-        $("#gridContainer").show();
+        $(container).find('.gridContainer').show();
     });
 
-    $(".accountnumber").focus();
+    $(".accountnumber:first").focus();
 
 }
 
-function SelectAccountNumberLookup(item) {
+function SelectAccountNumberLookup(item, container) {
 
-    $(".accountdescription").html(item.description)
-    $('.accountnumber').val(item.label);
-    $('.hidaccountid').val(item.value);
-
+    $(container).find(".accountdescription").html(item.description)
+    $(container).find(".accountnumber").val(item.label)
+    $(container).find(".hidaccountid").val(item.value)
 }
 
 function CreateGLAccountSelector(container)
@@ -139,10 +139,9 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
 function LoadGLAcountGrid(container, data, columns)
 {
     //create grid
-    $(container).dxDataGrid({
+    container.dxDataGrid({
         columns: $.parseJSON(columns),
         dataSource: data,
-        //cacheEnabled: true,
         scrolling: {
             mode: "virtual"
         },
@@ -155,10 +154,10 @@ function LoadGLAcountGrid(container, data, columns)
         onSelectionChanged: function (selectedItems) {
             var data = selectedItems.selectedRowsData[0];
             if (data) {
-                $(".accountnumber").val(data.AccountNumber);
-                $(".hidaccountid").val(data.Id);
-                $(".accountdescription").text(data.Description)
-                $(".accountnumber").focus();
+                $(container).find(".accountnumber").val(data.AccountNumber);
+                $(container).find(".hidaccountid").val(data.Id);
+                $(container).find(".accountdescription").text(data.Description)
+                $(container).find(".accountnumber").focus();
                 $(container).hide();
             }
         }
