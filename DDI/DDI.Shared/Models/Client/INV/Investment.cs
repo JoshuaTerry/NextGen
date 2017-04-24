@@ -1,3 +1,4 @@
+using DDI.Shared.Attributes.Models;
 using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
@@ -68,8 +69,10 @@ namespace DDI.Shared.Models.Client.INV
         public IssuanceMethod IssuanceMethod { get; set; }
 
         //may be able to be calculated as opposed to being stored on the model
+        [DecimalPrecision(14, 2)]
         public decimal OriginalPurchaseAmount { get; set; }
-        
+
+        [DecimalPrecision(6, 4)]
         public decimal Rate { get; set; }
 
         public bool StepUpEligible { get; set; }
@@ -79,12 +82,11 @@ namespace DDI.Shared.Models.Client.INV
         public InterestFrequency InterestFrequency { get; set; }
 
         
-
         #region Navigation Properties
 
-        public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
+        public ICollection<InvestmentRelationship> InvestmentRelationships { get; set; }
 
-        public ICollection<InvestmentInterestPayout> InvestmentInterestPayout { get; set; }
+        public ICollection<InvestmentInterestPayout> InvestmentInterestPayouts { get; set; }
 
         #endregion
 
