@@ -1,18 +1,27 @@
 ﻿using DDI.Services;
+using System;
+using System.Web.Http;
+using DDI.Services.GL;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Services.Search;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
     public class AccountController : GeneralLedgerController<Account>
     {
+        protected new IAccountService Service => (IAccountService)base.Service;
+
         private ServiceBase<GLAccountSelection> _glAccount = new ServiceBase<GLAccountSelection>();
         private ServiceBase<Ledger> _ledger = new ServiceBase<Ledger>();
+        public AccountController()
+            : base(new AccountService())
+        {
+        }
+
 
         [HttpGet]
         [Route("api/v1/businessunit/{businessUnitId}/accounts", Name = RouteNames.Account)]
@@ -59,6 +68,13 @@ namespace DDI.WebApi.Controllers.GL
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/accounts/activity/{id}", Name = RouteNames.AccountActivity)]
+        public IHttpActionResult GetAccountActivity(Guid id)
+        {   
+            return base.CustomAction(() => Service.GetAccountActivity(id));
         }
 
         [HttpPost]

@@ -81,6 +81,7 @@
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
     <Compile Include="Search\AccountNumberSearch.cs" />
+    <Compile Include="GL\AccountService.cs" />
     <Compile Include="Security\GroupService.cs" />
     <Compile Include="Core\NoteService.cs" />
     <Compile Include="CRM\PaymentMethodService.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Core\ITagGroupService.cs" />
     <Compile Include="Common\StateService.cs" />
     <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IFiscalYearService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ using System.Data.Entity.Validation;
 
 namespace DDI.Data
 {
+    [DbConfigurationType(typeof(CustomDbConfiguration))]
     public class CommonContext : DbContext
 	{
         private const string COMMON_CONTEXT_CONNECTION_KEY = "CommonContext";

@@ -27,6 +27,8 @@ namespace DDI.Shared.Models.Common
         // Navigation Properties
 
         public Zip Zip { get; set; }
-        
+
+        public override string DisplayName => Description;
+
     }
 }
