@@ -376,75 +376,63 @@
 
 <%--    Modal section     --%>
 
-<div class="autotransmodal" title="Automated Transactions" style="display: none;">
+    <div class="autotransmodal" title="Automated Transactions" style="display: none;">
 
-    <div class="modalcontent">
-
+        <div class="modalcontent">
+ 
             <div class="fieldblock">
                 <label>Method:</label>
                 <select class="at-method">
-
                     <option value="0">Deposit</option>
                     <option value="1">Withdrawal</option>
                     <option value="2">Transfer</option>
-
                 </select>
             </div>
-                
-            <!-- Dropdown with deposit/withdrawal/transfer-->
-        </div>
 
-        
 
             <div class="fieldblock">
-                <label>Preferred Payment Method</label>
-                <select class="at-Info" />
-            </div>
-        <div class="twocolumn">
-
-            <div class="fieldblock">
-                <label>Preferred Payment Method</label>
-                <select class="at-Info" />
+                <label>Constituent Search</label>
+                <input type="text" class="at-Constituent" />
             </div>
 
-        </div>
 
-        <div class="twocolumn">
+            <div class="twocolumn">
 
-            <div class="fieldblock">
-                <label>testing box but</label>
-                <input type="text" class="at-test" />
+                <div class="fieldblock">
+                    <label>Payment Method</label>
+                    <select class="at-Constituent" />
+                </div>
+
+                <div class="preferredpaymentcontainer"></div>
+
             </div>
 
-            <div class="fieldblock">
-                <label>Preferred Payment Method</label>
-                <select class="at-Info" />
+            <div class="threecolumn">
+
+                <div class="fieldblock">
+                    <label>Next Date</label>
+                    <select class="at-NextDate" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Amount</label>
+                    <input type="text" class="at-NextDate" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>IsActive</label>
+                    <input type="checkbox" class="at-NextDate" />
+                </div>
             </div>
 
-        </div>
-
-        <div class="twocolumn">
-
-            <div class="fieldblock">
-                <label>Is Active:</label>
-                <input type="checkbox"  class="at-IsPreferred" />
+            <div class="modalbuttons">
+                <input type="button" class="submitautotrans" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
-            <div class="fieldblock">
-                <label>Comment:</label>
-                <input type="text"  class="at-Comment" />
-            </div>
-
-        </div>
-
-        <div class="modalbuttons">
-            <input type="button" class="submitsocmed" value="Save" />
-            <a href ="#" class="cancelmodal">Cancel</a>
         </div>
 
     </div>
-
-</div>
 
     <div class="interestpaymentmodal" title="Interest Payment" style="display: none;">
 
