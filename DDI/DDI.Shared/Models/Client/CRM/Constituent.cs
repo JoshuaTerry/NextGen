@@ -192,7 +192,7 @@ namespace DDI.Shared.Models.Client.CRM
         
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
-        public ICollection<InvestmentRelationship> InvestmentRelationship { get; set; }
+        public ICollection<InvestmentRelationship> InvestmentRelationships { get; set; }
         
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
