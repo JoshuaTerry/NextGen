@@ -293,8 +293,9 @@
                             </div>
                         </div>
 
-                        <h1>Linked Accounts<a href="#" title="New" class="newlinkedaccountsmodallink newbutton"></a></h1>
-                        <div class="editcontainer">
+                        <h1>Linked Accounts</h1>
+                        <div>
+                            <a href="#" class="newlinkedaccountsmodallink">New Item</a>
                             <div class="linkedaccountsgridcontainer">
                                 <div class="linkedaccountsgrid"></div>
                             </div>
@@ -368,7 +369,6 @@
                     </div>
 
             </div>
-
         </div>
     </div>
 
@@ -461,7 +461,7 @@
 
             <div class="twocolumn">
                 <div>
-                    <input type="checkbox" class="editable LinkedAccountInd" />
+                    <input type="checkbox" class="LinkedAccountInd" />
                     <label>Loan</label>
                 </div>
                 <div>
@@ -474,16 +474,16 @@
 
             <div class="twocolumn">
                 <div>
-                    <input type="checkbox" class="editable CollateralType" />
+                    <input type="checkbox" class="CollateralType" />
                     <label>Collateral on Loan</label>
                 </div>
                 <div>
                     <fieldset>
-                        <span>
-                            <input type="radio" name="CollateralTypePercent" value="Percent"/>Percent
-                            <input type="radio" name="CollateralTypeAmount" value="Amount"/>Amount
+                        <div>
+                            <input type="radio" name="CollateralType" class="CollateralTypePercent" value="Percent"/>Percent
+                            <input type="radio" name="CollateralType" value="CollateralTypeAmount"/>Amount
                             <input type="number" class="Collateral" />
-                        </span>
+                        </div>
                     </fieldset>            
                 </div>
             </div>
@@ -491,10 +491,14 @@
             <br />
 
             <div class="interestBlockOtherLoanLinks">
-                <input type="checkbox" class="editable BlockOtherLoanLinks" />
+                <input type="checkbox" class="BlockOtherLoanLinks" />
                 <label>Block Investments from linking to other loans:</label>
             </div>
 
+            <div class="modalbuttons">
+                <input type="button" class="savelinkedaccounts" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
         </div>
 
     </div>

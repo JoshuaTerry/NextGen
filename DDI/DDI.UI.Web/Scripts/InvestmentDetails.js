@@ -150,7 +150,7 @@ function LoadLinkedAccountsGrid() {
             return [GetLinkedType(data.LinkedAccountType)];
         }
     },
-    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left'},
+    { dataField: 'LinkedAccountNumber', caption: 'Link Number', alignment: 'left' },
     { dataField: 'DisplayName', caption: 'Name' },
     ];
 
@@ -160,6 +160,7 @@ function LoadLinkedAccountsGrid() {
 
 function NewLinkedAccountsModal() {
 
+                
     $('.newlinkedaccountsmodallink').click(function (e) {
 
         e.preventDefault();
@@ -273,7 +274,7 @@ function GetLinkedAccountsToSave() {
     var rawitem = {
 
         LinkedAccountType: $(modal).find('.LinkedAccountType').val(),
-        //LinkedAccountInd: $(modal).find('.LinkedAccountInd').val(),
+        //LinkedAccountInd: ($.isNumeric($(modal).find('.LinkedAccountNumber').val()) ? 1 : 0),    // when the item is available
         LinkedAccountNumber: $(modal).find('.LinkedAccountNumber').val(),
         CollateralType: ($('.CollateralTypePercent').prop("checked" === true) ? 0 : 1),
         Collateral: $(modal).find('.Collateral').val(),
