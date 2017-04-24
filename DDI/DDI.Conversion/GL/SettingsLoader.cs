@@ -171,8 +171,8 @@ namespace DDI.Conversion.GL
         {
             DomainContext context = new DomainContext();
 
-            FileExport<LegacyToID> companyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.BusinessUnitIdMappingFile), false, true);
-            FileExport<LegacyToID> ledgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.LedgerIdMappingFile), false, true);
+            FileExport<LegacyToID> companyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_BusinessUnitIdMappingFile), false, true);
+            FileExport<LegacyToID> ledgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerIdMappingFile), false, true);
 
             var businessUnits = LoadEntities(context.GL_BusinessUnits);
 
@@ -252,7 +252,7 @@ namespace DDI.Conversion.GL
         private void LoadFiscalYears(string filename)
         {
             DomainContext context = new DomainContext();
-            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.FiscalYearIdMappingFile), false, true);
+            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_FiscalYearIdMappingFile), false, true);
 
             LoadLedgerIds();
             var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
@@ -441,7 +441,7 @@ namespace DDI.Conversion.GL
         {
             if (_ledgerIds.Count == 0)
             {
-                _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.LedgerIdMappingFile);
+                _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_LedgerIdMappingFile);
             }
         }
     }

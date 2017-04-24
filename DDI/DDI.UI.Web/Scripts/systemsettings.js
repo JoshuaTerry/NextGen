@@ -2818,7 +2818,7 @@ function LoadAccountingSettings(id) {
 
         PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
 
-        if ($('.as-approval').checked) {
+        if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
 
             CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
             // PopulateDropDown(); // users with permissions to post approvals

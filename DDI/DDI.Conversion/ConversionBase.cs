@@ -179,9 +179,6 @@ namespace DDI.Conversion
                 modifiedOnColumn = createdByColumn + 3;
             }
 
-            string createdBy = importer.GetString(createdByColumn);
-            string modifiedBy = importer.GetString(modifiedByColumn);
-
             entity.CreatedOn = importer.GetDateTime(createdOnColumn);
             entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);
             entity.CreatedBy = importer.GetString(createdByColumn);
@@ -205,7 +202,7 @@ namespace DDI.Conversion
         /// <summary>
         /// Class for exporting rows that map a legacy ID (string) to an entity ID (Guid)
         /// </summary>
-        protected class LegacyToID
+        public class LegacyToID
         {
             public string LegacyKey { get; set; }
             public Guid Id { get; set; }
@@ -226,7 +223,7 @@ namespace DDI.Conversion
         /// <summary>
         /// Class for exporting rows that join a parent ID to a child ID
         /// </summary>
-        protected class JoinRow
+        public class JoinRow
         {
             public Guid LeftId { get; set; }
             public Guid RightId { get; set; }

@@ -55,9 +55,9 @@
 
     <siteMapNode url="~/Dashboard.aspx" title="DASHBOARD"  description="Dashboard" />
 
-    <siteMapNode url="~/Pages/Admin/Admin.aspx" title="ADMIN"  description="Admin">
-      <siteMapNode url="~/Pages/Admin/Security.aspx" title="Security"  description="Security" />
-      <siteMapNode url="~/Pages/Admin/SystemSettings.aspx" title="System Settings"  description="System Settings" />
+    <siteMapNode url="~/Pages/Admin/Admin.aspx" title="ADMIN"  description="Admin" roles="Admin-Read/Write">
+      <siteMapNode url="~/Pages/Admin/Security.aspx" title="Security"  description="Security" roles="Admin-Read/Write" />
+      <siteMapNode url="~/Pages/Admin/SystemSettings.aspx" title="System Settings"  description="System Settings" roles="Admin-Read/Write" />
     </siteMapNode>
     
   </siteMapNode>

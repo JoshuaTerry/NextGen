@@ -26,8 +26,7 @@ namespace DDI.WebApi.Controllers.General
     public class UsersController : GenericController<User>
     {
         private UserManager _userManager;
-        private RoleManager _roleManager;
-        private ServiceBase<BusinessUnit> _buService;
+        private RoleManager _roleManager;        
         private UserService userService;
 
 
@@ -105,6 +104,28 @@ namespace DDI.WebApi.Controllers.General
             {
                 userService = new UserService();
                 var user = Service.GetById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/userbyname/{username}/")]
+        public IHttpActionResult GetByName(string username)
+        {
+            try
+            {
+                userService = new UserService();
+                var user = Service.GetWhereExpression(u => u.UserName == username);
                 if (user == null)
                 {
                     return NotFound();

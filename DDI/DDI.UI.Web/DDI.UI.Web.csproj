@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.UI.Web</RootNamespace>
     <AssemblyName>DDI.UI.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
@@ -67,18 +69,17 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\accounts.css" />
     <Content Include="CSS\autocomplete.css" />
     <Content Include="CSS\constituents.css" />
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
@@ -92,6 +93,10 @@
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\INV\InvestmentDetails.aspx" />
+    <Content Include="Pages\GL\AccountDetails.aspx" />
+    <Content Include="Pages\GL\AccountSummary.aspx" />
+    <Content Include="Pages\GL\AccountTransactions.aspx" />
+    <Content Include="Pages\GL\ActivityAndBudget.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
     <Content Include="Pages\GL\AccountsPayable.aspx" />
@@ -132,6 +137,7 @@
     <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="TabbedContent.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -314,6 +320,9 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Code\ApiRoleProvider.cs" />
+    <Compile Include="Code\ApiUserProvider.cs" />
+    <Compile Include="Code\CustomSiteMapProvider.cs" />
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -327,6 +336,34 @@
     </Compile>
     <Compile Include="Pages\INV\InvestmentDetails.aspx.designer.cs">
       <DependentUpon>InvestmentDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\AccountDetails.aspx.cs">
+      <DependentUpon>AccountDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\AccountDetails.aspx.designer.cs">
+      <DependentUpon>AccountDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\AccountSummary.aspx.cs">
+      <DependentUpon>AccountSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\AccountSummary.aspx.designer.cs">
+      <DependentUpon>AccountSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\AccountTransactions.aspx.cs">
+      <DependentUpon>AccountTransactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\AccountTransactions.aspx.designer.cs">
+      <DependentUpon>AccountTransactions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\ActivityAndBudget.aspx.cs">
+      <DependentUpon>ActivityAndBudget.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\ActivityAndBudget.aspx.designer.cs">
+      <DependentUpon>ActivityAndBudget.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Reports\AccountingReports.aspx.cs">
       <DependentUpon>AccountingReports.aspx</DependentUpon>
@@ -598,6 +635,13 @@
     <Compile Include="RegistrationConfirmation.aspx.designer.cs">
       <DependentUpon>RegistrationConfirmation.aspx</DependentUpon>
     </Compile>
+    <Compile Include="TabbedContent.Master.cs">
+      <DependentUpon>TabbedContent.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TabbedContent.Master.designer.cs">
+      <DependentUpon>TabbedContent.Master</DependentUpon>
+    </Compile>
     <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -606,6 +650,16 @@
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
+      <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
+      <Name>DDI.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

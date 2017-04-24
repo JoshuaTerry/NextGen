@@ -254,5 +254,32 @@ namespace DDI.WebApi.Controllers
                 return InternalServerError(new Exception(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Invoke a custom action that returns an IDataReponse
+        /// </summary>
+        /// <param name="action">Action to be invoked.</param>
+        protected virtual IHttpActionResult CustomAction<T1>(Func<IDataResponse<T1>> action)
+        {
+            try
+            {
+                IDataResponse<T1> result = action();
+                if (result.Data == null)
+                {
+                    return NotFound();
+                }
+
+                if (!result.IsSuccessful)
+                {
+                    return BadRequest(string.Join(",", result.ErrorMessages));
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
     }
 }

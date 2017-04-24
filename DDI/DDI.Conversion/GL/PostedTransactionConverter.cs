@@ -8,16 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using DDI.Conversion.Statics;
 using DDI.Data;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion.GL
 {    
-    internal class TransactionConverter : GLConversionBase
+    internal class PostedTransactionConverter : GLConversionBase
     {
-        private Dictionary<string, Guid> _ledgerAccountYearIds;
-
         public enum ConversionMethod
         {
             PostedTransactions = 70300,
@@ -40,7 +39,7 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountYearIds();
             
             var outputFile = new FileExport<PostedTransaction>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionFile), append);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.PostedTransactionMappingFile), append, true);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionMappingFile), append, true);
 
             if (!append)
             {
@@ -64,7 +63,7 @@ namespace DDI.Conversion.GL
                     string legacyAccountKey = importer.GetString(2);
 
                     Guid accountId;
-                    if (!_ledgerAccountYearIds.TryGetValue(legacyAccountKey, out accountId))
+                    if (!LedgerAccountYearIds.TryGetValue(legacyAccountKey, out accountId))
                     {
                         importer.LogError($"Invalid account legacy key \"{legacyAccountKey}\".");
                         continue;
@@ -74,13 +73,13 @@ namespace DDI.Conversion.GL
                     transaction.FiscalYearId = fiscalYearId;
                     transaction.LedgerAccountYearId = accountId;
                     transaction.PeriodNumber = importer.GetInt(3);
-                    transaction.TransactionType = importer.GetEnum<PostedTranType>(4);
+                    transaction.PostedTransactionType = importer.GetEnum<PostedTransactionType>(4);
                     transaction.TransactionDate = importer.GetDate(5);
                     transaction.Amount = importer.GetDecimal(6);
-                    transaction.DocumentType = importer.GetString(7);
                     transaction.TransactionNumber = importer.GetInt64(8);
                     transaction.LineNumber = importer.GetInt(9);
                     transaction.Description = importer.GetString(10);
+                    transaction.TransactionType = importer.GetEnum<TransactionType>(11);
                     transaction.IsAdjustment = importer.GetBool(12);
 
                     transaction.AssignPrimaryKey();
@@ -94,20 +93,6 @@ namespace DDI.Conversion.GL
 
             legacyIdFile.Dispose();
             outputFile.Dispose();
-        }
-
-
-
-        /// <summary>
-        /// Load legacy LedgerAccountYear IDs into a dictionary.
-        /// </summary>
-        private void LoadLedgerAccountYearIds()
-        {
-            if (_ledgerAccountYearIds == null)
-            {
-                _ledgerAccountYearIds = new Dictionary<string, Guid>();
-                _ledgerAccountYearIds = LoadLegacyIds(OutputDirectory, OutputFile.LedgerAccountYearIdMappingFile);
-            }
         }
 
     }

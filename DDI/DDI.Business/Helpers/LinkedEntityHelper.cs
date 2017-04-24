@@ -22,12 +22,7 @@ namespace DDI.Business.Helpers
         
         public static string GetEntityTypeName(Type type)
         {
-            if (_namespacePrefix == null)
-            {
-                _namespacePrefix = typeof(EntityBase).FullName.Replace("EntityBase", string.Empty);
-            }
-
-            return type.FullName.Replace(_namespacePrefix, string.Empty).Substring(7); // Substring(7) removes leading Common. or Client.
+            return type.Name;
         }
 
         public static string GetEntityTypeName<T>() where T : EntityBase
@@ -35,7 +30,7 @@ namespace DDI.Business.Helpers
             return GetEntityTypeName(typeof(T));
         }
 
-        public static EntityBase GetParentEntity(LinkedEntityBase childEntity, IUnitOfWork unitOfWork)
+        public static EntityBase GetParentEntity(ILinkedEntityBase childEntity, IUnitOfWork unitOfWork)
         {
             if (childEntity.ParentEntityId == null)
             {
@@ -52,7 +47,7 @@ namespace DDI.Business.Helpers
             return null;
         }
 
-        public static void SetParentEntity(LinkedEntityBase childEntity, EntityBase parentEntity)
+        public static void SetParentEntity(ILinkedEntityBase childEntity, EntityBase parentEntity)
         {
             if (parentEntity == null)
             {
