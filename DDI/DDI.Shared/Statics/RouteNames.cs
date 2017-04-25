@@ -43,6 +43,7 @@
         public const string Language = "Language";
         public const string Ledger = "Ledger";
         public const string Level = "Level";
+        public const string Lookup = "Lookup";
         public const string MaritalStatus = "MaritalStatus";
         public const string SectionName = "SectionName";
         public const string Note = "Note";
@@ -62,6 +63,7 @@
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";
         public const string Segment = "Segment";
+        public const string SegmentChildren = "ChildrenSegment";
         public const string SegmentLevel = "SegmentLevel";
         public const string State = "State";
         public const string Tag = "Tag";

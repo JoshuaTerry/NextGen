@@ -80,6 +80,7 @@
     <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\SegmentService.cs" />
     <Compile Include="GL\AccountService.cs" />
     <Compile Include="Security\GroupService.cs" />
     <Compile Include="Core\NoteService.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Core\ITagGroupService.cs" />
     <Compile Include="Common\StateService.cs" />
     <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IFiscalYearService.cs" />
   </ItemGroup>

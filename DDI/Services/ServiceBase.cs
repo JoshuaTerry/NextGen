@@ -68,15 +68,11 @@ namespace DDI.Services
             return GetPagedResults(queryable, search);
         }
 
-        private IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
+        protected IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
-                search = new PageableSearch
-                {
-                    Limit = SearchParameters.LimitDefault,
-                    Offset = SearchParameters.OffsetDefault
-                };
+                search = PageableSearch.Default;
             }
 
             var query = new CriteriaQuery<T, IPageable>(queryable, search);
