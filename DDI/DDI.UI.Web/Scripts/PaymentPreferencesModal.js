@@ -14,7 +14,7 @@
             resizable: false
         });
 
-        $('.cancelmodal').click(function (e) {
+        $('.cancelpaymentpreferencesmodal').click(function (e) {
 
             e.preventDefault();
 
@@ -22,9 +22,9 @@
 
         });
 
-        $('.savepaymentpreferences').unbind('click');
+        $('.savepaymentpreferencesbutton').unbind('click');
 
-        $('.savepaymentpreferences').click(function () {
+        $('.savepaymentpreferencesbutton').click(function () {
 
             var item = GetpaymentpreferencesToSave();
 
@@ -59,7 +59,7 @@ function Editpaymentpreferences(id) {
     Loadpaymentpreferences(id);
 
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelpaymentpreferencesmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -67,9 +67,9 @@ function Editpaymentpreferences(id) {
 
     });
 
-    $('.savepaymentpreferences').unbind('click');
+    $('.savepaymentpreferencesbutton').unbind('click');
 
-    $('.savepaymentpreferences').click(function () {
+    $('.savepaymentpreferencesbutton').click(function () {
 
         var topicsavelist = GetNoteTopicsToSave();
 

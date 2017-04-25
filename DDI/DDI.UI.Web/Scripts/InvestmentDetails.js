@@ -17,7 +17,11 @@
 
     DisplayInvestmentData();
 
-    $('.paymentpreferenceinclude').load("Pages\Common\PaymentPreference.html");
+    function LoadDropDowns() {
+
+        PopulateDropDown('.ConstituentPaymentPreference', 'paymentmethods', '', '');
+    }
+
 
     // RefreshEntity(); ?
     
@@ -158,7 +162,7 @@ function LoadInterestPayoutsGrid() {
 
 function NewInterestPayoutsModal() {
 
-
+    
     $('.newinterestpayoutsmodallink').click(function (e) {
 
         e.preventDefault();

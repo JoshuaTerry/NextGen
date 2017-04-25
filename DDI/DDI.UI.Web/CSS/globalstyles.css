@@ -9,7 +9,6 @@ a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
 
 .justright {text-align: right}
-.justcenter {text-align: center}
 
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
 

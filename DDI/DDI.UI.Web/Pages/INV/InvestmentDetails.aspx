@@ -416,21 +416,6 @@
 
             <br />
 
-            <div class="interestpayoutpaymentpreference twocolumn">
-                <div class="justright">
-                    <label>Payment Preference: </label>
-                </div>
-                <div>
-                    <select class="ConstituentPaymentPreference">                           
-                        <option value=""></option>
-                        <option value="Default">Default</option>
-                    </select>
-                    <a href="#" title="" class="newinterestpayoutpaymentpreferences newbutton"></a>
-                </div>
-            </div>
-
-            <br />
-
             <div class="interestpayoutconstituent twocolumn">
                 <div class="justright">
                     <label>Id:</label>
@@ -439,6 +424,19 @@
                 </div>
                 <div>
                     <input type="text" class="ConstituentName constituentlookup" />
+                </div>
+            </div>
+
+            <br />
+
+            <div class="interestpayoutpaymentpreference twocolumn">
+                <div class="justright">
+                    <label>Payment Preference: </label>
+                </div>
+                <div>
+                    <select class="ConstituentPaymentPreference">                           
+                    </select>
+                    <a href="#" title="" class="newinterestpayoutpaymentpreferences newbutton"></a>
                 </div>
             </div>
 
@@ -518,4 +516,85 @@
     </div>
 
     <div class="'paymentpreferencesinclude'"></div>
+
+
+<div class="paymentpreferencesmodal" title="Payment Preference" style="display: none;">
+
+    <div class="modalcontent">
+
+        <div class="fieldblock">
+            <label>Description</label>
+            <input type="text" class="pp-Description" />
+        </div>
+
+        <div class="fieldblock">
+            <label>Bank Name</label>
+            <input type="text" class="pp-BankName" />
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Routing Number</label>
+                <input type="text" class="pp-RoutingNumber" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Account Number</label>
+                <input type="text" class="pp-BankAccount" />
+            </div>
+
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Account Type</label>
+                <select class="pp-AccountType">
+                    <option value=""></option>
+                    <option value="0">Checking Account</option>
+                    <option value="1">Savings Account</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>EFT Format</label>
+                <select class="pp-EFTFormatId eftformats"></select>
+            </div>
+
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Status</label>
+                <select class="pp-Status">
+                    <option value=""></option>
+                    <option value="0">Active</option>
+                    <option value="1">Inactive</option>
+                    <option value="2">Pre-note Required</option>
+                    <option value="3">Pre-Note Sent</option>
+                    <option value="4">Expired</option>
+                    <option value="5">Not Valid</option>
+                </select>
+            </div>
+
+        </div>
+
+        <input type="hidden" class="pp-StatusDate" />
+        <input type="hidden" class="pp-PreviousStatus" />
+        <input type="hidden" class="pp-ConstituentId parentid" />
+
+        <div class="modalbuttons">
+            <input type="button" class="savepaymentpreferencesbutton" value="Save" />
+            <a href="#" class="cancelpaymentpreferencesmodal">Cancel</a>
+        </div>
+
+    </div>
+
+</div>
+
+<%--    End Modal section     --%>
+
+
 </asp:Content>
