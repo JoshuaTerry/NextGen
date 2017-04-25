@@ -38,6 +38,17 @@ namespace DDI.Shared.Extensions
             return val;
         }
 
+        /// <summary>
+        /// Add all entries from another dictionary into this dictionary.
+        /// </summary>
+        public static void AddRange<K, V>(this IDictionary<K, V> dict, IDictionary<K, V> otherDict)
+        {
+            foreach (var entry in otherDict)
+            {
+                dict[entry.Key] = entry.Value;
+            }
+        }
+
     }
 }
 

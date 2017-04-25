@@ -51,7 +51,7 @@ namespace DDI.Conversion.CP
         {
             if (_constituentIds.Count == 0)
             {
-                _constituentIds = LoadIntLegacyIds(_crmOutputDirectory, OutputFile.ConstituentIdMappingFile);
+                _constituentIds = LoadIntLegacyIds(_crmOutputDirectory, OutputFile.CRM_ConstituentIdMappingFile);
             }
         }
 
@@ -77,7 +77,7 @@ namespace DDI.Conversion.CP
                 var outputFile = new FileExport<PaymentMethod>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodFile), append);
 
                 // Legacy ID file, to convert from OE id to SQL Id.
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.PaymentMethodIdMappingFile), append, true);
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.CP_PaymentMethodIdMappingFile), append, true);
                 
                 if (!append)
                 {

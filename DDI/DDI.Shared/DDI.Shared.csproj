@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Shared</RootNamespace>
     <AssemblyName>DDI.Shared</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,8 +63,8 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -89,6 +90,7 @@
     <Compile Include="Attributes\Logging\DoNotLogAttribute.cs" />
     <Compile Include="Attributes\Logging\IFilterAttribute.cs" />
     <Compile Include="Attributes\Models\DecimalPrecisionAttribute.cs" />
+    <Compile Include="Attributes\Transactions\TransactionTypeAttribute.cs" />
     <Compile Include="Caching\CacheHelper.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\MemoryCacheProvider.cs" />
@@ -100,6 +102,11 @@
     <Compile Include="Enums\Common\CustomFieldType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
+    <Compile Include="Enums\Core\EntityTransactionRelationship.cs" />
+    <Compile Include="Enums\Core\RecurringDay.cs" />
+    <Compile Include="Enums\Core\EntityNumberType.cs" />
+    <Compile Include="Enums\Core\TransactionType.cs" />
+    <Compile Include="Enums\Core\TransactionAmountType.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
@@ -114,6 +121,7 @@
     <Compile Include="Enums\CRM\SalutationType.cs" />
     <Compile Include="Enums\CRM\TagSelectionType.cs" />
     <Compile Include="Enums\GL\AccountCategory.cs" />
+    <Compile Include="Enums\GL\JournalType.cs" />
     <Compile Include="Enums\GL\BudgetType.cs" />
     <Compile Include="Enums\GL\BusinessUnitType.cs" />
     <Compile Include="Enums\GL\DueToMode.cs" />
@@ -125,8 +133,8 @@
     <Compile Include="Enums\Core\RecurringType.cs" />
     <Compile Include="Enums\GL\SegmentFormat.cs" />
     <Compile Include="Enums\GL\SegmentType.cs" />
-    <Compile Include="Enums\GL\SubLedgerTransactionStatus.cs" />
-    <Compile Include="Enums\GL\TransactionXferCategory.cs" />
+    <Compile Include="Enums\Core\TransactionStatus.cs" />
+    <Compile Include="Enums\Core\EntityTransactionCategory.cs" />
     <Compile Include="Enums\INV\InvestmentAutomatedTransactionMethod.cs" />
     <Compile Include="Enums\INV\CollateralType.cs" />
     <Compile Include="Enums\INV\LinkedAccountType.cs" />
@@ -145,6 +153,7 @@
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="FixedSizeList.cs" />
+    <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
@@ -166,8 +175,14 @@
     <Compile Include="Models\Client\Audit\IReadOnlyEntity.cs" />
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
+    <Compile Include="Models\Client\Core\EntityApproval.cs" />
+    <Compile Include="Models\Client\Core\EntityNumber.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
+    <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
+    <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />
+    <Compile Include="Models\Client\GL\JournalLine.cs" />
+    <Compile Include="Models\Client\GL\Journal.cs" />
     <Compile Include="Models\Client\GL\AccountBalance.cs" />
     <Compile Include="Models\Client\GL\AccountClose.cs" />
     <Compile Include="Models\Client\GL\Account.cs" />
@@ -198,6 +213,9 @@
     <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
     <Compile Include="Models\Client\INV\InvestmentRelationship.cs" />
     <Compile Include="Models\Client\INV\Investment.cs" />
+    <Compile Include="Models\Client\GL\ValidatedAccount.cs" />
+    <Compile Include="Models\Client\Core\Transaction.cs" />
+    <Compile Include="Models\Client\Core\EntityTransaction.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
@@ -220,6 +238,7 @@
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\IAuditableEntity.cs" />
+    <Compile Include="Models\ILinkedEntityBase.cs" />
     <Compile Include="Models\ISearchDocument.cs" />
     <Compile Include="Models\LinkedEntityBase.cs" />
     <Compile Include="Models\Client\Core\Configuration.cs" />
@@ -282,6 +301,7 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+    <Compile Include="Statics\GL\ConstantsGL.cs" />
     <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
@@ -290,6 +310,7 @@
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
+    <Compile Include="Statics\UserMessages.cs" />
     <Compile Include="TaskScheduler.cs" />
     <Compile Include="ValidationException.cs" />
   </ItemGroup>

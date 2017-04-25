@@ -827,22 +827,40 @@ namespace DDI.Data.Migrations.Client
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.CustomField", t => t.CustomFieldId, cascadeDelete: true)
                 .Index(t => t.CustomFieldId);
-            
-            CreateTable(
-                "dbo.FileStorage",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false),
-                        Name = c.String(),
-                        Extension = c.String(maxLength: 256),
-                        Size = c.Long(nullable: false),
-                        Data = c.Binary(),
-                        CreatedBy = c.Guid(),
-                        CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
-                        LastModifiedBy = c.Guid(),
-                        LastModifiedOn = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.Id);
+
+            Sql(@"
+                    CREATE TABLE [dbo].[FileStorage](
+	                    [Id] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+	                    [Name] [varchar](max) NOT NULL,
+	                    [Extension] [varchar](256) NOT NULL,
+	                    [Size] [bigint] NOT NULL,
+	                    [Data] [varbinary](max) FILESTREAM  NULL,
+	                    [CreatedBy] [uniqueidentifier] NULL,
+	                    [CreatedOn] [datetime] NULL,
+	                    [LastModifiedBy] [uniqueidentifier] NULL,
+	                    [LastModifiedOn] [datetime] NULL,
+                     CONSTRAINT [PK_FileStorage] PRIMARY KEY CLUSTERED 
+                    (
+	                    [Id] ASC
+                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] FILESTREAM_ON [Demo_Filestream]
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY] FILESTREAM_ON [Demo_Filestream]
+                    ");
+
+            //CreateTable(
+            //    "dbo.FileStorage",
+            //    c => new
+            //        {
+            //            Id = c.Guid(nullable: false),
+            //            Name = c.String(),
+            //            Extension = c.String(maxLength: 256),
+            //            Size = c.Long(nullable: false),
+            //            Data = c.Binary(),
+            //            CreatedBy = c.Guid(),
+            //            CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
+            //            LastModifiedBy = c.Guid(),
+            //            LastModifiedOn = c.DateTime(),
+            //        })
+            //    .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.LogEntry",

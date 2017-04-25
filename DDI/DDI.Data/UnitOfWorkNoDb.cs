@@ -18,6 +18,18 @@ namespace DDI.Data
         private Dictionary<Type, object> _repositories;
         private List<object> _businessLogic;
 
+        /// <summary>
+        /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
+        /// </summary>
+        public bool AuditingEnabled
+        {
+            get
+            {
+                return false;
+            }
+            set { }
+        }
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -137,6 +149,14 @@ namespace DDI.Data
         public IQueryable<T> Where<T>(Expression<Func<T, bool>> predicate) where T : class
         {
             return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
         }
 
         /// <summary>

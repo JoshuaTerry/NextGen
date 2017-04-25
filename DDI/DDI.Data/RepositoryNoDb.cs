@@ -59,6 +59,11 @@ namespace DDI.Data
 
         public ISQLUtilities Utilities => null;
 
+        /// <summary>
+        /// A property name or comma delimited list of property names to return via the GetModifiedProperties method.
+        /// </summary>
+        public string ModifiedPropertyList { get; set; }
+
         #endregion Public Properties
 
 
@@ -75,7 +80,7 @@ namespace DDI.Data
 
         public EntityState GetEntityState(T entity)
         {
-            return EntityState.Unchanged;
+            return (string.IsNullOrWhiteSpace(ModifiedPropertyList) ? EntityState.Unchanged : EntityState.Modified);
         }
 
         /// <summary>
@@ -214,7 +219,14 @@ namespace DDI.Data
 
         public List<string> GetModifiedProperties(T entity) 
         {
-            return new List<string>();
+            if (string.IsNullOrWhiteSpace(ModifiedPropertyList))
+            {
+                return new List<string>();
+            }
+            else
+            {
+                return ModifiedPropertyList.Split(',').ToList();
+            }
         }
 
 

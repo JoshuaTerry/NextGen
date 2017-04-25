@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data
 {
@@ -22,8 +23,12 @@ namespace DDI.Data
         private DbContext _commonContext;
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private Dictionary<Type, object> _cachedRepositories;
         private string _commonNamespace;
         private List<object> _businessLogic;
+        private bool _isAuditStatusInitialized;
+        private bool _auditModuleEnabled;
+        private bool _auditingEnabled;
 
         #endregion Private Fields
          
@@ -47,11 +52,40 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
+            _cachedRepositories = null;
             _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
             _businessLogic = new List<object>();
+            _isAuditStatusInitialized = false;          
         }
 
         #endregion Public Constructors
+
+        #region Public Properties
+
+        /// <summary>
+        /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
+        /// </summary>
+        public bool AuditingEnabled
+        {
+            get
+            {
+                if (!_isAuditStatusInitialized)
+                {
+                    InitializeAuditStatus();
+                }
+                return _auditingEnabled;
+            }
+            set
+            {
+                if (!_isAuditStatusInitialized)
+                {
+                    InitializeAuditStatus();
+                }
+                _auditingEnabled = _auditModuleEnabled && value;
+            }
+        }
+
+        #endregion
 
         #region Public Methods
 
@@ -72,6 +106,14 @@ namespace DDI.Data
         public IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
         {
             return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
         }
 
         /// <summary>
@@ -212,25 +254,34 @@ namespace DDI.Data
             return repository;
         }
 
-        public IRepository<T> GetCachedRepository<T>() where T : class 
+        /// <summary>
+        /// Get a cached repository for an entity type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IRepository<T> GetCachedRepository<T>() where T : class
         {
             IRepository<T> repository = null;
 
             var type = typeof(T);
+            if (_cachedRepositories == null)
+            {
+                _cachedRepositories = new Dictionary<Type, object>();
+            }
 
-            if (!_repositories.ContainsKey(type))
+            if (!_cachedRepositories.ContainsKey(type))
             {
                 DbContext context = GetContext(type);
 
                 // Create a repository, then add it to the dictionary.
-                repository = new CachedRepository<T>(context);
+                repository = new CachedRepository<T>(GetRepository<T>());
 
-                _repositories.Add(type, repository);
+                _cachedRepositories.Add(type, repository);
             }
             else
             {
                 // Repository already exists...
-                repository = _repositories[type] as IRepository<T>;
+                repository = _cachedRepositories[type] as IRepository<T>;
             }
 
             return repository;
@@ -270,11 +321,10 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
+            User user;
 
-            var user = EntityFrameworkHelpers.GetCurrentUser();
-            if (EFAuditModule.IsAuditEnabled && user != null)
+            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
             {
-
                 return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
@@ -335,6 +385,19 @@ namespace DDI.Data
         }
 
         #endregion Protected Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Determine if the audit module is enabled.
+        /// </summary>
+        private void InitializeAuditStatus()
+        {
+            _auditingEnabled = _auditModuleEnabled = EFAuditModule.IsAuditEnabled;
+            _isAuditStatusInitialized = true;
+        }
+
+        #endregion
     }
 
 }

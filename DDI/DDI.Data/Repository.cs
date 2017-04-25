@@ -10,6 +10,8 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Models.Client.Security;
+using System.Threading;
 
 namespace DDI.Data
 {
@@ -237,13 +239,9 @@ namespace DDI.Data
                     IAuditableEntity auditableEntity = entity as IAuditableEntity;
                     if (auditableEntity != null)
                     {
-                        var user = EntityFrameworkHelpers.GetCurrentUser();
-                        if (user != null)
-                        {
-                            auditableEntity.CreatedBy = user.UserName;
-                            auditableEntity.LastModifiedBy = user.UserName;
-                        }
-
+                        string userName = Thread.CurrentPrincipal?.Identity.Name;
+                        auditableEntity.CreatedBy = userName;
+                        auditableEntity.LastModifiedBy = userName;
                         auditableEntity.CreatedOn = DateTime.UtcNow;
                         auditableEntity.LastModifiedOn = DateTime.UtcNow;
                     }
@@ -271,12 +269,7 @@ namespace DDI.Data
                 IAuditableEntity auditableEntity = entity as IAuditableEntity;
                 if (auditableEntity != null)
                 {
-                    var user = EntityFrameworkHelpers.GetCurrentUser();
-                    if (user != null)
-                    {
-                        auditableEntity.LastModifiedBy = user.UserName;
-                    }
-
+                    auditableEntity.LastModifiedBy = Thread.CurrentPrincipal?.Identity.Name;
                     auditableEntity.LastModifiedOn = DateTime.UtcNow;
                 }
                 Attach(entity, System.Data.Entity.EntityState.Modified);
