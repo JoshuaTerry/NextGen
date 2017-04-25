@@ -376,18 +376,11 @@
 
 <%--    Modal section     --%>
 
-    <div class="autotransmodal" title="Automated Transactions" style="display: none;">
+    <div class="autotransmodal" title="Automated Transactions" style="display: none;"> <%--autotransmodal--%>
 
         <div class="modalcontent">
  
-            <div class="fieldblock">
-                <label>Method:</label>
-                <select class="at-method">
-                    <option value="0">Deposit</option>
-                    <option value="1">Withdrawal</option>
-                    <option value="2">Transfer</option>
-                </select>
-            </div>
+            
 
 
             <div class="fieldblock">
@@ -403,26 +396,49 @@
                     <select class="at-Constituent" />
                 </div>
 
-                <div class="preferredpaymentcontainer"></div>
-
             </div>
 
-            <div class="threecolumn">
+            <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>Next Date</label>
                     <select class="at-NextDate" />
                 </div>
 
+               <input type="button" class="newpaymentpref" value="Add Payment Preference" />
+
+            </div>
+
+            <div class="twocolumn">
+
                 <div class="fieldblock">
                     <label>Amount</label>
-                    <input type="text" class="at-NextDate" />
+                    <input type="text" class="at-Amount" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Frequency</label>
+                    <input type="text" class="at-Frequency" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Method:</label>
+                    <select class="at-method">
+                        <option value="0">Deposit</option>
+                        <option value="1">Withdrawal</option>
+                        <option value="2">Transfer</option>
+                    </select>
                 </div>
 
                 <div class="fieldblock">
                     <label>IsActive</label>
-                    <input type="checkbox" class="at-NextDate" />
+                    <input type="checkbox" class="at-IsActive" />
                 </div>
+                
             </div>
 
             <div class="modalbuttons">

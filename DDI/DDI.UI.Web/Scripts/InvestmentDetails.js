@@ -105,19 +105,43 @@ function LoadDepositsAndWithdrawalsSection() {
         { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
         { dataField: 'NextTransactionDate', caption: 'NextDate' }, //order by
         { dataField: 'RecurringType', caption: 'Frequency' },
-       // { dataField: 'AutomatedTransactionMethod', caption: 'Method' },
         { dataField: 'PaymentPreference.DisplayName', caption: 'Payment Info' }, // similar to constituent payment prefs
         { dataField: 'Amount', caption: 'Amount' },
         { dataField: 'IsActive', caption: 'Status' }
     ];
 
+    var payprefcolumns = [
+         { dataField: 'Id', width: '0px' },
+         { dataField: 'Description', caption: 'Description' },
+         { dataField: 'RoutingNumber', caption: 'Routing Number' },
+         { dataField: 'BankAccount', caption: 'Account Number' },
+         {
+             caption: 'Ch/S', cellTemplate: function (container, options) {
+                 var type = 'Ch';
 
+                 if (options.data.AccountType == '1') {
+                     type = 'S';
+                 }
 
-    LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 500, false, false, false);
+                 $('<label>').text(type).appendTo(container);
+             }
+         }
+    ];
 
-    PopulateDropDown('.at-Info', 'paymentmethods/constituents/' + currentEntity.Id, '', ''); // payment preferences
+    var constituentid = ''
 
-    // need logic for selected constituent on search
+    LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 1000, false, false, false);
+
+    MakeServiceCall('GET', 'paymentmethods/constituents/'); // will need to look up id of constituent found in search,
+
+    PopulateDropDown('.at-Info', 'paymentmethods/constituents/' + constituentid, '', ''); 
+
+    $('.newpaymentpref').click(function (e) {
+
+        // Will need to use existing payment prefs modal to add a new payment pref from here
+        LoadGrid(null, null, payprefcolumns, 'paymentmethods/constituents/' + constituentid, 'paymentmethods',
+            null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
+    });
 
 }
 
