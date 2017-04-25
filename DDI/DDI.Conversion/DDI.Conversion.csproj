@@ -85,6 +85,7 @@
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
     <Compile Include="CRM\SettingsLoader.cs" />
+    <Compile Include="GL\JournalSearchIndexer.cs" />
     <Compile Include="GL\JournalConverter.cs" />
     <Compile Include="GL\PostedTransactionConverter.cs" />
     <Compile Include="GL\GLConversionBase.cs" />

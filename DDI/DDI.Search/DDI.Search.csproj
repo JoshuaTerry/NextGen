@@ -57,6 +57,7 @@
     <Compile Include="ElasticRepository.cs" />
     <Compile Include="IAutoMappable.cs" />
     <Compile Include="IDocumentSearchResult.cs" />
+    <Compile Include="Models\JournalDocument.cs" />
     <Compile Include="Models\AddressDocument.cs" />
     <Compile Include="Models\ConstituentDocument.cs" />
     <Compile Include="Models\ContactInfoDocument.cs" />

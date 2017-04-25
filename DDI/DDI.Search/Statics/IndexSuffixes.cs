@@ -12,5 +12,6 @@ namespace DDI.Search.Statics
     public static class IndexSuffixes
     {
         public const string CRM = "crm";
+        public const string GL = "gl";
     }
 }
