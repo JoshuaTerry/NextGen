@@ -128,7 +128,7 @@ function LoadDepositsAndWithdrawalsSection() {
          }
     ];
 
-    var constituentid = ''
+    var constituentid = '' // needs to come in from constituent search
 
     LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 1000, false, false, false);
 
@@ -139,8 +139,7 @@ function LoadDepositsAndWithdrawalsSection() {
     $('.newpaymentpref').click(function (e) {
 
         // Will need to use existing payment prefs modal to add a new payment pref from here
-        LoadGrid(null, null, payprefcolumns, 'paymentmethods/constituents/' + constituentid, 'paymentmethods',
-            null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
+
     });
 
 }
