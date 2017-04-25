@@ -1463,4 +1463,7 @@ function FormatFields() {
         $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
     });
     $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $(".percent").each(function () {
+        $(this).val($(this).val() + '%');
+    });
 }

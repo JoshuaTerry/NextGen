@@ -167,6 +167,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\Notes.js" />
+    <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\region.js" />
     <Content Include="Scripts\registrationconfirmation.js" />
     <Content Include="Scripts\security.js" />
