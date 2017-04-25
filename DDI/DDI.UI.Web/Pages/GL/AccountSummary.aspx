@@ -7,7 +7,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <h1>Summary</h1>
-
-    <p>foo diddy</p>
+    <div class="summarygridcontainer"></div>
 
 </asp:Content>
