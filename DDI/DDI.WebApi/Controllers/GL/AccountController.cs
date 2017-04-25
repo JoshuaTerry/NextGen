@@ -17,6 +17,7 @@ namespace DDI.WebApi.Controllers.GL
 
         private ServiceBase<GLAccountSelection> _glAccount = new ServiceBase<GLAccountSelection>();
         private ServiceBase<Ledger> _ledger = new ServiceBase<Ledger>();
+        private ServiceBase<FiscalYear> _fiscalYear = new ServiceBase<FiscalYear>();
         public AccountController()
             : base(new AccountService())
         {
@@ -47,8 +48,8 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/lookup/{name}/{ledgerId}/{fiscalYearId}")]
-        public IHttpActionResult AccountLookup(string name, Guid ledgerId, Guid fiscalYearId)
+        [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
+        public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)
         {
             string fields = "Id,AccountNumber,Description";
 
@@ -59,6 +60,8 @@ namespace DDI.WebApi.Controllers.GL
                 Limit = 500,
                 Fields = fields,
             };
+
+            var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
 
             return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId),search),null,search, search.Fields, null);
         }

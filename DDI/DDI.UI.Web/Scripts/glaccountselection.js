@@ -6,7 +6,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
 
     $('.accountnumberlookup',container).autocomplete({
         source: function (request, response) {
-            MakeServiceCall('GET', 'accounts/lookup/' + request.term + "/" + ledgerId + "/" + fiscalYearId, null, function (result) {
+            MakeServiceCall('GET', 'fiscalyears/' + fiscalYearId + '/accounts/lookup/' + request.term , null, function (result) {
 
                 if (result.Data.length == 1) {
                     var item = {
@@ -40,10 +40,10 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     
     $(".accountselectionsearch",container).click(function () {
         var grid = $(' .gridContainer .dx-widget', container).length;
-        var gridcontainer = $(container).find('.gridContainer');
+       
         if(grid == 0)
         {
-            LoadGLAccounts(gridcontainer, ledgerId, fiscalYearId);
+            LoadGLAccounts(container, ledgerId, fiscalYearId);
         }
         $(container).find('.gridContainer').show();
     });
@@ -93,7 +93,7 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
             MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
                 function (data) {
-                    LoadGLAcountGrid(container, data.Data, columns);
+                    LoadGLAccountGrid(container, data.Data, columns);
                 }
 
                 , null)
@@ -103,10 +103,10 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
     )
 }
 
-function LoadGLAcountGrid(container, data, columns)
+function LoadGLAccountGrid(container, data, columns)
 {
     //create grid
-    container.dxDataGrid({
+    $(container).find(".gridContainer").dxDataGrid({
         columns: $.parseJSON(columns),
         dataSource: data,
         scrolling: {
@@ -125,7 +125,7 @@ function LoadGLAcountGrid(container, data, columns)
                 $(container).find(".hidaccountid").val(data.Id);
                 $(container).find(".accountdescription").text(data.Description)
                 $(container).find(".accountnumber").focus();
-                $(container).hide();
+                $(container).find(".gridContainer").hide();
             }
         }
        
