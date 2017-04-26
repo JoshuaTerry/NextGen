@@ -1,4 +1,5 @@
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Enums.INV;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.INV;
@@ -213,11 +214,11 @@ namespace DDI.Shared.Models.Client.CRM
         }
 
         [NotMapped]
-        public string InvestorStatus
+        public InvestorStatus InvestorStatus
         {
             get
             {
-                return "Active";
+                return InvestorStatus.ActiveInvestor;
             }
         }
 
