@@ -48,7 +48,10 @@ namespace DDI.Business
         /// </summary>
         public void ScheduleUpdateSearchDocument(T entity)
         {
-            ScheduleUpdateSearchDocument(entity.Id);
+            if (entity != null)
+            {
+                ScheduleUpdateSearchDocument(entity.Id);
+            }
         }
 
         /// <summary>

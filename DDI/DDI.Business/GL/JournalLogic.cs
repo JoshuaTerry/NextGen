@@ -37,6 +37,12 @@ namespace DDI.Business.GL
         #endregion
 
 
+        public override void Validate(Journal journal)
+        {
+            journal.AssignPrimaryKey();
+            ScheduleUpdateSearchDocument(journal);
+        }
+
         public override void UpdateSearchDocument(Journal journal)
         {
             var elasticRepository = new ElasticRepository<JournalDocument>();
@@ -47,36 +53,37 @@ namespace DDI.Business.GL
         {
             string journalTypeName = LinkedEntityHelper.GetEntityTypeName<Journal>();
 
-            var document = new JournalDocument();
-
-            document.Id = entity.Id;
-            document.JournalNumber = entity.JournalNumber;
-            document.Amount = entity.Amount;
-            document.FiscalYearId = entity.FiscalYearId;
-            document.BusinessUnitId = entity.BusinessUnitId;
-            document.Comment = entity.Comment;
-            document.CreatedBy = entity.CreatedBy;
-            document.CreatedOn = entity.CreatedOn;
-            document.TransactionDate = entity.TransactionDate;
-            document.LineItemComments = string.Join(" ", entity.JournalLines.Select(p => p.Comment).Where(p => !string.IsNullOrWhiteSpace(p)));
-            document.JournalType = (int)entity.JournalType;
+            var document = new JournalDocument()
+            {
+                Id = entity.Id,
+                JournalNumber = entity.JournalNumber,
+                Amount = entity.Amount,
+                FiscalYearId = entity.FiscalYearId,
+                BusinessUnitId = entity.BusinessUnitId,
+                Comment = entity.Comment,
+                CreatedBy = entity.CreatedBy,
+                CreatedOn = entity.CreatedOn,
+                TransactionDate = entity.TransactionDate,
+                LineItemComments = string.Join(" ", entity.JournalLines.Select(p => p.Comment).Where(p => !string.IsNullOrWhiteSpace(p))),
+                JournalType = (int)entity.JournalType
+            };
 
             // Status
-            string status = string.Empty;
+            List<string> statusTerms = new List<string>();
             if (entity.DeletionDate.HasValue)
             {
-                status += " Deleted";
+                statusTerms.Add(EntityStatus.Deleted);
             }
 
             if (entity.JournalType == JournalType.Recurring)
             {
                 if (entity.IsExpired)
                 {
-                    status += " Expired";
+                    statusTerms.Add(EntityStatus.Expired);
                 }
                 else
                 {
-                    status += " Active";
+                    statusTerms.Add(EntityStatus.Active);
                 }
             }
 
@@ -87,11 +94,11 @@ namespace DDI.Business.GL
                 {
                     if (approvals.All(p => p.AppprovedById != null))
                     {
-                        status += " Approved";
+                        statusTerms.Add(EntityStatus.Approved);
                     }
                     else
                     {
-                        status += " Unapproved";
+                        statusTerms.Add(EntityStatus.Unapproved);
                     }
                 }
 
@@ -101,16 +108,15 @@ namespace DDI.Business.GL
 
                 if (transactions.All(p => p.PostDate != null))
                 {
-                    status += " Posted";
+                    statusTerms.Add(EntityStatus.Posted);
                 }
                 else
                 {
-                    status += " Unposted";
+                    statusTerms.Add(EntityStatus.Unposted);
                 }
             }
 
-            document.Status = status.Trim();
-
+            document.Status = string.Join(" ", statusTerms);
             return document;
         }
 

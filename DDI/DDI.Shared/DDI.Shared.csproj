@@ -284,6 +284,7 @@
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
     <Compile Include="Statics\GL\ConstantsGL.cs" />
+    <Compile Include="Statics\EntityStatus.cs" />
     <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
