@@ -20,9 +20,27 @@ namespace DDI.Shared.Models.Client.CRM
         [ForeignKey("Constituent1Id")]
         public Constituent Constituent1 { get; set; }
 
+        [NotMapped]
+        public string Constituent1Name
+        {
+            get
+            {
+                return Constituent1?.FormattedName;
+            }
+        }
+
         public Guid? Constituent2Id { get; set; }
         [ForeignKey("Constituent2Id")]
         public Constituent Constituent2 { get; set; }
+
+        [NotMapped]
+        public string Constituent2Name
+        {
+            get
+            {
+                return Constituent2?.FormattedName;
+            }
+        }
 
         [NotMapped]
         public bool IsSwapped { get; set; }

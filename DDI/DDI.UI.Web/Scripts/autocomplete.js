@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('.constituentlookup').autocomplete({
         source: function (request, response) {
 
-            MakeServiceCall('GET', 'constituents/lookup/' + request.term, function (result) {
+            MakeServiceCall('GET', 'constituents/lookup/' + request.term, null, function (result) {
                 if (result.Data.length == 1) {
                     var item = {
                         label: result.Data[0].Name,
@@ -37,7 +37,7 @@ $(document).ready(function () {
 
 function SelectConstituentLookup(item) {
 
-    $('.FormattedName2').val(item.label);
-    $('.hidconstituentlookupid').val(item.value);
+    $('.rs-Constituent2Name').val(item.label);
+    $('.rs-Constituent2Id').val(item.value);
 
 }

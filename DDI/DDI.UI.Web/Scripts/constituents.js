@@ -152,7 +152,7 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-    PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
+    PopulateDropDown('.rs-RelationshipTypeId', 'relationshiptypes', '', '');
 }
 
 function GetConstituentData(id) {
@@ -998,11 +998,10 @@ function LoadRelationshipsTab() {
         { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
         { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
     ];
-   
-    LoadGrid('.relationshipstable', 'relationshipsgrid', columns,  'constituents/' + currentEntity.Id + '/relationships', 'relationsships', null, 
-        'rs-', '.relationshipmodal', '.relationshipmodal', 250, false, false, false, null);
-}
 
+    // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete)
+    CustomLoadGrid('relationshipsgrid', 'relationshipstable', columns, 'constituents/' + currentEntity.Id + '/relationships', null, EditRelationship, null, NewRelationshipModal);
+}
 
 function LoadRelationshipsGrid() {
 
@@ -1011,50 +1010,43 @@ function LoadRelationshipsGrid() {
 
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
-    //EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
+
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 250, LoadRelationshipsTab);
 }
-/*
-function EditRelationship(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
-}
-*/
 
 function NewRelationshipModal() {
-    //NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
-}
 
-/*function LoadRelationship(url, modal) {
-    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
-}*/
+    var modalLinkClass = 'rs-newmodallink';
 
-function GetRelationshipToSave(modal, isUpdate) {
+    $('.' + modalLinkClass).remove();
 
-    var item = {
-        Constituent1Id: currentEntity.Id,
-        Constituent2Id: $(modal).find('.hidconstituentlookupid').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
+    var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .addClass(modalLinkClass)
+            .text('New Item')
+            .click(function (e) {
+                e.preventDefault();
 
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-        item.IsSwapped = $(modal).find('.hidrelationshipisswapped').val();
-    }
+                NewEntityModal('relationships', 'rs-', '.relationshipmodal', 250, LoadRelationshipsTab);
 
-    return item;
+                PrePopulateNewRelationshipModal(modal);
+
+            });
+    $('.relationshipstable').prepend($(link));
+
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
+    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
 
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
-
-    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent2.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1.FormattedName);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2.FormattedName);
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent1.Id);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
 
 }
