@@ -136,6 +136,7 @@
     <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\AccountSummary.js" />
     <Content Include="TabbedContent.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
