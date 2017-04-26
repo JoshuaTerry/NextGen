@@ -122,11 +122,11 @@ function LoadDepositsAndWithdrawalsSection() {
         { dataField: 'IsActive', caption: 'Status' }
     ];
 
-    var constituentid = '' // needs to come in from constituent search
+    var constituentid = '' // needs to come in from constituent search (see story DC-698)
 
     LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 1000, false, false, false);
 
-    MakeServiceCall('GET', 'paymentmethods/constituents/'); // will need to look up id of constituent found in search
+    MakeServiceCall('GET', 'paymentmethods/constituents/'); // will need to look up id of constituent found in search (see story DC-698)
 
     PopulateDropDown('.at-Info', 'paymentmethods/constituents/' + constituentid, '', ''); 
 

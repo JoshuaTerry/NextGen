@@ -135,7 +135,6 @@
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
     <Content Include="auth.config" />
-    <Content Include="Pages\INV\InvestmentDetails.aspx.orig" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\InvestmentDetails.js" />
