@@ -3331,7 +3331,7 @@ function LoadFiscalPeriods(info) {
 function LoadFundAccountingSectionSettings() {
 
     $('.contentcontainer').empty();
-
+    // a change here for demo purposes, can be removed later.
 
 }
 
