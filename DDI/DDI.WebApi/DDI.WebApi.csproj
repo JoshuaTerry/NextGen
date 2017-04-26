@@ -289,6 +289,7 @@
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
     <Compile Include="Controllers\GL\GeneralLedgerController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\PostTransactionController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
     <Compile Include="Global.asax.cs">
