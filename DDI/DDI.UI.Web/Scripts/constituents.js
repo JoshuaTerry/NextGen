@@ -1017,6 +1017,7 @@ function EditRelationship(id) {
 function NewRelationshipModal() {
 
     var modalLinkClass = 'rs-newmodallink';
+    var constituentId = $('.hidconstituentid').val();
 
     $('.' + modalLinkClass).remove();
 
@@ -1028,7 +1029,7 @@ function NewRelationshipModal() {
             .click(function (e) {
                 e.preventDefault();
 
-                NewEntityModal('relationships', 'rs-', '.relationshipmodal', 250, LoadRelationshipsTab);
+                NewEntityModal('constituents/' + constituentId + '/relationships', 'rs-', '.relationshipmodal', 250, LoadRelationshipsTab);
 
                 PrePopulateNewRelationshipModal(modal);
 
