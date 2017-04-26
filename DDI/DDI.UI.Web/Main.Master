@@ -384,34 +384,6 @@
 
     </div>
 
-    <div class="userbusinessunitmodal" title="Edit Business Units" style="display: none;">
-
-        <div class="modalcontent">
-
-            <div class="fieldblock">
-                <label>Available Business Units</label>
-                <select class="bu-orgbu BusinessUnit"></select>
-            </div>
-            
-            <div class="fieldblock">
-                <label>Selected Business Unit</label>
-                <select class="bu-otherbu BusinessUnits"></select>
-            </div>
-
-            <div class="fieldblock">
-                <label>Make Default</label>
-                <input type="checkbox"  class="default" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savebusinessunit" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-                            
-        </div>      
-          
-    </div>
-
     </form>
 </body>
 </html>
