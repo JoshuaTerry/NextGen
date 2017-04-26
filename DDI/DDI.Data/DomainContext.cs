@@ -28,8 +28,6 @@ namespace DDI.Data
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(DomainContext));
         #region Public Properties
 
-        public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
-
         #region Core Entities
 
         public DbSet<Configuration> Configurations { get; set; }
