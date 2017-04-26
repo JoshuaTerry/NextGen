@@ -283,14 +283,12 @@
 
                             <div class="accordions">
                                 <h1>Interest Payment</h1>
-                                <a href="#" class="newinterestpayoutsmodallink">New Item</a>
                                 <div class="interestpayoutsgridcontainer">
+                                    <a href="#" class="newinterestpayoutsmodallink">New Item</a>
                                     <div class="interestpayoutsgrid"></div>
                                 </div>
                                 <h1>IRS Information</h1>
-                                <div class="interestIRSgridcontainer">
-                                    <div class="interestIRSgrid"></div>
-                                </div>
+                                <div class="interestIRSgridcontainer"></div>
                             </div>
 
                         </div>
