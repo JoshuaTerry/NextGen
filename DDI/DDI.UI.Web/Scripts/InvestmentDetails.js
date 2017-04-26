@@ -117,40 +117,22 @@ function LoadDepositsAndWithdrawalsSection() {
         { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
         { dataField: 'NextTransactionDate', caption: 'NextDate' }, //order by
         { dataField: 'RecurringType', caption: 'Frequency' },
-        { dataField: 'PaymentPreference.DisplayName', caption: 'Payment Info' }, // similar to constituent payment prefs
+        { dataField: 'PaymentPreference.DisplayName', caption: 'Payment Info' }, 
         { dataField: 'Amount', caption: 'Amount' },
         { dataField: 'IsActive', caption: 'Status' }
-    ];
-
-    var payprefcolumns = [
-         { dataField: 'Id', width: '0px' },
-         { dataField: 'Description', caption: 'Description' },
-         { dataField: 'RoutingNumber', caption: 'Routing Number' },
-         { dataField: 'BankAccount', caption: 'Account Number' },
-         {
-             caption: 'Ch/S', cellTemplate: function (container, options) {
-                 var type = 'Ch';
-
-                 if (options.data.AccountType == '1') {
-                     type = 'S';
-                 }
-
-                 $('<label>').text(type).appendTo(container);
-             }
-         }
     ];
 
     var constituentid = '' // needs to come in from constituent search
 
     LoadGrid('.dwgridcontainer', 'dwgrid', columns, 'investmentautomatedtransactions/investment/' + currentEntity.Id, null, null, 'at-', '.autotransmodal', '.autotransmodal', 1000, false, false, false);
 
-    MakeServiceCall('GET', 'paymentmethods/constituents/'); // will need to look up id of constituent found in search,
+    MakeServiceCall('GET', 'paymentmethods/constituents/'); // will need to look up id of constituent found in search
 
     PopulateDropDown('.at-Info', 'paymentmethods/constituents/' + constituentid, '', ''); 
 
     $('.newpaymentpref').click(function (e) {
 
-        // Will need to use existing payment prefs modal to add a new payment pref from here
+        // Will need to use global payment prefs here (see story DC-693)
 
     });
 

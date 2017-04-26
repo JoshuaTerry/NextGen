@@ -5,6 +5,7 @@
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
     <script type="text/javascript" src="..\..\Scripts\PaymentPreferencesModal.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\search.js"></script>
     <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -383,7 +384,7 @@
 
             <div class="fieldblock">
                 <label>Constituent Search</label>
-                <input type="text" class="at-Constituent" />
+                <input type="text" class="dosearch at-Constituent" />
             </div>
 
 
