@@ -1057,7 +1057,6 @@
 	<div class="relationshipmodal" title="Relationship" style="display: none;">
 
         <div class="modalcontent">
-            <input type="hidden" class="rs-Id" />
             <input type="hidden" class="rs-IsSwapped" />
             <input type="hidden" class="rs-Constituent1Id" />
             <input type="hidden" class="rs-Constituent2Id" />

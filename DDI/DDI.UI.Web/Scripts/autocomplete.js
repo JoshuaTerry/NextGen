@@ -37,7 +37,7 @@ $(document).ready(function () {
 
 function SelectConstituentLookup(item) {
 
-    $('.rs-Constituent2Name').val(item.label);
-    $('.rs-Constituent2Id').val(item.value);
+    $('.rs-Constituent1Name').val(item.label);
+    $('.rs-Constituent1Id').val(item.value);
 
 }

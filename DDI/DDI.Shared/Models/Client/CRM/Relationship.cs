@@ -43,7 +43,7 @@ namespace DDI.Shared.Models.Client.CRM
         }
 
         [NotMapped]
-        public bool IsSwapped { get; set; }
+        public bool? IsSwapped { get; set; }
 
         [NotMapped]
         public Guid? TargetConstituentId { get; set; }
