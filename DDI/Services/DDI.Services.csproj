@@ -80,6 +80,7 @@
     <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="Search\AccountNumberSearch.cs" />
     <Compile Include="GL\AccountService.cs" />
     <Compile Include="GL\JournalService.cs" />
     <Compile Include="Search\JournalSearch.cs" />

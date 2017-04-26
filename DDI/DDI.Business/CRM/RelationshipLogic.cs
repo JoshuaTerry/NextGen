@@ -121,14 +121,14 @@ namespace DDI.Business.CRM
             }
 
             // If TargetConstituent is specified, the right side must be the target.
-            if (entity.TargetConstituentId != null && 
-                constituent2.Id != entity.TargetConstituentId)
-            {
-                throw new InvalidOperationException($"Constituent 2 of this relationship must match the target constituent Id.");
-            }
+            //if (entity.TargetConstituentId != null && 
+            //    constituent2.Id != entity.TargetConstituentId)
+            //{
+            //    throw new InvalidOperationException($"Constituent 2 of this relationship must match the target constituent Id.");
+            //}
 
             // If swapped:
-            if (entity.IsSwapped)
+            if (entity.IsSwapped.HasValue && entity.IsSwapped.Value)
             {
                 // The target constituent was originally constituent 1.  We must convert it back to this format.
                 Gender gender = UnitOfWork.GetReference(constituent2, p => p.Gender);

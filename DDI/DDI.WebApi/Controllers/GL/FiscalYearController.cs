@@ -13,6 +13,7 @@ using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
         [HttpGet]
