@@ -28,6 +28,8 @@ $(document).ready(function () {
 
     }
 
+    
+
     GetConstituentData($('.hidconstituentid').val());
 
     LoadYears();
@@ -226,6 +228,12 @@ function DisplayConstituentData() {
 
             }
         });
+
+        if (currentEntity.InvestorStatus == '0') {
+            // For now, every constituent will show InvestorStatus as Active
+            // This will need to be revisited when we finish Investments
+            $('#tab-investments-main').hide();
+        }
 
         DisplayConstituentPicture();
 
@@ -1086,14 +1094,7 @@ function LoadInvestmentsGrid() {
     { dataField: 'Investment.DisplayName', caption: 'Ownership' }
     ];
 
-    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, CallInvestmentDetail, null, InvestmentGridComplete);
-}
-
-function InvestmentGridComplete(data) {
-    if (data.Data.length < 1) {
-        $('#tab-investments-main').hide();
-        $('#tab-investments').hide();
-    }
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, CallInvestmentDetail, null, null);
 }
 
 
