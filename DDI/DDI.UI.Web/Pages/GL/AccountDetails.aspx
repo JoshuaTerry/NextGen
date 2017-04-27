@@ -13,8 +13,8 @@
         <div class="tabscontainer">
 
             <ul>
-                <li><a href="ActivityAndBudget.aspx">Activity and Budget</a></li>
-                <li id="summarytab"><a href="AccountSummary.aspx">Summary</a></li>
+                <li id="activity-and-budget-tab"><a href="ActivityAndBudget.aspx">Activity and Budget</a></li>
+                <li><a href="AccountSummary.aspx">Summary</a></li>
                 <li><a href="AccountTransactions.aspx">Transations</a></li>
             </ul>
 

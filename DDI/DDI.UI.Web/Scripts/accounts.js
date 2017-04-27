@@ -1,20 +1,20 @@
 ﻿$(document).ready(function () {
 
-    $('#summarytab').click(function () {
+    //$('#activity-and-budget-tab').click(function () {
 
-        LoadAccountSummaryTab('05523233-784D-4D6E-920B-0019EFAF9912');
+        LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
-    });
+    //});
 
 });
 
 
-function LoadAccountSummaryTab(id) {
+function LoadAccountActivityAndBudgetTab(id) {
     
 
     var columns = [
 
-    { dataField: 'Id', width: '0px', },
+    { dataField: 'Id'},
     { dataField: 'Detail.PeriodName', caption: 'Period' },
     { dataField: 'Detail.WorkingBudget', caption: 'Working Budget', dataType: 'date' },
     { dataField: 'Detail.Debits', caption: 'Prior Year Name' },
@@ -33,5 +33,13 @@ function LoadAccountSummaryTab(id) {
         $('<label>').text(data.Data.AccountName).appendTo($('.summarytitle'));
         
     }); 
+    //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
+    //LoadGrid( '.summarygridcontainer', 'summarygrid', columns, 'accounts/activity/' + id, null, null, null, null, null, null, false, false, false,  function (data) {
+
+    //        $('.summarytitle').empty();
+
+    //        $('<label>').text(data.Data.AccountName).appendTo($('.summarytitle'));
+        
+    //    }); 
 }
