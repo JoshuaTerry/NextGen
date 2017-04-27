@@ -26,7 +26,11 @@ namespace DDI.Shared.Models.Client.Security
         public override Guid Id { get; set; }
         [MaxLength(256)]
         [Index("IX_UserName", IsUnique = true)]
-        public override string UserName { get => base.UserName; set => base.UserName = value; }
+        public override string UserName
+        {
+            get { return base.UserName; }
+            set { base.UserName = value; }
+        }
         [MaxLength(256)]
         public string FullName { get; set; } 
         public bool IsActive { get; set; }
