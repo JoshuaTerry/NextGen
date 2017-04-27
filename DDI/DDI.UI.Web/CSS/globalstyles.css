@@ -1,4 +1,4 @@
-﻿body { margin: 0px; padding: 0px; font-size: 12px; font-family: Arial; background-color: #eeeeee; }
+﻿body { margin: 0px; padding: 0px; font-size: 12px; font-family: Arial; background-color: #eeeeee; min-width: 1000px; }
 
 h1, h2, h3 { margin: 0px; padding: 0px; }
 h1 {  }
