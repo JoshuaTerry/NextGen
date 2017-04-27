@@ -26,20 +26,20 @@ function LoadAccountActivityAndBudgetTab(id) {
 
     //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
 
-    CustomLoadGrid('summarygrid', '.summarygridcontainer', columns, 'accounts/activity/' + id, null, null, null, function (data) {
+    //CustomLoadGrid('activitygrid', '.activitygridcontainer', columns, 'accounts/activity/' + id, null, null, null, function (data) {
 
-        $('.summarytitle').empty();
+    //    $('.activitytitle').empty();
 
-        $('<label>').text(data.Data.AccountName).appendTo($('.summarytitle'));
+    //    $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
         
-    }); 
+    //}); 
     //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
-    //LoadGrid( '.summarygridcontainer', 'summarygrid', columns, 'accounts/activity/' + id, null, null, null, null, null, null, false, false, false,  function (data) {
+    LoadGrid('.activitygridcontainer', 'activitygrid', columns, 'accounts/activity/' + id, null, null, null, null, null, null, false, false, false, function (data) {
 
-    //        $('.summarytitle').empty();
+            $('.activitytitle').empty();
 
-    //        $('<label>').text(data.Data.AccountName).appendTo($('.summarytitle'));
+            $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
         
-    //    }); 
+        }); 
 }
