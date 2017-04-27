@@ -19,10 +19,12 @@ namespace DDI.Conversion.Core
         Dictionary<int, Guid> _businessUnitIds;
         Dictionary<string, Guid> _fiscalYearIds;
 
+        public EntityNumberConverter() : this(null, null) { }
+
         public EntityNumberConverter(Dictionary<int, Guid> businessUnitIds, Dictionary<string, Guid> fiscalYearIds)
         {
-            _businessUnitIds = businessUnitIds;
-            _fiscalYearIds = fiscalYearIds;
+            _businessUnitIds = businessUnitIds ?? new Dictionary<int, Guid>();
+            _fiscalYearIds = fiscalYearIds ?? new Dictionary<string, Guid>();
         }
 
         public void ConvertEntityNumbers(Func<FileImport> entityNumberImporter)

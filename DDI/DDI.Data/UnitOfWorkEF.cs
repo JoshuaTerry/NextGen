@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using DDI.Shared.Models.Client.Security;
+using System.Data;
 
 namespace DDI.Data
 {
@@ -29,9 +30,11 @@ namespace DDI.Data
         private bool _isAuditStatusInitialized;
         private bool _auditModuleEnabled;
         private bool _auditingEnabled;
+        private DbContextTransaction _dbTransaction;
+        private static object _lockObject;
 
         #endregion Private Fields
-         
+
 
         #region Public Constructors
 
@@ -53,9 +56,15 @@ namespace DDI.Data
 
             _repositories = new Dictionary<Type, object>();
             _cachedRepositories = null;
-            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;
             _businessLogic = new List<object>();
-            _isAuditStatusInitialized = false;          
+            _isAuditStatusInitialized = false;
+            _dbTransaction = null;
+        }
+
+        static UnitOfWorkEF()
+        {
+            _lockObject = new object();
         }
 
         #endregion Public Constructors
@@ -335,6 +344,54 @@ namespace DDI.Data
             }
         }
 
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            lock (_lockObject)
+            {
+                if (_dbTransaction != null)
+                {
+                    throw new InvalidOperationException("Cannot begin a new transcation because a transaction has already been started.");
+                }
+                if (_clientContext == null)
+                {
+                    _clientContext = new DomainContext();
+                }
+                _dbTransaction = _clientContext.Database.BeginTransaction(isolationLevel);                
+            }
+        }
+
+        public void RollbackTransaction()
+        {
+            lock(_lockObject)
+            {
+                _dbTransaction?.Rollback();
+                _dbTransaction?.Dispose();
+                _dbTransaction = null;
+            }
+        }
+
+        public bool CommitTransaction()
+        {
+            bool success = true;
+
+            lock(_lockObject)
+            {
+                try
+                {
+                    SaveChanges();
+                    _dbTransaction?.Commit();
+                    _dbTransaction?.Dispose();
+                    _dbTransaction = null;
+                }
+                catch (System.Data.Entity.Infrastructure.DbUpdateException)
+                {
+                    _dbTransaction = _clientContext.Database.CurrentTransaction;
+                    success = false;
+                }
+            }
+            return success;
+        }
+
         public void AddBusinessLogic(object logic)
         {
             if (!_businessLogic.Contains(logic))
@@ -376,6 +433,8 @@ namespace DDI.Data
             {
                 if (disposing)
                 {
+                    _dbTransaction?.Rollback();
+                    _dbTransaction?.Dispose();
                     _clientContext?.Dispose();
                     _commonContext?.Dispose();
                 }
