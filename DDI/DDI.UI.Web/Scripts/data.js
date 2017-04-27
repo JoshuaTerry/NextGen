@@ -277,12 +277,12 @@ function LoadGridData(container, grid, columns, route, selected, newModalClass, 
         });
 
         $(container).append($(datagrid));
-
+        /*
         if (newModalClass) {
             // Add link for new modal
             NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
         }
-
+        */
         if (onComplete) {
             onComplete(data);
         }
