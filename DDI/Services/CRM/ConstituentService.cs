@@ -239,6 +239,11 @@ namespace DDI.Services
                     query.Must.MatchAll(search.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
                 }
 
+                if (!string.IsNullOrWhiteSpace(search.QueryString))
+                {
+                    query.Must.QueryString(search.QueryString, p => p.Name);
+                }
+
                 if (!search.ConstituentTypeId.IsNullOrEmpty())
                 {
                     query.Must.Equal(search.ConstituentTypeId.Value, p => p.ConstituentTypeId);

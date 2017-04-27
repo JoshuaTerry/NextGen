@@ -12,7 +12,7 @@ using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    [Authorize(Roles=Permissions.CRM_Read)]
+    //[Authorize(Roles=Permissions.CRM_Read)]
     public class ConstituentsController : GenericController<Constituent>
     {
         protected new IConstituentService Service => (IConstituentService) base.Service;
@@ -54,6 +54,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/constituents", Name = RouteNames.Constituent)]
         public IHttpActionResult GetConstituents(string quickSearch = null, 
                                                  string name = null, 
+                                                 string queryString = null,
                                                  int? constituentNumber = null, 
                                                  string address = null, 
                                                  string city = null, 
@@ -81,6 +82,7 @@ namespace DDI.WebApi.Controllers.CRM
             var search = new ConstituentSearch()
             {
                 QuickSearch = quickSearch,
+                QueryString = queryString,
                 Name = name,
                 ConstituentNumber = constituentNumber,
                 ConstituentTypeId = type,

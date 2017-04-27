@@ -299,6 +299,18 @@ namespace DDI.Search
             }
 
             /// <summary>
+            /// Query string term.
+            /// </summary>
+            /// <param name="queryString">Elasticsearch query string</param>
+            /// <param name="predicate">Path to default property.</param>
+            /// <returns></returns>
+            public ElasticQuery<T> QueryString(string queryString, Expression<Func<T, object>> predicate)
+            {
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.DefaultField(predicate).Query(queryString).Boost(_boost).Lenient(true)));
+                return _query;
+            }
+
+            /// <summary>
             /// Exact value query term.
             /// </summary>
             /// <param name="value">Value to match</param>

@@ -26,6 +26,7 @@ namespace DDI.Services.Search
         public int? AgeTo { get; set; }
         public string IncludeTags { get; set; }
         public string ExcludeTags { get; set; }
+        public string QueryString { get; set; }
     }
 
 }

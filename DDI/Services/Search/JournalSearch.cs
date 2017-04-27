@@ -23,6 +23,6 @@ namespace DDI.Services.Search
         public DateTime? CreatedOnFrom { get; set; }
         public DateTime? CreatedOnTo { get; set; }
         public string JournalStatus { get; set; }
-
+        public string QueryString { get; set; }
     }
 }

@@ -96,6 +96,11 @@ namespace DDI.Services.GL
                 query.Must.Equal(search.FiscalYearId.Value.ToString("d"), p => p.FiscalYearId);
             }
 
+            if (!string.IsNullOrWhiteSpace(search.QueryString))
+            {
+                query.Must.QueryString(search.QueryString, p => p.Comment);
+            }
+
             if (search.AmountFrom > 0 || search.AmountTo > 0)
             {
                 if (search.AmountTo <= 0)
