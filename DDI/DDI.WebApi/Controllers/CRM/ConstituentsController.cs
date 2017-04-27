@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    //[Authorize(Roles=Permissions.CRM_Read)]
+    [Authorize(Roles=Permissions.CRM_Read)]
     public class ConstituentsController : GenericController<Constituent>
     {
         protected new IConstituentService Service => (IConstituentService) base.Service;
