@@ -80,7 +80,13 @@
     <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
-    <Compile Include="Search\AccountNumberSearch.cs" />
+    <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
+    <Compile Include="INV\LinkedAccountService.cs" />
+    <Compile Include="INV\InvestmentIRSInformationService.cs" />
+    <Compile Include="INV\InvestmentInterestPayoutService.cs" />
+    <Compile Include="INV\InvestmentService.cs" />
+    <Compile Include="INV\InvestmentRelationshipService.cs" />
+ 	<Compile Include="Search\AccountNumberSearch.cs" />
     <Compile Include="GL\AccountService.cs" />
     <Compile Include="GL\JournalService.cs" />
     <Compile Include="Search\JournalSearch.cs" />

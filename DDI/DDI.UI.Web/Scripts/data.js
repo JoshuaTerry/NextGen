@@ -313,20 +313,17 @@ function CustomLoadGrid(grid, container, columns, route, selected, editMethod, d
         headers: GetApiHeaders(),
         success: function (data) {
 
-            LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data);
+            LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
 
-            if (oncomplete) {
-                oncomplete();
-            }
-                        
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
+
 }
 
-function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data) {
+function LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete) {
     
     $(container).html('');
 
@@ -408,6 +405,11 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     });
 
     $(container).append($(datagrid));
+
+    if (oncomplete) {
+        oncomplete(data);
+    }
+
 }
 
 function NewModalLink(container, route, prefix, modalClass, modalWidth, refreshGrid) {

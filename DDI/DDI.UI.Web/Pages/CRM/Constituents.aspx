@@ -53,6 +53,7 @@
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li><a href="#tab-donor">Donor</a></li>
+                <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
             </ul>
 
             <!-- Individual Tab -->
@@ -632,6 +633,67 @@
 
             </div>
 
+            <!-- Investment Tab -->
+            <div id="tab-investments" class="scrollable">
+
+                <div class="investmenttopinfo">
+
+                        <div class="fieldblock">
+                            <h2>Investor Summary</h2>
+                        </div>
+                        <br />
+
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Status: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorStatus" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Since: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorStartDate date" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Primary Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="PrimaryInvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Joint Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="JointInvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Total Investment Balance: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                <hr />
+                
+                <div class="investmentstable scrollable"></div>
+
         </div>
 
         <div class="dashboard" style="display: none;">
@@ -639,6 +701,8 @@
             <h1>Dashboard</h1>
 
         </div>
+
+    </div>
 
     </div>
 
