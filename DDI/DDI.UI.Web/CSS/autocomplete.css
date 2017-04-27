@@ -2,11 +2,11 @@
 {
 	list-style: none;
 	margin: 0px;
-	padding: 0px;
+	padding: 6px;
 	border: solid 1px #eeeeee;
 	background-color: white;
 	width: auto;
-	width: 500px;
+	width: 300px;
     max-height: 400px;
     overflow: scroll;
     z-index: 900;

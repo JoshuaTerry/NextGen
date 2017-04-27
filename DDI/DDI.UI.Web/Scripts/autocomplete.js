@@ -19,7 +19,7 @@ $(document).ready(function () {
                             label: item.Name,
                             value: item.Id
                         }
-                    }), request.term);
+                    }), request.term[0]);
 
                     response(results);
 

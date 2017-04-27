@@ -241,7 +241,7 @@ namespace DDI.Services
 
                 if (!string.IsNullOrWhiteSpace(search.QueryString))
                 {
-                    query.Must.QueryString(search.QueryString, p => p.Name);
+                   query.Must.QueryString(search.QueryString, p => p.Name);
                 }
 
                 if (!search.ConstituentTypeId.IsNullOrEmpty())
@@ -395,6 +395,9 @@ namespace DDI.Services
             {
                 case OrderByProperties.DisplayName:
                     query.OrderBy(p => p.SortableName);
+                    break;
+                case OrderByProperties.Score:
+                    query.OrderByScore();
                     break;
             }
             

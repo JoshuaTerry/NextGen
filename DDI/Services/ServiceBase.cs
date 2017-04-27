@@ -188,8 +188,8 @@ namespace DDI.Services
                 return false;
             }
 
-            var properties = typeof(T1).GetProperties().Select(p => p.Name);
-            return fields.Split(',').All(f => properties.Contains(f));
+            var properties = typeof(T1).GetProperties().Select(p => p.Name.ToUpper());
+            return fields.ToUpper().Split(',').All(f => properties.Contains(f));
         }
         
         public virtual IDataResponse<T> GetById(Guid id)

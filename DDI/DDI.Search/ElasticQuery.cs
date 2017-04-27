@@ -306,7 +306,7 @@ namespace DDI.Search
             /// <returns></returns>
             public ElasticQuery<T> QueryString(string queryString, Expression<Func<T, object>> predicate)
             {
-                GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.DefaultField(predicate).Query(queryString).Boost(_boost).Lenient(true)));
+                GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.DefaultField(predicate).Query(queryString).Boost(_boost).Lenient(true).DefaultOperator(Operator.And)));
                 return _query;
             }
 

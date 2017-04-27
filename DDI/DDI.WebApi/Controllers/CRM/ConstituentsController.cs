@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -118,9 +119,16 @@ namespace DDI.WebApi.Controllers.CRM
         {
             string fields = "Id,Name";
 
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return Ok(new Constituent[0]);
+            }
+            var queryString = string.Join(" ", StringHelper.SplitIntoWords(name).Select(p => p + "*"));
+
             var search = new ConstituentSearch()
             {
-                QuickSearch = name,
+                QueryString = queryString,
+                OrderBy = OrderByProperties.Score,
                 Offset = SearchParameters.OffsetDefault,
                 Limit = 1000,
                 Fields = fields,
