@@ -25,14 +25,19 @@ namespace DDI.WebApi.Controllers.CRM
                 string.Join(",", new string[]
                 {
                     "Id",
+                    $"{nameof(Relationship.RelationshipType)}Id",
                     $"{nameof(Relationship.RelationshipType)}.Id",
                     $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.Name)}",
                     $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.Name)}",
                     $"{nameof(Relationship.RelationshipType)}.{nameof(RelationshipType.RelationshipCategory)}.{nameof(RelationshipCategory.IsShownInQuickView)}",
+                    $"{nameof(Relationship.Constituent1)}Id",
                     $"{nameof(Relationship.Constituent1)}.Id",
+                    $"{nameof(Relationship.Constituent1Name)}",
                     $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.ConstituentNumber)}",
                     $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.FormattedName)}",
+                    $"{nameof(Relationship.Constituent2)}Id",
                     $"{nameof(Relationship.Constituent2)}.Id",
+                    $"{nameof(Relationship.Constituent2Name)}",
                     $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.ConstituentNumber)}",
                     $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.FormattedName)}",
                     $"{nameof(Relationship.IsSwapped)}"

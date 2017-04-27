@@ -441,7 +441,9 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
         width: modalWidth,
         resizable: false,
         beforeClose: function (event, ui) {
-            currentEntity = previousEntity;
+            if (previousEntity) {
+                currentEntity = previousEntity;
+            }
         }
     });
 

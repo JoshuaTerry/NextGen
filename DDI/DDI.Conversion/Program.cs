@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDI.Business.GL;
+using DDI.Business.Core;
 using DDI.Business.Helpers;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Client.GL;
@@ -53,6 +54,7 @@ namespace DDI.Conversion
             //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
             //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.Codes)); // To run an individual conversion in SettingsLoader.
+            //Run<CRM.SettingsLoader>(new ConversionMethodArgs(CRM.SettingsLoader.ConversionMethod.ConstituentEntityNumber)); 
 
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Individuals));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Organizations));
@@ -90,7 +92,7 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalTransactions));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalApprovals));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
-            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -58,6 +59,12 @@ namespace DDI.Shared
         T GetById<T>(Guid id) where T : class;
 
         T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class;
+
+        void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+
+        void RollbackTransaction();
+
+        bool CommitTransaction();
 
         #endregion Public Methods
     }

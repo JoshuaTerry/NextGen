@@ -38,6 +38,28 @@ namespace DDI.Data.Migrations.Customizations
                     Statement(writer);
                 }
             }
+            else if (migrationOperation is CreateSequenceOperation)
+            {
+                var operation = (CreateSequenceOperation)migrationOperation;
+
+                using (IndentedTextWriter writer = Writer())
+                {
+                    writer.WriteLine("CREATE SEQUENCE {0} AS {1} START WITH {2} INCREMENT BY {3} MINVALUE 0 CACHE ; ", 
+                        operation.SequenceName, operation.DataType, operation.StartValue, operation.Increment);
+                    Statement(writer);
+                }
+            }
+            else if (migrationOperation is DropSequenceOperation)
+            {
+                var operation = (DropSequenceOperation)migrationOperation;
+
+                using (IndentedTextWriter writer = Writer())
+                {
+                    writer.WriteLine("DROP SEQUENCE {0} ; ", operation.SequenceName);
+                    Statement(writer);
+                }
+            }
+
         }
     }
 }
