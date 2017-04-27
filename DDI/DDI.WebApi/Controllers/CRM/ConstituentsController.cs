@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
 using DDI.Shared.Helpers;
+using System.Text.RegularExpressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -117,20 +118,24 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/constituents/lookup/{name}")]
         public IHttpActionResult ConstituentLookup(string name)
         {
-            string fields = "Id,Name";
+            string fields = "Id,Name,ConstituentNumber,PrimaryAddress";
 
             if (string.IsNullOrWhiteSpace(name))
             {
                 return Ok(new Constituent[0]);
             }
-            var queryString = string.Join(" ", StringHelper.SplitIntoWords(name).Select(p => p + "*"));
+            
+            // Format the query string by splitting into words, then if the word has any letters, append a "*" to the end.
+            // Example:  12345 Fred* Jones*
+            var queryString = string.Join(" ", StringHelper.SplitIntoWords(name)
+                                                           .Select(p => Regex.IsMatch(p, @"^\d+$") ? p : p + "*"));
 
             var search = new ConstituentSearch()
             {
                 QueryString = queryString,
                 OrderBy = OrderByProperties.Score,
                 Offset = SearchParameters.OffsetDefault,
-                Limit = 1000,
+                Limit = 250,
                 Fields = fields,
             };
 

@@ -304,9 +304,20 @@ namespace DDI.Search
             /// <param name="queryString">Elasticsearch query string</param>
             /// <param name="predicate">Path to default property.</param>
             /// <returns></returns>
-            public ElasticQuery<T> QueryString(string queryString, Expression<Func<T, object>> predicate)
+            public ElasticQuery<T> QueryString(string queryString, params Expression<Func<T, object>>[] predicates)
             {
-                GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.DefaultField(predicate).Query(queryString).Boost(_boost).Lenient(true).DefaultOperator(Operator.And)));
+                if (predicates == null || predicates.Length == 0)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.Query(queryString).Boost(_boost).Lenient(true).DefaultOperator(Operator.And)));
+                }
+                else if (predicates.Length == 1)
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.DefaultField(predicates[0]).Query(queryString).Boost(_boost).Lenient(true).DefaultOperator(Operator.And)));
+                }
+                else
+                {
+                    GetQueryContainer().Add(new QueryContainerDescriptor<T>().QueryString(m => m.Query(queryString).Fields(predicates).Boost(_boost).Lenient(true).DefaultOperator(Operator.And)));
+                }
                 return _query;
             }
 

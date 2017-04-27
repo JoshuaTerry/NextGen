@@ -5,25 +5,14 @@ $(document).ready(function () {
         source: function (request, response) {
 
             MakeServiceCall('GET', 'constituents/lookup/' + request.term, null, function (result) {
-                if (result.Data.length == 1) {
-                    var item = {
-                        label: result.Data[0].Name,
-                        value: result.Data[0].Id
-                    };
-                    SelectConstituentLookup(item);
-                }
-                else {
+                var results = $.ui.autocomplete.filter($.map(result.Data, function (item) {
+                    return {
+                        label: item.ConstituentNumber + ": " + item.Name + ", " + item.PrimaryAddress,
+                        value: item.Id
+                    }
+                }), request.term[0]);
 
-                    var results = $.ui.autocomplete.filter($.map(result.Data, function (item) {
-                        return {
-                            label: item.Name,
-                            value: item.Id
-                        }
-                    }), request.term[0]);
-
-                    response(results);
-
-                }
+                response(results);               
             }, null);
 
         },
@@ -37,7 +26,7 @@ $(document).ready(function () {
 
 function SelectConstituentLookup(item) {
 
-    $('.rs-Constituent1Name').val(item.label);
+    $('.rs-Constituent1Information').val(item.label);
     $('.rs-Constituent1Id').val(item.value);
 
 }

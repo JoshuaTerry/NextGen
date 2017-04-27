@@ -241,7 +241,7 @@ namespace DDI.Services
 
                 if (!string.IsNullOrWhiteSpace(search.QueryString))
                 {
-                   query.Must.QueryString(search.QueryString, p => p.Name);
+                   query.Must.QueryString(search.QueryString, p => p.Name, p => p.ConstituentNumber, p => p.PrimaryAddress);
                 }
 
                 if (!search.ConstituentTypeId.IsNullOrEmpty())

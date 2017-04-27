@@ -6,8 +6,8 @@
 	border: solid 1px #eeeeee;
 	background-color: white;
 	width: auto;
-	width: 300px;
-    max-height: 400px;
+	width: 500px;
+    max-height: 400px;       
     overflow: scroll;
     z-index: 900;
 }
@@ -15,6 +15,7 @@
 .ui-autocomplete li
 {
 	color: Black;
+    text-wrap: none;
 }
 
 .ui-autocomplete li:hover
@@ -29,11 +30,11 @@
 	background-color: #edf5f9;
 }
 
-.ui-autocomplete li a
-{
-	color: black;
-	display: block;
-	padding: 5px;
+.ui-autocomplete li a {
+    color: black;
+    display: block;
+    padding: 5px;
+    text-wrap: none;
 }
 
 .ui-autocomplete li a:hover
