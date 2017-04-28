@@ -42,7 +42,7 @@ namespace DDI.Business.Tests.Helpers
         [TestMethod, TestCategory(TESTDESCR)]
         public void LinkedEntityHelper_GetEntityTypeName()
         {
-            Assert.AreEqual("CRM.Constituent", LinkedEntityHelper.GetEntityTypeName(typeof(Constituent)));
+            Assert.AreEqual("Constituent", LinkedEntityHelper.GetEntityTypeName(typeof(Constituent)));
             Assert.AreEqual("Country", LinkedEntityHelper.GetEntityTypeName<DDI.Shared.Models.Common.Country>());
         }
 
@@ -64,7 +64,7 @@ namespace DDI.Business.Tests.Helpers
             LinkedEntityHelper.SetParentEntity(note, parent);
 
             Assert.AreEqual(parent.Id, note.ParentEntityId, "SetParentEntity set ParentEntityId correctly.");
-            Assert.AreEqual("CRM.Address", note.EntityType, "SetParentEntity set EntityType correctly.");
+            Assert.AreEqual("Address", note.EntityType, "SetParentEntity set EntityType correctly.");
 
             LinkedEntityHelper.SetParentEntity(note, null);
             Assert.IsNull(note.ParentEntityId, "SetParentEntity cleared ParentEntityID.");

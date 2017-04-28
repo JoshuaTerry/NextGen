@@ -1,5 +1,4 @@
-﻿
-namespace DDI.Shared.Enums.CRM
+﻿namespace DDI.Shared.Enums.CRM
 {
     public enum ConstituentBaseStatus
     {
