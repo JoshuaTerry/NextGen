@@ -80,6 +80,13 @@ namespace DDI.WebApi.Controllers.GL
             return base.CustomAction(() => Service.GetAccountActivity(id));
         }
 
+        [HttpGet]
+        [Route("api/v1/accounts/activity/{id}/detail")]
+        public IHttpActionResult GetAccountActivityDetail(Guid id)
+        {
+            return base.CustomAction(() => Service.GetAccountActivityDetail(id));
+        }
+
         [HttpPost]
         [Route("api/v1/accounts", Name = RouteNames.Account + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Account item)
