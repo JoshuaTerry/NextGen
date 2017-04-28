@@ -176,13 +176,16 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
         container = '.' + container;
     }
 
+    var newlink = null;
+
+    if (newModalClass) {
+        newlink = function () {
+            NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
+        }
+    }
+
     var refreshGrid = function () {
-        LoadGridData(container, gridClass, columns, getRoute, selected, showFilter, showGroup, function () {
-            if (newModalClass) {
-                // Add link for new modal
-                NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid)
-            }
-        });
+        LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
     }
 
     if (editModalClass) {
@@ -228,19 +231,11 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
         });
     }
 
-    LoadGridData(container, gridClass, columns, getRoute, selected, showFilter, showGroup, function () {
-        if (newModalClass) {
-            // Add link for new modal
-            NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
-        }
-        if (onComplete) {
-            onComplete();
-        }
-    });
+    LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
 
 }
 
-function LoadGridData(container, grid, columns, route, selected, showFilter, showGroup, onComplete) {
+function LoadGridData(container, grid, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete) {
 
     $('.' + grid).remove();
 
@@ -254,7 +249,7 @@ function LoadGridData(container, grid, columns, route, selected, showFilter, sho
         showGroup = false; // Hide the group by default
     }
 
-    MakeServiceCall('GET', route, null, function (data) {
+    MakeServiceCall('GET', getRoute, null, function (data) {
 
         $(datagrid).dxDataGrid({
             dataSource: data.Data,
@@ -291,8 +286,13 @@ function LoadGridData(container, grid, columns, route, selected, showFilter, sho
 
         $(container).append($(datagrid));
 
+        if (newlink) {
+            // Add link for new modal
+            newlink();
+        }
+
         if (onComplete) {
-            onComplete();
+            onComplete(data);
         }
 
     }, null);
