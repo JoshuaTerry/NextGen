@@ -1439,4 +1439,31 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 //
 // END DYNAMIC MARKUP
 
+function MaskFields() {
+    $('.date').mask('00/00/0000');
+    $('.time').mask('00:00:00');
+    $('.datetime').mask('00/00/0000 00:00:00');
+    $('.money').mask("#,##0.00", { reverse: true });
+    $('.moneynegative').maskMoney({ prefix: '$', allowNegative: true, thousands: ',', decimal: '.', affixesStay: false });
+    $('.phone').mask('(000) 000-0000');
+    $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+        translation: {
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
+        }
+    });
+}
 
+function FormatFields() {
+    $(".decimal").each(function () {
+        $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+    });
+    $(".money").each(function () {
+        $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+    });
+    $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $(".percent").each(function () {
+        $(this).val($(this).val() + '%');
+    });
+}
