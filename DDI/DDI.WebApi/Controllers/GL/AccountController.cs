@@ -1,5 +1,4 @@
-﻿using DDI.Services;
-using System;
+﻿using System;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.GL;
@@ -7,7 +6,6 @@ using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
-using DDI.Services.Search;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
