@@ -14,13 +14,31 @@ function LoadAccountActivityAndBudgetTab(id) {
 
     var columns = [
 
-    { dataField: 'Id'},
+        // going to need...
+        // bring in the accountsummary
+        // get the details from that - extra route or just get it off the details\
+        // the column captions will come from that - I think
+
+   // { dataField: 'Id'},
     { dataField: 'Detail.PeriodName', caption: 'Period' },
     { dataField: 'Detail.WorkingBudget', caption: 'Working Budget', dataType: 'date' },
     { dataField: 'Detail.Debits', caption: 'Prior Year Name' },
     { dataField: 'Detail.PriorCredits', caption: 'Prior credits', allowEditing: true },
     { dataField: 'Detail.Credits', caption: 'Credits', allowEditing: true },
-    { dataField: 'Detail.WhatIfBudget', caption: 'What If Budget Name', allowEditing: true }
+    { dataField: 'Detail.WhatIfBudget', caption: 'What If Budget Name', allowEditing: true },
+    {
+        summary: {
+            totalItems: [{
+                column: 'Debits',
+                summaryType: 'sum',
+                alignment: 'left'
+            }, {
+                column: 'Credits',
+                summaryType: 'sum',
+                alignment: 'left',
+            }]
+        }
+    }
 
     ];
 
@@ -41,5 +59,21 @@ function LoadAccountActivityAndBudgetTab(id) {
 
             $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
         
-        }); 
+    });
+
+    var summaryoptions =
+               {
+                   totalItems: [{
+                       column: 'Debits',
+                       summaryType: 'sum',
+                       alignment: 'right'
+                   }, {
+                       column: 'Credits',
+                       summaryType: 'sum',
+                       alignment: 'left',
+                       showInColumn: 'OrderDate',
+                   }]
+               }
+
+    $('.activitygridcontainer').dxDataGrid('instance').option(summary, summaryoptions);
 }
