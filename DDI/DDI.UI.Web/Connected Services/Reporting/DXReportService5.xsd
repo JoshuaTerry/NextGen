@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd0" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/DevExpress.XtraReports.Parameters" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting.Native" />
+  <xs:complexType name="DocumentId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentId" nillable="true" type="tns:DocumentId" />
+  <xs:complexType name="DocumentExportArgs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomArgs" nillable="true" type="xs:anyType" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting" minOccurs="0" name="Format" type="q1:ExportFormat" />
+      <xs:element minOccurs="0" name="SerializedExportOptions" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentExportArgs" nillable="true" type="tns:DocumentExportArgs" />
+  <xs:complexType name="ExportId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ExportId" nillable="true" type="tns:ExportId" />
+  <xs:complexType name="ExportStatus">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExportId" nillable="true" type="tns:ExportId" />
+      <xs:element minOccurs="0" name="Fault" nillable="true" type="tns:ServiceFault" />
+      <xs:element minOccurs="0" name="ProgressPosition" type="xs:int" />
+      <xs:element minOccurs="0" name="Status" type="tns:TaskStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ExportStatus" nillable="true" type="tns:ExportStatus" />
+  <xs:complexType name="ServiceFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FullMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceFault" nillable="true" type="tns:ServiceFault" />
+  <xs:simpleType name="TaskStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Fault" />
+      <xs:enumeration value="InProgress" />
+      <xs:enumeration value="Complete" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TaskStatus" nillable="true" type="tns:TaskStatus" />
+  <xs:complexType name="InstanceIdentity">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="InstanceIdentity" nillable="true" type="tns:InstanceIdentity" />
+  <xs:complexType name="ReportNameIdentity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:InstanceIdentity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ReportNameIdentity" nillable="true" type="tns:ReportNameIdentity" />
+  <xs:complexType name="ReportParameterContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Parameters" nillable="true" type="tns:ArrayOfReportParameter" />
+      <xs:element minOccurs="0" name="ShouldRequestParameters" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReportParameterContainer" nillable="true" type="tns:ReportParameterContainer" />
+  <xs:complexType name="ArrayOfReportParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReportParameter" nillable="true" type="tns:ReportParameter" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfReportParameter" nillable="true" type="tns:ArrayOfReportParameter" />
+  <xs:complexType name="ReportParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsFilteredLookUpSettings" type="xs:boolean" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/DevExpress.XtraReports.Parameters" minOccurs="0" name="LookUpValues" nillable="true" type="q2:ArrayOfLookUpValue" />
+      <xs:element minOccurs="0" name="MultiValue" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Path" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+      <xs:element minOccurs="0" name="Visible" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReportParameter" nillable="true" type="tns:ReportParameter" />
+  <xs:complexType name="ReportBuildArgs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomArgs" nillable="true" type="xs:anyType" />
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DrillDownKeys" nillable="true" type="q3:ArrayOfKeyValueOfstringboolean" />
+      <xs:element minOccurs="0" name="Parameters" nillable="true" type="tns:ArrayOfReportParameter" />
+      <xs:element minOccurs="0" name="SerializedPageData" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="SerializedWatermark" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReportBuildArgs" nillable="true" type="tns:ReportBuildArgs" />
+  <xs:complexType name="BuildStatus">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DocumentId" nillable="true" type="tns:DocumentId" />
+      <xs:element minOccurs="0" name="Fault" nillable="true" type="tns:ServiceFault" />
+      <xs:element minOccurs="0" name="PageCount" type="xs:int" />
+      <xs:element minOccurs="0" name="ProgressPosition" type="xs:int" />
+      <xs:element minOccurs="0" name="Status" type="tns:TaskStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BuildStatus" nillable="true" type="tns:BuildStatus" />
+  <xs:simpleType name="PageCompatibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Silverlight" />
+      <xs:enumeration value="WPF" />
+      <xs:enumeration value="Prnx" />
+      <xs:enumeration value="HTML" />
+      <xs:enumeration value="ImagePng" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="PageCompatibility" nillable="true" type="tns:PageCompatibility" />
+  <xs:complexType name="DocumentData">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting.Native" minOccurs="0" name="AvailableExportModes" nillable="true" type="q4:AvailableExportModes" />
+      <xs:element minOccurs="0" name="CanChangePageSettings" type="xs:boolean" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting.Native" minOccurs="0" name="DocumentMap" nillable="true" type="q5:DocumentMapTreeViewNode" />
+      <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DrillDownKeys" nillable="true" type="q6:ArrayOfKeyValueOfstringboolean" />
+      <xs:element minOccurs="0" name="ExportOptions" nillable="true" type="xs:base64Binary" />
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting" minOccurs="0" name="HiddenOptions" type="q7:ExportOptionKind" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SerializedPageData" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="SerializedWatermark" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentData" nillable="true" type="tns:DocumentData" />
+  <xs:complexType name="PrintId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PrintId" nillable="true" type="tns:PrintId" />
+  <xs:complexType name="PrintStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Fault" nillable="true" type="tns:ServiceFault" />
+      <xs:element minOccurs="0" name="PrintId" nillable="true" type="tns:PrintId" />
+      <xs:element minOccurs="0" name="ProgressPosition" type="xs:int" />
+      <xs:element minOccurs="0" name="Status" type="tns:TaskStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PrintStatus" nillable="true" type="tns:PrintStatus" />
+  <xs:complexType name="ArrayOfParameterLookUpValues">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ParameterLookUpValues" nillable="true" type="tns:ParameterLookUpValues" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfParameterLookUpValues" nillable="true" type="tns:ArrayOfParameterLookUpValues" />
+  <xs:complexType name="ParameterLookUpValues">
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/DevExpress.XtraReports.Parameters" minOccurs="0" name="LookUpValues" nillable="true" type="q8:ArrayOfLookUpValue" />
+      <xs:element minOccurs="0" name="Path" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ParameterLookUpValues" nillable="true" type="tns:ParameterLookUpValues" />
+</xs:schema>

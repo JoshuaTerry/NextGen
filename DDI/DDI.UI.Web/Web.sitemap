@@ -42,7 +42,7 @@
       </siteMapNode>
 
       <siteMapNode url="~/Pages/Reports/AccountingReports.aspx" title="Accounting"  description="Accounting">
-        <siteMapNode url="~/Pages/Reports/ChartOfAccountListing.aspx" title="Chart Of Account Listing"  description="Chart Of Account Listing" />
+        <siteMapNode url="~/Pages/GL/PostedTransactionReport.aspx" title="Posted Transaction Report"  description="PostedTransaction Report" />
         <siteMapNode url="~/Pages/Reports/TrialBalanceReport.aspx" title="Trial Balance Report"  description="Trial Balance Report" />
       </siteMapNode>
 

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/Message" />
+  <xs:import schemaLocation="http://localhost:49490/DXReportService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="ClearDocument">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q1:DocumentId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ClearDocumentResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartExport">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q2:DocumentId" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="exportArgs" nillable="true" type="q3:DocumentExportArgs" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartExportResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="StartExportResult" nillable="true" type="q4:ExportId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetExportStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="exportId" nillable="true" type="q5:ExportId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetExportStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetExportStatusResult" type="q6:ExportStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetExportedDocument">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="exportId" nillable="true" type="q7:ExportId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetExportedDocumentResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.microsoft.com/Message" name="GetExportedDocumentResult" type="q8:StreamBody" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetReportParameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="identity" nillable="true" type="q9:InstanceIdentity" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetReportParametersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetReportParametersResult" nillable="true" type="q10:ReportParameterContainer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartBuild">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="identity" nillable="true" type="q11:InstanceIdentity" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="buildArgs" nillable="true" type="q12:ReportBuildArgs" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartBuildResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="StartBuildResult" nillable="true" type="q13:DocumentId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StopBuild">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q14:DocumentId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StopBuildResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetBuildStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q15:DocumentId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetBuildStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetBuildStatusResult" type="q16:BuildStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q17:DocumentId" />
+        <xs:element minOccurs="0" name="pageIndex" type="xs:int" />
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="compatibility" type="q18:PageCompatibility" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPageResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetPageResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q19:DocumentId" />
+        <xs:element xmlns:q20="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="pageIndexes" nillable="true" type="q20:ArrayOfint" />
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="compatibility" type="q21:PageCompatibility" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPagesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetPagesResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDocumentData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q22:DocumentId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDocumentDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetDocumentDataResult" nillable="true" type="q23:DocumentData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartPrint">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="documentId" nillable="true" type="q24:DocumentId" />
+        <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="compatibility" type="q25:PageCompatibility" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartPrintResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="StartPrintResult" nillable="true" type="q26:PrintId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StopPrint">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="printId" nillable="true" type="q27:PrintId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StopPrintResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrintStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="printId" nillable="true" type="q28:PrintId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrintStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetPrintStatusResult" nillable="true" type="q29:PrintStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrintDocument">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="printId" nillable="true" type="q30:PrintId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrintDocumentResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q31="http://schemas.microsoft.com/Message" name="GetPrintDocumentResult" type="q31:StreamBody" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLookUpValues">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="identity" nillable="true" type="q32:InstanceIdentity" />
+        <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="parameterValues" nillable="true" type="q33:ArrayOfReportParameter" />
+        <xs:element xmlns:q34="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="requiredParameterPaths" nillable="true" type="q34:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLookUpValuesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/DevExpress.DocumentServices.ServiceModel.DataContracts" minOccurs="0" name="GetLookUpValuesResult" nillable="true" type="q35:ArrayOfParameterLookUpValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

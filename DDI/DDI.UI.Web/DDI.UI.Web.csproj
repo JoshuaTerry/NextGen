@@ -44,6 +44,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Charts.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxThemes.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.Resources.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpo.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGauges.v16.2.Core, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v16.2, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v16.2.Web, Version=16.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -59,6 +76,7 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
       <Private>True</Private>
@@ -79,6 +97,40 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.BuildStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.DocumentData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.DocumentId.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.ExportId.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.ExportStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.ParameterLookUpValues.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.PrintId.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.PrintStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\Reporting\DDI.UI.Web.Reporting.ReportParameterContainer.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\Reporting\DXReportService.disco" />
+    <None Include="Connected Services\Reporting\configuration91.svcinfo" />
+    <None Include="Connected Services\Reporting\configuration.svcinfo" />
+    <None Include="Connected Services\Reporting\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="CSS\accounts.css" />
     <Content Include="CSS\autocomplete.css" />
     <Content Include="CSS\constituents.css" />
@@ -96,6 +148,8 @@
     <Content Include="Pages\GL\AccountSummary.aspx" />
     <Content Include="Pages\GL\AccountTransactions.aspx" />
     <Content Include="Pages\GL\ActivityAndBudget.aspx" />
+    <Content Include="Pages\GL\PostedTransactionReport.aspx" />
+    <Content Include="Pages\GL\Report2.aspx" />
     <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
@@ -135,6 +189,34 @@
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
     <Content Include="auth.config" />
+    <None Include="Connected Services\Reporting\DXReportService.wsdl" />
+    <None Include="Connected Services\Reporting\DXReportService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Reporting\DXReportService8.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\InvestmentDetails.js" />
@@ -323,6 +405,11 @@
     <Compile Include="Code\ApiRoleProvider.cs" />
     <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Code\CustomSiteMapProvider.cs" />
+    <Compile Include="Connected Services\Reporting\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -357,6 +444,20 @@
     </Compile>
     <Compile Include="Pages\GL\ActivityAndBudget.aspx.designer.cs">
       <DependentUpon>ActivityAndBudget.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\PostedTransactionReport.aspx.cs">
+      <DependentUpon>PostedTransactionReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\PostedTransactionReport.aspx.designer.cs">
+      <DependentUpon>PostedTransactionReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\Report2.aspx.cs">
+      <DependentUpon>Report2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\Report2.aspx.designer.cs">
+      <DependentUpon>Report2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\INV\InvestmentDetails.aspx.cs">
       <DependentUpon>InvestmentDetails.aspx</DependentUpon>
@@ -660,6 +761,15 @@
       <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
       <Name>DDI.Logger</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\Reporting\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
