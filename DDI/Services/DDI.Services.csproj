@@ -86,9 +86,10 @@
     <Compile Include="INV\InvestmentInterestPayoutService.cs" />
     <Compile Include="INV\InvestmentService.cs" />
     <Compile Include="INV\InvestmentRelationshipService.cs" />
- 	<Compile Include="Search\AccountNumberSearch.cs" />
+    <Compile Include="Search\AccountNumberSearch.cs" />
     <Compile Include="GL\AccountService.cs" />
     <Compile Include="GL\JournalService.cs" />
+    <Compile Include="Search\NoteSearch.cs" />
     <Compile Include="Search\JournalSearch.cs" />
     <Compile Include="Security\GroupService.cs" />
     <Compile Include="Core\NoteService.cs" />

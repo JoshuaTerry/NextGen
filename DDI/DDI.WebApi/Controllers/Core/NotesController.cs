@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Services.Search;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -67,9 +68,43 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/notes", Name = RouteNames.Note)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(string title = null,
+                                        string text = null,
+                                        Guid? categoryId = null,
+                                        Guid? noteCodeId = null,
+                                        Guid? primaryContactId = null,
+                                        Guid? contactMethodId = null,
+                                        Guid? userResponsibleId = null,
+                                        Guid? parentEntityId = null,
+                                        string entityType = null,
+                                        DateTime? contactDateFrom = null,
+                                        DateTime? contactDateTo = null,
+                                        DateTime? alertDate = null,
+                                        int? limit = SearchParameters.LimitMax, 
+                                        int? offset = SearchParameters.OffsetDefault, 
+                                        string orderBy = OrderByProperties.DisplayName, 
+                                        string fields = null)
         {
-            return base.GetAll(RouteNames.Note, limit, offset, orderBy, fields);
+            var search = new NoteSearch()
+            {
+                AlertDate = alertDate,
+                CategoryId = categoryId,
+                ContactDateFrom = contactDateFrom,
+                ContactDateTo = contactDateTo,
+                ContactMethodId = contactMethodId,
+                EntityType = entityType,
+                NoteCodeId = noteCodeId,
+                ParentEntityId = parentEntityId,
+                PrimaryContactId = primaryContactId,
+                UserResponsibleId = userResponsibleId,
+                Text = text,
+                Title = title,
+                Offset = offset,
+                Limit = limit,
+                OrderBy = orderBy
+            };
+
+            return base.GetAll(RouteNames.Note, search, fields);
         }
 
         [HttpGet]

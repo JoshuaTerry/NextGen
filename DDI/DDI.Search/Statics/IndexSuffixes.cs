@@ -13,5 +13,6 @@ namespace DDI.Search.Statics
     {
         public const string CRM = "crm";
         public const string GL = "gl";
+        public const string CORE = "core";
     }
 }

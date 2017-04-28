@@ -44,6 +44,7 @@ namespace DDI.Search
                 { typeof(AddressDocument), IndexSuffixes.CRM },
                 { typeof(ContactInfoDocument), IndexSuffixes.CRM },
                 { typeof(JournalDocument), IndexSuffixes.GL },
+                { typeof(NoteDocument), IndexSuffixes.CORE }
             };
 
             // Mapping of index suffixes to their most recent versions.  
@@ -52,7 +53,8 @@ namespace DDI.Search
             _indexVersions = new Dictionary<string, string>
             {
                 { IndexSuffixes.CRM, "2.4" },
-                { IndexSuffixes.GL, "1.0" }
+                { IndexSuffixes.GL, "1.0" },
+                { IndexSuffixes.CORE, "1.0" }
             };
         }
 
