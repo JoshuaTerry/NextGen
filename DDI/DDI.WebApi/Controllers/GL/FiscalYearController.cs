@@ -16,21 +16,41 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
+        private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
+        private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
+
+        protected override string FieldsForList => $"{nameof(FiscalYear.Id)},{nameof(FiscalYear.Name)},{nameof(FiscalYear.Status)}";
+
         [HttpGet]
-        [Route("api/v1/fiscalyears/ledger/{ledgerId}")]
-        public IHttpActionResult GetAllByLedgerId(Guid ledgerId)
+        [Route("api/v1/fiscalyears/ledger/{ledgerId}", Name = RouteNames.FiscalYear + RouteNames.Ledger + RouteVerbs.Get)]
+        [Route("api/v1/ledgers/{ledgerId}/fiscalyears", Name = ROUTENAME_GETALLBYLEDGER)]
+        public IHttpActionResult GetAllByLedgerId(Guid ledgerId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             try
             {
-                var search = new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, "Name DESC");
+                var search = new PageableSearch(offset, limit, orderBy);
                 var result = _service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
+                return FinalizeResponse(result, ROUTENAME_GETALLBYLEDGER, search, ConvertFieldList(fields, FieldsForList));
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
 
-                return Ok(result);
+        [HttpGet]
+        [Route("api/v1/fiscalyears/businessunit/{unitId}", Name = RouteNames.FiscalYear + RouteNames.BusinessUnit + RouteVerbs.Get)]
+        [Route("api/v1/businessunits/{unitId}/fiscalyears", Name = ROUTENAME_GETALLBYUNIT)]
+        public IHttpActionResult GetAllByBusinessUnitId(Guid unitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var result = _service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search);
+
+                return FinalizeResponse(result, ROUTENAME_GETALLBYUNIT, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
