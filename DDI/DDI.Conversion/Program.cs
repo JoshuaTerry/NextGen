@@ -93,7 +93,9 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalApprovals));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
+
             Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
+            Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
