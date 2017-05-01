@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Logger", "DDI.Logger\DD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.EFAudit", "DDI.EFAudit\DDI.EFAudit.csproj", "{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.DevExpress", "DDI.DevExpress\DDI.DevExpress.csproj", "{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
