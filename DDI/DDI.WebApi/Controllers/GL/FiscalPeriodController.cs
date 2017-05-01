@@ -11,23 +11,22 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class FiscalPeriodController : GenericController<FiscalPeriod>
     {
+        private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
+
         [HttpGet]
-        [Route("api/v1/fiscalperiods/fiscalyear/{fiscalYearId}")]
-        public IHttpActionResult GetAllByFiscalYearId(Guid fiscalYearId)
+        [Route("api/v1/fiscalperiods/fiscalyear/{fiscalYearId}", Name = RouteNames.FiscalPeriod + RouteNames.FiscalYear + RouteVerbs.Get)]
+        [Route("api/v1/fiscalyears/{fiscalYearId}/fiscalperiods", Name = ROUTENAME_GETALLBYYEAR)]
+        public IHttpActionResult GetAllByFiscalYearId(Guid fiscalYearId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = nameof(FiscalPeriod.PeriodNumber), string fields = null)
         {
             try
             {
-                var search = new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, "PeriodNumber");
+                var search = new PageableSearch(offset, limit, orderBy);
                 var result = _service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
+                return FinalizeResponse(result, ROUTENAME_GETALLBYYEAR, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

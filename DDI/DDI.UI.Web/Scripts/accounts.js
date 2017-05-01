@@ -2,6 +2,10 @@
 
     LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
+    $('#summary-tab').click(function () {
+        LoadSummaryTab('05523233-784D-4D6E-920B-0019EFAF9912');
+    });
+
 });
 
 

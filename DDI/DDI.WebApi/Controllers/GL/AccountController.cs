@@ -1,52 +1,34 @@
-﻿using DDI.Services;
-using System;
+﻿using System;
 using System.Web.Http;
+using DDI.Services;
 using DDI.Services.GL;
+using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
-using DDI.Services.Search;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
-    public class AccountController : GeneralLedgerController<Account>
+    public class AccountController : GenericController<Account>
     {
         protected new IAccountService Service => (IAccountService)base.Service;
 
-        private ServiceBase<GLAccountSelection> _glAccount = new ServiceBase<GLAccountSelection>();
-        private ServiceBase<Ledger> _ledger = new ServiceBase<Ledger>();
-        private ServiceBase<FiscalYear> _fiscalYear = new ServiceBase<FiscalYear>();
+        private const string ROUTENAME_GETALLLEDGERACCOUNTS = RouteNames.Account + RouteNames.FiscalYear + RouteVerbs.Get;
+
+        private ServiceBase<GLAccountSelection> _glAccount;
+        private ServiceBase<Ledger> _ledger;
+        private ServiceBase<FiscalYear> _fiscalYear;
+
         public AccountController()
             : base(new AccountService())
         {
+            _glAccount = new ServiceBase<GLAccountSelection>();
+            _ledger = new ServiceBase<Ledger>();
+            _fiscalYear = new ServiceBase<FiscalYear>();
         }
-
-
-        [HttpGet]
-        [Route("api/v1/businessunit/{businessUnitId}/accounts", Name = RouteNames.Account)]
-        public IHttpActionResult GetAll(Guid businessUnitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
-            return base.GetAll(RouteNames.Account, businessUnitId, limit, offset, orderBy, fields);
-        }
-
-        [HttpGet]
-        [Route("api/v1/accounts/fiscalyear/{id}")]
-        public IHttpActionResult GetAllLedgerAccounts(Guid Id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
-        {
-            var search = new PageableSearch(null, 25000, null);
-           
-            var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id , search);
-
-            if (accounts == null)
-            {
-                NotFound();
-            }
-
-            return Ok(accounts);
-        }
-
+        
         [HttpGet]
         [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
         public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)
@@ -74,19 +56,30 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/activity/{id}", Name = RouteNames.AccountActivity)]
+        [Route("api/v1/accounts/activity/{id}", Name = RouteNames.AccountActivity + RouteVerbs.Get)]
         public IHttpActionResult GetAccountActivity(Guid id)
         {   
             return base.CustomAction(() => Service.GetAccountActivity(id));
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/activity/{id}/detail")]
-        public IHttpActionResult GetAccountActivityDetail(Guid id)
+        [Route("api/v1/accounts/fiscalyear/{id}",Name = ROUTENAME_GETALLLEDGERACCOUNTS)]
+        public IHttpActionResult GetAllLedgerAccounts(Guid Id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.CustomAction(() => Service.GetAccountActivityDetail(id));
-        }
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
 
+                var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+       
         [HttpPost]
         [Route("api/v1/accounts", Name = RouteNames.Account + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Account item)
