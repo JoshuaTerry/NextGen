@@ -29,5 +29,23 @@ namespace DDI.Data.Extensions
               .AddOperation(new DropViewOperation(viewName));
         }
 
+        /// <summary>
+        /// Add a SQL sequence to a migration.
+        /// </summary>
+        public static void CreateSequence(this DbMigration migration, string sequenceName, string dataType = "int", int startValue = 1, int increment = 1)
+        {
+            ((IDbMigration)migration)
+              .AddOperation(new CreateSequenceOperation(sequenceName, dataType, startValue, increment));
+        }
+
+        /// <summary>
+        /// Drop a SQL sequence from a migration.
+        /// </summary>
+        public static void DropSequence(this DbMigration migration, string sequenceName)
+        {
+            ((IDbMigration)migration)
+              .AddOperation(new DropSequenceOperation(sequenceName));
+        }
+
     }
 }

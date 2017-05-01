@@ -1,11 +1,15 @@
 ﻿<%@ Page Title="DDI - Accounts" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Accounts.aspx.cs" Inherits="DDI.UI.Web.Accounts" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <p>Account Selector Goes Here</p>
-
+    
+    <div class="as-accounts">
+        <label>Put Account Selector Here </label>
+    </div>
+   
 </asp:Content>
