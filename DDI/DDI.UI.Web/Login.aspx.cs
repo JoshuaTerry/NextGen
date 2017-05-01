@@ -66,9 +66,13 @@ namespace DDI.UI.Web
         {
             Token token = Token.GetToken();
 
-            Login.AuthorizeUser(token.UserName, token.Access_Token);
+            if (token != null)
+            {
+                Login.AuthorizeUser(token.UserName, token.Access_Token);
+                return token.Access_Token;
+            }
 
-            return token.Access_Token;
+            return null;
         }
     }
 }
