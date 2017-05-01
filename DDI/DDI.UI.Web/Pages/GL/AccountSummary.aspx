@@ -13,28 +13,30 @@
     
     <div class="twocolumn">
         <div class="glaccount">
+            <label class="summaryprompts">GL Account: </label>
             <input type="text" class="GLAccount readonly" readonly="read-only" />
+            <a href="#" title="" class="editaccount editbutton"></a>
         </div>
-        <div class="justright">
+        <div>
             <input type="checkbox" class="Active" /> Active
         </div>
     </div>
 
-    <div class="fieldblock">
-        <input type="text" class="Description" />
+    <div>
+        <label>Description: </label>
+        <input type="text" class="Description fieldblock" />
     </div>
 
     <div class="twocolumn">
-        <div class="accountcategory1">
-            <label class="category1prompt"></label>
-            <select class="category1dropdown" />
-            <a href="#" title="" class="editcategory1 editbutton"></a>
-            <a href="#" title="" class="newcategory1 editbutton"></a>
+        <div class="accountgroup1">
+            <label class="group1prompt summaryprompts"></label>
+            <select class="group1dropdown" />
+            <a href="#" title="" class="editgroup1 editbutton"></a>
         </div>
 
         <div>
             <label>Balances Normally: </label>
-            <select class="NormalBalace">
+            <select class="NormalBalance">
                 <option value="0">Credit</option>
                 <option value="1">Debit</option>
             </select>
@@ -42,19 +44,41 @@
     </div>
 
     <div class="twocolumn">
-        <div class="accountcategory2">
-            <label class="category2prompt"></label>
-            <select class="category2dropdown" />
-            <a href="#" title="" class="editcategory2 editbutton"></a>
-            <a href="#" title="" class="newcategory2 editbutton"></a>
+        <div class="accountgroup2">
+            <label class="group2prompt summaryprompts"></label>
+            <select class="group2dropdown" />
+            <a href="#" title="" class="editgroup2 editbutton"></a>
         </div>
 
         <div>
             <label>Beginning Balance: </label>
-            <select class="NormalBalace">
-                <option value="0">Credit</option>
-                <option value="1">Debit</option>
-            </select>
+            <input type="text" class="BeginningBalance money justright" disabled="disabled"" />
+        </div>
+    </div>
+
+    <div class="twocolumn">
+        <div class="accountgroup3">
+            <label class="group3prompt summaryprompts"></label>
+            <select class="group3dropdown" />
+            <a href="#" title="" class="editgroup3 editbutton"></a>
+        </div>
+
+        <div>
+            <label>Activity: </label>
+            <input type="text" class="Activity money justright" disabled="disabled"" />
+        </div>
+    </div>
+
+    <div class="twocolumn">
+        <div class="accountgroup4">
+            <label class="group4prompt summaryprompts"></label>
+            <select class="group4dropdown" />
+            <a href="#" title="" class="editgroup4 editbutton"></a>
+        </div>
+
+        <div>
+            <label>Activity: </label>
+            <input type="text" class="EndingBalance money justright" disabled="disabled"" />
         </div>
     </div>
 

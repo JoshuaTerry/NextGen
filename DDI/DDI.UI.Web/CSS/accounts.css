@@ -4,6 +4,14 @@
 div.accounts { width: 90%; margin: 10px auto 0 auto; }
 div.accounts div.tabscontainer { width: 100%; }
 
+/* gl summary widths*/
+
+.summaryprompts {width: 12%}
+.summaryleftinput {width: 35%}
+.summaryrightinput {width: 23%}
+.summarysegmentprompt {width: 10%}
+.summarysegmentinput {width: 10%}
+.summarysegmenttext {width: 70%}
 
 
 
