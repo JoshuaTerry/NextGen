@@ -44,6 +44,7 @@ namespace DDI.Conversion.Statics
         public static string CRM_NoteCategory => "MemoCategory.csv";
 
         public static string CRM_MemoConstituent => "Memo_Constituent.csv";
+        public static string CRM_EntityNumber => "EntityNumber_Constituent.csv";
         #endregion
 
         #region DDI Files
@@ -71,6 +72,13 @@ namespace DDI.Conversion.Statics
         public static string GL_FundFromTos => "FundXref.csv";
         public static string GL_BusinessUnitFromTos => "EntityXref.csv";
         public static string GL_PostedTransactions => "PostedTran.csv";
+        public static string GL_Journals => "Journal.csv";
+        public static string GL_JournalLines => "JournalLine.csv";
+        public static string GL_JournalTransactions => "Transaction_Journal.csv";
+        public static string GL_JournalEntityTransactions => "EntityTransaction_Journal.csv";
+        public static string GL_JournalEntityNumbers => "EntityNumber_Journal.csv";
+        public static string GL_JournalApprovals => "Approval_Journal.csv";
+        public static string GL_MemoJournals => "Memo_Journal.csv";
 
         #endregion
 

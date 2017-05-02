@@ -78,6 +78,18 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201704211403062_TransactionNumberSequence.cs" />
+    <Compile Include="Migrations\Client\201704211403062_TransactionNumberSequence.Designer.cs">
+      <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.cs" />
+    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.Designer.cs">
+      <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201704201955265_EntityNumber.cs" />
+    <Compile Include="Migrations\Client\201704201955265_EntityNumber.Designer.cs">
+      <DependentUpon>201704201955265_EntityNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201704171725592_Transaction_v1.cs" />
     <Compile Include="Migrations\Client\201704171725592_Transaction_v1.Designer.cs">
       <DependentUpon>201704171725592_Transaction_v1.cs</DependentUpon>
@@ -185,6 +197,8 @@
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\Customizations\CreateSequenceOperation.cs" />
+    <Compile Include="Migrations\Customizations\DropSequenceOperation.cs" />
     <Compile Include="Migrations\Customizations\DropViewOperation.cs" />
     <Compile Include="Migrations\Customizations\CreateViewOperation.cs" />
     <Compile Include="Migrations\Customizations\CustomSqlGenerator.cs" />
@@ -194,6 +208,7 @@
     <Compile Include="RepositoryNoDb.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
+    <Compile Include="Statics\Sequences.cs" />
     <Compile Include="UnitOfWorkNoDb.cs" />
     <Compile Include="UnitOfWorkEF.cs" />
   </ItemGroup>
@@ -204,6 +219,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201704211403062_TransactionNumberSequence.resx">
+      <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704261812162_AddingUniqueIndexToUserName.resx">
+      <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201704201955265_EntityNumber.resx">
+      <DependentUpon>201704201955265_EntityNumber.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201704171725592_Transaction_v1.resx">
       <DependentUpon>201704171725592_Transaction_v1.cs</DependentUpon>
     </EmbeddedResource>

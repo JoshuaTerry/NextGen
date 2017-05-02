@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using DDI.Shared.Models.Client.Security;
+using System.Data;
 
 namespace DDI.Data
 {
@@ -23,14 +24,17 @@ namespace DDI.Data
         private DbContext _commonContext;
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
+        private Dictionary<Type, object> _cachedRepositories;
         private string _commonNamespace;
         private List<object> _businessLogic;
         private bool _isAuditStatusInitialized;
         private bool _auditModuleEnabled;
         private bool _auditingEnabled;
+        private DbContextTransaction _dbTransaction;
+        private static object _lockObject;
 
         #endregion Private Fields
-         
+
 
         #region Public Constructors
 
@@ -51,9 +55,16 @@ namespace DDI.Data
             }
 
             _repositories = new Dictionary<Type, object>();
-            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;            
+            _cachedRepositories = null;
+            _commonNamespace = typeof(Shared.Models.Common.Country).Namespace;
             _businessLogic = new List<object>();
-            _isAuditStatusInitialized = false;          
+            _isAuditStatusInitialized = false;
+            _dbTransaction = null;
+        }
+
+        static UnitOfWorkEF()
+        {
+            _lockObject = new object();
         }
 
         #endregion Public Constructors
@@ -104,6 +115,14 @@ namespace DDI.Data
         public IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
         {
             return GetRepository<T>().Entities.Where(predicate);
+        }
+
+        /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
         }
 
         /// <summary>
@@ -244,25 +263,34 @@ namespace DDI.Data
             return repository;
         }
 
-        public IRepository<T> GetCachedRepository<T>() where T : class 
+        /// <summary>
+        /// Get a cached repository for an entity type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IRepository<T> GetCachedRepository<T>() where T : class
         {
             IRepository<T> repository = null;
 
             var type = typeof(T);
+            if (_cachedRepositories == null)
+            {
+                _cachedRepositories = new Dictionary<Type, object>();
+            }
 
-            if (!_repositories.ContainsKey(type))
+            if (!_cachedRepositories.ContainsKey(type))
             {
                 DbContext context = GetContext(type);
 
                 // Create a repository, then add it to the dictionary.
-                repository = new CachedRepository<T>(context);
+                repository = new CachedRepository<T>(GetRepository<T>());
 
-                _repositories.Add(type, repository);
+                _cachedRepositories.Add(type, repository);
             }
             else
             {
                 // Repository already exists...
-                repository = _repositories[type] as IRepository<T>;
+                repository = _cachedRepositories[type] as IRepository<T>;
             }
 
             return repository;
@@ -304,7 +332,7 @@ namespace DDI.Data
         {
             User user;
 
-            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser()) != null)
+            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
             {
                 return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
@@ -314,6 +342,54 @@ namespace DDI.Data
                 return (_clientContext?.SaveChanges() ?? 0) +
                        (_commonContext?.SaveChanges() ?? 0);
             }
+        }
+
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            lock (_lockObject)
+            {
+                if (_dbTransaction != null)
+                {
+                    throw new InvalidOperationException("Cannot begin a new transcation because a transaction has already been started.");
+                }
+                if (_clientContext == null)
+                {
+                    _clientContext = new DomainContext();
+                }
+                _dbTransaction = _clientContext.Database.BeginTransaction(isolationLevel);                
+            }
+        }
+
+        public void RollbackTransaction()
+        {
+            lock(_lockObject)
+            {
+                _dbTransaction?.Rollback();
+                _dbTransaction?.Dispose();
+                _dbTransaction = null;
+            }
+        }
+
+        public bool CommitTransaction()
+        {
+            bool success = true;
+
+            lock(_lockObject)
+            {
+                try
+                {
+                    SaveChanges();
+                    _dbTransaction?.Commit();
+                    _dbTransaction?.Dispose();
+                    _dbTransaction = null;
+                }
+                catch (System.Data.Entity.Infrastructure.DbUpdateException)
+                {
+                    _dbTransaction = _clientContext.Database.CurrentTransaction;
+                    success = false;
+                }
+            }
+            return success;
         }
 
         public void AddBusinessLogic(object logic)
@@ -357,6 +433,8 @@ namespace DDI.Data
             {
                 if (disposing)
                 {
+                    _dbTransaction?.Rollback();
+                    _dbTransaction?.Dispose();
                     _clientContext?.Dispose();
                     _commonContext?.Dispose();
                 }

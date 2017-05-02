@@ -9,15 +9,29 @@ namespace DDI.Shared.Caching
     internal class MemoryCacheProvider : ICacheProvider
     {
         private ObjectCache _cache;
-         
+        private bool _isDefault;
+        private const string CACHE_NAME = "DDI_MemoryCacheProvider";
+
         public MemoryCacheProvider()
         {
             _cache = System.Runtime.Caching.MemoryCache.Default;
+            _isDefault = true;
+        }
+
+        public void Clear()
+        {
+            if (!_isDefault)
+            {
+                ((MemoryCache)_cache).Dispose();                
+            }
+            _cache = new MemoryCache(CACHE_NAME);
+            _isDefault = false;
         }
 
         public void RemoveEntry(string key)
         {
             _cache.Remove(key);
+            
         }
 
         public T GetEntry<T>(string key, int timeoutSecs, bool isSlidingTimeout, Func<T> entryProvider, Action<T> callback) where T : class

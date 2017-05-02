@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DDI.Shared.Models.Common
 {
@@ -38,6 +39,9 @@ namespace DDI.Shared.Models.Common
         public ICollection<CityName> CityNames { get; set; }
 
         public ICollection<Zip> Zips { get; set; }
+
+        public override string DisplayName => CityNames?.FirstOrDefault().DisplayName ?? Id.ToString();
+
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DDI.Logger;
 using DDI.Services;
+using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
@@ -119,6 +120,11 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
+                if (search == null)
+                {
+                    search = PageableSearch.Default;
+                }
+
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!response.IsSuccessful)
                 {
@@ -247,6 +253,33 @@ namespace DDI.WebApi.Controllers
                 }
 
                 return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Invoke a custom action that returns an IDataReponse
+        /// </summary>
+        /// <param name="action">Action to be invoked.</param>
+        protected virtual IHttpActionResult CustomAction<T1>(Func<IDataResponse<T1>> action)
+        {
+            try
+            {
+                IDataResponse<T1> result = action();
+                if (result.Data == null)
+                {
+                    return NotFound();
+                }
+
+                if (!result.IsSuccessful)
+                {
+                    return BadRequest(string.Join(",", result.ErrorMessages));
+                }
+                return Ok(result);
             }
             catch (Exception ex)
             {

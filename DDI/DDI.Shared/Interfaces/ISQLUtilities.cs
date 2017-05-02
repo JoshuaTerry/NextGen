@@ -1,10 +1,12 @@
 ﻿
+using System;
+
 namespace DDI.Shared
 {
     public interface ISQLUtilities
     {
-        void SetNextSequenceValue(string sequenceName, int newValue);
+        void SetNextSequenceValue(string sequenceName, Int64 newValue);
 
-        int GetNextSequenceValue(string sequenceName);
+        Int64 GetNextSequenceValue(string sequenceName);
     }
 }

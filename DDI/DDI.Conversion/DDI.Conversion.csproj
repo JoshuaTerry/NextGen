@@ -71,7 +71,11 @@
   <ItemGroup>
     <Compile Include="ConversionBase.cs" />
     <Compile Include="ConversionMethodArgs.cs" />
+    <Compile Include="Core\EntityNumberConverter.cs" />
     <Compile Include="Core\Initialize.cs" />
+    <Compile Include="Core\ApprovalConverter.cs" />
+    <Compile Include="Core\NoteSearchIndexer.cs" />
+    <Compile Include="Core\TransactionConverter.cs" />
     <Compile Include="Core\NoteConverter.cs" />
     <Compile Include="Core\SettingsLoader.cs" />
     <Compile Include="CP\PaymentMethodConverter.cs" />
@@ -82,7 +86,9 @@
     <Compile Include="FileExport.cs" />
     <Compile Include="FileImport.cs" />
     <Compile Include="CRM\SettingsLoader.cs" />
-    <Compile Include="GL\TransactionConverter.cs" />
+    <Compile Include="GL\JournalSearchIndexer.cs" />
+    <Compile Include="GL\JournalConverter.cs" />
+    <Compile Include="GL\PostedTransactionConverter.cs" />
     <Compile Include="GL\GLConversionBase.cs" />
     <Compile Include="GL\FundConverter.cs" />
     <Compile Include="GL\AccountConverter.cs" />

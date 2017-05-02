@@ -21,13 +21,12 @@ using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Data
 {
+    [DbConfigurationType(typeof(CustomDbConfiguration))]
     public class DomainContext : DbContext
     {
         private const string DOMAIN_CONTEXT_CONNECTION_KEY = "DomainContext";
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(DomainContext));
         #region Public Properties
-
-        public static string ConstituentNumberSequence => "CRM_ConstituentNumber";
 
         #region Core Entities
 

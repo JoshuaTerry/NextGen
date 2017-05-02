@@ -287,10 +287,16 @@
     <Compile Include="Controllers\GL\AccountController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
-    <Compile Include="Controllers\GL\GeneralLedgerController.cs" />
+    <Compile Include="Controllers\GL\JournalsController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
+    <Compile Include="Controllers\INV\InvestmentAutomatedTransactionsController.cs" />
+    <Compile Include="Controllers\INV\LinkedAccountController.cs" />
+    <Compile Include="Controllers\INV\InvestmentIRSInformationController.cs" />
+    <Compile Include="Controllers\INV\InvestmentInterestPayoutController.cs" />
+    <Compile Include="Controllers\INV\InvestmentsController.cs" />
+    <Compile Include="Controllers\INV\InvestmentRelationshipsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

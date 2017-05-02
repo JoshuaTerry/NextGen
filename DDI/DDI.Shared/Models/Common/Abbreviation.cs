@@ -31,5 +31,6 @@ namespace DDI.Shared.Models.Common
 
         public int Priority { get; set; }
 
+        public override string DisplayName => Word;
     }
 }

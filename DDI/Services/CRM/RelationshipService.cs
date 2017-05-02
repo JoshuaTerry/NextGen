@@ -93,6 +93,24 @@ namespace DDI.Services
                     entity.IsSwapped = true;
                 }
             }
+            if (entity?.Constituent1 != null)
+            {
+                string address = UnitOfWork.GetBusinessLogic<ConstituentLogic>().GetFormattedPrimaryAddress(entity.Constituent1);
+                entity.Constituent1Information = $"{entity.Constituent1.ConstituentNumber}: {entity.Constituent1.FormattedName}, {address}";
+            }
+            else
+            {
+                entity.Constituent1Information = string.Empty;
+            }
+            if (entity?.Constituent2 != null)
+            {
+                string address = UnitOfWork.GetBusinessLogic<ConstituentLogic>().GetFormattedPrimaryAddress(entity.Constituent2);
+                entity.Constituent2Information = $"{entity.Constituent2.ConstituentNumber}: {entity.Constituent2.FormattedName}, {address}";
+            }
+            else
+            {
+                entity.Constituent2Information = string.Empty;
+            }
         }
 
         public override IDataResponse<Relationship> Update(Relationship entity, JObject changes)

@@ -63,8 +63,8 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -135,6 +135,16 @@
     <Compile Include="Enums\GL\SegmentType.cs" />
     <Compile Include="Enums\Core\TransactionStatus.cs" />
     <Compile Include="Enums\Core\EntityTransactionCategory.cs" />
+    <Compile Include="Enums\INV\CollateralType.cs" />
+    <Compile Include="Enums\INV\InterestFrequency.cs" />
+    <Compile Include="Enums\INV\InterestPaymentMethod.cs" />
+    <Compile Include="Enums\INV\InvestmentAutomatedTransactionMethod.cs" />
+    <Compile Include="Enums\INV\InvestmentStatus.cs" />
+    <Compile Include="Enums\INV\InvestorRelationshipType.cs" />
+    <Compile Include="Enums\INV\InvestorStatus.cs" />
+    <Compile Include="Enums\INV\IssuanceMethod.cs" />
+    <Compile Include="Enums\INV\LinkedAccountType.cs" />
+    <Compile Include="Enums\INV\MaturityMethod.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
@@ -143,6 +153,7 @@
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="FixedSizeList.cs" />
+    <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Helpers\NumericHelper.cs" />
@@ -168,6 +179,8 @@
     <Compile Include="Models\Client\Core\EntityNumber.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
+    <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
+    <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />
     <Compile Include="Models\Client\GL\JournalLine.cs" />
     <Compile Include="Models\Client\GL\Journal.cs" />
     <Compile Include="Models\Client\GL\AccountBalance.cs" />
@@ -192,8 +205,17 @@
     <Compile Include="Models\Client\GL\PostedTransaction.cs" />
     <Compile Include="Models\Client\GL\Segment.cs" />
     <Compile Include="Models\Client\GL\SegmentLevel.cs" />
+    <Compile Include="Models\Client\GL\ValidatedAccount.cs" />
     <Compile Include="Models\Client\Core\Transaction.cs" />
     <Compile Include="Models\Client\Core\EntityTransaction.cs" />
+    <Compile Include="Models\Client\INV\Investment.cs" />
+    <Compile Include="Models\Client\INV\InvestmentAutomatedTransaction.cs" />
+    <Compile Include="Models\Client\INV\InvestmentInterestPayout.cs" />
+    <Compile Include="Models\Client\INV\InvestmentIRSInformation.cs" />
+    <Compile Include="Models\Client\INV\InvestmentOwnershipType.cs" />
+    <Compile Include="Models\Client\INV\InvestmentRelationship.cs" />
+    <Compile Include="Models\Client\INV\InvestmentType.cs" />
+    <Compile Include="Models\Client\INV\LinkedAccount.cs" />
     <Compile Include="Models\Client\Security\Claim.cs" />
     <Compile Include="Models\Client\Core\CustomField.cs" />
     <Compile Include="Models\Client\Core\CustomFieldData.cs" />
@@ -279,6 +301,8 @@
     <Compile Include="Statics\CRM\AddressFormatMacros.cs" />
     <Compile Include="Statics\CRM\NameFormatMacros.cs" />
     <Compile Include="Statics\FieldLists.cs" />
+    <Compile Include="Statics\GL\ConstantsGL.cs" />
+    <Compile Include="Statics\EntityStatus.cs" />
     <Compile Include="Statics\Permissions.cs" />
     <Compile Include="Statics\GL\UserMessagesGL.cs" />
     <Compile Include="Statics\SearchParameters.cs" />
@@ -287,6 +311,7 @@
     <Compile Include="Statics\RouteRelationships.cs" />
     <Compile Include="Statics\RouteVerbs.cs" />
     <Compile Include="Statics\RouteNames.cs" />
+    <Compile Include="Statics\UserMessages.cs" />
     <Compile Include="TaskScheduler.cs" />
     <Compile Include="ValidationException.cs" />
   </ItemGroup>
