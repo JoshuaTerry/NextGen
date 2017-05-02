@@ -79,7 +79,14 @@ namespace DDI.EFAudit
         /// </summary>
         public ISaveResult<TChangeSet> SaveChanges(TPrincipal principal)
         {
-            return SaveChanges(principal, new TransactionOptions());
+            if (_dbcontext.Database.CurrentTransaction != null)
+            {
+                return SaveChangesWithinExplicitTransaction(principal);
+            }
+            else
+            {
+                return SaveChanges(principal, new TransactionOptions());
+            }
         }
 
         public ISaveResult<TChangeSet> SaveChanges(TPrincipal principal, TransactionOptions transactionOptions)
