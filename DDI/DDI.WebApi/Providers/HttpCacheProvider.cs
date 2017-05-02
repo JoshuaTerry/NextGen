@@ -18,17 +18,7 @@ namespace DDI.WebApi.Providers
         private static readonly object _cacheItemLock = new object();
 
         private Cache _currentCache = null;
-        private Cache CurrentCache
-        {
-            get
-            {
-                if (_currentCache == null)
-                {
-                    _currentCache = HttpContext.Current.Cache;
-                }
-                return _currentCache;
-            }
-        }
+        private Cache CurrentCache => _currentCache ?? (_currentCache = _currentCache = HttpContext.Current.Cache);
 
         public void RemoveEntry(string key)
         {
