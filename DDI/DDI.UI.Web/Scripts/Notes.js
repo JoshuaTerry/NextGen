@@ -26,8 +26,6 @@ function SetupNotesTab() {
 
         NewNoteDetailsModal();
 
-        GetNoteAlerts();
-
     });
 }
 
@@ -511,7 +509,7 @@ function SetupNoteAlertModal() {
         resizable: false
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelnotealertmodal').click(function (e) {
 
         e.preventDefault();
 
