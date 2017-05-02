@@ -1023,7 +1023,7 @@ function LoadRelationshipsGrid() {
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
 
-    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 250, LoadRelationshipsTab);
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 500, LoadRelationshipsTab);
 }
 
 function NewRelationshipModal() {

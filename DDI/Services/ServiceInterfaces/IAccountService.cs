@@ -11,5 +11,6 @@ namespace DDI.Services.ServiceInterfaces
     public interface IAccountService : IService<Account>
     {
         IDataResponse<AccountActivitySummary> GetAccountActivity(Guid accountId);
+        IDataResponse<List<AccountActivityDetail>> GetAccountActivityDetail(Guid id);
     }
 }
