@@ -1327,7 +1327,7 @@
             <div class="notealertgridcontainer"></div>
 
             <div class="modalbuttons">
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotealertmodal">Cancel</a>
             </div>
 
         </div>
