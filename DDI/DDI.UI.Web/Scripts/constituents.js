@@ -28,6 +28,8 @@ $(document).ready(function () {
 
     }
 
+    
+
     GetConstituentData($('.hidconstituentid').val());
 
     LoadYears();
@@ -152,7 +154,7 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-    PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
+    PopulateDropDown('.rs-RelationshipTypeId', 'relationshiptypes', '', '');
 }
 
 function GetConstituentData(id) {
@@ -172,9 +174,8 @@ function GetConstituentData(id) {
         success: function (data) {
 
             currentEntity = data.Data;
-
             DisplayConstituentData();
-            
+
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -228,6 +229,12 @@ function DisplayConstituentData() {
             }
         });
 
+        if (currentEntity.InvestorStatus == '0') {
+            // For now, every constituent will show InvestorStatus as Active
+            // This will need to be revisited when we finish Investments
+            $('#tab-investments-main').hide();
+        }
+
         DisplayConstituentPicture();
 
         DisplayConstituentSideBar();
@@ -252,6 +259,8 @@ function DisplayConstituentData() {
 
         LoadRelationshipsTab();
 
+        LoadInvestmentsGrid();
+
         PopulateMonthDays();
 
         AmendMonthDays();
@@ -267,6 +276,9 @@ function DisplayConstituentData() {
         DisplaySelectedTags($('.constituenttagselect'));
 
 		ShowAuditData(currentEntity.Id);
+
+		FormatFields();
+
     }
 }
 
@@ -998,11 +1010,10 @@ function LoadRelationshipsTab() {
         { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
         { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
     ];
-   
-    LoadGrid('.relationshipstable', 'relationshipsgrid', columns,  'constituents/' + currentEntity.Id + '/relationships', 'relationsships', null, 
-        'rs-', '.relationshipmodal', '.relationshipmodal', 250, false, false, false, null);
-}
 
+    // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete)
+    CustomLoadGrid('relationshipsgrid', 'relationshipstable', columns, 'constituents/' + currentEntity.Id + '/relationships', null, EditRelationship, null, NewRelationshipModal);
+}
 
 function LoadRelationshipsGrid() {
 
@@ -1011,55 +1022,101 @@ function LoadRelationshipsGrid() {
 
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
-    //EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'constituents/' + constituentId + '/relationships', id);
+
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 500, LoadRelationshipsTab);
 }
-/*
-function EditRelationship(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
-}
-*/
 
 function NewRelationshipModal() {
-    //NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships');
-}
 
-/*function LoadRelationship(url, modal) {
-    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
-}*/
+    var modalLinkClass = 'rs-newmodallink';
+    var constituentId = $('.hidconstituentid').val();
 
-function GetRelationshipToSave(modal, isUpdate) {
+    $('.' + modalLinkClass).remove();
 
-    var item = {
-        Constituent1Id: currentEntity.Id,
-        Constituent2Id: $(modal).find('.hidconstituentlookupid').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
+    var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .addClass(modalLinkClass)
+            .text('New Item')
+            .click(function (e) {
+                e.preventDefault();
 
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-        item.IsSwapped = $(modal).find('.hidrelationshipisswapped').val();
-    }
+                NewEntityModal('constituents/' + constituentId + '/relationships', 'rs-', '.relationshipmodal', 250, LoadRelationshipsTab);
 
-    return item;
+                PrePopulateNewRelationshipModal(modal);
+
+            });
+    $('.relationshipstable').prepend($(link));
+
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
+    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
 
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
     $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
-
-    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent2.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1.FormattedName);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2.FormattedName);
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent1.Id);
     $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
 
 }
 /* End Relationships Tab */
 
+
+/* Investment Tab */
+
+function LoadInvestmentsGrid() {
+    var columns = [
+    { 
+        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+            return [GetRelationshipType(data.InvestmentRelationshipType)];
+        }
+    },
+    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
+    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
+    {
+        dataField: 'Investment.Rate', caption: 'Rate', alignment: 'right', calculateCellValue: function (data) {
+            return [data.Investment.Rate + '%']
+        }
+    },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'Investment.DisplayName', caption: 'Ownership' }
+    ];
+
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, CallInvestmentDetail, null, null);
+}
+
+
+function GetRelationshipType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Primary Owner";
+            break;
+        case 1:
+            typeDesc = "Joint Owner";
+            break;
+        case 2:
+            typeDesc = "Beneficiary";
+            break;
+    }
+    return typeDesc;
+}
+
+function CallInvestmentDetail(id) {
+
+    if (id) {
+        sessionStorage.setItem("investmentid", id);
+        location.href = "../INV/InvestmentDetails.aspx";
+    }
+
+}
+
+/* End Investment Tab */
 
 
 

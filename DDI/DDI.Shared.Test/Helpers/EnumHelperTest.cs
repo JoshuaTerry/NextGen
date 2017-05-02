@@ -33,7 +33,20 @@ namespace DDI.Shared.Test.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void When_Given_An_Enumeration_Member_Should_Return_Description_Attribute_Value()
+        public void EnumHelper_ConvertToEnum()
+        {
+            Assert.AreEqual(PaymentMethodType.Check, EnumHelper.ConvertToEnum<PaymentMethodType>("Check"));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>("ACH"));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>("ACH Transfer"));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>("2"));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>(2));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>(PaymentMethodType.ACH));
+            Assert.AreEqual(PaymentMethodType.None, EnumHelper.ConvertToEnum<PaymentMethodType>(null));
+            Assert.AreEqual(PaymentMethodType.ACH, EnumHelper.ConvertToEnum<PaymentMethodType>(null, PaymentMethodType.ACH));
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void EnumHelper_GetDescription()
         {
             //Arrange
             string description = string.Empty;
@@ -46,31 +59,25 @@ namespace DDI.Shared.Test.Helpers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void When_Given_An_Enumeration_Should_Return_Description_Attribute_Of_Members_As_Dictionary_Of_String_And_Int()
+        public void EnumHelper_GetDescriptions()
         {
-            //Arrange
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            Dictionary<string, int> dictionary = EnumHelper.GetDescriptions<PaymentMethodType>();
 
-            //Act
-            dictionary = EnumHelper.GetDescriptions<PaymentMethodType>();
-
-            //Assert
             Assert.AreEqual(5, dictionary.Count);
             Assert.AreEqual(0, dictionary.GetValueOrDefault("None"));
             Assert.AreEqual(1, dictionary.GetValueOrDefault("Check"));
             Assert.AreEqual(2, dictionary.GetValueOrDefault("ACH Transfer"));
             Assert.AreEqual(3, dictionary.GetValueOrDefault("Wire Transfer"));
             Assert.AreEqual(4, dictionary.GetValueOrDefault("SWIFT Transfer"));
-        }
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void When_GetDescriptions_Is_Passed_Something_Other_Than_Enumeration_Should_Throw_Exception()
-        {
-            //Arrange
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            dictionary = EnumHelper.GetDescriptions<TestEnumeration>();
+            Assert.AreEqual(3, dictionary.Count);
+            Assert.AreEqual(2, dictionary.GetValueOrDefault("Number Two"));
+            Assert.AreEqual(3, dictionary.GetValueOrDefault("Number Three"));
+            Assert.AreEqual(4, dictionary.GetValueOrDefault("Number Four"));
+
             Exception exception = null;
 
-            //Act
             try
             {
                 dictionary = EnumHelper.GetDescriptions<Constituent>();
@@ -80,25 +87,10 @@ namespace DDI.Shared.Test.Helpers
                 exception = ex;
             }
 
-            //Assert
             Assert.AreEqual("Type of argument must be Enum.", exception?.Message);
-        }
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void When_Enumeration_Without_All_Members_Having_Descriptions_Should_Return_The_Elements_That_Do_Have_Descriptions()
-        {
-            //Arrange
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
 
-            //Act
-            dictionary = EnumHelper.GetDescriptions<TestEnumeration>();
-
-            //Assert
-            Assert.AreEqual(3, dictionary.Count);
-            Assert.AreEqual(2, dictionary.GetValueOrDefault("Number Two"));
-            Assert.AreEqual(3, dictionary.GetValueOrDefault("Number Three"));
-            Assert.AreEqual(4, dictionary.GetValueOrDefault("Number Four"));
-        }
+        }      
 
     }
 }
