@@ -12,19 +12,19 @@
     </div>
     
     <div class="twocolumn">
-        <div class="glaccount">
+        <div>
             <label class="summaryprompts">GL Account: </label>
-            <input type="text" class="GLAccount readonly" readonly="read-only" />
+            <input type="text" class="AccountNumber readonly" readonly="read-only" />
             <a href="#" title="" class="editaccount editbutton"></a>
         </div>
         <div>
-            <input type="checkbox" class="Active" /> Active
+            <input type="checkbox" class="IsActive" /> Active
         </div>
     </div>
 
     <div>
         <label>Description: </label>
-        <input type="text" class="Description fieldblock" />
+        <input type="text" class="Name fieldblock" />
     </div>
 
     <div class="twocolumn">
@@ -36,7 +36,7 @@
 
         <div>
             <label>Balances Normally: </label>
-            <select class="NormalBalance">
+            <select class="IsNormallyDebit">
                 <option value="0">Credit</option>
                 <option value="1">Debit</option>
             </select>
@@ -82,6 +82,16 @@
         </div>
     </div>
 
+    <div class="twocolumn">
+        <div class="closingaccountgroup">
+            <label class="summaryprompts">Closing Account: </label>
+            <input type="text" class="ClosingAccount"/>
+            <a href="#" title="" class="browseclosingaccount editbutton"></a>
+        </div>
+        <div>
+            <label> Accumulated Revenue</label>
+        </div>
+    </div>
 
 
 

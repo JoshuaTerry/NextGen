@@ -4,7 +4,7 @@
 
     $('#summary-tab').click(function () {
         LoadSummaryTab('');    // test new
-        LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
+        //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
     });
 
 });
@@ -44,12 +44,7 @@ function LoadSummaryTab(AccountId) {
 
     var ledgerid = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 
-    var group1Id;
-    var group2Id;
-    var group3Id;
-    var group4Id;
-    var levels = 0;
-
+    // retrieve ledger settings
     MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
 
         if (data.Data) {
@@ -63,6 +58,9 @@ function LoadSummaryTab(AccountId) {
                 if (levels > 0){
                     $('.accountgroup1').show;
                     $('.group1prompt').val(data.Data.AccountGroup1Title);
+                    $('.group1dropdown').change(function () {
+                        GroupChange(1);
+                    })
                 }
                 if (levels > 1){
                     $('.accountgroup2').show;
@@ -77,23 +75,58 @@ function LoadSummaryTab(AccountId) {
                     $('.group4prompt').val(data.Data.AccountGroup4Title);
                 }
 
+                if (addMode = true) {
+                    LoadGroupDropDown(1, '');
+                }
+                else {
+                    RetrieveAccountSummaryData(AccountId, levels);
+                }
+
             }
         }
 
     }, null);
 
-    if (AccountId === '' || AccountId === null) {
-        LoadGroup1DropDown(levels, null)
+}
 
-    }
-
-
+function RetrieveAccountSummaryData(AccountId, levels) {
     MakeServiceCall('GET', 'accounts/' + AccountId, null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
+                $('.AccountNumber').val(data.data.AccountNumber);
+                $('.Name').val(data.data.Name);
+                $('.IsActive').prop('checked', (data.Data.IsActive === 1 ? true : false));
+                if (levels > 0) {
+                    $('.group1dropdown').val(data.data.Group1Id);
+                }
+                if (levels > 1) {
+                    $('.group2dropdown').val(data.data.Group2Id);
+                }
+                if (levels > 2) {
+                    $('.group3dropdown').val(data.data.Group3Id);
+                }
+                if (levels > 3) {
+                    $('.group4dropdown').val(data.data.Group4Id);
+                }
+                $('.IsNormallyDebit').val(data.data.IsNormallyDebit);
+                $('.BeginningBalance').val(data.data.BeginningBalance);
+                //$('.Activity').val(data.data.Activity);
+                //$('.EndingBalance').val(data.data.EndingBalance);
 
-
+                FormatFields();
+                if (levels > 0) {
+                    LoadGroupDropDown(1, data.data.Group1Id)
+                }
+                if (levels > 1) {
+                    LoadGroupDropDown(2, data.data.Group2Id)
+                }
+                if (levels > 2) {
+                    LoadGroupDropDown(3, data.data.Group3Id)
+                }
+                if (levels > 3) {
+                    LoadGroupDropDown(4, data.data.Group4Id)
+                }
             }
         }
 
@@ -101,18 +134,18 @@ function LoadSummaryTab(AccountId) {
 
 }
 
-
-function LoadGroup1DropDown(levels, id) {
-    PopulateDropDown('.group1dropdown', 'accountgroup', '', null, id, function () {
-        LoadGroup2DropDown(levels, $('.group1dropdown').val())
-    });
-}
-
-function LoadGroup2DropDown(levels, id) {
-    if (levels > 1) {
-        PopulateDropDown('.group2dropdown', 'accountgroup', '', null, id, function () {
-            LoadGroup3DropDown(levels, null)
-        });
+function LoadGroupDropDown(level, parentId) {
+    var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
+    if (parentId === '') {
+        PopulateDropDown('.group' + level + 'dropdown', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '');
+    }
+    else {
+        PopulateDropDown('.group' + level + 'dropdown', 'AccountGroups/' + parentId + '/parent', '');
     }
 }
+
+function GroupChange(level) {
+    PopulateDropDown('.group' + (level + 1) + 'dropdown', 'AccountGroups/' + $('.group' + level + 'dropdown').val + '/parent', '');
+}
+
 
