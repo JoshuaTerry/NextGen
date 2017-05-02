@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using DevExtreme.AspNet.Data;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -21,24 +22,21 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/posttransactions/accountId/{Id}")]
-        public IHttpActionResult GetAllByAccountId(Guid Id)
+        public HttpResponseMessage GetAllByAccountId(Guid id, DataSourceLoadOptions loadOptions)
         {
             try
             {
-                var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == Id).Data.FirstOrDefault();
+                //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
+                var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
                 var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
+                         
+                return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(result.Data.ToList(), loadOptions)); 
             }
             catch (Exception ex)
             {
                 base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
     }
