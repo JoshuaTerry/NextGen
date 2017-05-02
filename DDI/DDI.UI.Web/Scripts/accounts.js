@@ -2,6 +2,14 @@
 
     LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
+    $('#activity-and-budget-tab').click(function (e) {
+
+        e.preventDefault();
+
+        LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
+
+    });
+
 });
 
 
