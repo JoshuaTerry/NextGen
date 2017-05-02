@@ -133,7 +133,7 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = response.TotalResults;
 
-                Pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
+                
                 var dynamicResponse = DynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {

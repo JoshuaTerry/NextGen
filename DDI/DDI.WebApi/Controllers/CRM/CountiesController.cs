@@ -44,8 +44,7 @@ namespace DDI.WebApi.Controllers.CRM
                 }
 
             var totalCount = result.TotalResults;
-
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
+                                
                 var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, fields);
                 return Ok(dynamicResult);
             }

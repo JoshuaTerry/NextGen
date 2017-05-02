@@ -11,6 +11,12 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class GendersController : GenericController<Gender>
     {
+        public GendersController() :this(new ServiceBase<Gender>())
+        {
+        }
+        public GendersController(ServiceBase<Gender> service) : base(service)
+        {
+        }
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

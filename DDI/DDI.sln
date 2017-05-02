@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Shared", "DDI.Shared\DDI.Shared.csproj", "{997B56F7-612D-43D5-90BD-89F264D4C58D}"
 EndProject
@@ -37,6 +37,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Logger", "DDI.Logger\DDI.Logger.csproj", "{F31674BF-F62C-4753-AED2-9BA3C2160577}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.EFAudit", "DDI.EFAudit\DDI.EFAudit.csproj", "{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{019A737D-3502-4F70-A755-B1759E7C956F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,10 @@ Global
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{019A737D-3502-4F70-A755-B1759E7C956F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{019A737D-3502-4F70-A755-B1759E7C956F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{019A737D-3502-4F70-A755-B1759E7C956F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{019A737D-3502-4F70-A755-B1759E7C956F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
