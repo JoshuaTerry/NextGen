@@ -241,6 +241,8 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
+        GetNoteAlerts();
+
         GenerateContactInfoSection();
 
         LoadDenominationsTagBox();
