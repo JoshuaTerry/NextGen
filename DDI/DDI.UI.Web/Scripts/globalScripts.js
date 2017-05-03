@@ -1,4 +1,5 @@
 var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
+var ACCOUNT_ID = "ACCOUNT_ID";
 var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
