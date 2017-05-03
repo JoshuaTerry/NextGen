@@ -29,7 +29,6 @@ namespace DDI.WebApi.Controllers.GL
                 //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
                 var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
-
                          
                 return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(result.Data.ToList(), loadOptions)); 
             }

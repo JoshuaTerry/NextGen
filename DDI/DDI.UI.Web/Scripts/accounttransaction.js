@@ -6,13 +6,22 @@
 
 function LoadTransactionGrid(accountId) {
     var columns = [
-        { dataField: 'Id', width:0 },
+        { dataField: 'MonthYear', caption: 'Month/Year', groupIndex: 0 },
+        { dataField: 'Id', width: '0px' },
         { dataField: 'TransactionNumber', caption: 'Trans #' },
-        { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date' },
+        { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date'},
         { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision:2, format:'currency'},
         { dataField: 'Description', caption: 'Description' },
         { dataField: 'TransactionId', caption: 'Trans Id' },
         { dataField: 'SourceDescription', caption: 'Source Description' },
+        {
+            caption: 'View', cellTemplate: function (container, options) {
+              
+
+                $('<input>').attr("type", "button").attr("Id", "btnView").addClass("searchicon").appendTo(container);
+            },
+            allowGrouping: false
+        }
        
     ];
 
@@ -27,15 +36,24 @@ function LoadTransactionGrid(accountId) {
                 if (loadOptions.sort[0].desc)
                     args.orderby += " desc";
             }
+            if (loadOptions.filter) {
+                args.filter = JSON.stringify(loadOptions.filter);
+            }
+           
+            //Getting group options
+            if (loadOptions.group) {
+                args.args = JSON.stringify(loadOptions.group);
+            }
+
+            if (loadOptions.searchValue) {
+                args.searchValue = loadOptions.searchValue;
+                args.searchOperation = loadOptions.searchOperation;
+                args.searchExpr = loadOptions.searchExpr;
+            }
             
-            args.filter = loadOptions.filter || "";
-            args.group = loadOptions.group || null;
             args.requireTotalCount = false;
-            args.searchExpr = loadOptions.searchExpr || "";
-            args.searchOperation = loadOptions.searchOperation || "";
-            args.searchValue = loadOptions.skip || null;
             args.skip = loadOptions.skip || 0;
-            args.take = loadOptions.take || 12;
+            args.take = loadOptions.take || 50;
 
             $.ajax({
                 url: WEB_API_ADDRESS + 'posttransactions/accountId/' + accountId,
@@ -56,18 +74,43 @@ function LoadTransactionGrid(accountId) {
     $('.gridcontainer').dxDataGrid({
         columns: columns,
         key: 'Id',
-        remoteOperations: { paging: true, filtering: true, sorting: true, grouping: true, summary: false, groupPaging: true },
+        remoteOperations: { paging: true, filtering: true, sorting: true, grouping: false, groupPaging: true, summary: false, groupPaging: true },
         dataSource: {
             store: gridData
+        },
+        filterRow: {
+            visible: true,
+            showOperationChooser: false
+        },
+        paging: {
+            pageSize: 50
+        },
+        pager: {
+            showPageSizeSelector: true,
+            allowedPageSizes: [25, 50, 100],
+            showInfo: true
         },
         groupPanel: {
             allowColumnDragging: true,
             visible: true
         },
-       
+        grouping: {
+            autoExpandAll: false
+        },
         scrolling: {
             mode: "virtual"
         },
+        sortByGroupSummaryInfo: [{
+            summaryItem: "count"
+        }],
+        summary: {
+            groupItems: [{
+                column: "MonthYear",
+                summaryType: "count",
+                displayFormat: "count: {0}",
+            }]
+        }
+
         
     });
 }

@@ -48,6 +48,14 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? TransactionId { get; set; }        
         [ForeignKey(nameof(TransactionId))]
         public Transaction Transaction { get; set; }
+        public string MonthYear
+        {
+            get
+            {
+                return TransactionDate?.ToString("MMMM yyyy");
+            }
+
+        }
 
     }
 }
