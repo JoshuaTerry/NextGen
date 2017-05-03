@@ -200,7 +200,6 @@
     <Content Include="Pages\GL\AccountTransactions.aspx" />
     <Content Include="Pages\GL\ActivityAndBudget.aspx" />
     <Content Include="Pages\GL\PostedTransactionReport.aspx" />
-    <Content Include="Pages\GL\Report2.aspx" />
     <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
@@ -503,13 +502,6 @@
     </Compile>
     <Compile Include="Pages\GL\PostedTransactionReport.aspx.designer.cs">
       <DependentUpon>PostedTransactionReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\GL\Report2.aspx.cs">
-      <DependentUpon>Report2.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\GL\Report2.aspx.designer.cs">
-      <DependentUpon>Report2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\INV\InvestmentDetails.aspx.cs">
       <DependentUpon>InvestmentDetails.aspx</DependentUpon>
