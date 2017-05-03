@@ -7,6 +7,7 @@ var previousEntity = null;
 var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
+var toolbox = null;
 
 $(document).ready(function () {
 
@@ -36,6 +37,30 @@ $(document).ready(function () {
         auth_token = null;
 
         location.href = "/Login.aspx";
+    });
+
+    $('.utilitynav').click(function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        toolbox = $(this).find('.utilitymenu');
+        $(toolbox).toggle();
+
+        //toolbox = $(this).next('.utilitymenu');
+        //$(toolbox).toggle();
+
+        // $('.utilitymenu').toggle();
+
+    });
+
+    $(document).click(function (e) {
+
+        if (toolbox) {
+            toolbox.hide();
+            toolbox = null;
+        }
+        
     });
 
 });

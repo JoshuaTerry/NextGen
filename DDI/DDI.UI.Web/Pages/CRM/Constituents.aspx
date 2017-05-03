@@ -52,7 +52,7 @@
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
-                <li><a href="#tab-donor">Donor</a></li>
+                <li style="display: none;"><a href="#tab-donor">Donor</a></li>
                 <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
             </ul>
 
@@ -87,8 +87,6 @@
                     <div class="fieldlock">
                         Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
-                    
-                    <a href="#" class="fileuploadlink">Upload Files...(for testing purposes)</a>
 
                 </div>
 
