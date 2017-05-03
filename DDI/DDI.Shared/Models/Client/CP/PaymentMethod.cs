@@ -47,5 +47,6 @@ namespace DDI.Shared.Models.Client.CP
 
         [MaxLength(128)]
         public string CardToken { get; set; }
+
     }
 }
