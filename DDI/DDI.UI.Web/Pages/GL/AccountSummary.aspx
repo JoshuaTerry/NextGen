@@ -12,30 +12,40 @@
 
     </div>
     
-    <div class="twocolumn">
-        <div>
-            <label class="summaryprompts">GL Account: </label>
-            <input type="text" class="AccountNumber readonly" readonly="read-only" />
-            <a href="#" title="" class="editaccount editbutton floatleft"></a>
+    <div>
+        <div class="summaryprompts">
+            <label>GL Account: </label>
         </div>
-        <div>
+        <div class="summaryleftinput">
+            <input type="text" class="AccountNumber readonly" readonly="read-only" />
+            <a href="#" title="" class="editaccount editbuttonleft"></a>
+        </div>
+        <div class="summaryrightinput">
             <input type="checkbox" class="IsActive" /> Active
         </div>
     </div>
 
     <div>
-        <label class="summaryprompts">Description: </label>
-        <input type="text" class="Name summarysegmenttext" />
+        <div class="summaryprompts">
+            <label>Description: </label>
+        </div>
+        <div class="summarysegmenttext">
+            <input type="text" class="Name" />
+        </div>
     </div>
 
-    <div class="twocolumn">
+    <div>
         <div class="accountgroup1">
-            <label class="group1prompt summaryprompts"></label>
-            <select class="group1dropdown" />
-            <a href="#" title="" class="editgroup1 editbutton"></a>
+            <div class="summaryprompts">
+                <label class="group1prompt"></label>
+            </div>
+            <div class="summaryleftinput">
+                <select class="group1dropdown" />
+                <a href="#" title="" class="editgroup1 editbuttonleft"></a>
+            </div>
         </div>
 
-        <div>
+        <div class="summaryrightinput">
             <label>Balances Normally: </label>
             <select class="IsNormallyDebit">
                 <option value="0">Credit</option>
@@ -44,24 +54,31 @@
         </div>
     </div>
 
-    <div class="twocolumn">
+    <div>
         <div class="accountgroup2">
-            <label class="group2prompt summaryprompts"></label>
-            <select class="group2dropdown" />
-            <a href="#" title="" class="editgroup2 editbutton"></a>
+            <div class="summaryprompts">
+                <label class="group2prompt"></label>
+            </div>
+            <div class="summaryleftinput">
+                <select class="group2dropdown" />
+                <a href="#" title="" class="editgroup2 editbuttonleft"></a>
+            </div>
         </div>
 
-        <div>
+        <div class="summaryrightinput">
             <label>Beginning Balance: </label>
             <input type="text" class="BeginningBalance money justright" disabled="disabled"" />
         </div>
     </div>
 
-    <div class="twocolumn">
+    <div">
         <div class="accountgroup3">
-            <label class="group3prompt summaryprompts"></label>
+            <div class="summaryprompts">
+                <label class="group3prompt"></label>
+            </div>
+            <div class="summaryleftinput">
             <select class="group3dropdown" />
-            <a href="#" title="" class="editgroup3 editbutton"></a>
+            <a href="#" title="" class="editgroup3 editbuttonleft"></a>
         </div>
 
         <div>
@@ -74,7 +91,7 @@
         <div class="accountgroup4">
             <label class="group4prompt summaryprompts"></label>
             <select class="group4dropdown" />
-            <a href="#" title="" class="editgroup4 editbutton"></a>
+            <a href="#" title="" class="editgroup4 editbuttonleft"></a>
         </div>
 
         <div>
@@ -87,7 +104,7 @@
         <div class="closingaccountgroup">
             <label class="summaryprompts">Closing Account: </label>
             <input type="text" class="ClosingAccount"/>
-            <a href="#" title="" class="browseclosingaccount editbutton"></a>
+            <a href="#" title="" class="browseclosingaccount editbuttonleft"></a>
         </div>
         <div>
             <label> Accumulated Revenue</label>

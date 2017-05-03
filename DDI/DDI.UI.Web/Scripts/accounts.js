@@ -71,7 +71,7 @@ function LoadSummaryTab(AccountId) {
                 }
                 if (levels > 2){
                     $('.accountgroup3').css('visibility', 'visible');
-                    $('.group3prompt').val(data.Data.AccountGroup3Title);
+                    $('.group3prompt').html(data.Data.AccountGroup3Title);
                     $('.group3dropdown').change(function () {
                         GroupChange(3);
                     })
