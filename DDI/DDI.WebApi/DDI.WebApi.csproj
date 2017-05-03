@@ -369,6 +369,7 @@
     <Compile Include="Helpers\IPagination.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
+    <Compile Include="Helpers\ReportHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\HttpCacheProvider.cs" />
+    <Compile Include="Reports\CustomReportResolver.cs" />
     <Compile Include="Reports\GL\PostedTransactionReport.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -7,9 +7,5 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <dx:ASPxDocumentViewer runat="server" Width="100%" Height="1100px">
-        <settingsremotesource reporttypename=" DDI.WebApi.Reports.GL.PostedTransactionReport" serveruri="http://localhost:49490/DXReportService.svc" />
-    </dx:ASPxDocumentViewer>
-
-
+    <dx:ASPxDocumentViewer runat="server" Width="100%" Height="1100px" ID="ReportDocumentViewer" />
 </asp:Content>
