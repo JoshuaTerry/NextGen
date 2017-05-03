@@ -357,7 +357,7 @@ function DisplayConstituentSideBar() {
 
     $('.FormattedName').text(currentEntity.FormattedName);
 
-    //GetConstituentPrimaryAddress();
+    GetConstituentPrimaryAddress();
 
     GetConstituentPreferredContactInfo();
 
@@ -422,28 +422,27 @@ function GetConstituentPrimaryAddress() {
 function GetConstituentPreferredContactInfo() {
     $.ajax({
         type: 'GET',
-        //url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
-        url: WEB_API_ADDRESS + SAVE_ROUTE + 'primary/' + currentEntity.Id,
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
         headers: GetApiHeaders(),
         success: function (data) {
 
-            currentcontactinfo = data.Data;
+            currentcontactinfo = data.Data.ContactInfo;
 
-           // var preferredContactInfos = ''
+            var preferredContactInfos = ''
 
-           // for (i = 0; i < currentcontactinfo.length; i++) {
+            for (i = 0; i < currentcontactinfo.length; i++) {
 
-                //if (currentcontactinfo[i].IsPreferred) {
+                if (currentcontactinfo[i].IsPreferred) {
 
-                //    preferredContactInfos += currentcontactinfo[i].Info + ' ';
+                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
 
-                //}
+                }
 
                 $('.ContactInfo').text(currentcontactinfo);
 
-            //}
+            }
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
