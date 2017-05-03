@@ -648,7 +648,7 @@
                                 <label>Status: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStatus" disabled="disabled"/>
+                                <input type="text" class="InvestorStatusDescription" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -1327,7 +1327,7 @@
             <div class="notealertgridcontainer"></div>
 
             <div class="modalbuttons">
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotealertmodal">Cancel</a>
             </div>
 
         </div>

@@ -223,7 +223,7 @@ function DisplayConstituentData() {
 
                     var date = FormatJSONDate(value);
 
-                    $(classname).text(date);
+                    $(classname).val(date);
                 }
 
             }
@@ -240,6 +240,8 @@ function DisplayConstituentData() {
         DisplayConstituentSideBar();
 
         DisplayConstituentType();
+
+        GetNoteAlerts();
 
         GenerateContactInfoSection();
 

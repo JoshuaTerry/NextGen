@@ -147,6 +147,7 @@
     <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\InvestmentDetails.js" />
     <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\accounttransaction.js" />

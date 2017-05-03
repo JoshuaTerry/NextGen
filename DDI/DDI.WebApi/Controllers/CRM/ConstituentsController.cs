@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Web.Http;
 using System.Web.Routing;
 using DDI.Shared.Helpers;
@@ -28,6 +29,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             return new Expression<Func<Constituent, object>>[]
             {
+                c => c.ConstituentAddresses,
                 c => c.ClergyStatus,
                 c => c.ClergyType,
                 c => c.ConstituentStatus,
@@ -93,6 +95,7 @@ namespace DDI.WebApi.Controllers.CRM
                 StateId = state,
                 PostalCodeFrom =  zipFrom,
                 PostalCodeTo = zipTo,
+                CountryId = country,
                 RegionId1 = region1,
                 RegionId2 = region2,
                 RegionId3 = region3,
@@ -183,6 +186,30 @@ namespace DDI.WebApi.Controllers.CRM
             }
             
         }
+
+        [HttpGet]
+        [Route("api/v1/constituents/primary/{id}")]
+        public IHttpActionResult GetPrimaryContactInfo(Guid id)
+        {
+            try
+            {
+                var constituent = Service.GetById(id).Data;
+
+                if (constituent == null)
+                {
+                    return NotFound();
+                }
+
+                var response = Service.GetConstituentPrimaryContactInfo(constituent);
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+        } 
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
