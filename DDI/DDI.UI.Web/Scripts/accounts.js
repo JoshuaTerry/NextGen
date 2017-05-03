@@ -50,29 +50,35 @@ function LoadSummaryTab(AccountId) {
         if (data.Data) {
             if (data.IsSuccessful) {
 
-                $('.accountgroup1').hide;
-                $('.accountgroup2').hide;
-                $('.accountgroup3').hide;
-                $('.accountgroup4').hide;
+                $('.accountgroup1').css('visibility', 'hidden');
+                $('.accountgroup2').css('visibility', 'hidden');
+                $('.accountgroup3').css('visibility', 'hidden');
+                $('.accountgroup4').css('visibility', 'hidden');
                 levels = data.Data.AccountGroupLevels;
                 if (levels > 0){
-                    $('.accountgroup1').show;
-                    $('.group1prompt').val(data.Data.AccountGroup1Title);
+                    $('.accountgroup1').css('visibility', 'visible');
+                    $('.group1prompt').html(data.Data.AccountGroup1Title);
                     $('.group1dropdown').change(function () {
                         GroupChange(1);
                     })
                 }
                 if (levels > 1){
-                    $('.accountgroup2').show;
-                    $('.group2prompt').val(data.Data.AccountGroup2Title);
+                    $('.accountgroup2').css('visibility', 'visible');
+                    $('.group2prompt').html(data.Data.AccountGroup2Title);
+                    $('.group2dropdown').change(function () {
+                        GroupChange(2);
+                    })
                 }
                 if (levels > 2){
-                    $('.accountgroup3').show;
+                    $('.accountgroup3').css('visibility', 'visible');
                     $('.group3prompt').val(data.Data.AccountGroup3Title);
+                    $('.group3dropdown').change(function () {
+                        GroupChange(3);
+                    })
                 }
                 if (levels > 3){
-                    $('.accountgroup4').show;
-                    $('.group4prompt').val(data.Data.AccountGroup4Title);
+                    $('.accountgroup4').css('visibility', 'visible');
+                    $('.group4prompt').html(data.Data.AccountGroup4Title);
                 }
 
                 if (addMode = true) {
@@ -145,7 +151,11 @@ function LoadGroupDropDown(level, parentId) {
 }
 
 function GroupChange(level) {
-    PopulateDropDown('.group' + (level + 1) + 'dropdown', 'AccountGroups/' + $('.group' + level + 'dropdown').val + '/parent', '');
+    var parentVal = $('.group' + level + 'dropdown').val();
+    if (parentVal != null && parentVal != '') {
+        PopulateDropDown('.group' + (level + 1) + 'dropdown', 'AccountGroups/' + parentVal + '/parent', '');
+    }
+
 }
 
 

@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/TabbedContent.Master" AutoEventWireup="true" CodeBehind="AccountSummary.aspx.cs" Inherits="DDI.UI.Web.Pages.GL.AccountSummary" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" href="..\..\CSS\accounts.css" />
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -15,7 +16,7 @@
         <div>
             <label class="summaryprompts">GL Account: </label>
             <input type="text" class="AccountNumber readonly" readonly="read-only" />
-            <a href="#" title="" class="editaccount editbutton"></a>
+            <a href="#" title="" class="editaccount editbutton floatleft"></a>
         </div>
         <div>
             <input type="checkbox" class="IsActive" /> Active
@@ -23,8 +24,8 @@
     </div>
 
     <div>
-        <label>Description: </label>
-        <input type="text" class="Name fieldblock" />
+        <label class="summaryprompts">Description: </label>
+        <input type="text" class="Name summarysegmenttext" />
     </div>
 
     <div class="twocolumn">
