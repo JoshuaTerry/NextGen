@@ -440,7 +440,7 @@ function GetConstituentPreferredContactInfo() {
 
                 }
 
-                $('.ContactInfo').text(currentcontactinfo);
+                $('.ContactInfo').text(preferredContactInfos);
 
             }
         },
