@@ -92,7 +92,7 @@ namespace DDI.Services
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
-        {            
+        {
             var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {

@@ -95,6 +95,7 @@ namespace DDI.WebApi.Controllers.CRM
                 StateId = state,
                 PostalCodeFrom =  zipFrom,
                 PostalCodeTo = zipTo,
+                CountryId = country,
                 RegionId1 = region1,
                 RegionId2 = region2,
                 RegionId3 = region3,
