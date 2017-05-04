@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\NoteLogic.cs" />
     <Compile Include="Core\TransactionLogic.cs" />
     <Compile Include="Core\EntityNumberLogic.cs" />
     <Compile Include="CP\PaymentMethodLogic.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
+    <Compile Include="GL\JournalLogic.cs" />
     <Compile Include="GL\BusinessUnitLogic.cs" />
     <Compile Include="GL\FiscalYearLogic.cs" />
     <Compile Include="GL\LedgerLogic.cs" />
