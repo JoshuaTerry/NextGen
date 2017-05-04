@@ -50,5 +50,17 @@
         public static string FundCRAccountWrongFund => "The closing revenue account for Fund {0} belongs to a different fund.";
         public static string FundCEAccountWrongLedger => "Fund's closing expense account is not in the same ledger as the fund.";
         public static string FundCEAccountWrongFund => "The closing expense account for Fund {0} belongs to a different fund.";
+
+        public static string UnitFromToNoFiscalYear => "Business unit from/to has no fiscal year.";
+        public static string UnitFromToWrongUnit => "Business unit from/to has a mismatch between its business unit and fiscal year.";
+        public static string UnitFromToDFAccountWrongLedger => "Business unit from/to has a \"due from\" account in the wrong ledger.";
+        public static string UnitFromToDTAccountWrongLedger => "Business unit from/to has a \"due to\" account in the wrong ledger.";
+
+        public static string FundFromToNoFundAccounting => "Fund from/to cannot be validated if fund accounting is disabled.";
+        public static string FundFromToNoFiscalYear => "Fund unit from/to has no fiscal year.";
+        public static string FundFromToWrongFiscalYear => "Fund unit from/to is not in the same fiscal year as its fund segment.";
+        public static string FundFromToDFAccountWrongFund => "Fund from/to has a \"due from\" account in the wrong fund.";
+        public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
+
     }
 }

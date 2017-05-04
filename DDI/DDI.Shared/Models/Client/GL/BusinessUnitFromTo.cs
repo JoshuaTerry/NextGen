@@ -35,5 +35,11 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? ToAccountId { get; set; }
         [ForeignKey(nameof(ToAccountId))]
         public LedgerAccount ToAccount { get; set; }
+
+        [NotMapped]
+        public string Name { get; set; }
+
+        public override string DisplayName => Name;
+
     }
 }

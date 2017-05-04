@@ -80,6 +80,8 @@
     <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\FundFromToService.cs" />
+    <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
     <Compile Include="INV\LinkedAccountService.cs" />
@@ -123,6 +125,8 @@
     <Compile Include="Core\ITagGroupService.cs" />
     <Compile Include="Common\StateService.cs" />
     <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
+    <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IJournalService.cs" />
