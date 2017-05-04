@@ -8,114 +8,148 @@
 
     <h1>Summary</h1>
 
-<%--    <div class="accountsegmentscontainer onecolumn">
+    <br />
 
-    </div>--%>
-    
     <div class="inlinecontainer">
-        <div class="summaryprompts">
+        <span class="summaryleftprompts">
             <label>GL Account: </label>
-        </div>
-        <div class="summaryleftinput">
+        </span>
+        <span class="summaryleftinput">
             <input type="text" class="AccountNumber readonly" readonly="read-only" />
             <a href="#" title="" class="editaccount editbuttoninline"></a>
-        </div>
-        <div class="summaryrightinput">
-            <input type="checkbox" class="IsActive" /> Active
-        </div>
+        </span>
+
+        <span>
+            <span class="summaryrightprompts">
+                <label >Active: </label>
+            </span>
+            <span class="summaryrightcheckbox">
+                <input type="checkbox" class="IsActive" />
+            </span>
+        </span>
     </div>
 
     <br />
 
     <div class="inlinecontainer">
-        <div class="summaryprompts">
+        <span class="summaryleftprompts">
             <label>Description: </label>
-        </div>
-        <div class="summarysegmenttext fieldblock">
+        </span>
+        <span class="summaryleftinputwide">
             <input type="text" class="Name" />
-        </div>
+        </span>
     </div>
 
     <br />
 
     <div class="inlinecontainer">
-        <div class="accountgroup1">
-            <div class="summaryprompts">
+        <span class="accountgroup1">
+            <span class="summaryleftprompts">
                 <label class="group1prompt"></label>
-            </div>
-            <div class="summaryleftinput">
+            </span>
+            <span class="summaryleftinput">
                 <select class="group1dropdown" />
                 <a href="#" title="" class="editgroup1 editbuttoninline"></a>
-            </div>
-        </div>
+            </span>
+        </span>
 
-        <div class="summaryrightinput">
-            <label>Balances Normally: </label>
-            <select class="IsNormallyDebit">
-                <option value="0">Credit</option>
-                <option value="1">Debit</option>
-            </select>
-        </div>
+        <span>
+            <span class="summaryrightprompts">
+                <label >Balances Normally: </label>
+            </span>
+            <span class="summaryrightinput">
+                <select class="IsNormallyDebit">
+                    <option value="0">Credit</option>
+                    <option value="1">Debit</option>
+                </select>
+            </span>
+        </span>
     </div>
 
     <br />
 
     <div class="inlinecontainer">
-        <div class="accountgroup2">
-            <div class="summaryprompts">
+        <span class="accountgroup2">
+            <span class="summaryleftprompts">
                 <label class="group2prompt"></label>
-            </div>
-            <div class="summaryleftinput">
+            </span>
+            <span class="summaryleftinput">
                 <select class="group2dropdown" />
-                <a href="#" title="" class="editgroup2 editbuttonleftinline"></a>
-            </div>
-        </div>
+                <a href="#" title="" class="editgroup2 editbuttoninline"></a>
+            </span>
+        </span>
 
-        <div class="summaryrightinput">
-            <label>Beginning Balance: </label>
-            <input type="text" class="BeginningBalance money justright" disabled="disabled"" />
-        </div>
+        <span>
+            <span class="summaryrightprompts">
+                <label>Beginning Balance: </label>
+            </span>
+            <span class="summaryrightinput">
+                <input type="text" class="BeginningBalance money justright" disabled="disabled"" />
+            </span>
+        </span>
     </div>
 
+    <br />
+
     <div class="inlinecontainer">
-        <div class="accountgroup3">
-            <div class="summaryprompts">
+        <span class="accountgroup3">
+            <span class="summaryleftprompts">
                 <label class="group3prompt"></label>
-            </div>
-            <div class="summaryleftinput">
+            </span>
+            <span class="summaryleftinput">
                 <select class="group3dropdown" />
                 <a href="#" title="" class="editgroup3 editbuttoninline"></a>
-            </div>
-        </div>
+            </span>
+        </span>
 
-        <div>
-            <label>Activity: </label>
-            <input type="text" class="Activity money justright" disabled="disabled"" />
-        </div>
+        <span>
+            <span class="summaryrightprompts">
+                <label>Activity: </label>
+            </span>
+            <span class="summaryrightinput">
+                <input type="text" class="Activity money justright" disabled="disabled"" />
+            </span>
+        </span>
     </div>
 
-    <div class="inlinecontainer">
-        <div class="accountgroup4">
-            <label class="group4prompt summaryprompts"></label>
-            <select class="group4dropdown" />
-            <a href="#" title="" class="editgroup4 editbuttoninline"></a>
-        </div>
+    <br />
 
-        <div>
-            <label>Activity: </label>
-            <input type="text" class="EndingBalance money justright" disabled="disabled"" />
-        </div>
+    <div class="inlinecontainer">
+        <span class="accountgroup4">
+            <span class="summaryleftprompts">
+                <label class="group4prompt"></label>
+            </span>
+            <span class="summaryleftinput">
+                <select class="group4dropdown" />
+                <a href="#" title="" class="editgroup4 editbuttoninline"></a>
+            </span>
+        </span>
+
+        <span>
+            <span class="summaryrightprompts">
+                <label>Ending Balance: </label>
+            </span>
+            <span class="summaryrightinput">
+                <input type="text" class="EndingBalance money justright" disabled="disabled"" />
+            </span>
+        </span>
     </div>
 
+    <br />
+
     <div class="inlinecontainer">
-        <div class="closingaccountgroup">
-            <label class="summaryprompts">Closing Account: </label>
-            <input type="text" class="ClosingAccount"/>
-            <a href="#" title="" class="browseclosingaccount editbuttoninline"></a>
-        </div>
-        <div>
-            <label> Accumulated Revenue</label>
-        </div>
+        <span class="closingaccountgroup">
+            <span class="summaryleftprompts">
+                <label>Closing Account: </label>
+            </span>
+            <span class="summaryleftinput">
+                <input type="text" class="ClosingAccount"/>
+                <a href="#" title="" class="browseclosingaccount editbuttoninline"></a>
+            </span>
+            <span class="summaryrightinput">
+                <label> Accumulated Revenue</label>
+            </span>
+        </span>
     </div>
 
 

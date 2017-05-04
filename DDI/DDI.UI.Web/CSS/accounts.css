@@ -6,12 +6,17 @@ div.accounts div.tabscontainer { width: 100%; }
 
 /* gl summary widths*/
 
-div.summaryprompts {width: 9%; display: inline-block; }
-div.summaryleftinput {width: 40%; display: inline-block;}
-div.summaryrightinput {width: 38%; display: inline-block;}
-div.summarysegmentprompt {width: 10%; display: inline-block;}
-div.summarysegmentinput {width: 10%; display: inline-block;}
-div.summarysegmenttext {width: 70%; display: inline-block;}
+span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 6px; }
+span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
+span.summaryleftinput input,
+span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryleftinputwide input {width: 55%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightinput input,
+span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentinput input select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmenttext {width: 70%; display: inline-block; margin: 5px 0 5px 0}
 
 div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-right: 1%; margin-top: 1%;}
 
