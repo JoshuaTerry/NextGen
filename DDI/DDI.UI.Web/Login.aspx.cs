@@ -74,5 +74,11 @@ namespace DDI.UI.Web
 
             return null;
         }
+
+        [WebMethod]
+        public static void Logout()
+        {
+            HttpContext.Current.Response.Cookies.Remove(FormsAuthentication.FormsCookieName);
+        }
     }
 }
