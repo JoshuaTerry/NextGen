@@ -114,12 +114,32 @@ function LoadDepositsAndWithdrawalsSection() {
 
     var columns = [
         { dataField: 'Id', width: '0px' },
-        { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
-        { dataField: 'NextTransactionDate', caption: 'NextDate' }, //order by
+        // { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
+        { dataField: 'NextTransactionDate', caption: 'NextDate', dataType:'date'}, //order by
         { dataField: 'RecurringType', caption: 'Frequency' },
-        { dataField: 'PaymentPreference.DisplayName', caption: 'Payment Info' }, 
+        { dataField: 'PaymentMethod.DisplayName', caption: 'Payment Info' }, 
         { dataField: 'Amount', caption: 'Amount' },
-        { dataField: 'IsActive', caption: 'Status' }
+        { dataField: 'IsActive', caption: 'Status' },
+        {
+            caption: 'Deposit/Withdrawal/Transfer', cellTemplate: function (container, options) {
+
+            var category;
+
+            switch (options.data.InvestmentAutomatedTransactionMethod) {
+                case 0:
+                    category = "Deposit";
+                    break;
+                case 1:
+                    category = "Withdrawal";
+                    break;
+                case 2:
+                    category = "Transfer";
+                    break;
+            }
+
+            $('<label>').text(category).appendTo(container);
+        }
+        }
     ];
 
     var constituentid = '' // needs to come in from constituent search (see story DC-698)
@@ -159,8 +179,8 @@ function LoadInterestPayoutsGrid() {
         }
     },
     { dataField: 'Constituent.Name', caption: 'Name' },
-    { dataField: 'Percent', caption: 'Percent', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
-    { dataField: 'Amount', caption: 'Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
+    { dataField: 'Percent', caption: 'Percent', dataType: 'number', format: 'percent', precision: 2, alignment: 'right' },
+    { dataField: 'Amount', caption: 'Amount', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
     ];
 
     CustomLoadGrid('interestpayoutsgrid', '.interestpayoutsgridcontainer', columns, 'investmentinterestpayouts/investment/' + id, null, EditInterestPayouts);

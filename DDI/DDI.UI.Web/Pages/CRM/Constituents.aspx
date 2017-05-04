@@ -646,7 +646,7 @@
                                 <label>Status: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStatus" disabled="disabled"/>
+                                <input type="text" class="InvestorStatusDescription" disabled="disabled"/>
                             </div>
                         </div>
 
@@ -1125,7 +1125,7 @@
 
             <div class="fieldblock">
                 <label></label>
-                <input type="text" class="rs-Constituent1Name constituentlookup" />
+                <input type="text" class="rs-Constituent1Information constituentlookup" />
             </div>
 
             <div class="fieldblock">
@@ -1135,7 +1135,7 @@
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="rs-Constituent2Name" />
+                <input type="text" class="rs-Constituent2Information" />
             </div>
 
             <div class="modalbuttons">
@@ -1325,7 +1325,7 @@
             <div class="notealertgridcontainer"></div>
 
             <div class="modalbuttons">
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotealertmodal">Cancel</a>
             </div>
 
         </div>

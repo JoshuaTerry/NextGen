@@ -61,7 +61,7 @@ namespace DDI.Services
             intPayout.Constituent.Name = "Joe Smith";
             intPayout.Priority = 1;
             intPayout.InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout.Percent = new decimal(50);
+            intPayout.Percent = new decimal(.50);
             intPayout.Amount = new decimal(0);
 
 
@@ -89,7 +89,7 @@ namespace DDI.Services
             intPayout[0].Constituent.Name = "Joe Smith";
             intPayout[0].Priority = 1;
             intPayout[0].InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout[0].Percent = new decimal(50);
+            intPayout[0].Percent = new decimal(.50);
             intPayout[0].Amount = new decimal(0);
 
             intPayout[1] = new InvestmentInterestPayout();
@@ -109,7 +109,7 @@ namespace DDI.Services
             intPayout[2].Constituent.Name = "Jack Smith";
             intPayout[2].Priority = 3;
             intPayout[2].InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout[2].Percent = new decimal(20);
+            intPayout[2].Percent = new decimal(.20);
             intPayout[2].Amount = new decimal(0);
 
             List<InvestmentInterestPayout> interestPayouts = new List<InvestmentInterestPayout>();

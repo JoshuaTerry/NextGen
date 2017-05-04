@@ -611,7 +611,7 @@ function LoadAccordions() {
 
 function LoadDatePickers() {
 
-    $('.datepicker').datepicker();
+    $('.datepicker').datepicker({ 'dateFormat': 'm/d/yy' });
 
 }
 
@@ -638,7 +638,8 @@ function FormatJSONDate(jsonDate) {
     var date = '';
 
     if (jsonDate) {
-        date = new Date(jsonDate).toDateString();
+        var dt = new Date(jsonDate);
+        date = (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear();
     }
 
     return date;

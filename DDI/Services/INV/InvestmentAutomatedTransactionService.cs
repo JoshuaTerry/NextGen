@@ -7,6 +7,7 @@ using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Enums.INV;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Client.INV;
 using DDI.Shared.Statics;
@@ -88,7 +89,9 @@ namespace DDI.Services
             at[0].RecurringType = Shared.Enums.Core.RecurringType.Monthly;
             at[0].Amount = new decimal(550);
             at[0].IsActive = true;
-            at[0].PaymentMethodId = new Guid("e695bd55-fa89-4659-9b14-1a91b22fd603");
+            at[0].PaymentMethod = new PaymentMethod();
+            at[0].PaymentMethodId = at[0].PaymentMethod.Id;
+            at[0].PaymentMethod.Description = "Checking";
 
             at[1] = new InvestmentAutomatedTransaction();
             at[1].Id = new Guid();
@@ -97,8 +100,9 @@ namespace DDI.Services
             at[1].RecurringType = Shared.Enums.Core.RecurringType.Weekly;
             at[1].Amount = new decimal(550);
             at[1].IsActive = true;
-            at[1].PaymentMethodId = new Guid();
-            //at[1].PaymentMethod.Description = "Transfer to Investment 432";
+            at[1].PaymentMethod = new PaymentMethod();
+            at[1].PaymentMethodId = at[1].PaymentMethod.Id;
+            at[1].PaymentMethod.Description = "Account";
 
             at[2] = new InvestmentAutomatedTransaction();
             at[2].Id = new Guid();
@@ -107,8 +111,11 @@ namespace DDI.Services
             at[2].RecurringType = Shared.Enums.Core.RecurringType.SemiAnnually;
             at[2].Amount = new decimal(15.50);
             at[2].IsActive = true;
-            at[2].PaymentMethodId = new Guid("e695bd55-fa89-4659-9b14-1a91b22fd603");
-        
+            at[2].PaymentMethod = new PaymentMethod();
+            at[2].PaymentMethodId = at[2].PaymentMethod.Id;
+            at[2].PaymentMethod.Description = "Checking";
+
+
             List<InvestmentAutomatedTransaction> automatedTransactions = new List<InvestmentAutomatedTransaction>();
 
             foreach (InvestmentAutomatedTransaction row in at)
