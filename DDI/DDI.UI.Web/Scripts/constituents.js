@@ -223,7 +223,7 @@ function DisplayConstituentData() {
 
                     var date = FormatJSONDate(value);
 
-                    $(classname).text(date);
+                    $(classname).val(date);
                 }
 
             }
@@ -240,6 +240,8 @@ function DisplayConstituentData() {
         DisplayConstituentSideBar();
 
         DisplayConstituentType();
+
+        GetNoteAlerts();
 
         GenerateContactInfoSection();
 
@@ -1023,7 +1025,7 @@ function LoadRelationshipsGrid() {
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
 
-    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 250, LoadRelationshipsTab);
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 500, LoadRelationshipsTab);
 }
 
 function NewRelationshipModal() {

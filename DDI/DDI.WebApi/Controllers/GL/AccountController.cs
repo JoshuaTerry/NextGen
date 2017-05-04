@@ -63,6 +63,13 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
+        [Route("api/v1/accounts/activity/{id}/detail")]
+        public IHttpActionResult GetAccountActivityDetail(Guid id)
+        {
+            return base.CustomAction(() => Service.GetAccountActivityDetail(id));
+        }
+
+        [HttpGet]
         [Route("api/v1/accounts/fiscalyear/{id}",Name = ROUTENAME_GETALLLEDGERACCOUNTS)]
         public IHttpActionResult GetAllLedgerAccounts(Guid Id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
