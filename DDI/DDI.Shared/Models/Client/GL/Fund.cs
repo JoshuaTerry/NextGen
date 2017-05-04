@@ -38,6 +38,6 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(FundFromTo.Fund))]
         public ICollection<FundFromTo> FundFromTos { get; set; }
 
-        public override string DisplayName =>  FundSegment?.Code + " " + FundSegment.Name;
+        public override string DisplayName =>  FundSegment?.Code + " " + FundSegment?.Name;
     }
 }
