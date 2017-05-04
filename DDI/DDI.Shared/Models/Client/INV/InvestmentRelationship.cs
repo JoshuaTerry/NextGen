@@ -48,25 +48,6 @@ namespace DDI.Shared.Models.Client.INV
             }
         }
 
-        [NotMapped]
-        public string InvestmentRelationshipTypeDescription
-        {
-            get
-            {
-                switch ((int)(InvestmentRelationshipType))
-                    {
-                        case 0:
-                            return "Primary Owner";
-                        case 1:
-                            return "Joint Owner";
-                        case 2:
-                            return "Beneficiary";
-                    }
-                return "Unknown";
-            }
-
-        }
-
         #endregion
 
         #endregion Public Properties

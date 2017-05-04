@@ -91,7 +91,7 @@ namespace DDI.Services
             invrelate[0].Investment.Rate = new decimal(4.25);
             invrelate[0].InvestmentId = Guid.NewGuid();
             invrelate[0].InvestmentRelationshipType = InvestmentRelationshipType.Beneficiary;
-            invrelate[0].InvestmentRelationshipTypeDescription = InvestmentRelationshipType.Beneficiary;
+            //invrelate[0].InvestmentRelationshipTypeDescription = InvestmentRelationshipType.Beneficiary;
 
             invrelate[1] = new InvestmentRelationship();
             invrelate[1].Investment = new Investment();
