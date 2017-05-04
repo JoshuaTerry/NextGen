@@ -50,7 +50,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExtreme.AspNet.Mvc">
-      <HintPath>..\..\..\..\Program Files (x86)\DevExpress 16.1\DevExtreme\System\Bin\AspNet\DevExtreme.AspNet.Mvc.dll</HintPath>
+      <HintPath>Solution Files\DevExtreme.AspNet.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
@@ -478,6 +478,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Solution Files\" />
     <Folder Include="Views\BusinessDate\" />
     <Folder Include="Views\MemoCategories\" />
     <Folder Include="Views\MemoCodes\" />
