@@ -32,6 +32,7 @@
         public const string EFT = "EFT";
         public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
+        public const string Fund = "Fund";
         public const string Degree = "Degree";
         public const string Denomination = "Denomination";
         public const string DoingBusinessAs = "DoingBusinessAs";
