@@ -9,7 +9,15 @@ namespace DDI.UI.Web
     public class BasePage : System.Web.UI.Page
     {
         #region Properties
-        
+
+        public bool IsAuthenticated
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         private string PageName
         {
             get
@@ -18,6 +26,18 @@ namespace DDI.UI.Web
             }
         }
 
-        #endregion        
+        #endregion
+
+        #region Methods
+
+        protected override void OnPreInit(EventArgs e)
+        {
+            base.OnPreInit(e);
+
+            if (!IsAuthenticated && PageName != "login.aspx")
+                Response.Redirect("~/Login.aspx", false);
+        }
+
+        #endregion
     }
 }

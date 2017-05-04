@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Shared", "DDI.Shared\DDI.Shared.csproj", "{997B56F7-612D-43D5-90BD-89F264D4C58D}"
 EndProject
@@ -16,9 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.WebApi.Tests", "DDI.WebApi.Tests\DDI.WebApi.Tests.csproj", "{3A8F5C47-BA24-45FC-9024-351BB0710E8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.UI.Web", "DDI.UI.Web\DDI.UI.Web.csproj", "{77317F25-549B-409F-A460-86E38B058BDD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7C76AAF9-FAD1-40A6-8140-D33229A9B942} = {7C76AAF9-FAD1-40A6-8140-D33229A9B942}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Business", "DDI.Business\DDI.Business.csproj", "{0E7D7E11-80B4-4751-8C21-B05A08A19473}"
 EndProject
@@ -40,8 +37,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.Logger", "DDI.Logger\DDI.Logger.csproj", "{F31674BF-F62C-4753-AED2-9BA3C2160577}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.EFAudit", "DDI.EFAudit\DDI.EFAudit.csproj", "{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDI.DevExpress", "DDI.DevExpress\DDI.DevExpress.csproj", "{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,10 +108,6 @@ Global
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C3B147F-FD3E-4CA9-B405-AF4D249BF5A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17BAEA8D-DF82-4369-B7DD-1590EEEA0427}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

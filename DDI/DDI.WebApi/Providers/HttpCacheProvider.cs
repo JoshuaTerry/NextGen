@@ -18,22 +18,15 @@ namespace DDI.WebApi.Providers
         private static readonly object _cacheItemLock = new object();
 
         private Cache _currentCache = null;
-        private Cache CurrentCache => _currentCache ?? (_currentCache = HttpContext.Current?.Cache);
+        private Cache CurrentCache => _currentCache ?? (_currentCache = _currentCache = HttpContext.Current.Cache);
 
         public void RemoveEntry(string key)
         {
-            if (CurrentCache != null)
-            {
-                CurrentCache[key] = null;
-            }
+            CurrentCache[key] = null;
         }
 
         public T GetEntry<T>(string key, int timeoutSeconds, bool isSlidingTimeout, Func<T> entryProvider, Action<T> callback) where T : class
         {
-            if (CurrentCache == null)
-            {
-                return entryProvider.Invoke();
-            }
             if (CurrentCache[key] == null)
             {
                 lock (_cacheItemLock)
@@ -50,11 +43,6 @@ namespace DDI.WebApi.Providers
 
         public void SetEntry<T>(string key, T entry, int _timeoutSecs, bool isSlidingTimeout, Action<T> callback) where T : class
         {
-            if (CurrentCache == null)
-            {
-                return;
-            }
-
             DateTime absoluteExpiration = Cache.NoAbsoluteExpiration;
             TimeSpan slidingExpiration = Cache.NoSlidingExpiration;
 
