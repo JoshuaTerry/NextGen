@@ -159,8 +159,8 @@ function LoadInterestPayoutsGrid() {
         }
     },
     { dataField: 'Constituent.Name', caption: 'Name' },
-    { dataField: 'Percent', caption: 'Percent', dataType: 'number', format: 'percent', precision: 2, alignment: 'right' },
-    { dataField: 'Amount', caption: 'Amount', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'Percent', caption: 'Percent', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
+    { dataField: 'Amount', caption: 'Amount', dataType: 'number', format: 'decimal', precision: 2, alignment: 'right' },
     ];
 
     CustomLoadGrid('interestpayoutsgrid', '.interestpayoutsgridcontainer', columns, 'investmentinterestpayouts/investment/' + id, null, EditInterestPayouts);
