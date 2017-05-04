@@ -150,8 +150,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CountriesControllerTests.cs" />
     <Compile Include="Controllers\GendersControllerTests.cs" />
     <Compile Include="Controllers\AuthorizationsControllerTests.cs" />
+    <Compile Include="Controllers\PrefixControllerTests.cs" />
     <Compile Include="Fakes\FakeApplicationUserManager.cs" />
     <Compile Include="Helpers\PaginationTests.cs" />
     <Compile Include="Helpers\DynamicTransmogrifierTests.cs" />
