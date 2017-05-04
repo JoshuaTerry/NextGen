@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/DevExpress.XtraPrinting" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="ExportFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Pdf" />
+      <xs:enumeration value="Htm" />
+      <xs:enumeration value="Mht" />
+      <xs:enumeration value="Rtf" />
+      <xs:enumeration value="Xls" />
+      <xs:enumeration value="Xlsx" />
+      <xs:enumeration value="Csv" />
+      <xs:enumeration value="Txt" />
+      <xs:enumeration value="Image" />
+      <xs:enumeration value="Xps" />
+      <xs:enumeration value="Prnx" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ExportFormat" nillable="true" type="tns:ExportFormat" />
+  <xs:complexType name="ArrayOfHtmlExportMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HtmlExportMode" type="tns:HtmlExportMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfHtmlExportMode" nillable="true" type="tns:ArrayOfHtmlExportMode" />
+  <xs:simpleType name="HtmlExportMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SingleFile" />
+      <xs:enumeration value="SingleFilePageByPage" />
+      <xs:enumeration value="DifferentFiles" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="HtmlExportMode" nillable="true" type="tns:HtmlExportMode" />
+  <xs:complexType name="ArrayOfImageExportMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImageExportMode" type="tns:ImageExportMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfImageExportMode" nillable="true" type="tns:ArrayOfImageExportMode" />
+  <xs:simpleType name="ImageExportMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SingleFile" />
+      <xs:enumeration value="SingleFilePageByPage" />
+      <xs:enumeration value="DifferentFiles" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ImageExportMode" nillable="true" type="tns:ImageExportMode" />
+  <xs:complexType name="ArrayOfRtfExportMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RtfExportMode" type="tns:RtfExportMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRtfExportMode" nillable="true" type="tns:ArrayOfRtfExportMode" />
+  <xs:simpleType name="RtfExportMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SingleFile" />
+      <xs:enumeration value="SingleFilePageByPage" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="RtfExportMode" nillable="true" type="tns:RtfExportMode" />
+  <xs:complexType name="ArrayOfXlsExportMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="XlsExportMode" type="tns:XlsExportMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfXlsExportMode" nillable="true" type="tns:ArrayOfXlsExportMode" />
+  <xs:simpleType name="XlsExportMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SingleFile" />
+      <xs:enumeration value="SingleFilePageByPage" />
+      <xs:enumeration value="DifferentFiles" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="XlsExportMode" nillable="true" type="tns:XlsExportMode" />
+  <xs:complexType name="ArrayOfXlsxExportMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="XlsxExportMode" type="tns:XlsxExportMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfXlsxExportMode" nillable="true" type="tns:ArrayOfXlsxExportMode" />
+  <xs:simpleType name="XlsxExportMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SingleFile" />
+      <xs:enumeration value="SingleFilePageByPage" />
+      <xs:enumeration value="DifferentFiles" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="XlsxExportMode" nillable="true" type="tns:XlsxExportMode" />
+  <xs:simpleType name="ExportOptionKind">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="long" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="PdfPageRange" />
+          <xs:enumeration value="PdfCompressed" />
+          <xs:enumeration value="PdfACompatibility" />
+          <xs:enumeration value="PdfShowPrintDialogOnOpen" />
+          <xs:enumeration value="PdfNeverEmbeddedFonts" />
+          <xs:enumeration value="PdfPasswordSecurityOptions" />
+          <xs:enumeration value="PdfSignatureOptions" />
+          <xs:enumeration value="PdfConvertImagesToJpeg" />
+          <xs:enumeration value="PdfImageQuality" />
+          <xs:enumeration value="PdfDocumentAuthor" />
+          <xs:enumeration value="PdfDocumentApplication" />
+          <xs:enumeration value="PdfDocumentTitle" />
+          <xs:enumeration value="PdfDocumentSubject" />
+          <xs:enumeration value="PdfDocumentKeywords" />
+          <xs:enumeration value="HtmlExportMode" />
+          <xs:enumeration value="HtmlCharacterSet" />
+          <xs:enumeration value="HtmlTitle" />
+          <xs:enumeration value="HtmlRemoveSecondarySymbols" />
+          <xs:enumeration value="HtmlEmbedImagesInHTML" />
+          <xs:enumeration value="HtmlPageRange" />
+          <xs:enumeration value="HtmlPageBorderWidth" />
+          <xs:enumeration value="HtmlPageBorderColor" />
+          <xs:enumeration value="HtmlTableLayout" />
+          <xs:enumeration value="HtmlExportWatermarks" />
+          <xs:enumeration value="RtfExportMode" />
+          <xs:enumeration value="RtfPageRange" />
+          <xs:enumeration value="RtfExportWatermarks" />
+          <xs:enumeration value="XlsExportMode" />
+          <xs:enumeration value="XlsPageRange" />
+          <xs:enumeration value="XlsxExportMode" />
+          <xs:enumeration value="XlsxPageRange" />
+          <xs:enumeration value="TextSeparator" />
+          <xs:enumeration value="TextEncoding" />
+          <xs:enumeration value="TextQuoteStringsWithSeparators" />
+          <xs:enumeration value="TextExportMode" />
+          <xs:enumeration value="XlsShowGridLines" />
+          <xs:enumeration value="XlsUseNativeFormat" />
+          <xs:enumeration value="XlsExportHyperlinks" />
+          <xs:enumeration value="XlsRawDataMode" />
+          <xs:enumeration value="XlsSheetName" />
+          <xs:enumeration value="ImageExportMode" />
+          <xs:enumeration value="ImagePageRange" />
+          <xs:enumeration value="ImagePageBorderWidth" />
+          <xs:enumeration value="ImagePageBorderColor" />
+          <xs:enumeration value="ImageFormat" />
+          <xs:enumeration value="ImageResolution" />
+          <xs:enumeration value="NativeFormatCompressed" />
+          <xs:enumeration value="XpsPageRange" />
+          <xs:enumeration value="XpsCompression" />
+          <xs:enumeration value="XpsDocumentCreator" />
+          <xs:enumeration value="XpsDocumentCategory" />
+          <xs:enumeration value="XpsDocumentTitle" />
+          <xs:enumeration value="XpsDocumentSubject" />
+          <xs:enumeration value="XpsDocumentKeywords" />
+          <xs:enumeration value="XpsDocumentVersion" />
+          <xs:enumeration value="XpsDocumentDescription" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:element name="ExportOptionKind" nillable="true" type="tns:ExportOptionKind" />
+</xs:schema>

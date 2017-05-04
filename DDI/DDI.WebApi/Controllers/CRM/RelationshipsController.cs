@@ -33,11 +33,13 @@ namespace DDI.WebApi.Controllers.CRM
                     $"{nameof(Relationship.Constituent1)}Id",
                     $"{nameof(Relationship.Constituent1)}.Id",
                     $"{nameof(Relationship.Constituent1Name)}",
+                    $"{nameof(Relationship.Constituent1Information)}",
                     $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.ConstituentNumber)}",
                     $"{nameof(Relationship.Constituent1)}.{nameof(Constituent.FormattedName)}",
                     $"{nameof(Relationship.Constituent2)}Id",
                     $"{nameof(Relationship.Constituent2)}.Id",
                     $"{nameof(Relationship.Constituent2Name)}",
+                    $"{nameof(Relationship.Constituent2Information)}",
                     $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.ConstituentNumber)}",
                     $"{nameof(Relationship.Constituent2)}.{nameof(Constituent.FormattedName)}",
                     $"{nameof(Relationship.IsSwapped)}"

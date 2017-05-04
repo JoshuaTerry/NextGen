@@ -372,7 +372,7 @@
 
 <%--    Modal section     --%>
 
-    <div class="autotransmodal" title="Automated Transactions" style="display: none;"> <%--autotransmodal--%>
+    <div class="autotransmodal" title="Automated Transactions" style="display: none;">
 
 
         <div class="modalcontent">
