@@ -40,5 +40,15 @@
         public static string AdjustmentPeriodNotLast => "Adjustment period for fiscal year {0} must be the last period.";
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
+
+        public static string FundNoFiscalYear => "Fund has no fiscal year.";
+        public static string FundNoFundSegment => "No fund segment specified for fund.";
+        public static string FundSegmentWrongFiscalYear => "Fund {0} is not in the same fiscal year as its fund segment.";
+        public static string FundFBAccountWrongLedger => "Fund's fund balance account is not in the same ledger as the fund.";
+        public static string FundFBAccountWrongFund => "The fund balance account for Fund {0} belongs to a different fund.";
+        public static string FundCRAccountWrongLedger => "Fund's closing revenue account is not in the same ledger as the fund.";
+        public static string FundCRAccountWrongFund => "The closing revenue account for Fund {0} belongs to a different fund.";
+        public static string FundCEAccountWrongLedger => "Fund's closing expense account is not in the same ledger as the fund.";
+        public static string FundCEAccountWrongFund => "The closing expense account for Fund {0} belongs to a different fund.";
     }
 }
