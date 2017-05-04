@@ -1,4 +1,5 @@
 using DDI.Shared.Enums.INV;
+using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
@@ -31,6 +32,7 @@ namespace DDI.Shared.Models.Client.INV
         public InvestmentRelationshipType InvestmentRelationshipType { get; set; }
 
 
+
         #endregion
         #region Navigation Properties
 
@@ -44,6 +46,25 @@ namespace DDI.Shared.Models.Client.INV
                 return "Testing";
                 //return InvestmentRelationshipType.ToString() + " for " + Investment.InvestmentNumber + ": " + Investment.InvestmentDescription;
             }
+        }
+
+        [NotMapped]
+        public string InvestmentRelationshipTypeDescription
+        {
+            get
+            {
+                switch ((int)(InvestmentRelationshipType))
+                    {
+                        case 0:
+                            return "Primary Owner";
+                        case 1:
+                            return "Joint Owner";
+                        case 2:
+                            return "Beneficiary";
+                    }
+                return "Unknown";
+            }
+
         }
 
         #endregion
