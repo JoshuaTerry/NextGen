@@ -68,15 +68,11 @@ namespace DDI.Services
             return GetPagedResults(queryable, search);
         }
 
-        private IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
+        protected IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
         {
             if (search == null)
             {
-                search = new PageableSearch
-                {
-                    Limit = SearchParameters.LimitDefault,
-                    Offset = SearchParameters.OffsetDefault
-                };
+                search = PageableSearch.Default;
             }
 
             var query = new CriteriaQuery<T, IPageable>(queryable, search);
@@ -188,8 +184,8 @@ namespace DDI.Services
                 return false;
             }
 
-            var properties = typeof(T1).GetProperties().Select(p => p.Name);
-            return fields.Split(',').All(f => properties.Contains(f));
+            var properties = typeof(T1).GetProperties().Select(p => p.Name.ToUpper());
+            return fields.ToUpper().Split(',').All(f => properties.Contains(f));
         }
         
         public virtual IDataResponse<T> GetById(Guid id)

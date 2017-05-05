@@ -1,5 +1,6 @@
 ﻿using DDI.Logger;
 using DDI.Services;
+using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
@@ -119,6 +120,11 @@ namespace DDI.WebApi.Controllers
         {
             try
             {
+                if (search == null)
+                {
+                    search = PageableSearch.Default;
+                }
+
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!response.IsSuccessful)
                 {

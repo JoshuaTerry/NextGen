@@ -1,15 +1,17 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DDI.Business.Core;
 using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Shared;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DDI.Business.CRM
 {
@@ -83,6 +85,21 @@ namespace DDI.Business.CRM
             return nameLine1;
         }
 
+        /// <summary>
+        /// Get the formatted primary address for a constituent.
+        /// </summary>
+        public string GetFormattedPrimaryAddress(Constituent constituent)
+        {
+            if (constituent != null)
+            {
+                ConstituentAddress constituentAddress = UnitOfWork.GetReference(constituent, p => p.ConstituentAddresses).FirstOrDefault(p => p.IsPrimary);
+                if (constituentAddress != null)
+                {
+                    return UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(constituentAddress, p => p.Address)).Replace("\n", ", ");
+                }
+            }
+            return string.Empty;
+        }
 
         /// <summary>
         /// Get the sort name for a constituent (e.g. Last First Middle)
@@ -162,20 +179,16 @@ namespace DDI.Business.CRM
         }
 
         public int GetNextConstituentNumber()
-        {
-            if (_constituentRepo.Utilities == null)
-            {
-                // If this is a mocked repo, get the last constituent # in use and add one.
-                return 1 + (_constituentRepo.Entities.OrderByDescending(p => p.ConstituentNumber).FirstOrDefault()?.ConstituentNumber ?? 0);
-            }
-
+        {            
             int nextNumber = 0;
             bool isUnique = false;
             int tries = 0;
+            var logic = UnitOfWork.GetBusinessLogic<EntityNumberLogic>();
+
             while (!isUnique)
             {
                 tries++;
-                nextNumber = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+                nextNumber = logic.GetNextEntityNumber(EntityNumberType.Constituent);
                 isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNumber) == 0;
 
                 if (tries >= _maxTries)
@@ -187,7 +200,7 @@ namespace DDI.Business.CRM
 
         public void SetNextConstituentNumber(int newValue)
         {
-            _constituentRepo.Utilities?.SetNextSequenceValue(DomainContext.ConstituentNumberSequence, newValue);
+            UnitOfWork.GetBusinessLogic<EntityNumberLogic>().SetNextEntityNumber(EntityNumberType.Constituent, newValue);
         }
 
         public Constituent GetSpouse(Constituent constituent)

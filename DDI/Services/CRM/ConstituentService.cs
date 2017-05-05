@@ -7,11 +7,13 @@ using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using WebGrease.Css.Extensions;
 
 namespace DDI.Services
@@ -90,7 +92,7 @@ namespace DDI.Services
         }
 
         public IDataResponse<Constituent> NewConstituent(Guid constituentTypeId)
-        {            
+        {
             var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {
@@ -201,6 +203,40 @@ namespace DDI.Services
             return response;
         }
 
+        public IDataResponse GetConstituentPrimaryContactInfo(Constituent constituent)
+        {
+            IDataResponse response = null;
+
+            
+            var address = constituent.ConstituentAddresses.FirstOrDefault<ConstituentAddress>(a => a.IsPrimary);
+            var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
+            var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Address: ");
+            sb.Append(primaryaddress.AddressLine1 + "\n");
+            sb.Append(primaryaddress.PostalCode + " ");
+            sb.Append(primaryaddress.City + ", ");
+            sb.Append(state + "\n");
+
+            var primaryContactInfo = constituent.ContactInfo.Where(ci => ci.IsPreferred);
+
+            foreach (ContactInfo info in primaryContactInfo)
+            {
+                var contactType = UnitOfWork.GetById<ContactType>(info.ContactTypeId.Value);
+                sb.Append(contactType + ": ");
+                sb.Append(info.Info + "\n");
+            }
+
+            response = new DataResponse<string>()
+            {
+                Data = sb.ToString(),
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
         #endregion
 
         #region Private Methods
@@ -237,6 +273,11 @@ namespace DDI.Services
                 if (!string.IsNullOrWhiteSpace(search.Name))
                 {
                     query.Must.MatchAll(search.Name, p => p.Name, p => p.Name2, p => p.Nickname, p => p.DoingBusinessAs);
+                }
+
+                if (!string.IsNullOrWhiteSpace(search.QueryString))
+                {
+                   query.Must.QueryString(search.QueryString, p => p.Name, p => p.ConstituentNumber, p => p.PrimaryAddress);
                 }
 
                 if (!search.ConstituentTypeId.IsNullOrEmpty())
@@ -390,6 +431,9 @@ namespace DDI.Services
             {
                 case OrderByProperties.DisplayName:
                     query.OrderBy(p => p.SortableName);
+                    break;
+                case OrderByProperties.Score:
+                    query.OrderByScore();
                     break;
             }
             

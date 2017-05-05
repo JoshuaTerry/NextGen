@@ -97,6 +97,7 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 
 .regionscontainer label { margin-right: 3px; }
 
+
 /* EDIT CONTROLS */
 .editcontainer {  }
 .editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }
@@ -160,7 +161,6 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 /* END MODAL CONTENT */
 
 
-
 /* NEW CONSTITUENT MODAL */
 .addconstituentmodal { overflow: hidden; }
 .addconstituentmodal div.fieldblock input { width: 98.7%; }
@@ -183,5 +183,9 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .default { background: url('../../Images/Male.png') no-repeat; }
 /* END NEW CONSTITUENT MODAL */
 
-
+/*Account Number Selector*/
+.accountselectionsearch {background: url('../../Images/Search_16.png') no-repeat; width: 16px; height: 16px; display: inline-block; margin-right: 5px;  }
+.accountselectiongrid {width:50%; display: none;}
+.accountdescription {padding-left: 4px; padding-right: 4px}
+/* End Account Number Selector*/
 

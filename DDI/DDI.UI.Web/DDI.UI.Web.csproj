@@ -92,11 +92,11 @@
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
-    <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
     <Content Include="Pages\GL\AccountSummary.aspx" />
     <Content Include="Pages\GL\AccountTransactions.aspx" />
     <Content Include="Pages\GL\ActivityAndBudget.aspx" />
+    <Content Include="Pages\INV\InvestmentDetails.aspx" />
     <Content Include="Pages\Reports\AccountingReports.aspx" />
     <Content Include="Pages\GL\Accounts.aspx" />
     <Content Include="Pages\GL\AccountsPayable.aspx" />
@@ -137,6 +137,9 @@
     <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\accounts.js" />
+    <Content Include="Scripts\InvestmentDetails.js" />
+    <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="TabbedContent.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -158,10 +161,8 @@
     <Content Include="Scripts\fileupload\jquery.fileupload.js" />
     <Content Include="Scripts\fileupload\jquery.iframe-transport.js" />
     <Content Include="Scripts\fileupload\load-image.all.min.js" />
-    <Content Include="Scripts\InvestmentDetails.js" />
+    <Content Include="Scripts\glaccountselection.js" />
     <Content Include="Scripts\jquery.datepair.min.js" />
-    <Content Include="Scripts\jquery.format.js" />
-    <Content Include="Scripts\jquery.maskMoney.min.js" />
     <Content Include="Scripts\jquery.timepicker.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -330,13 +331,6 @@
     <Compile Include="Pages\GL\Accounting.aspx.designer.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\INV\InvestmentDetails.aspx.cs">
-      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\INV\InvestmentDetails.aspx.designer.cs">
-      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Pages\GL\AccountDetails.aspx.cs">
       <DependentUpon>AccountDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -364,6 +358,13 @@
     </Compile>
     <Compile Include="Pages\GL\ActivityAndBudget.aspx.designer.cs">
       <DependentUpon>ActivityAndBudget.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\INV\InvestmentDetails.aspx.cs">
+      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\INV\InvestmentDetails.aspx.designer.cs">
+      <DependentUpon>InvestmentDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Reports\AccountingReports.aspx.cs">
       <DependentUpon>AccountingReports.aspx</DependentUpon>

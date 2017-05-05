@@ -19,6 +19,7 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
+using DDI.Conversion.Core;
 
 namespace DDI.Conversion.CRM
 {    
@@ -35,6 +36,7 @@ namespace DDI.Conversion.CRM
             RelationshipTypes,
             Tags,
             Configuration,
+            ConstituentEntityNumber,
         }
 
         // nacodes.record-cd sets - these are the ones that are being imported here.
@@ -81,6 +83,8 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.RelationshipTypes, () => LoadRelationshipTypes(InputFile.CRM_RelationshipType));
             RunConversion(ConversionMethod.Tags, () => LoadTags(InputFile.CRM_TagGroup, InputFile.CRM_TagCode));
             RunConversion(ConversionMethod.Configuration, () => LoadConfiguration(InputFile.CRM_NASetup));
+            RunConversion(ConversionMethod.ConstituentEntityNumber, () => LoadEntityNumbers(InputFile.CRM_EntityNumber));
+
         }
 
 
@@ -987,6 +991,12 @@ namespace DDI.Conversion.CRM
             }
 
             context.SaveChanges();
+        }
+
+        private void LoadEntityNumbers(string filename)
+        {
+            var converter = new EntityNumberConverter();
+            converter.ConvertEntityNumbers(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)));
         }
 
     }

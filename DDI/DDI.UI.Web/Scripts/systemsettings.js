@@ -2732,6 +2732,8 @@ function LoadDonationHomeScreenSectionSettings() {
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() { 
 
+    $('.contentcontainer').empty();
+
     var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
@@ -2836,6 +2838,9 @@ function PickLedger() {
 }
 
 function LoadBudgetSectionSettings() {
+
+    $('.contentcontainer').empty();
+
     var businessunitid = currentBusinessUnit.Id;
     var ledgerid;
 
@@ -2949,7 +2954,9 @@ function GetBudgetSetting() {
 }
 
 function LoadChartAccountsSectionSettings() {
-    var businessunitid = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16';      // replace with global variable
+
+    $('.contentcontainer').empty();
+
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
@@ -2969,7 +2976,7 @@ function LoadChartAccountsSectionSettings() {
     var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
         //update on change  (not working so added .change logic below
         //GetChartSetting();
     }, function () {
@@ -3163,8 +3170,11 @@ function LoadChartAccountsSettingsSectionSettings() {
 
 
 }
-    /// Entities/BusinessUnits Settings
+
+/// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
+
+    $('.contentcontainer').empty();
 
     var entityColumns = [
       { dataField: 'Id', width: '0px' },
@@ -3202,55 +3212,76 @@ function LoadEntitiesSectionSettings() {
 
 }
 /// End Entities/Business Untis Settings
+
 function LoadFiscalYearSectionSettings() {
 
-    var ledgerid = '7BAFBB1E-A2DC-4D85-9542-229378F8DBC7';
-
+    $('.contentcontainer').empty();
     $('.fiscalyearcontainer').remove();
+    
+    var container = $('<div>'); 
+    var selectledgergroup = $('<div>').addClass('twocolumn');   
+    var selectledgername = $('<h1>').text('Fiscal Year Settings for Ledger: ');
+    $('<select>').addClass('LedgerId').appendTo(selectledgername);
+    $(selectledgername).appendTo(selectledgergroup);
+    $(selectledgergroup).appendTo(container);
+
+    var gridgroup = $('<div>').addClass('twocolumn');
+
     var fycontainer = $('<div>').addClass('fiscalyearcontainer');
     $('.gridcontainer').append($(fycontainer));
     $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
-
-    var columns = [
-        { dataField: 'Id', width: "0px" },
-        { dataField: 'Name', caption: 'Name' },
-        { caption: 'Status', cellTemplate: function (container, options) {
-
-                var status;
-
-                switch (options.data.Status) {
-                    case 0:
-                        status = "Empty";
-                        break;
-                    case 1:
-                        status = "Open";
-                        break;
-                    case 2:
-                        status = "Closed";
-                        break;
-                    case 3:
-                        status = "Reopened";
-                        break;
-                    case 4:
-                        status = "Locked";
-                        break;
-                }
-
-                $('<label>').text(status).appendTo(container);
-            }
-        },
-    ];
-
-    LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=all', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
-
-}
-
-function LoadFiscalPeriods(info) {
 
     $('.fiscalperiodscontainer').remove();
     var fpcontainer = $('<div>').addClass('fiscalperiodscontainer');
     $('.gridcontainer').append($(fpcontainer));
     $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
+
+    $(fycontainer).appendTo(gridgroup);
+    $(fpcontainer).appendTo(gridgroup);
+
+    $(gridgroup).appendTo(container);
+    $(container).appendTo($('.contentcontainer'));
+
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+
+        var ledgerid = $('.LedgerId').val();
+
+        var columns = [
+            { dataField: 'Id', width: "0px" },
+            { dataField: 'Name', caption: 'Name' },
+            { caption: 'Status', cellTemplate: function (container, options) {
+
+                    var status;
+
+                    switch (options.data.Status) {
+                        case 0:
+                            status = "Empty";
+                            break;
+                        case 1:
+                            status = "Open";
+                            break;
+                        case 2:
+                            status = "Closed";
+                            break;
+                        case 3:
+                            status = "Reopened";
+                            break;
+                        case 4:
+                            status = "Locked";
+                            break;
+                    }
+
+                    $('<label>').text(status).appendTo(container);
+                }
+            },
+        ];
+
+        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=all', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+        
+    });
+}
+
+function LoadFiscalPeriods(info) {
 
     if (!info) {
         var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
@@ -3299,16 +3330,17 @@ function LoadFiscalPeriods(info) {
 
 function LoadFundAccountingSectionSettings() {
 
-
-
+    $('.contentcontainer').empty();
+    // a change here for demo purposes, can be removed later.
+    // something here
 }
 
 function LoadGLFormatSectionSettings() {
 
+    $('.contentcontainer').empty();
+
     var container = $('<div>'); 
 
-    //var businessUnitId = 'd66ecff2-990d-4a5a-8cd6-5c6ab63b89df'; //CE needs to be replaced with the global variable when it is available
-    var businessUnitId = 'd63d404a-1bdd-40e4-ac19-b9354bd11d16'; //DCEF
     var glaccountformat = '';
     
     var selectledgergroup = $('<div>').addClass('twocolumn');   
@@ -3325,7 +3357,7 @@ function LoadGLFormatSectionSettings() {
 
     
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + businessUnitId, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
 
         var ledgerId = $('.LedgerId').val();
         var canDeleteSegmentLevels = false;
@@ -3479,12 +3511,14 @@ function LoadGLFormatSectionSettings() {
 
 function LoadJournalSectionSettings() {
 
+    $('.contentcontainer').empty();
 
 
 }
 
 function LoadUtilitiesSectionSettings() {
 
+    $('.contentcontainer').empty();
 
 
 }

@@ -1121,13 +1121,13 @@
 	<div class="relationshipmodal" title="Relationship" style="display: none;">
 
         <div class="modalcontent">
-            <input type="hidden" class="hidrelationshipid" />
-            <input type="hidden" class="hidrelationshipisswapped" />
-            <input type="hidden" class="hidconstituentlookupid" />
+            <input type="hidden" class="rs-IsSwapped" />
+            <input type="hidden" class="rs-Constituent1Id" />
+            <input type="hidden" class="rs-Constituent2Id" />
 
             <div class="fieldblock">
                 <label></label>
-                <input type="text" class="rs-FormattedName2 constituentlookup" />
+                <input type="text" class="rs-Constituent1Information constituentlookup" />
             </div>
 
             <div class="fieldblock">
@@ -1137,7 +1137,7 @@
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="rs-FormattedName1" />
+                <input type="text" class="rs-Constituent2Information" />
             </div>
 
             <div class="modalbuttons">
@@ -1327,7 +1327,7 @@
             <div class="notealertgridcontainer"></div>
 
             <div class="modalbuttons">
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotealertmodal">Cancel</a>
             </div>
 
         </div>

@@ -4,6 +4,8 @@
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\PaymentPreferencesModal.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\search.js"></script>
     <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
@@ -187,7 +189,7 @@
                             </div>
                         </div>
 
-                        <h1>Deposits and Withdrawals</h1>
+                        <h1>Automated Transactions</h1>
                         <div class="editcontainer">
 
                             <div class="dwgridcontainer"></div>
@@ -202,14 +204,13 @@
                                     <label>Interest Frequency:</label>
                                 </div>
                                 <div>
-                                    <select class="editable InterestFrequency">
-                                        <option value=""></option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Quarter">Quarter</option>
-                                        <option value="Semi-Annual">Semi-Annual</option>
-                                        <option value="Annual">Annual</option>
-                                        <option value="Maturity Only">Maturity Only</option>
-                                        <option value="None">None</option>
+                                    <select class="InterestFrequency editable">
+                                        <option value="0">None</option>
+                                        <option value="1">Monthly</option>
+                                        <option value="2">Quarter</option>
+                                        <option value="3">Semi-Annual</option>
+                                        <option value="4">Annual</option>
+                                        <option value="5">Maturity Only</option>
                                     </select>
                                 </div>
 
@@ -221,7 +222,7 @@
                                     <label>Rate:</label>
                                 </div>
                                 <div>
-                                    <input type="number" class="InterestRate editable" />
+                                    <input type="number" class="Rate justright editable" />%
                                 </div>
 
                             </div>
@@ -232,7 +233,7 @@
                                     <label>Accrued Interest:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestAccrued readonly" readonly="read-only" />
+                                    <input type="text" class="AccruedInterest money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -243,7 +244,7 @@
                                     <label>Last Interest Calculation Dt:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestLastCalcDate readonly"  readonly="read-only" />
+                                    <input type="text" class="LastInterestCalculatedDate date" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -254,7 +255,7 @@
                                     <label>Interest Paid YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPaidYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="InterestPaidYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -265,7 +266,7 @@
                                     <label>Interest Withheld YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestWithheldYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="InterestWithheldYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
@@ -276,33 +277,29 @@
                                     <label>Penalty Charged YTD:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="InterestPenaltyYTD readonly"  readonly="read-only" />
+                                    <input type="text" class="PenaltyChargedYTD money justright" disabled="disabled" />
                                 </div>
 
                             </div>
 
                             <div class="accordions">
-                            <h1>Interest Payment</h1>
-                                <div class="interestpaymentgridcontainer"></div>
-                            <h1>IRS Information</h1>
+                                <h1>Interest Payment</h1>
+                                <div class="interestpayoutsgridcontainer">
+                                    <a href="#" class="newinterestpayoutsmodallink">New Item</a>
+                                    <div class="interestpayoutsgrid"></div>
+                                </div>
+                                <h1>IRS Information</h1>
                                 <div class="interestIRSgridcontainer"></div>
                             </div>
 
-                            <div>
-                                <div class="interestpaymenttable"></div>
-                            </div>
                         </div>
 
                         <h1>Linked Accounts</h1>
-                            <div class="editcontainer">
-                                <div class="accordions">
-
-                                <h1>Linked Account Detail<a href="#" title="New" class="newlinkedaccountsmodallink newbutton"></a></h1>
-                                <div class="linkedaccountsgridcontainer">
-                                    <div class="linkedaccountsgrid"></div>
-                                </div>
+                        <div>
+                            <a href="#" class="newlinkedaccountsmodallink">New Item</a>
+                            <div class="linkedaccountsgridcontainer">
+                                <div class="linkedaccountsgrid"></div>
                             </div>
-
                         </div>
 
                         <h1>Maturity</h1>
@@ -340,7 +337,7 @@
 
                                  <div class="fieldblock">
                                     <label>Renewal Investment Type</label>
-                                    <input type="text" class="RenewalInvestmentType editable datepicker" />
+                                    <input type="text" class="RenewalInvestmentType editable" />
                                 </div>
 
                             </div>
@@ -358,22 +355,16 @@
 
                                  <div class="fieldblock">
                                     <label>Number of Renewals</label>
-                                    <input type="text" class="NumberOfRenewals editable datepicker" />
+                                    <input type="text" class="NumberOfRenewals editable" />
                                 </div>
 
                             </div>
 
-
-                        </div>
-
-                        <h1>Payment Preferences</h1>
-                        <div class="editcontainer">
                         </div>
 
                     </div>
 
             </div>
-
         </div>
     </div>
 
@@ -381,64 +372,148 @@
 
 <%--    Modal section     --%>
 
-    <div class="interestpaymentmodal" title="Interest Payment" style="display: none;">
+    <div class="autotransmodal" title="Automated Transactions" style="display: none;">
+
 
         <div class="modalcontent">
+ 
+            
 
-            <input type="hidden" class="interest-Id" />
-            <input type="hidden" class="hidconstituentlookupid" />
-
-            <div class="fieldblock fourcolumn">
-                <label>Priority</label>
-                <input type="number" class="interest-Priority" />
-
-                <label>Method</label>
-                <select class="interest-Category">
-                    <option value=""></option>
-                    <option value="ACH">ACH</option>
-                    <option value="Check">Check</option>
-                    <option value="Compound">Compound</option>
-                    <option value="Donation">Donation</option>
-                    <option value="Investment Deposit">Investment Deposit</option>
-                    <option value="Wire">Wire</option>
-                </select>
-            </div>
-
-            <div class="fieldblock fourcolumn">
-                <input type="radio" name="gender" value="Percent"/>Percent<br />
-                <input type="radio" name="gender" value="Amount"/>Amount
-                <input type="number" class="interest-AmtPct" />
-            </div>
 
             <div class="fieldblock">
-                <label></label>
-                <input type="text" class="rs-FormattedName2 constituentlookup" />
+                <label>Constituent Search</label>
+                <input type="text" class="dosearch at-Constituent" />
             </div>
 
-            <div class="fieldblock interestOptionACHWire fourcolumn">
-                <label>Payment Preference:</label>
-                <select class="interest-PaymentPreference">
-                    <option value=""></option>
-                    <option value="Default">Default</option>
-                </select>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Payment Method</label>
+                    <select class="at-Constituent" />
+                </div>
+
             </div>
 
-            <div class="fieldblock interestOptionCheck fourcolumn">
-                <label>Id:</label>
-                <input type="text" class="interest-CheckId" />
-                <label>Name:</label>
-                <input type="text" class="interest-CheckName" />
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Next Date</label>
+                    <select class="at-NextDate" />
+                </div>
+
+               <input type="button" class="newpaymentpref" value="Add Payment Preference" />
+
             </div>
 
-            <div class="fieldblock interestOptionDonation">
-                <fieldset>
-                    <legend>Dontation Template</legend>
-                </fieldset>            
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Amount</label>
+                    <input type="text" class="at-Amount" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Frequency</label>
+                    <input type="text" class="at-Frequency" />
+                </div>
+
             </div>
 
-            <div class="fieldblock interestOptionCompound">
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Method:</label>
+                    <select class="at-method">
+                        <option value="0">Deposit</option>
+                        <option value="1">Withdrawal</option>
+                        <option value="2">Transfer</option>
+                    </select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>IsActive</label>
+                    <input type="checkbox" class="at-IsActive" />
+                </div>
+                
             </div>
 
+            <div class="modalbuttons">
+                <input type="button" class="submitautotrans" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="interestpayoutsmodal" title="Interest Payout" style="display: none;">
+        <div class="modalcontent">
+
+            <input type="hidden" class="interestPayout-Id" />
+            <input type="hidden" class="hidconstituentlookupid" />
+
+            <div class="twocolumn">
+                <div>
+                    <label>Priority: </label>
+                    <input type="number" class="Priority" />
+                    <label>Method: </label>
+                </div>
+
+                <div>
+                    <select class="InterestPaymentMethod">
+                        <option value="0">Compound</option>
+                        <option value="1">EFT</option>
+                        <option value="2">Check</option>
+                        <option value="3">Investment Deposit</option>
+                    </select>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="twocolumn">
+                <div class="justright">
+                    <input type="radio" name="interestpayoutoption" class="InterestPayoutOptionPercent" value="Percent"/>Percent&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="interestpayoutoption" class="InterestPayoutOptionAmount" value="Amount"/>Amount&nbsp;&nbsp;
+                </div>
+                <div>
+                    <input type="number" class="InterestPayoutPercentAmount" />
+                </div>
+            </div>
+
+            <br />
+
+            <div class="interestpayoutconstituent twocolumn">
+                <div class="justright">
+                    <label>Id:</label>
+                    <input type="text" class="Constituent.Id" />
+                    <label>Name:</label>
+                </div>
+                <div>
+                    <input type="text" class="ConstituentName constituentlookup" />
+                </div>
+            </div>
+
+            <br />
+
+            <div class="interestpayoutpaymentpreference twocolumn">
+                <div class="justright">
+                    <label>Payment Preference: </label>
+                </div>
+                <div>
+                    <select class="ConstituentPaymentPreference">                           
+                    </select>
+                    <a href="#" title="" class="newinterestpayoutpaymentpreferences newbutton"></a>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="modalbuttons">
+                <input type="button" class="saveinterestpayouts" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
         </div>
 
     </div>
@@ -466,41 +541,128 @@
 
             <div class="twocolumn">
                 <div>
-                    <input type="checkbox" class="editable LinkedAccountsLoanInd" />
+                    <input type="checkbox" class="LinkedAccountInd" />
                     <label>Loan</label>
                 </div>
                 <div>
                     <label>Loan Number:</label>
-                    <input type="text" class="rs-LoanName loanlookup" />
+                    <input type="text" class="LinkedAccountNumber" />
                 </div>
             </div>
 
             <br />
 
-            <div class="interestOptionACHWire twocolumn">
+            <div class="twocolumn">
                 <div>
-                    <input type="checkbox" class="editable LinkedAccountsLoanCollateral" />
+                    <input type="checkbox" class="CollateralType" />
                     <label>Collateral on Loan</label>
                 </div>
-                <div class="loanCollateralOption">
+                <div>
                     <fieldset>
-                        <span>
-                            <input type="radio" name="loancollateral" value="Percent"/>Percent
-                            <input type="radio" name="loancollateral" value="Amount"/>Amount
-                        </span>
+                        <div>
+                            <input type="radio" name="CollateralType" class="CollateralTypePercent" value="Percent"/>Percent
+                            <input type="radio" name="CollateralType" value="CollateralTypeAmount"/>Amount
+                            <input type="number" class="Collateral" />
+                        </div>
                     </fieldset>            
                 </div>
             </div>
 
             <br />
 
-            <div class="interestBlockLinkedInvestments">
-                <input type="checkbox" class="editable LoanBlockLinkedInvestments" />
+            <div class="interestBlockOtherLoanLinks">
+                <input type="checkbox" class="BlockOtherLoanLinks" />
                 <label>Block Investments from linking to other loans:</label>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savelinkedaccounts" value="Save" />
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="'paymentpreferencesinclude'"></div>
+
+
+<div class="paymentpreferencesmodal" title="Payment Preference" style="display: none;">
+
+    <div class="modalcontent">
+
+        <div class="fieldblock">
+            <label>Description</label>
+            <input type="text" class="pp-Description" />
+        </div>
+
+        <div class="fieldblock">
+            <label>Bank Name</label>
+            <input type="text" class="pp-BankName" />
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Routing Number</label>
+                <input type="text" class="pp-RoutingNumber" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Account Number</label>
+                <input type="text" class="pp-BankAccount" />
             </div>
 
         </div>
 
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Account Type</label>
+                <select class="pp-AccountType">
+                    <option value=""></option>
+                    <option value="0">Checking Account</option>
+                    <option value="1">Savings Account</option>
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>EFT Format</label>
+                <select class="pp-EFTFormatId eftformats"></select>
+            </div>
+
+        </div>
+
+        <div class="twocolumn">
+
+            <div class="fieldblock">
+                <label>Status</label>
+                <select class="pp-Status">
+                    <option value=""></option>
+                    <option value="0">Active</option>
+                    <option value="1">Inactive</option>
+                    <option value="2">Pre-note Required</option>
+                    <option value="3">Pre-Note Sent</option>
+                    <option value="4">Expired</option>
+                    <option value="5">Not Valid</option>
+                </select>
+            </div>
+
+        </div>
+
+        <input type="hidden" class="pp-StatusDate" />
+        <input type="hidden" class="pp-PreviousStatus" />
+        <input type="hidden" class="pp-ConstituentId parentid" />
+
+        <div class="modalbuttons">
+            <input type="button" class="savepaymentpreferencesbutton" value="Save" />
+            <a href="#" class="cancelpaymentpreferencesmodal">Cancel</a>
+        </div>
+
     </div>
+
+</div>
+
+<%--    End Modal section     --%>
+
 
 </asp:Content>

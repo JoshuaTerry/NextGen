@@ -55,13 +55,16 @@ namespace DDI.Services
 
 
             InvestmentInterestPayout intPayout = new InvestmentInterestPayout();
+            intPayout.Id = Guid.NewGuid();
+            intPayout.ConstituentId = Guid.NewGuid();
             intPayout.Constituent = new Constituent();
             intPayout.Constituent.Name = "Joe Smith";
             intPayout.Priority = 1;
             intPayout.InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout.Percent = new decimal(50);
+            intPayout.Percent = new decimal(.50);
+            intPayout.Amount = new decimal(0);
 
-            
+
             var response = new DataResponse<InvestmentInterestPayout>()
             {
                 Data = intPayout,
@@ -80,25 +83,34 @@ namespace DDI.Services
             intPayout = new InvestmentInterestPayout[3];
 
             intPayout[0] = new InvestmentInterestPayout();
+            intPayout[0].Id = Guid.NewGuid();
             intPayout[0].Constituent = new Constituent();
+            intPayout[0].Constituent.Id = Guid.NewGuid();
             intPayout[0].Constituent.Name = "Joe Smith";
             intPayout[0].Priority = 1;
             intPayout[0].InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout[0].Percent = new decimal(50);
+            intPayout[0].Percent = new decimal(.50);
+            intPayout[0].Amount = new decimal(0);
 
             intPayout[1] = new InvestmentInterestPayout();
+            intPayout[1].Id = Guid.NewGuid();
             intPayout[1].Constituent = new Constituent();
+            intPayout[1].Constituent.Id = Guid.NewGuid();
             intPayout[1].Constituent.Name = "Jane Smith";
             intPayout[1].Priority = 2;
             intPayout[1].InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout[1].Percent = new decimal(30);
+            intPayout[1].Percent = new decimal(0);
+            intPayout[1].Amount = new decimal(30);
 
             intPayout[2] = new InvestmentInterestPayout();
+            intPayout[2].Id = Guid.NewGuid();
             intPayout[2].Constituent = new Constituent();
+            intPayout[2].Constituent.Id = Guid.NewGuid();
             intPayout[2].Constituent.Name = "Jack Smith";
             intPayout[2].Priority = 3;
             intPayout[2].InterestPaymentMethod = InterestPaymentMethod.EFT;
-            intPayout[2].Percent = new decimal(20);
+            intPayout[2].Percent = new decimal(.20);
+            intPayout[2].Amount = new decimal(0);
 
             List<InvestmentInterestPayout> interestPayouts = new List<InvestmentInterestPayout>();
 

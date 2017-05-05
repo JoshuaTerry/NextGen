@@ -585,7 +585,7 @@ function LoadAccordions() {
 
 function LoadDatePickers() {
 
-    $('.datepicker').datepicker();
+    $('.datepicker').datepicker({ 'dateFormat': 'm/d/yy' });
 
 }
 
@@ -612,7 +612,8 @@ function FormatJSONDate(jsonDate) {
     var date = '';
 
     if (jsonDate) {
-        date = new Date(jsonDate).toDateString();
+        var dt = new Date(jsonDate);
+        date = (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear();
     }
 
     return date;
@@ -1463,4 +1464,7 @@ function FormatFields() {
         $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
     });
     $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $(".percent").each(function () {
+        $(this).val($(this).val() + '%');
+    });
 }

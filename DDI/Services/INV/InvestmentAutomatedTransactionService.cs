@@ -97,7 +97,8 @@ namespace DDI.Services
             at[1].RecurringType = Shared.Enums.Core.RecurringType.Weekly;
             at[1].Amount = new decimal(550);
             at[1].IsActive = true;
-            at[1].PaymentMethod.Description = "Transfer to Investment 432";
+            at[1].PaymentMethodId = new Guid();
+            //at[1].PaymentMethod.Description = "Transfer to Investment 432";
 
             at[2] = new InvestmentAutomatedTransaction();
             at[2].Id = new Guid();
