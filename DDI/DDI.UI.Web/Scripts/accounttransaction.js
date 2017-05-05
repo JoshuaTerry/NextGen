@@ -5,15 +5,16 @@
 });
 
 function LoadTransactionGrid(accountId) {
+    debugger;
     var columns = [
         { dataField: 'MonthYear', caption: 'Month/Year', groupIndex: 0 },
-        { dataField: 'Id', width: '0px' },
+        { dataField: 'Id', visible: false },
         { dataField: 'TransactionNumber', caption: 'Trans #' },
         { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date'},
-        { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision:2, format:'currency'},
-        { dataField: 'Description', caption: 'Description' },
+        { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision: 2, format: 'currency', allowGrouping: false },
+        { dataField: 'Description', caption: 'Description', allowGrouping: false },
         { dataField: 'TransactionId', caption: 'Trans Id' },
-        { dataField: 'SourceDescription', caption: 'Source Description' },
+        { dataField: 'SourceDescription', caption: 'Source Description', allowGrouping: false },
         {
             caption: 'View', cellTemplate: function (container, options) {
               
@@ -25,7 +26,8 @@ function LoadTransactionGrid(accountId) {
        
     ];
 
-    var gridData = new DevExpress.data.CustomStore({
+    var gridData = new DevExpress.data.DataSource({
+        
         key: 'Id',
         load: function (loadOptions) {
             var deferred = $.Deferred(),
@@ -53,8 +55,8 @@ function LoadTransactionGrid(accountId) {
             
             args.requireTotalCount = false;
             args.skip = loadOptions.skip || 0;
-            args.take = loadOptions.take || 50;
-
+            args.take = loadOptions.take || 100;
+           
             $.ajax({
                 url: WEB_API_ADDRESS + 'posttransactions/accountId/' + accountId,
                 data: args,
@@ -69,21 +71,20 @@ function LoadTransactionGrid(accountId) {
 
             return deferred.promise();
         }
+
     });
 
     $('.gridcontainer').dxDataGrid({
         columns: columns,
         key: 'Id',
         remoteOperations: { paging: true, filtering: true, sorting: true, grouping: false, groupPaging: true, summary: false, groupPaging: true },
-        dataSource: {
-            store: gridData
-        },
+        dataSource: gridData,
         filterRow: {
             visible: true,
             showOperationChooser: false
         },
         paging: {
-            pageSize: 50
+            pageSize: 5
         },
         pager: {
             showPageSizeSelector: true,
