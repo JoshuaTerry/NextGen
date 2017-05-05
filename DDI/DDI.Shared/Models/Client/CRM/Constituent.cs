@@ -1,5 +1,6 @@
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Enums.INV;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.INV;
@@ -219,6 +220,15 @@ namespace DDI.Shared.Models.Client.CRM
             get
             {
                 return InvestorStatus.ActiveInvestor;
+            }
+        }
+
+        [NotMapped]
+        public string InvestorStatusDescription
+        {
+            get
+            {
+                return EnumHelper.GetDescription(InvestorStatus);
             }
         }
 

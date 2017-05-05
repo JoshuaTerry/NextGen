@@ -648,7 +648,7 @@
                                 <label>Status: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStatus" disabled="disabled"/>
+                                <input type="text" class="InvestorStatusDescription" disabled="disabled"/>
                             </div>
                         </div>
 
