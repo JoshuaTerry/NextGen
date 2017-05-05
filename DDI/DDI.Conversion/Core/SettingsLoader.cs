@@ -10,6 +10,8 @@ using DDI.Data;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Models;
+using DDI.Business.Core;
+using DDI.Shared;
 
 namespace DDI.Conversion.Core
 {    
@@ -19,7 +21,8 @@ namespace DDI.Conversion.Core
         {
             Users = 990001,
             Codes,
-            NoteCategories
+            NoteCategories,
+            Configuration,
         }
 
         // nacodes.record-cd sets - these are the ones that are being imported here.        
@@ -38,6 +41,7 @@ namespace DDI.Conversion.Core
             RunConversion(ConversionMethod.Users, () => LoadUsers(InputFile.DDI_User));
             RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.CRM_NACodes));
             RunConversion(ConversionMethod.NoteCategories, () => LoadNoteCategories(InputFile.CRM_NoteCategory));
+            RunConversion(ConversionMethod.Configuration, () => LoadConfiguration(InputFile.DDI_Settings));
 
         }
 
@@ -159,6 +163,40 @@ namespace DDI.Conversion.Core
                 }
                 context.SaveChanges();
             }
-        }    
+        }
+
+        private void LoadConfiguration(string filename)
+        {
+            var bl = new ConfigurationLogic();
+
+            IUnitOfWork uow = bl.UnitOfWork;
+
+            using (var importer = CreateFileImporter(_ddiDirectory, filename, typeof(ConversionMethod)))
+            {
+                while (importer.GetNextRow())
+                {
+                    CoreConfiguration config = bl.GetConfiguration<CoreConfiguration>();
+
+                    config.ClientName = importer.GetString(0);
+                    config.ClientCode = importer.GetString(1);
+
+                    bool useBusinessDate = importer.GetBool(3);
+                    if (useBusinessDate)
+                    {
+                        config.BusinessDate = importer.GetDate(4);
+                    }
+                    else
+                    {
+                        config.BusinessDate = null;
+                    }
+
+                    config.BusinessUnitLabel = importer.GetString(6);
+
+                    bl.SaveConfiguration(config);
+                    break;
+                }
+            }
+        }
+
     }
 }

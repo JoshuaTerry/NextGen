@@ -232,6 +232,7 @@
     <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
     <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
     <Compile Include="Controllers\Core\CustomFieldsController.cs" />
+    <Compile Include="Controllers\Core\ConfigurationController.cs" />
     <Compile Include="Controllers\Core\EnvironmentController.cs" />
     <Compile Include="Controllers\Core\FileStorageController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
