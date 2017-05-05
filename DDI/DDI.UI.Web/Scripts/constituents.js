@@ -1072,12 +1072,13 @@ function LoadRelationshipData(data, modal) {
 
 function LoadInvestmentsGrid() {
     var columns = [
-    { 
-        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+    {
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: "",
+            calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'InvestmentId', visible: false },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
