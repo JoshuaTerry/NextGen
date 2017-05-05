@@ -10,6 +10,30 @@
 
     <br />
 
+    <div class="accountsegmentscontainer">
+        <h2>AccountSegments</h2>
+        <br />
+
+        <div class="inlinecontainer">
+            <span class="accountsegment1">
+                <span class="summarysegmentprompt">
+                    <label class="segment1prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="group1dropdown" />
+                    <a href="#" title="" class="editgroup1 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment1text"></label>
+            </span>
+    </div>
+
+
+
+    </div>
+
     <div class="inlinecontainer">
         <span class="summaryleftprompts">
             <label>GL Account: </label>
@@ -147,7 +171,7 @@
                 <a href="#" title="" class="browseclosingaccount editbuttoninline"></a>
             </span>
             <span class="summaryrightinput">
-                <label> Accumulated Revenue</label>
+                <label> (Accumulated Revenue)</label>
             </span>
         </span>
     </div>

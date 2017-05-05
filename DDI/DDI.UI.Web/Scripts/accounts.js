@@ -3,8 +3,8 @@
     //LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
     $('#summary-tab').click(function () {
-        LoadSummaryTab('');    // test new
-        //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
+        //LoadSummaryTab('');    // test new
+        LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
     });
 
 });
@@ -54,7 +54,7 @@ function LoadSummaryTab(AccountId) {
                 $('.accountgroup2').css('visibility', 'hidden');
                 $('.accountgroup3').css('visibility', 'hidden');
                 $('.accountgroup4').css('visibility', 'hidden');
-                levels = data.Data.AccountGroupLevels;
+                var levels = data.Data.AccountGroupLevels;
                 if (levels > 0){
                     $('.accountgroup1').css('visibility', 'visible');
                     $('.group1prompt').html(data.Data.AccountGroup1Title);
@@ -81,10 +81,11 @@ function LoadSummaryTab(AccountId) {
                     $('.group4prompt').html(data.Data.AccountGroup4Title);
                 }
 
-                if (addMode = true) {
+                if (AccountId === null) {
                     LoadGroupDropDown(1, '');
                 }
                 else {
+                    $('.accountsegmentscontainer').hide();
                     RetrieveAccountSummaryData(AccountId, levels);
                 }
 
@@ -100,38 +101,38 @@ function RetrieveAccountSummaryData(AccountId, levels) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
-                $('.AccountNumber').val(data.data.AccountNumber);
-                $('.Name').val(data.data.Name);
+                $('.AccountNumber').val(data.Data.AccountNumber);
+                $('.Name').val(data.Data.Name);
                 $('.IsActive').prop('checked', (data.Data.IsActive === 1 ? true : false));
-                if (levels > 0) {
-                    $('.group1dropdown').val(data.data.Group1Id);
-                }
-                if (levels > 1) {
-                    $('.group2dropdown').val(data.data.Group2Id);
-                }
-                if (levels > 2) {
-                    $('.group3dropdown').val(data.data.Group3Id);
-                }
-                if (levels > 3) {
-                    $('.group4dropdown').val(data.data.Group4Id);
-                }
-                $('.IsNormallyDebit').val(data.data.IsNormallyDebit);
-                $('.BeginningBalance').val(data.data.BeginningBalance);
-                //$('.Activity').val(data.data.Activity);
-                //$('.EndingBalance').val(data.data.EndingBalance);
+                //if (levels > 0) {
+                //    $('.group1dropdown').val(data.Data.Group1Id);
+                //}
+                //if (levels > 1) {
+                //    $('.group2dropdown').val(data.Data.Group2Id);
+                //}
+                //if (levels > 2) {
+                //    $('.group3dropdown').val(data.Data.Group3Id);
+                //}
+                //if (levels > 3) {
+                //    $('.group4dropdown').val(data.Data.Group4Id);
+                //}
+                $('.IsNormallyDebit').val(data.Data.IsNormallyDebit);
+                $('.BeginningBalance').val(data.Data.BeginningBalance);
+                //$('.Activity').val(data.Data.Activity);
+                //$('.EndingBalance').val(data.Data.EndingBalance);
 
                 FormatFields();
                 if (levels > 0) {
-                    LoadGroupDropDown(1, data.data.Group1Id)
+                    LoadGroupDropDown(1, null, data.Data.Group1Id)
                 }
                 if (levels > 1) {
-                    LoadGroupDropDown(2, data.data.Group2Id)
+                    LoadGroupDropDown(2, data.Data.Group1Id, data.Data.Group2Id)
                 }
                 if (levels > 2) {
-                    LoadGroupDropDown(3, data.data.Group3Id)
+                    LoadGroupDropDown(3, data.Data.Group2Id, data.Data.Group3Id)
                 }
                 if (levels > 3) {
-                    LoadGroupDropDown(4, data.data.Group4Id)
+                    LoadGroupDropDown(4, data.Data.Group3Id, data.Data.Group4Id)
                 }
             }
         }
@@ -140,13 +141,13 @@ function RetrieveAccountSummaryData(AccountId, levels) {
 
 }
 
-function LoadGroupDropDown(level, parentId) {
+function LoadGroupDropDown(level, parentId, initialId) {
     var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
     if (parentId === '') {
-        PopulateDropDown('.group' + level + 'dropdown', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '');
+        PopulateDropDown('.group' + level + 'dropdown', 'fiscalyears/' + fiscalYearId + '/AccountGroups', initialId);
     }
     else {
-        PopulateDropDown('.group' + level + 'dropdown', 'AccountGroups/' + parentId + '/parent', '');
+        PopulateDropDown('.group' + level + 'dropdown', 'AccountGroups/' + parentId + '/parent', initialId);
     }
 }
 

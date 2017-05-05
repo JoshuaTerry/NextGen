@@ -15,10 +15,12 @@ span.summaryrightinput input,
 span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmentinput input select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmenttext {width: 70%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentinput select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmenttext label {width: 70%; display: inline-block; margin: 5px 0 5px 0}
 
 div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-right: 1%; margin-top: 1%;}
+
+div.invisible {display: none;}
 
 
 
