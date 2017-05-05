@@ -7,6 +7,7 @@
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\glaccountselection.js"></script>
 
 </asp:Content>
 

@@ -25,11 +25,24 @@ namespace DDI.WebApi.Controllers.GL
             {
                 c => c.FundSegment, 
                 c => c.ClosingExpenseAccount,
+                c => c.FundBalanceAccount,
+                c => c.ClosingRevenueAccount
+            };
+        }
+
+        protected override Expression<Func<Fund, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Fund, object>>[]
+            {
+                c => c.FundSegment,
+                c => c.ClosingExpenseAccount,
+                c => c.FundBalanceAccount,
+                c => c.ClosingRevenueAccount
             };
         }
 
 
-    [HttpGet]
+        [HttpGet]
     [Route("api/v1/fund", Name = RouteNames.Fund)]
     public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
     {
@@ -64,28 +77,6 @@ namespace DDI.WebApi.Controllers.GL
             return InternalServerError();
         }
      }
-        [HttpGet]
-        [Route("api/v1/fund/{fiscalyearid}/fiscalyear/FundSegment")]
-        public IHttpActionResult GetByFiscalYearbysegment(Guid fiscalyearid, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid);
-                //if (result == null)
-                //{
-                //    NotFound();
-                //}
-
-                //return Ok(result);
-                return FinalizeResponse(result, "", search, fields);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                return InternalServerError();
-            }
-        }
 
         [Authorize]
     [HttpPost]
