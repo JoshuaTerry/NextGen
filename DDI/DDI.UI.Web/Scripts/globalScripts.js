@@ -34,10 +34,23 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        auth_token = null;
+        $.ajax({
+            type: 'POST',
+            url: 'Login.aspx/Logout',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function () {
+                sessionStorage.removeItem(AUTH_TOKEN_KEY);
+                auth_token = null;
 
-        location.href = "/Login.aspx";
+                location.href = "/Login.aspx";
+            },
+            error: function (error) {
+                var err = error;
+            }
+        });
+
+        
     });
 
     $('.utilitynav').click(function (e) {
@@ -78,9 +91,11 @@ function LoadDefaultAuthToken() {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (data) {
-                sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+                if (data.d) {
+                    sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
 
-                location.href = "/Default.aspx";
+                    location.href = "/Default.aspx";
+                }
             },
             error: function (error) {
                 var err = error;

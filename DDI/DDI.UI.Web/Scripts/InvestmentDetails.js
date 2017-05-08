@@ -90,7 +90,7 @@ function DisplayInvestmentData() {
 
                     var date = FormatJSONDate(display);
 
-                    $(classname).text(date);
+                    $(classname).val(date);
                 }
 
             }

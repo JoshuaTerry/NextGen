@@ -374,7 +374,7 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.organizationSection').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
