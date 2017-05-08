@@ -3348,13 +3348,13 @@ function LoadFundAccountingSectionSettings() {
     $(selectfiscalyearname).appendTo(selectfiscalyeargroup);
     $(selectfiscalyeargroup).appendTo(container);
 
-    var selectfundgroup = $('<div>').addClass('twocolumn');
+    var selectfundgroup = $('<div>');
     var selectfundname = $('<label>').text('Fund: ');
     $('<select>').addClass('selectfund').appendTo(selectfundname);
     $(selectfundname).appendTo(selectfundgroup);
     $(selectfundgroup).appendTo(container);
 
-    var selectfundbalanceaccountgroup = $('<div>').addClass('threecolumn');
+    var selectfundbalanceaccountgroup = $('<div>');
     var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
     $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
     var selectaccumlatedrevenuename = $('<label>').text('Accumlated Revenue ');
@@ -3363,9 +3363,9 @@ function LoadFundAccountingSectionSettings() {
     $(selectfundbalanceaccountgroup).appendTo(container);
 
 
-    var selectclosingrevenueaccountgroup = $('<div>').addClass('twocolumn');
+    var selectclosingrevenueaccountgroup = $('<div>');
     var selectclosingrevenueaccountname = $('<label>').text('Closing Revenue Account: ');
-    $('<select>').addClass('selectclosingrevenueaccount').appendTo(selectclosingrevenueaccountname);
+    $('<div>').addClass('selectclosingrevenueaccount').appendTo(selectclosingrevenueaccountname);
     var selectaccumlatedrevenuename = $('<label>').text('Accumlated Revenue ');
     $(selectclosingrevenueaccountname).appendTo(selectclosingrevenueaccountgroup);
     $(selectaccumlatedrevenuename).appendTo(selectclosingrevenueaccountgroup);
@@ -3373,30 +3373,55 @@ function LoadFundAccountingSectionSettings() {
 
     var selectclosingexpenseaccountgroup = $('<div>').addClass('twocolumn');
     var selectclosingexpenseaccountname = $('<label>').text('Closing Expense Account: ');
-    $('<select>').addClass('selectclosingexpenseaccount').appendTo(selectclosingexpenseaccountname);
+    $('<div>').addClass('selectclosingexpenseaccount').appendTo(selectclosingexpenseaccountname);
     var selectaccumlatedrevenuename = $('<label>').text('Accumlated Revenue ');
     $(selectclosingexpenseaccountname).appendTo(selectclosingexpenseaccountgroup);
     $(selectaccumlatedrevenuename).appendTo(selectclosingexpenseaccountgroup);
     $(selectclosingexpenseaccountgroup).appendTo(container);
+
+    var fiscalyearid = '';
 
     MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnit.Id, null, function (data) {
         var ledger = data.Data[0];
         $('.FundLedgerId').text(ledger.Code);
         if (data && data.Data) {
 
-            PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + ledger.Id, '', '', ledger.DefaultFiscalYearId, null, PopulateFundFromFiscalYear(ledger.DefaultFiscalYearId));
+            PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + ledger.Id, '', '', ledger.DefaultFiscalYearId, null, function () {
 
-            $('.selectfiscalyear').unbind('change');
+                fiscalyearid = ledger.DefaultFiscalYearId;
 
-            $('.selectfiscalyear').change(function (e) {
+            var businessduecolumns = [
+                { dataField: 'Id', width: '0px' },
+                { dataField: 'OffsettingBusinessUnit.Code', caption: 'Business Unit' },
+                { dataField: 'FromAccount.AccountNumber', caption: 'Due From Account' },
+                { dataField: 'FromAccount.Name', caption: 'Description' },
+                { dataField: 'ToAccount.AccountNumber', caption: 'Due To Account' },
+                { dataField: 'ToAccount.Name', caption: 'Description' }
+            ];
+                //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
+
+            LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', '', null, '',
+            '', '.businessunitduemodal', 250, true, false, false, null);
+
+
+                PopulateFundFromFiscalYear(ledger.DefaultFiscalYearId)
+            });
+
+            $('.selectfund').unbind('change');
+
+            $('.selectfund').change(function (e) {
 
                 e.preventDefault();
 
                 fiscalyearid = $('.selectfiscalyear').val();
 
                 GLAccountSelector('.selectfundbalanceaccount', ledger.Id, fiscalyearid);
+                GLAccountSelector('.selectclosingrevenueaccount', ledger.Id, fiscalyearid);
+                GLAccountSelector('.selectclosingexpenseaccount', ledger.Id, fiscalyearid);
 
                 //PopulateFundFromFiscalYear(fiscalyearid);
+
+         
 
             });
 
@@ -3417,16 +3442,7 @@ function LoadFundAccountingSectionSettings() {
     var header = $('<h1>').text('Business Unit Due From/Due to Accounts ').appendTo($(accordion));
     $(businessunitdue).appendTo($(accordion));
 
-    var businessduecolumns = [
-              { dataField: 'Id', width: '0px' },
-              { dataField: 'Code', caption: 'Fund' },
-              { dataField: 'Name', caption: 'Due From Account' },
-              { dataField: 'IsActive', caption: 'Description' },
-              { dataField: 'Name', caption: 'Due To Account' },
-             { dataField: 'Name', caption: 'Description' }
-    ];
-    //LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'businessunitdues?fields=all', 'businessunitdues', null, 'businessdue-',
-    //    '.businessunitduemodal', '.businessunitduemodal', 250, true, false, false, null);
+
     
     var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordion));
     $(funddue).appendTo($(accordion));
@@ -3439,14 +3455,14 @@ function LoadFundAccountingSectionSettings() {
               { dataField: 'Name', caption: 'Due To Account' },
              { dataField: 'Name', caption: 'Description' }
     ];
-    //LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, 'fundduescontainer?fields=all', 'funddues', null, 'funddue-',
-    //    '.fundduemodal', '.fundduemodal', 250, true, false, false, null);
+    LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, '', 'funddues', null, 'funddue-',
+        '.fundduemodal', '.fundduemodal', 250, true, false, false, null);
 
 
     $(accordion).appendTo($('.contentcontainer'));
 
 
-    //LoadAccordions();
+    LoadAccordions();
 
      // a change here for demo purposes, can be removed later.
     // something here
@@ -3460,6 +3476,7 @@ function PopulateFundFromFiscalYear(fiscalyearid) {
     PopulateDropDown('.selectfund', 'fund/' + fiscalyearid + '/fiscalyear', '', '', '',  function (data) {
 
         fundid = $('.selectfund').val();
+
 
         
         // fund balance
