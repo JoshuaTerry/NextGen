@@ -85,6 +85,21 @@ namespace DDI.Business.CRM
             return nameLine1;
         }
 
+        /// <summary>
+        /// Get the formatted primary address for a constituent.
+        /// </summary>
+        public string GetFormattedPrimaryAddress(Constituent constituent)
+        {
+            if (constituent != null)
+            {
+                ConstituentAddress constituentAddress = UnitOfWork.GetReference(constituent, p => p.ConstituentAddresses).FirstOrDefault(p => p.IsPrimary);
+                if (constituentAddress != null)
+                {
+                    return UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(constituentAddress, p => p.Address)).Replace("\n", ", ");
+                }
+            }
+            return string.Empty;
+        }
 
         /// <summary>
         /// Get the sort name for a constituent (e.g. Last First Middle)

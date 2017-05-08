@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="..\..\Scripts\accounts.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\glaccountselection.js"></script>
     <link rel="stylesheet" href="../../../CSS/accounts.css" />
 
 </asp:Content>

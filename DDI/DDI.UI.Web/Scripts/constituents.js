@@ -223,7 +223,7 @@ function DisplayConstituentData() {
 
                     var date = FormatJSONDate(value);
 
-                    $(classname).text(date);
+                    $(classname).val(date);
                 }
 
             }
@@ -240,6 +240,8 @@ function DisplayConstituentData() {
         DisplayConstituentSideBar();
 
         DisplayConstituentType();
+
+        GetNoteAlerts();
 
         GenerateContactInfoSection();
 
@@ -1023,7 +1025,7 @@ function LoadRelationshipsGrid() {
 function EditRelationship(id) {
     var constituentId = $('.hidconstituentid').val();
 
-    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 250, LoadRelationshipsTab);
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 500, LoadRelationshipsTab);
 }
 
 function NewRelationshipModal() {
@@ -1070,12 +1072,13 @@ function LoadRelationshipData(data, modal) {
 
 function LoadInvestmentsGrid() {
     var columns = [
-    { 
-        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+    {
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: "",
+            calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'InvestmentId', visible: false },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {

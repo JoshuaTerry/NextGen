@@ -7,13 +7,15 @@ div.accounts div.tabscontainer { width: 100%; }
 /* gl summary widths*/
 
 span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 6px; }
-span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
 span.summaryleftinput input,
 span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
 span.summaryleftinputwide input {width: 55%; display: inline-block; margin: 5px 0 5px 0}
+
+span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
 span.summaryrightinput input,
 span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
+
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
 span.summarysegmentinput select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
 span.summarysegmenttext label {width: 70%; display: inline-block; margin: 5px 0 5px 0}

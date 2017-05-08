@@ -1,4 +1,5 @@
 using DDI.Shared.Enums.INV;
+using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.CRM;
@@ -29,6 +30,7 @@ namespace DDI.Shared.Models.Client.INV
         public Guid? InvestmentId { get; set; }
 
         public InvestmentRelationshipType InvestmentRelationshipType { get; set; }
+
 
 
         #endregion

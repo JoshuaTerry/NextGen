@@ -11,8 +11,7 @@
     <br />
 
     <div class="accountsegmentscontainer">
-        <h2>AccountSegments</h2>
-        <br />
+        <h2>Account Segments</h2><br />
 
         <div class="inlinecontainer">
             <span class="accountsegment1">
@@ -162,18 +161,16 @@
     <br />
 
     <div class="inlinecontainer">
-        <span class="closingaccountgroup">
-            <span class="summaryleftprompts">
+        <div class="closingaccountgroup">
+            <div class="summaryleftprompts">
                 <label>Closing Account: </label>
-            </span>
-            <span class="summaryleftinput">
-                <input type="text" class="ClosingAccount"/>
-                <a href="#" title="" class="browseclosingaccount editbuttoninline"></a>
-            </span>
-            <span class="summaryrightinput">
+            </div>
+            <div class="closingaccountcontainer">
+            </div>
+            <div class="summaryrightinput">
                 <label> (Accumulated Revenue)</label>
-            </span>
-        </span>
+            </div>
+        </div>
     </div>
 
 
