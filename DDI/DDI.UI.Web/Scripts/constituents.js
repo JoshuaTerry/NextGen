@@ -1078,7 +1078,7 @@ function LoadInvestmentsGrid() {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', visible: false },
+    { dataField: 'Investment.Id', width: '0px' },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
@@ -1110,10 +1110,10 @@ function GetRelationshipType(type) {
     return typeDesc;
 }
 
-function CallInvestmentDetail(id) {
+function CallInvestmentDetail(investmentid) {
 
-    if (id) {
-        sessionStorage.setItem("investmentid", id);
+    if (investmentid) {
+        sessionStorage.setItem("investmentid", investmentid);
         location.href = "../INV/InvestmentDetails.aspx";
     }
 

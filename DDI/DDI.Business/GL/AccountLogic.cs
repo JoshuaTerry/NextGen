@@ -893,6 +893,9 @@ namespace DDI.Business.GL
                 priorBalance = row.PriorEndingBalance;
             }
 
+            var activityTotal = summary.Detail.Sum(p => p.Activity);
+            var finalEndingBalance = summary.Detail.OrderBy(p => p.PeriodNumber).Last().EndingBalance;
+
             return summary;
         }
         		
