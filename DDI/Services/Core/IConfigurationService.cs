@@ -1,4 +1,5 @@
-﻿using DDI.Shared;
+﻿using System;
+using DDI.Shared;
 using DDI.Shared.Enums;
 
 namespace DDI.Services
@@ -6,5 +7,6 @@ namespace DDI.Services
     public interface IConfigurationService
     {
         IDataResponse GetConfiguration(ModuleType moduleType);
+        IDataResponse<DateTime> GetBusinessDate();
     }
 }

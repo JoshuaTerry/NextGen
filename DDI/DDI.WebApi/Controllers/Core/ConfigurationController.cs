@@ -30,7 +30,7 @@ namespace DDI.WebApi.Controllers.General
             _logger = LoggerManager.GetLogger(typeof(ConfigurationController));
         }
 
-    public ConfigurationController() : this(new ConfigurationService()) { }
+        public ConfigurationController() : this(new ConfigurationService()) { }
         
         #endregion Public Constructors
 
@@ -52,6 +52,23 @@ namespace DDI.WebApi.Controllers.General
             catch(Exception ex)
             {
                 _logger.LogError(ex.ToString());
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/businessdate", Name = RouteNames.BusinessDate)]
+        public IHttpActionResult Get()
+        {
+            try
+            {
+                var response = _service.GetBusinessDate();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }

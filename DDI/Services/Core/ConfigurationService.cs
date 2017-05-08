@@ -75,6 +75,23 @@ namespace DDI.Services
             return response;
         }
 
+        /// <summary>
+        /// Get the business date for the client.
+        /// </summary>
+        public IDataResponse<DateTime> GetBusinessDate()
+        {
+            DateTime businessDate = DateTime.Now.Date;
+
+            CoreConfiguration config = _logic.GetConfiguration<CoreConfiguration>();
+
+            if (config != null && config.UseBusinessDate && config.BusinessDate.HasValue)
+            {
+                businessDate = config.BusinessDate.Value;
+            }
+
+            return new DataResponse<DateTime>() { Data = businessDate };
+        }
+
 
         #endregion Public Methods
 

@@ -227,7 +227,6 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
-    <Compile Include="Controllers\Core\BusinessDateController.cs" />
     <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
     <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
