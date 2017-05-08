@@ -1078,7 +1078,7 @@ function LoadInvestmentsGrid() {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', visible: false },
+    { dataField: 'InvestmentId', width: '0px' },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
