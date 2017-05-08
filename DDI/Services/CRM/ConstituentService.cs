@@ -212,11 +212,15 @@ namespace DDI.Services
             var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
             var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
 
-            var formattedAddress = UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(address, p => p.Address));
-            var sb = new StringBuilder();
-            sb.Append(formattedAddress + "\n");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Address: ");
+            sb.Append(primaryaddress.AddressLine1 + "\n");
+            sb.Append(primaryaddress.PostalCode + " ");
+            sb.Append(primaryaddress.City + ", ");
+            sb.Append(state + "\n");
 
             var primaryContactInfo = constituent.ContactInfo.Where(ci => ci.IsPreferred);
+
             foreach (ContactInfo info in primaryContactInfo)
             {
                 var contactType = UnitOfWork.GetById<ContactType>(info.ContactTypeId.Value);
