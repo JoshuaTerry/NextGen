@@ -11,25 +11,169 @@
     <br />
 
     <div class="accountsegmentscontainer">
-        <h2>Account Segments</h2><br />
+      <fieldset>
+        <legend>Account Segments:</legend>
 
-        <div class="inlinecontainer">
+        <div class="inlinecontainer segmentgroup1">
             <span class="accountsegment1">
                 <span class="summarysegmentprompt">
                     <label class="segment1prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="group1dropdown" />
-                    <a href="#" title="" class="editgroup1 editbuttoninline"></a>
+                    <select class="segment1dropdown" />
+                    <a href="#" title="" class="editsegment1 editbuttoninline"></a>
                 </span>
             </span>
 
             <span class="summarysegmenttext">
                 <label class="segment1text"></label>
             </span>
-    </div>
+        </div>
 
+        <div class="inlinecontainer segmentgroup2">
+            <span class="accountsegment2">
+                <span class="summarysegmentprompt">
+                    <label class="segment2prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment2dropdown" />
+                    <a href="#" title="" class="editsegment2 editbuttoninline"></a>
+                </span>
+            </span>
 
+            <span class="summarysegmenttext">
+                <label class="segment2text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup3">
+            <span class="accountsegment3">
+                <span class="summarysegmentprompt">
+                    <label class="segment3prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment3dropdown" />
+                    <a href="#" title="" class="editsegment3 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment3text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup4">
+            <span class="accountsegment4">
+                <span class="summarysegmentprompt">
+                    <label class="segment4prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment4dropdown" />
+                    <a href="#" title="" class="editsegment4 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment4text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup5">
+            <span class="accountsegment5">
+                <span class="summarysegmentprompt">
+                    <label class="segment5prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment5dropdown" />
+                    <a href="#" title="" class="editsegment5 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment5text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup6">
+            <span class="accountsegment6">
+                <span class="summarysegmentprompt">
+                    <label class="segment6prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment6dropdown" />
+                    <a href="#" title="" class="editsegment6 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment6text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup7">
+            <span class="accountsegment7">
+                <span class="summarysegmentprompt">
+                    <label class="segment7prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment7dropdown" />
+                    <a href="#" title="" class="editsegment7 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment7text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup8">
+            <span class="accountsegment8">
+                <span class="summarysegmentprompt">
+                    <label class="segment8prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment8dropdown" />
+                    <a href="#" title="" class="editsegment8 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment8text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup9">
+            <span class="accountsegment9">
+                <span class="summarysegmentprompt">
+                    <label class="segment9prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment9dropdown" />
+                    <a href="#" title="" class="editsegment9 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment9text"></label>
+            </span>
+        </div>
+
+        <div class="inlinecontainer segmentgroup10">
+            <span class="accountsegment10">
+                <span class="summarysegmentprompt">
+                    <label class="segment10prompt"></label>
+                </span>
+                <span class="summarysegmentinput">
+                    <select class="segment10dropdown" />
+                    <a href="#" title="" class="editsegment10 editbuttoninline"></a>
+                </span>
+            </span>
+
+            <span class="summarysegmenttext">
+                <label class="segment10text"></label>
+            </span>
+        </div>
+      </fieldset>
 
     </div>
 

@@ -15,7 +15,7 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETALL = RouteNames.FiscalYear + RouteNames.Segment + RouteVerbs.Get;
         private const string ROUTENAME_GETALLFORPARENT = RouteNames.FiscalYear + RouteNames.Segment + RouteNames.SegmentChildren + RouteVerbs.Get;
 
-        protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)}";
+        protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)},{nameof(Segment.DisplayName)}";
 
         protected new ISegmentService Service => (ISegmentService)base.Service;
 

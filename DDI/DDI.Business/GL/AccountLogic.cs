@@ -874,6 +874,7 @@ namespace DDI.Business.GL
             // Generate all other calculated columns
             decimal balance = 0m;
             decimal priorBalance = 0m;
+            decimal activityTotal = 0;
 
             foreach (var row in detail.OrderBy(p => p.PeriodNumber))
             {
@@ -891,7 +892,11 @@ namespace DDI.Business.GL
 
                 balance = row.EndingBalance;
                 priorBalance = row.PriorEndingBalance;
+                activityTotal += row.Activity;
             }
+
+            summary.ActivityTotal = activityTotal;
+            summary.FinalEndingBalance = balance;
 
             return summary;
         }

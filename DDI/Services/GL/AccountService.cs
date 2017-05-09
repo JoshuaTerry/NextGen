@@ -18,8 +18,6 @@ namespace DDI.Services.GL
             Account account = UnitOfWork.GetById<Account>(accountId, p => p.FiscalYear.Ledger, p => p.Budgets);
 
             var activity = UnitOfWork.GetBusinessLogic<AccountLogic>().GetAccountActivity(account);
-            var activityTotal = activity.Detail.Sum(p => p.Activity);
-            var finalEndingBalance = activity.Detail.OrderBy(p => p.PeriodNumber).Last().EndingBalance;
             return new DataResponse<AccountActivitySummary>(activity);
         }
 
