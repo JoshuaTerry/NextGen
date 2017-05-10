@@ -9,6 +9,7 @@ using DDI.Search.Models;
 using DDI.Shared;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
@@ -52,26 +53,179 @@ namespace DDI.Business.CRM
             }
         }
                 
-        public Constituent ConvertAgeRange (Constituent constituent)
+        /// <summary>
+        /// Calculate age range and birth year.
+        /// </summary>
+        public void CalculateAgeRange(Constituent constituent)
         {
-            if (constituent.BirthYearFrom.HasValue)
+            DateTime? dt1 = null, dt2 = null;
+            DateTime baseDate = DateTime.Now;
+            int baseYear = baseDate.Year;
+            int baseMonth = baseDate.Month;
+            int baseDay = baseDate.Day;
+
+            constituent.BirthYear = null;
+            constituent.AgeFrom = constituent.AgeTo = null;
+
+            if (constituent.BirthDateType == BirthDateType.FullDate && constituent.BirthMonth > 0 && constituent.BirthDay > 0 && constituent.BirthYearFrom > 0)
             {
-                constituent.BirthYearFrom = DateTime.Now.Year - constituent.BirthYearFrom;
+                dt1 = dt2 = DateHelper.GetNearestValidDate(constituent.BirthMonth.Value, constituent.BirthDay.Value, constituent.BirthYearFrom.Value, false);
+                constituent.BirthYear = dt1.Value.Year;
             }
 
-            if (constituent.BirthYearTo.HasValue)
+            else if (constituent.BirthYearFrom > 0 && constituent.BirthYearTo > 0)
             {
-                constituent.BirthYearTo = DateTime.Now.Year - constituent.BirthYearTo;
+                int day = constituent.BirthDay > 0 ? constituent.BirthDay.Value : 1;
+                int month = constituent.BirthMonth > 0 ? constituent.BirthMonth.Value : 1;
+                dt1 = DateHelper.GetNearestValidDate(month, day, constituent.BirthYearFrom.Value, false);
+                dt2 = DateHelper.GetNearestValidDate(month, day, constituent.BirthYearTo.Value, false);
             }
 
-            return constituent;
+            // If birth year from & birth year to are the same, set the (nonmapped) birth year to this value.
+            if (constituent.BirthYear == null && constituent.BirthYearFrom > 0 && constituent.BirthYearFrom == constituent.BirthYearTo)
+            {
+                constituent.BirthYear = constituent.BirthYearFrom;
+            }
+
+            // If either date is null, age range is zero.
+            if (dt1 == null || dt2 == null)
+            {
+                return;
+            }
+
+            // Calculate the age range.
+            constituent.AgeFrom = baseYear - dt2.Value.Year;
+            constituent.AgeTo = baseYear - dt1.Value.Year;
+            if (constituent.AgeFrom > constituent.AgeTo)
+            {
+                int temp = constituent.AgeFrom.Value;
+                constituent.AgeFrom = constituent.AgeTo;
+                constituent.AgeTo = temp;
+            }
+
+            // Adjust age based on month/day
+            if (baseDate.Month < dt1.Value.Month ||
+                    baseDate.Month == dt1.Value.Month && baseDate.Day < dt1.Value.Day)
+            {
+                constituent.AgeFrom--;
+            }
+
+            if (baseDate.Month < dt2.Value.Month ||
+                baseDate.Month == dt2.Value.Month && baseDate.Day < dt2.Value.Day)
+            {
+                constituent.AgeTo--;
+            }
+
+            // Ensure age isn't negative.
+            if (constituent.AgeFrom < 0)
+            {
+                constituent.AgeFrom = 0;
+            }
+            if (constituent.AgeTo < 0)
+            {
+                constituent.AgeTo = 0;
+            }
         }
 
-        public int ConvertAgeRange(int value)
+        /// <summary>
+        /// Valudate and update birth date properties based on (nonmapped) birth year and/or age range properties if non-null.
+        /// </summary>
+        /// <param name="c"></param>
+        public void UpdateBirthDate(Constituent c)
         {
-            value = DateTime.Now.Year - value;
-            return value;
+            DateTime baseDate = DateTime.Now;
+            int baseYear = baseDate.Year;
+            int baseMonth = baseDate.Month;
+            int baseDay = baseDate.Day;
+
+            if (c.BirthMonth > 12 || c.BirthDay < 0)
+            {
+                throw new ValidationException("Birth date month must be between 1 and 12.");
+            }
+
+            if (c.BirthDay > 31 || c.BirthDay < 0)
+            {
+                throw new ValidationException("Birth date day must be between 1 and 31.");
+            }
+
+            if (c.BirthYear < 0 || c.BirthYear > baseYear)
+            {
+                throw new ValidationException("Birth date year is not valid.");
+            }
+
+            if (c.BirthYear > 0)
+            {
+                // Birth year set via API...
+                // Reset the birth year range.
+                c.BirthYearFrom = c.BirthYearTo = null;
+
+                if (c.BirthDay > 0 && c.BirthMonth > 0)
+                {
+                    // Month, day, year specified.  
+                    DateTime date = DateHelper.GetNearestValidDate(c.BirthMonth.Value, c.BirthDay.Value, c.BirthYear.Value, false);
+                    c.BirthMonth = date.Month;
+                    c.BirthDay = date.Day;
+                    c.BirthYear = date.Year;
+                    c.BirthDateType = BirthDateType.FullDate;
+                }
+                else
+                {
+                    c.BirthDateType = BirthDateType.AgeRange;
+                }
+
+                c.BirthYearFrom = c.BirthYearTo = c.BirthYear;
+            }
+            else
+            {
+                // No birth year.
+                c.BirthYear = null;
+
+                if (c.BirthDay > 0 && c.BirthMonth > 0)
+                {
+                    // Use 1980 to adjust birth month & birth day if necessary.  (2/29/1980 is a valid date.)
+                    DateTime date = DateHelper.GetNearestValidDate(c.BirthMonth.Value, c.BirthDay.Value, 1980, false);
+                    c.BirthMonth = date.Month;
+                    c.BirthDay = date.Day;
+                    c.BirthDateType = BirthDateType.MonthDay;
+                }
+                else if (c.AgeFrom > 0 || c.AgeTo > 0)
+                {
+                    c.BirthDateType = BirthDateType.AgeRange;
+                }
+                else
+                {
+                    c.BirthDateType = BirthDateType.None;
+                }
+            }
+
+            // Age range calculation - if an age range was specified and we don't already have a birth year range.
+            if ((c.AgeFrom > 0 || c.AgeTo > 0) && (c.BirthYearFrom == null || c.BirthYearTo == null || c.BirthYearFrom == 0 || c.BirthYearTo == 0))
+            {
+                int year1 = c.AgeTo > 0 ? baseYear - c.AgeTo.Value : 0;
+                int year2 = c.AgeFrom > 0 ? baseYear - c.AgeFrom.Value : 0;
+
+                if (year1 > year2)
+                {
+                    int temp = year1;
+                    year1 = year2;
+                    year2 = temp;
+                }
+
+                if (c.BirthMonth > 0)
+                {
+                    if (c.BirthMonth.Value > baseMonth || (c.BirthMonth.Value == baseMonth && c.BirthDay > 0 && c.BirthDay.Value > baseDay))
+                    {
+                        year1--;
+                        year2--;
+                    }
+                }
+
+                c.BirthYearFrom = year1;
+                c.BirthYearTo = year2;
+            }
         }
+
+
         /// <summary>
         /// Get the formatted name for a constituent.
         /// </summary>
@@ -168,6 +322,7 @@ namespace DDI.Business.CRM
         {
             constituent.AssignPrimaryKey();
             ValidateUniqueConstituentNumber(constituent);
+            UpdateBirthDate(constituent);
             constituent = CalculateConstituentNameProperties(constituent);
             ScheduleUpdateSearchDocument(constituent);
         }

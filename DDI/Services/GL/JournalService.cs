@@ -80,7 +80,7 @@ namespace DDI.Services.GL
         }
 
         /// <summary>
-        /// Override of UpdateFromJToken to handle deleting journal line items where IsDeleted was set to TRUE.
+        /// Override of UpdateFromJObject to handle deleting journal line items where IsDeleted was set to TRUE.
         /// </summary>
         protected override void UpdateFromJObject<T1>(T1 entity, JObject changes) 
         {
