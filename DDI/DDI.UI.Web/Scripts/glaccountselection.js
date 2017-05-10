@@ -41,11 +41,19 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     $(".accountselectionsearch",container).click(function () {
         var grid = $(' .gridContainer .dx-widget', container).length;
        
-        if(grid == 0)
-        {
+        if (grid == 0) {
             LoadGLAccounts(container, ledgerId, fiscalYearId);
         }
-        $(container).find('.gridContainer').show();
+        else{
+            if ( ($(container).find('.gridContainer').css("display") == 'block')){
+                $(container).find('.gridContainer').hide();
+            }
+            else {
+                var key = $(container).find(".hidaccountid").val();
+                $(container).find('.gridContainer').dxDataGrid('instance').selectRows(key);
+                $(container).find('.gridContainer').show();
+            }
+        }
     });
 
     $(".accountnumber:first").focus();
@@ -65,8 +73,8 @@ function CreateGLAccountSelector(container)
         
     $('<input>').attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
     $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
-    $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
     $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
+    $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
 
     glcontrol.appendTo($(container));
 
@@ -108,7 +116,12 @@ function LoadGLAccountGrid(container, data, columns)
     //create grid
     $(container).find(".gridContainer").dxDataGrid({
         columns: $.parseJSON(columns),
-        dataSource: data,
+       
+        dataSource:
+            { 
+                store: data,
+                key: 'AccountId'
+            },
         scrolling: {
             mode: "virtual"
         },
@@ -129,6 +142,21 @@ function LoadGLAccountGrid(container, data, columns)
             }
         }
        
-    });
+    }).dxDataGrid("instance");
+
+}
+
+function LoadSelectedAccount(container, value)
+{
+
+    //Get Account Detail
+    //Select Account from grid and then set values for hidaccountid, accountnumber and accountdescription.
+    MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
+       
+            $(container).find(".accountnumber").val(data.Data.AccountNumber);
+            $(container).find(".hidaccountid").val(data.Data.Id);
+            $(container).find(".accountdescription").text(data.Data.Name)
+        
+    }, null);
 
 }
