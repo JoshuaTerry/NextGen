@@ -374,7 +374,7 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.organizationSection').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
@@ -495,7 +495,7 @@ function LoadEducationGrid() {
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
+        , null, 'ed-', '.educationmodal', '.educationmodal', 550, false, true, false, null);
 
 }
 
@@ -523,7 +523,7 @@ function LoadPaymentPreferencesTable() {
     ];
 
     LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods'
-        , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
+        , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 550, false, true, false, null);
 }
 
 /* End Payment Preference Section */
@@ -1072,12 +1072,13 @@ function LoadRelationshipData(data, modal) {
 
 function LoadInvestmentsGrid() {
     var columns = [
-    { 
-        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+    {
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: "",
+            calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'InvestmentId', visible: false },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
