@@ -71,7 +71,7 @@ function NewNoteDetailsModal() {
 
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelnotesmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -192,7 +192,7 @@ function EditNoteDetails(id) {
 
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelnotesmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -250,14 +250,14 @@ function LoadNoteDetails(id) {
 
         $('.nd-Title').val(data.Data.Title),
         $('.nd-Description').val(data.Data.Text),
-        $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
-        $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
+        $('.nd-AlertStartDate').val(FormatJSONDate(data.Data.AlertStartDate)),
+        $('.nd-AlertEndDate').val(FormatJSONDate(data.Data.AlertEndDate)),
         $('.nd-ContactDate').val(data.Data.ContactDate),
         $('.nd-ContactDate').val(data.Data.NoteCode),
         $('.nd-CreatedBy').text(data.Data.CreatedBy),
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
-        $('.nd-CreatedOn').text(data.Data.CreatedOn),
-        $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
+        $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
+        $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
 
 
     }, function (xhr, status, err) {

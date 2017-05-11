@@ -1311,7 +1311,7 @@
 
             <div class="modalbuttons">
                 <input type="button" class="savenotedetails" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotesmodal">Cancel</a>
             </div>
 
         </div>
