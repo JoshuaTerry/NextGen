@@ -60,7 +60,7 @@ function LoadSummaryTab(AccountId) {
     var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 
     accountId = AccountId;
-    var container = '.closingaccountcontainer';
+    var container = $('.closingaccountcontainer');
     GLAccountSelector(container, ledgerId, fiscalYearId);
 
     // retrieve ledger settings
