@@ -374,7 +374,6 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.organizationSection').hide();
         $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
@@ -495,7 +494,6 @@ function LoadEducationGrid() {
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
 
 }
 
@@ -523,7 +521,6 @@ function LoadPaymentPreferencesTable() {
     ];
 
     LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods'
-        , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
 }
 
 /* End Payment Preference Section */
@@ -1078,7 +1075,9 @@ function LoadInvestmentsGrid() {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
+    { dataField: 'InvestmentId', visible: false },
     { dataField: 'InvestmentId', width: '0px' },
+    { dataField: 'Investment.Id', width: '0px' },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
@@ -1110,10 +1109,10 @@ function GetRelationshipType(type) {
     return typeDesc;
 }
 
-function CallInvestmentDetail(id) {
+function CallInvestmentDetail(investmentid) {
 
-    if (id) {
-        sessionStorage.setItem("investmentid", id);
+    if (investmentid) {
+        sessionStorage.setItem("investmentid", investmentid);
         location.href = "../INV/InvestmentDetails.aspx";
     }
 
