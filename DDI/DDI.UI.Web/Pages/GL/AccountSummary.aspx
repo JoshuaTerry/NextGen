@@ -26,7 +26,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment1text"></label>
+                <label class="segment1name"></label>
             </span>
         </div>
 
@@ -42,7 +42,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment2text"></label>
+                <label class="segment2name"></label>
             </span>
         </div>
 
@@ -58,7 +58,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment3text"></label>
+                <label class="segment3name"></label>
             </span>
         </div>
 
@@ -74,7 +74,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment4text"></label>
+                <label class="segment4name"></label>
             </span>
         </div>
 
@@ -90,7 +90,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment5text"></label>
+                <label class="segment5name"></label>
             </span>
         </div>
 
@@ -106,7 +106,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment6text"></label>
+                <label class="segment6name"></label>
             </span>
         </div>
 
@@ -122,7 +122,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment7text"></label>
+                <label class="segment7name"></label>
             </span>
         </div>
 
@@ -138,7 +138,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment8text"></label>
+                <label class="segment8name"></label>
             </span>
         </div>
 
@@ -154,7 +154,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment9text"></label>
+                <label class="segment9name"></label>
             </span>
         </div>
 
@@ -170,7 +170,7 @@
             </span>
 
             <span class="summarysegmenttext">
-                <label class="segment10text"></label>
+                <label class="segment10name"></label>
             </span>
         </div>
       </fieldset>

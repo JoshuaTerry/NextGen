@@ -147,7 +147,7 @@ function PopulateDropDownData(element, route, defaultText, defaultValue, selecte
 
             if (completecallback) {
 
-                completecallback(data);
+                completecallback(element, data);
 
             }
 
@@ -159,7 +159,7 @@ function PopulateDropDownData(element, route, defaultText, defaultValue, selecte
         $(element).unbind('change');
 
         $(element).change(function () {
-            changecallback(data);
+            changecallback(element);
         });
 
     }
