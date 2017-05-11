@@ -1,16 +1,23 @@
-﻿using DDI.Services.Search;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Http;
+using DDI.Services;
+using DDI.Services.Search;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq.Expressions;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     public class EducationsController : GenericController<Education>
     {
-        [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
+
+        public EducationsController()
+            : base(new EducationService())
+        {
+        }
+
         protected override Expression<Func<Education, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<Education, object>>[]
@@ -20,6 +27,13 @@ namespace DDI.WebApi.Controllers.CRM
             };
         }
 
+        protected override string FieldsForList => $"{nameof(Education.Id)},{nameof(Education.Major)},{nameof(Education.DegreeOther)},{nameof(Education.SchoolOther)},{nameof(Education.StartDate)},{nameof(Education.EndDate)}";
+
+        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Education>().IncludeAll().Exclude(p => p.Constituent);
+
+        protected override string FieldsForAll => FieldsForSingle;
+
+        [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
         [HttpGet]
         [Route("api/v1/educations", Name = RouteNames.Education)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -27,6 +41,7 @@ namespace DDI.WebApi.Controllers.CRM
             return base.GetAll(RouteNames.Education, limit, offset, orderBy, fields);
         }
 
+        [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
         [HttpGet]
         [Route("api/v1/educations/{id}", Name = RouteNames.Education + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
@@ -61,7 +76,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/educations/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/educations", Name = RouteNames.Constituent + RouteNames.Education)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/educations", Name = RouteNames.Constituent + RouteNames.Education)]
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try

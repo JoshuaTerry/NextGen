@@ -4,12 +4,19 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class DoingBusinessAsController : GenericController<DoingBusinessAs>
     {
+        protected override string FieldsForList => $"{nameof(DoingBusinessAs.Id)},{nameof(DoingBusinessAs.DisplayName)}";
+
+        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<DoingBusinessAs>().IncludeAll().Exclude(p => p.Constituent);
+
+        protected override string FieldsForAll => FieldsForSingle;
+
         [HttpGet]
         [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

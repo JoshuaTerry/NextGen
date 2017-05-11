@@ -3,12 +3,14 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ContactCategoryController : GenericController<ContactCategory>
     {
+
         protected override string FieldsForList => FieldLists.CodeFields + ",SectionTitle";
 
         [HttpGet]

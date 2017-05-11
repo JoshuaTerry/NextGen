@@ -10,6 +10,8 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class AlternateIdsController : GenericController<AlternateId>
     {
+        protected override string FieldsForList => $"{nameof(AlternateId.Id)},{nameof(AlternateId.Name)}";
+
         [HttpGet]
         [Route("api/v1/alternateids", Name = RouteNames.AlternateId)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
