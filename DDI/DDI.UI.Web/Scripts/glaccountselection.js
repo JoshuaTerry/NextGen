@@ -59,9 +59,9 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
 
         //if ($(container).find(".hidaccountid").val().length > 0)
         //{
-        //     var key = [];
-        //     key.push({ Id: $(container).find(".hidaccountid").val()});
-        //     $(container).find('.gridContainer').dxDataGrid('instance').selectRows(key);
+        //    var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance')
+        //    var key = $(container).find(".hidaccountid").val();
+        //    dataGrid.selectRows(key);
         //}
     });
 
@@ -107,7 +107,7 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
                    
             columns.push("AccountNumber");
             columns.push("Description");
-            columns.push({ dataField: "Id", visible: false });
+            columns.push({ dataField: "Id"});
            
             MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
@@ -151,9 +151,15 @@ function LoadGLAccountGrid(container, data, columns)
                 $(container).find(".accountnumber").focus();
                 $(container).find(".gridContainer").hide();
             }
+        },
+        onContentReady: function () {
+            if ($(container).find(".hidaccountid").val().length > 0) {
+                var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance')
+                var key = $(container).find(".hidaccountid").val();
+                dataGrid.selectRows(key);
+            }
         }
-       
-    }).dxDataGrid("instance");
+    });
 
 }
 
