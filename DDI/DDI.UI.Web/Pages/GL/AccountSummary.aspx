@@ -2,6 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="..\..\CSS\accounts.css" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
+        });
+
+    </script>
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -309,8 +318,9 @@
             <div class="summaryleftprompts">
                 <label>Closing Account: </label>
             </div>
-            <div class="closingaccountcontainer">
-            </div>
+
+            <div class="closingaccountcontainer"></div>
+
             <div class="summaryrightinput">
                 <label> (Accumulated Revenue)</label>
             </div>

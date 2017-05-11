@@ -1,12 +1,7 @@
 ﻿$(document).ready(function () {
 
     //LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
-
-    $('#summary-tab').click(function () {
-        //LoadSummaryTab('');    // test new
-        LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
-    });
-
+    
     $('#activity-and-budget-tab').click(function (e) {
 
         e.preventDefault();
