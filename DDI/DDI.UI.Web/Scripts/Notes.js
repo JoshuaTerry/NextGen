@@ -79,6 +79,11 @@ function NewNoteDetailsModal() {
 
         ClearNoteTopicTagBox(modal);
 
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
     });
 
     $('.savenotedetails').unbind('click');
@@ -200,6 +205,11 @@ function EditNoteDetails(id) {
 
         ClearNoteTopicTagBox(modal);
 
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
     });
 
     $('.savenotedetails').unbind('click');
@@ -253,7 +263,7 @@ function LoadNoteDetails(id) {
         $('.nd-AlertStartDate').val(FormatJSONDate(data.Data.AlertStartDate)),
         $('.nd-AlertEndDate').val(FormatJSONDate(data.Data.AlertEndDate)),
         $('.nd-ContactDate').val(data.Data.ContactDate),
-        $('.nd-ContactDate').val(data.Data.NoteCode),
+        $('.nd-NoteCode').val(data.Data.NoteCode),
         $('.nd-CreatedBy').text(data.Data.CreatedBy),
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
         $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
