@@ -7,6 +7,8 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared.Helpers;
+using System.Linq;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -16,6 +18,16 @@ namespace DDI.WebApi.Controllers.General
         #region Public Properties
 
         protected new INoteService Service => (INoteService)base.Service;
+
+        protected override string FieldsForList => $"{nameof(Note.Id)},{nameof(Note.DisplayName)}";
+
+        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Note>()
+            .IncludeAll()
+            .Exclude(p => p.Category)
+            .Exclude(p => p.ContactMethod)
+            .Exclude(p => p.NoteCode)
+            .Include(p => p.NoteTopics.First().Id)
+            .Include(p => p.NoteTopics.First().DisplayName);
 
         #endregion Public Properties
 
@@ -35,29 +47,7 @@ namespace DDI.WebApi.Controllers.General
 
         #region Public Methods
 
-        [HttpPost]
-        [Route("api/v1/notes/{id}/notetopics")]
-        public IHttpActionResult AddTopicsToNote(Guid id, [FromBody] JObject topic)
-        {
-            try
-            {
-                var note = Service.GetById(id).Data;
 
-                if (note == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.AddTopicsToNote(note, topic);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.ToString());
-                return InternalServerError(ex);
-            }
-        }
 
         [HttpDelete]
         [Route("api/v1/notes/{id}", Name = RouteNames.Note + RouteVerbs.Delete)]
@@ -115,41 +105,42 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/{parentid}/notes")]
-        public IHttpActionResult GetByEntityId(Guid parentId)
+        [Route("api/v1/entity/{parentid}/notes", Name = RouteNames.Entity + RouteNames.Note)]
+        public IHttpActionResult GetByEntityId(Guid parentId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId);
-
-            if (result == null)
+            try
             {
-                return NotFound();
-            }
+                var search = new PageableSearch(offset, limit, orderBy);
 
-            if(!result.IsSuccessful)
+                var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId, search);
+
+                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note, search, ConvertFieldList(fields, FieldsForList));
+            }
+            catch (Exception ex)
             {
-                return InternalServerError();
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
-
-            return Ok(result);
         }
 
         [HttpGet]
-        [Route("api/v1/notealert/{parentid}")]
+        [Route("api/v1/entity/{parentid}/notes/alert", Name = RouteNames.Entity + RouteNames.Note + RouteNames.Alert)]
         public IHttpActionResult GetNotesWithinAlertDateRange(Guid parentId)
         {
-            var result = Service.GetNotesInAlertDateRange(parentId);
-
-            if (result == null)
+            try
             {
-                return NotFound();
+                var search = PageableSearch.Max;
+                var result = Service.GetNotesInAlertDateRange(parentId);
+
+                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note + RouteNames.Alert, search,
+                    $"{nameof(Note.Id)},{nameof(Note.AlertStartDate)},{nameof(Note.AlertEndDate)},{nameof(Note.Title)}");
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
 
-            if (!result.IsSuccessful)
-            {
-                return InternalServerError();
-            }
-
-            return Ok(result);
         }
 
         [HttpPatch]
@@ -164,30 +155,6 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult Post([FromBody] Note entityToSave)
         {
             return base.Post(entityToSave);
-        }
-
-        [HttpDelete]
-        [Route("api/v1/notes/{id}/notetopics/{topicid}")]
-        public IHttpActionResult RemoveTopicFromNote(Guid id, Guid topicId)
-        {
-            try
-            {
-                var note = Service.GetById(id).Data;
-
-                if (note == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.RemoveTopicFromNote(note, topicId);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.ToString());
-                return InternalServerError(ex);
-            }
         }
 
         #endregion Public Methods
