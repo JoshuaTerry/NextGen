@@ -43,17 +43,26 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
        
         if (grid == 0) {
             LoadGLAccounts(container, ledgerId, fiscalYearId);
+            $(container).find('.gridContainer').show();
         }
         else{
             if ( ($(container).find('.gridContainer').css("display") == 'block')){
                 $(container).find('.gridContainer').hide();
             }
             else {
-                var key = $(container).find(".hidaccountid").val();
-                $(container).find('.gridContainer').dxDataGrid('instance').selectRows(key);
+                
+               
+               
                 $(container).find('.gridContainer').show();
             }
         }
+
+        //if ($(container).find(".hidaccountid").val().length > 0)
+        //{
+        //     var key = [];
+        //     key.push({ Id: $(container).find(".hidaccountid").val()});
+        //     $(container).find('.gridContainer').dxDataGrid('instance').selectRows(key);
+        //}
     });
 
     $(".accountnumber:first").focus();
@@ -89,15 +98,17 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
         function (data) {
 
             var numberOfAccountGroups = data.Data.AccountGroupLevels
-            var columns = "[";
+            var columns = [];
 
             for(var i = 0; i < numberOfAccountGroups; i++)
             {
-                columns = columns + '{ "dataField": "Level' + (i +1) + '", "caption": "", "groupIndex": "' + i +'" },'
+                columns.push({ dataField: "Level" + (i +1) , caption: "",  groupIndex:i });
             }
                    
-            columns = columns +  '"AccountNumber", "Description"]';
-
+            columns.push("AccountNumber");
+            columns.push("Description");
+            columns.push({ dataField: "Id", visible: false });
+           
             MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
                 function (data) {
@@ -115,12 +126,12 @@ function LoadGLAccountGrid(container, data, columns)
 {
     //create grid
     $(container).find(".gridContainer").dxDataGrid({
-        columns: $.parseJSON(columns),
+        columns: columns,
        
         dataSource:
             { 
                 store: data,
-                key: 'AccountId'
+                key: 'Id'
             },
         scrolling: {
             mode: "virtual"
@@ -149,14 +160,12 @@ function LoadGLAccountGrid(container, data, columns)
 function LoadSelectedAccount(container, value)
 {
 
-    //Get Account Detail
-    //Select Account from grid and then set values for hidaccountid, accountnumber and accountdescription.
     MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
        
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);
-            $(container).find(".accountdescription").text(data.Data.Name)
-        
+            $(container).find(".accountdescription").text(data.Data.Name);
+           
     }, null);
 
 }
