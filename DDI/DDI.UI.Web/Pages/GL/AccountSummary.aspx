@@ -6,11 +6,11 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
+            LoadSummaryTab('');    // test new
+            //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
         });
 
     </script>
-
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -19,9 +19,22 @@
 
     <br />
 
+    <div class="inlinecontainer">
+        <span class="summaryleftprompts">
+            <label>GL Account: </label>
+        </span>
+        <span class="summaryleftinput">
+            <input type="text" class="AccountNumber readonly" readonly="read-only" />
+            <a href="#" title="" class="editaccount editbuttoninline"></a>
+        </span>
+    </div>
+
+    <br />
+    <br />
+
     <div class="accountsegmentscontainer">
       <fieldset>
-        <legend>Account Segments:</legend>
+        <legend>Account Segments: </legend>
 
         <div class="inlinecontainer segmentgroup1">
             <span class="accountsegment1">
@@ -34,9 +47,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment1name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment1code segmentcode"></label>
+                <label class="segment1name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup2">
@@ -50,9 +65,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment2name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment2code segmentcode"></label>
+                <label class="segment2name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup3">
@@ -66,9 +83,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment3name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment3code segmentcode"></label>
+                <label class="segment3name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup4">
@@ -82,9 +101,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment4name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment4code segmentcode"></label>
+                <label class="segment4name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup5">
@@ -98,9 +119,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment5name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment5code segmentcode"></label>
+                <label class="segment5name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup6">
@@ -114,9 +137,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment6name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment6code segmentcode"></label>
+                <label class="segment5name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup7">
@@ -130,9 +155,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment7name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment7code segmentcode"></label>
+                <label class="segment7name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup8">
@@ -146,9 +173,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment8name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment8code segmentcode"></label>
+                <label class="segment8name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup9">
@@ -162,9 +191,11 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment9name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment9code segmentcode"></label>
+                <label class="segment9name readonly"></label>
             </span>
+            <br />
         </div>
 
         <div class="inlinecontainer segmentgroup10">
@@ -178,8 +209,9 @@
                 </span>
             </span>
 
-            <span class="summarysegmenttext">
-                <label class="segment10name"></label>
+            <span class="summarysegmentdisplay">
+                <label class="segment10code segmentcode"></label>
+                <label class="segment10name readonly"></label>
             </span>
         </div>
       </fieldset>
@@ -188,19 +220,19 @@
 
     <div class="inlinecontainer">
         <span class="summaryleftprompts">
-            <label>GL Account: </label>
+            <label>Description: </label>
         </span>
         <span class="summaryleftinput">
-            <input type="text" class="AccountNumber readonly" readonly="read-only" />
-            <a href="#" title="" class="editaccount editbuttoninline"></a>
+            <input type="text" class="Name" />
+            <a href="#" title="" class="editbuttoninline invisible"></a>
         </span>
 
-        <span>
+        <span class="activeadjust">
             <span class="summaryrightprompts">
                 <label >Active: </label>
             </span>
             <span class="summaryrightcheckbox">
-                <input type="checkbox" class="IsActive" />
+                <input type="checkbox" class="IsActive activeadjust" />
             </span>
         </span>
     </div>
@@ -208,18 +240,7 @@
     <br />
 
     <div class="inlinecontainer">
-        <span class="summaryleftprompts">
-            <label>Description: </label>
-        </span>
-        <span class="summaryleftinputwide">
-            <input type="text" class="Name" />
-        </span>
-    </div>
-
-    <br />
-
-    <div class="inlinecontainer">
-        <span class="accountgroup1">
+        <span class="accountgroup1 accountgroup">
             <span class="summaryleftprompts">
                 <label class="group1prompt"></label>
             </span>
@@ -245,7 +266,7 @@
     <br />
 
     <div class="inlinecontainer">
-        <span class="accountgroup2">
+        <span class="accountgroup2 accountgroup">
             <span class="summaryleftprompts">
                 <label class="group2prompt"></label>
             </span>
@@ -268,7 +289,7 @@
     <br />
 
     <div class="inlinecontainer">
-        <span class="accountgroup3">
+        <span class="accountgroup3 accountgroup">
             <span class="summaryleftprompts">
                 <label class="group3prompt"></label>
             </span>
@@ -291,7 +312,7 @@
     <br />
 
     <div class="inlinecontainer">
-        <span class="accountgroup4">
+        <span class="accountgroup4 accountgroup">
             <span class="summaryleftprompts">
                 <label class="group4prompt"></label>
             </span>
@@ -318,9 +339,8 @@
             <div class="summaryleftprompts">
                 <label>Closing Account: </label>
             </div>
-
-            <div class="closingaccountcontainer"></div>
-
+            <div class="closingaccountcontainer">
+            </div>
             <div class="summaryrightinput">
                 <label> (Accumulated Revenue)</label>
             </div>
@@ -330,3 +350,6 @@
 
 
 </asp:Content>
+
+
+

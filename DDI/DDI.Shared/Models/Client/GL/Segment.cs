@@ -40,6 +40,6 @@ namespace DDI.Shared.Models.Client.GL
 
         public ICollection<AccountSegment> AccountSegments { get; set; }
 
-        public override string DisplayName => Code;
+        public override string DisplayName => (Code + ": " + Name);
     }
 }
