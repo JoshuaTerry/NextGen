@@ -3,8 +3,8 @@
     //LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
     $('#summary-tab').click(function () {
-        LoadSummaryTab('');    // test new
-        //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
+        //LoadSummaryTab('');    // test new
+        LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
     });
 
     $('#activity-and-budget-tab').click(function (e) {
@@ -60,7 +60,7 @@ function LoadSummaryTab(AccountId) {
     var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 
     accountId = AccountId;
-    var container = $('.closingaccountcontainer');
+    var container = '.closingaccountcontainer';
     GLAccountSelector(container, ledgerId, fiscalYearId);
 
     // retrieve ledger settings
@@ -112,7 +112,7 @@ function LoadSummaryTab(AccountId) {
                     $('segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Abbreviation);
                     if (AccountId === null || AccountId === '') {
                         if (i = 1) {
-                            LoadSegmentDropDown(i, '', null);
+                            LoadSegmentDropDown(1, '', null);
                         }
                     }
                 }
@@ -189,7 +189,7 @@ function RetrieveAccountSummaryData() {
 
 function LoadGroupDropDown(groupLevel, parentId, initialId) {
     var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
-    if (parentId === '') {
+    if (parentId === '' || parentId === null) {
         PopulateDropDown('.group' + groupLevel + 'dropdown', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId);
     }
     else {
@@ -223,26 +223,30 @@ function SegmentChange(element) {
     var dropdownlevel = element.substring(8, 9);
     var segmentName;
     var segmentIsLinked;
-    var segmentVal = $(element).val();   
-    for (i = 0; i <= segmentData.length - 1 ; i++) {
-        if (segmentVal === segmentData[dropdownlevel - 1][i].Id) {
-            segmentName = segmentData[dropdownlevel - 1][i].Name;
-            if (dropdownlevel < segmentLevels) {
-                segmentIsLinked = segmentLevelArray[dropdownlevel].IsLinked;
-            }
-        }
+    var segmentVal = $(element).val();
+    var i = $(element).prop('selectedIndex')
+    //for (i = 0; i <= segmentData.length - 1 ; i++) {
+    //    if (segmentVal === segmentData[dropdownlevel - 1][i].Id) {
+    //        segmentName = segmentData[dropdownlevel - 1][i].Name;
+    //        if (dropdownlevel < segmentLevels) {
+    //            segmentIsLinked = segmentLevelArray[dropdownlevel].IsLinked;
+    //        }
+    //    }
+    //}
+    segmentName = segmentData[dropdownlevel - 1][i].Name;
+    if (dropdownlevel < segmentLevels) {
+        segmentIsLinked = segmentLevelArray[dropdownlevel].IsLinked;
     }
+
     $('.segment' + dropdownlevel + 'name') = segmentName;
 
-
+    //populate next segment level dropdown 
     if (dropdownlevel < $('.hidSegmentLevels').val) {
-        if (segmentIsLinked === 1) {
-            if (segmentVal === null) {
-                PopulateDropDownData('.segment' + (dropdownlevel + 1) + 'dropdown', 'fiscalyears/' + fiscalYearId + '/segments/level/' + (dropdownlevel + 1), '', null, null, SegmentChange, StoreSegmentData);
-            }
-            else {
-                PopulateDropDownData('.segment' + (dropdownlevel + 1) + 'dropdown', 'fiscalyears/' + fiscalYearId + '/segments/' + segmentVal + '/level/' + (dropdownlevel + 1), '', null, null, SegmentChange, StoreSegmentData);
-            }
+        if (segmentIsLinked === 1 && segmentVal != null) {
+            PopulateDropDownData('.segment' + (dropdownlevel + 1) + 'dropdown', 'fiscalyears/' + fiscalYearId + '/segments/level/' + (dropdownlevel + 1), '', null, null, SegmentChange, StoreSegmentData);
+        }
+        else {
+            PopulateDropDownData('.segment' + (dropdownlevel + 1) + 'dropdown', 'fiscalyears/' + fiscalYearId + '/segments/' + segmentVal + '/level/' + (dropdownlevel + 1), '', null, null, SegmentChange, StoreSegmentData);
         }
 
     }
