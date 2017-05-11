@@ -720,6 +720,8 @@ function GetAutoZipData(container, prefix) {
                 if (data.Data.State) {
                     $(container).find('.autocountry').val(data.Data.State.CountryId);
 
+                    // PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback)
+
                     PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 
                     PopulateDropDown('.autocounty', 'counties/?stateid=' + data.Data.State.Id, '', '', data.Data.County.Id);
