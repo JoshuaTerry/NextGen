@@ -5,10 +5,10 @@
 });
 
 function LoadTransactionGrid(accountId) {
-    debugger;
+    
     var columns = [
-        { dataField: 'MonthYear', caption: 'Month/Year', groupIndex: 0 },
         { dataField: 'Id', visible: false },
+        { dataField: 'MonthYear', caption: 'Month/Year'},
         { dataField: 'TransactionNumber', caption: 'Trans #' },
         { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date'},
         { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision: 2, format: 'currency', allowGrouping: false },
@@ -26,10 +26,11 @@ function LoadTransactionGrid(accountId) {
        
     ];
 
-    var gridData = new DevExpress.data.DataSource({
+    var gridData = new DevExpress.data.CustomStore({
         
         key: 'Id',
         load: function (loadOptions) {
+            debugger;
             var deferred = $.Deferred(),
                 args = {};
 
@@ -44,9 +45,22 @@ function LoadTransactionGrid(accountId) {
            
             //Getting group options
             if (loadOptions.group) {
-                args.args = JSON.stringify(loadOptions.group);
+                args.group = JSON.stringify(loadOptions.group);
             }
+            //else {
+            //    var group = [];
+            //    var groupcolumn = {
+            //        selector :"MonthYear",
+            //        groupInterval : null,
+            //        desc : false,
+            //    }
+            //    group.push(groupcolumn);
+            //    args.group = (JSON.stringify(group));
+            //}
 
+            if (loadOptions.remotegrouping) {
+                args.remotegrouping = loadOptions.remotegrouping;
+            }
             if (loadOptions.searchValue) {
                 args.searchValue = loadOptions.searchValue;
                 args.searchOperation = loadOptions.searchOperation;
@@ -64,31 +78,42 @@ function LoadTransactionGrid(accountId) {
                     deferred.resolve({data: result, totalCount: result.length });
                 },
                 error: function (result) {
+                    debugger;
                     deferred.reject("Data Loading Error");
                 },
                
             });
 
             return deferred.promise();
-        }
+        },
+        group: [
+            { selector: "MonthYear", groupInterval: 100, desc: false },
+        ]
+
+        
 
     });
 
     $('.gridcontainer').dxDataGrid({
         columns: columns,
         key: 'Id',
-        remoteOperations: { paging: true, filtering: true, sorting: true, grouping: false, groupPaging: true, summary: false, groupPaging: true },
-        dataSource: gridData,
+        remoteOperations: {  grouping: true, groupPaging: true, paging: true, filtering: true, sorting: true, summary: false },
+        dataSource: {
+            store: gridData,
+            group: "MonthYear"
+        },
         filterRow: {
             visible: true,
             showOperationChooser: false
         },
         paging: {
-            pageSize: 5
+            enabled: true,
+            pageSize: 50
         },
         pager: {
+            visible: true,
             showPageSizeSelector: true,
-            allowedPageSizes: [25, 50, 100],
+            allowedPageSizes: [50, 100, 200],
             showInfo: true
         },
         groupPanel: {
@@ -101,9 +126,7 @@ function LoadTransactionGrid(accountId) {
         scrolling: {
             mode: "virtual"
         },
-        sortByGroupSummaryInfo: [{
-            summaryItem: "count"
-        }],
+       
         summary: {
             groupItems: [{
                 column: "MonthYear",
@@ -111,7 +134,6 @@ function LoadTransactionGrid(accountId) {
                 displayFormat: "count: {0}",
             }]
         }
-
-        
+     
     });
 }

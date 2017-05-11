@@ -48,6 +48,7 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? TransactionId { get; set; }        
         [ForeignKey(nameof(TransactionId))]
         public Transaction Transaction { get; set; }
+        [NotMapped]
         public string MonthYear
         {
             get

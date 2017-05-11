@@ -36,7 +36,7 @@ namespace DDI.WebApi.Controllers.GL
             catch (Exception ex)
             {
                 base.Logger.LogError(ex);
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, InternalServerError(new Exception(ex.Message)));
             }
         }
         [HttpGet]
