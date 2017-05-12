@@ -1104,7 +1104,7 @@ function LoadRelationshipData(data, modal) {
 function LoadInvestmentsGrid() {
     var columns = [
     {
-        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: "",
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'desc', sortIndex: 0, caption: "",
             calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
