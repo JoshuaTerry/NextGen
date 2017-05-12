@@ -17,10 +17,10 @@ span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px
 
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
 span.summarysegmentinput select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmenttext label {width: 70%; display: inline-block; margin: 5px 0 5px 0}
-.segmentcode {width: 1px; visibility: hidden;}
+.segmentcode {display: none;}
+.segmentname {margin-left: 5px;}
 
-div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-right: 1%; margin-top: 1%;}
+div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
 
 .accountsegmentscontainer {display: none;}
 .activeadjust {margin: 0 0 0 -3px;}

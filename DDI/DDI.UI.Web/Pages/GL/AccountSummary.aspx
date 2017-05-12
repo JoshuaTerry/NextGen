@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/TabbedContent.Master" AutoEventWireup="true" CodeBehind="AccountSummary.aspx.cs" Inherits="DDI.UI.Web.Pages.GL.AccountSummary" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="..\..\CSS\accounts.css" />
 
     <script type="text/javascript">
 
@@ -49,7 +48,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment1code segmentcode"></label>
-                <label class="segment1name readonly"></label>
+                <label class="segment1name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -67,7 +66,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment2code segmentcode"></label>
-                <label class="segment2name readonly"></label>
+                <label class="segment2name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -85,7 +84,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment3code segmentcode"></label>
-                <label class="segment3name readonly"></label>
+                <label class="segment3name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -103,7 +102,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment4code segmentcode"></label>
-                <label class="segment4name readonly"></label>
+                <label class="segment4name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -121,7 +120,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment5code segmentcode"></label>
-                <label class="segment5name readonly"></label>
+                <label class="segment5name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -139,7 +138,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment6code segmentcode"></label>
-                <label class="segment5name readonly"></label>
+                <label class="segment5name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -157,7 +156,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment7code segmentcode"></label>
-                <label class="segment7name readonly"></label>
+                <label class="segment7name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -175,7 +174,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment8code segmentcode"></label>
-                <label class="segment8name readonly"></label>
+                <label class="segment8name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -193,7 +192,7 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment9code segmentcode"></label>
-                <label class="segment9name readonly"></label>
+                <label class="segment9name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -211,19 +210,20 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment10code segmentcode"></label>
-                <label class="segment10name readonly"></label>
+                <label class="segment10name segmentname readonly"></label>
             </span>
         </div>
       </fieldset>
 
     </div>
 
+    <div class="editcontainer">
     <div class="inlinecontainer">
         <span class="summaryleftprompts">
             <label>Description: </label>
         </span>
         <span class="summaryleftinput">
-            <input type="text" class="Name" />
+            <input type="text" class="editable Name" />
             <a href="#" title="" class="editbuttoninline invisible"></a>
         </span>
 
@@ -232,7 +232,7 @@
                 <label >Active: </label>
             </span>
             <span class="summaryrightcheckbox">
-                <input type="checkbox" class="IsActive activeadjust" />
+                <input type="checkbox" class="editable IsActive activeadjust" />
             </span>
         </span>
     </div>
@@ -245,7 +245,7 @@
                 <label class="group1prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="group1dropdown" />
+                <select class="editable group1dropdown" />
                 <a href="#" title="" class="editgroup1 editbuttoninline"></a>
             </span>
         </span>
@@ -271,7 +271,7 @@
                 <label class="group2prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="group2dropdown" />
+                <select class="editable group2dropdown" />
                 <a href="#" title="" class="editgroup2 editbuttoninline"></a>
             </span>
         </span>
@@ -281,7 +281,7 @@
                 <label>Beginning Balance: </label>
             </span>
             <span class="summaryrightinput">
-                <input type="text" class="BeginningBalance money justright" disabled="disabled"" />
+                <input type="text" class="editable BeginningBalance money justright" disabled="disabled"" />
             </span>
         </span>
     </div>
@@ -294,7 +294,7 @@
                 <label class="group3prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="group3dropdown" />
+                <select class="editable group3dropdown" />
                 <a href="#" title="" class="editgroup3 editbuttoninline"></a>
             </span>
         </span>
@@ -317,7 +317,7 @@
                 <label class="group4prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="group4dropdown" />
+                <select class="editable group4dropdown" />
                 <a href="#" title="" class="editgroup4 editbuttoninline"></a>
             </span>
         </span>
@@ -345,6 +345,13 @@
                 <label> (Accumulated Revenue)</label>
             </div>
         </div>
+    </div>
+
+    <div class="modalbuttons">
+        <input type="button" class="savenewaccount" value="Save" />
+        <a href="#" class="cancelmodal">Cancel</a>
+    </div>
+
     </div>
 
 

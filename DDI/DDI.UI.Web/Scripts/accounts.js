@@ -63,6 +63,30 @@ function LoadSummaryTab(AccountId) {
     var container = $('.closingaccountcontainer');
     GLAccountSelector(container, ledgerId, fiscalYearId);
 
+    if (AccountId === '' || AccountId === null) {
+        $('.savenewaccount').unbind('click');
+
+        $('.savenewaccount').click(function () {
+            SaveNewConstituent(modal, false);
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+
+    }
+    else {
+
+        CreateEditControls();
+
+        SetupEditControls();
+    }
+
     // retrieve ledger settings
     MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
 
@@ -104,7 +128,7 @@ function LoadSummaryTab(AccountId) {
 
                 for (i = 1; i <= segmentLevels; i++) {
                     $('.segmentgroup' + i).show();
-                    $('.segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Abbreviation + ':');
+                    $('.segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Name + ':');
                 }
                 RetrieveSegmentLevels(ledgerId)
 
