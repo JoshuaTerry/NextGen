@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using DDI.Shared.Helpers;
+using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -24,6 +26,15 @@ namespace DDI.WebApi.Controllers.CRM
         public PaymentMethodController(PaymentMethodService service, IConstituentService constituentService) : base(service)
         {            
             ConstituentService = constituentService;
+        }
+
+        protected override string FieldsForList => $"{nameof(PaymentMethod.Id)},{nameof(PaymentMethod.DisplayName)}";
+
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<PaymentMethod>().IncludeAll().Exclude(p => p.Constituents).Include(p => p.EFTFormat.DisplayName);
+
+        protected override Expression<Func<PaymentMethod, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<PaymentMethod, object>>[] { p => p.EFTFormat };
         }
 
         [HttpGet]
@@ -96,14 +107,14 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/paymentmethods/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/paymentmethods", Name = RouteNames.Constituent + RouteNames.PaymentMethod)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/paymentmethods", Name = RouteNames.Constituent + RouteNames.PaymentMethod)]
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, fields);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

@@ -242,10 +242,10 @@ function GetConstituentTypeImage(name) {
 function ConstituentTypeLayout(category) {
 
     switch (category) {
-        case '0':
+        case 0:
             IndividualLayout();
             break;
-        case '1':
+        case 1:
             NonindividualLayout();
             break;
         default:

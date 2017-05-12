@@ -557,7 +557,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods')
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
 }
 
 /* End Payment Preference Section */

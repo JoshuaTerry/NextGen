@@ -15,9 +15,7 @@ namespace DDI.WebApi.Controllers.General
     {
         protected override string FieldsForList => FieldLists.CodeFields;
 
-        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<NoteTopic>().IncludeAll().Exclude(p => p.Notes);
-
-        protected override string FieldsForAll => FieldsForSingle;
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<NoteTopic>().IncludeAll().Exclude(p => p.Notes);
 
         [HttpGet]
         [Route("api/v1/notetopics", Name = RouteNames.NoteTopic)]

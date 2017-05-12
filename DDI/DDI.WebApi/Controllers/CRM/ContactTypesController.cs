@@ -24,9 +24,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForList => FieldLists.CodeFields;
 
-        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<ContactType>().IncludeAll().Exclude(p => p.ContactCategoryDefaults).Exclude(p => p.ContactCategory.ContactTypes).Exclude(p => p.ContactCategory.DefaultContactType);
-
-        protected override string FieldsForAll => FieldsForSingle;
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<ContactType>().IncludeAll().Exclude(p => p.ContactCategoryDefaults).Exclude(p => p.ContactCategory.ContactTypes).Exclude(p => p.ContactCategory.DefaultContactType);
 
         [HttpGet]
         [Route("api/v1/contacttypes", Name = RouteNames.ContactType)]

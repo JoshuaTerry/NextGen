@@ -29,9 +29,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForList => $"{nameof(Education.Id)},{nameof(Education.Major)},{nameof(Education.DegreeOther)},{nameof(Education.SchoolOther)},{nameof(Education.StartDate)},{nameof(Education.EndDate)}";
 
-        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Education>().IncludeAll().Exclude(p => p.Constituent);
-
-        protected override string FieldsForAll => FieldsForSingle;
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<Education>().IncludeAll().Exclude(p => p.Constituent);
 
         [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
         [HttpGet]

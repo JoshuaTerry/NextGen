@@ -14,9 +14,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected override string FieldsForList => $"{nameof(County.Id)},{nameof(County.DisplayName)}";
 
-        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<County>().IncludeAll().Exclude(p => p.Cities).Include(p => p.State.DisplayName).Include(p => p.State.StateCode);
-
-        protected override string FieldsForAll => FieldsForSingle;
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<County>().IncludeAll().Exclude(p => p.Cities).Include(p => p.State.DisplayName).Include(p => p.State.StateCode);
 
         protected override Expression<Func<County, object>>[] GetDataIncludesForSingle()
         {

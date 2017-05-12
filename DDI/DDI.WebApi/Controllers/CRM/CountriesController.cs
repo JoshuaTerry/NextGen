@@ -22,9 +22,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForList => $"{nameof(Country.Id)},{nameof(Country.DisplayName)}";
 
-        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Country>().IncludeAll().Exclude(p => p.States);
-
-        protected override string FieldsForAll => FieldsForSingle;
+        protected override string FieldsForAll => new PathHelper.FieldListBuilder<Country>().IncludeAll().Exclude(p => p.States);
 
         [HttpGet]
         [Route("api/v1/countries", Name = RouteNames.Country)]
