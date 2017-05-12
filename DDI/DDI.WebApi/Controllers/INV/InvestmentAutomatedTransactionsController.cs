@@ -14,10 +14,16 @@ namespace DDI.WebApi.Controllers.INV
     public class InvestmentAutomatedTransactionsController : GenericController<InvestmentAutomatedTransaction>
     {
 
+        protected override Expression<Func<InvestmentAutomatedTransaction, object>>[] GetDataIncludesForList()
+        {
+            return new Expression<Func<InvestmentAutomatedTransaction, object>>[]
+            {
+                a => a.PaymentMethod
+            };
+        }
+
         InvestmentAutomatedTransactionService _laService = new InvestmentAutomatedTransactionService();
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
-        
-        [HttpGet]
         [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {

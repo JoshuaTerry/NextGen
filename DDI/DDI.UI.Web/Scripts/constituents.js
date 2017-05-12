@@ -374,7 +374,6 @@ function DisplayConstituentType() {
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.organizationSection').hide();
         $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
@@ -494,8 +493,7 @@ function LoadEducationGrid() {
             { dataField: 'Major', caption: 'Major' }
     ];
 
-    LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
+    LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations')
 
 }
 
@@ -522,8 +520,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods'
-        , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods')
 }
 
 /* End Payment Preference Section */
@@ -1073,7 +1070,7 @@ function LoadRelationshipData(data, modal) {
 function LoadInvestmentsGrid() {
     var columns = [
     {
-        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: "",
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'desc', sortIndex: 0, caption: "",
             calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
@@ -1110,10 +1107,10 @@ function GetRelationshipType(type) {
     return typeDesc;
 }
 
-function CallInvestmentDetail(id) {
+function CallInvestmentDetail(investmentid) {
 
-    if (id) {
-        sessionStorage.setItem("investmentid", id);
+    if (investmentid) {
+        sessionStorage.setItem("investmentid", investmentid);
         location.href = "../INV/InvestmentDetails.aspx";
     }
 

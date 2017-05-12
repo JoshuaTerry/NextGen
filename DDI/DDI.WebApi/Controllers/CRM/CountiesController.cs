@@ -9,9 +9,13 @@ namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class CountiesController : GenericController<County>
-    { 
-        protected new CountyService Service => (CountyService)base.Service; 
-   
+    {
+        public CountiesController()
+            :base(new CountyService())
+        {
+
+        }
+
         #region Public Methods
 
         [HttpGet]
@@ -28,7 +32,7 @@ namespace DDI.WebApi.Controllers.CRM
 
             try
             {
-                var result = Service.GetAll(search);
+                var result = Service.GetAll(fields, search);
 
                 try
                 {

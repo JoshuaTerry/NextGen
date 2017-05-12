@@ -23,7 +23,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public decimal ActivityTotal { get; set; }
         public decimal FinalEndingBalance { get; set; }
-
+        
         public IList<AccountActivityDetail> Detail { get; set; }
 
     }    
