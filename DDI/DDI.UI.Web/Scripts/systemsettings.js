@@ -862,7 +862,6 @@ function LoadContactInformationSectionSettings() {
                     Name: $(modal).find('.conttype-Name').val(),
                     ContactCategoryId: $(modal).find('.conttype-ContactCategoryId').val(),
                     IsAlwaysShown: $(modal).find('.conttype-IsAlwaysShown').prop('checked'),
-                    CanDelete: $(modal).find('.conttype-CanDelete').prop('checked'),
                     IsActive: $(modal).find('.conttype-IsActive').prop('checked')
                 }
 
@@ -1272,7 +1271,6 @@ function LoadContactType(id) {
                 $(modal).find('.conttype-Name').val(data.Data.Name);
                 $(modal).find('.conttype-ContactCategoryId').val(data.Data.ContactCategoryId);
                 $(modal).find('.conttype-IsAlwaysShown').prop('checked', data.Data.IsAlwaysShown);
-                $(modal).find('.conttype-CanDelete').prop('checked', data.Data.CanDelete);
                 $(modal).find('.conttype-IsActive').prop('checked', data.Data.IsActive);
 
                 PopulateDropDown('.conttype-ContactCategoryId', 'contactcategory', '', '', data.Data.ContactCategoryId);
