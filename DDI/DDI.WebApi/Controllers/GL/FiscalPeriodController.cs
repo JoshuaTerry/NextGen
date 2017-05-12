@@ -24,7 +24,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = _service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
+                var result = Service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
 
                 return FinalizeResponse(result, ROUTENAME_GETALLBYYEAR, search, ConvertFieldList(fields, FieldsForList));
             }

@@ -1792,6 +1792,8 @@ function DisplayRegions(level, parentid) {
         route = route + parentid;
     }
 
+    route = route + "?fields=Id,Code,Name,IsActive";
+
     var columns = [
        { dataField: 'Id', width: '0px' },
        { dataField: 'Code', caption: 'Code' },

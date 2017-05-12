@@ -30,7 +30,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForList => $"{nameof(PaymentMethod.Id)},{nameof(PaymentMethod.DisplayName)}";
 
-        protected override string FieldsForAll => new PathHelper.FieldListBuilder<PaymentMethod>().IncludeAll().Exclude(p => p.Constituents).Include(p => p.EFTFormat.DisplayName);
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents).Include(p => p.EFTFormat.DisplayName);
 
         protected override Expression<Func<PaymentMethod, object>>[] GetDataIncludesForSingle()
         {

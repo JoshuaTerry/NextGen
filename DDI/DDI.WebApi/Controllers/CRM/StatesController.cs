@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected override string FieldsForList => $"{nameof(State.Id)},{nameof(State.DisplayName)},{nameof(State.StateCode)}";
 
-        protected override string FieldsForAll => new PathHelper.FieldListBuilder<State>().IncludeAll().Exclude(p => p.Cities).Exclude(p => p.Counties).Include(p => p.Country.DisplayName);
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Cities).Exclude(p => p.Counties).Include(p => p.Country.DisplayName);
 
         protected override Expression<Func<State, object>>[] GetDataIncludesForSingle()
         {
@@ -43,7 +43,7 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = _service.GetAllWhereExpression(fp => fp.CountryId == id, search);
+                var result = Service.GetAllWhereExpression(fp => fp.CountryId == id, search);
 
                 return FinalizeResponse(result, RouteNames.Country + RouteNames.State, search, ConvertFieldList(fields, FieldsForList));
             }

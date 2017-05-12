@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected override string FieldsForList => $"{nameof(DoingBusinessAs.Id)},{nameof(DoingBusinessAs.DisplayName)}";
 
-        protected override string FieldsForAll => new PathHelper.FieldListBuilder<DoingBusinessAs>().IncludeAll().Exclude(p => p.Constituent);
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituent);
 
         [HttpGet]
         [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs)]

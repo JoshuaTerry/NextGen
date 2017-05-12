@@ -29,7 +29,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = _service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search);
+                var result = Service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search);
 
                 return FinalizeResponse(result, ROUTENAME_GETALLBYLEDGER, search, ConvertFieldList(fields, FieldsForList));
             }
@@ -48,7 +48,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = _service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search);
+                var result = Service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search);
 
                 return FinalizeResponse(result, ROUTENAME_GETALLBYUNIT, search, ConvertFieldList(fields, FieldsForList));
             }

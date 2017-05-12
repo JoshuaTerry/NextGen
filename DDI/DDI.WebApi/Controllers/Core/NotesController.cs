@@ -21,7 +21,7 @@ namespace DDI.WebApi.Controllers.General
 
         protected override string FieldsForList => $"{nameof(Note.Id)},{nameof(Note.DisplayName)}";
 
-        protected override string FieldsForAll => new PathHelper.FieldListBuilder<Note>()
+        protected override string FieldsForAll => FieldListBuilder
             .IncludeAll()
             .Exclude(p => p.Category)
             .Exclude(p => p.ContactMethod)
