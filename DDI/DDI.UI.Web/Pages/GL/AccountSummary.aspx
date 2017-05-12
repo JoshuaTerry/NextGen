@@ -18,12 +18,13 @@
 
     <br />
 
+    <div class="accountsummarycontainer">
     <div class="inlinecontainer">
         <span class="summaryleftprompts">
             <label>GL Account: </label>
         </span>
         <span class="summaryleftinput">
-            <input type="text" class="AccountNumber readonly" readonly="read-only" />
+            <input type="text" class="AccountNumber readonly editable" readonly="read-only" />
             <a href="#" title="" class="editaccount editbuttoninline"></a>
         </span>
     </div>
@@ -41,7 +42,7 @@
                     <label class="segment1prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment1dropdown" />
+                    <select class="segment1dropdown segmentselect" />
                     <a href="#" title="" class="editsegment1 editbuttoninline"></a>
                 </span>
             </span>
@@ -59,7 +60,7 @@
                     <label class="segment2prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment2dropdown" />
+                    <select class="segment2dropdown segmentselect" />
                     <a href="#" title="" class="editsegment2 editbuttoninline"></a>
                 </span>
             </span>
@@ -77,7 +78,7 @@
                     <label class="segment3prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment3dropdown" />
+                    <select class="segment3dropdown segmentselect" />
                     <a href="#" title="" class="editsegment3 editbuttoninline"></a>
                 </span>
             </span>
@@ -95,7 +96,7 @@
                     <label class="segment4prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment4dropdown" />
+                    <select class="segment4dropdown segmentselect" />
                     <a href="#" title="" class="editsegment4 editbuttoninline"></a>
                 </span>
             </span>
@@ -113,7 +114,7 @@
                     <label class="segment5prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment5dropdown" />
+                    <select class="segment5dropdown segmentselect" />
                     <a href="#" title="" class="editsegment5 editbuttoninline"></a>
                 </span>
             </span>
@@ -131,7 +132,7 @@
                     <label class="segment6prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment6dropdown" />
+                    <select class="segment6dropdown segmentselect" />
                     <a href="#" title="" class="editsegment6 editbuttoninline"></a>
                 </span>
             </span>
@@ -149,7 +150,7 @@
                     <label class="segment7prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment7dropdown" />
+                    <select class="segment7dropdown segmentselect" />
                     <a href="#" title="" class="editsegment7 editbuttoninline"></a>
                 </span>
             </span>
@@ -167,7 +168,7 @@
                     <label class="segment8prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment8dropdown" />
+                    <select class="segment8dropdown segmentselect" />
                     <a href="#" title="" class="editsegment8 editbuttoninline"></a>
                 </span>
             </span>
@@ -185,7 +186,7 @@
                     <label class="segment9prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment9dropdown" />
+                    <select class="segment9dropdown segmentselect" />
                     <a href="#" title="" class="editsegment9 editbuttoninline"></a>
                 </span>
             </span>
@@ -203,7 +204,7 @@
                     <label class="segment10prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment10dropdown" />
+                    <select class="segment10dropdown segmentselect" />
                     <a href="#" title="" class="editsegment10 editbuttoninline"></a>
                 </span>
             </span>
@@ -217,13 +218,12 @@
 
     </div>
 
-    <div class="editcontainer">
     <div class="inlinecontainer">
         <span class="summaryleftprompts">
             <label>Description: </label>
         </span>
         <span class="summaryleftinput">
-            <input type="text" class="editable Name" />
+            <input type="text" class="Name editable" />
             <a href="#" title="" class="editbuttoninline invisible"></a>
         </span>
 
@@ -232,7 +232,7 @@
                 <label >Active: </label>
             </span>
             <span class="summaryrightcheckbox">
-                <input type="checkbox" class="editable IsActive activeadjust" />
+                <input type="checkbox" class="IsActive editable activeadjust" />
             </span>
         </span>
     </div>
@@ -245,7 +245,7 @@
                 <label class="group1prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="editable group1dropdown" />
+                <select class="Group1Id editable" />
                 <a href="#" title="" class="editgroup1 editbuttoninline"></a>
             </span>
         </span>
@@ -255,7 +255,7 @@
                 <label >Balances Normally: </label>
             </span>
             <span class="summaryrightinput">
-                <select class="IsNormallyDebit">
+                <select class="IsNormallyDebit editable">
                     <option value="0">Credit</option>
                     <option value="1">Debit</option>
                 </select>
@@ -271,7 +271,7 @@
                 <label class="group2prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="editable group2dropdown" />
+                <select class="Group2Id editable" />
                 <a href="#" title="" class="editgroup2 editbuttoninline"></a>
             </span>
         </span>
@@ -281,7 +281,7 @@
                 <label>Beginning Balance: </label>
             </span>
             <span class="summaryrightinput">
-                <input type="text" class="editable BeginningBalance money justright" disabled="disabled"" />
+                <input type="text" class="BeginningBalance editable money justright" disabled="disabled"" />
             </span>
         </span>
     </div>
@@ -294,7 +294,7 @@
                 <label class="group3prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="editable group3dropdown" />
+                <select class="Group3Id editable" />
                 <a href="#" title="" class="editgroup3 editbuttoninline"></a>
             </span>
         </span>
@@ -317,7 +317,7 @@
                 <label class="group4prompt"></label>
             </span>
             <span class="summaryleftinput">
-                <select class="editable group4dropdown" />
+                <select class="Group4Id editable" />
                 <a href="#" title="" class="editgroup4 editbuttoninline"></a>
             </span>
         </span>
@@ -335,7 +335,7 @@
     <br />
 
     <div class="inlinecontainer">
-        <div class="closingaccountgroup">
+        <div class="closingaccountgroup invisible">
             <div class="summaryleftprompts">
                 <label>Closing Account: </label>
             </div>
@@ -347,12 +347,13 @@
         </div>
     </div>
 
-    <div class="modalbuttons">
+    <div class="modalbuttons newaccountbuttons hidebuttons">
         <input type="button" class="savenewaccount" value="Save" />
-        <a href="#" class="cancelmodal">Cancel</a>
+        <a href="#" class="cancelnewaccount">Cancel</a>
     </div>
 
     </div>
+
 
 
 

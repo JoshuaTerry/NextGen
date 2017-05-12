@@ -23,9 +23,11 @@ span.summarysegmentinput select {width: 10%; display: inline-block; margin: 5px 
 div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
 
 .accountsegmentscontainer {display: none;}
+.hidebuttons {display: none;}
 .activeadjust {margin: 0 0 0 -3px;}
 
 .invisible {visibility: hidden;}
+.accountgroup {visibility: hidden;}
 
 
 

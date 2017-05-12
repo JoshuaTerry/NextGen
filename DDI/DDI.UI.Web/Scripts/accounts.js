@@ -50,6 +50,7 @@ var segmentLevelArray = [];
 var segmentLevels;
 var segmentLevel;
 var groupLevels;
+var group1Data = [];
 var accountId;
 var segmentData = [];
 
@@ -60,22 +61,20 @@ function LoadSummaryTab(AccountId) {
     var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 
     accountId = AccountId;
-    var container = $('.closingaccountcontainer');
-    GLAccountSelector(container, ledgerId, fiscalYearId);
+    GLAccountSelector($('.closingaccountcontainer'), ledgerId, fiscalYearId);
+
+    var container = '.accountsummarycontainer';
 
     if (AccountId === '' || AccountId === null) {
+        $('.newaccountbuttons').show();
         $('.savenewaccount').unbind('click');
-
         $('.savenewaccount').click(function () {
-            SaveNewConstituent(modal, false);
+            SaveNewAccount(container);
         });
 
-        $('.cancelmodal').click(function (e) {
-
+        $('.cancelnewaccount').click(function (e) {
             e.preventDefault();
-
-            CloseModal(modal);
-
+            ClearAccountFields(container);
         });
 
 
@@ -97,21 +96,21 @@ function LoadSummaryTab(AccountId) {
                 if (groupLevels > 0) {
                     $('.accountgroup1').css('visibility', 'visible');
                     $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
-                    $('.group1dropdown').change(function () {
+                    $('.Group1Id').change(function () {
                         GroupChange(1);
                     })
                 }
                 if (groupLevels > 1) {
                     $('.accountgroup2').css('visibility', 'visible');
                     $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
-                    $('.group2dropdown').change(function () {
+                    $('.Group2Id').change(function () {
                         GroupChange(2);
                     })
                 }
                 if (groupLevels > 2) {
                     $('.accountgroup3').css('visibility', 'visible');
                     $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
-                    $('.group3dropdown').change(function () {
+                    $('.Group3Id').change(function () {
                         GroupChange(3);
                     })
                 }
@@ -206,17 +205,38 @@ function RetrieveAccountSummaryData() {
 function LoadGroupDropDown(groupLevel, parentId, initialId) {
     var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
     if (parentId === '' || parentId === null) {
-        PopulateDropDown('.group' + groupLevel + 'dropdown', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId);
+        PopulateDropDownData('.Group' + groupLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId, '', StoreGroupData);
     }
     else {
-        PopulateDropDown('.group' + groupLevel + 'dropdown', 'AccountGroups/' + parentId + '/parent', '', '', initialId);
+        PopulateDropDownData('.Group' + groupLevel + 'Id', 'AccountGroups/' + parentId + '/parent', '', '', initialId, '', StoreGroupData);
+    }
+}
+
+// used to retrieve group 1's category later
+function StoreGroupData(element, data) {
+    var dropdownlevel = element.substring(6, 7);
+    if (dropdownlevel === '1') {
+        group1Data = data.Data;
     }
 }
 
 function GroupChange(groupLevel) {
-    var parentVal = $('.group' + groupLevel + 'dropdown').val();
+    var element = $('.Group' + groupLevel + 'Id');
+    var parentVal = element.val();
     if (parentVal != null && parentVal != '') {
-        PopulateDropDown('.group' + (groupLevel + 1) + 'dropdown', 'AccountGroups/' + parentVal + '/parent', '');
+        PopulateDropDown('.Group' + (groupLevel + 1) + 'Id', 'AccountGroups/' + parentVal + '/parent', '');
+    }
+    if (groupLevel === '1') {
+        var i = element.prop('selectedIndex');
+        if (group1Data[i - 1].Category.contains('123')) {
+            $('.BeginningBalance').attr('enabled', true);
+            $('.closingaccountgroup').attr('visibility', 'hidden');
+        }
+        else {
+            $('.BeginningBalance').attr('enabled', false);
+            $('.closingaccountgroup').attr('visibility', 'visible');
+        }
+
     }
 }
 
@@ -248,10 +268,10 @@ function SegmentChange(element) {
     if (dropdownlevel < segmentLevels) {
         segmentIsLinked = segmentLevelArray[dropdownlevel].IsLinked;
     }
-    $('.segment' + dropdownlevel + 'code').html(segmentCode)
+    $('.segment' + dropdownlevel + 'code').html(segmentCode);
     $('.segment' + dropdownlevel + 'name').html(segmentName);
 
-    RebuildAccountNumber();
+    BuildAccountNumber();
 
     //populate next segment level dropdown 
     if (dropdownlevel < $('.hidSegmentLevels').val) {
@@ -264,27 +284,103 @@ function SegmentChange(element) {
 
     }
 
-    function RebuildAccountNumber() {
-        var accountNumber;
-        var segment;
+}
 
-        for (i = 1; i <= segmentLevels; i++) {
-            segment = $('.segment' + i + 'code').html();
-            if (segment != '') {
-                if (i === 1) {
-                    accountNumber = segment;
-                }
-                else {
-                    accountNumber = accountNumber + '-' + segment;
-                }
+function BuildAccountNumber() {
+    var accountNumber;
+    var segment;
+
+    for (i = 1; i <= segmentLevels; i++) {
+        segment = $('.segment' + i + 'code').html();
+        if (segment != '') {
+            if (i === 1) {
+                accountNumber = segment;
+            }
+            else {
+                accountNumber = accountNumber + '-' + segment;
             }
         }
-
-        $('.AccountNumber').val(accountNumber);
     }
 
+    $('.AccountNumber').val(accountNumber);
+}
+
+function SaveNewAccount(container) {
+
+    // Get the fields
+    var fields = GetNewAccountFields();
+
+    // Save the Account
+    MakeServiceCall('POST', 'accounts', fields, function (data) {
+
+        if (data.Data) {
+            // Display success
+            DisplaySuccessMessage('Success', 'Account saved successfully.');
+
+            ClearAccountFields(container);
+
+        }
+
+    }, null);
 
 }
+
+function GetNewAccountFields(container) {
+
+    var p = [];
+
+    $(modal).find('.accountsummarycontainer editable div.fieldblock input').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    $(modal).find('.accountsummarycontainer editable select').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    $(modal).find('.accountsummarycontainer editable checkbox').each(function () {
+        var property = $(this).attr('class').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
+
+        if (value && value.length > 0)
+            p.push('"' + propertyName + '": "' + value + '"');
+    });
+
+    p = '{' + p + '}';
+
+    return p;
+
+}
+
+function ClearAccountFields(container) {
+
+    $(container + ' input').val('');
+
+    $(container + ' .segmentname').html('');
+
+    $(container + ' .segmentcode').html('');
+
+    $(container + ' select').val(0);
+
+    $(container + ' input:checkbox').attr('checked', false);
+
+}
+
+
+
+
+
+
 
 
 
