@@ -27,7 +27,7 @@ namespace DDI.WebApi.Controllers
         protected ILogger Logger => _logger;
         protected DynamicTransmogrifier DynamicTransmogrifier => _dynamicTransmogrifier;
         protected IPagination Pagination => _pagination;
-        protected PathHelper.FieldListBuilder<T> FieldListBuilder => _fieldListBuilder ?? (_fieldListBuilder = new PathHelper.FieldListBuilder<T>());
+        protected PathHelper.FieldListBuilder<T> FieldListBuilder => _fieldListBuilder?.Clear() ?? (_fieldListBuilder = new PathHelper.FieldListBuilder<T>());
 
         protected virtual string FieldsForList => string.Empty;
         protected virtual string FieldsForSingle => "all";

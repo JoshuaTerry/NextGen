@@ -1,15 +1,11 @@
-﻿using DDI.Services.GL;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -19,7 +15,30 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
         private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
 
+        private string _fieldsForAll = null;
+
         protected override string FieldsForList => $"{nameof(FiscalYear.Id)},{nameof(FiscalYear.Name)},{nameof(FiscalYear.Status)}";
+
+        protected override string FieldsForAll => _fieldsForAll ?? (_fieldsForAll = FieldListBuilder
+            .IncludeAll()
+            .Exclude(p => p.Ledger)
+            .Exclude(p => p.LedgerAccounts)
+            .Exclude(p => p.Segments)
+            .Include(p => p.FiscalPeriods.First().Id)
+            .Include(p => p.FiscalPeriods.First().PeriodNumber)
+            .Include(p => p.FiscalPeriods.First().StartDate)
+            .Include(p => p.FiscalPeriods.First().EndDate)
+            .Include(p => p.FiscalPeriods.First().Status)
+            .Include(p => p.FiscalPeriods.First().IsAdjustmentPeriod)
+            );
+
+        protected override Expression<Func<FiscalYear, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<FiscalYear, object>>[]
+            {
+                p => p.FiscalPeriods
+            };
+        }
 
         [HttpGet]
         [Route("api/v1/fiscalyears/ledger/{ledgerId}", Name = RouteNames.FiscalYear + RouteNames.Ledger + RouteVerbs.Get)]

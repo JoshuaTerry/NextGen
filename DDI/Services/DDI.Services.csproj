@@ -80,6 +80,7 @@
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
     <Compile Include="CRM\EducationService.cs" />
+    <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
     <Compile Include="INV\LinkedAccountService.cs" />

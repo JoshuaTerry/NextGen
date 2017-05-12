@@ -39,7 +39,7 @@ namespace DDI.WebApi.Controllers.General
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search);
-                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, fields);
+                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

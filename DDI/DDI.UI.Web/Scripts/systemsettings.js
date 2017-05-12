@@ -2674,7 +2674,7 @@ function LoadAccountingSettings(id) {
         $('.as-daysinadvance').val(data.Data.PostDaysInAdvance); 
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
-        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
+        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val() + '?fields=DisplayName', '', '', data.Data.DefaultFiscalYearId, null);
 
         if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
 
@@ -3132,7 +3132,7 @@ function LoadFiscalYearSectionSettings() {
             },
         ];
 
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=all', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
         
     });
 }
@@ -3230,7 +3230,7 @@ function LoadGLFormatSectionSettings() {
 
                 glaccountformat = data.Data.DisplayFormat;
 
-                if (data.Data.LedgerAccounts === null || data.Data.LedgerAccounts.length === 0) {
+                if (data.Data.HasLedgerAccounts === false) {
 
                     canDeleteSegmentLevels = true;
                     editModalClass = '.glformatmodal';
