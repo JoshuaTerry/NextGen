@@ -369,7 +369,7 @@ function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
 
-    LoadTagSelector(currentEntity.Category, $('.constituenttagselect'));
+    LoadTagSelector($('.constituenttagselect'));
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();

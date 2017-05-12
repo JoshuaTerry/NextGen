@@ -120,8 +120,8 @@
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
-    <Compile Include="Core\ITagGroupService.cs" />
-    <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="CRM\ITagGroupService.cs" />
+    <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IJournalService.cs" />

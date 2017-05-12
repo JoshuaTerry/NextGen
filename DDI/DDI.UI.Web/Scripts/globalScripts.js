@@ -732,7 +732,7 @@ function GetAutoZipData(container, prefix) {
 
 }
 
-function LoadTagSelector(type, container) {
+function LoadTagSelector(container) {
 
     $('.tagselect').each(function () {
 
@@ -750,7 +750,7 @@ function LoadTagSelector(type, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags(modal);
+                LoadAvailableTags(modal, true);
 
                 $('.saveselectedtags').unbind('click');
 
@@ -795,9 +795,15 @@ function LoadTagSelector(type, container) {
 
 }
 
-function LoadAvailableTags(container) {
+function LoadAvailableTags(container, isCategorySpecific) {
 
-    MakeServiceCall('GET', 'taggroups', null, function (data) {
+    var route = 'taggroups/tags';
+
+    if (isCategorySpecific && currentEntity && currentEntity.ConstituentType) {
+        route += '?category=' + currentEntity.ConstituentType.Category;
+    }
+
+    MakeServiceCall('GET', route, null, function (data) {
 
         if (data.Data) {
 

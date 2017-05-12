@@ -7,21 +7,18 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using System.Linq;
 
-namespace DDI.WebApi.Controllers.General
+namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class TagGroupsController : GenericController<TagGroup>
     {
         protected new ITagGroupService Service => (ITagGroupService)base.Service;
 
-        protected override Expression<Func<TagGroup, object>>[] GetDataIncludesForList()
-        {
-            return new Expression<Func<TagGroup, object>>[]
-            {
-                tg => tg.Tags
-            };
-        }
+        protected override string FieldsForList => FieldLists.CodeFields;
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Tags.First().Constituents).Exclude(p => p.Tags.First().ConstituentTypes);
 
         public TagGroupsController() : base(new TagGroupService())
         {
@@ -43,12 +40,12 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/taggroups/constituentcategory/{category}")]
-        public IHttpActionResult GetByConstituentCategory(ConstituentCategory category)
+        [Route("api/v1/taggroups/tags")]
+        public IHttpActionResult GetGroupsAndTags(ConstituentCategory? category = null)
         {
             try
             {
-                var response = Service.GetByConstituentCategory(category);
+                var response = Service.GetGroupsAndTags(category ?? ConstituentCategory.Both);
 
                 return Ok(response);
             }

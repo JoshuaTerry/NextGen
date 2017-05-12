@@ -7,6 +7,6 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface ITagGroupService
     {
-        IDataResponse<List<TagGroup>> GetByConstituentCategory(ConstituentCategory category);
+        IDataResponse<List<TagGroup>> GetGroupsAndTags(ConstituentCategory category);
     }
 }

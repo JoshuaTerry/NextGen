@@ -485,7 +485,7 @@ function DisplayConstituentTypeTags(tags) {
 }
 
 function LoadConstituentTypeTagSelector(typeId, container) {
-
+    
     $('.tagselect').each(function () {
 
         var img = $('.tagSelectImage');
@@ -504,7 +504,7 @@ function LoadConstituentTypeTagSelector(typeId, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags(tagmodal);
+                LoadAvailableTags(tagmodal, false);
 
                 $('.cancelmodal').click(function (e) {
 
@@ -2454,7 +2454,7 @@ function TagGroupSelected(info) {
     CustomLoadGrid('tagsgrid',
         'tagscontainer',
         columns,
-        'taggroups/' + selectedRow.Id + '/tags',
+        'taggroups/' + selectedRow.Id + '/tags?fields=Id,Order,Code,Name,IsActive',
         TagGroupSelected,
         EditTag,
         null,

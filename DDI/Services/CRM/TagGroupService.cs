@@ -28,10 +28,14 @@ namespace DDI.Services
             _repository = _unitOfWork.GetRepository<TagGroup>();
         }
 
-        public IDataResponse<List<TagGroup>> GetByConstituentCategory(ConstituentCategory category)
+        public IDataResponse<List<TagGroup>> GetGroupsAndTags(ConstituentCategory category)
         {
-            var results = _unitOfWork.GetEntities<TagGroup>(base.IncludesForList).Where(tg => tg.IsActive).OrderBy(tg => tg.Order).ToList();
-            results.ForEach(tg => tg.Tags = tg.Tags.Where(t => t.IsActive && (t.ConstituentCategory == ConstituentCategory.Both || t.ConstituentCategory == category)).OrderBy(t => t.Order).ToList());
+            var results = UnitOfWork.GetEntities<TagGroup>(p => p.Tags).Where(tg => tg.IsActive).OrderBy(tg => tg.Order).ToList();
+
+            results.ForEach(tg => tg.Tags = tg.Tags.Where(t => t.IsActive && 
+                                                               (category == ConstituentCategory.Both || t.ConstituentCategory == ConstituentCategory.Both || t.ConstituentCategory == category))
+                                                   .OrderBy(t => t.Order)
+                                                   .ToList());
 
             return GetIDataResponse(() => results);
         }

@@ -6,11 +6,16 @@ using System;
 using System.Linq;
 using System.Web.Http;
 
-namespace DDI.WebApi.Controllers.General
+namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class TagsController : GenericController<Tag>
     {
+
+        protected override string FieldsForList => $"{FieldLists.CodeFields},{nameof(Tag.Code)}";
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents).Exclude(p => p.ConstituentTypes).Exclude(p => p.TagGroup);
+
         [HttpGet]
         [Route("api/v1/tags")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
@@ -48,14 +53,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/tags/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag + RouteVerbs.Get)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag + RouteVerbs.Get)]
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -66,14 +71,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/tags/constituenttypes/{id}")]
-        [Route("api/v1/constituenttypes/{id}/tags", Name = RouteNames.ConstituentType + RouteNames.Tag + RouteVerbs.Get)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituenttypes/{id}/tags", Name = RouteNames.ConstituentType + RouteNames.Tag + RouteVerbs.Get)]
         public IHttpActionResult GetByConstituentTypeId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.ConstituentTypes.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -84,14 +89,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/tags/taggroups/{id}")]
-        [Route("api/v1/taggroups/{id}/tags")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/taggroups/{id}/tags")] 
         public IHttpActionResult GetByTagGroupId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.TagGroupId == id, search);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
