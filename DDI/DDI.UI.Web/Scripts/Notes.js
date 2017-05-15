@@ -262,7 +262,7 @@ function LoadNoteDetails(id) {
         $('.nd-Description').val(data.Data.Text),
         $('.nd-AlertStartDate').val(FormatJSONDate(data.Data.AlertStartDate)),
         $('.nd-AlertEndDate').val(FormatJSONDate(data.Data.AlertEndDate)),
-        $('.nd-ContactDate').val(data.Data.ContactDate),
+        $('.nd-ContactDate').val(FormatJSONDate(data.Data.ContactDate)),
         $('.nd-NoteCode').val(data.Data.NoteCode),
         $('.nd-CreatedBy').text(data.Data.CreatedBy),
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
