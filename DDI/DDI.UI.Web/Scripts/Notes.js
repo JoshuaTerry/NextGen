@@ -56,7 +56,7 @@ function NewNoteDetailsModal() {
 
     e.preventDefault();
 
-    modal = $('.notesdetailmodal').dialog({
+    var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 500,
@@ -94,7 +94,7 @@ function NewNoteDetailsModal() {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = GetNoteDetailsToSave();
+        var item = GetNoteDetailsToSave(modal);
 
         MakeServiceCall('POST', 'notes', item, function (data) {
 
@@ -224,7 +224,7 @@ function EditNoteDetails(id) {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = GetNoteDetailsToSave();
+        var item = GetNoteDetailsToSave(modal);
 
         MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
@@ -282,7 +282,7 @@ function LoadNoteDetails(id) {
 
 }
 
-function GetNoteDetailsToSave() {
+function GetNoteDetailsToSave(modal) {
 
     var rawitem = {
 
