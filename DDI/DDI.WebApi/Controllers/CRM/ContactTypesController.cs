@@ -4,6 +4,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Services.Search;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -23,6 +25,24 @@ namespace DDI.WebApi.Controllers.CRM
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.ContactType, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/contacttypes/newconstituent", Name = RouteNames.ContactType + RouteNames.Constituent)]
+        public IHttpActionResult GetForNewConstituent()
+        {
+            try
+            {
+                var result = _service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true);
+                var search = PageableSearch.Max;
+                string fields = $"{nameof(ContactType.Id)},{nameof(ContactType.Name)},{nameof(ContactType.ContactCategory)}.{nameof(ContactCategory.Code)}";
+                return FinalizeResponse(result, RouteNames.ContactType + RouteNames.Constituent, search, fields);                
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]

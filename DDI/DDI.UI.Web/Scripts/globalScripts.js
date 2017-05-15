@@ -9,6 +9,7 @@ var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
 var toolbox = null;
+var newContactInformationFields = null;
 
 $(document).ready(function () {
 
@@ -127,6 +128,10 @@ function NewConstituentModal() {
 
         SetupConstituentTypeSelector();
 
+        if (newContactInformationFields == null) {
+            CreateContactInformationFields('contactInformationContainer');
+        }
+
         // Save Constituent
         $('.savenewconstituent').unbind('click');
 
@@ -155,6 +160,40 @@ function NewConstituentModal() {
 
     });
 
+}
+
+function CreateContactInformationFields(containerClass) {
+    if ($.type(containerClass) === "string" && containerClass.indexOf('.') != 0)
+        containerClass = '.' + containerClass;
+
+    MakeServiceCall('GET', 'contacttypes/newconstituent', null, function (data) {
+        if (data && data.IsSuccessful) {
+
+            var column = 0;
+            var container = null;
+            newContactInformationFields = [];
+
+            $.map(data.Data, function (item) {
+                if (column == 0) {
+                    container = $('<div>').addClass('fourcolumn');
+                    $(containerClass).append(container);
+                }
+                container.append(CreateContactInformationField(item));
+                column = ++column % 4;
+            });
+        }
+    });
+}
+
+function CreateContactInformationField(item) {
+    var div = $('<div>').addClass('fieldblock');
+    $('<label>').text(item.Name).appendTo($(div));
+    var text = $('<input>').attr('type', 'text').addClass('editable');
+    $(div).append(text);
+
+    newContactInformationFields.push( { TextBox: text, Id: item.Id, Category: item.ContactCategory.Code } );
+
+    return div;
 }
 
 function SetupConstituentTypeSelector() {
@@ -308,44 +347,33 @@ function SaveNewConstituent(modal, addnew) {
     var fields = GetNewFields();
 
     // Save the Constituent
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituents',
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
 
-            if (data && data.IsSuccessful) {
+    MakeServiceCall('POST', 'constituents', fields, function (data) {
 
-                // Display success
-                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-                
-                if (addnew) {
-                    ClearFields('.modalcontent');
+        if (data && data.IsSuccessful) {
 
-                    $(modal).find('.constituenttypeselect').show('fast');
-                    $(modal).find('.constituentdetails').hide('fast');
-                }
-                else {
-                    CloseModal(modal);
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-                    currentEntity = data.Data;
+            if (addnew) {
+                ClearFields('.modalcontent');
 
-                    sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                    location.href = "Constituents.aspx";
-                }
+                $(modal).find('.constituenttypeselect').show('fast');
+                $(modal).find('.constituentdetails').hide('fast');
+            }
+            else {
+                CloseModal(modal);
 
+                currentEntity = data.Data;
+
+                sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
+                location.href = "Pages/CRM/Constituents.aspx";
             }
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
 
+    }, null);
+  
 }
 
 function GetNewFields() {
@@ -354,21 +382,51 @@ function GetNewFields() {
 
     $(modal).find('.modalcontent div.fieldblock input').each(function () {
         var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
+        if (property[0].startsWith('nc-')) {
+            var propertyName = property[0].replace('nc-', '');
+            var value = $(this).val();
 
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
+            if (value && value.length > 0)
+                p.push('"' + propertyName + '": "' + value + '"');
+        }
     });
 
     $(modal).find('.modalcontent div.fieldblock select').each(function () {
         var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
+        if (property[0].startsWith('nc-')) {
+            var propertyName = property[0].replace('nc-', '');
+            var value = $(this).val();
 
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
+            if (value && value.length > 0)
+                p.push('"' + propertyName + '": "' + value + '"');
+        }
     });
+
+    // Contact information
+    primaries = [];
+    ciSet = [];
+    ciSet.index
+    for (var idx = 0; idx < newContactInformationFields.length; idx++) {
+        var entry = newContactInformationFields[idx];
+        var value = entry.TextBox.val();
+        if (value) {
+            var ci = [];
+            ci.push('"Info": "' + value + '"');
+            ci.push('"ContactTypeId": "' + entry.Id + '"');
+
+            // Make sure one of each category is flagged primary
+            if (primaries.indexOf(entry.Category) < 0) {
+                ci.push('"IsPreferred": "true"');
+                primaries.push(entry.Category);
+            }
+
+            ciSet.push('{' + ci + '}');
+        }
+    };
+
+    if (ciSet.length > 0) {
+        p.push('"ContactInfo": [ ' + ciSet + ']');
+    }
 
     p = '{' + p + '}';
 
@@ -465,54 +523,6 @@ function GetQueryString() {
     return vars;
 }
 
-function SaveNewConstituent(modal) {
-
-    // Get the fields
-    var fields = GetNewFields();
-
-    // Save the Constituent
-    MakeServiceCall('POST', 'constituents', fields, function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-            ClearFields();
-
-            CloseModal(modal);
-        }
-
-    }, null);
-
-}
-
-function GetNewFields() {
-
-    var p = [];
-
-    $(modal).find('.modalcontent div.fieldblock input').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    $(modal).find('.modalcontent div.fieldblock select').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    p = '{' + p + '}';
-
-    return p;
-
-}
 
 function CloseModal(modal) {
 

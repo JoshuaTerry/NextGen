@@ -112,6 +112,17 @@ namespace DDI.Services
         public override IDataResponse<Constituent> Add(Constituent entity)
         {
             entity = _constituentlogic.ConvertAgeRange(entity);
+
+            if (entity.ContactInfo != null)
+            {
+                foreach (var entry in entity.ContactInfo)
+                {
+                    UnitOfWork.Insert(entry);
+                    entry.Constituent = entity;  // Ensure contact info is linked back to the constituent.
+                    BusinessLogicHelper.GetBusinessLogic<ContactInfo>(UnitOfWork).Validate(entry);
+                }
+            }
+
             return base.Add(entity);
         }
 

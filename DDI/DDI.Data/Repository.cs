@@ -140,7 +140,15 @@ namespace DDI.Data
         /// </summary>
         public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
         {
-            var entryCollection = _context.Entry(entity).Collection(collection);
+            var entry = _context.Entry(entity);
+
+            if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
+            {
+                var method = collection.Compile();
+                return method.Invoke(entity);
+            }
+
+            var entryCollection = entry.Collection(collection);
             if (!entryCollection.IsLoaded)
                 entryCollection.Load();
             return entryCollection.CurrentValue;
@@ -151,7 +159,15 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
-            var reference = _context.Entry(entity).Reference(property);
+            var entry = _context.Entry(entity);
+
+            if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
+            {
+                var method = property.Compile();
+                return method.Invoke(entity);
+            }
+
+            var reference = entry.Reference(property);
 
             if (!reference.IsLoaded)
                 reference.Load();
