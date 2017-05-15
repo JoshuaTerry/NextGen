@@ -112,6 +112,13 @@ function NewNoteDetailsModal() {
 
             CloseModal(modal);
 
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
             ClearNoteTopicTagBox(modal);
 
             LoadNoteDetailsGrid();
@@ -241,6 +248,13 @@ function EditNoteDetails(id) {
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
 
             ClearNoteTopicTagBox(modal);
 
