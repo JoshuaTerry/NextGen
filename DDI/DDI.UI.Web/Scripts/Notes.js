@@ -79,6 +79,8 @@ function NewNoteDetailsModal() {
 
         ClearNoteTopicTagBox(modal);
 
+        $('.editnoteinfo').hide();
+
         $('.nd-CreatedBy').text('');
         $('.nd-UpdatedBy').text('');
         $('.nd-CreatedOn').text('');
@@ -134,6 +136,8 @@ function EditNoteDetails(id) {
         resizable: false
     });
 
+    $('.editnoteinfo').show();
+
     LoadNoteDetails(id);
 
     $('.noteTopicSelectImage').unbind('click');
@@ -187,7 +191,7 @@ function EditNoteDetails(id) {
         $('.cancelnotetopics').click(function (e) {
 
             e.preventDefault();
-
+                        
             $(modal).find('.tagdropdowncontainer').hide();
 
             ClearNoteTopicSelectModal();
@@ -204,6 +208,8 @@ function EditNoteDetails(id) {
         CloseModal(modal);
 
         ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
 
         $('.nd-CreatedBy').text('');
         $('.nd-UpdatedBy').text('');
@@ -476,25 +482,28 @@ function CreateMultiSelectTopics(topics, container) {
 
 /* Note Alerts Modal */
 
-function GetNoteAlerts() {
+function GetNoteAlerts(showalertsflag) {
 
-    MakeServiceCall('GET', 'notealert/' + currentEntity.Id, null, function (data) {
+    if (showalertsflag) {
 
-        if (data.Data.length > 0) {
+        MakeServiceCall('GET', 'notealert/' + currentEntity.Id, null, function (data) {
 
-            SetupNoteAlertModal();
+            if (data.Data.length > 0) {
 
-            LoadNoteAlertGrid(data.Data);
+                SetupNoteAlertModal();
 
-            $('.notealertmodal').show();
+                LoadNoteAlertGrid(data.Data);
 
-        }
+                $('.notealertmodal').show();
 
-    },
+            }
 
-    function (xhr, status, err) {
+        },
 
-    });
+        function (xhr, status, err) {
+
+        });
+    }
 }
 
 function LoadNoteAlertGrid(data) {

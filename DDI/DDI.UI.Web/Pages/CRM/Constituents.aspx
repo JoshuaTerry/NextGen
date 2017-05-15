@@ -1198,7 +1198,6 @@
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
 
         <div class="modalcontent">
-<%--            <input type="hidden" class="hidrelationshipid" />--%>
             <input type="hidden" class="nd-hidparententityid" />
             <input type="hidden" class="hidentitytype" />
 
@@ -1281,32 +1280,34 @@
 
             </div>
 
-            <div class="twocolumn">
+            <div class="editnoteinfo" style="display: none;">
+                <div class="twocolumn">
 
-                <div class="fieldblock">
-                    <label>Created By</label>
-                    <label class="nd-CreatedBy"></label>
+                    <div class="fieldblock">
+                        <label>Created By</label>
+                        <label class="nd-CreatedBy"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Updated By</label>
+                        <label class="nd-UpdatedBy"></label>
+                    </div>
+
                 </div>
 
-                <div class="fieldblock">
-                    <label>Updated By</label>
-                    <label class="nd-UpdatedBy"></label>
+                 <div class="twocolumn">
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-CreatedOn"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-UpdatedOn"></label>
+                    </div>
+
                 </div>
-
-            </div>
-
-             <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>On</label>
-                    <label class="nd-CreatedOn"></label>
-                </div>
-
-                <div class="fieldblock">
-                    <label>On</label>
-                    <label class="nd-UpdatedOn"></label>
-                </div>
-
             </div>
 
             <div class="modalbuttons">
