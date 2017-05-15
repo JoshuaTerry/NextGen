@@ -1,4 +1,5 @@
 var AUTH_TOKEN_KEY = "DDI_AUTH_TOKEN";
+var ACCOUNT_ID = "ACCOUNT_ID";
 var auth_token = null;
 var editing = false;
 var lastActiveSection = null;
@@ -7,6 +8,7 @@ var previousEntity = null;
 var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
+var toolbox = null;
 
 $(document).ready(function () {
 
@@ -32,10 +34,47 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        auth_token = null;
+        $.ajax({
+            type: 'POST',
+            url: 'Login.aspx/Logout',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function () {
+                sessionStorage.removeItem(AUTH_TOKEN_KEY);
+                auth_token = null;
 
-        location.href = "/Login.aspx";
+                location.href = "/Login.aspx";
+            },
+            error: function (error) {
+                var err = error;
+            }
+        });
+
+        
+    });
+
+    $('.utilitynav').click(function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        toolbox = $(this).find('.utilitymenu');
+        $(toolbox).toggle();
+
+        //toolbox = $(this).next('.utilitymenu');
+        //$(toolbox).toggle();
+
+        // $('.utilitymenu').toggle();
+
+    });
+
+    $(document).click(function (e) {
+
+        if (toolbox) {
+            toolbox.hide();
+            toolbox = null;
+        }
+        
     });
 
 });
@@ -52,9 +91,11 @@ function LoadDefaultAuthToken() {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (data) {
-                sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+                if (data.d) {
+                    sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
 
-                location.href = "/Default.aspx";
+                    location.href = "/Default.aspx";
+                }
             },
             error: function (error) {
                 var err = error;
@@ -678,6 +719,8 @@ function GetAutoZipData(container, prefix) {
 
                 if (data.Data.State) {
                     $(container).find('.autocountry').val(data.Data.State.CountryId);
+
+                    // PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback)
 
                     PopulateDropDown('.autostate', 'states/?countryid=' + $(container).find('.autocountry').val(), '', '', data.Data.State.Id);
 

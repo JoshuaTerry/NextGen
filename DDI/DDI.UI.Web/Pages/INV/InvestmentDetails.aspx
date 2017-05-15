@@ -190,11 +190,8 @@
                         </div>
 
                         <h1>Automated Transactions</h1>
-                        <div class="editcontainer">
+                        <div class="dwgridcontainer"></div>
 
-                            <div class="dwgridcontainer"></div>
-
-                        </div>
 
                         <h1>Interest</h1>
                         <div class="editcontainer">
