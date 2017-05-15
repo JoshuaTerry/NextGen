@@ -50,23 +50,12 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 $(container).find('.gridContainer').hide();
             }
             else {
-                
-               
-               
                 $(container).find('.gridContainer').show();
             }
         }
-
-        //if ($(container).find(".hidaccountid").val().length > 0)
-        //{
-        //    var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance')
-        //    var key = $(container).find(".hidaccountid").val();
-        //    dataGrid.selectRows(key);
-        //}
     });
 
     $(".accountnumber:first").focus();
-
 }
 
 function SelectAccountNumberLookup(item, container) {
@@ -78,17 +67,16 @@ function SelectAccountNumberLookup(item, container) {
 
 function CreateGLAccountSelector(container)
 {
-    var glcontrol = $('<div>').addClass("inline-block");
-        
-    $('<input>').attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
-    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
+    var glcontrol = $('<div>').addClass("fieldblock");
+    
+    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:35%").addClass("accountnumber").addClass("accountnumberlookup").appendTo($(glcontrol));
     $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
     $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
 
     glcontrol.appendTo($(container));
-
+   
     $('<div>').addClass("gridContainer").addClass("accountselectiongrid").appendTo($(container));
-
+    $('<input>').attr("type", "hidden").addClass("hidaccountid").addClass("inline").appendTo($(container));
 }
 
 function LoadGLAccounts(container, ledgerId, fiscalYearId) {
@@ -107,7 +95,7 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId) {
                    
             columns.push("AccountNumber");
             columns.push("Description");
-            columns.push({ dataField: "Id"});
+            columns.push({ dataField: "Id", width: '0px'});
            
             MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
@@ -130,8 +118,11 @@ function LoadGLAccountGrid(container, data, columns)
        
         dataSource:
             { 
-                store: data,
-                key: 'Id'
+                store: {
+                    data: data,
+                    type: 'array',
+                    key: 'Id'
+                }
             },
         scrolling: {
             mode: "virtual"
@@ -153,11 +144,33 @@ function LoadGLAccountGrid(container, data, columns)
             }
         },
         onContentReady: function () {
+           
             if ($(container).find(".hidaccountid").val().length > 0) {
-                var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance')
-                var key = $(container).find(".hidaccountid").val();
-                dataGrid.selectRows(key);
+                var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
+                var keyId = $(container).find(".hidaccountid").val();
+                dataGrid.selectRows(keyId);
+
+                var groupedColumns = dataGrid.getVisibleColumns().filter(function(column) {
+                    return column.groupIndex > -1;
+                }).sort(function(c1, c2) {
+                    return c1.groupIndex - c2.groupIndex;
+                }).map(function(column) {
+                    return column.dataField;
+                });
+                dataGrid.byKey(keyId).done(function(row) {
+                    var keys = groupedColumns.map(function(col) {
+                        return row[col];
+                    });
+                    var groupToExpand = [];
+                    keys.forEach(function(key) {
+                        groupToExpand.push(key);
+                        dataGrid.expandRow(groupToExpand);
+                    });
+                });
             }
+
+            $(container).find('.gridContainer').show();
+           
         }
     });
 
