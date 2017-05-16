@@ -110,7 +110,7 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
     var activeSection = $('<div>').addClass('fieldblock');
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
-    $('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
+    $('<span>').text('Activate ' + section + ' section of ' + category).appendTo(activeSection);
     $(activeSection).appendTo(container);
 
     var sectionLabel = $('<div>').addClass('fieldblock');

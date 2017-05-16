@@ -39,7 +39,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                var result = _service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true);
+                var result = Service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true);
                 var search = PageableSearch.Max;
                 string fields = $"{nameof(ContactType.Id)},{nameof(ContactType.Name)},{nameof(ContactType.ContactCategory)}.{nameof(ContactCategory.Code)}";
                 return FinalizeResponse(result, RouteNames.ContactType + RouteNames.Constituent, search, fields);                
