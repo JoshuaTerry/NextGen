@@ -145,7 +145,7 @@ namespace DDI.Data
             if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
             {
                 var method = collection.Compile();
-                return method.Invoke(entity);
+                return method.Invoke(entity) ?? new List<TElement>();
             }
 
             var entryCollection = entry.Collection(collection);

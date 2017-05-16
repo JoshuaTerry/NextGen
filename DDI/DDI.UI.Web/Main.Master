@@ -218,44 +218,44 @@
                                     <div>
                                         <div class="fieldblock">
                                             <label>Address Type</label>
-                                            <select class="nc-AddressType"></select>
+                                            <select class="nca-AddressType"></select>
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Address Line 1</label>
-                                            <input type="text" class="nc-AddressLine1 autoaddress1" />
+                                            <input type="text" class="nca-AddressLine1 autoaddress1" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Address Line 2</label>
-                                            <input type="text" class="nc-AddressLine2 autoaddress2" />
+                                            <input type="text" class="nca-AddressLine2 autoaddress2" />
                                         </div>
                                     </div>
 
                                     <div>
                                         <div class="fieldblock">
                                             <label>Country</label>
-                                            <select class="nc-Country autocountry"></select>
+                                            <select class="nca-Country autocountry"></select>
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Postal Code</label>
-                                            <input type="text" class="nc-PostalCode autozip" />
+                                            <input type="text" class="nca-PostalCode autozip" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>State</label>
-                                            <select class="nc-State autostate"></select>
+                                            <select class="nca-State autostate"></select>
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>City</label>
-                                            <input type="text" class="nc-City autocity" />
+                                            <input type="text" class="nca-City autocity" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>County</label>
-                                            <select class="nc-County autocounty"></select>
+                                            <select class="nca-County autocounty"></select>
                                         </div>
 
                                     </div>

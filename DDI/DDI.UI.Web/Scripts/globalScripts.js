@@ -156,7 +156,7 @@ function NewConstituentModal() {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip(modal, '.nc-');
+        AutoZip(modal, '.nca-');
 
     });
 
@@ -339,6 +339,12 @@ function SetupNewConstituent(constituenttypeid) {
         }
     })
 
+    MakeServiceCall('GET', 'configurations?module=CRM', null, function (data) {
+        $('.nca-AddressType').val(data.Data.DefaultAddressType.Id);
+        $('.nca-Country').val(data.Data.DefaultCountryId);
+        
+    }, null);
+
 }
 
 function SaveNewConstituent(modal, addnew) {
@@ -376,6 +382,15 @@ function SaveNewConstituent(modal, addnew) {
   
 }
 
+function PushField(fields, propertyName, propertyValue) {
+    if (propertyValue) {
+        propertyValue = propertyValue.trim();
+        if (propertyValue.length > 0) {
+            fields.push('"' + propertyName + '": "' + propertyValue + '"');
+        }
+    }
+}
+
 function GetNewFields() {
 
     var p = [];
@@ -386,8 +401,9 @@ function GetNewFields() {
             var propertyName = property[0].replace('nc-', '');
             var value = $(this).val();
 
-            if (value && value.length > 0)
-                p.push('"' + propertyName + '": "' + value + '"');
+            PushField(p, propertyName, value);
+            //if (value && value.length > 0)
+            //    p.push('"' + propertyName + '": "' + value + '"');
         }
     });
 
@@ -397,10 +413,40 @@ function GetNewFields() {
             var propertyName = property[0].replace('nc-', '');
             var value = $(this).val();
 
-            if (value && value.length > 0)
-                p.push('"' + propertyName + '": "' + value + '"');
+            PushField(p, propertyName, value);
+            //if (value && value.length > 0)
+            //    p.push('"' + propertyName + '": "' + value + '"');
         }
     });
+
+    // Address
+    var addr = [];
+    PushField(addr, "AddressLine1", $('.nca-AddressLine1').val());
+    PushField(addr, "AddressLine2", $('.nca-AddressLine2').val());
+    PushField(addr, "City", $('.nca-City').val());
+
+    var caddr = [];
+    PushField(caddr, 'AddressTypeId', $('.nca-AddressType').val());
+
+    var caddrSet = [];
+
+    if (addr.length > 0 && caddr.length > 0) {
+        // As long as there's an address line or city, continue with the rest of the address.
+        PushField(addr, "CountryId", $('.nca-Country').val());
+        PushField(addr, "StateId", $('.nca-State').val());
+        PushField(addr, "PostalCode", $('.nca-PostalCode').val());
+        PushField(addr, "CountyId", $('.nca-County').val());
+        PushField(addr, "Region1Id", $('.nca-Region1Id').val());
+        PushField(addr, "Region2Id", $('.nca-Region2Id').val());
+        PushField(addr, "Region3Id", $('.nca-Region3Id').val());
+        PushField(addr, "Region4Id", $('.nca-Region4Id').val());
+
+        PushField(caddr, "IsPrimary", "true");
+        PushField(caddr, "ResidentType", "0");
+
+        caddr.push('"Address": {' + addr + '}');
+        caddrSet.push('{' + caddr + '}');
+    }
 
     // Contact information
     primaries = [];
@@ -422,8 +468,11 @@ function GetNewFields() {
 
             ciSet.push('{' + ci + '}');
         }
-    };
+    }
 
+    if (caddrSet.length > 0) {
+        p.push('"ConstituentAddresses": [ ' + caddrSet + ']');
+    }
     if (ciSet.length > 0) {
         p.push('"ContactInfo": [ ' + ciSet + ']');
     }
@@ -494,16 +543,16 @@ function LoadNewConstituentModalDropDowns() {
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
-    PopulateDropDown('.nc-Country', 'countries', '', '');
-    PopulateDropDown('.nc-AddressType', 'addresstypes', '', '');
+    PopulateDropDown('.nca-Country', 'countries', '', '');
+    PopulateDropDown('.nca-AddressType', 'addresstypes', '', '');
 
-    $('.nc-Country').change(function () {
+    $('.nca-Country').change(function () {
 
-        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+        PopulateDropDown('.nca-State', 'states/?countryid=' + $('.nca-Country').val(), '', '');
 
     });
 
-    LoadRegions($(modal).find('.regionscontainer'), 'nc-');
+    LoadRegions($(modal).find('.regionscontainer'), 'nca-');
 
 }
 

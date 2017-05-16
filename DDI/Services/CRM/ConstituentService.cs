@@ -113,6 +113,22 @@ namespace DDI.Services
         {
             entity = _constituentlogic.ConvertAgeRange(entity);
 
+            if (entity.ConstituentAddresses != null)
+            {
+                foreach (var entry in entity.ConstituentAddresses)
+                {
+                    UnitOfWork.Insert(entry);
+                    entry.Constituent = entity;
+                    BusinessLogicHelper.GetBusinessLogic<ConstituentAddress>(UnitOfWork).Validate(entry);
+
+                    if (entry.Address != null)
+                    {
+                        BusinessLogicHelper.GetBusinessLogic<Address>(UnitOfWork).Validate(entry.Address);
+                    }
+                }
+
+            }
+
             if (entity.ContactInfo != null)
             {
                 foreach (var entry in entity.ContactInfo)

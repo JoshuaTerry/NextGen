@@ -5,6 +5,7 @@ using DDI.Shared.Models;
 using System;
 using System.Linq;
 using DDI.Shared.Statics;
+using System.Collections.Generic;
 
 namespace DDI.Business
 {
@@ -16,10 +17,15 @@ namespace DDI.Business
     {
 
         private const int UPDATE_SEARCH_DOCUMENT_DELAY = 5; // Wait 5 seconds after saving before updating search documents.
+        private List<Guid> _scheduledUpdates = null;
+        private static object _lockObject = new object();
 
         #region Constructors 
 
-        public EntityLogicBase(IUnitOfWork uow) : base(uow) { }
+        public EntityLogicBase(IUnitOfWork uow) : base(uow)
+        {
+            _scheduledUpdates = new List<Guid>();
+        }
 
         #endregion
 
@@ -59,10 +65,16 @@ namespace DDI.Business
         /// </summary>
         public void ScheduleUpdateSearchDocument(Guid? id)
         {
-            if (!id.HasValue)
+            lock (_lockObject)
             {
-                return;
+                if (!id.HasValue || _scheduledUpdates.Contains(id.Value))  // Shouldn't schedule an update that's just been scheduled.
+                {
+                    return;
+                }
+
+                _scheduledUpdates.Add(id.Value);
             }
+
             Shared.TaskScheduler.ScheduleTask(() =>
             {
                 using (var unitOfWork = new UnitOfWorkEF())
@@ -72,6 +84,7 @@ namespace DDI.Business
                     {
                         BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
                     }
+                    _scheduledUpdates.Remove(id.Value);  // Remove this id from the list of scheduled updates.
                 }
             }, UPDATE_SEARCH_DOCUMENT_DELAY);
         }
