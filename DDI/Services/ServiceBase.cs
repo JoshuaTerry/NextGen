@@ -378,6 +378,11 @@ namespace DDI.Services
             return response;
         }
 
+        public IDataResponse GetErrorResponse(string errorMessage, string verboseErrorMessage = null)
+        {
+            return GetErrorResponse<object>(errorMessage, verboseErrorMessage);
+        }
+
         public IDataResponse<T1> GetErrorResponse<T1>(string errorMessage, string verboseErrorMessage = null)
         {
             Logger.LogError($"Message: {errorMessage} | Verbose Message: {verboseErrorMessage}");

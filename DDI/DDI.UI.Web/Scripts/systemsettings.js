@@ -1128,7 +1128,7 @@ function DeleteContactCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });
@@ -1245,7 +1245,7 @@ function DeleteContactType(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Type.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });

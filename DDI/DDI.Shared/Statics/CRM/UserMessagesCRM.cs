@@ -10,5 +10,6 @@
         public static string PhoneFormatNotValid => "Phone number format is not valid for constituent's country.";
         public static string EmailFormatNotValid => "Email address is not valid.";
         public static string EducationNoConstituent => "Constitent for education is not defined.";
+        public static string ContactTypeCantDelete => "This contact type cannot be deleted.";
     }
 }

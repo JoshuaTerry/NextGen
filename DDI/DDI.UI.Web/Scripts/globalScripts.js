@@ -380,13 +380,9 @@ function PushField(fields, propertyName, propertyValue) {
     if (propertyValue) {
         propertyValue = propertyValue.trim();
         if (propertyValue.length > 0) {
-            fields.push('"' + propertyName + '": "' + EscapeString(propertyValue) + '"');
+            fields.push('"' + propertyName + '": ' + JSON.stringify(propertyValue));
         }
     }
-}
-
-function EscapeString(text) {
-    return text.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
 function GetNewFields() {
@@ -400,8 +396,6 @@ function GetNewFields() {
             var value = $(this).val();
 
             PushField(p, propertyName, value);
-            //if (value && value.length > 0)
-            //    p.push('"' + propertyName + '": "' + value + '"');
         }
     });
 
@@ -412,8 +406,6 @@ function GetNewFields() {
             var value = $(this).val();
 
             PushField(p, propertyName, value);
-            //if (value && value.length > 0)
-            //    p.push('"' + propertyName + '": "' + value + '"');
         }
     });
 
@@ -1325,30 +1317,36 @@ function DeleteEntity(url, method, confirmationMessage) {
 // MESSAGING
 //
 function DisplayInfoMessage(heading, text) {
-    DisplayMessage(heading, text, 'info');
+    DisplayMessage(heading, text, 'info', false);
 }
 
 function DisplayErrorMessage(heading, text) {
-    DisplayMessage(heading, text, 'error');
+    DisplayMessage(heading, text, 'error', true);
 }
 
 function DisplayWarningMessage(heading, text) {
-    DisplayMessage(heading, text, 'warning');
+    DisplayMessage(heading, text, 'warning', true);
 }
 
 function DisplaySuccessMessage(heading, text) {
-    DisplayMessage(heading, text, 'success');
+    DisplayMessage(heading, text, 'success', false);
 }
 
-function DisplayMessage(heading, text, icon) {
+function DisplayMessage(heading, text, icon, sticky) {
 
-    $.toast({
+    var options = {
         heading: heading,
         text: text,
         icon: icon,
         showHideTransition: 'slide',
-        position: 'top-right'
-    });
+        allowToastClose: true,
+        position: { left: 'auto', right: 100, top: 35, bottom: 'auto' }, 
+    };
+    if (sticky) {
+        options.hideAfter = false;
+    }
+
+    $.toast(options);
 
 }
 //

@@ -6,12 +6,21 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared.Helpers;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ContactTypesController : GenericController<ContactType>
     {
+        public ContactTypesController() : this(new ContactTypeService())
+        {
+        }
+
+        public ContactTypesController(ContactTypeService service) : base(service)
+        {
+        }
+
         protected override Expression<Func<ContactType, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<ContactType, object>>[]
