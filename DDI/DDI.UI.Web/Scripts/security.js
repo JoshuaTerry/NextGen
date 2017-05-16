@@ -72,15 +72,22 @@ function LoadGroupsGrid() {
     //MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
     MakeServiceCall('GET', 'roles', null, function (data) {
 
+        //testData = [
+        //    { id: 0, name: 'pickme' },
+        //    { id: 1, name: 'nopickme' },
+        //    { id: 2, name: 'pickkkkmeeeee' }
+        //];
+
         $('.rolesdropdowncontainer').dxTagBox({
 
             dataSource: data.Data,
             visible: true,
             tagTemplate: "tag",
             opened: false,
-            valueExpr: 'id',
-            displayExpr: 'Name'
-            //items: data.Data
+            valueExpr: 'Id',
+            displayExpr: 'Name',
+            multiline: true,
+            onValueChanged: null,
 
         });
 
