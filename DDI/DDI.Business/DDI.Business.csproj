@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CoreConfiguration.cs" />
     <Compile Include="Core\NoteLogic.cs" />
     <Compile Include="Core\TransactionLogic.cs" />
     <Compile Include="Core\EntityNumberLogic.cs" />

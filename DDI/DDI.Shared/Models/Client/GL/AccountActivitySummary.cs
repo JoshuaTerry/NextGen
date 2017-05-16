@@ -20,6 +20,9 @@ namespace DDI.Shared.Models.Client.GL
         public string WorkingBudgetName { get; set; }
         public string FixedBudgetName { get; set; }
         public string WhatIfBudgetName { get; set; }
+
+        public decimal ActivityTotal { get; set; }
+        public decimal FinalEndingBalance { get; set; }
         
         public IList<AccountActivityDetail> Detail { get; set; }
 
