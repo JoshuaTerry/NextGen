@@ -227,11 +227,11 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
-    <Compile Include="Controllers\Core\BusinessDateController.cs" />
     <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
     <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
     <Compile Include="Controllers\Core\CustomFieldsController.cs" />
+    <Compile Include="Controllers\Core\ConfigurationController.cs" />
     <Compile Include="Controllers\Core\EnvironmentController.cs" />
     <Compile Include="Controllers\Core\FileStorageController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />

@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditService.cs" />
+    <Compile Include="Core\ConfigurationService.cs" />
+    <Compile Include="Core\IConfigurationService.cs" />
     <Compile Include="CRM\ConstituentAddressService.cs" />
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
