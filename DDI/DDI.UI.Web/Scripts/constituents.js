@@ -198,10 +198,7 @@ function DisplayConstituentData() {
         $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
-
-            if (typeof (value) == 'string')
-                value = value.replace('"', '').replace('"', '');
-
+         
             if (key != '$id') {
 
                 var classname = '.' + key;

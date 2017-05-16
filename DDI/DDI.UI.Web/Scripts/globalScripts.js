@@ -386,9 +386,13 @@ function PushField(fields, propertyName, propertyValue) {
     if (propertyValue) {
         propertyValue = propertyValue.trim();
         if (propertyValue.length > 0) {
-            fields.push('"' + propertyName + '": "' + propertyValue + '"');
+            fields.push('"' + propertyName + '": "' + EscapeString(propertyValue) + '"');
         }
     }
+}
+
+function EscapeString(text) {
+    return text.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
 function GetNewFields() {
@@ -418,6 +422,7 @@ function GetNewFields() {
             //    p.push('"' + propertyName + '": "' + value + '"');
         }
     });
+
 
     // Address
     var addr = [];
@@ -455,14 +460,14 @@ function GetNewFields() {
     for (var idx = 0; idx < newContactInformationFields.length; idx++) {
         var entry = newContactInformationFields[idx];
         var value = entry.TextBox.val();
-        if (value) {
+        if (value && value.trim().length > 0) {
             var ci = [];
-            ci.push('"Info": "' + value + '"');
-            ci.push('"ContactTypeId": "' + entry.Id + '"');
+            PushField(ci, "Info", value.trim());
+            PushField(ci, "ContactTypeId", entry.Id);
 
             // Make sure one of each category is flagged primary
             if (primaries.indexOf(entry.Category) < 0) {
-                ci.push('"IsPreferred": "true"');
+                PushField(ci, "IsPreferred", "true");
                 primaries.push(entry.Category);
             }
 
