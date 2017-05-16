@@ -5,8 +5,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            LoadSummaryTab('');    // test new
-            //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
+            //LoadSummaryTab('');    // test new
+            LoadSummaryTab('BDF91701-0531-4787-91AA-1EEA7C65BF98');
         });
 
     </script>
@@ -25,7 +25,6 @@
         </span>
         <span class="summaryleftinput">
             <input type="text" class="AccountNumber readonly editable" readonly="read-only" />
-            <a href="#" title="" class="editaccount editbuttoninline"></a>
         </span>
     </div>
 
@@ -281,7 +280,7 @@
                 <label>Beginning Balance: </label>
             </span>
             <span class="summaryrightinput">
-                <input type="text" class="BeginningBalance editable money justright" disabled="disabled"" />
+                <input type="number" class="BeginningBalance editable money justright" disabled="disabled" />
             </span>
         </span>
     </div>
@@ -334,22 +333,21 @@
 
     <br />
 
-    <div class="inlinecontainer">
-        <div class="closingaccountgroup invisible">
-            <div class="summaryleftprompts">
-                <label>Closing Account: </label>
-            </div>
-            <div class="closingaccountcontainer">
-            </div>
-            <div class="summaryrightinput">
-                <label> (Accumulated Revenue)</label>
+    <div>
+        <div class="closingaccountgroup">
+            <div class="closingaccountcontainer fieldblock inline">
+                <label class="inline">Closing Account: </label>
             </div>
         </div>
     </div>
 
-    <div class="modalbuttons newaccountbuttons hidebuttons">
-        <input type="button" class="savenewaccount" value="Save" />
-        <a href="#" class="cancelnewaccount">Cancel</a>
+    <div class="modalbuttons saveaccountbuttons hidebuttons">
+        <input type="button" class="saveaccount" value="Save" />
+        <a href="#" class="cancelsaveaccount">Cancel</a>
+    </div>
+
+    <div class="modalbuttons editaccountbutton hidebuttons">
+        <a href="#" class="editaccount">Edit</a>
     </div>
 
     </div>

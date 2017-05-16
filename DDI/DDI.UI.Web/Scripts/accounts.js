@@ -2,11 +2,6 @@
 
     //LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
 
-    //$('#summary-tab').click(function () {
-    //    LoadSummaryTab('');    // test new
-    //    //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');    // test existing
-    //});
-
     $('#activity-and-budget-tab').click(function (e) {
 
         e.preventDefault();
@@ -46,6 +41,9 @@ function LoadAccountActivityAndBudgetTab(id) {
 
 }
 
+
+//summary tab section
+
 var segmentLevelArray = [];
 var segmentLevels;
 var segmentLevel;
@@ -53,33 +51,50 @@ var groupLevels;
 var group1Data = [];
 var accountId;
 var segmentData = [];
+var category;
+var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
+var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 
 function LoadSummaryTab(AccountId) {
 
-    var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
-
-    var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
-
     accountId = AccountId;
     GLAccountSelector($('.closingaccountcontainer'), ledgerId, fiscalYearId);
+    $('.closingaccountgroup').attr('disabled', true);
 
     var container = '.accountsummarycontainer';
 
     if (AccountId === '' || AccountId === null) {
-        $('.newaccountbuttons').show();
-        $('.savenewaccount').unbind('click');
-        $('.savenewaccount').click(function () {
+        $('.saveaccountbuttons').show();
+        $('.saveaccount').unbind('click');
+        $('.saveaccount').click(function () {
             SaveNewAccount(container);
         });
 
-        $('.cancelnewaccount').click(function (e) {
+        $('.cancelsaveaccount').click(function (e) {
             e.preventDefault();
             ClearAccountFields(container);
         });
 
-
     }
     else {
+
+        $('.editaccountbutton').show();
+        $('.saveaccount').unbind('click');
+        $('.saveaccount').click(function () {
+            SaveOldAccount(container);
+        });
+
+        $('.editaccount').click(function (e) {
+            $('.accountsegmentscontainer').show();
+            LoadSegmentDropDowns();
+            e.preventDefault();
+        });
+
+        $('.cancelsaveaccount').click(function (e) {
+            e.preventDefault();
+            ClearAccountFields(container);
+            RetrieveAccountSummaryData();
+        });
 
         CreateEditControls();
 
@@ -172,16 +187,26 @@ function RetrieveAccountSummaryData() {
                 $('.IsNormallyDebit').val((data.Data.IsNormallyDebit === true ? 1 : 0));
                 $('.BeginningBalance').val(data.Data.BeginningBalance);
 
-                if (groupLevels > 0) {
+                category = data.Data.Category;
+                if (category < 4) {
+                    $('.BeginningBalance').removeAttr("disabled");
+                    $('.closingaccountgroup').attr('disabled', true);
+                }
+                else {
+                    $('.BeginningBalance').attr('disabled', true);
+                    $('.closingaccountgroup').removeAttr("disabled");
+                }
+
+                if (groupLevels > 0 && data.Data.Group1Id != null) {
                     LoadGroupDropDown(1, '', data.Data.Group1Id)
                 }
-                if (groupLevels > 1) {
+                if (groupLevels > 1 && data.Data.Group2Id != null) {
                     LoadGroupDropDown(2, data.Data.Group1Id, data.Data.Group2Id)
                 }
-                if (groupLevels > 2) {
+                if (groupLevels > 2 && data.Data.Group3Id != null) {
                     LoadGroupDropDown(3, data.Data.Group2Id, data.Data.Group3Id)
                 }
-                if (groupLevels > 3) {
+                if (groupLevels > 3 && data.Data.Group4Id != null) {
                     LoadGroupDropDown(4, data.Data.Group3Id, data.Data.Group4Id)
                 }
                 MakeServiceCall('GET', 'accounts/activity/' + accountId, null, function (data) {
@@ -193,6 +218,9 @@ function RetrieveAccountSummaryData() {
                             FormatFields();
                         }
                     }
+                    else {
+                        var test = 1;
+                    }
                 }, null);
             }
 
@@ -203,7 +231,6 @@ function RetrieveAccountSummaryData() {
 }
 
 function LoadGroupDropDown(groupLevel, parentId, initialId) {
-    var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
     if (parentId === '' || parentId === null) {
         PopulateDropDownData('.Group' + groupLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId, '', StoreGroupData);
     }
@@ -223,26 +250,39 @@ function StoreGroupData(element, data) {
 function GroupChange(groupLevel) {
     var element = $('.Group' + groupLevel + 'Id');
     var parentVal = element.val();
+    if (groupLevel === 1) {
+        var i = element.prop('selectedIndex');
+        category = group1Data[i - 1].Category;
+        if (category < 4) {
+            $('.BeginningBalance').removeAttr("disabled");
+            $('.closingaccountgroup').attr('disabled', true);
+        }
+        else {
+            $('.BeginningBalance').attr('disabled', true);
+            $('.closingaccountgroup').removeAttr("disabled");
+        }
+    }
+
     if (parentVal != null && parentVal != '') {
         PopulateDropDown('.Group' + (groupLevel + 1) + 'Id', 'AccountGroups/' + parentVal + '/parent', '');
     }
-    if (groupLevel === '1') {
-        var i = element.prop('selectedIndex');
-        if (group1Data[i - 1].Category.contains('123')) {
-            $('.BeginningBalance').attr('enabled', true);
-            $('.closingaccountgroup').attr('visibility', 'hidden');
-        }
-        else {
-            $('.BeginningBalance').attr('enabled', false);
-            $('.closingaccountgroup').attr('visibility', 'visible');
-        }
+}
 
+function LoadSegmentDropDowns() {
+    for (i = 0; segments; i++) {
+        if (data.Data.AccountSegments[i].SegmentId != null) {
+            if (i === 0 || data.Data.AccountSegments[i].IsLinked === 0) {
+                LoadSegmentDropDown(i + 1, '', data.Data.AccountSegments[i].SegmentId);
+            }
+            else {
+                LoadSegmentDropDown(i + 1, data.Data.AccountSegments[i - 1].SegmentId, data.Data.AccountSegments[i].SegmentId);
+            }
+        }
     }
 }
 
 function LoadSegmentDropDown(segmentLevel, parentId, initialId) {
-    var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
-    if (parentId === '') {
+    if (parentId === '' || parentId === null) {
         PopulateDropDownData('.segment' + segmentLevel + 'dropdown', 'fiscalyears/' + fiscalYearId + '/segments/level/' + segmentLevel, '', null, null, SegmentChange, StoreSegmentData);
     }
     else {
@@ -256,7 +296,6 @@ function StoreSegmentData(element, data) {
 }
 
 function SegmentChange(element) {
-    var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
     var dropdownlevel = element.substring(8, 9);
     var segmentName;
     var segmentCode;
@@ -308,17 +347,14 @@ function BuildAccountNumber() {
 function SaveNewAccount(container) {
 
     // Get the fields
-    var fields = GetNewAccountFields();
+    var fields = GetNewAccountFields(container);
 
     // Save the Account
     MakeServiceCall('POST', 'accounts', fields, function (data) {
 
         if (data.Data) {
-            // Display success
             DisplaySuccessMessage('Success', 'Account saved successfully.');
-
             ClearAccountFields(container);
-
         }
 
     }, null);
@@ -328,34 +364,45 @@ function SaveNewAccount(container) {
 function GetNewAccountFields(container) {
 
     var p = [];
+    var value;
 
-    $(modal).find('.accountsummarycontainer editable div.fieldblock input').each(function () {
+    $(container).find('.editable').each(function () {
         var property = $(this).attr('class').split(' ');
         var propertyName = property[0];
-        var value = $(this).val();
+        switch (propertyName) {
+            case 'IsNormallyDebit': {
+                if ($(this).val() === '1')
+                    value = 1;
+                else
+                    value = 0;
+                break;
+            }
+            case 'IsActive': {
+                if ($(this).prop('checked') === true)
+                    value = 1;
+                else
+                    value = 0;
+                break;
+            }
+            case 'BeginningBalance': {
+                if ($(this).val() === null || $(this).val() === '')
+                    value = 0;
+                else
+                    value = $(this).val();
+                break;
+            }
+            default:
+                value = $(this).val();
+        }
 
         if (value && value.length > 0)
             p.push('"' + propertyName + '": "' + value + '"');
     });
 
-    $(modal).find('.accountsummarycontainer editable select').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0];
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    $(modal).find('.accountsummarycontainer editable checkbox').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0];
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
+    // add non-screen items
+    p.push('"Category": "' + category + '"');
+    p.push('"FiscalYearId": "' + fiscalYearId + '"');
+    p.push('"ClosingAccountId": "' + $(container).find(".hidaccountid").val() + '"');
     p = '{' + p + '}';
 
     return p;
@@ -364,23 +411,32 @@ function GetNewAccountFields(container) {
 
 function ClearAccountFields(container) {
 
-    $(container + ' input').val('');
-
+    $(container + ' input[type="text"]').val('');
+    $(container + ' input[type="number"]').val('');
     $(container + ' .segmentname').html('');
-
     $(container + ' .segmentcode').html('');
-
     $(container + ' select').val(0);
+    $(container + ' input:checkbox').prop('checked', false);
+    $(container).find(".accountdescription").html('');
+    $(container).find(".accountnumber").val('');
+    $(container).find(".hidaccountid").val('');
+}
 
-    $(container + ' input:checkbox').attr('checked', false);
+function SaveOldAccount(container) {
+
+    // Get the fields
+    var fields = GetNewAccountFields(container);
+
+    // Save the Account
+    MakeServiceCall('PATCH', 'accounts', fields, function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Account saved successfully.');
+            ClearAccountFields(container);
+        }
+
+    }, null);
 
 }
 
-
-
-
-
-
-
-
-
+//end summary tab section
