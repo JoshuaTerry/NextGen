@@ -45,6 +45,12 @@
 
                     <div class="fieldblock">
                         <label>Roles</label>
+                        <div class="rolesdropdowncontainer"></div>
+                    </div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="savebutton" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
                     </div>
                 </div>
 

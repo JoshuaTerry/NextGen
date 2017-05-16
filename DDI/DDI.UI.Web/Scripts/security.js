@@ -67,7 +67,27 @@ function LoadGroupsGrid() {
     //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
-        , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);   
+        , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);
+
+    //MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
+    MakeServiceCall('GET', 'roles', null, function (data) {
+
+        $('.rolesdropdowncontainer').dxTagBox({
+
+            dataSource: data.Data,
+            visible: true,
+            tagTemplate: "tag",
+            opened: false,
+            valueExpr: 'id',
+            displayExpr: 'Name'
+            //items: data.Data
+
+        });
+
+    });
+
+    var asdf = $('.rolesdropdowncontainer').val();
+
 }
 
 function LoadSecuritySettingsGrid() {
