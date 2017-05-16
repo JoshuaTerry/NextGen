@@ -204,7 +204,7 @@ function SetupConstituentTypeSelector() {
     $(container).empty();
 
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituenttypes',
+        url: WEB_API_ADDRESS + 'constituenttypes?fields=Id,Name,Category',
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
@@ -226,7 +226,7 @@ function SetupConstituentTypeSelector() {
                         $(container).hide('fast');
                         $(details).show('fast');
 
-                        ConstituentTypeLayout(item.Name);
+                        ConstituentTypeLayout(item.Category);
 
                         SetupNewConstituent(item.Id);
 
@@ -278,23 +278,17 @@ function GetConstituentTypeImage(name) {
 
 }
 
-function ConstituentTypeLayout(name) {
+function ConstituentTypeLayout(category) {
 
-    switch (name) {
-        case 'Individual':
+    switch (category) {
+        case 0:
             IndividualLayout();
             break;
-        case 'Church':
-            NonindividualLayout();
-            break;
-        case 'Family':
-            NonindividualLayout();
-            break;
-        case 'Organization':
+        case 1:
             NonindividualLayout();
             break;
         default:
-            IndividualLayout();
+            NonindividualLayout();
             break;
     }
 
@@ -802,7 +796,7 @@ function GetAutoZipData(container, prefix) {
 
 }
 
-function LoadTagSelector(type, container) {
+function LoadTagSelector(container) {
 
     $('.tagselect').each(function () {
 
@@ -820,7 +814,7 @@ function LoadTagSelector(type, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags(modal);
+                LoadAvailableTags(modal, true);
 
                 $('.saveselectedtags').unbind('click');
 
@@ -865,9 +859,15 @@ function LoadTagSelector(type, container) {
 
 }
 
-function LoadAvailableTags(container) {
+function LoadAvailableTags(container, isCategorySpecific) {
 
-    MakeServiceCall('GET', 'taggroups', null, function (data) {
+    var route = 'taggroups/tags';
+
+    if (isCategorySpecific && currentEntity && currentEntity.ConstituentType) {
+        route += '?category=' + currentEntity.ConstituentType.Category;
+    }
+
+    MakeServiceCall('GET', route, null, function (data) {
 
         if (data.Data) {
 

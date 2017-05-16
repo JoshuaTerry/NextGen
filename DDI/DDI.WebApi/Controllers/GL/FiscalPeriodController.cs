@@ -1,13 +1,9 @@
-﻿using DDI.Services.Search;
+﻿using System;
+using System.Web.Http;
+using DDI.Services.Search;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -15,6 +11,10 @@ namespace DDI.WebApi.Controllers.GL
     public class FiscalPeriodController : GenericController<FiscalPeriod>
     {
         private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
+
+        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.FiscalYear);
 
         [HttpGet]
         [Route("api/v1/fiscalperiods/fiscalyear/{fiscalYearId}", Name = RouteNames.FiscalPeriod + RouteNames.FiscalYear + RouteVerbs.Get)]
@@ -24,7 +24,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = _service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
+                var result = Service.GetAllWhereExpression(fp => fp.FiscalYearId == fiscalYearId, search);
 
                 return FinalizeResponse(result, ROUTENAME_GETALLBYYEAR, search, ConvertFieldList(fields, FieldsForList));
             }

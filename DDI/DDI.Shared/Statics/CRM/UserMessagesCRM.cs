@@ -9,5 +9,6 @@
         public static string ContactInfoNoParent => "Contact information has no parent.";
         public static string PhoneFormatNotValid => "Phone number format is not valid for constituent's country.";
         public static string EmailFormatNotValid => "Email address is not valid.";
+        public static string EducationNoConstituent => "Constitent for education is not defined.";
     }
 }

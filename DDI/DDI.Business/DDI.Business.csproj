@@ -52,6 +52,7 @@
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />
+    <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="GL\JournalLogic.cs" />
     <Compile Include="GL\BusinessUnitLogic.cs" />

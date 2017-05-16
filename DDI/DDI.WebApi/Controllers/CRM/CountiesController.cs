@@ -4,16 +4,21 @@ using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using System;
 using System.Web.Http;
+using DDI.Shared.Helpers;
+using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class CountiesController : GenericController<County>
     {
-        public CountiesController()
-            :base(new CountyService())
-        {
+        protected override string FieldsForList => $"{nameof(County.Id)},{nameof(County.DisplayName)}";
 
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Cities).Include(p => p.State.DisplayName).Include(p => p.State.StateCode);
+
+        protected override Expression<Func<County, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<County, object>>[] { p => p.State };
         }
 
         #region Public Methods
@@ -22,42 +27,40 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/counties", Name = RouteNames.County)]
         public IHttpActionResult GetAll(Guid? stateId = null, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            var search = new ForeignKeySearch()
+            if (stateId == null)
             {
-                Id = stateId,
-                Limit = limit,
-                Offset = offset,
-                OrderBy = orderBy
-            };
+                return base.GetAll(RouteNames.County, limit, offset, orderBy, fields);
+            }
+
+            return GetByState(stateId.Value, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/counties/state/{id}", Name = RouteNames.County + RouteNames.State)]
+        [Route("api/v1/states/{id}/counties", Name = RouteNames.State + RouteNames.County)]
+        public IHttpActionResult GetByState(Guid id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
 
             try
             {
-                var result = Service.GetAll(fields, search);
+                var search = new PageableSearch(offset, limit, orderBy);
+                var result = Service.GetAllWhereExpression(fp => fp.StateId == id, search);
 
-                try
-                {
-                    if (result == null)
-                    {
-                        return NotFound();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex.ToString);
-                    return InternalServerError(new Exception(ex.Message));
-                }
-
-            var totalCount = result.TotalResults;
-
-                Pagination.AddPaginationHeaderToResponse(GetUrlHelper(), search, totalCount, RouteNames.County);
-                var dynamicResult = DynamicTransmogrifier.ToDynamicResponse(result, fields);
-                return Ok(dynamicResult);
+                return FinalizeResponse(result, RouteNames.State + RouteNames.County, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
+
+        }
+
+        [HttpGet]
+        [Route("api/v1/counties/{id}", Name = RouteNames.County + RouteVerbs.Get)]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
         }
 
         #endregion Public Methods

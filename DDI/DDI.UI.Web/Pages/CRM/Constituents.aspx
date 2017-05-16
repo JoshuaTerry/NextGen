@@ -336,7 +336,7 @@
                                         <option value="8">08</option>
                                         <option value="9">09</option>
                                         <option value="10">10</option>
-                                        <option value="12">11</option>
+                                        <option value="11">11</option>
                                         <option value="12">12</option>
                                     </select>
                                         </div>
@@ -1171,17 +1171,15 @@
             </div>
 
             <div class="twocolumn">
-
                 <div class="fieldblock">
                     <label>School</label>
-                    <select class="ed-SchoolId schools"></select>
+                    <input type="text" class="ed-SchoolOther schoolLookup" />
                 </div>
 
                 <div class="fieldblock">
                     <label>Degree</label>
-                    <select class="ed-DegreeId degrees"></select>
+                    <input type="text" class="ed-DegreeOther degreeLookup" />
                 </div>
-
             </div>
             
              <input type="hidden" class="ed-ConstituentId parentid" />

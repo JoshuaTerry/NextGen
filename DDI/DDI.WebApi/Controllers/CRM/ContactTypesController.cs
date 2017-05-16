@@ -20,6 +20,12 @@ namespace DDI.WebApi.Controllers.CRM
             };
         }
 
+        protected override Expression<Func<ContactType, object>>[] GetDataIncludesForSingle() => GetDataIncludesForList();
+
+        protected override string FieldsForList => FieldLists.CodeFields;
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.ContactCategoryDefaults).Exclude(p => p.ContactCategory.ContactTypes).Exclude(p => p.ContactCategory.DefaultContactType);
+
         [HttpGet]
         [Route("api/v1/contacttypes", Name = RouteNames.ContactType)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -47,18 +53,13 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/contacttypes/category/{categoryid}")]
-        public IHttpActionResult GetByCategoryId(Guid categoryid)
+        public IHttpActionResult GetByCategoryId(Guid categoryid, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             try
             {
-                var result = _service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
+                var result = Service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid);
+                var search = new PageableSearch(offset, limit, orderBy);
+                return FinalizeResponse(result, string.Empty, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
