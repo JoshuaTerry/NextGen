@@ -20,12 +20,10 @@
 
             <!-- Groups Tab -->
             <div id="tab-groups">
-                <h1 class ="GroupsSectionLabel">Groups</h1>
-                    <div>
-                        <div class="groupstable"></div>
-                    </div>
+                <h1 class="GroupsSectionLabel">Groups</h1>
+                <div class="groupstable"></div>
 
-              <%--  <div class="newlinkcontainer">
+                <%--  <div class="newlinkcontainer">
                     <a href="#" class="newlink addnewgroup">New Group</a>
                 </div>
 
@@ -34,49 +32,31 @@
                 <div class="groupmembersgridcontainer"></div>
 
                 <div class="securitysettingsgridcontainer"></div>--%>
-
             </div>
 
             <div class="groupmodal" title="Groups" style="display: none;">
 
-        <div class="modalcontent">
-             
-            <div class="fieldblock">
-                <label>Name:</label>
-                <input type="text" class="dba-Name" />
-            </div>
+                <div class="modalcontent">
 
-            <div class="threecolumn">
+                    <div class="fieldblock">
+                        <label>Name:</label>
+                        <input type="text" class="gp-Name" />
+                    </div>
 
-                <div class="fieldblock">
-                    <label>Assigned Roles</label>
-                    <select class="gp-Roles" size="5"> 
-                    </select>
-
-                </div>
-                 
-                <div>
-                    <input type="button" value="Add" /> <br />
-                    <input type="button" value="Remove" /> <br />
-                </div>
-
-                <div class="fieldblock">
-                    <label>Available Roles</label>
-                    <select class="AllRoles" size="5"> 
-                    </select>
-                </div>
-
-                <div class="modalbuttons">
-                    <input type="button" class="savebutton" value="Save" />
-                    <a href="#" class="cancelmodal">Cancel</a>
+                    <div class="fieldblock">
+                        <label>Roles</label>
+                    </div>
                 </div>
 
             </div>
 
-        </div>
+            <div class="addrolesmodal" title="Add Roles" style="display: none;">
 
-    </div>
+                <div class="modalcontent">
+                    <div class="availableroles"></div>
+                </div>
 
+            </div>
             <!-- Users Tab -->
             <div id="tab-users">
                 <div class="usersgridcontainer">
@@ -109,9 +89,10 @@
                 <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
             </div>
 
-           <div class="fieldblock">
+            <div class="fieldblock">
                 <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select></div>
+                <select class="user-DefaultBusinessUnitId"></select>
+            </div>
 
             <div class="fieldblock">
                 <div class="businessUnits">
@@ -120,7 +101,7 @@
 
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
-                <a href ="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>

@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     LoadGroupsGrid();
 
-     LoadUsersGrid();
+    LoadUsersGrid();
 
 });
 
@@ -60,9 +60,11 @@ function SetupNewUserModal() {
 function LoadGroupsGrid() {
 
     var columns = [
-        { dataField: 'Id', visible: false },
+        { dataField: 'Id', width: '0px' },
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
+
+    //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
         , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);   
