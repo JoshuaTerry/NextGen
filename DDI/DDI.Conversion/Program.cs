@@ -41,7 +41,7 @@ namespace DDI.Conversion
             log4net.Config.XmlConfigurator.Configure();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            GuidHelper.GenerateSequentialGuids = true;
+            GuidHelper.GenerateSequentialGuids = true;            
 
             // These can be uncommented to run individual conversions.
 
@@ -49,7 +49,9 @@ namespace DDI.Conversion
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.NoteCategories));
+            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Configuration));
             //Run<Core.NoteConverter>(new ConversionMethodArgs(Core.NoteConverter.ConversionMethod.Notes_CRM));
+
 
             //Run<CRM.Initialize>();            
             //Run<CRM.SettingsLoader>(); // To run all conversions in SettingsLoader.
@@ -94,8 +96,8 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
-            Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
-            Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
+            //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
+            //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
             //Run<CP.SettingsLoader>();
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
