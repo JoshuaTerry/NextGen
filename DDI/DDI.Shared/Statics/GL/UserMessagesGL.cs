@@ -43,5 +43,8 @@
         public static string AdjustmentPeriodNotLast => "Adjustment period for fiscal year {0} must be the last period.";
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
+
+        public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
+        public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
     }
 }

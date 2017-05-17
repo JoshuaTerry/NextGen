@@ -1,6 +1,7 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
+var shownotealert = true;
 
 $(document).ready(function () {
 
@@ -15,8 +16,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
-
-    DisplayConstituentCustomFields();
     
     CreateEditControls();
 
@@ -239,7 +238,9 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
-        GetNoteAlerts();
+        GetNoteAlerts(shownotealert);
+
+        shownotealert = false;
 
         GenerateContactInfoSection();
 
@@ -274,6 +275,8 @@ function DisplayConstituentData() {
         LoadRelationshipsQuickView();
         
         NewAddressModal();
+
+        DisplayConstituentCustomFields();
 
         DisplaySelectedTags($('.constituenttagselect'));
 
@@ -1060,7 +1063,6 @@ function EditRelationship(id) {
 }
 
 function NewRelationshipModal() {
-
     var modalLinkClass = 'rs-newmodallink';
     var constituentId = $('.hidconstituentid').val();
 

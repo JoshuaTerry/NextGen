@@ -8,6 +8,10 @@
         public static string ContactTypeMissing => "Contact type is not specified.";
         public static string ContactInfoNoParent => "Contact information has no parent.";
         public static string PhoneFormatNotValid => "Phone number format is not valid for constituent's country.";
+        public static string BirthDateBadMonth => "Birth date month must be between 1 and 12.";
+        public static string BirthDateBadDay => "Birth date day must be between 1 and 31.";
+        public static string BirthDateBadYear => "Birth date year is not valid.";
+        public static string ConstituentNumberExists => "A constituent with constituent number {0} already exists.";
         public static string EducationNoConstituent => "Constitent for education is not defined.";
     }
 }
