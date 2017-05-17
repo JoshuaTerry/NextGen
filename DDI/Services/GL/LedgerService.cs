@@ -1,0 +1,33 @@
+﻿using DDI.Shared.Models.Client.GL;
+using DDI.Services.ServiceInterfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DDI.Shared;
+using DDI.Shared.Models;
+using Newtonsoft.Json.Linq;
+using System.Linq.Expressions;
+using DDI.Business.GL;
+
+namespace DDI.Services.GL
+{
+    public class LedgerService : ServiceBase<Ledger>
+    {
+        private LedgerLogic _ledgerLogic = null;
+
+        public LedgerService()
+        {
+            _ledgerLogic = UnitOfWork.GetBusinessLogic<LedgerLogic>();
+        }
+
+        protected override Action<Ledger> FormatEntityForGet => ledger => FormatLedgerForGet(ledger);
+
+        private void FormatLedgerForGet(Ledger ledger)
+        {
+            ledger.DisplayFormat = _ledgerLogic.GetGLAccountFormatSample(ledger);
+            ledger.HasLedgerAccounts = UnitOfWork.Any<LedgerAccount>(p => p.LedgerId == ledger.Id);
+        }
+    }
+}

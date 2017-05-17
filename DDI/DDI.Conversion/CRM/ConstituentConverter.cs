@@ -1059,12 +1059,10 @@ namespace DDI.Conversion.CRM
                             continue;
                         }
                     }
-
-
+                    
                     Education education = new Education();
                     education.AssignPrimaryKey();
                     education.ConstituentId = constituentId;
-                    education.Name = string.Empty;
                     education.Major = string.Empty;
                     education.StartDate = importer.GetDate(2);
                     education.EndDate = importer.GetDate(4);

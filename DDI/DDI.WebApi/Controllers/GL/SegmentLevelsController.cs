@@ -14,6 +14,13 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETBYLEDGERID = RouteNames.Ledger + RouteNames.SegmentLevel + RouteVerbs.Get;
         private const string ROUTENAME_GETBYUNITID = RouteNames.BusinessUnit + RouteNames.SegmentLevel + RouteVerbs.Get;
 
+        protected override string FieldsForAll => FieldListBuilder
+            .IncludeAll()
+            .Exclude(p => p.Ledger)
+            .Exclude(p => p.Segments);
+
+        protected override string FieldsForList => FieldsForAll;
+
         [HttpGet]
         [Route("api/v1/segmentlevels/{id}", Name = RouteNames.SegmentLevel + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
@@ -32,7 +39,7 @@ namespace DDI.WebApi.Controllers.GL
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search);
                 
-                return FinalizeResponse(response, ROUTENAME_GETBYLEDGERID, search, fields);
+                return FinalizeResponse(response, ROUTENAME_GETBYLEDGERID, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -52,7 +59,7 @@ namespace DDI.WebApi.Controllers.GL
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Ledger.BusinessUnitId == id, search);
 
-                return FinalizeResponse(response, ROUTENAME_GETBYUNITID, search, fields);
+                return FinalizeResponse(response, ROUTENAME_GETBYUNITID, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

@@ -25,6 +25,23 @@ namespace DDI.WebApi.Controllers.GL
         {
         }
 
+        protected override string FieldsForList => FieldListBuilder
+            .Include(p => p.JournalNumber)
+            .Include(p => p.Id)
+            .Include(p => p.TransactionDate)
+            .Include(p => p.JournalType);
+
+        protected override string FieldsForAll => FieldListBuilder
+            .IncludeAll()
+            .Exclude(p => p.FiscalYear)
+            .Exclude(p => p.ParentJournal)
+            .Exclude(p => p.ChildJournals)
+            .Exclude(p => p.BusinessUnit)
+            .Exclude(p => p.JournalLines.First().Journal)
+            .Exclude(p => p.JournalLines.First().LedgerAccount)
+            .Exclude(p => p.JournalLines.First().SourceBusinessUnit)
+            .Exclude(p => p.JournalLines.First().SourceFund);
+            
         protected override Expression<Func<Journal, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Journal, object>>[]

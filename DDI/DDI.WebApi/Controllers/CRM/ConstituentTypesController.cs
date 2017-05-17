@@ -30,6 +30,8 @@ namespace DDI.WebApi.Controllers.CRM
             };
         }
 
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/constituenttypes", Name = RouteNames.ConstituentType)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

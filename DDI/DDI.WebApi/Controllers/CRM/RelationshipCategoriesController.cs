@@ -9,6 +9,10 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RelationshipCategoriesController : GenericController<RelationshipCategory>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.RelationshipTypes);
+
         [HttpGet]
         [Route("api/v1/relationshipcategories", Name = RouteNames.RelationshipCategories)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

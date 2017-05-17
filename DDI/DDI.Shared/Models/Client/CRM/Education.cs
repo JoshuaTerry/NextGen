@@ -15,9 +15,6 @@ namespace DDI.Shared.Models.Client.CRM
         [MaxLength(128)]
         public string Major { get; set; }
 
-        [MaxLength(128)]
-        public string Name { get; set; }
-
         public Guid? SchoolId { get; set; }
         [ForeignKey("SchoolId")]
         public School School { get; set;

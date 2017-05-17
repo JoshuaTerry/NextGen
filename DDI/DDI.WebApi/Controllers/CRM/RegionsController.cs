@@ -4,12 +4,16 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RegionsController : GenericController<Region>
     {
+        protected override string FieldsForList => $"{FieldLists.CodeFields},{nameof(Region.Level)}";
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.ChildRegions).Exclude(p => p.ParentRegion);
 
         [HttpGet]
         [Route("api/v1/regions/regionlevels/{level}")]
@@ -33,7 +37,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search);
-                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, fields);
+                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -50,7 +54,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.ParentRegionId == null, search);
-                return FinalizeResponse(response, RouteNames.Region, search, fields);
+                return FinalizeResponse(response, RouteNames.Region, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
