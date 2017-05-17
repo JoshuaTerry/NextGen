@@ -8,5 +8,6 @@
         public const string EntityNumber = "Number";
         public const string TransactionDate = "TransactionDate";
         public const string Score = "Score";
+        public const string Prefix = "-ShowOnline,Name";
     }
 }

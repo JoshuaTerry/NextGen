@@ -201,11 +201,14 @@ namespace DDI.Services
             return response;
         }
 
-        public IDataResponse GetNotesInAlertDateRange(Guid parentid)
+        public IDataResponse<List<Note>> GetNotesInAlertDateRange(Guid parentid)
         {
-            IDataResponse response = null;
+            IDataResponse<List<Note>> response = null;
             DateTime currentDay = DateTime.Today.Date;
-            var entityNotesInRange = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.ParentEntityId == parentid && (n.AlertStartDate <= currentDay && n.AlertEndDate >= currentDay)).ToList();
+            var entityNotesInRange = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.ParentEntityId == parentid && 
+                (n.AlertStartDate != null || n.AlertEndDate != null) && 
+                (n.AlertStartDate == null || n.AlertStartDate <= currentDay) && 
+                (n.AlertEndDate == null || n.AlertEndDate >= currentDay)).ToList();
             
             response = new DataResponse<List<Note>>
             {

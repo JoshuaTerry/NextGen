@@ -5,7 +5,8 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
-
+using System.Linq;
+using DDI.Services.GL;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -14,15 +15,30 @@ namespace DDI.WebApi.Controllers.GL
     public class LedgerController : GenericController<Ledger>
     {
         private const string ROUTENAME_GETBYUNIT = RouteNames.BusinessUnit + RouteNames.Ledger + RouteVerbs.Get;
-
-
+        
         protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Ledger, object>>[]
             {
-                c => c.LedgerAccounts,
-                c => c.SegmentLevels
+                c => c.SegmentLevels,
             };
+        }
+
+        protected override string FieldsForList => $"{nameof(Ledger.Id)},{nameof(Ledger.Code)},{nameof(Ledger.DisplayName)}";
+
+        protected override string FieldsForAll => FieldListBuilder
+            .IncludeAll()
+            .Exclude(p => p.BusinessUnit)
+            .Exclude(p => p.LedgerAccounts)
+            .Exclude(p => p.OrgLedger)
+            .Exclude(p => p.FiscalYears)
+            .Exclude(p => p.SegmentLevels.First().Ledger)
+            .Exclude(p => p.SegmentLevels.First().Segments)
+            .Include(p => p.DefaultFiscalYear.Name)
+            ;
+
+        public LedgerController() : base(new LedgerService())
+        {
         }
 
         [HttpGet]
