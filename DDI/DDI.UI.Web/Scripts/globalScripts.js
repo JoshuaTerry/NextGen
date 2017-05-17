@@ -53,20 +53,30 @@ $(document).ready(function () {
         
     });
 
-    $('.utilitynav').click(function (e) {
+    if ($('.utilitymenu li').length > 0) {
 
-        e.preventDefault();
-        e.stopPropagation();
+        $('.utilitynav').show();
 
-        toolbox = $(this).find('.utilitymenu');
-        $(toolbox).toggle();
+        $('.utilitynav').click(function (e) {
 
-        //toolbox = $(this).next('.utilitymenu');
-        //$(toolbox).toggle();
+            e.preventDefault();
+            e.stopPropagation();
 
-        // $('.utilitymenu').toggle();
+            toolbox = $(this).find('.utilitymenu');
+            $(toolbox).toggle();
 
-    });
+            //toolbox = $(this).next('.utilitymenu');
+            //$(toolbox).toggle();
+
+            // $('.utilitymenu').toggle();
+
+        });
+    }
+    else {
+        $('.utilitynav').hide();
+    }
+
+    
 
     $(document).click(function (e) {
 
