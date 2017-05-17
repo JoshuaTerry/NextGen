@@ -1,14 +1,13 @@
-﻿using System;
+﻿using DDI.Shared.Enums.CRM;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq; 
-using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentType")]
-    public class ConstituentType : EntityBase
+    public class ConstituentType : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]
@@ -21,10 +20,10 @@ namespace DDI.Shared.Models.Client.CRM
        
         public ConstituentCategory Category { get; set; }
 
-        [MaxLength(4)]
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
         public string Code { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         [MaxLength(128)]

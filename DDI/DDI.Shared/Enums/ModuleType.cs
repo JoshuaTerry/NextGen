@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Enums
+﻿namespace DDI.Shared.Enums
 {
     public enum ModuleType
     {
@@ -17,7 +11,7 @@ namespace DDI.Shared.Enums
         CashProcessing = 6,
         CashDisbursements = 7,
         CashReceipting = 8,
-        Gifts = 9,
+        Donations = 9,
         NamedFunds = 10,
         CropEvents = 11,
         PlannedGiving = 12,
@@ -37,5 +31,6 @@ namespace DDI.Shared.Enums
         FundRaising = 26,
         ExtensionFund = 27,
         Accounting = 28,
+        Core = 99
     }
 }

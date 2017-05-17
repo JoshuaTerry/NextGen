@@ -42,15 +42,16 @@ function ConfirmEmail(email, code) {
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'ConfirmEmail',
+        url: WEB_API_ADDRESS + 'authorizations/confirmemail',
         data: model,
         contentType: 'application/x-www-form-urlencoded',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function () {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during email confirmation.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 

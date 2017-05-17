@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Statics.CRM
+﻿namespace DDI.Shared.Statics.CRM
 {
     public static class UserMessagesCRM
     {
@@ -14,5 +8,6 @@ namespace DDI.Shared.Statics.CRM
         public static string ContactTypeMissing => "Contact type is not specified.";
         public static string ContactInfoNoParent => "Contact information has no parent.";
         public static string PhoneFormatNotValid => "Phone number format is not valid for constituent's country.";
+        public static string EducationNoConstituent => "Constitent for education is not defined.";
     }
 }

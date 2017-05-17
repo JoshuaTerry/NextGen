@@ -14,6 +14,7 @@ using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
+using DDI.Conversion.Core;
 
 namespace DDI.Conversion.CRM
 {    
@@ -37,7 +38,8 @@ namespace DDI.Conversion.CRM
             PaymentPreferences,
             Relationships,
             Tags,
-            CustomFieldData
+            CustomFieldData,
+            Notes
         }
 
         private string _crmDirectory;
@@ -72,7 +74,14 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.ContactInformation, () => ConvertContactInfo(InputFile.CRM_ContactInfoFW, true));
             RunConversion(ConversionMethod.Relationships, () => ConvertRelationships(InputFile.CRM_Relationship, false));
             RunConversion(ConversionMethod.Tags, () => ConvertTags(InputFile.CRM_ConstituentTag, false));
-            RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));            
+            RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));
+            RunConversion(ConversionMethod.Notes, () => ConvertNotes(InputFile.CRM_MemoConstituent, false));
+        }
+
+        private void ConvertNotes(string filename, bool append)
+        {
+            var noteConverter = new NoteConverter();
+            noteConverter.ConvertNotes(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)), "Constituent", null, false);
         }
 
         /// <summary>
@@ -82,7 +91,7 @@ namespace DDI.Conversion.CRM
         {
             if (_constituentIds.Count == 0)
             {
-                _constituentIds = LoadIntLegacyIds(_outputDirectory, OutputFile.ConstituentIdMappingFile);
+                _constituentIds = LoadIntLegacyIds(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile);
             }
         }
 
@@ -93,7 +102,7 @@ namespace DDI.Conversion.CRM
         {
             if (_addressIds.Count == 0)
             {
-                _addressIds = LoadIntLegacyIds(_outputDirectory, OutputFile.AddressIdMappingFile);
+                _addressIds = LoadIntLegacyIds(_outputDirectory, OutputFile.CRM_AddressIdMappingFile);
             }
         }
 
@@ -102,21 +111,21 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
             CommonContext commonContext = new CommonContext();
 
-            context.RegionLevels.Load();
-            context.Regions.Load();
+            context.CRM_RegionLevels.Load();
+            context.CRM_Regions.Load();
 
             var countries = commonContext.Countries.Local;
             var states = commonContext.States.Local;
             var counties = commonContext.Counties.Local;
-            var regionLevels = context.RegionLevels.Local;
-            var regions = context.Regions.Local;
+            var regionLevels = context.CRM_RegionLevels.Local;
+            var regions = context.CRM_Regions.Local;
 
             RegionLevel regionLevel1 = regionLevels.FirstOrDefault(p => p.Level == 1);
             RegionLevel regionLevel2 = regionLevels.FirstOrDefault(p => p.Level == 2);
             RegionLevel regionLevel3 = regionLevels.FirstOrDefault(p => p.Level == 3);
             RegionLevel regionLevel4 = regionLevels.FirstOrDefault(p => p.Level == 4);
 
-            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.AddressIdMappingFile), append, true);
+            FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_AddressIdMappingFile), append, true);
             FileExport<Address> addressFile = new FileExport<Address>(Path.Combine(_outputDirectory, OutputFile.CRM_AddressFile), append);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
@@ -260,22 +269,22 @@ namespace DDI.Conversion.CRM
             nameFormatter = uow.GetBusinessLogic<NameFormatter>();
 
             // Load entity sets that will be queried often...
-            var constituentTypes = LoadEntities(context.ConstituentTypes);
-            var ethnicities = LoadEntities(context.Ethnicities);
-            var denominations = LoadEntities(context.Denominations);
-            var genders = LoadEntities(context.Genders);
-            var prefixes = LoadEntities(context.Prefixes, nameof(Prefix.Gender));
-            var incomelevels = LoadEntities(context.IncomeLevels);
-            var educationLevels = LoadEntities(context.EducationLevels);
-            var professions = LoadEntities(context.Professions);
-            var clergyTypes = LoadEntities(context.ClergyTypes);
-            var clergyStatuses = LoadEntities(context.ClergyStatuses);
-            var maritalStatuses = LoadEntities(context.MaritalStatuses);
-            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
+            var constituentTypes = LoadEntities(context.CRM_ConstituentTypes);
+            var ethnicities = LoadEntities(context.CRM_Ethnicities);
+            var denominations = LoadEntities(context.CRM_Denominations);
+            var genders = LoadEntities(context.CRM_Genders);
+            var prefixes = LoadEntities(context.CRM_Prefixes, nameof(Prefix.Gender));
+            var incomelevels = LoadEntities(context.CRM_IncomeLevels);
+            var educationLevels = LoadEntities(context.CRM_EducationLevels);
+            var professions = LoadEntities(context.CRM_Professions);
+            var clergyTypes = LoadEntities(context.CRM_ClergyTypes);
+            var clergyStatuses = LoadEntities(context.CRM_ClergyStatuses);
+            var maritalStatuses = LoadEntities(context.CRM_MaritalStatuses);
+            var constituentStatuses = LoadEntities(context.CRM_ConstituentStatuses);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
                 FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
                 FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF
@@ -324,20 +333,20 @@ namespace DDI.Conversion.CRM
                     string educationLevelCode = importer.GetString(20);
                     string employer = importer.GetString(21, 128);
                     string position = importer.GetString(22, 128);
-                    DateTime? employmentStartDate = importer.GetDateTime(23);
-                    DateTime? employmentEndDate = importer.GetDateTime (24);
-                    DateTime? firstEmploymentDate = importer.GetDateTime(25);
+                    DateTime? employmentStartDate = importer.GetDate(23);
+                    DateTime? employmentEndDate = importer.GetDate (24);
+                    DateTime? firstEmploymentDate = importer.GetDate(25);
                     bool isClientEmployee = (importer.GetString(26) == "yes");
                     string professionCode = importer.GetString(27);
                     string clergyTypeCode = importer.GetString(28);
                     string clergyStatusCode = importer.GetString(29);
-                    DateTime? ordinationDate = importer.GetDateTime(30);
+                    DateTime? ordinationDate = importer.GetDate(30);
                     string ordinationPlace = importer.GetString(31, 128);
-                    DateTime? prospectDate = importer.GetDateTime(32);
+                    DateTime? prospectDate = importer.GetDate(32);
                     string maritalStatusCode = importer.GetString(33);
-                    DateTime? marriageDate = importer.GetDateTime(34);
-                    DateTime? divorceDate = importer.GetDateTime(35);
-                    DateTime? deceasedDate = importer.GetDateTime(36);
+                    DateTime? marriageDate = importer.GetDate(34);
+                    DateTime? divorceDate = importer.GetDate(35);
+                    DateTime? deceasedDate = importer.GetDate(36);
                     int birthMonth = importer.GetInt(37);
                     int birthDay = importer.GetInt(38);
                     int birthYear1 = importer.GetInt(39);
@@ -406,7 +415,7 @@ namespace DDI.Conversion.CRM
                     codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        Denomination denomination = context.CRM_Denominations.Local.FirstOrDefault(p => p.Code == code);
                         if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
@@ -651,14 +660,14 @@ namespace DDI.Conversion.CRM
             DomainContext context = new DomainContext();
 
             // Load entity sets that will be queried often...
-            var constituentTypes = LoadEntities(context.ConstituentTypes);
-            var constituentStatuses = LoadEntities(context.ConstituentStatuses);
-            var ethnicities = LoadEntities(context.Ethnicities);
-            var denominations = LoadEntities(context.Denominations);
+            var constituentTypes = LoadEntities(context.CRM_ConstituentTypes);
+            var constituentStatuses = LoadEntities(context.CRM_ConstituentStatuses);
+            var ethnicities = LoadEntities(context.CRM_Ethnicities);
+            var denominations = LoadEntities(context.CRM_Denominations);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
-                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.ConstituentIdMappingFile), append, true);
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentIdMappingFile), append, true);
                 FileExport<Constituent> constituentFile = new FileExport<Constituent>(Path.Combine(_outputDirectory, OutputFile.CRM_ConstituentFile), append);
                 FileExport<JoinRow> ethnicityFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_EthnicityFile), append); // Join table created by EF
                 FileExport<JoinRow> denominationFile = new FileExport<JoinRow>(Path.Combine(_outputDirectory, OutputFile.CRM_DenominationFile), append); // Join table created by EF
@@ -702,7 +711,7 @@ namespace DDI.Conversion.CRM
                     int membership = importer.GetInt(15);
                     int yearEstablished = importer.GetInt(16);
                     string deletionCode = importer.GetString(17);
-                    DateTime? deleteDate = importer.GetDateTime(18);
+                    DateTime? deleteDate = importer.GetDate(18);
                     if (deletionCode == "YBD") deletionCode = "DEL";
 
                     ConstituentType constituentType = constituentTypes.FirstOrDefault(p => p.Code == constituentTypeCode);
@@ -750,7 +759,7 @@ namespace DDI.Conversion.CRM
                     codelist = denominationCode.Split(commaDelimiter, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string code in codelist)
                     {
-                        Denomination denomination = context.Denominations.Local.FirstOrDefault(p => p.Code == code);
+                        Denomination denomination = context.CRM_Denominations.Local.FirstOrDefault(p => p.Code == code);
                         if (denomination == null)
                         {
                             importer.LogError($"Invalid denomination code \"{code}\" for PIN {constituentNum}.");
@@ -851,7 +860,7 @@ namespace DDI.Conversion.CRM
         {
             DomainContext context = new DomainContext();
 
-            var addressTypes = LoadEntities<AddressType>(context.AddressTypes);
+            var addressTypes = LoadEntities<AddressType>(context.CRM_AddressTypes);
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -908,8 +917,8 @@ namespace DDI.Conversion.CRM
                     constituentAddress.AddressId = addressId;                   
                     constituentAddress.AddressTypeId = addressType.Id;
                     constituentAddress.Comment = importer.GetString(3);
-                    constituentAddress.StartDate = importer.GetDateTime(4);
-                    constituentAddress.EndDate = importer.GetDateTime(5);
+                    constituentAddress.StartDate = importer.GetDate(4);
+                    constituentAddress.EndDate = importer.GetDate(5);
                     constituentAddress.StartDay = importer.GetInt(6);
                     constituentAddress.EndDay = importer.GetInt(7);
                     constituentAddress.IsPrimary = importer.GetBool(8);
@@ -977,8 +986,8 @@ namespace DDI.Conversion.CRM
                     doingBusinessAs.AssignPrimaryKey();
                     doingBusinessAs.ConstituentId = constituentId;
                     doingBusinessAs.Name = importer.GetString(1, 128);
-                    doingBusinessAs.StartDate = importer.GetDateTime(2);
-                    doingBusinessAs.EndDate = importer.GetDateTime(3);
+                    doingBusinessAs.StartDate = importer.GetDate(2);
+                    doingBusinessAs.EndDate = importer.GetDate(3);
 
                     outputFile.AddRow(doingBusinessAs);
 
@@ -991,8 +1000,8 @@ namespace DDI.Conversion.CRM
         private void ConvertEducation(string filename, bool append)
         {
             DomainContext context = new DomainContext();
-            var schools = LoadEntities(context.Schools);
-            var degrees = LoadEntities(context.Degrees);
+            var schools = LoadEntities(context.CRM_Schools);
+            var degrees = LoadEntities(context.CRM_Degrees);
 
             // Load the constituent Ids
             LoadConstituentIds();
@@ -1050,15 +1059,13 @@ namespace DDI.Conversion.CRM
                             continue;
                         }
                     }
-
-
+                    
                     Education education = new Education();
                     education.AssignPrimaryKey();
                     education.ConstituentId = constituentId;
-                    education.Name = string.Empty;
                     education.Major = string.Empty;
-                    education.StartDate = importer.GetDateTime(2);
-                    education.EndDate = importer.GetDateTime(4);
+                    education.StartDate = importer.GetDate(2);
+                    education.EndDate = importer.GetDate(4);
                     education.SchoolId = school?.Id;
                     education.SchoolOther = importer.GetString(6, 128);
                     education.DegreeId = degree?.Id;
@@ -1141,7 +1148,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
             
             // Load contact types
-            var contactTypes = LoadEntities(context.ContactTypes, nameof(ContactType.ContactCategory));
+            var contactTypes = LoadEntities(context.CRM_ContactTypes, nameof(ContactType.ContactCategory));
 
             // Because contact info self-relates, conversion requires two passes.  The first pass builds a dictionary of Guids for the parents.
             var parentDict = new Dictionary<int, Guid>();
@@ -1274,7 +1281,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
 
             // Load the relationship types
-            var types = LoadEntities<RelationshipType>(context.RelationshipTypes);
+            var types = LoadEntities<RelationshipType>(context.CRM_RelationshipTypes);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -1355,7 +1362,7 @@ namespace DDI.Conversion.CRM
             LoadConstituentIds();
 
             // Load the tags
-            var tags = LoadEntities(context.Tags);
+            var tags = LoadEntities(context.CRM_Tags);
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {

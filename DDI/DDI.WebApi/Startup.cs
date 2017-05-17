@@ -1,7 +1,7 @@
 ﻿using DDI.WebApi;
-using Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
+using Owin;
 
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -18,6 +18,7 @@ namespace DDI.WebApi
 
             // Set the CacheHelper's cache provider
             Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
+
         }
     }
 }

@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("TagGroup")]
-    public class TagGroup : EntityBase
+    public class TagGroup : AuditableEntityBase
     {
         #region Public Properties
         [Key]
@@ -23,7 +22,7 @@ namespace DDI.Shared.Models.Client.CRM
         public TagSelectionType TagSelectionType { get; set; }
 
         public bool IsActive { get; set; }
-
+        
         public ICollection<Tag> Tags { get; set; }
 
         #endregion Public Properties

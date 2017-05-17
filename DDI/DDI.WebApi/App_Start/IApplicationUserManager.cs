@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using DDI.Shared.Models.Client.Security;
+using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DDI.WebApi.Models;
-using Microsoft.AspNet.Identity;
 
 namespace DDI.WebApi
 {
-    public interface IApplicationUserManager
+    public interface IUserManager
     {
-        Task<IdentityResult> CreateAsync(ApplicationUser user, string password);
-        Task<ApplicationUser> FindByIdAsync(string userId);
+        Task<IdentityResult> CreateAsync(User user, string password);
+        Task<User> FindByIdAsync(string userId);
         Task<IdentityResult> AddPasswordAsync(string userId, string password);
         Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<IdentityResult> RemovePasswordAsync(string userId);
@@ -19,7 +19,7 @@ namespace DDI.WebApi
         Task<IdentityResult> RemoveLoginAsync(string userId, UserLoginInfo login);
         Task<string> GenerateEmailConfirmationTokenAsync(string userId);
         Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
-        IQueryable<ApplicationUser> Users { get; }
+        IQueryable<User> Users { get; }
         void Dispose();
     }
 }

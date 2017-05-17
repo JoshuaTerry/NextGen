@@ -1,16 +1,17 @@
-using System;
+using DDI.Data.Helpers;
+using DDI.Logger;
 using DDI.Shared;
-using System.Collections;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks; 
-using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Security;
+using System.Threading;
 
 namespace DDI.Data
 {
@@ -33,10 +34,11 @@ namespace DDI.Data
         private SQLUtilities _utilities = null;
         private bool _isUOW = false;
         private ICollection<T> _local = null;
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(Repository<T>));
         #endregion Private Fields
 
         #region Public Properties
+        protected ILogger Logger => _logger;
 
         public virtual IQueryable<T> Entities => EntitySet;
 
@@ -53,7 +55,7 @@ namespace DDI.Data
 
                 return _utilities;
             }
-        }                       
+        }
 
         #endregion Public Properties
 
@@ -88,31 +90,14 @@ namespace DDI.Data
             _isUOW = (context != null);
         }
         #endregion Public Constructors
-         
-        #region Public Methods
 
-        public static string NameFor<T1>(Expression<Func<T1, object>> property, bool shouldContainObjectPath = false)
+        #region Public Methods       
+
+        public DDI.Shared.EntityState GetEntityState(T entity)
         {
-            var member = property.Body as MemberExpression;
-            if (member == null)
-            {
-                var unary = property.Body as UnaryExpression;
-                if (unary != null)
-                {
-                    member = unary.Operand as MemberExpression;
-                }
-            }
-            if (shouldContainObjectPath && member != null)
-            {
-                var path = member.Expression.ToString();
-                var objectPath = member.Expression.ToString().Split('.').Where(a => !a.Equals("First()")).ToArray();
-                if (objectPath.Length >= 2)
-                {
-                    path = String.Join(".", objectPath, 1, objectPath.Length - 1);
-                    return $"{path}.{member.Member.Name}";
-                }
-            }
-            return member?.Member.Name ?? String.Empty;
+            DbEntityEntry<T> entry = _context.Entry(entity);
+
+            return (DDI.Shared.EntityState)entry.State;
         }
 
         public virtual void Delete(T entity)
@@ -126,7 +111,7 @@ namespace DDI.Data
 
                 Attach(entity);
 
-                EntitySet.Remove(entity);                            
+                EntitySet.Remove(entity);
             }
             catch (DbEntityValidationException e)
             {
@@ -141,7 +126,7 @@ namespace DDI.Data
         {
             GetReference<TElement>(entity, collection);
         }
-        
+
         /// <summary>
         /// Explicitly load a reference property or collection for an entity.
         /// </summary>
@@ -190,9 +175,9 @@ namespace DDI.Data
         /// </summary>
         public T Attach(T entity)
         {
-            return Attach(entity, EntityState.Unchanged);
+            return Attach(entity, System.Data.Entity.EntityState.Unchanged);
         }
-        
+
         public T Find(params object[] keyValues) => EntitySet.Find(keyValues);
 
         public IQueryable<T> GetEntities(params Expression<Func<T, object>>[] includes)
@@ -204,9 +189,9 @@ namespace DDI.Data
 
             var query = _context.Set<T>().AsQueryable();
 
-            foreach(Expression<Func<T, object>> include in includes)
+            foreach (Expression<Func<T, object>> include in includes)
             {
-                string name = NameFor(include, true);
+                string name = PathHelper.NameFor(include, true);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     query = query.Include(name);
@@ -249,11 +234,20 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                if (_context.Entry(entity).State != EntityState.Added)
+                if (_context.Entry(entity).State != System.Data.Entity.EntityState.Added)
                 {
+                    IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                    if (auditableEntity != null)
+                    {
+                        string userName = Thread.CurrentPrincipal?.Identity.Name;
+                        auditableEntity.CreatedBy = userName;
+                        auditableEntity.LastModifiedBy = userName;
+                        auditableEntity.CreatedOn = DateTime.UtcNow;
+                        auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                    }
                     // Add it only if not already added.
                     EntitySet.Add(entity);
-                }                 
+                }
 
                 return entity;
             }
@@ -272,9 +266,15 @@ namespace DDI.Data
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                Attach(entity, EntityState.Modified);
-                _context.Entry(entity).State = EntityState.Modified;
-                
+                IAuditableEntity auditableEntity = entity as IAuditableEntity;
+                if (auditableEntity != null)
+                {
+                    auditableEntity.LastModifiedBy = Thread.CurrentPrincipal?.Identity.Name;
+                    auditableEntity.LastModifiedOn = DateTime.UtcNow;
+                }
+                Attach(entity, System.Data.Entity.EntityState.Modified);
+                _context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+
                 return entity;
             }
             catch (DbEntityValidationException e)
@@ -292,25 +292,35 @@ namespace DDI.Data
         {
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
-
+            IEnumerable<string> propertynames = currentValues.PropertyNames;
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
-                currentValues[keyValue.Key] = keyValue.Value;
+                if (propertynames.Contains(keyValue.Key))
+                {
+                    currentValues[keyValue.Key] = keyValue.Value;
+                }
+                else
+                {
+                    // NotMapped property: Use reflection to try and set the property in the entity.
+                    typeof(T).GetProperty(keyValue.Key)?.SetValue(entity, keyValue.Value);
+                }
             }
 
-            action?.Invoke(entity); 
+            action?.Invoke(entity);
         }
-
         public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();
             DbEntityEntry<T> entry = _context.Entry(entity);
 
-            foreach (string property in entry.OriginalValues.PropertyNames)
+            if (entry.State != System.Data.Entity.EntityState.Detached)
             {
-                if (entry.Property(property).IsModified)
+                foreach (string property in entry.OriginalValues.PropertyNames)
                 {
-                    list.Add(property);
+                    if (entry.Property(property).IsModified)
+                    {
+                        list.Add(property);
+                    }
                 }
             }
 
@@ -327,9 +337,9 @@ namespace DDI.Data
         /// <param name="entity"></param>
         /// <param name="entityState"></param>
         /// <returns></returns>
-        private T Attach(T entity, EntityState entityState)
+        private T Attach(T entity, System.Data.Entity.EntityState entityState)
         {
-            if (entity != null && _context.Entry(entity).State == EntityState.Detached)
+            if (entity != null && _context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
             {
                 if (entity is IEntity)
                 {

@@ -1,18 +1,12 @@
 ﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DDI.Business.Core;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using System;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Helpers;
 using DDI.Shared.Statics.CRM;
-using DDI.Business.Helpers;
-using DDI.Business.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DDI.Business.CRM
 {
@@ -212,11 +206,17 @@ namespace DDI.Business.CRM
             return resultAddress;
         }
 
-
-
         public override void Validate(ConstituentAddress entity)
         {
-            base.Validate(entity);
+            if (entity.IsPrimary)
+            {
+                var existingPrimaryAddresses = UnitOfWork.Where<ConstituentAddress>(ca => ca.ConstituentId == entity.ConstituentId && ca.Id != entity.Id && ca.IsPrimary).ToList();
+                existingPrimaryAddresses.ForEach(a =>
+                {
+                    a.IsPrimary = false;
+                    UnitOfWork.GetRepository<ConstituentAddress>().Update(a);
+                });
+            }
 
             var constituentLogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
             constituentLogic.ScheduleUpdateSearchDocument(entity.ConstituentId);

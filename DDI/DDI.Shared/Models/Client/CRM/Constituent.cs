@@ -1,16 +1,18 @@
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Enums.INV;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.INV;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Enums.CRM;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Constituent")]
-    public class Constituent : EntityBase, IEntity
+    public class Constituent : AuditableEntityBase, IEntity
     {
         #region Public Properties        
         [Key]
@@ -149,17 +151,27 @@ namespace DDI.Shared.Models.Client.CRM
         public int? YearEstablished { get; set; }
 
         #region Navigation Properties
-
+        [ForeignKey("ClergyStatusId")]
         public ClergyStatus ClergyStatus { get; set; }
+        [ForeignKey("ClergyTypeId")]
         public ClergyType ClergyType { get; set; }
+        [ForeignKey("ConstituentStatusId")]
         public ConstituentStatus ConstituentStatus { get; set; }
+        [ForeignKey("ConstituentTypeId")]
         public ConstituentType ConstituentType { get; set; }
+        [ForeignKey("EducationLevelId")]
         public EducationLevel EducationLevel { get; set; }
+        [ForeignKey("GenderId")]
         public Gender Gender { get; set; }
+        [ForeignKey("IncomeLevelId")]
         public IncomeLevel IncomeLevel { get; set; }
+        [ForeignKey("LanguageId")]
         public Language Language { get; set; }
+        [ForeignKey("MaritalStatusId")]
         public MaritalStatus MaritalStatus { get; set; }
+        [ForeignKey("PrefixId")]
         public Prefix Prefix { get; set; }
+        [ForeignKey("ProfessionId")]
         public Profession Profession { get; set; }
 
 
@@ -181,6 +193,8 @@ namespace DDI.Shared.Models.Client.CRM
         public ICollection<Tag> Tags { get; set; }
         
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
+
+        public ICollection<InvestmentRelationship> InvestmentRelationships { get; set; }
         
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
@@ -197,6 +211,61 @@ namespace DDI.Shared.Models.Client.CRM
             get
             {
                 return FormattedName;
+            }
+        }
+
+        [NotMapped]
+        public InvestorStatus InvestorStatus
+        {
+            get
+            {
+                return InvestorStatus.ActiveInvestor;
+            }
+        }
+
+        [NotMapped]
+        public string InvestorStatusDescription
+        {
+            get
+            {
+                return EnumHelper.GetDescription(InvestorStatus);
+            }
+        }
+
+        [NotMapped]
+        public DateTime? InvestorStartDate
+        {
+            get
+            {
+                return new DateTime(2000, 01, 05);
+            }
+        }
+
+        [NotMapped]
+        public decimal PrimaryInvestorTotal
+        {
+            get
+            {
+                return new decimal(10000.43);
+            }
+        }
+
+        [NotMapped]
+        public decimal JointInvestorTotal
+        {
+            get
+            {
+                return new decimal(5042.43);
+            }
+        }
+
+        [NotMapped]
+        public decimal InvestorTotal
+        {
+            get
+            {
+                decimal investorTotal = (PrimaryInvestorTotal + JointInvestorTotal);
+                return new decimal(15042.86);
             }
         }
         #endregion

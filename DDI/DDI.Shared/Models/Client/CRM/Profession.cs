@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Profession")]
-    public class Profession : EntityBase
+    public class Profession : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties
         [Key]
@@ -16,10 +14,10 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
-        [MaxLength(4)]
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
         public string Code { get; set; }
 
         #endregion Public Properties

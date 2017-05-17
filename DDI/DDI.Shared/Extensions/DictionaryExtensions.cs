@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DDI.Shared.Extensions
 {
@@ -40,6 +36,17 @@ namespace DDI.Shared.Extensions
                 val = defaultValue;
             }
             return val;
+        }
+
+        /// <summary>
+        /// Add all entries from another dictionary into this dictionary.
+        /// </summary>
+        public static void AddRange<K, V>(this IDictionary<K, V> dict, IDictionary<K, V> otherDict)
+        {
+            foreach (var entry in otherDict)
+            {
+                dict[entry.Key] = entry.Value;
+            }
         }
 
     }

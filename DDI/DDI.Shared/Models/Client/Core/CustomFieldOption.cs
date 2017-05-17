@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("CustomFieldOption")]
-    public class CustomFieldOption : EntityBase
+    public class CustomFieldOption : AuditableEntityBase
     {
         #region Properties
 
@@ -18,7 +16,7 @@ namespace DDI.Shared.Models.Client.Core
         public string Code { get; set; }
         public string Description { get; set; }
         public int SortOrder { get; set; }
-
+        [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 
         [NotMapped]

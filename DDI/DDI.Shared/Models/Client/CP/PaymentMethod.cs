@@ -1,15 +1,14 @@
-﻿using System;
+﻿using DDI.Shared.Enums.CP;
+using DDI.Shared.Models.Client.CRM;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Enums.CP;
-using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Shared.Models.Client.CP
 {
     [Table("PaymentMethod")]
-    public class PaymentMethod : EntityBase
+    public class PaymentMethod : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -48,5 +47,6 @@ namespace DDI.Shared.Models.Client.CP
 
         [MaxLength(128)]
         public string CardToken { get; set; }
+
     }
 }

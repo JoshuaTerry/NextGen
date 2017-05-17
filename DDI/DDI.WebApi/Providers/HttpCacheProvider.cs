@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Caching;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Caching;
-using DDI.Shared.Caching;
 
 namespace DDI.WebApi.Providers
 {
@@ -18,25 +17,28 @@ namespace DDI.WebApi.Providers
         // Cache lock object
         private static readonly object _cacheItemLock = new object();
 
+        private Cache _currentCache = null;
+        private Cache CurrentCache => _currentCache ?? (_currentCache = _currentCache = HttpContext.Current.Cache);
+
         public void RemoveEntry(string key)
         {
-            HttpContext.Current.Cache[key] = null;
+            CurrentCache[key] = null;
         }
 
         public T GetEntry<T>(string key, int timeoutSeconds, bool isSlidingTimeout, Func<T> entryProvider, Action<T> callback) where T : class
         {
-            if (HttpContext.Current.Cache[key] == null)
+            if (CurrentCache[key] == null)
             {
                 lock (_cacheItemLock)
                 {
-                    if (HttpContext.Current.Cache[key] == null)
+                    if (CurrentCache[key] == null)
                     {
                         T entry = entryProvider.Invoke();
                         SetEntry(key, entry, timeoutSeconds, isSlidingTimeout, callback);
                     }
                 }
             }
-            return HttpContext.Current.Cache[key] as T;
+            return CurrentCache[key] as T;
         }
 
         public void SetEntry<T>(string key, T entry, int _timeoutSecs, bool isSlidingTimeout, Action<T> callback) where T : class
@@ -55,12 +57,12 @@ namespace DDI.WebApi.Providers
 
             if (callback == null)
             {
-                HttpContext.Current.Cache.Insert(key, entry, null, absoluteExpiration, slidingExpiration);
+                CurrentCache.Insert(key, entry, null, absoluteExpiration, slidingExpiration);
             }
             else
             {
                 _entryCallbacks[key] = () => callback(entry);
-                HttpContext.Current.Cache.Insert(key, entry, null, absoluteExpiration, slidingExpiration, Callback);
+                CurrentCache.Insert(key, entry, null, absoluteExpiration, slidingExpiration, Callback);
             }
 
         }

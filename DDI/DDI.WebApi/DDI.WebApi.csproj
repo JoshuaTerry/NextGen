@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.WebApi</RootNamespace>
     <AssemblyName>DDI.WebApi</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,13 +45,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinqKit, Version=1.1.8.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinqKit.1.1.8.0\lib\net452\LinqKit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -61,27 +57,26 @@
       <HintPath>..\packages\Microsoft.Owin.Cors.3.0.1\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -136,6 +131,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -192,7 +188,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\ApplicationRoleManager.cs" />
+    <Compile Include="App_Start\RoleManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IApplicationUserManager.cs" />
@@ -228,58 +224,79 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\NoteCategoriesController.cs" />
-    <Compile Include="Controllers\NoteContactMethodsController.cs" />
-    <Compile Include="Controllers\NotesController.cs" />
-    <Compile Include="Controllers\NoteTopicsController.cs" />
-    <Compile Include="Controllers\RelationshipTypesController.cs" />
-    <Compile Include="Controllers\RelationshipsController.cs" />
-    <Compile Include="Controllers\AuthorizationsController.cs" />
-    <Compile Include="Controllers\AddressTypesController.cs" />
-    <Compile Include="Controllers\BusinessDateController.cs" />
-    <Compile Include="Controllers\BusinessUnitControllers.cs" />
-    <Compile Include="Controllers\ClergyStatusesController.cs" />
-    <Compile Include="Controllers\ClergyTypesController.cs" />
-    <Compile Include="Controllers\AddressesController.cs" />
-    <Compile Include="Controllers\ConstituentAddressesController.cs" />
-    <Compile Include="Controllers\ConstituentsController.cs" />
-    <Compile Include="Controllers\ConstituentStatusesController.cs" />
-    <Compile Include="Controllers\ConstituentTypesController.cs" />
-    <Compile Include="Controllers\AlternateIdsController.cs" />
-    <Compile Include="Controllers\ContactCategoryController.cs" />
-    <Compile Include="Controllers\DegreesController.cs" />
-    <Compile Include="Controllers\DoingBusinessAsController.cs" />
-    <Compile Include="Controllers\ContactTypesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
-    <Compile Include="Controllers\CountiesController.cs" />
-    <Compile Include="Controllers\CountriesController.cs" />
-    <Compile Include="Controllers\CustomFieldDataController.cs" />
-    <Compile Include="Controllers\CustomFieldOptionsController.cs" />
-    <Compile Include="Controllers\CustomFieldsController.cs" />
-    <Compile Include="Controllers\ContactInfoController.cs" />
-    <Compile Include="Controllers\DenominationsController.cs" />
-    <Compile Include="Controllers\EnvironmentController.cs" />
-    <Compile Include="Controllers\PaymentMethodController.cs" />
-    <Compile Include="Controllers\SchoolsController.cs" />
-    <Compile Include="Controllers\TagGroupsController.cs" />
-    <Compile Include="Controllers\TagsController.cs" />
-    <Compile Include="Controllers\EducationsController.cs" />
-    <Compile Include="Controllers\EducationLevelsController.cs" />
-    <Compile Include="Controllers\EthnicitiesController.cs" />
-    <Compile Include="Controllers\GendersController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IncomeLevelsController.cs" />
-    <Compile Include="Controllers\LanguagesController.cs" />
-    <Compile Include="Controllers\MaritalStatusesController.cs" />
-    <Compile Include="Controllers\PrefixesController.cs" />
-    <Compile Include="Controllers\ProfessionsController.cs" />
-    <Compile Include="Controllers\RegionLevelsController.cs" />
-    <Compile Include="Controllers\RegionsController.cs" />
-    <Compile Include="Controllers\RolesController.cs" />
-    <Compile Include="Controllers\SectionPreferencesController.cs" />
-    <Compile Include="Controllers\StatesController.cs" />
-    <Compile Include="Controllers\UserRolesController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\Core\AuditController.cs" />
+    <Compile Include="Controllers\Core\AuthorizationsController.cs" />
+    <Compile Include="Controllers\Core\BusinessUnitController.cs" />
+    <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
+    <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
+    <Compile Include="Controllers\Core\CustomFieldsController.cs" />
+    <Compile Include="Controllers\Core\ConfigurationController.cs" />
+    <Compile Include="Controllers\Core\EnvironmentController.cs" />
+    <Compile Include="Controllers\Core\FileStorageController.cs" />
+    <Compile Include="Controllers\Core\GroupController.cs" />
+    <Compile Include="Controllers\Core\HomeController.cs" />
+    <Compile Include="Controllers\Core\NoteCategoriesController.cs" />
+    <Compile Include="Controllers\Core\NoteCodesController.cs" />
+    <Compile Include="Controllers\Core\NoteContactMethodsController.cs" />
+    <Compile Include="Controllers\Core\NotesController.cs" />
+    <Compile Include="Controllers\Core\NoteTopicsController.cs" />
+    <Compile Include="Controllers\Core\RolesController.cs" />
+    <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
+    <Compile Include="Controllers\CRM\TagGroupsController.cs" />
+    <Compile Include="Controllers\CRM\TagsController.cs" />
+    <Compile Include="Controllers\Core\UserRolesController.cs" />
+    <Compile Include="Controllers\Core\UsersController.cs" />
+    <Compile Include="Controllers\CRM\AddressesController.cs" />
+    <Compile Include="Controllers\CRM\AddressTypesController.cs" />
+    <Compile Include="Controllers\CRM\AlternateIdsController.cs" />
+    <Compile Include="Controllers\CRM\ClergyStatusesController.cs" />
+    <Compile Include="Controllers\CRM\ClergyTypesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentAddressesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentPictureController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentsController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentStatusesController.cs" />
+    <Compile Include="Controllers\CRM\ConstituentTypesController.cs" />
+    <Compile Include="Controllers\CRM\ContactCategoryController.cs" />
+    <Compile Include="Controllers\CRM\ContactInfoController.cs" />
+    <Compile Include="Controllers\CRM\ContactTypesController.cs" />
+    <Compile Include="Controllers\CRM\CountiesController.cs" />
+    <Compile Include="Controllers\CRM\CountriesController.cs" />
+    <Compile Include="Controllers\CRM\DegreesController.cs" />
+    <Compile Include="Controllers\CRM\DenominationsController.cs" />
+    <Compile Include="Controllers\CRM\DoingBusinessAsController.cs" />
+    <Compile Include="Controllers\CRM\EducationLevelsController.cs" />
+    <Compile Include="Controllers\CRM\EducationsController.cs" />
+    <Compile Include="Controllers\CRM\EFTFormatsController.cs" />
+    <Compile Include="Controllers\CRM\EthnicitiesController.cs" />
+    <Compile Include="Controllers\CRM\GendersController.cs" />
+    <Compile Include="Controllers\CRM\IncomeLevelsController.cs" />
+    <Compile Include="Controllers\CRM\LanguagesController.cs" />
+    <Compile Include="Controllers\CRM\MaritalStatusesController.cs" />
+    <Compile Include="Controllers\CRM\PaymentMethodController.cs" />
+    <Compile Include="Controllers\CRM\PrefixesController.cs" />
+    <Compile Include="Controllers\CRM\ProfessionsController.cs" />
+    <Compile Include="Controllers\CRM\RegionLevelsController.cs" />
+    <Compile Include="Controllers\CRM\RegionsController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipCategoriesController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipsController.cs" />
+    <Compile Include="Controllers\CRM\RelationshipTypesController.cs" />
+    <Compile Include="Controllers\CRM\SchoolsController.cs" />
+    <Compile Include="Controllers\CRM\StatesController.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
+    <Compile Include="Controllers\GL\FiscalYearController.cs" />
+    <Compile Include="Controllers\GL\JournalsController.cs" />
+    <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
+    <Compile Include="Controllers\GL\SegmentController.cs" />
+    <Compile Include="Controllers\INV\InvestmentAutomatedTransactionsController.cs" />
+    <Compile Include="Controllers\INV\LinkedAccountController.cs" />
+    <Compile Include="Controllers\INV\InvestmentIRSInformationController.cs" />
+    <Compile Include="Controllers\INV\InvestmentInterestPayoutController.cs" />
+    <Compile Include="Controllers\INV\InvestmentsController.cs" />
+    <Compile Include="Controllers\INV\InvestmentRelationshipsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -287,7 +304,6 @@
     <Compile Include="Helpers\IPagination.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
-    <Compile Include="Helpers\PatchUpdateUser.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -299,7 +315,6 @@
     <Compile Include="Models\BindingModels\RolesBindingModel.cs" />
     <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\UserRolesBindingModel.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\HttpCacheProvider.cs" />
@@ -334,6 +349,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="logging.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -357,6 +373,14 @@
       <Project>{0e7d7e11-80b4-4751-8c21-b05a08a19473}</Project>
       <Name>DDI.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
+      <Project>{7DD8C5F7-4F2D-4D54-B8B0-B4D136007663}</Project>
+      <Name>DDI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Name>DDI.Shared</Name>
@@ -373,6 +397,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\BusinessDate\" />
+    <Folder Include="Views\MemoCategories\" />
+    <Folder Include="Views\MemoCodes\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

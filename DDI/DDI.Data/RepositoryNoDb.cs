@@ -1,12 +1,9 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared;
-using DDI.Shared.Models;
 
 namespace DDI.Data
 {
@@ -62,6 +59,11 @@ namespace DDI.Data
 
         public ISQLUtilities Utilities => null;
 
+        /// <summary>
+        /// A property name or comma delimited list of property names to return via the GetModifiedProperties method.
+        /// </summary>
+        public string ModifiedPropertyList { get; set; }
+
         #endregion Public Properties
 
 
@@ -75,6 +77,11 @@ namespace DDI.Data
         }
 
         #region Public Methods
+
+        public EntityState GetEntityState(T entity)
+        {
+            return (string.IsNullOrWhiteSpace(ModifiedPropertyList) ? EntityState.Unchanged : EntityState.Modified);
+        }
 
         /// <summary>
         /// Clear all entities in the repository.
@@ -212,7 +219,14 @@ namespace DDI.Data
 
         public List<string> GetModifiedProperties(T entity) 
         {
-            return new List<string>();
+            if (string.IsNullOrWhiteSpace(ModifiedPropertyList))
+            {
+                return new List<string>();
+            }
+            else
+            {
+                return ModifiedPropertyList.Split(',').ToList();
+            }
         }
 
 

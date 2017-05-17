@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using DDI.Business.Helpers;
+using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models;
-using System.Threading.Tasks;
-using DDI.Business.Helpers;
-using DDI.Data;
+using System;
+using System.Linq;
+using DDI.Shared.Statics;
 
 namespace DDI.Business
 {
@@ -15,7 +14,8 @@ namespace DDI.Business
     /// <typeparam name="T">Entity type</typeparam>
     public class EntityLogicBase<T> : EntityLogicBase where T : class, IEntity
     {
-        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2000; // Wait 2 seconds after saving before updating search documents.
+
+        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2; // Wait 2 seconds after saving before updating search documents.
 
         #region Constructors 
 
@@ -48,7 +48,10 @@ namespace DDI.Business
         /// </summary>
         public void ScheduleUpdateSearchDocument(T entity)
         {
-            ScheduleUpdateSearchDocument(entity.Id);
+            if (entity != null)
+            {
+                ScheduleUpdateSearchDocument(entity.Id);
+            }
         }
 
         /// <summary>
@@ -65,7 +68,10 @@ namespace DDI.Business
                 using (var unitOfWork = new UnitOfWorkEF())
                 {
                     T entityToUpdate = unitOfWork.GetById<T>(id.Value);
-                    BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                    if (entityToUpdate != null)
+                    {
+                        BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                    }
                 }
             }, UPDATE_SEARCH_DOCUMENT_DELAY);
         }
@@ -92,6 +98,36 @@ namespace DDI.Business
             if (typedEntity != null)
             {
                 UpdateSearchDocument(typedEntity);
+            }
+        }
+
+        /// <summary>
+        /// Validate a set of strings, ensuring they are non-blank and unique.
+        /// </summary>
+        /// <param name="numberOfStrings">If non-zero, validate only the first n strings.</param>
+        /// <param name="errorMessageParameter">Paramter to include in the error message (i.e. what the strings represent.)</param>
+        /// <param name="strings">List of strings to be validated.</param>
+        protected void ValidateNonBlankAndUnique(int numberOfStrings, string errorMessageParameter, params string[] strings)
+        {
+            if (strings.Length == 0)
+            {
+                return;
+            }
+
+            if (numberOfStrings == 0)
+            {
+                numberOfStrings = strings.Length;
+            }
+
+            var stringsToUpper = strings.Take(numberOfStrings).Select(p => p.ToUpper());
+
+            if (stringsToUpper.Any(p => string.IsNullOrWhiteSpace(p)))
+            {
+                throw new ValidationException(UserMessages.MustBeNonBlank, errorMessageParameter);
+            }
+            if (stringsToUpper.Distinct().Count() < numberOfStrings)
+            {
+                throw new ValidationException(UserMessages.MustBeUnique, errorMessageParameter);
             }
         }
         #endregion

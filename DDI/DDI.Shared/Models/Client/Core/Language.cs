@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Models.Client;
 
 namespace DDI.Shared.Models.Client.Core
 {
     [Table("Language")]
-    public class Language : EntityBase
+    public class Language : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties        
         [Key]
@@ -15,11 +14,11 @@ namespace DDI.Shared.Models.Client.Core
 
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
-        public string Name { get; set; }
-
-        [MaxLength(128)]
+        [Index("IX_Code", IsUnique = true), MaxLength(128)]
         public string Code { get; set; }
+
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; }
 
         #endregion Public Properties
 

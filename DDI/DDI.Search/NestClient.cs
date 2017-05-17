@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DDI.Search.Models;
 using DDI.Search.Statics;
 using Nest;
+using DDI.Logger;
 
 namespace DDI.Search
 {
@@ -15,7 +16,7 @@ namespace DDI.Search
     public class NestClient
     {
         #region Private Fields
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(NestClient));
         private ElasticClient _client;
         private Uri _uri;
         private ConnectionSettings _connectionSettings;
@@ -169,7 +170,7 @@ namespace DDI.Search
                 }
                 catch (Exception ex)
                 {
-                    Shared.Logger.Logger.Error(typeof(NestClient), ex.Message);
+                    _logger.LogError(ex);
                 }
             }
         }

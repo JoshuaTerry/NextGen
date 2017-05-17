@@ -53,6 +53,7 @@
                 type: 'POST',
                 url: WEB_API_ADDRESS + 'Register',
                 data: model,
+                headers: GetApiHeaders(),
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
                 success: function () {
@@ -61,7 +62,7 @@
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during registration.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -80,16 +81,33 @@ function Login() {
         url: WEB_API_ADDRESS + 'Login',
         data: loginData,
         contentType: 'application/x-www-form-urlencoded',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
             sessionStorage.setItem(AUTH_TOKEN_KEY, data.access_token);
 
-            location.href = "/Default.aspx";
+            var user = {};
+            user.username = $('.username').val();
+            user.token = data.access_token;
+
+            $.ajax({
+                type: 'POST',
+                url: 'Login.aspx/AuthorizeUser',
+                data: JSON.stringify(user),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function () {
+                    location.href = "/Default.aspx";
+                },
+                error: function (error) {
+                    var err = error;
+                }
+            });
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during logging in.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 

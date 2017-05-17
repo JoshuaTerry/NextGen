@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace DDI.WebApi.Models.BindingModels
 {
@@ -18,5 +19,7 @@ namespace DDI.WebApi.Models.BindingModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        [Display(Name = "Default Business Unit")]
+        public Guid? DefaultBusinessUnitId { get; set; }
     }
 }

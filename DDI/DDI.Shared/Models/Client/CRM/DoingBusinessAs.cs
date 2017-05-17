@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
-	[Table("DoingBusinessAs")]
-	public class DoingBusinessAs : EntityBase
+    [Table("DoingBusinessAs")]
+	public class DoingBusinessAs : AuditableEntityBase
     {
         #region Public Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
@@ -23,9 +22,13 @@ namespace DDI.Shared.Models.Client.CRM
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
 
+        [ForeignKey("ConstituentId")]
         public Constituent Constituent { get; set; }
 
         public Guid? ConstituentId { get; set; }
+
+        public override string DisplayName => Name;
+
         #endregion Public Properties
     }
 }

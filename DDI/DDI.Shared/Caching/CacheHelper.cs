@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Caching
 {
@@ -67,6 +63,21 @@ namespace DDI.Shared.Caching
         public static void RemoveEntry(string key)
         {
             CacheProvider.RemoveEntry(key);
+        }
+
+        /// <summary>
+        /// Remove all entries from the cache.  This is only supported for MemoryCacheProviders and not in an Web environment.
+        /// </summary>
+        public static void RemoveAllEntries()
+        {
+            if (CacheProvider is MemoryCacheProvider)
+            {
+                ((MemoryCacheProvider)CacheProvider).Clear();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
     }

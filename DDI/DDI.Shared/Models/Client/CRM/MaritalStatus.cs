@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("MaritialStatus")]
-    public class MaritalStatus : EntityBase
+    public class MaritalStatus : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties 
         [Key]
@@ -14,11 +14,11 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
-        public string Name { get; set; }
-
-        [MaxLength(4)]
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
         public string Code { get; set; }
+
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; }
 
         #endregion Public Properties
 

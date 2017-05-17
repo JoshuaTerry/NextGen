@@ -1,14 +1,13 @@
 ﻿using DDI.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DDI.Shared.Statics;
 
 namespace DDI.Services.Search
 {
     public class PageableSearch : IPageable
     {
+        public static PageableSearch Default => new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitDefault, null);
+        public static PageableSearch Max => new PageableSearch(SearchParameters.OffsetDefault, SearchParameters.LimitMax, null);
+
         #region IPageable
         public int? Offset { get; set; }
         public int? Limit { get; set; }

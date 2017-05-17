@@ -2,11 +2,9 @@
 using DDI.Shared.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace DDI.Data
 {
@@ -20,6 +18,18 @@ namespace DDI.Data
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
         private List<object> _businessLogic;
+
+        /// <summary>
+        /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
+        /// </summary>
+        public bool AuditingEnabled
+        {
+            get
+            {
+                return false;
+            }
+            set { }
+        }
 
         #endregion Private Fields
 
@@ -143,6 +153,14 @@ namespace DDI.Data
         }
 
         /// <summary>
+        /// Determine if any entries exist in a collection of entities filtered by a predicate.
+        /// </summary>
+        public bool Any<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class
+        {
+            return GetRepository<T>().Entities.Any(predicate);
+        }
+
+        /// <summary>
         /// Return a queryable collection of entities.
         /// </summary>
         public IQueryable<T> GetEntities<T>(params Expression<Func<T, object>>[] includes) where T : class
@@ -216,7 +234,7 @@ namespace DDI.Data
 
         public void Insert<T>(T entity) where T : class
         {
-            ((ICollection<T>)(GetRepository<T>().Entities)).Add(entity);
+            GetRepository<T>().Insert(entity);
         }
 
         public void Update<T>(T entity) where T : class
@@ -226,7 +244,7 @@ namespace DDI.Data
 
         public void Delete<T>(T entity) where T : class
         {
-            ((ICollection<T>)(GetRepository<T>().Entities)).Remove(entity);
+            GetRepository<T>().Delete(entity);
         }
 
         public void AddBusinessLogic(object logic)
@@ -267,6 +285,20 @@ namespace DDI.Data
         public T GetById<T>(Guid id, params Expression<Func<T, object>>[] includes) where T : class
         {
             return GetRepository<T>().GetById(id, includes);
+        }
+
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {           
+        }
+
+        public void RollbackTransaction()
+        {
+        }
+
+        public bool CommitTransaction()
+        {
+            SaveChanges();
+            return true;
         }
 
         #endregion Protected Methods

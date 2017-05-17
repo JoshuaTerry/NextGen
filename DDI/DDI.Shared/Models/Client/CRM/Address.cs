@@ -1,15 +1,13 @@
+using DDI.Shared.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Statics;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Address")]
-    public class Address : EntityBase
+    public class Address : AuditableEntityBase
     {
         #region Public Properties
         [Key]
@@ -45,6 +43,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private Country _country = null;
         [NotMapped]
+        [ForeignKey("CountryId")]
         public Country Country
         {
             get
@@ -60,6 +59,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private State _state = null;
         [NotMapped]
+        [ForeignKey("StateId")]
         public State State
         {
             get
@@ -75,6 +75,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         private County _county = null;
         [NotMapped]
+        [ForeignKey("CountyId")]
         public County County
         {
             get
@@ -90,10 +91,13 @@ namespace DDI.Shared.Models.Client.CRM
 
         // Navigation Properties
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
-
+        [ForeignKey("Region1Id")]
         public Region Region1 { get; set; }
+        [ForeignKey("Region2Id")]
         public Region Region2 { get; set; }
+        [ForeignKey("Region3Id")]
         public Region Region3 { get; set; }
+        [ForeignKey("Region4Id")]
         public Region Region4 { get; set; }
 
         #endregion Public Properties

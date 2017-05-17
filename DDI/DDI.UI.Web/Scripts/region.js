@@ -2,7 +2,7 @@
 
 function LoadRegions(container, prefix) {
 
-    if (container.indexOf('.') != 0) {
+    if ($.type(container) === "string" && container.indexOf('.') != 0) {
         container = '.' + container;
     }
 
@@ -12,13 +12,9 @@ function LoadRegions(container, prefix) {
 
     $(container).html('');
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'regionlevels',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'regionlevels', null, function (data) {
 
+        if (data.Data) {
             $.map(data.Data, function (item) {
 
                 var currentRegion = CreateRegionControl(container, prefix, item.Level);
@@ -27,26 +23,23 @@ function LoadRegions(container, prefix) {
                 $('.region' + item.Level + 'label').text(item.Label);
 
                 if (!item.IsChildLevel) {
-                    LoadRegionDropDown(prefix, item.Level);
+                    LoadRegionDropDown(container, prefix, item.Level);
                 } else {
                     $(prefix + 'Region' + (item.Level - 1) + 'Id').change(function () {
 
                         ClearElement(prefix + 'Region' + item.Level + 'Id');
 
                         if ($(prefix + 'Region' + (item.Level - 1) + 'Id option:selected').text().length > 0) {
-                            LoadRegionDropDown(prefix, (item.Level), $(prefix + 'Region' + item.Level + 'Id').val());
+                            LoadRegionDropDown(container, prefix, (item.Level), $(prefix + 'Region' + item.Level + 'Id').val());
                         }
 
                     });
                 }
 
             });
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
         }
-    });
+
+    }, null);
 
 }
 
@@ -66,7 +59,31 @@ function CreateRegionControl(container, prefix, index) {
 
 }
 
-function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
+function LoadAllRegionDropDowns(container, prefix, address) {
+
+    if (address) {
+
+        if (address.Region1) {
+            LoadRegionDropDown(container, prefix, 1, null, address.Region1.Id);
+        }
+
+        if (address.Region2 && address.Region2.Id && address.Region2.ParentRegionId) {
+            LoadRegionDropDown(container, prefix, 2, address.Region2.ParentRegionId, address.Region2.Id);
+        }
+
+        if (address.Region3 && address.Region3.Id && address.Region3.ParentRegionId) {
+            LoadRegionDropDown(container, prefix, 3, address.Region3.ParentRegionId, address.Region3.Id);
+        }
+
+        if (address.Region4 && address.Region4.Id && address.Region4.ParentRegionId) {
+            LoadRegionDropDown(container, prefix, 4, address.Region4.ParentRegionId, address.Region4.Id);
+        }
+
+    }
+
+}
+
+function LoadRegionDropDown(container, prefix, level, parentid, selectedvalue) {
 
     var route = 'regionlevels/' + level + '/regions/';
 
@@ -74,15 +91,11 @@ function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
         route = route + parentid;
     }
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + route,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', route, null, function (data) {
 
-            var currentdropdown = $(prefix + 'Region' + level + 'Id');
-            ClearElement(prefix + 'Region' + level + 'Id');
+        if (data.Data) {
+            var currentdropdown = $(container).find(prefix + 'Region' + level + 'Id');
+            ClearElement(currentdropdown);
             AddDefaultOption($(currentdropdown), '', '');
 
             $.map(data.Data, function (item) {
@@ -97,10 +110,7 @@ function LoadRegionDropDown(prefix, level, parentid, selectedvalue) {
                 $(currentdropdown).val(selectedvalue);
 
             }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the region levels.');
         }
-    });
+
+    }, null);
 }

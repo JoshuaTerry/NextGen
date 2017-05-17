@@ -1,13 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Helpers
 {
@@ -15,11 +10,19 @@ namespace DDI.Shared.Helpers
     {
 
         /// <summary>
-        /// Convert an object (which is expected to be an enum value) to an Enum value.
+        /// Convert an object to an Enum value.
         /// </summary>
         public static T ConvertToEnum<T>(object obj, T defaultValue = default(T)) where T : struct
         {
             if (obj is T)
+            {
+                return (T)obj;
+            }
+            else if (obj is string)
+            {
+                return GetBestMatch<T>((string)obj, defaultValue);
+            }
+            else if (obj is int)
             {
                 return (T)obj;
             }
@@ -70,25 +73,37 @@ namespace DDI.Shared.Helpers
             return values;
         } 
 
-        public static T FromDescription<T>(string definition) where T : struct, IConvertible
+        /// <summary>
+        /// Given a string, return the enum value whose field name, numeric value, or description attribute best matches the string.
+        /// </summary>
+        private static T GetBestMatch<T>(string matchString, T defaultValue) where T : struct
         {
             Type t = typeof(T);
-            foreach (FieldInfo fieldInfo in t.GetFields())
+            FieldInfo[] fields = t.GetFields();
+            var candidates = new Dictionary<string, FieldInfo>();
+
+            foreach (var fieldInfo in fields.Where(p => p.IsStatic))
             {
-                object[] attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), true);
-                if (attributes.Length > 0)
+                DescriptionAttribute attribute = fieldInfo.GetCustomAttribute<DescriptionAttribute>();
+                if (attribute != null)
                 {
-                    foreach (DescriptionAttribute descriptionAttribute in attributes)
-                    {
-                        if (descriptionAttribute.Description.Equals(definition))
-                        {
-                            return (T)fieldInfo.GetValue(null);
-                        }
-                    }
+                    candidates[attribute.Description] = fieldInfo; // Description attribute
                 }
+                candidates[fieldInfo.Name] = fieldInfo;  // Enum field name
+                candidates[((int)fieldInfo.GetValue(null)).ToString()] = fieldInfo; // Enum field integer value
             }
-            return default(T);
+
+            string bestMatch = StringHelper.GetBestMatch(matchString, candidates.Select(p => p.Key).ToArray());
+
+            if (bestMatch != null)
+            {
+                return (T)candidates[bestMatch].GetValue(null);
+            }
+
+            return defaultValue;
         }
+
+
     }
 
 }

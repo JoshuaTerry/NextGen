@@ -1,13 +1,9 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Enums;
+using DDI.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models;
-using DDI.Shared.Enums;
 
 namespace DDI.Business.Core
 {
@@ -97,5 +93,17 @@ namespace DDI.Business.Core
 
             return list;
         }
+
+        /// <summary>
+        /// Method called before the configuration is saved to the database.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        public virtual void BeforeSave(IUnitOfWork unitOfWork) { }
+
+        /// <summary>
+        /// Method called after the configuration is loaded from the database.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        public virtual void AfterLoad(IUnitOfWork unitOfWork) { }
     }
 }

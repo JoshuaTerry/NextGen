@@ -5,8 +5,13 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Conversion
 {
@@ -15,9 +20,12 @@ namespace DDI.Conversion
     /// </summary>
     internal abstract class ConversionBase
     {
+        #region Private Fields
+
+        #endregion 
 
         #region Public Abstract Methods
-        
+
         /// <summary>
         /// Execute a set of conversion methods.
         /// </summary>
@@ -153,6 +161,40 @@ namespace DDI.Conversion
             return entities.Local;
         }
 
+        /// <summary>
+        /// Import CreatedBy, CreatedOn, LastModifiedBy, LastModifiedOn values.
+        /// </summary>
+        /// <param name="entity">Entity being converted.</param>
+        /// <param name="importer">FileImport object.</param>
+        /// <param name="createdByColumn">Column number for CreatedBy</param>
+        /// <param name="createdOnColumn">Column number for CreatedOn</param>
+        /// <param name="modifiedByColumn">Column number for LastModifiedBy</param>
+        /// <param name="modifiedOnColumn">Column number for LastModifiedOn</param>
+        protected void ImportCreatedModifiedInfo(IAuditableEntity entity, FileImport importer, int createdByColumn, int createdOnColumn = -1, int modifiedByColumn = -1, int modifiedOnColumn = -1)
+        {
+            if (createdOnColumn < 0)
+            {
+                createdOnColumn = createdByColumn + 1;
+                modifiedByColumn = createdByColumn + 2;
+                modifiedOnColumn = createdByColumn + 3;
+            }
+
+            entity.CreatedOn = importer.GetDateTime(createdOnColumn);
+            entity.LastModifiedOn = importer.GetDateTime(modifiedOnColumn);
+            entity.CreatedBy = importer.GetString(createdByColumn);
+            entity.LastModifiedBy = importer.GetString(modifiedByColumn);         
+        }
+
+        /// <summary>
+        /// Lookup a user by user name.
+        /// </summary>
+        /// <param name="users">Set of User entities.</param>
+        /// <param name="userName">User name.</param>
+        protected User GetUserByName(IEnumerable<User> users, string userName)
+        {
+            return users.FirstOrDefault(p => Regex.IsMatch(p.UserName, $"^{userName}(@.*)?$", RegexOptions.IgnoreCase));
+        }
+
         #endregion
 
         #region Internal Classes
@@ -160,7 +202,7 @@ namespace DDI.Conversion
         /// <summary>
         /// Class for exporting rows that map a legacy ID (string) to an entity ID (Guid)
         /// </summary>
-        protected class LegacyToID
+        public class LegacyToID
         {
             public string LegacyKey { get; set; }
             public Guid Id { get; set; }
@@ -181,7 +223,7 @@ namespace DDI.Conversion
         /// <summary>
         /// Class for exporting rows that join a parent ID to a child ID
         /// </summary>
-        protected class JoinRow
+        public class JoinRow
         {
             public Guid LeftId { get; set; }
             public Guid RightId { get; set; }

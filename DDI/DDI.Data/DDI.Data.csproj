@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Data</RootNamespace>
     <AssemblyName>DDI.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,11 +43,20 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,90 +70,113 @@
     <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
+    <Compile Include="Conventions\DecimalPrecisionAttributeConvention.cs" />
+    <Compile Include="CustomDbConfiguration.cs" />
     <Compile Include="DomainContext.cs" />
+    <Compile Include="DomainContextAdapter.cs" />
+    <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.cs" />
-    <Compile Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.Designer.cs">
-      <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704211403062_TransactionNumberSequence.cs" />
+    <Compile Include="Migrations\Client\201704211403062_TransactionNumberSequence.Designer.cs">
+      <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702171526564_Notes_v2.cs" />
-    <Compile Include="Migrations\Client\201702171526564_Notes_v2.Designer.cs">
-      <DependentUpon>201702171526564_Notes_v2.cs</DependentUpon>
+    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.cs" />
+    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.Designer.cs">
+      <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.cs" />
-    <Compile Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.Designer.cs">
-      <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704201955265_EntityNumber.cs" />
+    <Compile Include="Migrations\Client\201704201955265_EntityNumber.Designer.cs">
+      <DependentUpon>201704201955265_EntityNumber.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.cs" />
-    <Compile Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.Designer.cs">
-      <DependentUpon>201702090410032_AddingPaymentMethodTables.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704171725592_Transaction_v1.cs" />
+    <Compile Include="Migrations\Client\201704171725592_Transaction_v1.Designer.cs">
+      <DependentUpon>201704171725592_Transaction_v1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701272031315_AddPropertiesToConstituent.cs" />
-    <Compile Include="Migrations\Client\201701272031315_AddPropertiesToConstituent.Designer.cs">
-      <DependentUpon>201701272031315_AddPropertiesToConstituent.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704072130391_Transaction_v0.cs" />
+    <Compile Include="Migrations\Client\201704072130391_Transaction_v0.Designer.cs">
+      <DependentUpon>201704072130391_Transaction_v0.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701301923425_AddPropertiesToConstituent.cs" />
-    <Compile Include="Migrations\Client\201701301923425_AddPropertiesToConstituent.Designer.cs">
-      <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201704072115338_GL_v8.cs" />
+    <Compile Include="Migrations\Client\201704072115338_GL_v8.Designer.cs">
+      <DependentUpon>201704072115338_GL_v8.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.cs" />
-    <Compile Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.Designer.cs">
-      <DependentUpon>201702032027460_AddBirthYearToConstituent.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703301855584_AddingGroups.cs" />
+    <Compile Include="Migrations\Client\201703301855584_AddingGroups.Designer.cs">
+      <DependentUpon>201703301855584_AddingGroups.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.cs" />
-    <Compile Include="Migrations\Client\201701242312159_PaymentMethod_v2.Designer.cs">
-      <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703301358533_GL_v6.cs" />
+    <Compile Include="Migrations\Client\201703301358533_GL_v6.Designer.cs">
+      <DependentUpon>201703301358533_GL_v6.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701232316587_PaymentMethod.cs" />
-    <Compile Include="Migrations\Client\201701232316587_PaymentMethod.Designer.cs">
-      <DependentUpon>201701232316587_PaymentMethod.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703300000532_GL_v5.cs" />
+    <Compile Include="Migrations\Client\201703300000532_GL_v5.Designer.cs">
+      <DependentUpon>201703300000532_GL_v5.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701152046175_ContactInfo.cs" />
-    <Compile Include="Migrations\Client\201701152046175_ContactInfo.Designer.cs">
-      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703282024177_GL_v4.cs" />
+    <Compile Include="Migrations\Client\201703282024177_GL_v4.Designer.cs">
+      <DependentUpon>201703282024177_GL_v4.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.cs" />
-    <Compile Include="Migrations\Client\201701141745544_MaritalStatus2.Designer.cs">
-      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703022141401_Initial.cs" />
+    <Compile Include="Migrations\Client\201703022141401_Initial.Designer.cs">
+      <DependentUpon>201703022141401_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.cs" />
-    <Compile Include="Migrations\Client\201701131918535_Update SectionPreferences.Designer.cs">
-      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.cs" />
+    <Compile Include="Migrations\Client\201703030506257_ChangeCreatedOn.Designer.cs">
+      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.cs" />
-    <Compile Include="Migrations\Client\201701090156579_MaritalStatus1.Designer.cs">
-      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703051400387_IsActive.cs" />
+    <Compile Include="Migrations\Client\201703051400387_IsActive.Designer.cs">
+      <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.cs" />
-    <Compile Include="Migrations\Client\201701071608076_Configuration_v1.Designer.cs">
-      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703061608079_AddingMemoCodeTables.cs" />
+    <Compile Include="Migrations\Client\201703061608079_AddingMemoCodeTables.Designer.cs">
+      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701061651063_ConstituentType_v2.cs" />
-    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.cs" />
-    <Compile Include="Migrations\Client\201701131622214_AddingCustomFields.Designer.cs">
-      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703061846001_TestingForChanges.cs" />
+    <Compile Include="Migrations\Client\201703061846001_TestingForChanges.Designer.cs">
+      <DependentUpon>201703061846001_TestingForChanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.cs" />
-    <Compile Include="Migrations\Client\201701040309174_Prefix_v2.Designer.cs">
-      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.cs" />
+    <Compile Include="Migrations\Client\201703062337318_ConstituentPictureTable.Designer.cs">
+      <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701032042214_StringLength.cs" />
-    <Compile Include="Migrations\Client\201701032042214_StringLength.Designer.cs">
-      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.cs" />
+    <Compile Include="Migrations\Client\201703081713520_AddNoteRelatedTables.Designer.cs">
+      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.cs" />
-    <Compile Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.Designer.cs">
-      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.cs" />
+    <Compile Include="Migrations\Client\201703091702142_RenamesAndUsers.Designer.cs">
+      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.cs" />
-    <Compile Include="Migrations\Client\201701271545556_PaymentPreferences.Designer.cs">
-      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.cs" />
+    <Compile Include="Migrations\Client\201703092005534_NoteCodeMaxLength.Designer.cs">
+      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201702100312545_PaymentMethod_v3.cs" />
-    <Compile Include="Migrations\Client\201702100312545_PaymentMethod_v3.Designer.cs">
-      <DependentUpon>201702100312545_PaymentMethod_v3.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.cs" />
+    <Compile Include="Migrations\Client\201703092024348_Note_Notecode.Designer.cs">
+      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703132245251_AuditChanges.cs" />
+    <Compile Include="Migrations\Client\201703132245251_AuditChanges.Designer.cs">
+      <DependentUpon>201703132245251_AuditChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.cs" />
+    <Compile Include="Migrations\Client\201703211657318_AddingUniqueIndexes.Designer.cs">
+      <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703241755260_GL_v1.cs" />
+    <Compile Include="Migrations\Client\201703241755260_GL_v1.Designer.cs">
+      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703241853454_GL_v2.cs" />
+    <Compile Include="Migrations\Client\201703241853454_GL_v2.Designer.cs">
+      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201703260034361_GL_v3.cs" />
+    <Compile Include="Migrations\Client\201703260034361_GL_v3.Designer.cs">
+      <DependentUpon>201703260034361_GL_v3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
@@ -153,151 +186,113 @@
     <Compile Include="Migrations\Common\201612280326437_Indexes.Designer.cs">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.cs" />
-    <Compile Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.Designer.cs">
-      <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.cs" />
-    <Compile Include="Migrations\Client\201612201635019_ConsitituentNumSequence.Designer.cs">
-      <DependentUpon>201612201635019_ConsitituentNumSequence.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612201527048_MaritalStatus.cs" />
-    <Compile Include="Migrations\Client\201612201527048_MaritalStatus.Designer.cs">
-      <DependentUpon>201612201527048_MaritalStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612201429096_EdLevel_DBA.cs" />
-    <Compile Include="Migrations\Client\201612201429096_EdLevel_DBA.Designer.cs">
-      <DependentUpon>201612201429096_EdLevel_DBA.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612151525388_Region_v1.cs" />
-    <Compile Include="Migrations\Client\201612151525388_Region_v1.Designer.cs">
-      <DependentUpon>201612151525388_Region_v1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612141657201_Constituent_v6.cs" />
-    <Compile Include="Migrations\Client\201612141657201_Constituent_v6.Designer.cs">
-      <DependentUpon>201612141657201_Constituent_v6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612141647490_Constituent_v5.cs" />
-    <Compile Include="Migrations\Client\201612141647490_Constituent_v5.Designer.cs">
-      <DependentUpon>201612141647490_Constituent_v5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612141422218_Constituent_v2.cs" />
-    <Compile Include="Migrations\Client\201612141422218_Constituent_v2.Designer.cs">
-      <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612141508500_Constituent_v3.cs" />
-    <Compile Include="Migrations\Client\201612141508500_Constituent_v3.Designer.cs">
-      <DependentUpon>201612141508500_Constituent_v3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612141546004_Constituent_v4.cs" />
-    <Compile Include="Migrations\Client\201612141546004_Constituent_v4.Designer.cs">
-      <DependentUpon>201612141546004_Constituent_v4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612122040239_fixingMigration.cs" />
-    <Compile Include="Migrations\Client\201612122040239_fixingMigration.Designer.cs">
-      <DependentUpon>201612122040239_fixingMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.cs" />
-    <Compile Include="Migrations\Client\201612262059020_Relationship_Tag.Designer.cs">
-      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.cs" />
     <Compile Include="Migrations\Common\201612091710348_RenameColumns.Designer.cs">
       <DependentUpon>201612091710348_RenameColumns.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612091853462_ModelChanges.cs" />
-    <Compile Include="Migrations\Client\201612091853462_ModelChanges.Designer.cs">
-      <DependentUpon>201612091853462_ModelChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.cs" />
-    <Compile Include="Migrations\Client\201612072148271_AddCRMObjects.designer.cs">
-      <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201612070300153_InitialMigration.cs" />
     <Compile Include="Migrations\Common\201612070300153_InitialMigration.Designer.cs">
       <DependentUpon>201612070300153_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Client\201612052134024_InitialMigration.cs" />
-    <Compile Include="Migrations\Client\201612052134024_InitialMigration.Designer.cs">
-      <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Common\CommonConfiguration.cs" />
     <Compile Include="Migrations\Client\ClientConfiguration.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\Customizations\CreateSequenceOperation.cs" />
+    <Compile Include="Migrations\Customizations\DropSequenceOperation.cs" />
+    <Compile Include="Migrations\Customizations\DropViewOperation.cs" />
+    <Compile Include="Migrations\Customizations\CreateViewOperation.cs" />
+    <Compile Include="Migrations\Customizations\CustomSqlGenerator.cs" />
+    <Compile Include="Extensions\DbMigrationExtensions.cs" />
+    <Compile Include="Models\TransactionXref.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryNoDb.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
+    <Compile Include="Statics\Sequences.cs" />
     <Compile Include="UnitOfWorkNoDb.cs" />
     <Compile Include="UnitOfWorkEF.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Client\201702152150014_AddNotesObjectsAndTables.resx">
-      <DependentUpon>201702152150014_AddNotesObjectsAndTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704211403062_TransactionNumberSequence.resx">
+      <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702171526564_Notes_v2.resx">
-      <DependentUpon>201702171526564_Notes_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704261812162_AddingUniqueIndexToUserName.resx">
+      <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702091934005_PaymentMethodUpdateMR.resx">
-      <DependentUpon>201702091934005_PaymentMethodUpdateMR.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704201955265_EntityNumber.resx">
+      <DependentUpon>201704201955265_EntityNumber.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702090410032_AddingPaymentMethodTables.resx">
-      <DependentUpon>201702090410032_AddingPaymentMethodTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704171725592_Transaction_v1.resx">
+      <DependentUpon>201704171725592_Transaction_v1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701272031315_AddPropertiesToConstituent.resx">
-      <DependentUpon>201701272031315_AddPropertiesToConstituent.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704072130391_Transaction_v0.resx">
+      <DependentUpon>201704072130391_Transaction_v0.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701301923425_AddPropertiesToConstituent.resx">
-      <DependentUpon>201701301923425_AddPropertiesToConstituent.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201704072115338_GL_v8.resx">
+      <DependentUpon>201704072115338_GL_v8.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702032027460_AddBirthYearToConstituent.resx">
-      <DependentUpon>201702032027460_AddBirthYearToConstituent.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703301855584_AddingGroups.resx">
+      <DependentUpon>201703301855584_AddingGroups.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701242312159_PaymentMethod_v2.resx">
-      <DependentUpon>201701242312159_PaymentMethod_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703301358533_GL_v6.resx">
+      <DependentUpon>201703301358533_GL_v6.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701232316587_PaymentMethod.resx">
-      <DependentUpon>201701232316587_PaymentMethod.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703300000532_GL_v5.resx">
+      <DependentUpon>201703300000532_GL_v5.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701152046175_ContactInfo.resx">
-      <DependentUpon>201701152046175_ContactInfo.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703282024177_GL_v4.resx">
+      <DependentUpon>201703282024177_GL_v4.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701141745544_MaritalStatus2.resx">
-      <DependentUpon>201701141745544_MaritalStatus2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703022141401_Initial.resx">
+      <DependentUpon>201703022141401_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701131918535_Update SectionPreferences.resx">
-      <DependentUpon>201701131918535_Update SectionPreferences.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703030506257_ChangeCreatedOn.resx">
+      <DependentUpon>201703030506257_ChangeCreatedOn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701090156579_MaritalStatus1.resx">
-      <DependentUpon>201701090156579_MaritalStatus1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703051400387_IsActive.resx">
+      <DependentUpon>201703051400387_IsActive.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701071608076_Configuration_v1.resx">
-      <DependentUpon>201701071608076_Configuration_v1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703061608079_AddingMemoCodeTables.resx">
+      <DependentUpon>201703061608079_AddingMemoCodeTables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701061651063_ConstituentType_v2.resx">
-      <DependentUpon>201701061651063_ConstituentType_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703061846001_TestingForChanges.resx">
+      <DependentUpon>201703061846001_TestingForChanges.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701131622214_AddingCustomFields.resx">
-      <DependentUpon>201701131622214_AddingCustomFields.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703062337318_ConstituentPictureTable.resx">
+      <DependentUpon>201703062337318_ConstituentPictureTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701040309174_Prefix_v2.resx">
-      <DependentUpon>201701040309174_Prefix_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703081713520_AddNoteRelatedTables.resx">
+      <DependentUpon>201703081713520_AddNoteRelatedTables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701032042214_StringLength.resx">
-      <DependentUpon>201701032042214_StringLength.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703091702142_RenamesAndUsers.resx">
+      <DependentUpon>201703091702142_RenamesAndUsers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701031914395_RemoveIdentityFromPK.resx">
-      <DependentUpon>201701031914395_RemoveIdentityFromPK.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703092005534_NoteCodeMaxLength.resx">
+      <DependentUpon>201703092005534_NoteCodeMaxLength.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201701271545556_PaymentPreferences.resx">
-      <DependentUpon>201701271545556_PaymentPreferences.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703092024348_Note_Notecode.resx">
+      <DependentUpon>201703092024348_Note_Notecode.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201702100312545_PaymentMethod_v3.resx">
-      <DependentUpon>201702100312545_PaymentMethod_v3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201703132245251_AuditChanges.resx">
+      <DependentUpon>201703132245251_AuditChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703211657318_AddingUniqueIndexes.resx">
+      <DependentUpon>201703211657318_AddingUniqueIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703241755260_GL_v1.resx">
+      <DependentUpon>201703241755260_GL_v1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703241853454_GL_v2.resx">
+      <DependentUpon>201703241853454_GL_v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201703260034361_GL_v3.resx">
+      <DependentUpon>201703260034361_GL_v3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>
@@ -305,51 +300,19 @@
     <EmbeddedResource Include="Migrations\Common\201612280326437_Indexes.resx">
       <DependentUpon>201612280326437_Indexes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612222012576_AddSectionPreferenceDisplayName.resx">
-      <DependentUpon>201612222012576_AddSectionPreferenceDisplayName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612201635019_ConsitituentNumSequence.resx">
-      <DependentUpon>201612201635019_ConsitituentNumSequence.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612201527048_MaritalStatus.resx">
-      <DependentUpon>201612201527048_MaritalStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612201429096_EdLevel_DBA.resx">
-      <DependentUpon>201612201429096_EdLevel_DBA.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612151525388_Region_v1.resx">
-      <DependentUpon>201612151525388_Region_v1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612141657201_Constituent_v6.resx">
-      <DependentUpon>201612141657201_Constituent_v6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612141647490_Constituent_v5.resx">
-      <DependentUpon>201612141647490_Constituent_v5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612141422218_Constituent_v2.resx">
-      <DependentUpon>201612141422218_Constituent_v2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612141508500_Constituent_v3.resx">
-      <DependentUpon>201612141508500_Constituent_v3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612141546004_Constituent_v4.resx">
-      <DependentUpon>201612141546004_Constituent_v4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612072148271_AddCRMObjects.resx">
-      <DependentUpon>201612072148271_AddCRMObjects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612262059020_Relationship_Tag.resx">
-      <DependentUpon>201612262059020_Relationship_Tag.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201612070300153_InitialMigration.resx">
       <DependentUpon>201612070300153_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Client\201612052134024_InitialMigration.resx">
-      <DependentUpon>201612052134024_InitialMigration.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.EFAudit\DDI.EFAudit.csproj">
+      <Project>{7c3b147f-fd3e-4ca9-b405-af4d249bf5a5}</Project>
+      <Name>DDI.EFAudit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>

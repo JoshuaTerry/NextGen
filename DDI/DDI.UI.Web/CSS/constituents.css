@@ -1,11 +1,14 @@
-﻿
-.constituentcontainer { margin-top: 10px; vertical-align: top; }
+﻿.constituentcontainer { margin-top: 10px; vertical-align: top; }
 .constituentcontainer h1 { margin: 0px; padding: 5px; color: #333333; background-color: #cccccc; font-size: 14px; }
 
 .constituenttopinfo { padding: 1em 2.2em; }
 .constituentinfocontainer { width: 15%; display: inline-block; background-color: white; vertical-align: top; }
-.constituentpic { height: 150px; }
+
+.constituentpic { height: 150px; cursor: pointer; position: relative; }
 .constituentpic img { height: 150px; }
+.changeconstituentpic { background-color: black; opacity: .6; bottom: 0px; width: 100%; line-height: 50px; color: white; text-align: center; 
+                        font-weight: bold; font-size: 16px; position: absolute; z-index: 50; }
+
 .constituentinformation { height: 175px; }
 .constituentinformation div { padding: 5px; margin-bottom: 10px; }
 .constituentinformation div label { display: block; text-align: left; }
@@ -13,7 +16,7 @@
 .constituentrealtionships { height: 175px; }
 .constituentname { font-weight: bold; text-align: center; }
 .constituenttags { width: 100%; }
-
+ul.relationshipQuickViewData { padding-left: 5px; }
 
 /* ADDRESS MODAL */
 .addressmodal div.modalcontent div.fieldblock label { display: inline-block; width: 100px; text-align: right; vertical-align: top; margin-top: 3px; }

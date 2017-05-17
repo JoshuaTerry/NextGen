@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using DDI.Shared.Helpers;
 
 namespace DDI.Shared.Models
 {
@@ -8,28 +8,13 @@ namespace DDI.Shared.Models
     /// Base class for all entity model classes.
     /// </summary>
     public abstract class EntityBase : IEntity
-    {
-        #region Fields
-
-        private string _entityType = null;
-        private static Dictionary<string, Type> _entityTypeDict = null;
-
-        #endregion
-
+    {       
         #region Properties 
 
         public abstract Guid Id { get; set; }
 
         public virtual string DisplayName => string.Empty;
-
-        public virtual Guid? CreatedBy { get; set; }
-
-        public virtual DateTime? CreatedOn { get; set; }
-
-        public virtual Guid? LastModifiedBy { get; set; }
-
-        public virtual DateTime? LastModifiedOn { get; set; }
-
+       
         #endregion
 
         #region Constructors 
@@ -49,7 +34,9 @@ namespace DDI.Shared.Models
         public void AssignPrimaryKey()
         {
             if (this.Id == default(Guid))
-                this.Id = Guid.NewGuid();
+            {
+                this.Id = GuidHelper.NewGuid();
+            }
         }
 
         #endregion

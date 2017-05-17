@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    public class NoteTopic : EntityBase
+    [Table("NoteTopic")]
+    public class NoteTopic : AuditableEntityBase, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(64)]
+        [Index("IX_Code", IsUnique = true), MaxLength(64)]
         public string Code { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         public bool IsActive { get; set; }
 
         public ICollection<Note> Notes { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

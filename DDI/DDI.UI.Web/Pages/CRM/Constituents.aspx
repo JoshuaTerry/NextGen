@@ -17,8 +17,13 @@
 
         <div class="constituentinfocontainer">
             <h1>Photo</h1>
-            <div class="constituentpic"></div>
-            
+            <div class="constituentpic">
+                <img />
+                <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
+            </div>
+            <div>
+                <a href="#" class="newauditmodal">Audit History</a>
+            </div>
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
@@ -28,12 +33,13 @@
                     <label class="editable FormattedName"></label>
                     <label class="editable Address"></label>
                     <label class="editable CityStateZip"></label>
+                    <label class="editable ContactInfo"></label>
                 </div>
                 <div>
                     <span class="editable PhoneNumber"></span>
                 </div>
             </div>
-
+            
             <h1>Relationships</h1>
             <div class="editable relationshipsQuickView">
 
@@ -44,9 +50,10 @@
 
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
-                <li><a href="#tab-donor">Donor</a></li>
+                <li style="display: none;"><a href="#tab-donor">Donor</a></li>
+                <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
             </ul>
 
             <!-- Individual Tab -->
@@ -62,6 +69,7 @@
                         </div>
 
                         <div class="fieldblock">
+                            <label>Name</label>
                             <label class="editable FormattedName"></label>
                         </div>
 
@@ -73,13 +81,13 @@
 
                     <div class="fieldblock">
                         <label>Tags</label>
-                        <input type="text" class="editable Tags" />
+                        <div class="tagselect constituenttagselect disabled"></div>
                     </div>
 
                     <div class="fieldlock">
                         Created: <span class="CreatedDate"></span> by <span class="CreatedBy"></span>
                     </div>
-                    
+
                 </div>
 
                 <div class="accordions">
@@ -183,7 +191,7 @@
                     <h1>Additional Data</h1>
                     <div class="editcontainer customFieldContainer"></div>
 
-                    <h1>Clergy Section</h1>
+                    <h1 class="ClergySettingsSection"><span class="ClergySettingsSectionLabel">Clergy Section</span></h1>
                     <div class="editcontainer">
                         
                         <div class="fourcolumn">
@@ -210,7 +218,8 @@
 
                     </div>
 
-                    <h1>Demographics</h1>
+                   <h1 class="DemographicSettingsSection"><span class="DemographicSettingsSectionLabel">Demographics</span></h1>
+                    
                     <div class="editcontainer">
                         <div class="fieldblock">
                             <label>Denomination</label>
@@ -228,12 +237,13 @@
                         </div>
                     </div>
 
-                    <h1>Doing Business As<a href="#" title="New" class="newdbamodallink newbutton"></a></h1>
+                    <h1 class ="DBASettingsSection"><span class="DBASettingsSectionLabel">Doing Business As</span></h1>
                     <div>
                         <div class="doingbusinessastable"></div>
                     </div>
 
-                    <h1>Education<a href="#" title="New" class="neweducationmodallink newbutton"></a></h1>
+                    <h1 class="EducationSettingsSection"><span class="EducationSettingsSectionLabel">Education</span></h1> 
+
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -245,7 +255,7 @@
 
                     </div>
 
-                    <h1 class="OrganizationSection">Organization</h1>
+                   <h1 class="OrganizationSettingsSection"><span class="OrganizationSettingsSectionLabel">Organization</span></h1>
                     <div class="editcontainer">
 
                         <div class="inline">
@@ -284,7 +294,8 @@
 
                     </div>
 
-                    <h1>Payment Preferences<a href="#" title="New" class="newppmodallink newbutton"></a></h1>
+                    <h1 class ="PaymentPreferencesSettingsSection">
+                        <span class="PaymentPreferencesSettingsSectionLabel">Payment Preferences</span></h1>
                     <div class="editcontainer">
 
                         <div class="fieldblock">
@@ -298,12 +309,12 @@
                             </select>
                         </div>
 
-                        <label>ETF Information</label>
+                        <label>EFT Information</label>
                         <div class="paymentpreferencesgridcontainer"></div>
 
                     </div>
 
-                    <h1 class="PersonalSection">Personal</h1>
+                    <h1 class ="PersonalSettingsSection"><span class="PersonalSettingsSectionLabel">Personal</span></h1>
                     <div class="editcontainer">
 
                         <div class="twocolumn">
@@ -325,7 +336,7 @@
                                         <option value="8">08</option>
                                         <option value="9">09</option>
                                         <option value="10">10</option>
-                                        <option value="12">11</option>
+                                        <option value="11">11</option>
                                         <option value="12">12</option>
                                     </select>
                                         </div>
@@ -377,7 +388,8 @@
                         
                     </div>
 
-                    <h1>Professional</h1>
+                    <h1 class="ProfessionalSettingsSection"><span class="ProfessionalSettingsSectionLabel">Professional</span></h1>
+
                     <div class="editcontainer">
 
                         <div class="threecolumn">
@@ -436,7 +448,7 @@
 
                     </div>
 
-                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span> <a href="#" class="newaltidmodal newbutton"></a></h1>
+                    <h1 class="AlternateIdSettingsSection"><span class="AlternateIdSettingsSectionLabel">Alternate ID</span></h1>
                     <div>
                         
                         <div class="alternateidgridcontainer"></div>
@@ -450,8 +462,10 @@
                                     <input type="text"  class="ai-Name" />
                                 </div>
 
+                                 <input type="hidden" class="ai-ConstituentId parentid" />
+
                                 <div class="modalbuttons">
-                                    <input type="button" class="submitaltid" value="Save" />
+                                    <input type="button" class="savebutton" value="Save" />
                                     <a href ="#" class="cancelmodal">Cancel</a>
                                 </div>
 
@@ -460,7 +474,7 @@
                         </div>
                     </div>
 
-                    <h1>Contact Information</h1>
+                    <h1 class="ContactInformationSettingsSection"><span class="ContactInformationSettingsSectionLabel">Contact Information</span></h1>
                     <div>
 
                         <div class="accordions contactinfocontainer">
@@ -478,30 +492,21 @@
 
             </div>
 
-            <!-- Notes Tab -->
+             <!-- Notes Tab -->
             <div id="tab-notes" class="scrollable">
 
                 <div class="tabscontainer inner">
 
-                    <ul>
+                    <ul> 
                         <li><a href="#tab-notedetail">Note Detail</a></li>
                         <li><a href="#tab-attachments">Attachments</a></li>
                     </ul>
 
                     <div id="tab-notedetail">
 
-                        <table class="datagrid notedetailtable">
-                            <thead>
-                                <tr>
-                                    <th>Created Date</th>
-                                    <th>Created By</th>
-                                    <th>Title</th>
-                                    <th><img src="Images/Note_16.png" /></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
+                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
+                        <div class="notedetailsgridcontainer"></div>
+                        
                     </div>
 
                     <div id="tab-attachments">
@@ -525,7 +530,7 @@
             
             <!-- Relationships Tab -->
             <div id="tab-relationships" class="scrollable">
-                <h1>Relationships<a href="#" class="newrelationshipmodal newbutton"></a></h1>
+                <h1>Relationships</h1>
                 <div class="relationshipstable"></div>
             </div>
             
@@ -626,6 +631,67 @@
 
             </div>
 
+            <!-- Investment Tab -->
+            <div id="tab-investments" class="scrollable">
+
+                <div class="investmenttopinfo">
+
+                        <div class="fieldblock">
+                            <h2>Investor Summary</h2>
+                        </div>
+                        <br />
+
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Status: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorStatusDescription" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn" >
+                            <div>
+                                <label>Since: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorStartDate date" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Primary Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="PrimaryInvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Joint Owner Investment: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="JointInvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="fivecolumn">
+                            <div>
+                                <label>Total Investment Balance: </label>
+                            </div>
+                            <div>
+                                <input type="text" class="InvestorTotal money justright" disabled="disabled"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                <hr />
+                
+                <div class="investmentstable scrollable"></div>
+
         </div>
 
         <div class="dashboard" style="display: none;">
@@ -633,6 +699,8 @@
             <h1>Dashboard</h1>
 
         </div>
+
+    </div>
 
     </div>
 
@@ -719,7 +787,7 @@
             </fieldset>
 
             <div class="modalbuttons">
-                <input type="button" class="saveaddress" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -730,31 +798,31 @@
     <div class="dbamodal" title="Doing Business As" style="display: none;">
 
         <div class="modalcontent">
-            <input type="hidden" class="hiddbaid" />
-
+            
+            <input type="hidden" class="dba-ConstituentId parentid" />
 
             <div class="fieldblock">
                 <label>DBA Name:</label>
-                <input type="text" class="DBAName" />
+                <input type="text" class="dba-Name" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>From:</label>
-                    <input type="text" class="StartDate datepicker" />
+                    <input type="text" class="dba-StartDate datepicker" />
 
                 </div>
 
 
                 <div class="fieldblock">
                     <label>To:</label>
-                    <input type="text" class="EndDate datepicker" />
+                    <input type="text" class="dba-EndDate datepicker" />
 
                 </div>
 
                 <div class="modalbuttons">
-                    <input type="button" class="savedba" value="Save" />
+                    <input type="button" class="savebutton" value="Save" />
                     <a href="#" class="cancelmodal">Cancel</a>
                 </div>
 
@@ -781,13 +849,13 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Rounting Number</label>
+                    <label>Routing Number</label>
                     <input type="text" class="pp-RoutingNumber" />
                 </div>
 
                 <div class="fieldblock">
                     <label>Account Number</label>
-                    <input type="text" class="pp-AccountNumber" />
+                    <input type="text" class="pp-BankAccount" />
                 </div>
 
             </div>
@@ -802,6 +870,15 @@
                         <option value="1">Savings Account</option>
                     </select>
                 </div>
+
+                <div class="fieldblock">
+                    <label>EFT Format</label>
+                    <select class="pp-EFTFormatId eftformats"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>Status</label>
@@ -820,9 +897,10 @@
             
             <input type="hidden" class="pp-StatusDate" />
             <input type="hidden" class="pp-PreviousStatus" />
+            <input type="hidden" class="pp-ConstituentId parentid" />
 
             <div class="modalbuttons">
-                <input type="button" class="savepaymentpreference" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -830,32 +908,34 @@
 
     </div>
                         
-    <div class="phonenumbermodal" title="Phone Number" style="display: none;">
+    <div class="phonemodal" title="Phone Number" style="display: none;">
 
         <div class="modalcontent">
             
+            <input type="hidden" class="phone-ConstituentId parentid" />
+
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="pn-PhoneNumberType ContactTypeId"></select>
+                <select class="phone-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Phone:</label>
-                <input type="text"  class="pn-Info" />
+                <input type="text"  class="phone-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="pn-IsPreferred" />
+                <input type="checkbox"  class="phone-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="pn-Comment" />
+                <input type="text"  class="phone-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitphonenumber" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -867,28 +947,30 @@
 
         <div class="modalcontent">
             
+            <input type="hidden" class="email-ConstituentId parentid" />
+
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="e-EmailType ContactTypeId"></select>
+                <select class="email-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Email:</label>
-                <input type="text"  class="e-Info" />
+                <input type="text"  class="email-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="e-IsPreferred" />
+                <input type="checkbox"  class="email-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="e-Comment" />
+                <input type="text"  class="email-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitemail" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -896,32 +978,34 @@
 
     </div>
 
-    <div class="websitemodal" title="Web Sites" style="display: none;">
+    <div class="webmodal" title="Web Sites" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="web-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="ws-WebSiteType ContactTypeId" ></select>
+                <select class="web-ContactTypeId" ></select>
             </div>
 
             <div class="fieldblock">
                 <label>Web Site:</label>
-                <input type="text"  class="ws-Info" />
+                <input type="text"  class="web-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="ws-IsPreferred" />
+                <input type="checkbox"  class="web-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="ws-Comment" />
+                <input type="text"  class="web-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitwebsite" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -929,32 +1013,34 @@
 
     </div>
 
-    <div class="pocmodal" title="Point Of Contact" style="display: none;">
+    <div class="personmodal" title="Point Of Contact" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="person-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="poc-PocType ContactTypeId"></select>
+                <select class="person-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Info:</label>
-                <input type="text"  class="poc-Info" />
+                <input type="text"  class="person-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="poc-IsPreferred" />
+                <input type="checkbox"  class="person-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="poc-Comment" />
+                <input type="text"  class="person-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitpoc" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -968,7 +1054,7 @@
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="sm-SocialMediaType ContactTypeId"></select>
+                <select class="sm-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
@@ -998,29 +1084,31 @@
     <div class="othermodal" title="Other Contacts" style="display: none;">
 
         <div class="modalcontent">
+
+            <input type="hidden" class="other-ConstituentId parentid" />
             
             <div class="fieldblock">
                 <label>Type:</label>
-                <select class="o-OtherType ContactTypeId"></select>
+                <select class="other-ContactTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>Info:</label>
-                <input type="text"  class="o-Info" />
+                <input type="text"  class="other-Info" />
             </div>
 
             <div class="fieldblock">
                 <label>Is Preferred:</label>
-                <input type="checkbox"  class="o-IsPreferred" />
+                <input type="checkbox"  class="other-IsPreferred" />
             </div>
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="o-Comment" />
+                <input type="text"  class="other-Comment" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="submitother" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1031,26 +1119,27 @@
 	<div class="relationshipmodal" title="Relationship" style="display: none;">
 
         <div class="modalcontent">
-            <input type="hidden" class="hidrelationshipid" />
+            <input type="hidden" class="rs-IsSwapped" />
+            <input type="hidden" class="rs-Constituent1Id" />
+            <input type="hidden" class="rs-Constituent2Id" />
 
             <div class="fieldblock">
-                <label>Constituent</label>
-                <input type="text" class="FormattedName1" />
+                <label></label>
+                <input type="text" class="rs-Constituent1Information constituentlookup" />
             </div>
 
             <div class="fieldblock">
                 <label>is the</label>
-                <select class="RelationshipTypeId"></select>
-
+                <select class="rs-RelationshipTypeId"></select>
             </div>
 
             <div class="fieldblock">
                 <label>of</label>
-                <input type="text" class="FormattedName2" />
+                <input type="text" class="rs-Constituent2Information" />
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="saverelationship" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1058,7 +1147,7 @@
 
     </div>
 	
-	<div class="educationmodal" title="Education" style="display: none;"">
+	<div class="educationmodal" title="Education" style="display: none;">
 
         <div class="modalcontent">
             
@@ -1082,21 +1171,21 @@
             </div>
 
             <div class="twocolumn">
-
                 <div class="fieldblock">
                     <label>School</label>
-                    <select class="ed-School"></select>
+                    <input type="text" class="ed-SchoolOther schoolLookup" />
                 </div>
 
                 <div class="fieldblock">
                     <label>Degree</label>
-                    <select class="ed-Degree"></select>
+                    <input type="text" class="ed-DegreeOther degreeLookup" />
                 </div>
-
             </div>
+            
+             <input type="hidden" class="ed-ConstituentId parentid" />
 
             <div class="modalbuttons">
-                <input type="button" class="saveeducation" value="Save" />
+                <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
@@ -1104,4 +1193,141 @@
 
     </div>
 
+    <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
+
+        <div class="modalcontent">
+            <input type="hidden" class="nd-hidparententityid" />
+            <input type="hidden" class="hidentitytype" />
+
+            <div class="fieldblock">
+                <label>Title</label>
+                <input type="text" class="nd-Title" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Description</label>
+                <textarea rows ="4" cols ="86" class="nd-Description"></textarea>
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Alert Start Date</label>
+                    <input type="text" class="nd-AlertStartDate datepicker" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Alert End Date</label>
+                    <input type="text" class="nd-AlertEndDate datepicker" />
+                </div>
+
+            </div>
+
+            <div class="fieldblock">
+                <label>Note Topics</label>
+                <div class="nd-Topics noteTopicSelect"></div> 
+                <div class="noteTopicSelectImage" style="display: inline-block;"></div>
+                <div class="tagdropdowncontainer" style="display:none;">
+                    <div class="tagdropdowndivcontainer"></div>
+                    <div class="modalbuttons">
+                        <input type="button" class="savenotetopics" value="Save" />
+                        <a href="#" class="cancelnotetopics">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Note Code</label>
+                    <select class="nd-NoteCode"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Note Category</label>
+                    <select class="nd-Category Id"></select>
+                </div>
+
+            </div>
+
+             <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Contact Date</label>
+                    <input type="text" class="nd-ContactDate datepicker" />
+                </div>
+
+                 <div class="fieldblock">
+                    <label>Primary Contact</label>
+                    <select class="nd-PrimaryContact"></select>
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock">
+                    <label>Person Responsible</label>
+                    <select class="nd-PersonResponsible"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Contact Method</label>
+                    <select class="nd-ContactMethod"></select>
+                </div>
+
+            </div>
+
+            <div class="editnoteinfo" style="display: none;">
+                <div class="twocolumn">
+
+                    <div class="fieldblock">
+                        <label>Created By</label>
+                        <label class="nd-CreatedBy"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Updated By</label>
+                        <label class="nd-UpdatedBy"></label>
+                    </div>
+
+                </div>
+
+                 <div class="twocolumn">
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-CreatedOn"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-UpdatedOn"></label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savenotedetails" value="Save" />
+                <a href="#" class="cancelnotesmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="notealertmodal" title="Note Alerts" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="notealertgridcontainer"></div>
+
+            <div class="modalbuttons">
+                <a href="#" class="cancelnotealertmodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>

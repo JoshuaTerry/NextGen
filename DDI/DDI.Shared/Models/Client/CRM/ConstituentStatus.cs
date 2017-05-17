@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDI.Shared.Enums.CRM;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("ConstituentStatus")]
-    public class ConstituentStatus : EntityBase
+    public class ConstituentStatus : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties        
         [Key]
@@ -16,13 +14,15 @@ namespace DDI.Shared.Models.Client.CRM
         public override Guid Id { get; set; }
 
 
-        [MaxLength(16)]
+        [Index("IX_Code", IsUnique = true), MaxLength(16)]
         public string Code { get; set; }
+
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
+        public string Name { get; set; }
 
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
-        public string Name { get; set; }
+        
 
         public ConstituentBaseStatus BaseStatus { get; set; }
 

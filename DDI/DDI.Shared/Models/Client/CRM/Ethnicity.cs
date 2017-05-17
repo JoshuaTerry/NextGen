@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Ethnicity")]
-    public class Ethnicity : EntityBase
+    public class Ethnicity : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties   
         [Key]
@@ -16,13 +15,14 @@ namespace DDI.Shared.Models.Client.CRM
 
         public bool IsActive { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Code", IsUnique = true), MaxLength(4)]
+        public string Code { get; set; }
+
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         public ICollection<Constituent> Constituents { get; set; }
-
-        [MaxLength(4)]
-        public string Code { get; set; }
+                 
 
         #endregion Public Properties
 

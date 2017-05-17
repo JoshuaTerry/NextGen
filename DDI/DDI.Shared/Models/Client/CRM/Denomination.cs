@@ -1,25 +1,23 @@
-﻿using System;
+﻿using DDI.Shared.Enums.CRM;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq; 
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Enums.CRM;
 
 namespace DDI.Shared.Models.Client.CRM
 {
     [Table("Denomination")]
-    public class Denomination : EntityBase
+    public class Denomination : AuditableEntityBase, ICodeEntity
     {
         #region Public Properties       
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [MaxLength(16)]
+        [Index("IX_Code", IsUnique = true), MaxLength(16)]
         public string Code { get; set; }
 
-        [MaxLength(128)]
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
         public bool IsActive { get; set; }

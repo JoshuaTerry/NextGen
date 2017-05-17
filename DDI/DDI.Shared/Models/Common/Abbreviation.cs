@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-using System.Linq;
-using System.Text;
 
 namespace DDI.Shared.Models.Common
 {
@@ -35,5 +31,6 @@ namespace DDI.Shared.Models.Common
 
         public int Priority { get; set; }
 
+        public override string DisplayName => Word;
     }
 }

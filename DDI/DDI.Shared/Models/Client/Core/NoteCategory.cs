@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Core
 {
-    public class NoteCategory : EntityBase
+    [Table("NoteCategory")]
+    public class NoteCategory : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -20,6 +18,10 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public ICollection<Note> Notes { get; set; } 
+        public bool IsActive { get; set; }
+
+        public ICollection<Note> Notes { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

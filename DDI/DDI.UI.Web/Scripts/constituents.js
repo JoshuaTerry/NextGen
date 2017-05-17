@@ -1,7 +1,7 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
-
+var shownotealert = true;
 
 $(document).ready(function () {
 
@@ -13,13 +13,15 @@ $(document).ready(function () {
 
     LoadDropDowns();
 
-    CreateEditControls();
-
-    SetupEditControls();
-
     $(window).resize(function () {
         Resize();
     });
+
+    DisplayConstituentCustomFields();
+    
+    CreateEditControls();
+
+    SetupEditControls();
 
     if (sessionStorage.getItem('constituentid')) {
 
@@ -31,12 +33,30 @@ $(document).ready(function () {
 
     LoadYears();
 
-    $('.BirthMonth').change(function () { PopulateMonthDays(); });    
+    $('.BirthMonth').change(function () { PopulateMonthDays(); });
+
     $('.BirthYear').change(function () { AmendMonthDays(); });
 
-    
+    $('.fileuploadlink').click(function (e) {
+        e.preventDefault();
+
+        UploadFiles();
+    });
 
 });
+
+function UploadFiles(callback) {
+
+    modal = $('.fileuploadmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
+
+}
 
 function ApplySystemSettings() {
     
@@ -71,7 +91,7 @@ function LoadYears()
 function PopulateMonthDays()
 {
     var arrayLookup = {
-        '1': 31, '2': 29, '3': 31,
+        '1': 31, '2': 28, '3': 31,
         '4': 30, '5': 31,
         '6': 30, '7': 31,
         '8': 31, '9': 30,
@@ -133,27 +153,31 @@ function LoadDropDowns() {
     PopulateDropDown('.MaritalStatusId', 'maritalstatuses', '', '');
     PopulateDropDown('.ProfessionId', 'professions', '', '');
     PopulateDropDown('.IncomeLevelId', 'incomelevels', '', '');
-    PopulateDropDown('.RelationshipTypeId', 'relationshiptypes', '', '');
-    EducationModalDropDowns();
+    PopulateDropDown('.rs-RelationshipTypeId', 'relationshiptypes', '', '');
 }
 
 function GetConstituentData(id) {
+    route = 'constituents/';
 
+    if (id.length <= 9) {
+        route += 'number/'; // If id length is <= 9, assume the constituent ID is a constituent number.
+    }
+    
     $.ajax({
-        url: WEB_API_ADDRESS + 'constituents/' + id,
+        url: WEB_API_ADDRESS + route + id,
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
             currentEntity = data.Data;
-
             DisplayConstituentData();
-            
+
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 }
@@ -167,6 +191,10 @@ function RefreshEntity() {
 function DisplayConstituentData() {
 
     if (currentEntity) {
+
+        var id = currentEntity.Id;
+        sessionStorage.setItem('constituentid', id);
+        $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
 
@@ -194,215 +222,251 @@ function DisplayConstituentData() {
 
                     var date = FormatJSONDate(value);
 
-                    $(classname).text(date);
+                    $(classname).val(date);
                 }
 
             }
         });
 
-        $('.constituentpic').html('');
-        var img = $('<img>');
-
-        if (currentEntity.IsMasculine) {
-            $(img).attr('src', '../../Images/Male.png');
-        } else {
-            $(img).attr('src', '../../Images/Female.png');
+        if (currentEntity.InvestorStatus == '0') {
+            // For now, every constituent will show InvestorStatus as Active
+            // This will need to be revisited when we finish Investments
+            $('#tab-investments-main').hide();
         }
 
-        $(img).appendTo($('.constituentpic'));
+        DisplayConstituentPicture();
+
+        DisplayConstituentSideBar();
 
         DisplayConstituentType();
 
-        DisplayConstituentPrimaryAddress();
+        GetNoteAlerts(shownotealert);
+
+        shownotealert = false;
 
         GenerateContactInfoSection();
 
-	    LoadDenominationsTagBox();
+        LoadDenominationsTagBox();
 
         LoadDBAGrid();
 
-        NewDBAModal();
+        if (currentEntity.ConstituentType.Category === 0) {
+            LoadEducationGrid();
 
-        LoadEducationGrid();
+            PopulateMonthDays();
 
-        NewEducationModal();
+            AmendMonthDays();
+
+            $('.BirthDay').val(currentEntity.BirthDay);
+        }
 
         LoadEthnicitiesTagBox();
 
         LoadPaymentPreferencesTable();
 
-        NewPaymentPreference();
-
         LoadContactInfo();
 
         LoadAlternateIDTable();
 
-        NewAlternateIdModal();
+        LoadRelationshipsTab();
 
-        PopulateMonthDays();
-
-        AmendMonthDays();
-
-        $('.BirthDay').val(currentEntity.BirthDay);
-	
+        LoadInvestmentsGrid();
+            
         PopulateUserIdDropDown();
 
-        LoadRelationshipsData();
-
-        NewRelationshipModal();
-
+        LoadRelationshipsQuickView();
+        
         NewAddressModal();
 
         DisplayConstituentCustomFields();
+
+        DisplaySelectedTags($('.constituenttagselect'));
+
+		ShowAuditData(currentEntity.Id);
+
+		FormatFields();
+
     }
 }
 
-function DisplayConstituentType() {
-    $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
-    if (currentEntity.ConstituentType.Category === 0) {
-        $('.organizationConstituent').hide();
-        $('.individualConstituent').show();
-        $('.OrganizationSection').hide();
-    } else {
-        $('.organizationConstituent').show();
-        $('.individualConstituent').hide();
-        $('.PersonalSection').hide();
-    }
-}
+function DisplayConstituentPicture() {
 
-function DisplayConstituentPrimaryAddress() {
+    var img = $('.constituentpic img');
 
-    if (currentEntity.ConstituentAddresses) {
+    $.ajax({
+        url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
+        method: 'GET',
+        contentType: 'application/json; charset-utf-8',
+        dataType: 'json',
+        headers: GetApiHeaders(),
+        crossDomain: true,
+        success: function (data) {
 
-        $.map(currentEntity.ConstituentAddresses, function (item) {
+            if (data.Data && data.Data[0]) {
 
-            if (item.IsPrimary) {
+                GetFile(data.Data[0].FileId, function (item) {
 
-                $('.Address').text(item.Address.AddressLine1);
+                    $(img).attr('src', 'data:image/jpg;base64,' + item.Data).appendTo($('.constituentpic'));
 
-                if (item.Address.AddressLine2 && item.Address.AddressLine2.length > 0) {
-                    $('.address').after($('<div>').addClass('address2').text(item.Address.AddressLine2));
-                }
-
-             //   $('.CityStateZip').text(item.Address.City + ', ' + item.Address.State.DisplayName + item.Address.PostalCode);
+                });
 
             }
 
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+
+    $('.constituentpic').on('mouseenter', function () {
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+    }).on('mouseleave', function () {
+        $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
+    });
+
+    $('.constituentpic').unbind('click');
+    $('.constituentpic').click(function () {
+
+        UploadFiles(function (file) {
+
+            var data = {
+                ConstituentId: currentEntity.Id,
+                FileId: file.Id
+            }
+
+            $.ajax({
+                url: WEB_API_ADDRESS + 'constituentpicture',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset-utf-8',
+                dataType: 'json',
+                headers: GetApiHeaders(),
+                crossDomain: true,
+                success: function (data) {
+
+                    DisplayConstituentPicture();
+
+                    CloseModal(modal);
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                }
+            });
+
         });
 
+    });
+
+}
+
+function DisplayConstituentSideBar() {
+
+    $('.FormattedName').text(currentEntity.FormattedName);
+
+    GetConstituentPrimaryAddress();
+
+    GetConstituentPreferredContactInfo();
+
+}
+
+function DisplayConstituentType() {
+
+    $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
+
+    LoadTagSelector($('.constituenttagselect'));
+
+    if (currentEntity.ConstituentType.Category === 0) {
+        $('.organizationConstituent').hide();
+        $('.individualConstituent').show();
+        $('.DBASettingsSection').hide();
+    } else {
+        $('.organizationConstituent').show();
+        $('.individualConstituent').hide();
+        $('.PersonalSettingsSection').hide();
+        $('.ClergySettingsSection').hide();
+        $('.EducationSettingsSection').hide();
+        $('.ProfessionalSettingsSection').hide();
     }
+
+}
+
+function GetConstituentPrimaryAddress() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        contentType: 'application/json',
+        crossDomain: true,
+        headers: GetApiHeaders(),
+        success: function (data) {
+
+            currentaddress = data.Data;
+
+            for (i = 0; i < currentaddress.length; i++) { 
+
+                if (currentaddress[i].IsPrimary) {
+
+                    $('.Address').text(currentaddress[i].Address.AddressLine1);
+
+                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
+
+                        $('.Address').append(currentaddress[i].Address.AddressLine2);
+
+                    }
+
+                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
+
+                }
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
+}
+
+function GetConstituentPreferredContactInfo() {
+    $.ajax({
+        type: 'GET',
+        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
+        contentType: 'application/x-www-form-urlencoded',
+        crossDomain: true,
+        headers: GetApiHeaders(),
+        success: function (data) {
+
+            currentcontactinfo = data.Data.ContactInfo;
+
+            var preferredContactInfos = ''
+
+            for (i = 0; i < currentcontactinfo.length; i++) {
+
+                if (currentcontactinfo[i].IsPreferred) {
+
+                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
+
+                }
+
+                $('.ContactInfo').text(preferredContactInfos);
+
+            }
+        },
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }
+    });
 
 }
 
 
 /* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'tagDenominationsContainer', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
+    LoadTagBoxes('tagBoxDenominations', 'denominations', 'denominations', '/constituents/' + currentEntity.Id + '/denominations');
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'tagEthnicitiesContainer', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
+    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities');
 }
 /* End Demographics Section */
-
-
-/* Relationships Tab */
-function LoadRelationshipsData() {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/relationships',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            LoadRelationshipsQuickView(data);
-            LoadRelationshipsTab(data);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
-        }
-    });
-
-}
-
-function LoadRelationshipsQuickView(data) {
-
-    var formattedData = $('<ul>').addClass('relationshipQuickViewData');
-
-    if (data.Data) {
-
-        $.map(data.Data, function (item) {
-
-            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                $('<li>').text(item.DisplayName).appendTo($(formattedData));
-            }
-
-        });
-
-    }
-
-    $(formattedData).appendTo($('.relationshipsQuickView'));
-
-}
-
-function LoadRelationshipsTab(data) {
-
-    var columns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
-    ];
-
-    LoadGridWithData('relationshipsgrid',
-        'relationshipstable',
-        columns,
-        'relationships',
-        null,
-        EditRelationship,
-        null,
-        data);
-
-}
-
-function EditRelationship(id) {
-    EditEntity('.relationshipmodal', '.saverelationship', 250, LoadRelationshipData, LoadRelationshipsData, GetRelationshipToSave, 'Relationship', 'relationships', id);
-}
-
-function NewRelationshipModal() {
-    NewEntityModal('.newrelationshipmodal', '.relationshipmodal', '.saverelationship', 250, PrePopulateNewRelationshipModal, LoadRelationshipsData, GetRelationshipToSave, 'Replationship', 'relationships');
-}
-
-function GetRelationshipToSave(modal, isUpdate) {
-
-    var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
-
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-    }
-
-    return item;
-}
-
-function PrePopulateNewRelationshipModal(modal) {
-
-    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
-
-}
-
-function LoadRelationshipData(data, modal) {
-
-    $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
-
-}
-/* End Relationships Tab */
-
 
 /* Doing Business As Section */
 function LoadDBAGrid() {
@@ -414,322 +478,69 @@ function LoadDBAGrid() {
         { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('dbagrid',
-        'doingbusinessastable',
-        columns,
-        'doingbusinessas',
-        null,
-        EditDBA,
-        null);
+    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/doingbusinessas?fields=Id,StartDate,EndDate,Name', 'doingbusinessas'
+        , null, 'dba-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 
 }
 
-function NewDBAModal() {
-
-    $('.newdbamodallink').click(function (e) {
-
-        e.preventDefault();
-
-        var modal = $('.dbamodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-
-        $('.cancelmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-        });
-
-        $('.savedba').unbind('click');
-
-        $('.savedba').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                Name: $(modal).find('.DBAName').val(),
-                StartDate: $(modal).find('.StartDate').val(),
-                EndDate: $(modal).find('.EndDate').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'doingbusinessas',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
-
-                    DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
-
-                    CloseModal(modal);
-
-                    LoadDBAGrid();
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
-                }
-            });
-
-        });
-
-    });
-
-}
-
-function EditDBA(id) {
-
-    var modal = $('.dbamodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadDBA(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.savedba').unbind('click');
-
-    $('.savedba').click(function () {
-
-        var item = {
-            Id: $(modal).find('.hiddbaid').val(),
-            ConstituentId: $('.hidconstituentid').val(),
-            Name: $(modal).find('.DBAName').val(),
-            StartDate: $(modal).find('.StartDate').val(),
-            EndDate: $(modal).find('.EndDate').val()
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'doingbusinessas/' + $(modal).find('.hiddbaid').val(),
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Doing Business As saved successfully.');
-
-                CloseModal(modal);
-
-                LoadDBAGrid();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Doing Business As.');
-            }
-        });
-
-    });
-
-}
-
-function LoadDBA(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'doingbusinessas/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $(modal).find('.hiddbaid').val(data.Data.Id);
-            $(modal).find('.StartDate').val(data.Data.StartDate);
-            $(modal).find('.EndDate').val(data.Data.EndDate);
-            $(modal).find('.DBAName').val(data.Data.Name);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Doing Business As.');
-        }
-    });
-
-}
 /* End Doing Business As Section */
 
+function SetupSchoolAutocomplete() {   
+    MakeServiceCall('GET', 'schools?fields=Name', null, function (result) {
+        var items = [];
+
+        if (result.Data) {
+            $.map(result.Data, function (item) {
+                if (item.Name && item.Name.length > 0) {
+                    items.push(item.Name);
+                }
+            });
+        }
+
+        $('.schoolLookup').autocomplete({
+            source: items
+        });
+    }, null);
+}
+
+function SetupDegreeAutoComplete() {
+    MakeServiceCall('GET', 'degrees?fields=Name', null, function (result) {
+        var items = [];
+
+        if (result.Data) {
+            $.map(result.Data, function (item) {
+                if (item.Name && item.Name.length > 0) {
+                    items.push(item.Name);
+                }
+            });
+        }
+
+        $('.degreeLookup').autocomplete({
+            source: items
+        });
+    }, null);
+}
 
 /* Education Section */
 function LoadEducationGrid() {
-
     var columns = [
             { dataField: 'Id', width: '0px' },
             { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
             { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
-            { dataField: 'School.DisplayName', caption: 'School' },
-            { dataField: 'Degree.DisplayName', caption: 'Degree' },
+            { dataField: 'SchoolOther', caption: 'School' },
+            { dataField: 'DegreeOther', caption: 'Degree' },
             { dataField: 'Major', caption: 'Major' }
     ];
 
-    LoadGrid('educationgrid',
-        'educationgridcontainer',
-        columns,
-        'educations',
-        null,
-        EditEducationModal);
+    LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
+        , null, 'ed-', '.educationmodal', '.educationmodal', 350, false, false, false, null);
 
+    SetupSchoolAutocomplete();
+    SetupDegreeAutoComplete();
 }
 
-function EducationModalDropDowns() {
-
-    PopulateDropDown('.ed-Degree', 'degrees', '', '', null);
-    PopulateDropDown('.ed-School', 'schools', '', '', null);
-
-}
-
-function NewEducationModal() {
-
-    $('.neweducationmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        var modal = $('.educationmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 600,
-            resizable: false
-        });
-
-        EducationModalDropDowns();
-
-        $('.cancelmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-        });
-
-        $('.saveeducation').unbind('click');
-        $('.saveeducation').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                Major: $('.ed-Major').val(),
-                StartDate: $('.ed-StartDate').val(),
-                EndDate: $('.ed-EndDate').val(),
-                SchoolId: $('.ed-School').val(),
-                DegreeId: $('.ed-Degree').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'educations',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
-
-                    DisplaySuccessMessage('Success', 'Education saved successfully.');
-
-                    CloseModal(modal);
-
-                    LoadEducationGrid();
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the education.');
-                }
-            });
-
-        });
-
-    });
-
-}
-
-function EditEducationModal(id) {
-
-    var modal = $('.educationmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 600,
-        resizable: false
-    });
-
-    LoadEducation(id);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.saveeducation').unbind('click');
-    $('.saveeducation').click(function () {
-
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            Major: $('.ed-Major').val(),
-            StartDate: $('.ed-StartDate').val(),
-            EndDate: $('.ed-EndDate').val(),
-            SchoolId: $('.ed-School').val(),
-            DegreeId: $('.ed-Degree').val()
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'educations/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function() {
-
-                DisplaySuccessMessage('Success', 'Education saved successfully.');
-
-                CloseModal(modal);
-
-                LoadEducationGrid();
-
-            },
-            error: function(xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the education.');
-            }
-        });
-
-    });
-
-}
-
-function LoadEducation(id) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'educations/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $('.ed-Major').val(data.Data.Major),
-            $('.ed-StartDate').val(data.Data.StartDate),
-            $('.ed-EndDate').val(data.Data.EndDate),
-            $('.ed-School').val(data.Data.SchoolId),
-            $('.ed-Degree').val(data.Data.DegreeId)
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
-        }
-    });
-
-}
 /* End Education Section */
-
-
+ 
 /* Payment Preference Section */
 function LoadPaymentPreferencesTable() {
 
@@ -751,173 +562,9 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('paymentpreferencesgrid',
-        'paymentpreferencesgridcontainer',
-        columns,
-        'paymentmethods/constituents/' + currentEntity.Id,
-        null,
-        EditPaymentPreference);
-    
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
 }
 
-function NewPaymentPreference() {
-
-    $('.newppmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        modal = $('.paymentpreferencemodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 600,
-            resizable: false
-        });
-
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal();
-
-    });
-
-    $('.savepaymentpreference').unbind('click');
-
-    $('.savepaymentpreference').click(function () {
-
-        var date = new Date();
-
-        var item = {
-            ConstituentId: $('.hidconstituentid').val(),
-            Description: $(modal).find('.pp-Description').val(),
-            BankName: $(modal).find('.pp-BankName').val(),
-            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
-            BankAccount: $(modal).find('.pp-AccountNumber').val(),
-            AccountType: $(modal).find('.pp-AccountType').val(),
-            Status: $(modal).find('.pp-Status').val(),
-            StatusDate: date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: WEB_API_ADDRESS + 'paymentmethods',
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
-
-                CloseModal();
-
-                LoadPaymentPreferencesTable();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
-            }
-        });
-
-    });
-
-}
-
-function EditPaymentPreference(id) {
-
-    modal = $('.paymentpreferencemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 600,
-        resizable: false
-    });
-
-    LoadPaymentPreference(id);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal();
-
-    });
-
-    $('.savepaymentpreference').unbind('click');
-
-    $('.savepaymentpreference').click(function () {
-
-        var date = '';
-        var prevStatus = $(modal).find('.pp-PreviousStatus').val();
-        var selectedStatus = $(modal).find('.pp-Status').val();
-        
-        if (prevStatus != selectedStatus) {
-
-            var newDate = new Date();
-
-            date = newDate.getMonth() + 1 + '/' + newDate.getDate() + '/' + newDate.getFullYear();
-
-        }
-
-        var item = {
-            Description: $(modal).find('.pp-Description').val(),
-            BankName: $(modal).find('.pp-BankName').val(),
-            RoutingNumber: $(modal).find('.pp-RoutingNumber').val(),
-            BankAccount: $(modal).find('.pp-AccountNumber').val(),
-            AccountType: $(modal).find('.pp-AccountType').val(),
-            Status: $(modal).find('.pp-Status').val(),
-            StatusDate: date
-        };
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Payment Method saved successfully.');
-
-                CloseModal();
-
-                LoadPaymentPreferencesTable();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the payment method.');
-            }
-        });
-
-    });
-
-}
-
-function LoadPaymentPreference(id) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'paymentpreferences/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $(modal).find('.pp-Description').val(data.Data.Description);
-            $(modal).find('.pp-BankName').val(data.Data.BankName);
-            $(modal).find('.pp-RoutingNumber').val(data.Data.RoutingNumber);
-            $(modal).find('.pp-AccountNumber').val(data.Data.BankAccount);
-            $(modal).find('.pp-AccountType').val(data.Data.AccountType);
-            $(modal).find('.pp-Status').val(data.Data.Status);
-            $(modal).find('.pp-PreviousStatus').val(data.Data.Status);
-            $(modal).find('.pp-StatusDate').val(FormatJSONDate(data.Data.StatusDate));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Payment Method.');
-        }
-    });
-
-}
 /* End Payment Preference Section */
 
 
@@ -952,6 +599,80 @@ function PopulateUserIdDropDown() {
 
 /* End Professional Section */
 
+/* Audit Section */
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+    var modal = $('.auditmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 800,
+        height: 600,
+        resizable: true
+    });
+
+    LoadAuditTable(id, modal);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            headers: GetApiHeaders(),
+            success: function (data) {
+
+                LoadAuditTable();
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable() {
+    var id = currentEntity.Id;
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+            { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0  },
+            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+            { dataField: 'User' }, 
+            { dataField: 'ChangeType', width: '100px' },  
+            { dataField: 'Property' },
+            { dataField: 'OldValue', caption: 'Old Value' },
+            { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+            { dataField: 'NewValue', caption: 'New Value' },
+            { dataField: 'NewDisplayName', caption: 'New Display Name' }
+    ];
+
+    LoadAuditGrid('auditgrid',
+       'auditgridcontainer',
+       columns,
+       route,
+       false);
+     
+}
+/* End Audit Section */
 
 /* Alternate Id Section */
 function LoadAlternateIDTable() {
@@ -961,142 +682,11 @@ function LoadAlternateIDTable() {
             { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('altidgrid',
-       'alternateidgridcontainer',
-       columns,
-       'alternateids',
-       null,
-       EditAlternateId);
+    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
+        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, false, true, false, null);
 }
 
-function NewAlternateIdModal() {
-
-    $('.newaltidmodal').click(function (e) {
-
-        e.preventDefault();
-
-        var modal = $('.alternateidmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-
-        $('.cancelmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-        });
-
-        $('.submitaltid').unbind('click');
-
-        $('.submitaltid').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                Name: $(modal).find('.ai-Name').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'alternateids',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
-
-                    DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
-
-                    CloseModal(modal);
-
-                    LoadAlternateIDTable();
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id');
-                }
-            });
-
-        });
-    });
-
-}
-
-function EditAlternateId(id) {
-
-    var modal = $('.alternateidmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadAlternateId(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitaltid').unbind('click');
-
-    $('.submitaltid').click(function () {
-
-        var item = {
-            Id: id,
-            ConstituentId: $('.hidconstituentid').val(),
-            Name: $(modal).find('.ai-Name').val()
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'alternateids/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
-
-                DisplaySuccessMessage('Success', 'Alternate Id saved successfully.');
-
-                CloseModal(modal);
-
-                LoadAlternateIDTable();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Alternate Id.');
-            }
-        });
-
-    });
-
-}
-
-function LoadAlternateId(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'alternateids/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            $(modal).find('.ai-Name').val(data.Data.Name);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Alternate Id.');
-        }
-    });
-
-}
 /* End Alternate Id Section */
-
 
 /* Contact Information Section */
 function LoadContactInfo() {
@@ -1114,12 +704,14 @@ function LoadAddressesGrid() {
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
 
-    LoadGrid('constituentaddressgrid',
+    CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
-        'constituentaddresses',
+        'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
         EditAddressModal);
+    
+    
 
 }
 
@@ -1129,12 +721,14 @@ function NewAddressModal() {
 
         e.preventDefault();
 
-        var modal = $('.addressmodal').dialog({
+        modal = $('.addressmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 375,
             resizable: false
         });
+
+        LoadRegions($(modal).find('.regionscontainer'), 'na-');
 
         $('.cancelmodal').click(function (e) {
 
@@ -1149,7 +743,7 @@ function NewAddressModal() {
         $('.saveaddress').click(function () {
 
             var item = {
-                ConstituentId: $('.hidconstituentid').val(),
+                ConstituentId: currentEntity.Id,
                 IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
                 Comment: $(modal).find('.na-Comment').val(),
                 StartDate: $(modal).find('.na-StartDate').val(),
@@ -1173,37 +767,25 @@ function NewAddressModal() {
                 }
             }
 
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'constituentaddresses',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
+            MakeServiceCall('POST', 'constituentaddresses', item, function () {
 
-                    DisplaySuccessMessage('Success', 'Address saved successfully.');
+                DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                    CloseModal(modal);
+                CloseModal(modal);
 
-                    LoadAddressesGrid();
+                LoadAddressesGrid();
 
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the address.');
-                }
-            });
+            }, null);
 
         });
 
-        AutoZip(modal);
+        AutoZip(modal, '.na-');
 
     });
 
     PopulateAddressTypesInModal(null);
 
     PopulateCountriesInModal(null);
-
-    LoadRegions('regionscontainer', 'na-');
 
 }
 
@@ -1216,35 +798,33 @@ function PopulateAddressTypesInModal(selectedValue) {
 function PopulateCountriesInModal(selectedValue) {
 
     PopulateDropDown('.na-CountryId', 'countries', '', '', selectedValue, function () {
-        PopulateStatesInModal(null);
+        PopulateStatesInModal($('.na-CountryId').val(), null);
     });
 
 }
 
-function PopulateStatesInModal(selectedValue) {
+function PopulateStatesInModal(countryId, selectedValue) {
 
     ClearElement('.na-StateId');
     ClearElement('.na-CountyId');
 
-    var countryid = $('.na-CountryId').val();
+    //var countryid = $('.na-CountryId').val();
 
-    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryid, '', '', selectedValue, function () {
-        PopulateCountiesInModal(null)
+    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryId, '', '', selectedValue, function () {
+        PopulateCountiesInModal($('.na-StateId').val(), null);
     });
 
 }
 
-function PopulateCountiesInModal(selectedValue) {
+function PopulateCountiesInModal(stateId, selectedValue) {  
 
-    var stateid = $('.na-StateId').val();
-
-    PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '', selectedValue);
+    PopulateDropDown('.na-CountyId', 'states/' + stateId + '/counties', '', '', selectedValue);
 
 }
 
 function EditAddressModal(id) {
 
-    var modal = $('.addressmodal').dialog({
+    modal = $('.addressmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 375,
@@ -1256,7 +836,9 @@ function EditAddressModal(id) {
 
     PopulateCountriesInModal(null);
 
-    AutoZip(modal);
+    LoadRegions($(modal).find('.regionscontainer'), 'na-');
+
+    AutoZip(modal, '.na-');
 
     LoadAddress(id);
 
@@ -1275,21 +857,11 @@ function EditAddressModal(id) {
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
 
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
-            data: fields,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function () {
+        MakeServiceCall('PATCH', 'constituentaddresses/' + id, fields, function () {
+            DisplaySuccessMessage('Success', 'Address saved successfully.');
 
-                DisplaySuccessMessage('Success', 'Address saved successfully.');
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the address.');
-            }
-        })
+            CloseModal(modal);
+        }, null);
 
     });
 
@@ -1299,7 +871,7 @@ function GetEditedAddressFields() {
 
     var item = {
         Id: $(modal).find('.hidconstituentaddressid').val(),
-        ConstituentId: $('.hidconstituentid').val(),
+        ConstituentId: currentEntity.Id,
         IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
         StartDate: $(modal).find('.na-StartDate').val(),
@@ -1330,47 +902,34 @@ function GetEditedAddressFields() {
 
 function LoadAddress(id) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituentaddresses/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'constituentaddresses/' + id, null, function (data) {
+        currentaddress = data.Data;
 
-            currentaddress = data.Data;
+        $('.hidconstituentaddressid').val(data.Data.Id);
+        $('.hidaddressid').val(data.Data.Address.Id);
 
-            $('.hidconstituentaddressid').val(data.Data.Id);
-            $('.hidaddressid').val(data.Data.Address.Id);
+        $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+        $('.na-Comment').val(data.Data.Comment);
+        $('.na-StartDate').val(data.Data.StartDate);
+        $('.na-EndDate').val(data.Data.EndDate);
+        $('.na-ResidentType').val(data.Data.ResidentType);
 
-            $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
-            $('.na-Comment').val(data.Data.Comment);
-            $('.na-StartDate').val(data.Data.StartDate);
-            $('.na-EndDate').val(data.Data.EndDate);
-            $('.na-ResidentType').val(data.Data.ResidentType);
+        $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
+        $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
+        $('.na-City').val(data.Data.Address.City);
 
-            $('.na-AddressLine1').val(data.Data.Address.AddressLine1);
-            $('.na-AddressLine2').val(data.Data.Address.AddressLine2);
-            $('.na-City').val(data.Data.Address.City);
+        $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
-            $('.na-PostalCode').val(data.Data.Address.PostalCode);
+        PopulateAddressTypesInModal(data.Data.AddressTypeId);
 
-            PopulateAddressTypesInModal(data.Data.AddressTypeId);
-            PopulateCountriesInModal(data.Data.Address.CountryId);
+        PopulateCountriesInModal(data.Data.Address.CountryId);
 
-            PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
-                PopulateCountiesInModal(null)
-            });
+        PopulateStatesInModal(data.Data.Address.CountryId, data.Data.Address.StateId);
 
-            PopulateCountiesInModal(data.Data.Address.CountyId);
+        PopulateCountiesInModal(data.Data.Address.StateId, data.Data.Address.CountyId);
 
-            LoadRegionDropDown('.na-', 1, null, data.Data.Address.Region1Id);
-            LoadRegionDropDown('.na-', 2, data.Data.Address.Region1Id, data.Data.Address.Region2Id);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the address.');
-        }
-    });
+        LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
+    }, null);
 
 }
 
@@ -1381,66 +940,36 @@ function GenerateContactInfoSection() {
 
         $.map(data.Data, function (category) {
 
-            var header = $('<h3>').text(category.SectionTitle).appendTo($('.contactinfocontainer'));
-            $('<a>', { 
-                title: 'New', 
-                class: 'new' + category.Name.toLowerCase() + 'modallink' + ' newbutton', 
-                href: '#'
-            }).appendTo($(header));
-
-            $('<div>', {
-                class: 'constituent' + category.Name + 'gridcontainer'
-            }).appendTo($('.contactinfocontainer'));
+            // remove previous elements
+            $('.' + category.DisplayName + 'header').remove();
+            $('.constituent' + category.DisplayName + 'gridcontainer').remove();
 
             // most of our accordions use h1, but for some reason accordions.refresh() only works with h3.
+            var header = $('<h3>').text(category.SectionTitle).addClass(category.DisplayName + 'header').appendTo($('.contactinfocontainer'));
 
-            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
+            $('<div>').attr('id', category.Id).addClass('constituent' + category.DisplayName + 'gridcontainer').appendTo($('.contactinfocontainer'));
 
-            $('<input>').addClass('hidContactCategory' + category.Name).attr('type', 'hidden').val(category.Id).appendTo($('.' + 'constituent' + category.Name + 'gridcontainer'));
+            LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.DisplayName);
 
         });
         
-        ContactInfoAddModals();
-
         $('.accordions').accordion('refresh');
-        // LoadAccordions will not work here
 
     });
 
-}
-
-function ContactInfoAddModals() {
-
-    NewPhoneModal();
-
-    NewEmailModal();
-
-    NewWebModal();
-
-    NewPersonModal();
-
-    NewOtherModal();
 }
 
 function LoadCategories(CategoryTitles) {
 
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactcategory',
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
+    MakeServiceCall('GET', 'contactcategory', null, function (data) {
 
-            CategoryTitles(data);
+        CategoryTitles(data);
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Contact Categories.');
-        }
-    });
+    }, null);
+
 }
 
-function LoadContactCategoryGrid(categoryid, displayText, name) {
+function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 
     var columns = [
         { dataField:  'Id', width: '0px' }, 
@@ -1450,800 +979,78 @@ function LoadContactCategoryGrid(categoryid, displayText, name) {
         { dataField: 'Comment', caption: 'Comment' }
     ];
 
-    LoadGrid('constituent' + name + 'grid',
-        'constituent' + name + 'gridcontainer',
-        columns,
-        WEB_API_ADDRESS + 'contactinfo/' + categoryid + '/' + currentEntity.Id,
-        null,
-        function (id) { ExecuteFunction('Edit' + name, window, id) }); 
+    PopulateDropDown($('.' + name.toLowerCase() + "-ContactTypeId"), 'contacttypes/category/' + categoryid, null)
+   
+    LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
+        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
+
+   
 }
-
-// Phone # Subsection
-function NewPhoneModal() {
-
-    $('.newphonemodallink').click(function (e) {
-
-        e.preventDefault();
-
-        PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '');
-
-         modal = $('.phonenumbermodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-
-        $('.submitphonenumber').unbind('click');
-
-        $('.submitphonenumber').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
-                Info: $(modal).find('.pn-Info').val(),
-                IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'), 
-                Comment: $(modal).find('.pn-Comment').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'contactinfo/', 
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
-
-                    DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
-
-                    CloseModal(modal);
-
-                    var categoryid = $('.hidContactCategoryPhone').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryPhone').val(), 'Phone', 'Phone');
-
-                    $('<input>').addClass('hidContactCategory' + 'Phone').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Phone' + 'gridcontainer'));
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number');
-                }
-            });
-
-        });
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-}
-
-function EditPhone(id) {
-
-    var modal = $('.phonenumbermodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadPhone(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitphonenumber').unbind('click');
-
-    $('.submitphonenumber').click(function () {
-
-        var item = {
-
-            ConstituentId: $('.hidconstituentid').val(),
-            ContactTypeId: $(modal).find('.pn-PhoneNumberType').val(),
-            Info: $(modal).find('.pn-Info').val(),
-            IsPreferred: $(modal).find('.pn-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.pn-Comment').val()
-
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'contactinfo/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) { 
-
-                DisplaySuccessMessage('Success', 'Phone Number saved successfully.');
-
-                CloseModal(modal);
-
-                var category = data.Data.ContactType.ContactCategory;
-
-                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Phone Number.');
-            }
-        });
-
-    });
-
-}
-
-function LoadPhone(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/' + id, 
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            PopulateDropDown('.pn-PhoneNumberType', 'contacttypes/' + $('.hidContactCategoryPhone').val(), '', '', data.Data.ContactTypeId);
-
-            $(modal).find('.pn-Info').val(data.Data.Info);
-            $(modal).find('.pn-PhoneNumberType').val(data.Data.ContactTypeId);
-            $(modal).find('.pn-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.pn-Comment').val(data.Data.Comment);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Phone Number.');
-        }
-    });
-
-}
-// End Phone # Subsection
-
-// Emails Subsection
-function NewEmailModal() {
-
-    $('.newemailmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '');
-
-        modal = $('.emailmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-        $('.submitemail').unbind('click');
-
-        $('.submitemail').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: $(modal).find('.e-EmailType').val(),
-                Info: $(modal).find('.e-Info').val(),
-                IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.e-Comment').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'contactinfo/',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function () {
-
-                    DisplaySuccessMessage('Success', 'Email saved successfully.');
-
-                    CloseModal(modal);
-
-                    var categoryid = $('.hidContactCategoryEmail').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryEmail').val(), 'Email', 'Email');
-
-                    $('<input>').addClass('hidContactCategory' + 'Email').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Email' + 'gridcontainer'));
-
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Email');
-                }
-            });
-
-        });
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-}
-
-function EditEmail(id) {
-
-   var modal = $('.emailmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadEmail(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitemail').unbind('click');
-
-    $('.submitemail').click(function () {
-
-        var item = {
-
-            ConstituentId: $('.hidconstituentid').val(),
-            ContactTypeId: $(modal).find('.e-EmailType').val(),
-            Info: $(modal).find('.e-Info').val(),
-            IsPreferred: $(modal).find('.e-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.e-Comment').val()
-
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'contactinfo/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
-
-                DisplaySuccessMessage('Success', 'Email saved successfully.');
-
-                CloseModal(modal);
-
-                var category = data.Data.ContactType.ContactCategory;
-
-                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Email.');
-            }
-        });
-
-    });
-
-}
-
-function LoadEmail(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            PopulateDropDown('.e-EmailType', 'contacttypes/' + $('.hidContactCategoryEmail').val(), '', '', data.Data.ContactTypeId);
-
-            $(modal).find('.e-Info').val(data.Data.Info);
-            $(modal).find('.e-EmailType').val(data.Data.ContactTypeId);
-            $(modal).find('.e-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.e-Comment').val(data.Data.Comment);
-
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Email.');
-        }
-    });
-
-}
-// End Emails Subsection
-
-// Websites Subsection
-function NewWebModal() {
-
-    $('.newwebmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '');
-
-        modal = $('.websitemodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-
-        $('.submitwebsite').unbind('click');
-
-        $('.submitwebsite').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
-                Info: $(modal).find('.ws-Info').val(),
-                IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.ws-Comment').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'contactinfo/',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
-
-                    DisplaySuccessMessage('Success', 'Web Site saved successfully.');
-
-                    CloseModal(modal);
-
-                    var categoryid = $('.hidContactCategoryWeb').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryWeb').val(), 'URL', 'Web');
-
-                    $('<input>').addClass('hidContactCategory' + 'Web').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Web' + 'gridcontainer'));
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Web Site');
-                }
-            });
-
-        });
-    }); 
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-}
-
-function EditWeb(id) {
-
-    var modal = $('.websitemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadWeb(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitwebsite').unbind('click');
-
-    $('.submitwebsite').click(function () {
-
-        var item = {
-
-            ConstituentId: $('.hidconstituentid').val(),
-            ContactTypeId: $(modal).find('.ws-WebSiteType').val(),
-            Info: $(modal).find('.ws-Info').val(),
-            IsPreferred: $(modal).find('.ws-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.ws-Comment').val()
-
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'contactinfo/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
-
-                DisplaySuccessMessage('Success', 'Web Site saved successfully.');
-
-                CloseModal(modal);
-
-                var category = data.Data.ContactType.ContactCategory;
-
-                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Web Site.');
-            }
-        });
-
-    });
-
-}
-
-function LoadWeb(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            PopulateDropDown('.ws-WebSiteType', 'contacttypes/' + $('.hidContactCategoryWeb').val(), '', '', data.Data.ContactTypeId);
-
-            $(modal).find('.ws-Info').val(data.Data.Info);
-            $(modal).find('.ws-WebSiteType').val(data.Data.ContactTypeId);
-            $(modal).find('.ws-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.ws-Comment').val(data.Data.Comment);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Web Site.');
-        }
-    });
-
-}
-// End Websites Subsection
-
-// Point Of Contact Subsection
-function NewPersonModal() {
-
-    $('.newpersonmodallink').click(function (e) {
-
-        e.preventDefault();
-
-        PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '');
-
-        modal = $('.pocmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-        $('.submitpoc').unbind('click');
-
-        $('.submitpoc').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: $(modal).find('.poc-PocType').val(),
-                Info: $(modal).find('.poc-Info').val(),
-                IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.poc-Comment').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'contactinfo/',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
-
-                    DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
-
-                    CloseModal(modal);
-
-                    var categoryid = $('.hidContactCategoryPerson').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryPerson').val(), 'Name', 'Person');
-
-                    $('<input>').addClass('hidContactCategory' + 'Person').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Person' + 'gridcontainer'));
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact');
-                }
-            });
-
-        });
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-}
-
-function EditPerson(id) {
-
-    var modal = $('.pocmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadPerson(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitpoc').unbind('click');
-
-    $('.submitpoc').click(function () {
-
-        var item = {
-
-            ConstituentId: $('.hidconstituentid').val(),
-            ContactTypeId: $(modal).find('.poc-PocType').val(),
-            Info: $(modal).find('.poc-Info').val(),
-            IsPreferred: $(modal).find('.poc-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.poc-Comment').val()
-
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'contactinfo/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
-
-                DisplaySuccessMessage('Success', 'Point of Contact saved successfully.');
-
-                CloseModal(modal);
-
-                var category = data.Data.ContactType.ContactCategory;
-
-                LoadContactCategoryGrid(category.Id, category.TextBoxLabel, category.Name);
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Point of Contact.');
-            }
-        });
-
-    });
-
-}
-
-function LoadPerson(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            PopulateDropDown('.poc-PocType', 'contacttypes/' + $('.hidContactCategoryPerson').val(), '', '', data.Data.ContactTypeId);
-
-            $(modal).find('.poc-Info').val(data.Data.Info);
-            $(modal).find('.poc-PocType').val(data.Data.ContactTypeId)
-            $(modal).find('.poc-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.poc-Comment').val(data.Data.Comment);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Point of Contact.');
-        }
-    });
-
-}
-// End Point Of Contact Subsection
-
-// Other Contacts Subsection
-function NewOtherModal() {
-
-    $('.newothermodallink').click(function (e) {
-
-        PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '');
-
-        e.preventDefault();
-
-        modal = $('.othermodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 250,
-            resizable: false
-        });
-        $('.submitother').unbind('click');
-
-        $('.submitother').click(function () {
-
-            var item = {
-                ConstituentId: $('.hidconstituentid').val(),
-                ContactTypeId: $(modal).find('.o-OtherType').val(),
-                Info: $(modal).find('.o-Info').val(),
-                IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
-                Comment: $(modal).find('.o-Comment').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'contactinfo/',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                success: function (data) {
-
-                    DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
-
-                    CloseModal(modal);
-
-                    var categoryid = $('.hidContactCategoryOther').val();
-
-                    LoadContactCategoryGrid($('.hidContactCategoryOther').val(), 'Info', 'Other');
-
-                    $('<input>').addClass('hidContactCategory' + 'Other').attr('type', 'hidden').val(categoryid).appendTo($('.' + 'constituent' + 'Other' + 'gridcontainer'));
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during saving the Other Contact');
-                }
-            });
-
-        });
-    });
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-}
-
-function EditOther(id) {
-
-    var modal = $('.othermodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 250,
-        resizable: false
-    });
-
-    LoadOther(id, modal);
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.submitother').unbind('click');
-
-    $('.submitother').click(function () {
-
-        var item = {
-
-            ConstituentId: $('.hidconstituentid').val(),
-            ContactTypeId: $(modal).find('.o-OtherType').val(),
-            Info: $(modal).find('.o-Info').val(),
-            IsPreferred: $(modal).find('.o-IsPreferred').prop('checked'),
-            Comment: $(modal).find('.o-Comment').val()
-
-        }
-
-        $.ajax({
-            type: 'PATCH',
-            url: WEB_API_ADDRESS + 'contactinfo/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            success: function (data) {
-
-                DisplaySuccessMessage('Success', 'Other Contact saved successfully.');
-
-                CloseModal(modal);
-
-                LoadContactCategoryGrid(data.Data.Id, 'Info', 'Other');
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', 'An error occurred during saving the Other Contacts.');
-            }
-        });
-
-    });
-
-}
-
-function LoadOther(id, modal) {
-
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'contactinfo/' + id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-
-            PopulateDropDown('.o-OtherType', 'contacttypes/' + $('.hidContactCategoryOther').val(), '', '', data.Data.ContactTypeId);
-
-            $(modal).find('.o-Info').val(data.Data.Info);
-            $(modal).find('o-OtherType').val(data.Data.ContactTypeId);
-            $(modal).find('.o-IsPreferred').prop('checked', data.Data.IsPreferred);
-            $(modal).find('.o-Comment').val(data.Data.Comment);
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during loading the Other Contact.');
-        }
-    });
-
-}
-// End Other Contacts Subsection
 
 /* End Contact Information Section */
-/* Relationships Tab */
-function LoadRelationshipsData() {
-    $.ajax({
-        type: Links.GetRelationship.method,
-        url: Links.GetRelationship.Href,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        success: function (data) {
-            LoadRelationshipsQuickView(data);
-            LoadRelationshipsTab(data);
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during the loading of the Relationships.');
-        }
-    });
-}
-function LoadRelationshipsQuickView(data) {
-    var formattedData = "<ul>";
-    if (data.Data && Array.isArray(data.Data)) {
-        data.Data.forEach(function (eachItem) {
-            if (eachItem.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
-                formattedData = formattedData + "<li>" + eachItem.DisplayName + "</li>";
-            };
-        });
-    }
-    formattedData = formattedData + "</ul>";
-    $('.relationshipsQuickView').html(formattedData);
-}
-function LoadRelationshipsTab(data) {
-    var columns = [
-        { dataField: 'RelationshipType.RelationshipCategory.DisplayName', caption: 'Category', groupIndex: 0 },
-        { dataField: 'DisplayName', caption: 'Relationship' },
-    ];
-    LoadGridFromHateoas("relationshipsgrid",
-        "relationshipstable",
-        columns,
-        Links.GetRelationship.Href,
-        null,
-        EditRelationship,
-        DeleteEntity,
-        "Delete that ",
-        data);
 
+/* Relationships Tab */
+
+function LoadRelationshipsQuickView() {
+    var quickviewdata;
+
+    MakeServiceCall('GET', 'constituents/' + currentEntity.Id + '/relationships', null, function (data) {
+
+        var formattedData = $('<ul>').addClass('relationshipQuickViewData');
+
+        $.map(data.Data, function (item) {
+
+            if (item.RelationshipType.RelationshipCategory.IsShownInQuickView === true) {
+
+                var li = $('<li>');
+
+                var rowText = item.RelationshipType.Name + ': ';
+                var link = $('<a>').attr('href', '#').text(item.Constituent1.FormattedName).click(function (e) {
+                    e.preventDefault();
+                    RelationshipLinkClicked(item.Constituent1.Id)
+                });
+
+                $(li).html(rowText);
+                $(link).appendTo($(li));
+
+                $(li).appendTo($(formattedData));
+
+            }
+
+        });
+
+        $('.relationshipsQuickView').empty();
+
+        $(formattedData).appendTo($('.relationshipsQuickView'));
+
+    }, null);
+
+}
+
+function RelationshipLinkClicked(id) {
+
+    sessionStorage.setItem('constituentid', id);
+
+    if (sessionStorage.getItem('constituentid')) {
+        $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
+    }
+
+    GetConstituentData($('.hidconstituentid').val());
+
+}
+
+function LoadRelationshipsTab() {
+
+    var columns = [
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
+        { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
+        { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
+        { dataField: 'Constituent1.FormattedName', caption: 'Name', width: '50%' }
+    ];
+
+    // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete)
+    CustomLoadGrid('relationshipsgrid', 'relationshipstable', columns, 'constituents/' + currentEntity.Id + '/relationships', null, EditRelationship, null, NewRelationshipModal);
 }
 
 function LoadRelationshipsGrid() {
@@ -2251,42 +1058,103 @@ function LoadRelationshipsGrid() {
     LoadRelationshipsData();
 }
 
-function EditRelationship(getUrl, patchUrl) {
-    EditEntity(getUrl, patchUrl, "Relationship", ".relationshipmodal", ".saverelationship", 250, LoadRelationship, LoadRelationshipsGrid, GetRelationshipToSave);
+function EditRelationship(id) {
+    var constituentId = $('.hidconstituentid').val();
+
+    EditEntity('constituents/' + constituentId + '/relationships', 'rs-', id, '.relationshipmodal', 500, LoadRelationshipsTab);
 }
 
 function NewRelationshipModal() {
-    NewEntityModal("Relationship", ".newrelationshipmodal", ".relationshipmodal", 250, PrePopulateNewRelationshipModal, ".saverelationship", GetRelationshipToSave, Links.NewRelationship.Method, Links.NewRelationship.Href, LoadRelationshipsGrid);
-}
+    var modalLinkClass = 'rs-newmodallink';
+    var constituentId = $('.hidconstituentid').val();
 
-function LoadRelationship(url, modal) {
-    LoadEntity(url, modal, "GET", LoadRelationshipData, "Relationship");
-}
+    $('.' + modalLinkClass).remove();
 
-function GetRelationshipToSave(modal, isUpdate) {
-    var item = {
-        Constituent1Id: $('.FormattedName1').val(),
-        Constituent2Id: $(modal).find('.FormattedName2').val(),
-        RelationshipTypeId: $(modal).find('.RelationshipTypeId').val(),
-    }
-    if (isUpdate === true) {
-        item.Id = $(modal).find('.hidrelationshipid').val();
-    }
-    return item;
+    var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .addClass(modalLinkClass)
+            .text('New Item')
+            .click(function (e) {
+                e.preventDefault();
+
+                NewEntityModal('constituents/' + constituentId + '/relationships', 'rs-', '.relationshipmodal', 250, LoadRelationshipsTab);
+
+                PrePopulateNewRelationshipModal(modal);
+
+            });
+    $('.relationshipstable').prepend($(link));
+
 }
 
 function PrePopulateNewRelationshipModal(modal) {
-    $(modal).find('.FormattedName1').val($('.hidconstituentid').val());
+    $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
+    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
+
     $(modal).find('.hidrelationshipid').val(data.Data.Id);
-    $(modal).find('.FormattedName1').val(data.Data.Constituent1Id);
-    $(modal).find('.FormattedName2').val(data.Data.Constituent2Id);
-    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipTypeId);
+    $(modal).find('.hidrelationshipisswapped').val(data.Data.IsSwapped);
+    $(modal).find('.hidconstituentlookupid').val(data.Data.Constituent1.Id);
+    $(modal).find('.RelationshipTypeId').val(data.Data.RelationshipType.Id);
+
 }
 /* End Relationships Tab */
 
+
+/* Investment Tab */
+
+function LoadInvestmentsGrid() {
+    var columns = [
+    {
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'desc', sortIndex: 0, caption: "",
+            calculateCellValue: function (data) {
+            return [GetRelationshipType(data.InvestmentRelationshipType)];
+        }
+    },
+    { dataField: 'InvestmentId', width: '0px' },
+    { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
+    { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
+    {
+        dataField: 'Investment.Rate', caption: 'Rate', alignment: 'right', calculateCellValue: function (data) {
+            return [data.Investment.Rate + '%']
+        }
+    },
+    { dataField: 'Investment.Balance', caption: 'Balance', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
+    { dataField: 'Investment.DisplayName', caption: 'Ownership' }
+    ];
+
+    CustomLoadGrid('investmentgrid', '.investmentstable', columns, 'investmentrelationships/constituent/' + currentEntity.Id, null, CallInvestmentDetail, null, null);
+}
+
+
+function GetRelationshipType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Primary Owner";
+            break;
+        case 1:
+            typeDesc = "Joint Owner";
+            break;
+        case 2:
+            typeDesc = "Beneficiary";
+            break;
+    }
+    return typeDesc;
+}
+
+function CallInvestmentDetail(investmentid) {
+
+    if (investmentid) {
+        sessionStorage.setItem("investmentid", investmentid);
+        location.href = "../INV/InvestmentDetails.aspx";
+    }
+
+}
+
+/* End Investment Tab */
 
 
 

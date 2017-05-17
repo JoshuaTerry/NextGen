@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DDI.Business.ModuleInfo;
 using DDI.Shared.Enums;
-using DDI.Business.ModuleInfo;
+using System.Collections.Generic;
 
 namespace DDI.Business
 {
@@ -169,11 +165,11 @@ namespace DDI.Business
                     Code = "FRDG",
                     Name = "Donations",
                     HasCustomFields = true,
-                    ModuleType = ModuleType.Gifts,
+                    ModuleType = ModuleType.Donations,
                     ParentModuleType = ModuleType.FundRaising,
 
                 };
-                _moduleDictionary.Add(ModuleType.Gifts, donations);
+                _moduleDictionary.Add(ModuleType.Donations, donations);
                 _modules.Add(donations);
 
                 var extensionFund = new ModuleInformation

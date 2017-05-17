@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-using System.Linq;
-using System.Text;
 
 namespace DDI.Shared.Models.Common
 {
@@ -31,60 +27,8 @@ namespace DDI.Shared.Models.Common
         // Navigation Properties
 
         public Zip Zip { get; set; }
-        [NotMapped]
-        public override Guid? CreatedBy
-        {
-            get
-            {
-                return base.CreatedBy;
-            }
 
-            set
-            {
-                base.CreatedBy = value;
-            }
-        }
+        public override string DisplayName => Description;
 
-        [NotMapped]
-        public override DateTime? CreatedOn
-        {
-            get
-            {
-                return base.CreatedOn;
-            }
-
-            set
-            {
-                base.CreatedOn = value;
-            }
-        }
-
-        [NotMapped]
-        public override Guid? LastModifiedBy
-        {
-            get
-            {
-                return base.LastModifiedBy;
-            }
-
-            set
-            {
-                base.LastModifiedBy = value;
-            }
-        }
-
-        [NotMapped]
-        public override DateTime? LastModifiedOn
-        {
-            get
-            {
-                return base.LastModifiedOn;
-            }
-
-            set
-            {
-                base.LastModifiedOn = value;
-            }
-        }
     }
 }

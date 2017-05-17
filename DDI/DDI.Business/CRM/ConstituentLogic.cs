@@ -1,18 +1,17 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
-using System;
-using DDI.Shared.Enums.CRM;
 using DDI.Business.Core;
-using DDI.Shared.Statics.CRM;
-using DDI.Search.Models;
-using DDI.Shared.Models;
+using DDI.Data;
 using DDI.Search;
+using DDI.Search.Models;
+using DDI.Shared;
+using DDI.Shared.Enums.Core;
+using DDI.Shared.Enums.CRM;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM
 {
@@ -86,6 +85,21 @@ namespace DDI.Business.CRM
             return nameLine1;
         }
 
+        /// <summary>
+        /// Get the formatted primary address for a constituent.
+        /// </summary>
+        public string GetFormattedPrimaryAddress(Constituent constituent)
+        {
+            if (constituent != null)
+            {
+                ConstituentAddress constituentAddress = UnitOfWork.GetReference(constituent, p => p.ConstituentAddresses).FirstOrDefault(p => p.IsPrimary);
+                if (constituentAddress != null)
+                {
+                    return UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(constituentAddress, p => p.Address)).Replace("\n", ", ");
+                }
+            }
+            return string.Empty;
+        }
 
         /// <summary>
         /// Get the sort name for a constituent (e.g. Last First Middle)
@@ -95,7 +109,7 @@ namespace DDI.Business.CRM
         {
             ConstituentType type = constituent.ConstituentType ?? UnitOfWork.GetReference(constituent, p => p.ConstituentType);
 
-            if (type.Category == ConstituentCategory.Organization)
+            if (type?.Category == ConstituentCategory.Organization)
             {
                 return constituent.Name;
             }
@@ -103,15 +117,9 @@ namespace DDI.Business.CRM
             return NameFormatter.FormatIndividualSortName(constituent);
         }
 
-        public override void Validate(Constituent constituent)
+        private List<string> GetFormattedNameFields()
         {
-            base.Validate(constituent);           
-
-            // Get list of modified properties
-            List<string> modifiedProperties = _constituentRepo.GetModifiedProperties(constituent);
-
-            // Update constituent formatted name and sort name only if name fields were updated.
-            if (modifiedProperties.Intersect(new string[]
+            return new string[]
             {
                 nameof(Constituent.FirstName),
                 nameof(Constituent.MiddleName),
@@ -120,12 +128,47 @@ namespace DDI.Business.CRM
                 nameof(Constituent.Nickname),
                 nameof(Constituent.Prefix),
                 nameof(Constituent.NameFormat)
-            }).Count() > 0)
+            }.ToList(); 
+        }
+        private Constituent CalculateConstituentNameProperties(Constituent constituent)
+        {
+            var formattedNameFields = GetFormattedNameFields();
+
+            List<string> modifiedProperties = null;
+            if (_constituentRepo.GetEntityState(constituent) != EntityState.Added)
+            {
+                modifiedProperties = _constituentRepo.GetModifiedProperties(constituent);
+            }
+            else
+            {
+                modifiedProperties = typeof(Constituent).GetProperties().Where(p => formattedNameFields.Contains(p.Name) && p.GetValue(constituent) != null).Select(p => p.Name).ToList();
+            }
+            // Update constituent formatted name and sort name only if name fields were updated.
+            if (modifiedProperties?.Intersect(GetFormattedNameFields()).Count() > 0)
             {
                 constituent.FormattedName = GetFormattedName(constituent);
                 constituent.Name = GetSortName(constituent);
             }
 
+            return constituent;
+        }
+                
+        private void ValidateUniqueConstituentNumber(Constituent entity)
+        {
+            var existing = UnitOfWork.GetRepository<Constituent>().Entities.FirstOrDefault(c => c.ConstituentNumber == entity.ConstituentNumber);
+            if (existing != null)
+            {
+                if (entity.Id == Guid.Empty || entity.Id != existing.Id)
+                {
+                    throw new ValidationException("The Constituent Number already exists.");
+                } 
+            } 
+        }
+        public override void Validate(Constituent constituent)
+        {
+            constituent.AssignPrimaryKey();
+            ValidateUniqueConstituentNumber(constituent);
+            constituent = CalculateConstituentNameProperties(constituent);
             ScheduleUpdateSearchDocument(constituent);
         }
 
@@ -136,20 +179,16 @@ namespace DDI.Business.CRM
         }
 
         public int GetNextConstituentNumber()
-        {
-            if (_constituentRepo.Utilities == null)
-            {
-                // If this is a mocked repo, get the last constituent # in use and add one.
-                return 1 + (_constituentRepo.Entities.OrderByDescending(p => p.ConstituentNumber).FirstOrDefault()?.ConstituentNumber ?? 0);
-            }
-
+        {            
             int nextNumber = 0;
             bool isUnique = false;
             int tries = 0;
+            var logic = UnitOfWork.GetBusinessLogic<EntityNumberLogic>();
+
             while (!isUnique)
             {
                 tries++;
-                nextNumber = _constituentRepo.Utilities.GetNextSequenceValue(DomainContext.ConstituentNumberSequence);
+                nextNumber = logic.GetNextEntityNumber(EntityNumberType.Constituent);
                 isUnique = _constituentRepo.Entities.Count(p => p.ConstituentNumber == nextNumber) == 0;
 
                 if (tries >= _maxTries)
@@ -161,7 +200,7 @@ namespace DDI.Business.CRM
 
         public void SetNextConstituentNumber(int newValue)
         {
-            _constituentRepo.Utilities?.SetNextSequenceValue(DomainContext.ConstituentNumberSequence, newValue);
+            UnitOfWork.GetBusinessLogic<EntityNumberLogic>().SetNextEntityNumber(EntityNumberType.Constituent, newValue);
         }
 
         public Constituent GetSpouse(Constituent constituent)
@@ -214,16 +253,17 @@ namespace DDI.Business.CRM
 
             document.Id = entity.Id;
             document.ConstituentNumber = entity.ConstituentNumber.ToString();
+            document.SortableName = entity.Name;
             document.Name = entity.FormattedName ?? string.Empty;
-            document.ConstituentStatusId = entity.ConstituentStatusId ?? Guid.Empty;
-            document.ConstituentTypeId = entity.ConstituentTypeId ?? Guid.Empty;
+            document.ConstituentStatusId = entity.ConstituentStatusId;
+            document.ConstituentTypeId = entity.ConstituentTypeId;
             document.Source = entity.Source ?? string.Empty;
             document.Name2 = entity.Name2 ?? string.Empty;
             document.Business = entity.Business ?? string.Empty;
             document.Nickname = entity.Nickname ?? string.Empty;
             document.CreationDate = entity.CreatedOn;
-            document.LanguageId = entity.LanguageId ?? Guid.Empty;
-            document.GenderId = entity.GenderId ?? Guid.Empty;
+            document.LanguageId = entity.LanguageId;
+            document.GenderId = entity.GenderId;
 
             if (entity.BirthYear > 0)
             {
@@ -254,7 +294,7 @@ namespace DDI.Business.CRM
             document.ContactInfo = new List<ContactInfoDocument>();
             foreach (var item in UnitOfWork.GetReference(entity, p => p.ContactInfo))
             {
-                Guid categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId ?? Guid.Empty;
+                Guid? categoryId = UnitOfWork.GetReference(item, p => p.ContactType)?.ContactCategoryId;
 
                 document.ContactInfo.Add(new ContactInfoDocument()
                 {
@@ -278,12 +318,12 @@ namespace DDI.Business.CRM
                         StreetAddress = (address.AddressLine1 + " " + address.AddressLine2).Trim(),
                         City = address.City ?? string.Empty,
                         PostalCode = address.PostalCode ?? string.Empty,
-                        CountryId = address.CountryId ?? Guid.Empty,
-                        StateId = address.StateId ?? Guid.Empty,
-                        Region1Id = address.Region1Id ?? Guid.Empty,
-                        Region2Id = address.Region2Id ?? Guid.Empty,
-                        Region3Id = address.Region3Id ?? Guid.Empty,
-                        Region4Id = address.Region4Id ?? Guid.Empty
+                        CountryId = address.CountryId,
+                        StateId = address.StateId,
+                        Region1Id = address.Region1Id,
+                        Region2Id = address.Region2Id,
+                        Region3Id = address.Region3Id,
+                        Region4Id = address.Region4Id
                     });
                 }
             }

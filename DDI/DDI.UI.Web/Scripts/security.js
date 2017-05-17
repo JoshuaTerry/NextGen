@@ -1,11 +1,11 @@
 ﻿
 $(document).ready(function () {
 
-    SetupNewUserModal();
+   // SetupNewUserModal();
 
     LoadGroupsGrid();
 
-    // LoadUsersGrid();
+     LoadUsersGrid();
 
 });
 
@@ -37,6 +37,7 @@ function SetupNewUserModal() {
                 data: model,
                 contentType: 'application/x-www-form-urlencoded',
                 crossDomain: true,
+                headers: GetApiHeaders(),
                 success: function () {
 
                     AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
@@ -45,7 +46,7 @@ function SetupNewUserModal() {
 
                 },
                 error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', 'An error occurred during user creation.');
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
                 }
             });
 
@@ -60,71 +61,11 @@ function LoadGroupsGrid() {
 
     var columns = [
         { dataField: 'Id', visible: false },
-        { dataField: 'Name', caption: 'Group Name' }
+        { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
-    LoadGrid('groupsgrid', 'groupsgridcontainer', columns, 'roles', function () {
-
-        LoadGroupMembersGrid();
-
-    });
-
-}
-
-function LoadGroupMembersGrid() {
-
-    var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
-    ];
-
-    var datagrid = $('<div>').addClass(grid);
-
-    $.ajax({
-        url: WEB_API_ADDRESS + route,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-
-            $(datagrid).dxDataGrid({
-                dataSource: data,
-                columns: columns,
-                paging: {
-                    pageSize: 25
-                },
-                pager: {
-                    showNavigationButtons: true,
-                    showPageSizeSelector: true,
-                    showInfo: true,
-                    allowedPageSizes: [15, 25, 50, 100]
-                },
-                groupPanel: {
-                    visible: false,
-                    allowColumnDragging: true
-                },
-                filterRow: {
-                    visible: true,
-                    showOperationChooser: false
-                },
-                onRowClick: function (info) {
-
-                    if (selected) {
-                        selected();
-                    }
-
-                }
-            });
-
-            $(datagrid).appendTo($(container));
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading grid.');
-        }
-    });
-
+    LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
+        , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);   
 }
 
 function LoadSecuritySettingsGrid() {
@@ -140,16 +81,40 @@ function LoadSecuritySettingsGrid() {
 /* END GROUPS TAB */
 
 
-
 /* USERS TAB */
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
+        { dataField: 'Id', width: '0px' },
+        { dataField: 'DisplayName', caption: 'User Name' },
+        { dataField: 'Email', caption: 'Email Address' },
+        { caption: 'Active', cellTemplate: function (container, options) {
+                var type = 'Yes';
+
+                if (options.data.IsActive != '1') {
+                    type = 'No';
+                }
+                $('<label>').text(type).appendTo(container);
+            }
+        }
     ];
 
-    LoadGrid('usersgrid', 'usersgridcontainer', columns, 'users');
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+   // PopulateBusinessUnits();
+    LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
+       , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
+   
+
+}
+
+function LoadBusinessUnits()
+{
+   
+}
+
+function CreateBusinessUnitCheckBoxes(data)
+{
+
 
 }
 
@@ -172,6 +137,7 @@ function DisplayUserInfo(id) {
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function (data) {
 
             if (IsSuccessful) {
@@ -191,7 +157,7 @@ function DisplayUserInfo(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error loading user info.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     })
 
@@ -206,15 +172,16 @@ function AddUsersToRoles(user, roles) {
 
     $.ajax({
         type: 'POST',
-        url: WEB_API_ADDRESS + 'UserRoles/AddMultiple',
+        url: WEB_API_ADDRESS + 'users/roles/add',
         data: data,
         contentType: 'application/x-www-form-urlencoded',
         crossDomain: true,
+        headers: GetApiHeaders(),
         success: function () {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred during user creation.');
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 

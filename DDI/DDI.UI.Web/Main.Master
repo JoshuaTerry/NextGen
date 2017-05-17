@@ -14,9 +14,25 @@
     <script type="text/javascript" src="..\..\Scripts\jquery.toast.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.timepicker.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\jquery.datepair.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\jquery.maskMoney.min.js"></script>
+    <%--<script type="text/javascript" src="..\..\Scripts\jquery.format.js"></script>--%>
+
+    <!-- FileUpload Files -->
+    <script type="text/javascript" src="..\..\Scripts\fileupload\load-image.all.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\canvas-to-blob.min.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\jquery.fileupload-image.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\fileupload\fileupload.js"></script>
+
+    <link rel="stylesheet" href="CSS/fileupload/uploader.css" />
+    <link rel="stylesheet" href="CSS/fileupload/jquery.fileupload.css" />
+    <link rel="stylesheet" href="CSS/fileupload/jquery.fileupload-ui.css" />
+    <!-- FileUpload Files -->
 
     <!-- DevExtreme Files -->
-    <script type="text/javascript" src="..\..\Scripts/dx.web.js"></script>
+    <script type="text/javascript" src="..\..\Scripts/dx.all.js"></script>
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <!-- DevExtreme Files -->
@@ -25,20 +41,24 @@
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.toast.min.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.timepicker.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/globalstyles.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/autocomplete.css" />
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\autocomplete.js"></script>
     <script type="text/javascript" src="..\..\Scripts\additional-methods.min.js"></script>
-    <link rel="stylesheet" href="CSS\globalstyles.css" />
+    <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager ID="scriptmanager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
 
         <header>
             <div class="globalnav"> 
@@ -49,7 +69,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Business Unit"><a href="#" >BU</a> </li>
+                    <li title="Business Unit"><a href="#" class="editbusinessunit">BU</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
                 </ul>
@@ -57,188 +77,327 @@
             <div class="logo">
                 <a runat="server" href="~/Default.aspx" title="DDI"></a>
             </div>
-            <div class="topnav">
-                <asp:Menu ID="mainmenu" runat="server" DataSourceID="sitemapdatasource1" Orientation="Horizontal"
-                    DynamicEnableDefaultPopOutImage="false" 
-                    StaticEnableDefaultPopOutImage="false">
-                </asp:Menu>
-                <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
-                    ShowStartingNode="false" />
-            </div>
         </header>
+
+        <div class="topnav">
+            <div class="utilitynav">
+                <ul class="utilitymenu" style="display: none;">
+                    <li><a href="#">Edit</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li class="menu-break"></li>
+                    <li><a href="#">Import</a></li>
+                    <li><a href="#">Export</a></li>
+                    <li class="menu-break"></li>
+                    <li><a href="#">Edit History</a></li>
+                </ul>
+            </div>
+
+            <asp:Menu ID="mainmenu" runat="server" DataSourceID="sitemapdatasource1" Orientation="Horizontal"
+                DynamicEnableDefaultPopOutImage="false" 
+                StaticEnableDefaultPopOutImage="false">
+            </asp:Menu>
+            <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
+                ShowStartingNode="false" />
+        </div>
 
         <div class="maincontainer">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
         </div>
 
-        <div class="addconstituentmodal" title="Add Constituent" style="display: none;">
+        <div class="confirmmodal" title="Confirm" style="display: none;">
 
             <div class="modalcontent">
 
-                <div class="fivecolumn">
-                    <div class="fieldblock">
-                        <label>ID</label>
-                        <input type="text" class="nc-ConstituentNumber" maxlength="9" />
-                    </div>
-                </div>
-
-                <div class="fivecolumn">
-                    <div class="fieldblock">
-                        <label>Prefix</label>
-                        <select class="nc-PrefixId"></select>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>First</label>
-                        <input type="text" class="nc-FirstName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Middle</label>
-                        <input type="text" class="nc-MiddleName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Last</label>
-                        <input type="text" class="nc-LastName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Suffix</label>
-                        <input type="text" class="nc-Suffix" />
-                    </div>
-                </div>
-
-                <div class="threecolumn">
-                    <div class="fieldblock">
-                        <label>Nick Name</label>
-                        <input type="text" class="nc-NickName" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Name 2</label>
-                        <input type="text" class="nc-Name2" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Salutation</label>
-                        <input type="text" class="nc-Salutation" />
-                    </div>
-                </div>
-
-                <div class="threecolumn">
-                    <div class="fieldblock">
-                        <label>Tax ID</label>
-                        <input type="text" class="nc-TaxID" />
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Gender</label>
-                        <select class="nc-GenderId"></select>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Source</label>
-                        <input type="text" class="nc-Source" />
-                    </div>
-                </div>
-
-                <fieldset>
-                    <legend>Primary Address</legend>
-
-                    <div class="threecolumn">
-
-                        <div>
-                            <div class="fieldblock">
-                                <label>Address Type</label>
-                                <select class="nc-AddressType"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Address Line 1</label>
-                                <input type="text" class="nc-AddressLine1 autoaddress1" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Address Line 2</label>
-                                <input type="text" class="nc-AddressLine2 autoaddress2" />
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="fieldblock">
-                                <label>Postal Code</label>
-                                <input type="text" class="nc-PostalCode autozip" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>Country</label>
-                                <select class="nc-Country autocountry"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>State</label>
-                                <select class="nc-State autostate"></select>
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>City</label>
-                                <input type="text" class="nc-City autocity" />
-                            </div>
-
-                            <div class="fieldblock">
-                                <label>County</label>
-                                <select class="nc-County autocounty"></select>
-                            </div>
-
-                        </div>
-
-                        <div class="regionscontainer"></div>
-
-                    </div>
-
-                </fieldset>
+                <p class="confirmmessage"></p>
                 
-                <fieldset>
-                    <legend>Contact Information</legend>
+            </div>
 
-                    <div class="twocolumn">
-                        <div class="twocolumn">
-                            <div class="fieldblock">
-                                <label>Email</label>
-                                <input type="email" class="nc-Email" />
-                            </div>
+            <div class="modalbuttons">
+                <input type="button" class="confirmyes" value="Ok" />
+                <input type="button" class="confirmno" value="Cancel" />
+            </div>
 
-                            <div class="fieldblock">
-                                <label>Email Type</label>
-                                <select class="nc-EmailType"></select>
-                            </div>
+        </div>
+
+        <div class="addconstituentmodal" title="Add Constituent" style="display: none;">
+
+            <div class="modalcontent">
+                
+                <div class="newconstituentcontainer">
+                    <div class="constituenttypeinner">
+
+                        <div class="constituenttypeselect">
+
                         </div>
 
-                        <div class="twocolumn">
-                            <div class="fieldblock">
-                                <label>Phone</label>
-                                <input type="text" class="nc-Phone" />
+                        <div class="constituentdetails" style="display: none;">
+
+                            <div class="fivecolumn">
+                                <div class="fieldblock">
+                                    <label>ID</label>
+                                    <input type="text" class="nc-ConstituentNumber" maxlength="9" />
+                                    <input type="hidden" class="nc-ConstituentTypeId" />
+                                </div>
+                            </div>
+                            
+                            <div class="IndividualContainer">
+                                <div class="fivecolumn">
+                                    <div class="fieldblock">
+                                        <label>Prefix</label>
+                                        <select class="nc-PrefixId"></select>
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>First</label>
+                                        <input type="text" class="nc-FirstName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Middle</label>
+                                        <input type="text" class="nc-MiddleName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Last</label>
+                                        <input type="text" class="nc-LastName" />
+                                    </div>
+
+                                    <div class="fieldblock">
+                                        <label>Suffix</label>
+                                        <input type="text" class="nc-Suffix" />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="fieldblock">
-                                <label>Phone Type</label>
-                                <select class="nc-PhoneType"></select>
+                            <div class="OrganizationContainer">
+                                <div class="fieldblock">
+                                    <label>Name</label>
+                                    <input type="text" class="nc-Name" />
+                                </div>
                             </div>
+
+                            <div class="threecolumn IndividualContainer">
+                                <div class="fieldblock">
+                                    <label>Nick Name</label>
+                                    <input type="text" class="nc-NickName" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Name 2</label>
+                                    <input type="text" class="nc-Name2" />
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Salutation</label>
+                                    <input type="text" class="nc-Salutation" />
+                                </div>
+                            </div>
+
+                            <div class="threecolumn">
+                                <div class="fieldblock">
+                                    <label>Tax ID</label>
+                                    <input type="text" class="nc-TaxID" />
+                                </div>
+
+                                <div class="fieldblock IndividualContainer">
+                                    <label>Gender</label>
+                                    <select class="nc-GenderId"></select>
+                                </div>
+
+                                <div class="fieldblock">
+                                    <label>Source</label>
+                                    <input type="text" class="nc-Source" />
+                                </div>
+                            </div>
+
+                            <fieldset>
+                                <legend>Primary Address</legend>
+
+                                <div class="threecolumn">
+
+                                    <div>
+                                        <div class="fieldblock">
+                                            <label>Address Type</label>
+                                            <select class="nc-AddressType"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Address Line 1</label>
+                                            <input type="text" class="nc-AddressLine1 autoaddress1" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Address Line 2</label>
+                                            <input type="text" class="nc-AddressLine2 autoaddress2" />
+                                        </div>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="fieldblock">
+                                            <label>Postal Code</label>
+                                            <input type="text" class="nc-PostalCode autozip" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Country</label>
+                                            <select class="nc-Country autocountry"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>State</label>
+                                            <select class="nc-State autostate"></select>
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>City</label>
+                                            <input type="text" class="nc-City autocity" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>County</label>
+                                            <select class="nc-County autocounty"></select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="regionscontainer"></div>
+
+                                </div>
+
+                            </fieldset>
+                
+                            <fieldset>
+                                <legend>Contact Information</legend>
+
+                                <div class="twocolumn">
+                                    <div class="twocolumn">
+                                        <div class="fieldblock">
+                                            <label>Email</label>
+                                            <input type="email" class="nc-Email" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Email Type</label>
+                                            <select class="nc-EmailType"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="twocolumn">
+                                        <div class="fieldblock">
+                                            <label>Phone</label>
+                                            <input type="text" class="nc-Phone" />
+                                        </div>
+
+                                        <div class="fieldblock">
+                                            <label>Phone Type</label>
+                                            <select class="nc-PhoneType"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                            <div class="modalbuttons">
+                                <input type="button" class="savenewconstituent" value="Save" />
+                                <input type="button" class="saveandnewconstituent" value="Save & New" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+                    
                         </div>
+                    
                     </div>
+                </div>
 
-                </fieldset>
+            </div>
+            
+        </div>
+
+        <div class="tagselectmodal" title="Select Tags..." style="display: none;">
+            
+            <div class="modalcontent">
+
+                <div class="tagselectgridcontainer"></div>
 
                 <div class="modalbuttons">
-                    <input type="button" class="savenewconstituent" value="Save" />
+                    <input type="button" class="saveselectedtags" value="Save" />
                     <a href="#" class="cancelmodal">Cancel</a>
                 </div>
 
             </div>
             
         </div>
+
+        <div class="fileuploadmodal" title="Add Files..." style="display: none;">
+
+            <div class="modalcontent">
+
+                <div class="fileuploadcontainer">
+
+                    <span class="btn btn-success fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Select files...</span>
+
+                        <input id="file_upload" type="file" name="files[]" multiple="multiple" />
+                    </span>
+        
+                    <div id="progress" class="progress">
+                        <div class="progress-bar progress-bar-success"></div>
+                    </div>
+
+                    <div id="file-upload-progress"></div>
+
+                    <label class="filemessage">Press 'Select Files' or Drag your files here to begin uploading.</label>
+                    <label class="totalfiles"></label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="auditmodal" title="Audit History" style="display: none;">
+
+            <div class="modalcontent">
+            
+           <%-- <div class="fieldblock range">
+                <label>Dates</label>
+                <input type="text" class="na-StartDate datepicker" />
+                <span>to</span>
+                <input type="text" class="na-EndDate datepicker" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="queryAudit" value="Query" /> 
+             </div>--%>
+
+            <div class="auditgridcontainer"></div>
+
+           <%-- <div class="modalbuttons"> 
+                <a href ="#" class="cancelmodal">Cancel</a>
+            </div>--%>
+                            
+        </div>      
+              
+    </div>
+
+    <div class="changebusinessunitmodal" title="Change Current Business Unit" style="display: none;">
+
+        <div class="modalcontent">
+            
+            <div class="fieldblock">
+                <label>Selected Business Unit</label>
+                <select class="bu-currentbu"></select>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebusinessunit" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+                            
+        </div>        
+
+    </div>
 
     </form>
 </body>

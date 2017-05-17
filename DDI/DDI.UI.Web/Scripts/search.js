@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     $(document).keypress(function (e) {
-        if (e.which == 13) {
+        if (e.which === 13) {
             DoSearch();
         }
     });
@@ -35,7 +35,7 @@ function Resize() {
 
     var windowHeight = $(window).height();
     var header = $('header').height();
-    var adjustedHeight = (windowHeight - header) - 55;
+    var adjustedHeight = (windowHeight - header) - 90;
 
     $('.searchcriteria div.scrollable').height(adjustedHeight);
 
@@ -90,10 +90,11 @@ function DoSearch() {
         method: 'GET',
         contentType: 'application/json; charset-utf-8',
         dataType: 'json',
+        headers: GetApiHeaders(),
         crossDomain: true,
         success: function (data) {
 
-            if (data.Data.length == 1) {
+            if (data.Data.length === 1) {
                 DisplayConstituent(data.Data[0].ConstituentNumber);
             }
             else {
@@ -102,7 +103,7 @@ function DoSearch() {
                     dataSource: data.Data,
                     columns: [
                         { dataField: 'Id', width: '0px' },
-                        { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'center', width: '100px' },
+                        { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'right', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
                         { dataField: 'PrimaryAddress', caption: 'Primary Address' },
                         'Contact Information'
@@ -125,15 +126,15 @@ function DoSearch() {
                         showOperationChooser: false
                     },
                     onRowClick: function (info) {
-                        DisplayConstituent(info.values[0]);
+                        DisplayConstituent(info.values[1]);
                     }
                 });
 
             }
 
         },
-        failure: function (response) {
-            alert(response);
+        error: function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
     });
 
@@ -144,24 +145,25 @@ function GetSearchParameters() {
     var p = '';
 
     $('.searchcriteria div.fieldblock input').each(function () {
-        var property = $(this).attr('class').replace('search', '');
+        var property = $(this).attr('class').split(' ')[0].replace('search', '');
         var value = $(this).val();
 
         if (value) {
-            p += property + '=' + value + '&';
+            p += property + '=' + encodeURIComponent(value) + '&';
         }
     });
 
     $('.searchcriteria div.fieldblock select').each(function () {
-        var property = $(this).attr('class').replace('search', '');
+        var property = $(this).attr('class').split(' ')[0].replace('search', '');
         var value = $(this).val();
 
-        if (value) {
-            p += property + '=' + value + '&';
+        if (value && value !== 'null') {
+            p += property + '=' + encodeURIComponent(value) + '&';
         }
     });
 
     p += 'limit=100&';
+    p += 'fields=ConstituentNumber,FormattedName,PrimaryAddress&';
 
     p = p.substring(0, p.length - 1);
 

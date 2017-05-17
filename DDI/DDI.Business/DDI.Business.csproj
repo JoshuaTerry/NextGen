@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Business</RootNamespace>
     <AssemblyName>DDI.Business</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,11 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CoreConfiguration.cs" />
+    <Compile Include="Core\NoteLogic.cs" />
+    <Compile Include="Core\TransactionLogic.cs" />
+    <Compile Include="Core\EntityNumberLogic.cs" />
     <Compile Include="CP\PaymentMethodLogic.cs" />
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />
+    <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
+    <Compile Include="GL\JournalLogic.cs" />
+    <Compile Include="GL\BusinessUnitLogic.cs" />
+    <Compile Include="GL\FiscalYearLogic.cs" />
+    <Compile Include="GL\LedgerLogic.cs" />
+    <Compile Include="GL\AccountLogic.cs" />
     <Compile Include="Helpers\AbbreviationHelper.cs" />
     <Compile Include="Common\ZipLookup.cs" />
     <Compile Include="CRM\AddressCategory.cs" />
@@ -62,7 +74,9 @@
     <Compile Include="EntityLogicBase.cs" />
     <Compile Include="CRM\CRMConfiguration.cs" />
     <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
+    <Compile Include="Helpers\BusinessUnitHelper.cs" />
     <Compile Include="Helpers\BusinessLogicHelper.cs" />
+    <Compile Include="Helpers\CodeEntityHelper.cs" />
     <Compile Include="Helpers\LinkedEntityHelper.cs" />
     <Compile Include="IEntityLogic.cs" />
     <Compile Include="ModuleInfo\ModuleInfoCreator.cs" />
@@ -74,6 +88,10 @@
       <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
       <Name>DDI.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Search\DDI.Search.csproj">
       <Project>{9cb38eba-c2bb-4153-b47d-73cee54bb92f}</Project>
       <Name>DDI.Search</Name>
@@ -82,6 +100,9 @@
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

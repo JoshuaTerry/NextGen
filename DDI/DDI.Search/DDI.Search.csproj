@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDI.Search</RootNamespace>
     <AssemblyName>DDI.Search</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,16 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Elasticsearch.Net.5.0.1\lib\net45\Elasticsearch.Net.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Elasticsearch.Net.5.3.1\lib\net46\Elasticsearch.Net.dll</HintPath>
     </Reference>
     <Reference Include="Nest, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NEST.5.0.1\lib\net45\Nest.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NEST.5.3.1\lib\net46\Nest.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -59,6 +56,9 @@
     <Compile Include="ElasticQuery.cs" />
     <Compile Include="ElasticRepository.cs" />
     <Compile Include="IAutoMappable.cs" />
+    <Compile Include="IDocumentSearchResult.cs" />
+    <Compile Include="Models\NoteDocument.cs" />
+    <Compile Include="Models\JournalDocument.cs" />
     <Compile Include="Models\AddressDocument.cs" />
     <Compile Include="Models\ConstituentDocument.cs" />
     <Compile Include="Models\ContactInfoDocument.cs" />
@@ -68,12 +68,17 @@
     <Compile Include="Statics\IndexSuffixes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
+      <Project>{f31674bf-f62c-4753-aed2-9ba3c2160577}</Project>
+      <Name>DDI.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
