@@ -45,7 +45,9 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}", Name = RouteNames.CustomField + RouteNames.Entity)]
         public IHttpActionResult GetByEntity(int entityId, Guid constituentId)
         {
-            var result = Service.GetByEntityId(entityId, constituentId);
+            try
+            {
+                var result = Service.GetByEntityId(entityId, constituentId);
 
                 if (result == null)
                 {

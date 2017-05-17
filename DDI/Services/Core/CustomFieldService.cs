@@ -5,6 +5,7 @@ using DDI.Shared.Enums.Common;
 using DDI.Shared.Models.Client.Core;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Data;
 
 namespace DDI.Services
 {

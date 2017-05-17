@@ -16,8 +16,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
-
-    DisplayConstituentCustomFields();
     
     CreateEditControls();
 

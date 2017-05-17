@@ -1122,21 +1122,24 @@ function SaveEdit(editcontainer) {
     if ($(editcontainer).hasClass('customFieldContainer')) {
 
         SaveCustomFields(editcontainer);
+    }
+    else {
+        var fields = GetEditedFields(editcontainer);
 
-    // Save the entity
-    MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
+        // Save the entity
+        MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
 
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+            if (data.Data) {
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
                 // Display updated entity data
                 currentEntity = data.Data;
 
-            RefreshEntity();
-        }
+                RefreshEntity();
+            }
 
-    }, null);
+        }, null);
 
         //SaveTagBoxes
         SaveTagBoxes(editcontainer);

@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
-    public class CustomFieldDataController : ControllerBase<CustomFieldData>
+    public class CustomFieldDataController : GenericController<CustomFieldData>
     {
         [HttpGet]
         [Route("api/v1/customfielddata")]

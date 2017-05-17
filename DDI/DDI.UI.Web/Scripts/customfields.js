@@ -81,14 +81,15 @@ function DisplayCustomFields(container, entity, callback) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
-
-    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
+    // url: WEB_API_ADDRESS + route + 'entity/' + entity + '/constituent/' + currentEntity.Id
+    MakeServiceCall('GET', 'customfields/entity/' + entity + '/constituent/' + currentEntity.Id, null, function (data) {
 
         if (data && data.IsSuccessful) {
 
             $.map(data.Data, function (item) {
 
-                    currentCustomFields[item.Id] = item;
+                currentCustomFields[item.Id] = item;
+                $(container).append(CreateCustomField(item));
 
             });
 
