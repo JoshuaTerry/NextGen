@@ -16,8 +16,10 @@ namespace DDI.Shared.Models.Client.Security
         [MaxLength(64)]
         public string CreatedBy { get; set; }        
         public DateTime? CreatedOn { get; set; }
+        [MaxLength(64)]
+        public string Module { get; set; }
         [NotMapped]
-        public string DisplayName => Name;
+        public string DisplayName => Module + " " + Name ;
         [MaxLength(64)]
         public string LastModifiedBy { get; set; }
 

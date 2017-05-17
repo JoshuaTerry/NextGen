@@ -19,16 +19,11 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        [Column(TypeName = "date")]
-        public DateTime? BirthDate { get; set; }
-         
         public BirthDateType BirthDateType { get; set; }
 
         public int? BirthMonth { get; set; }
 
         public int? BirthDay { get; set; }
-
-        public int? BirthYear { get; set; }
 
         public int? BirthYearFrom { get; set; }
 
@@ -213,6 +208,15 @@ namespace DDI.Shared.Models.Client.CRM
                 return FormattedName;
             }
         }
+
+        [NotMapped]
+        public int? AgeFrom { get; set; }
+
+        [NotMapped]
+        public int? AgeTo { get; set; }
+
+        [NotMapped]
+        public int? BirthYear { get; set; }
 
         [NotMapped]
         public InvestorStatus InvestorStatus
