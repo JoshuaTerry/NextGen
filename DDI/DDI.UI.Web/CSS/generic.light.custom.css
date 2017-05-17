@@ -7656,6 +7656,9 @@
 .dx-datagrid-headers .dx-datagrid-table .dx-row > td {
     border-bottom: 1px solid #ddd;
 }
+.dx-datagrid-filter-row, .dx-datagrid-filter-row:hover {
+    background-color: white;
+}
 .dx-datagrid-filter-row .dx-menu .dx-overlay-content {
     color: #333;
 }
@@ -7966,12 +7969,12 @@
 }
 .dx-datagrid-rowsview .dx-selection.dx-row > td,
 .dx-datagrid-rowsview .dx-selection.dx-row:hover > td {
-    background-color: #333333;
+    background-color: #dddddd;
     color: #333;
 }
 .dx-datagrid-rowsview .dx-selection.dx-row > td.dx-datagrid-group-space,
 .dx-datagrid-rowsview .dx-selection.dx-row:hover > td.dx-datagrid-group-space {
-    border-right-color: #e6e6e6;
+    border-right-color: #dddddd;
 }
 .dx-datagrid-rowsview .dx-selection.dx-row > td.dx-pointer-events-none,
 .dx-datagrid-rowsview .dx-selection.dx-row:hover > td.dx-pointer-events-none {
