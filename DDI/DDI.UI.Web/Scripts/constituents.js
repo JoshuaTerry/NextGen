@@ -16,8 +16,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
-
-    DisplayConstituentCustomFields();
     
     CreateEditControls();
 
@@ -277,6 +275,8 @@ function DisplayConstituentData() {
         LoadRelationshipsQuickView();
         
         NewAddressModal();
+
+        DisplayConstituentCustomFields();
 
         DisplaySelectedTags($('.constituenttagselect'));
 
@@ -1063,7 +1063,6 @@ function EditRelationship(id) {
 }
 
 function NewRelationshipModal() {
-
     var modalLinkClass = 'rs-newmodallink';
     var constituentId = $('.hidconstituentid').val();
 
