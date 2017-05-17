@@ -103,7 +103,7 @@ namespace DDI.Services
 
             FormatEntityListForGet(queryDataList);
 
-            var response = GetIDataResponse(() => ModifySortOrder(queryDataList).ToList<ICanTransmogrify>());
+            var response = GetIDataResponse(() => ModifySortOrder(search.OrderBy, queryDataList).ToList<ICanTransmogrify>());
 
             response.TotalResults = totalCount;
 
@@ -169,7 +169,13 @@ namespace DDI.Services
             return this;
         }
 
-        protected virtual List<T> ModifySortOrder(List<T> data)
+        /// <summary>
+        /// Provides a virtual method that can be overridden to modify the sort order of the results of a GET.
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual List<T> ModifySortOrder(string orderBy, List<T> data)
         {
             return data;
         }

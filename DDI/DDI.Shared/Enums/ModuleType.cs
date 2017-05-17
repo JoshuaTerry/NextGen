@@ -31,5 +31,6 @@
         FundRaising = 26,
         ExtensionFund = 27,
         Accounting = 28,
+        Core = 99
     }
 }
