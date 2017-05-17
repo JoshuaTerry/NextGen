@@ -59,7 +59,12 @@ function LoadSummaryTab(AccountId) {
 
     accountId = AccountId;
     GLAccountSelector($('.closingaccountcontainer'), ledgerId, fiscalYearId);
+    $('accountnumberlookup').removeClass('inline').addClass('summaryrightinput');
+    $('accountdescription').removeClass('inline').addClass("summaryleftinput");
+    $('accountselectionsearch').removeClass('inline').addClass("summaryrightcheckbox");
+
     $('.closingaccountgroup').attr('disabled', true);
+    $('.accountselectionsearch').css('visibility', 'hidden');
 
     var container = '.accountsummarycontainer';
 
@@ -114,12 +119,50 @@ function LoadSummaryTab(AccountId) {
                     $('.Group1Id').change(function () {
                         GroupChange(1);
                     })
+                    $('.editgroup1').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
+                            alert($('.group1prompt').html + ' must be selected first');
+                        }
+                        else {
+                            EditGroupModal(2, $('.Group2Id').val(), null, data.Data.AccountGroup2Title);
+                        }
+                    })
+                    $('.newgroup1').click(function (e) {
+                        e.preventDefault();
+                        NewGroupModal(1, null, data.Data.AccountGroup1Title);
+                    })
                 }
                 if (groupLevels > 1) {
                     $('.accountgroup2').css('visibility', 'visible');
                     $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
                     $('.Group2Id').change(function () {
                         GroupChange(2);
+                    })
+                    $('.editgroup2').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group2Id').val() === null || $('.Group2Id').val() === '') {
+                            alert($('.group2prompt').html + ' must be selected first');
+                        }
+                        else {
+                            if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
+                                alert($('.group1prompt').html + ' must be selected first');
+                            }
+                            else {
+                                EditGroupModal(2, $('.Group2Id').val(), $('.Group1Id').val(), data.Data.AccountGroup2Title);
+
+                            }
+                        }
+                    })
+                    $('.newgroup2').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
+                            alert('Group 1 must be selected first');
+                        }
+                        else {
+                            NewGroupModal(2, $('.Group1Id').val(), data.Data.AccountGroup2Title);
+
+                        }
                     })
                 }
                 if (groupLevels > 2) {
@@ -191,10 +234,12 @@ function RetrieveAccountSummaryData() {
                 if (category < 4) {
                     $('.BeginningBalance').removeAttr("disabled");
                     $('.closingaccountgroup').attr('disabled', true);
+                    $('.accountselectionsearch').css('visibility', 'hidden');
                 }
                 else {
                     $('.BeginningBalance').attr('disabled', true);
                     $('.closingaccountgroup').removeAttr("disabled");
+                    $('.accountselectionsearch').css('visibility', 'visible');
                 }
 
                 if (groupLevels > 0 && data.Data.Group1Id != null) {
@@ -230,6 +275,8 @@ function RetrieveAccountSummaryData() {
 
 }
 
+// account group section
+
 function LoadGroupDropDown(groupLevel, parentId, initialId) {
     if (parentId === '' || parentId === null) {
         PopulateDropDownData('.Group' + groupLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId, '', StoreGroupData);
@@ -256,10 +303,12 @@ function GroupChange(groupLevel) {
         if (category < 4) {
             $('.BeginningBalance').removeAttr("disabled");
             $('.closingaccountgroup').attr('disabled', true);
+            $('.accountselectionsearch').css('visibility', 'hidden');
         }
         else {
             $('.BeginningBalance').attr('disabled', true);
             $('.closingaccountgroup').removeAttr("disabled");
+            $('.accountselectionsearch').css('visibility', 'visible');
         }
     }
 
@@ -267,6 +316,10 @@ function GroupChange(groupLevel) {
         PopulateDropDown('.Group' + (groupLevel + 1) + 'Id', 'AccountGroups/' + parentVal + '/parent', '');
     }
 }
+
+// end group section
+
+// segment section
 
 function LoadSegmentDropDowns() {
     for (i = 0; segments; i++) {
@@ -372,16 +425,16 @@ function GetNewAccountFields(container) {
         switch (propertyName) {
             case 'IsNormallyDebit': {
                 if ($(this).val() === '1')
-                    value = 1;
+                    value = true;
                 else
-                    value = 0;
+                    value = false;
                 break;
             }
             case 'IsActive': {
                 if ($(this).prop('checked') === true)
-                    value = 1;
+                    value = true;
                 else
-                    value = 0;
+                    value = false;
                 break;
             }
             case 'BeginningBalance': {
@@ -395,7 +448,7 @@ function GetNewAccountFields(container) {
                 value = $(this).val();
         }
 
-        if (value && value.length > 0)
+        if (value)
             p.push('"' + propertyName + '": "' + value + '"');
     });
 
@@ -403,6 +456,24 @@ function GetNewAccountFields(container) {
     p.push('"Category": "' + category + '"');
     p.push('"FiscalYearId": "' + fiscalYearId + '"');
     p.push('"ClosingAccountId": "' + $(container).find(".hidaccountid").val() + '"');
+
+    // Segment information
+    asSet = []; // Array of AccountSegment objects
+    for (var level = 1; level <= segmentLevels; level++) {
+        var segment = $('.segment' + level + 'dropdown');
+        var i = segment.prop('selectedIndex');
+        value = segmentData[level - 1][i - 1].Id;
+        if (value && value.trim().length > 0) {
+            var as = [];  // An AccountSegment object
+            as.push("Level", level);
+            as.push("SegmentId", value);
+            asSet.push('{' + as + '}');  // Add the object to the array
+        }
+    }
+    if (asSet.length > 0) {
+        p.push('"AccountSegment": [ ' + asSet + ']');  // Add the array of Account Segment objects to the Account object
+    }
+
     p = '{' + p + '}';
 
     return p;
@@ -440,3 +511,152 @@ function SaveOldAccount(container) {
 }
 
 //end summary tab section
+
+
+//group modal section
+
+function NewGroupModal(groupLevel, parentId, groupName) {
+    $('.modalGroupName').html(groupName);
+
+    modal = $('.accountgroupmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.saveaccountgroupbutton').unbind('click');
+
+    $('.saveaccountgroupbutton').click(function () {
+
+        var item = GetAccountGroupsToSave();
+
+        MakeServiceCall('POST', 'AccountGroups', item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Account Group saved successfully.');
+
+            CloseModal(modal);
+
+            LoadGroupDropDown(groupLevel, parentId, '')
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Account Group.');
+
+        });
+
+    });
+
+}
+
+function EditGroupModal(groupLevel, groupId, parentId, groupName) {
+
+    $('.modalGroupName').html(groupName);
+
+    var modal = $('.AccountGroupsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    LoadAccountGroups(groupId);
+    
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.saveAccountGroups').unbind('click');
+
+    $('.saveAccountGroups').click(function () {
+
+        var item = GetAccountGroupsToSave();
+
+        MakeServiceCall('PATCH', 'AccountGroups/' + groupId, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Account Group saved successfully.');
+
+            CloseModal(modal);
+
+            LoadGroupDropDown(groupLevel, parentId, '')
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Account Group.');
+        });
+
+    });
+}
+
+function LoadAccountGroups(id) {
+
+    MakeServiceCall('GET', 'AccountGroups/' + id, null, function (data) {
+
+        $('.Priority').val(data.Data.Priority),
+        $('.InterestPaymentMethod').val(data.Data.InterestPaymentMethod),
+        $('.ConstituentId').val(data.Data.Constituent.Id),
+        $('.ConstituentName').val(data.Data.Constituent.DisplayName),
+        $('.InterestPayoutOptionPercent').prop("checked", (data.Data.Percent === 0) ? false : true),
+        $('.InterestPayoutOptionAmount').prop("checked", (data.Data.Amount === 0) ? false : true),
+        $('.InterestPayoutPercentAmount').val($(data.Data.Percent === 0) ? data.Data.Amount : data.Data.Percent)
+
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Interest Payout.');
+    });
+
+}
+
+
+function GetAccountGroupsToSave(modal) {
+
+    var rawitem = {
+
+        Priority: $(modal).find('.Priority').val(),
+        InterestPaymentMethod: $(modal).find('.InterestPaymentMethod').val(),
+        ConstituentId: $(modal).find('.Constituent.Id').val(),
+        ConstituentName: $(modal).find('.Constituent.Name').val(),
+        Percent: ($('.InterestPayoutOptionPercent').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
+        Amount: ($('.InterestPayoutOptionAmount').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
+}
+
+function GetInterestPaymentMethod(method) {
+    var methodDesc;
+    switch (method) {
+        case 0:
+            methodDesc = "Compound";
+            break;
+        case 1:
+            methodDesc = "EFT";
+            break;
+        case 2:
+            methodDesc = "Check";
+            break;
+        case 3:
+            methodDesc = "Investment Deposit";
+            break;
+    }
+    return methodDesc;
+}
+
+//end segments modal section
+

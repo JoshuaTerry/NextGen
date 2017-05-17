@@ -103,7 +103,7 @@ function SelectAccountNumberLookup(item, container) {
 
 function CreateGLAccountSelector(container)
 {
-    var glcontrol = $('<div>').addClass("inline-block");
+    var glcontrol = $('<span>').addClass("inline-block");
         
     $('<input>').attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
     $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
