@@ -16,7 +16,7 @@ namespace DDI.Business
     public class EntityLogicBase<T> : EntityLogicBase where T : class, IEntity
     {
 
-        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 5; // Wait 5 seconds after saving before updating search documents.
+        private const int UPDATE_SEARCH_DOCUMENT_DELAY = 2; // Wait 2 seconds after saving before updating search documents.
         private List<Guid> _scheduledUpdates = null;
         private static object _lockObject = new object();
 
@@ -65,28 +65,32 @@ namespace DDI.Business
         /// </summary>
         public void ScheduleUpdateSearchDocument(Guid? id)
         {
-            lock (_lockObject)
-            {
-                if (!id.HasValue || _scheduledUpdates.Contains(id.Value))  // Shouldn't schedule an update that's just been scheduled.
-                {
-                    return;
-                }
 
-                _scheduledUpdates.Add(id.Value);
-            }
-
-            Shared.TaskScheduler.ScheduleTask(() =>
+            UnitOfWork.AddPostSaveAction(() =>
             {
-                using (var unitOfWork = new UnitOfWorkEF())
+                lock (_lockObject)
                 {
-                    T entityToUpdate = unitOfWork.GetById<T>(id.Value);
-                    if (entityToUpdate != null)
+                    if (!id.HasValue || _scheduledUpdates.Contains(id.Value))  // Shouldn't schedule an update that's just been scheduled.
                     {
-                        BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                        return;
                     }
-                    _scheduledUpdates.Remove(id.Value);  // Remove this id from the list of scheduled updates.
+
+                    _scheduledUpdates.Add(id.Value);
                 }
-            }, UPDATE_SEARCH_DOCUMENT_DELAY);
+
+                Shared.TaskScheduler.ScheduleTask(() =>
+                {
+                    using (var unitOfWork = new UnitOfWorkEF())
+                    {
+                        T entityToUpdate = unitOfWork.GetById<T>(id.Value);
+                        if (entityToUpdate != null)
+                        {
+                            BusinessLogicHelper.GetBusinessLogic<T>(unitOfWork).UpdateSearchDocument(entityToUpdate);
+                        }
+                        _scheduledUpdates.Remove(id.Value);  // Remove this id from the list of scheduled updates.
+                    }
+                }, UPDATE_SEARCH_DOCUMENT_DELAY);
+            });
         }
 
 
