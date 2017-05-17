@@ -29,7 +29,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var search = new PageableSearch(SearchParameters.OffsetDefault,10000000, OrderByProperties.TransactionDate);
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
-                var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id,search);
+                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id,search);
                 var castResults = result.Data.Cast<PostedTransaction>();
                 var gridResults = DataSourceLoader.Load(castResults, loadOptions);
                // var gridResults2 = 
@@ -58,7 +58,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly => ly.AccountId == id).Data.FirstOrDefault();
-                var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
+                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
                 var count = Json( DataSourceLoader.Load(result.Data.ToList(), loadOptions));
                
                 return Request.CreateResponse(HttpStatusCode.OK, count);
@@ -77,7 +77,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly => ly.AccountId == id).Data.FirstOrDefault();
-                var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
+                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
                 var count = Json(DataSourceLoader.Load(result.Data.ToList(), loadOptions));
 
                 return Request.CreateResponse(HttpStatusCode.OK, count);
