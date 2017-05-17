@@ -8,6 +8,7 @@ using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.GL
 {
@@ -70,6 +71,7 @@ namespace DDI.Services.GL
             {
                 foreach (var entry in account.AccountSegments)
                 {
+                    // Ensure segment exists
                     Segment segment = null;
                     if (entry.SegmentId != null)
                     {
@@ -89,6 +91,8 @@ namespace DDI.Services.GL
             {
                 return GetErrorResponse<Account>(UserMessagesGL.GLAccountNoSegments);
             }
+
+            // Handle LedgerAccountYears collection.
 
             LedgerAccount ledgerAccount = null;
 
@@ -151,6 +155,15 @@ namespace DDI.Services.GL
             
             return base.Add(account);
         }
+
+        public override IDataResponse<Account> Update(Account entity, JObject changes)
+        {
+
+
+            return base.Update(entity, changes);
+        }
+
+        
 
     }
 }
