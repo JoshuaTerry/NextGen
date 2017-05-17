@@ -67,16 +67,10 @@ function LoadGroupsGrid() {
     //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
     LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
-        , null, 'gp-', '.groupmodal', '.groupmodal', 250, false, true, false, null);
+        , null, 'gp-', '.groupmodal', '.groupmodal', 250, true, true, false, null);
 
     //MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
     MakeServiceCall('GET', 'roles', null, function (data) {
-
-        //testData = [
-        //    { id: 0, name: 'pickme' },
-        //    { id: 1, name: 'nopickme' },
-        //    { id: 2, name: 'pickkkkmeeeee' }
-        //];
 
         $('.rolesdropdowncontainer').dxTagBox({
 
