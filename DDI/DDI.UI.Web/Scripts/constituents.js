@@ -467,7 +467,6 @@ function LoadEthnicitiesTagBox() {
 function LoadDBAGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px', },
         { dataField: 'StartDate', caption: 'From', dataType: 'date' },
         { dataField: 'EndDate', caption: 'To', dataType: 'date' },
         { dataField: 'Name', caption: 'Name' }
@@ -485,7 +484,6 @@ function LoadDBAGrid() {
 function LoadEducationGrid() {
 
     var columns = [
-            { dataField: 'Id', width: '0px' },
             { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
             { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
             { dataField: 'School.DisplayName', caption: 'School' },
@@ -503,7 +501,6 @@ function LoadEducationGrid() {
 function LoadPaymentPreferencesTable() {
 
     var columns = [
-            { dataField: 'Id', width: '0px' },
             { dataField: 'Description', caption: 'Description' },
             { dataField: 'RoutingNumber', caption: 'Routing Number' },
             { dataField: 'BankAccount', caption: 'Account Number' },
@@ -636,7 +633,6 @@ function LoadAuditTable() {
 function LoadAlternateIDTable() {
 
     var columns = [
-            { dataField: 'Id', width:'0px' },
             { dataField: 'Name', caption: 'Name' }
     ];
 
@@ -656,7 +652,6 @@ function LoadContactInfo() {
 function LoadAddressesGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'IsPrimary', caption: 'Is Primary' },
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
         { dataField: 'Address.AddressLine1', caption: 'Address' }
@@ -933,7 +928,6 @@ function LoadCategories(CategoryTitles) {
 function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 
     var columns = [
-        { dataField:  'Id', width: '0px' }, 
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType.Name', caption: 'Type' }, 
         { dataField: 'Info', caption: displayText },
@@ -1003,7 +997,6 @@ function RelationshipLinkClicked(id) {
 function LoadRelationshipsTab() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
         { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
         { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },

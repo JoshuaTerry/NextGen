@@ -200,8 +200,8 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
                     .click(function(e) {
                         e.preventDefault();
 
-                        var id = $(this).parent().parent().find('td:not(:empty):first').text();
-                        EditEntity(saveRoute, prefix, id, editModalClass, modalWidth, refreshGrid);
+                        // var id = $(this).parent().parent().find('td:not(:empty):first').text();
+                        EditEntity(saveRoute, prefix, options.data.Id, editModalClass, modalWidth, refreshGrid);
                     })
                     .appendTo(container);
             }
@@ -220,10 +220,10 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
                     .click(function (e) {
                         e.preventDefault();
 
-                        var id = $(this).parent().parent().find('td:not(:empty):first').text();
+                        // var id = $(this).parent().parent().find('td:not(:empty):first').text();
                         
                         ConfirmModal('Are you sure you want to delete this item?', function () {
-                            DeleteEntity(saveRoute, id, refreshGrid);
+                            DeleteEntity(saveRoute, options.data.Id, refreshGrid);
                         }, null);
                     })
                     .appendTo(container);
@@ -252,7 +252,13 @@ function LoadGridData(container, grid, columns, getRoute, selected, newlink, sho
     MakeServiceCall('GET', getRoute, null, function (data) {
 
         $(datagrid).dxDataGrid({
-            dataSource: data.Data,
+            dataSource: {
+                store: {
+                    data: data.Data,
+                    type: 'array',
+                    key: 'Id'
+                }
+            },
             columns: columns,
             paging: {
                 pageSize: 25
@@ -372,7 +378,13 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     }
 
     $(datagrid).dxDataGrid({
-        dataSource: actualData,
+        dataSource: {
+            store: {
+                data: actualData,
+                type: 'array',
+                key: 'ID'
+            }
+        },
         columns: columns,
         paging: {
             pageSize: 25

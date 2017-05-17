@@ -32,7 +32,6 @@ function SetupNotesTab() {
 function LoadNoteDetailsGrid() {
 
     var columns = [
-    { dataField: 'Id', width: '0px', },
     { dataField: 'CreatedOn', caption: 'Created Date', dataType: 'date' },
     { dataField: 'CreatedBy', caption: 'Created By' },
     { dataField: 'Title', caption: 'Title' }
@@ -490,7 +489,6 @@ function GetNoteAlerts() {
 function LoadNoteAlertGrid(data) {
 
     var columns = [
-        { dataField: 'Id', width: '0px', },
         { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
         { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
         { dataField: 'Title', caption: 'Title' }
