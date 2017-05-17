@@ -336,7 +336,7 @@
                                         <option value="8">08</option>
                                         <option value="9">09</option>
                                         <option value="10">10</option>
-                                        <option value="12">11</option>
+                                        <option value="11">11</option>
                                         <option value="12">12</option>
                                     </select>
                                         </div>
@@ -1171,17 +1171,15 @@
             </div>
 
             <div class="twocolumn">
-
                 <div class="fieldblock">
                     <label>School</label>
-                    <select class="ed-SchoolId schools"></select>
+                    <input type="text" class="ed-SchoolOther schoolLookup" />
                 </div>
 
                 <div class="fieldblock">
                     <label>Degree</label>
-                    <select class="ed-DegreeId degrees"></select>
+                    <input type="text" class="ed-DegreeOther degreeLookup" />
                 </div>
-
             </div>
             
              <input type="hidden" class="ed-ConstituentId parentid" />
@@ -1198,7 +1196,6 @@
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
 
         <div class="modalcontent">
-<%--            <input type="hidden" class="hidrelationshipid" />--%>
             <input type="hidden" class="nd-hidparententityid" />
             <input type="hidden" class="hidentitytype" />
 
@@ -1281,37 +1278,39 @@
 
             </div>
 
-            <div class="twocolumn">
+            <div class="editnoteinfo" style="display: none;">
+                <div class="twocolumn">
 
-                <div class="fieldblock">
-                    <label>Created By</label>
-                    <label class="nd-CreatedBy"></label>
+                    <div class="fieldblock">
+                        <label>Created By</label>
+                        <label class="nd-CreatedBy"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Updated By</label>
+                        <label class="nd-UpdatedBy"></label>
+                    </div>
+
                 </div>
 
-                <div class="fieldblock">
-                    <label>Updated By</label>
-                    <label class="nd-UpdatedBy"></label>
+                 <div class="twocolumn">
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-CreatedOn"></label>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>On</label>
+                        <label class="nd-UpdatedOn"></label>
+                    </div>
+
                 </div>
-
-            </div>
-
-             <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>On</label>
-                    <label class="nd-CreatedOn"></label>
-                </div>
-
-                <div class="fieldblock">
-                    <label>On</label>
-                    <label class="nd-UpdatedOn"></label>
-                </div>
-
             </div>
 
             <div class="modalbuttons">
                 <input type="button" class="savenotedetails" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                <a href="#" class="cancelnotesmodal">Cancel</a>
             </div>
 
         </div>

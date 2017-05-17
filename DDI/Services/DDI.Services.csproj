@@ -79,9 +79,10 @@
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
     <Compile Include="Common\CountryService.cs" />
-    <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="CRM\EducationService.cs" />
+    <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
     <Compile Include="INV\LinkedAccountService.cs" />
@@ -122,9 +123,8 @@
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
-    <Compile Include="Core\ITagGroupService.cs" />
-    <Compile Include="Common\StateService.cs" />
-    <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="CRM\ITagGroupService.cs" />
+    <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IJournalService.cs" />

@@ -252,8 +252,8 @@
     <Compile Include="Controllers\Core\NoteTopicsController.cs" />
     <Compile Include="Controllers\Core\RolesController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
-    <Compile Include="Controllers\Core\TagGroupsController.cs" />
-    <Compile Include="Controllers\Core\TagsController.cs" />
+    <Compile Include="Controllers\CRM\TagGroupsController.cs" />
+    <Compile Include="Controllers\CRM\TagsController.cs" />
     <Compile Include="Controllers\Core\UserRolesController.cs" />
     <Compile Include="Controllers\Core\UsersController.cs" />
     <Compile Include="Controllers\CRM\AddressesController.cs" />

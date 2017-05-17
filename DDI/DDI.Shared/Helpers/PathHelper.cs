@@ -69,6 +69,15 @@ namespace DDI.Shared.Helpers
             }
 
             /// <summary>
+            /// Remove all existing paths.
+            /// </summary>
+            public FieldListBuilder<T> Clear()
+            {
+                _fields.Clear();
+                return this;
+            }
+
+            /// <summary>
             /// Include a path in the field list being built.
             /// </summary>
             public FieldListBuilder<T> Include(Expression<Func<T, object>> path)

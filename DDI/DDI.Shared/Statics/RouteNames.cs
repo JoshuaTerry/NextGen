@@ -8,6 +8,7 @@
         public const string AccountActivity = "AccountActivity";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
+        public const string Alert = "Alert";
         public const string AlternateId = "AlternateId";
         public const string Audit = "Audit";
         public const string BusinessDate = "BusinessDate";

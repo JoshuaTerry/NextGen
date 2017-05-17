@@ -7,13 +7,13 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class PrefixesController : GenericController<Prefix>
-    {
-
+    {   
         protected override Expression<Func<Prefix, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<Prefix, object>>[]
@@ -22,9 +22,13 @@ namespace DDI.WebApi.Controllers.CRM
             };
         }
 
+        protected override Expression<Func<Prefix, object>>[] GetDataIncludesForSingle() => GetDataIncludesForList();
+
+        protected override string FieldsForList => $"{FieldLists.CodeFields},{nameof(Prefix.ShowOnline)}";
+
         [HttpGet]
         [Route("api/v1/prefixes", Name = RouteNames.Prefix)]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Prefix, string fields = null)
         {            
             return base.GetAll(RouteNames.Prefix, limit, offset, orderBy, fields);
         }

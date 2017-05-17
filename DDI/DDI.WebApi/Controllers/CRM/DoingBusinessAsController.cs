@@ -4,12 +4,17 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class DoingBusinessAsController : GenericController<DoingBusinessAs>
     {
+        protected override string FieldsForList => $"{nameof(DoingBusinessAs.Id)},{nameof(DoingBusinessAs.DisplayName)}";
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituent);
+
         [HttpGet]
         [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -58,7 +63,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.DoingBusinessAs, search, fields);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.DoingBusinessAs, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
