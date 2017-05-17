@@ -442,7 +442,6 @@ function GetNewFields() {
     // Contact information
     primaries = [];
     ciSet = [];
-    ciSet.index
     for (var idx = 0; idx < newContactInformationFields.length; idx++) {
         var entry = newContactInformationFields[idx];
         var value = entry.TextBox.val();
