@@ -10,8 +10,6 @@
     <h1>Transactions</h1>
     <br />
     <div class="gridcontainer">
-
-
     </div>
 
 </asp:Content>

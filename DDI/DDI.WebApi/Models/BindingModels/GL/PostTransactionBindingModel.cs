@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using DDI.Shared.Models.Client.GL;
 
-namespace DDI.WebApi.Models.GL
+namespace DDI.WebApi.Models.BindingModels
 {
     public class PostTransactionBindingModel
     {
          public int TotalCount { get; set; }
-         public IEnumerable<PostedTransaction> PostedTransactions { get; set; } 
+         public object Data { get; set; } 
          public int GroupCount { get; set; }
     }
 }

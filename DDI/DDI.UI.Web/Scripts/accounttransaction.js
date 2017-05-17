@@ -30,7 +30,7 @@ function LoadTransactionGrid(accountId) {
         
         key: 'Id',
         load: function (loadOptions) {
-            debugger;
+            
             var deferred = $.Deferred(),
                 args = {};
 
@@ -47,17 +47,7 @@ function LoadTransactionGrid(accountId) {
             if (loadOptions.group) {
                 args.group = JSON.stringify(loadOptions.group);
             }
-            //else {
-            //    var group = [];
-            //    var groupcolumn = {
-            //        selector :"MonthYear",
-            //        groupInterval : null,
-            //        desc : false,
-            //    }
-            //    group.push(groupcolumn);
-            //    args.group = (JSON.stringify(group));
-            //}
-
+            
             if (loadOptions.remotegrouping) {
                 args.remotegrouping = loadOptions.remotegrouping;
             }
@@ -67,7 +57,8 @@ function LoadTransactionGrid(accountId) {
                 args.searchExpr = loadOptions.searchExpr;
             }
             
-            args.requireTotalCount = false;
+            args.requireTotalCount = loadOptions.requireTotalCount || false;
+            args.requireGroupCount = loadOptions.requireGroupCount || false
             args.skip = loadOptions.skip || 0;
             args.take = loadOptions.take || 100;
            
@@ -75,7 +66,8 @@ function LoadTransactionGrid(accountId) {
                 url: WEB_API_ADDRESS + 'posttransactions/accountId/' + accountId,
                 data: args,
                 success: function (result) {
-                    deferred.resolve({data: result, totalCount: result.length });
+                    
+                    deferred.resolve({data: result.Data, totalCount: result.TotalCount });
                 },
                 error: function (result) {
                     debugger;
@@ -87,7 +79,7 @@ function LoadTransactionGrid(accountId) {
             return deferred.promise();
         },
         group: [
-            { selector: "MonthYear", groupInterval: 100, desc: false },
+            { selector: "MonthYear", groupInterval: 5, desc: false },
         ]
 
         

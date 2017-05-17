@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DevExtreme.AspNet.Data;
+using DDI.WebApi.Models.BindingModels;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -27,11 +28,21 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(SearchParameters.OffsetDefault,10000000, OrderByProperties.TransactionDate);
-                //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
                 var result = _service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id,search);
-                var gridResults = Json(DataSourceLoader.Load(result.Data.ToList(), loadOptions));
-                return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(result.Data.ToList(), loadOptions)); 
+                var castResults = result.Data.Cast<PostedTransaction>();
+                var gridResults = DataSourceLoader.Load(castResults, loadOptions);
+               // var gridResults2 = 
+
+
+                PostTransactionBindingModel gridModel = new Models.BindingModels.PostTransactionBindingModel
+                {
+                    Data = gridResults,
+                    TotalCount = result.Data.Count
+
+                };
+               
+                return Request.CreateResponse(HttpStatusCode.OK, gridModel); 
             }
             catch (Exception ex)
             {
