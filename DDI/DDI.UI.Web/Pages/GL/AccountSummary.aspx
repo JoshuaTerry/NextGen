@@ -374,8 +374,8 @@
     <div class="modalcontent">
 
         <div class="fieldblock">
-            <label>Level</label>
-            <input type="text" class="as-Level readonly" readonly="readonly" />
+            <label>Segment</label>
+            <label class="modalSegmentName readonly" ></label>
         </div>
 
         <div class="fieldblock">
@@ -405,7 +405,7 @@
 
         <div class="fieldblock">
             <label>Group</label>
-            <input type="text" class="modalGroupName readonly" readonly="readonly" />
+            <label class="modalGroupName readonly" ></label>
         </div>
 
         <div class="fieldblock">
@@ -413,8 +413,8 @@
             <input type="text" class="ag-Name editable" />
         </div>
         
-        <div class="fieldblock">
-            <label>Name</label>
+        <div class="fieldblock group1only">
+            <label>Account Category</label>
             <select class="ag-Category editable">
                 <option value="0">None</option>
                 <option value="1">Asset</option>

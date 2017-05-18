@@ -113,72 +113,39 @@ function LoadSummaryTab(AccountId) {
             if (data.IsSuccessful) {
 
                 groupLevels = data.Data.AccountGroupLevels;
-                if (groupLevels > 0) {
-                    $('.accountgroup1').css('visibility', 'visible');
-                    $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
-                    $('.Group1Id').change(function () {
-                        GroupChange(1);
-                    })
-                    $('.editgroup1').click(function (e) {
-                        e.preventDefault();
-                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
-                            alert($('.group1prompt').html + ' must be selected first');
-                        }
-                        else {
-                            EditGroupModal(2, $('.Group2Id').val(), null, data.Data.AccountGroup2Title);
-                        }
-                    })
-                    $('.newgroup1').click(function (e) {
-                        e.preventDefault();
-                        NewGroupModal(1, null, data.Data.AccountGroup1Title);
-                    })
-                }
-                if (groupLevels > 1) {
-                    $('.accountgroup2').css('visibility', 'visible');
-                    $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
-                    $('.Group2Id').change(function () {
-                        GroupChange(2);
-                    })
-                    $('.editgroup2').click(function (e) {
-                        e.preventDefault();
-                        if ($('.Group2Id').val() === null || $('.Group2Id').val() === '') {
-                            alert($('.group2prompt').html + ' must be selected first');
-                        }
-                        else {
-                            if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
-                                alert($('.group1prompt').html + ' must be selected first');
-                            }
-                            else {
-                                EditGroupModal(2, $('.Group2Id').val(), $('.Group1Id').val(), data.Data.AccountGroup2Title);
+                for (i = 1; i <= groupLevels; i++) {
+                    $('.accountgroup' + i).css('visibility', 'visible');
+                    switch (i) {
+                        case 1:
+                            $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
+                            break;
+                        case 2:
+                            $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
+                            break;
+                        case 3:
+                            $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
+                            break;
+                        case 4:
+                            $('.group4prompt').html(data.Data.AccountGroup41Title + ':');
+                            break;
+                    }
 
-                            }
-                        }
-                    })
-                    $('.newgroup2').click(function (e) {
+                    if (i < 4) {
+                        $('.Group' + i + 'Id').change(function () {
+                            GroupChange(i);
+                        })
+                    }
+                    $('.editgroup' + i).click(function (e) {
                         e.preventDefault();
-                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
-                            alert('Group 1 must be selected first');
-                        }
-                        else {
-                            NewGroupModal(2, $('.Group1Id').val(), data.Data.AccountGroup2Title);
-
-                        }
+                        EditGroup(i);
                     })
-                }
-                if (groupLevels > 2) {
-                    $('.accountgroup3').css('visibility', 'visible');
-                    $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
-                    $('.Group3Id').change(function () {
-                        GroupChange(3);
+                    $('.newgroup1' + i).click(function (e) {
+                        e.preventDefault();
+                        NewGroup(i);
                     })
-                }
-                if (groupLevels > 3) {
-                    $('.accountgroup4').css('visibility', 'visible');
-                    $('.group4prompt').html(data.Data.AccountGroup4Title + ':');
                 }
 
                 segmentLevels = data.Data.NumberOfSegments;
-
                 for (i = (segmentLevels + 1) ; i <= 10; i++) {
                     $('.segmentgroup' + i).hide();
                 }
@@ -194,6 +161,35 @@ function LoadSummaryTab(AccountId) {
 
     }, null);
 
+}
+
+function EditGroup(level) {
+    var prevLevel = level - 1;
+    if ($('.Group' + level + 'Id').val() === null || $('.Group' + level + 'Id').val() === '') {
+        alert($('.group' + level + 'prompt').html() + ' must be selected first');
+        return;
+    }
+    if (level > 1) {
+        if ($('.Group' + prevLevel + 'Id').val() === null || $('.Group' + prevLevel + 'Id').val() === '') {
+            alert($('.group' + prevLevel + 'prompt').html() + ' must be selected first');
+            return;
+        }
+    }
+    EditGroupModal(level, $('.Group' + level + 'Id').val(), $('.Group' + prevLevel + 'Id').val(), $('.group' + level + 'prompt').html());
+}
+
+function NewGroup(level) {
+    var prevLevel = level - 1;
+    if (level > 1) {
+        if ($('.Group' + prevLevel + 'Id').val() === null || $('.Group' + prevLevel + 'Id').val() === '') {
+            alert($('.group' + prevLevel + 'prompt').html() + ' must be selected first');
+            return;
+        }
+        NewGroupModal(level, $('.Group' + prevLevel + 'Id').val(), $('.group' + level + 'prompt').html());
+    }
+    else {
+        NewGroupModal(level, null, $('.group' + level + 'prompt').html());
+    }
 }
 
 function RetrieveSegmentLevels(ledgerId) {
@@ -299,16 +295,18 @@ function GroupChange(groupLevel) {
     var parentVal = element.val();
     if (groupLevel === 1) {
         var i = element.prop('selectedIndex');
-        category = group1Data[i - 1].Category;
-        if (category < 4) {
-            $('.BeginningBalance').removeAttr("disabled");
-            $('.closingaccountgroup').attr('disabled', true);
-            $('.accountselectionsearch').css('visibility', 'hidden');
-        }
-        else {
-            $('.BeginningBalance').attr('disabled', true);
-            $('.closingaccountgroup').removeAttr("disabled");
-            $('.accountselectionsearch').css('visibility', 'visible');
+        if (i > 0) {
+            category = group1Data[i - 1].Category;
+            if (category < 4) {
+                $('.BeginningBalance').removeAttr("disabled");
+                $('.closingaccountgroup').attr('disabled', true);
+                $('.accountselectionsearch').css('visibility', 'hidden');
+            }
+            else {
+                $('.BeginningBalance').attr('disabled', true);
+                $('.closingaccountgroup').removeAttr("disabled");
+                $('.accountselectionsearch').css('visibility', 'visible');
+            }
         }
     }
 
@@ -517,6 +515,14 @@ function SaveOldAccount(container) {
 
 function NewGroupModal(groupLevel, parentId, groupName) {
     $('.modalGroupName').html(groupName);
+    $('.ag-Category').val(0);
+    $('.ag_Name').val('');
+    if (groupLevel != 1) {
+        $('.group1only').hide();
+    }
+    else {
+        $('.group1only').show();
+    }
 
     modal = $('.accountgroupmodal').dialog({
         closeOnEscape: false,
@@ -525,7 +531,7 @@ function NewGroupModal(groupLevel, parentId, groupName) {
         resizable: false
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelaccountgroupmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -537,7 +543,7 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 
     $('.saveaccountgroupbutton').click(function () {
 
-        var item = GetAccountGroupsToSave();
+        var item = GetAccountGroupItemsToSave(modal, parentId);
 
         MakeServiceCall('POST', 'AccountGroups', item, function (data) {
 
@@ -560,8 +566,15 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
     $('.modalGroupName').html(groupName);
+    if (groupLevel != 1) {
+        $('.ag-Category').val(0);
+        $('.group1only').hide();
+    }
+    else {
+        $('.group1only').show();
+    }
 
-    var modal = $('.AccountGroupsmodal').dialog({
+    var modal = $('.accountgroupmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 500,
@@ -570,7 +583,7 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
     LoadAccountGroups(groupId);
     
-    $('.cancelmodal').click(function (e) {
+    $('.cancelaccountgroupmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -578,11 +591,11 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
     });
 
-    $('.saveAccountGroups').unbind('click');
+    $('.saveaccountgroupbutton').unbind('click');
 
-    $('.saveAccountGroups').click(function () {
+    $('.saveaccountgroupbutton').click(function () {
 
-        var item = GetAccountGroupsToSave();
+        var item = GetAccountGroupItemsToSave(modal, parentId);
 
         MakeServiceCall('PATCH', 'AccountGroups/' + groupId, item, function (data) {
 
@@ -604,32 +617,24 @@ function LoadAccountGroups(id) {
 
     MakeServiceCall('GET', 'AccountGroups/' + id, null, function (data) {
 
-        $('.Priority').val(data.Data.Priority),
-        $('.InterestPaymentMethod').val(data.Data.InterestPaymentMethod),
-        $('.ConstituentId').val(data.Data.Constituent.Id),
-        $('.ConstituentName').val(data.Data.Constituent.DisplayName),
-        $('.InterestPayoutOptionPercent').prop("checked", (data.Data.Percent === 0) ? false : true),
-        $('.InterestPayoutOptionAmount').prop("checked", (data.Data.Amount === 0) ? false : true),
-        $('.InterestPayoutPercentAmount').val($(data.Data.Percent === 0) ? data.Data.Amount : data.Data.Percent)
-
+        $('.ag-Name').val(data.Data.Name),
+        $('.ag-Category').val(data.Data.Category)
 
     }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', 'An error occurred during loading the Interest Payout.');
+        DisplayErrorMessage('Error', 'An error occurred during loading the Account Group.');
     });
 
 }
 
 
-function GetAccountGroupsToSave(modal) {
+function GetAccountGroupItemsToSave(modal, parentId) {
 
     var rawitem = {
 
-        Priority: $(modal).find('.Priority').val(),
-        InterestPaymentMethod: $(modal).find('.InterestPaymentMethod').val(),
-        ConstituentId: $(modal).find('.Constituent.Id').val(),
-        ConstituentName: $(modal).find('.Constituent.Name').val(),
-        Percent: ($('.InterestPayoutOptionPercent').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
-        Amount: ($('.InterestPayoutOptionAmount').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
+        Name: $(modal).find('.ag-Name').val(),
+        Category: $(modal).find('.ag-Category').val(),
+        FiscalYearId: fiscalYearId,
+        ParentGroupId: parentId
 
     };
 
@@ -637,25 +642,6 @@ function GetAccountGroupsToSave(modal) {
 
     return item;
 
-}
-
-function GetInterestPaymentMethod(method) {
-    var methodDesc;
-    switch (method) {
-        case 0:
-            methodDesc = "Compound";
-            break;
-        case 1:
-            methodDesc = "EFT";
-            break;
-        case 2:
-            methodDesc = "Check";
-            break;
-        case 3:
-            methodDesc = "Investment Deposit";
-            break;
-    }
-    return methodDesc;
 }
 
 //end segments modal section
