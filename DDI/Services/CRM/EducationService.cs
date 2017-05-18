@@ -1,10 +1,5 @@
-﻿using DDI.Business.CRM;
-using DDI.Data;
-using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
+﻿using System;
 using DDI.Shared.Models.Client.CRM;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace DDI.Services
 {

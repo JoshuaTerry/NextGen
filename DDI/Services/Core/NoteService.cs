@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Services.Search;

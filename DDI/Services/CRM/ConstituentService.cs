@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using DDI.Business.CRM;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Services.Search;

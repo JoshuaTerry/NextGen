@@ -1,6 +1,5 @@
 ﻿using DDI.Business;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;

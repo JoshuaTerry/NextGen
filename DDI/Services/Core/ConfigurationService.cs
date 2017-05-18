@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using DDI.Business.Core;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.Core;

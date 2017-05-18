@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.INV;
 

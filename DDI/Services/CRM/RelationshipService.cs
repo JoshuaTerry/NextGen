@@ -1,5 +1,4 @@
 ﻿using DDI.Business.CRM;
-using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;

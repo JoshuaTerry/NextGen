@@ -1,12 +1,11 @@
-﻿using DDI.Business.Common;
+﻿using System;
+using System.Linq;
+using DDI.Business.Common;
 using DDI.Business.CRM;
-using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using System;
-using System.Linq;
 
 namespace DDI.Services
 {

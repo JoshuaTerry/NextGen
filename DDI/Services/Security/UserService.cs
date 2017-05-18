@@ -1,5 +1,4 @@
-﻿using DDI.Data;
-using DDI.Logger;
+﻿using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
