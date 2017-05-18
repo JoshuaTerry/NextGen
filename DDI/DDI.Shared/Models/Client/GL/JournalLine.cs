@@ -51,5 +51,11 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(JournalId))]
         public Journal Journal { get; set; }
 
+        /// <summary>
+        /// The client can set IsDeleted to TRUE prior to calling PATCH to cause line items to be deleted.
+        /// </summary>
+        [NotMapped]
+        public bool IsDeleted { get; set; }
+
     }
 }

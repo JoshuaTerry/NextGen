@@ -80,7 +80,7 @@ namespace DDI.WebApi.Controllers.CRM
                 {
                     // For entity types with recursive properties or large collections, we need to exclude these.
                     // This is an example of using the FieldListBuilder to create a list of fields.
-                    _allFields = new PathHelper.FieldListBuilder<RelationshipType>()
+                    _allFields = FieldListBuilder
                         .IncludeAll()
                         .Include(p => p.ReciprocalTypeFemale.DisplayName)
                         .Include(p => p.ReciprocalTypeMale.DisplayName)
