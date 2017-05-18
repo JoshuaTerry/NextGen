@@ -3380,8 +3380,8 @@ function PopulateFundFromFiscalYear(fiscalyearid, ledger, fundid) {
 
                
            // });
-        }
-}
+        //
+//}
 
 /* POPULATING FUND DUE FROM FUND */
 function PopulateFundDueFromFund(fundid) {
