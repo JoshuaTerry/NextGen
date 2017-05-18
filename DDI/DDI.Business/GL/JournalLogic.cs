@@ -192,7 +192,6 @@ namespace DDI.Business.GL
             journal.JournalLines = new List<JournalLine>();
                        
             journal.AssignPrimaryKey();
-            UnitOfWork.Insert(journal);
 
             return journal;
         }
