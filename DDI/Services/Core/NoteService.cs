@@ -1,18 +1,18 @@
-﻿using DDI.Business.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DDI.Business.Helpers;
 using DDI.Data;
+using DDI.Search;
+using DDI.Search.Models;
+using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
-using DDI.Services.Search;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Shared.Models;
 
 namespace DDI.Services
 {
