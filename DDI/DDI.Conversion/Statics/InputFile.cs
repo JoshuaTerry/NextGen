@@ -49,6 +49,7 @@ namespace DDI.Conversion.Statics
 
         #region DDI Files
         public static string DDI_User => "DDIUser.csv";
+        public static string DDI_Settings => "DDISettings.csv";
         #endregion
 
         #region GL Files

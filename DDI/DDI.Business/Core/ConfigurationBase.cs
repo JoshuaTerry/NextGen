@@ -93,5 +93,17 @@ namespace DDI.Business.Core
 
             return list;
         }
+
+        /// <summary>
+        /// Method called before the configuration is saved to the database.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        public virtual void BeforeSave(IUnitOfWork unitOfWork) { }
+
+        /// <summary>
+        /// Method called after the configuration is loaded from the database.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        public virtual void AfterLoad(IUnitOfWork unitOfWork) { }
     }
 }

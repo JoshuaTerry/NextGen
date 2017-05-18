@@ -91,53 +91,11 @@ namespace DDI.Shared.Models.Client.GL
             }
         }
 
-        
         [NotMapped]
-        public string DisplayFormat
-        {
-            get
-            {
-                if (SegmentLevels == null)
-                {
-                    return "";
-                }
-                else
-                {
-                    string displayFormat = "";
-
-                    foreach (SegmentLevel sl in SegmentLevels.OrderBy(t => t.Level))
-                    {
-                        string character = "";
-                        switch (sl.Format)
-                        {
-                            case SegmentFormat.Both:
-                                character = "X";
-                                break;
-                            case SegmentFormat.Numeric:
-                                character = "9";
-                                break;
-                            case SegmentFormat.Alpha:
-                                character = "A";
-                                break;
-                        }
-
-                        for (int k = 1; k <= sl.Length; k++){
-
-                            displayFormat = displayFormat + character;
-                        }
-
-                        if (sl.Separator != null)
-                        {
-                            displayFormat = displayFormat + sl.Separator;
-                        }
-                                    
-                    }
-
-                    return displayFormat;
-
-                }
-            }
-        }
+        public bool HasLedgerAccounts { get; set; }
+    
+        [NotMapped]
+        public string DisplayFormat { get; set; }
 
     }
 }

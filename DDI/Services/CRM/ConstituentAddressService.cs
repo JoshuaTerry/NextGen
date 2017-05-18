@@ -9,6 +9,7 @@ using DDI.Shared.Models.Client.CRM;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using DDI.Shared.Models;
 
 namespace DDI.Services
 {
@@ -37,37 +38,22 @@ namespace DDI.Services
             _unitOfWork = unitOfWork;
         }
 
-        public override IDataResponse<ConstituentAddress> Update(Guid id, JObject changes)
+        /// <summary>
+        /// Override to handle updating Address passed via ConstituentAddress.
+        /// </summary>
+        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
-            var response = new DataResponse<ConstituentAddress>();
-            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
-            try
+            if (name == nameof(ConstituentAddress.Address) && entity is ConstituentAddress)
             {
-                foreach (var property in changes)
+                if (token is JObject)
                 {
-                    if (property.Key == "Address")
-                    {
-                        _addressService.Update(property.Value.ToObject<Address>().Id, JObject.FromObject(property.Value));
-                    }
-                    else
-                    {
-                        var convertedProperty = JsonExtensions.ConvertToType<ConstituentAddress>(property);
-                        changedProperties.Add(convertedProperty.Key, convertedProperty.Value);
-
-                        IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<ConstituentAddress>(_unitOfWork);
-                        _unitOfWork.GetRepository<ConstituentAddress>().UpdateChangedProperties(id, changedProperties, p => logic.Validate(p));
-                        _unitOfWork.SaveChanges();
-                    }
+                    var constituentAddress = (ConstituentAddress)entity;
+                    constituentAddress.Address = AddUpdateFromJObject<Address>((JObject)token);
+                    constituentAddress.AddressId = constituentAddress.Address?.Id;
+                    return true;
                 }
-
-                response.Data = _unitOfWork.GetRepository<ConstituentAddress>().GetById(id, IncludesForSingle);
-
-                return response;
             }
-            catch (Exception ex)
-            {
-                return base.ProcessIDataResponseException(ex);
-            }
+            return false;
         }
 
         public override IDataResponse<ConstituentAddress> Add(ConstituentAddress entity)

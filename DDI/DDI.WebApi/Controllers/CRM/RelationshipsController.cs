@@ -153,20 +153,16 @@ namespace DDI.WebApi.Controllers.CRM
         [HttpGet]
         [Route("api/v1/relationships/constituents/{id}")]
         [Route("api/v1/constituents/{id}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
-        public IHttpActionResult GetByConstituentId(Guid id, string fields = "", int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
-            {
-                if (string.IsNullOrWhiteSpace(fields))
-                {
-                    fields = DefaultFields;
-                }
+            {    
                 Service.TargetConstituentId = id;
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response1 = Service.GetAllWhereExpression(a => a.Constituent1Id == id, search);
                 var response2 = Service.GetAllWhereExpression(a => a.Constituent2Id == id, search);
                 response1.Data = response1.Data.Union(response2.Data).ToList();
-                return FinalizeResponse(response1, RouteNames.Constituent + RouteNames.Relationship, search, fields);
+                return FinalizeResponse(response1, RouteNames.Constituent + RouteNames.Relationship, search, ConvertFieldList(fields, DefaultFields));
             }
             catch (Exception ex)
             {

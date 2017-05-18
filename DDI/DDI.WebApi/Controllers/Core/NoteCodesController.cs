@@ -9,6 +9,8 @@ namespace DDI.WebApi.Controllers.General
     [Authorize]
     public class NoteCodesController : GenericController<NoteCode>
     {
+        protected override string FieldsForList => FieldLists.CodeFields;
+
         [HttpGet]
         [Route("api/v1/notecodes", Name = RouteNames.NoteCode)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

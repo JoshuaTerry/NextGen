@@ -30,6 +30,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -44,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CoreConfiguration.cs" />
     <Compile Include="Core\NoteLogic.cs" />
     <Compile Include="Core\TransactionLogic.cs" />
     <Compile Include="Core\EntityNumberLogic.cs" />
@@ -51,6 +61,7 @@
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />
     <Compile Include="CRM\RegionLogic.cs" />
+    <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="GL\JournalLogic.cs" />
     <Compile Include="GL\BusinessUnitLogic.cs" />

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.GL;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
-using WebGrease.Css.Extensions;
 
 namespace DDI.Services.GL
 {
@@ -30,5 +28,24 @@ namespace DDI.Services.GL
 
             return new DataResponse<List<AccountActivityDetail>>(activityDetailList);
         }
+
+        protected override Action<Account> FormatEntityForGet => account => PopulateAccountBalanceIds(account);
+
+        /// <summary>
+        /// The Ids coming back from the SQL view put the account ID into AccountBalance.Id.  This confuses the dynamic transmogrifier, 
+        /// so we need to store actual Guids instead.  These are never used, since the rows in AccountBalance can't be updated or referenced individually.
+        /// </summary>
+        private void PopulateAccountBalanceIds(Account account)
+        {
+            if (account.AccountBalances != null)
+            {
+                foreach (var entry in account.AccountBalances)
+                {
+                    entry.Id = GuidHelper.NewSequentialGuid();
+                }
+            }
+        }
+
+
     }
 }
