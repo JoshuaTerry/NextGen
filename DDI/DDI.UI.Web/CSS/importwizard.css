@@ -1,0 +1,17 @@
+﻿
+
+.importsteps { vertical-align: top; overflow: hidden; position: relative; }
+.importsteps .stepsinner {
+    width: 3100px;
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+}
+.importsteps .step { width: 615px; display: inline-block; vertical-align: top; margin: 0px; padding: 0px; }
+
+.importsteps .step1 {  }
+.importsteps .step2 {  }
+.importsteps .step3 {  }
+.importsteps .step4 {  }
+.importsteps .step5 {  }
+

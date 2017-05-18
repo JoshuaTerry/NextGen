@@ -43,6 +43,7 @@
     <link rel="stylesheet" type="text/css" href="CSS/jquery.timepicker.css" />
     <link rel="stylesheet" type="text/css" href="CSS/globalstyles.css" />
     <link rel="stylesheet" type="text/css" href="CSS/autocomplete.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/importwizard.css" />
     
     <script type="text/javascript" src="..\..\Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
@@ -52,6 +53,7 @@
     <script type="text/javascript" src="..\..\Scripts\autocomplete.js"></script>
     <script type="text/javascript" src="..\..\Scripts\additional-methods.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\importwizard.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 
@@ -101,6 +103,7 @@
         </div>
 
         <div class="maincontainer">
+            <a href="#" class="import">Import</a>
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
         </div>
 
@@ -381,24 +384,116 @@
               
     </div>
 
-    <div class="changebusinessunitmodal" title="Change Current Business Unit" style="display: none;">
+        <div class="changebusinessunitmodal" title="Change Current Business Unit" style="display: none;">
 
-        <div class="modalcontent">
+            <div class="modalcontent">
             
-            <div class="fieldblock">
-                <label>Selected Business Unit</label>
-                <select class="bu-currentbu"></select>
-            </div>
+                <div class="fieldblock">
+                    <label>Selected Business Unit</label>
+                    <select class="bu-currentbu"></select>
+                </div>
 
-            <div class="modalbuttons">
-                <input type="button" class="savebusinessunit" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
+                <div class="modalbuttons">
+                    <input type="button" class="savebusinessunit" value="Save" />
+                    <a href="#" class="cancelmodal">Cancel</a>
+                </div>
                             
-        </div>        
+            </div>        
 
-    </div>
+        </div>
+
+        <div class="importwizardmodal" title="Import Wizard" style="display: none;">
+
+            <div class="modalcontent">
+                <div class="importsteps">
+                    <div class="stepsinner">
+
+                        <div class="step step1">
+
+                            <h2>Select Source File</h2>
+                            <p>Select the file containing the records to be imported.</p>
+
+                            <div class="fileuploadcontainer">
+
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Select files...</span>
+
+                                    <input id="file_upload2" type="file" name="files[]" multiple="multiple" />
+                                </span>
+        
+                                <div id="progress2" class="progress">
+                                    <div class="progress-bar progress-bar-success"></div>
+                                </div>
+
+                                <div id="file-upload-progress2"></div>
+
+                                <label class="filemessage">Press 'Select Files' or Drag your files here to begin uploading.</label>
+                                <label class="totalfiles"></label>
+
+                            </div>
+
+                            <div class="fieldblock">
+                                <label>First Row Has Column Headers</label>
+                                <input type="checkbox" class="HasColumnHeaders" />
+                            </div>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Next" class="nextstep" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+
+                        </div>
+
+                        <div class="step step2">
+                            <h2>Step 2</h2>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Back" class="prevstep" />
+                                <input type="button" value="Next" class="nextstep" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+                        
+                        </div>
+
+                        <div class="step step3">
+                            <h2>Step 3</h2>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Back" class="prevstep" />
+                                <input type="button" value="Next" class="nextstep" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+
+                        </div>
+
+                        <div class="step step4">
+                            <h2>Step 4</h2>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Back" class="prevstep" />
+                                <input type="button" value="Next" class="nextstep" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+                        </div>
+
+                        <div class="step step5">
+                            <h2>Step 5</h2>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Back" class="prevstep" />
+                                <input type="button" value="Save" class="finishimport" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     </form>
 </body>
 </html>
+
