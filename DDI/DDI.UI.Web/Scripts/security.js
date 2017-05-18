@@ -79,7 +79,7 @@ function LoadGroupsGrid() {
             tagTemplate: "tag",
             opened: false,
             valueExpr: 'Id',
-            displayExpr: 'Name',
+            displayExpr: 'DisplayName',
             multiline: true,
             onValueChanged: null,
 
