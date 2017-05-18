@@ -3345,7 +3345,7 @@ function PopulateFundFromFiscalYear(fiscalyearid, ledger, fundid) {
         $('.selectfund').change(function (e) {
             PopulateFundDueFromFund(fundid);
 
-            LoadFundGLAccountSelector(fiscalyearid, ledger, fundid);
+            //LoadFundGLAccountSelector(fiscalyearid, ledger, fundid);
         });
             
 
@@ -3353,33 +3353,33 @@ function PopulateFundFromFiscalYear(fiscalyearid, ledger, fundid) {
 
 
     
-    LoadFundGLAccountSelector(fiscalyearid, ledger, fundid);
+   // LoadFundGLAccountSelector(fiscalyearid, ledger, fundid);
     
 }
 
-function LoadFundGLAccountSelector(fiscalyearid, ledger, fundid) {
+//function LoadFundGLAccountSelector(fiscalyearid, ledger, fundid) {
 
    
 
-        if (($('.selectfundbalanceaccount').children().length <= 0)){
-            GLAccountSelector($('.selectfundbalanceaccount'), ledger.Id, fiscalyearid);
-            GLAccountSelector($('.selectclosingrevenueaccount'), ledger.Id, fiscalyearid);
-            GLAccountSelector($('.selectclosingexpenseaccount'), ledger.Id, fiscalyearid);
-        }
-        else {
+        //if (($('.selectfundbalanceaccount').children().length <= 0)){
+        //    GLAccountSelector($('.selectfundbalanceaccount'), ledger.Id, fiscalyearid);
+        //    GLAccountSelector($('.selectclosingrevenueaccount'), ledger.Id, fiscalyearid);
+        //    GLAccountSelector($('.selectclosingexpenseaccount'), ledger.Id, fiscalyearid);
+        //}
+        //else {
 
-            MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
-            var fund = data.Data;
-            LoadSelectedAccount($('.selectfundbalanceaccount > .accountnumber'), fund.FundBalanceAccountId);
+            //MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
+            //var fund = data.Data;
+            //LoadSelectedAccount($('.selectfundbalanceaccount > .accountnumber'), fundid.FundBalanceAccountId);
            // LoadSelectedAccount($('.selectclosingrevenueaccount'), fund.ClosingRevenueAccountId);
            // LoadSelectedAccount($('.selectclosingexpenseaccount'), fund.ClosingExpenseAccountId);
 
-            //$('.selectfundbalanceaccount > .accountnumber').val(fund.FundBalanceAccount.DisplayName);
+            //$('.selectfundbalanceaccount > .accountnumber').val(fundid.FundBalanceAccount.DisplayName);
             //$('.selectclosingrevenueaccount').val(fund.ClosingRevenueAccount.DisplayName);
             //$('.selectclosingexpenseaccount').val(fund.ClosingExpenseAccount.DisplayName);
 
                
-            });
+           // });
         }
 }
 
