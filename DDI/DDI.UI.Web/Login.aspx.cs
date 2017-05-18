@@ -23,43 +23,36 @@ namespace DDI.UI.Web
         [WebMethod]
         public static void AuthorizeUser(string username, string token)
         {
-            try
+
+            //api/v1/roles/user/{username}
+            WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "roles/user/" + HttpUtility.HtmlEncode(username) + "/");
+            request.Method = "GET";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = 0;
+            request.PreAuthenticate = true;
+            request.Headers.Add("Authorization", "Bearer " + token);
+
+            HttpContext.Current.Session[Token.DDI_User_Token] = token;
+
+            using (WebResponse response = request.GetResponse())
             {
-                //api/v1/roles/user/{username}
-                WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "roles/user/" + HttpUtility.HtmlEncode(username) + "/");
-                request.Method = "GET";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = 0;
-                request.PreAuthenticate = true;
-                request.Headers.Add("Authorization", "Bearer " + token);
-
-                HttpContext.Current.Session[Token.DDI_User_Token] = token;
-
-                using (WebResponse response = request.GetResponse())
+                using (var reader = new StreamReader(response.GetResponseStream()))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        string responseData = reader.ReadToEnd();
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    string responseData = reader.ReadToEnd();
 
-                        List<string> data = (List<string>)js.Deserialize(responseData, typeof(List<string>));
-                        string roles = string.Join(",", data.ToArray());
+                    List<string> data = (List<string>)js.Deserialize(responseData, typeof(List<string>));
+                    string roles = string.Join(",", data.ToArray());
 
-                        //if (data != null && data.IsSuccessful)
-                        //{
-                        FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(60), false, roles);
-                        string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                        HttpCookie fatCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                    //if (data != null && data.IsSuccessful)
+                    //{
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(60), false, roles);
+                    string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+                    HttpCookie fatCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
 
-                        HttpContext.Current.Response.Cookies.Add(fatCookie);
-                        //}
-                    }
+                    HttpContext.Current.Response.Cookies.Add(fatCookie);
+                    //}
                 }
-
-            }
-            catch (Exception ex)
-            {
-                string foo = ex.ToString();
             }
         }
 
@@ -68,9 +61,13 @@ namespace DDI.UI.Web
         {
             Token token = Token.GetToken();
 
-            Login.AuthorizeUser(token.UserName, token.Access_Token);
+            if (token != null)
+            {
+                Login.AuthorizeUser(token.UserName, token.Access_Token);
+                return token.Access_Token;
+            }
 
-            return token.Access_Token;
+            return null;
         }
 
         [WebMethod]

@@ -4,7 +4,7 @@ $(document).ready(function () {
    // SetupNewUserModal();
 
     LoadGroupsGrid();
-
+    PopulateDropDown('.ConstituentId', 'constituents', '', '');
      LoadUsersGrid();
 
 });
