@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using DDI.Shared;
 using DDI.Shared.Caching;
+using System.Reflection;
+using DDI.Shared.Models;
 
 namespace DDI.Data.Helpers
 {
@@ -62,6 +64,20 @@ namespace DDI.Data.Helpers
         public static IQueryable<T> IncludePath<T, TProperty>(IQueryable<T> source, System.Linq.Expressions.Expression<Func<T, TProperty>> path) where T : class
         {
             return source.Include(path);
+        }
+
+        /// <summary>
+        /// Get the table name for an entity.
+        /// </summary>
+        public static string GetTableName<T>() where T : IEntity
+        {
+            var tableAttribute = typeof(T).GetCustomAttribute<System.ComponentModel.DataAnnotations.Schema.TableAttribute>();
+            if (tableAttribute != null)
+            {
+                return tableAttribute.Name;
+            }
+
+            return typeof(T).Name;
         }
     }
 }
