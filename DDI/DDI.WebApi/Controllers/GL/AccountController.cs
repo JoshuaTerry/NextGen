@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.GL;
@@ -20,6 +22,47 @@ namespace DDI.WebApi.Controllers.GL
         private ServiceBase<GLAccountSelection> _glAccount;
         private ServiceBase<Ledger> _ledger;
         private ServiceBase<FiscalYear> _fiscalYear;
+        private string _fieldsForAll = null;
+
+        protected override string FieldsForList => $"{nameof(Account.Id)},{nameof(Account.AccountNumber)},{nameof(Account.Name)}";
+        protected override string FieldsForAll => _fieldsForAll ?? (_fieldsForAll = FieldListBuilder
+                                                        .IncludeAll()
+                                                        .Exclude(p => p.FiscalYear)
+                                                        .Exclude(p => p.NextYearAccounts)
+                                                        .Exclude(p => p.PriorYearAccounts)
+                                                        .Exclude(p => p.LedgerAccountYears)
+                                                        .Include(p => p.AccountSegments.First().Id)
+                                                        .Include(p => p.AccountSegments.First().Level)
+                                                        .Include(p => p.AccountSegments.First().SegmentId)
+                                                        .Include(p => p.AccountSegments.First().Segment.Code)
+                                                        .Include(p => p.AccountSegments.First().Segment.Name)
+                                                        .Include(p => p.ClosingAccount.AccountNumber)
+                                                        .Include(p => p.ClosingAccount.Name)
+                                                        .Exclude(p => p.Budgets.First().Account)
+                                                        .Include(p => p.Group1.Category)
+                                                        .Include(p => p.Group1.Name)
+                                                        .Include(p => p.Group2.Name)
+                                                        .Include(p => p.Group3.Name)
+                                                        .Include(p => p.Group4.Name)
+                                                        .Include(p => p.AccountBalances.First().PeriodNumber)
+                                                        .Include(p => p.AccountBalances.First().DebitCredit)
+                                                        .Include(p => p.AccountBalances.First().TotalAmount)
+                                                        );
+
+        protected override Expression<Func<Account, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Account, object>>[]
+            {
+                p => p.AccountSegments.First().Segment,
+                p => p.Budgets,
+                p => p.ClosingAccount,
+                p => p.Group1,
+                p => p.Group2,
+                p => p.Group3,
+                p => p.Group4,
+                p => p.AccountBalances
+            };
+        }
 
         public AccountController()
             : base(new AccountService())
@@ -33,7 +76,7 @@ namespace DDI.WebApi.Controllers.GL
         [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
         public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)
         {
-            string fields = "Id,AccountNumber,Description";
+            string fields = $"{nameof(GLAccountSelection.Id)},{nameof(GLAccountSelection.AccountNumber)},{nameof(GLAccountSelection.Description)}";
 
             var search = new AccountNumberSearch()
             {
@@ -45,7 +88,7 @@ namespace DDI.WebApi.Controllers.GL
 
             var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
 
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId),search),null,search, search.Fields, null);
+            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
         }
 
         [HttpGet]

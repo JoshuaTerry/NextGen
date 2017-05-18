@@ -1,4 +1,3 @@
-using DDI.Data.Helpers;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Helpers;
@@ -10,7 +9,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using DDI.Shared.Models.Client.Security;
 using System.Threading;
 
 namespace DDI.Data
@@ -68,6 +66,7 @@ namespace DDI.Data
                 if (_entities == null)
                 {
                     _entities = _context.Set<T>();
+                    
                 }
 
                 return _entities;
@@ -339,7 +338,18 @@ namespace DDI.Data
         /// <returns></returns>
         private T Attach(T entity, System.Data.Entity.EntityState entityState)
         {
-            if (entity != null && _context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
+            if (entity == null)
+            {
+                return null;
+            }
+
+            DbEntityEntry<T> entityEntry = _context.Entry(entity);
+            if (entityEntry.State == entityState)
+            {
+                return entity;
+            }
+
+            if (entity != null && entityEntry.State == System.Data.Entity.EntityState.Detached)
             {
                 if (entity is IEntity)
                 {
@@ -353,9 +363,47 @@ namespace DDI.Data
                 }
             }
 
-            // Attach throws exceptions if parts of the entity graph are already in the context.  Instead, use Add and adjust the entity state.
-            EntitySet.Add(entity);
+            // EF makes attaching an object from another context very painful if that object contains other referenced entities.  Attach() can throw an exception if 
+            // any of the referenced entities were previously loaded into the context.
+
+            // The first step is capture the state of all tracked entites in the context by storing them in a dictionary (keyed by entity.Id)
+            var stateDict = new Dictionary<Guid, System.Data.Entity.EntityState>();
+           
+            foreach (var entry in _context.ChangeTracker.Entries())
+            {
+                if (entry.Entity is IEntity)
+                {
+                    stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                }
+            }
+
+            // Then add the entity via the Add method.  
+            EntitySet.Add(entity);            
+
+            // Change the entity state to what we want it to be (Unmodified, or Modified)
             _context.Entry(entity).State = entityState;
+
+            // Finally check the state of all tracked entities, looking for ones that are in an Added State.
+            foreach (var entry in _context.ChangeTracker.Entries().Where(p => p.State == System.Data.Entity.EntityState.Added && p.Entity is IEntity))
+            {
+                System.Data.Entity.EntityState state;
+
+                if (stateDict.TryGetValue(((IEntity)entry.Entity).Id, out state))
+                {
+                    // If the entity was already being tracked and wasn't originally in the Added state, detach the entity.
+                    if (state != System.Data.Entity.EntityState.Added)
+                    {
+                        _context.Entry(entry.Entity).State = System.Data.Entity.EntityState.Detached;
+                    }
+                }
+                else
+                {
+                    // If the entity wasn't being tracked, make sure it's state is Unchanged.
+                    _context.Entry(entry.Entity).State = System.Data.Entity.EntityState.Unchanged;
+                }
+
+            }
+
             return entity;
         }
 

@@ -28,6 +28,7 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 
 .invisible {visibility: hidden;}
 .accountgroup {visibility: hidden;}
+.accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
 
 
 

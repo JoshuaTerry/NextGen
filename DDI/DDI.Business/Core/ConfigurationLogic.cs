@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using DDI.Shared.Helpers;
 
 namespace DDI.Business.Core
 {
@@ -21,6 +22,8 @@ namespace DDI.Business.Core
         private const string CONFIGURATION_KEY = "CONFIG";
 
         private List<ConfigurationBase> _attachedConfigurations;
+
+        private static Dictionary<ModuleType, Type> _moduleTypeMappings = null;
 
         #endregion
 
@@ -37,6 +40,12 @@ namespace DDI.Business.Core
 
         #region Public Methods
 
+        /// <summary>
+        /// Get a configuration entity from the cache (or if necessary, from the database).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reload">TRUE to force the configuration to be loaded from the database.</param>
+        /// <returns></returns>
         public T GetConfiguration<T> (bool reload = false) where T : ConfigurationBase
         {
             T config = null;       
@@ -60,7 +69,41 @@ namespace DDI.Business.Core
             return config;
         }
 
+        /// <summary>
+        /// Get a configuration entity from the cache (or if necessary, from the database).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reload">TRUE to force the configuration to be loaded from the database.</param>
+        /// <returns></returns>
+        public ConfigurationBase GetConfiguration(Type type, bool reload = false)
+        {
+            ConfigurationBase config = null;
 
+            string key = GetCacheKey(type);
+            if (reload)
+            {
+                CacheHelper.RemoveEntry(key);
+            }
+
+            // Retrieve config from cache
+            config = CacheHelper.GetEntry(key, CONFIGURATION_TIMEOUT_SECS, false, () => LoadConfiguration(type), CacheItemRemoved);
+
+            if (config != null && !_attachedConfigurations.Contains(config))
+            {
+                // If loaded from the cache, attach it to the unit of work.
+                config.Attach(UnitOfWork);
+                _attachedConfigurations.Add(config);
+            }
+
+            return config;
+        }
+        
+        /// <summary>
+        /// Save a configuration entity to the database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config">The configuration entity to be saved.</param>
+        /// <param name="saveChanges">TRUE to commit changes via SaveChanges()</param>
         public void SaveConfiguration<T>(T config, bool saveChanges = true) where T : ConfigurationBase
         {
             if (config == null)
@@ -86,14 +129,42 @@ namespace DDI.Business.Core
             }            
         }
 
+        /// <summary>
+        /// Return a dictionary of known configuration types.
+        /// </summary>
+        public Dictionary<ModuleType, Type> GetConfigurationTypes()
+        {
+            if (_moduleTypeMappings == null)
+            {
+                GetModuleTypeMappings();
+            }
+
+            return _moduleTypeMappings;
+        }
+
         #endregion
 
         #region Private Methods
 
+        private static void GetModuleTypeMappings()
+        {
+            _moduleTypeMappings = new Dictionary<ModuleType, Type>();
+            foreach (Type type in ReflectionHelper.GetDerivedTypes<ConfigurationBase>())
+            {
+                ConfigurationBase instance = Activator.CreateInstance(type) as ConfigurationBase;
+                if (instance != null)
+                {
+                    _moduleTypeMappings[instance.ModuleType] = type;
+                }
+            }
+        }
+
         private string GetCacheKey<T>() where T : ConfigurationBase
         {
-            return CONFIGURATION_KEY + typeof(T).Name;
+            return GetCacheKey(typeof(T));
         }
+
+        private string GetCacheKey(Type type) => CONFIGURATION_KEY + type.Name;        
 
         private void SaveConfigurationToDb(ConfigurationBase config)
         {
@@ -102,11 +173,13 @@ namespace DDI.Business.Core
 
             ModuleType modType = config.ModuleType;
 
+            config.BeforeSave(UnitOfWork);
+
             // Load the entire set of config rows
             var configRows = UnitOfWork.Where<Configuration>(p => p.ModuleType == modType).ToList();
 
             // Iterate through each property
-            foreach (var prop in configType.GetProperties())
+            foreach (var prop in configType.GetProperties().Where(p => p.SetMethod != null && p.SetMethod.IsPublic))
             {
                 bool failed = false;
                 string valString = string.Empty;
@@ -208,7 +281,7 @@ namespace DDI.Business.Core
 
                 // See if there's a property of this name.
                 var prop = type.GetProperty(row.Name);
-                if (prop != null)
+                if (prop != null && prop.SetMethod != null && prop.SetMethod.IsPublic)
                 {
                     Type propType = prop.PropertyType;
 
@@ -285,13 +358,11 @@ namespace DDI.Business.Core
 
             }
 
+            config.AfterLoad(UnitOfWork);
+
             return config;
         }
-
-        #endregion
-
-        #region Private Methods
-
+        
         /// <summary>
         /// Callback for when a cached configuration is removed.  This will remove it from _attachedConfigurations.
         /// </summary>

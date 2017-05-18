@@ -73,8 +73,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     $(".accountselectionsearch",container).click(function () {
         var grid = $(' .gridContainer .dx-widget', container).length;
        
-        if(grid == 0)
-        {
+        if (grid == 0) {
             LoadGLAccounts(container, ledgerId, fiscalYearId, function (d) {
 
                 if (d) {
@@ -86,12 +85,19 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 }
 
             });
+            $(container).find('.gridContainer').show();
         }
-        $(container).find('.gridContainer').show();
+        else{
+            if ( ($(container).find('.gridContainer').css("display") == 'block')){
+                $(container).find('.gridContainer').hide();
+            }
+            else {
+                $(container).find('.gridContainer').show();
+            }
+        }
     });
 
     $(".accountnumber:first").focus();
-
 }
 
 function SelectAccountNumberLookup(item, container) {
@@ -103,17 +109,16 @@ function SelectAccountNumberLookup(item, container) {
 
 function CreateGLAccountSelector(container)
 {
-    var glcontrol = $('<span>').addClass("inline-block");
-        
-    $('<input>').attr("type", "hidden").addClass("hidaccountid").appendTo($(container));
-    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:10%").addClass("accountnumber").addClass("accountnumberlookup").addClass("inline").appendTo($(glcontrol));
-    $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
+    var glcontrol = $('<div>').addClass("fieldblock");
+    
+    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:35%").addClass("accountnumber").addClass("accountnumberlookup").appendTo($(glcontrol));
     $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
+    $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
 
     glcontrol.appendTo($(container));
-
+   
     $('<div>').addClass("gridContainer").addClass("accountselectiongrid").appendTo($(container));
-
+    $('<input>').attr("type", "hidden").addClass("hidaccountid").addClass("inline").appendTo($(container));
 }
 
 function LoadGLAccounts(container, ledgerId, fiscalYearId, onSelect) {
@@ -123,15 +128,17 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId, onSelect) {
         function (data) {
 
             var numberOfAccountGroups = data.Data.AccountGroupLevels
-            var columns = "[";
+            var columns = [];
 
             for(var i = 0; i < numberOfAccountGroups; i++)
             {
-                columns = columns + '{ "dataField": "Level' + (i +1) + '", "caption": "", "groupIndex": "' + i +'" },'
+                columns.push({ dataField: "Level" + (i +1) , caption: "",  groupIndex:i });
             }
                    
-            columns = columns +  '"AccountNumber", "Description"]';
-
+            columns.push("AccountNumber");
+            columns.push("Description");
+            columns.push({ dataField: "Id", width: '0px'});
+           
             MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId, null,
                                 
                 function (data) {
@@ -149,8 +156,16 @@ function LoadGLAccountGrid(container, data, columns, onSelect)
 {
     //create grid
     $(container).find(".gridContainer").dxDataGrid({
-        columns: $.parseJSON(columns),
-        dataSource: data,
+        columns: columns,
+       
+        dataSource:
+            { 
+                store: {
+                    data: data,
+                    type: 'array',
+                    key: 'Id'
+                }
+            },
         scrolling: {
             mode: "virtual"
         },
@@ -166,8 +181,49 @@ function LoadGLAccountGrid(container, data, columns, onSelect)
                 var data = selectedItems.selectedRowsData[0];
                 onSelect(data);
             }
+        },
+        onContentReady: function () {
+           
+            if ($(container).find(".hidaccountid").val().length > 0) {
+                var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
+                var keyId = $(container).find(".hidaccountid").val();
+                dataGrid.selectRows(keyId);
+
+                var groupedColumns = dataGrid.getVisibleColumns().filter(function(column) {
+                    return column.groupIndex > -1;
+                }).sort(function(c1, c2) {
+                    return c1.groupIndex - c2.groupIndex;
+                }).map(function(column) {
+                    return column.dataField;
+                });
+                dataGrid.byKey(keyId).done(function(row) {
+                    var keys = groupedColumns.map(function(col) {
+                        return row[col];
+                    });
+                    var groupToExpand = [];
+                    keys.forEach(function(key) {
+                        groupToExpand.push(key);
+                        dataGrid.expandRow(groupToExpand);
+                    });
+                });
+            }
+
+            $(container).find('.gridContainer').show();
+           
         }
-       
     });
+
+}
+
+function LoadSelectedAccount(container, value)
+{
+
+    MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
+       
+            $(container).find(".accountnumber").val(data.Data.AccountNumber);
+            $(container).find(".hidaccountid").val(data.Data.Id);
+            $(container).find(".accountdescription").text(data.Data.Name);
+           
+    }, null);
 
 }

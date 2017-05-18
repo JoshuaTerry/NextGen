@@ -59,9 +59,14 @@ function LoadSummaryTab(AccountId) {
 
     accountId = AccountId;
     GLAccountSelector($('.closingaccountcontainer'), ledgerId, fiscalYearId);
-    $('accountnumberlookup').removeClass('inline').addClass('summaryrightinput');
-    $('accountdescription').removeClass('inline').addClass("summaryleftinput");
-    $('accountselectionsearch').removeClass('inline').addClass("summaryrightcheckbox");
+    //$('.closingaccountcontainer').find('.fieldblock').replaceWith(function () {
+    //    return "<span>" + this.innerHTML + "</span>";
+    //});
+    $('.closingaccountcontainer').find('.fieldblock').removeClass('.fieldblock').css('inline')
+    $('.accountnumberlookup').removeAttr('style');
+    $('.accountnumberlookup').attr("style", "width:30%");
+    $('.accountdescription').addClass("summaryleftinput");
+    $('.accountselectionsearch').addClass("accountsearch");
 
     $('.closingaccountgroup').attr('disabled', true);
     $('.accountselectionsearch').css('visibility', 'hidden');

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services.GL;
 using DDI.Services.Search;
@@ -16,6 +17,22 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETALLFORPARENT = RouteNames.FiscalYear + RouteNames.Segment + RouteNames.SegmentChildren + RouteVerbs.Get;
 
         protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)},{nameof(Segment.DisplayName)}";
+
+        protected override string FieldsForAll => FieldListBuilder
+            .Exclude(p => p.AccountSegments)
+            .Exclude(p => p.ChildSegments)
+            .Exclude(p => p.ParentSegment)
+            .Exclude(p => p.FiscalYear)
+            .Exclude(p => p.SegmentLevel.Ledger)
+            .Exclude(p => p.SegmentLevel.Segments);
+
+        protected override Expression<Func<Segment, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Segment, object>>[]
+            {
+                p => p.SegmentLevel
+            };
+        }
 
         protected new ISegmentService Service => (ISegmentService)base.Service;
 

@@ -38,11 +38,11 @@ namespace DDI.WebApi.Controllers
             try
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
-                return FinalizeResponse(_service.GetAll(fields, search), routeName, search, ConvertFieldList(fields, FieldsForList), urlHelper);
+                return FinalizeResponse(Service.GetAll(fields, search), routeName, search, ConvertFieldList(fields, FieldsForList), urlHelper);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex);
+                Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
 
