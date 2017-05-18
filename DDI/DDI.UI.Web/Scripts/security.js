@@ -69,23 +69,24 @@ function LoadGroupsGrid() {
     LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
         , null, 'gp-', '.groupmodal', '.groupmodal', 250, true, true, false, null);
 
-    //MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
-    MakeServiceCall('GET', 'roles', null, function (data) {
+    //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+    DisplayTagBox('roles', 'rolestagbox', '.rolestagboxcontainer', null);
+    //MakeServiceCall('GET', 'roles', null, function (data) {
 
-        $('.rolesdropdowncontainer').dxTagBox({
+    //    $('.rolesdropdowncontainer').dxTagBox({
 
-            dataSource: data.Data,
-            visible: true,
-            tagTemplate: "tag",
-            opened: false,
-            valueExpr: 'Id',
-            displayExpr: 'DisplayName',
-            multiline: true,
-            onValueChanged: null,
+    //        dataSource: data.Data,
+    //        visible: true,
+    //        tagTemplate: "tag",
+    //        opened: false,
+    //        valueExpr: 'Id',
+    //        displayExpr: 'DisplayName',
+    //        multiline: true,
+    //        onValueChanged: null,
 
-        });
+    //    });
 
-    });
+    //});
 
     var asdf = $('.rolesdropdowncontainer').val();
 
