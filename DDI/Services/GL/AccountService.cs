@@ -6,6 +6,7 @@ using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 using Newtonsoft.Json.Linq;
@@ -156,14 +157,58 @@ namespace DDI.Services.GL
             return base.Add(account);
         }
 
-        public override IDataResponse<Account> Update(Account entity, JObject changes)
+
+        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
+            if (name == nameof(Account.AccountSegments) && entity is Account)
+            {
+                var account = (Account)entity;
+                if (account.AccountSegments == null)
+                {
+                    UnitOfWork.LoadReference(account, p => p.AccountSegments);
+                }
 
+                foreach (var entry in account.AccountSegments.ToList())
+                {
+                    UnitOfWork.Delete(entry);
+                }
 
-            return base.Update(entity, changes);
+                account.AccountSegments.Clear();
+
+                AddUpdateFromJArray(account.AccountSegments, token as JArray);
+
+                foreach (var entry in account.AccountSegments)
+                {
+                    // Ensure segment exists
+                    Segment segment = entry.Segment;
+                    if (segment == null && entry.SegmentId != null)
+                    {
+                        segment = UnitOfWork.GetById<Segment>(entry.SegmentId.Value);
+                    }
+                    else
+                    {
+                        segment = UnitOfWork.GetById<Segment>(entry.Segment.Id);
+                    }
+                    if (segment == null)
+                    {
+                        throw new ValidationException(UserMessagesGL.GLAccountSegmentInvalid);
+                    }
+                    entry.Segment = segment;
+                    entry.SegmentId = segment.Id;
+                    entry.Level = segment.Level;
+                    entry.Account = account;
+                }
+
+                account.AccountNumber = _accountLogic.CalculateAccountNumber(account);
+                account.SortKey = _accountLogic.CalculateSortKey(account);
+
+                return true;
+            }
+
+            return false;
         }
 
-        
+
 
     }
 }
