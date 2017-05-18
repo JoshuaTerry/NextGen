@@ -87,6 +87,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.cs" />
+    <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.Designer.cs">
+      <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201705171743409_AddModuleColumnToRole.cs" />
     <Compile Include="Migrations\Client\201705171743409_AddModuleColumnToRole.Designer.cs">
       <DependentUpon>201705171743409_AddModuleColumnToRole.cs</DependentUpon>
@@ -95,8 +99,8 @@
     <Compile Include="Migrations\Client\201704211403062_TransactionNumberSequence.Designer.cs">
       <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.cs" />
-    <Compile Include="Migrations\201704261812162_AddingUniqueIndexToUserName.Designer.cs">
+    <Compile Include="Migrations\Client\201704261812162_AddingUniqueIndexToUserName.cs" />
+    <Compile Include="Migrations\Client\201704261812162_AddingUniqueIndexToUserName.Designer.cs">
       <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201704201955265_EntityNumber.cs" />
@@ -232,13 +236,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.resx">
+      <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201705171743409_AddModuleColumnToRole.resx">
       <DependentUpon>201705171743409_AddModuleColumnToRole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201704211403062_TransactionNumberSequence.resx">
       <DependentUpon>201704211403062_TransactionNumberSequence.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704261812162_AddingUniqueIndexToUserName.resx">
+    <EmbeddedResource Include="Migrations\Client\201704261812162_AddingUniqueIndexToUserName.resx">
       <DependentUpon>201704261812162_AddingUniqueIndexToUserName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201704201955265_EntityNumber.resx">
