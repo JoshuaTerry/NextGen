@@ -13,28 +13,6 @@ namespace DDI.Services
     {
         #region Private Fields
 
-        private readonly IRepository<ConstituentType> _repository;
-
-        #endregion
-
-        #region Constructors
-
-        public ConstituentTypeService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public ConstituentTypeService(IUnitOfWork uow)
-            : this(uow, uow.GetRepository<ConstituentType>())
-        {
-        }
-
-        private ConstituentTypeService(IUnitOfWork uow, IRepository<ConstituentType> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
         #endregion
 
         #region Public Methods

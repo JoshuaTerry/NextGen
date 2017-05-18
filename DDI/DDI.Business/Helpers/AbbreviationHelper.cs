@@ -73,7 +73,7 @@ namespace DDI.Business.Helpers
             }
             else
             {
-                using (var context = new UnitOfWorkEF())
+                using (var context = RepoFactory.CreateUnitOfWork())
                 {
                     return context.GetEntities<Abbreviation>().ToList();
                 }

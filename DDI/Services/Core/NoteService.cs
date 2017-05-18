@@ -22,21 +22,9 @@ namespace DDI.Services
 
         private IRepository<Note> _repository;
 
-        private IUnitOfWork _unitOfWork;
-
         #endregion Private Fields
 
         #region Public Constructors
-
-        public NoteService()
-        {
-            Initialize(new UnitOfWorkEF());
-        }
-
-        public NoteService(IUnitOfWork uow)
-        {
-            Initialize(uow);
-        }
 
         #endregion Public Constructors
 
@@ -223,10 +211,9 @@ namespace DDI.Services
 
         #region Private Methods
 
-        private void Initialize(IUnitOfWork uow)
+        protected override void Initialize()
         {
-            _unitOfWork = uow;
-            _repository = _unitOfWork.GetRepository<Note>();
+            _repository = UnitOfWork.GetRepository<Note>();
         }
 
         private void SetEntityType(Note note)

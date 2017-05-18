@@ -12,13 +12,6 @@ namespace DDI.Services.General
 {
     public class GroupService : ServiceBase<Group>, IGroupService
     {
-        public GroupService() : this(new UnitOfWorkEF())
-        {
-        }
-        public GroupService(IUnitOfWork uow) : base(uow)
-        {
-             
-        }
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {

@@ -10,8 +10,6 @@ namespace DDI.Business.CRM
 {
     public class RegionLogic : EntityLogicBase<Region>
     {
-        public RegionLogic() : this(new UnitOfWorkEF()) { }
-
         public RegionLogic(IUnitOfWork uow) : base(uow)
         {
         }

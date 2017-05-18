@@ -22,7 +22,7 @@ namespace DDI.Business.GL
         #region Fields
 
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(FiscalYearLogic));
-        public FiscalYearLogic() : this(new UnitOfWorkEF()) { }
+
         private IRepository<FiscalYear> _fiscalYearRepository;
         private IRepository<FiscalPeriod> _fiscalPeriodRepository;
         private LedgerLogic _ledgerLogic;

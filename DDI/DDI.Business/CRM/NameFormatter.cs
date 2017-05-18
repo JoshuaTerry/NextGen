@@ -57,7 +57,7 @@ namespace DDI.Business.CRM
 
         #region Constructors 
 
-        public NameFormatter() : this(new UnitOfWorkEF()) { }
+        public NameFormatter() : this(RepoFactory.CreateUnitOfWork()) { }
 
         public NameFormatter(IUnitOfWork uow)
         {

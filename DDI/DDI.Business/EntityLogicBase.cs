@@ -19,6 +19,8 @@ namespace DDI.Business
 
         #region Constructors 
 
+        public EntityLogicBase() : this(RepoFactory.CreateUnitOfWork()) { }
+
         public EntityLogicBase(IUnitOfWork uow) : base(uow) { }
 
         #endregion
@@ -65,7 +67,7 @@ namespace DDI.Business
             }
             Shared.TaskScheduler.ScheduleTask(() =>
             {
-                using (var unitOfWork = new UnitOfWorkEF())
+                using (var unitOfWork = RepoFactory.CreateUnitOfWork())
                 {
                     T entityToUpdate = unitOfWork.GetById<T>(id.Value);
                     if (entityToUpdate != null)

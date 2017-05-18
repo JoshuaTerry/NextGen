@@ -11,15 +11,9 @@ namespace DDI.Business.CRM
 {
     public class ContactInfoLogic : EntityLogicBase<ContactInfo>
     {
-        #region Constructors 
-
-        public ContactInfoLogic() : this(new UnitOfWorkEF()) { }
-
         public ContactInfoLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Methods
 

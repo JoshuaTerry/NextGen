@@ -8,31 +8,6 @@ namespace DDI.Services
 {
     public class InvestmentService : ServiceBase<Investment>
     {
-        #region Private Fields
-
-        private readonly IRepository<Investment> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<Investment>())
-        {
-        }
-
-        private InvestmentService(IUnitOfWork uow, IRepository<Investment> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
 
         #region Public Methods
 

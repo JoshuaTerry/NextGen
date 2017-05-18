@@ -29,8 +29,6 @@ namespace DDI.Business.Core
 
         #region Constructors 
 
-        public TransactionLogic() : this(new UnitOfWorkEF()) { }
-
         public TransactionLogic(IUnitOfWork uow) : base(uow)
         {
             _transactionRepo = uow.GetRepository<Transaction>();

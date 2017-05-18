@@ -31,12 +31,13 @@ namespace DDI.Services
         /// </summary>
         protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
-        public ServiceBase() : this(new UnitOfWorkEF())
+        public ServiceBase() : this(RepoFactory.CreateUnitOfWork())
         {            
         }
         public ServiceBase(IUnitOfWork uow)
         {
-            _unitOfWork = uow;  
+            _unitOfWork = uow;
+            Initialize();
         }
 
         protected IUnitOfWork UnitOfWork
@@ -55,6 +56,8 @@ namespace DDI.Services
             protected get { return _includesForList; }
             set { _includesForList = value; }
         }
+
+        protected virtual void Initialize() { }
 
         public virtual IDataResponse<List<ICanTransmogrify>> GetAll()
         {

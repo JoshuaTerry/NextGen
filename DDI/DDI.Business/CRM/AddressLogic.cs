@@ -18,16 +18,9 @@ namespace DDI.Business.CRM
     /// </summary>
     public class AddressLogic : EntityLogicBase<Address>
     {
-
-        #region Constructors 
-
-        public AddressLogic() : this(new UnitOfWorkEF()) { }
-
         public AddressLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Properties
 

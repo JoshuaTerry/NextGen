@@ -9,31 +9,6 @@ namespace DDI.Services
 {
     public class InvestmentRelationshipService : ServiceBase<InvestmentRelationship>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentRelationship> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentRelationshipService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentRelationshipService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentRelationship>())
-        {
-        }
-
-        private InvestmentRelationshipService(IUnitOfWork uow, IRepository<InvestmentRelationship> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
 
         #region Public Methods
 

@@ -25,19 +25,10 @@ using DDI.Shared.Statics.GL;
 namespace DDI.Business.GL
 {
     public class JournalLogic : EntityLogicBase<Journal>
-    {        
-
-        #region Constructors 
-
-        public JournalLogic() : this(new UnitOfWorkEF()) { }
-
+    {
         public JournalLogic(IUnitOfWork uow) : base(uow)
         {
-           
         }
-
-        #endregion
-
 
         public override void Validate(Journal journal)
         {

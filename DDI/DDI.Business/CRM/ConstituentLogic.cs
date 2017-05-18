@@ -29,8 +29,6 @@ namespace DDI.Business.CRM
 
         #region Constructors 
 
-        public ConstituentLogic() : this(new UnitOfWorkEF()) { }
-
         public ConstituentLogic(IUnitOfWork uow) : base(uow)
         {
             _constituentRepo = UnitOfWork.GetRepository<Constituent>();

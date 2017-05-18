@@ -14,7 +14,6 @@ namespace DDI.Services
         #region Private Fields
 
         private RelationshipLogic _logic;
-        private IUnitOfWork _uow;
 
         #endregion
 
@@ -44,35 +43,18 @@ namespace DDI.Services
                 }
                 else
                 {
-                    TargetConstituent = _uow.GetById<Constituent>(value.Value);
+                    TargetConstituent = UnitOfWork.GetById<Constituent>(value.Value);
                 }
             }
         }
 
         #endregion
 
-        #region Constructors
 
-        public RelationshipService()
-            : this(new UnitOfWorkEF())
+        protected override void Initialize()
         {
+            _logic = UnitOfWork.GetBusinessLogic<RelationshipLogic>();
         }
-
-        public RelationshipService(IUnitOfWork uow)
-            : this(uow, uow.GetBusinessLogic<RelationshipLogic>())
-        {
-            _uow = uow;
-        }
-
-        private RelationshipService(IUnitOfWork uow, RelationshipLogic relationshipLogic)
-            : base(uow)
-        {
-            _logic = relationshipLogic;
-        }
-
-        #endregion
-
-        #region Protected Methods
 
         private void FormatRelationshipForTarget(Relationship entity)
         {
@@ -120,7 +102,6 @@ namespace DDI.Services
 
             return base.Update(entity, changes);
         }
-        #endregion
 
     }
 }

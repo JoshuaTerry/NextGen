@@ -10,23 +10,6 @@ namespace DDI.Services
 {
     public class TagGroupService : ServiceBase<TagGroup>, ITagGroupService
     {
-        private IRepository<TagGroup> _repository;
-        private IUnitOfWork _unitOfWork;
-
-        public TagGroupService()
-        {
-            Initialize(new UnitOfWorkEF());
-        }
-        public TagGroupService(IUnitOfWork uow)
-        {
-            Initialize(uow);
-        }
-
-        private void Initialize(IUnitOfWork uow)
-        {
-            _unitOfWork = uow;
-            _repository = _unitOfWork.GetRepository<TagGroup>();
-        }
 
         public IDataResponse<List<TagGroup>> GetGroupsAndTags(ConstituentCategory category)
         {

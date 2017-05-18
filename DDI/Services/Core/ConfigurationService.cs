@@ -13,24 +13,9 @@ namespace DDI.Services
     {
         #region Private Fields
 
-        private IUnitOfWork _unitOfWork;
         private ConfigurationLogic _logic;
 
         #endregion Private Fields
-
-        #region Public Constructors
-
-        public ConfigurationService()
-        {
-            Initialize(new UnitOfWorkEF());
-        }
-
-        public ConfigurationService(IUnitOfWork uow)
-        {
-            Initialize(uow);
-        }
-
-        #endregion Public Constructors
 
         #region Public Methods
 
@@ -85,11 +70,9 @@ namespace DDI.Services
         #endregion Public Methods
 
         #region Private Methods
-
-        private void Initialize(IUnitOfWork uow)
+        protected override void Initialize()
         {
-            _unitOfWork = uow;
-            _logic = uow.GetBusinessLogic<ConfigurationLogic>();
+            _logic = UnitOfWork.GetBusinessLogic<ConfigurationLogic>();
         }
 
         #endregion Private Methods

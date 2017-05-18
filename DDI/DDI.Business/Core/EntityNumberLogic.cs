@@ -24,8 +24,6 @@ namespace DDI.Business.Core
 
         #region Constructors 
 
-        public EntityNumberLogic() : this(new UnitOfWorkEF()) { }
-
         public EntityNumberLogic(IUnitOfWork uow) : base(uow)
         {
         }

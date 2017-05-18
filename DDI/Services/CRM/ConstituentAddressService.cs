@@ -15,27 +15,11 @@ namespace DDI.Services
 {
     public class ConstituentAddressService : ServiceBase<ConstituentAddress>
     {
-        private AddressService _addressService;
-        private IUnitOfWork _unitOfWork;
-        private readonly ConstituentAddressLogic _logic;
+        private ConstituentAddressLogic _logic;
 
-
-        public ConstituentAddressService()
-            : this(new AddressService(), new UnitOfWorkEF())
+        protected override void Initialize()
         {
-
-        }
-
-        internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork) : this(addressService, unitOfWork, new ConstituentAddressLogic(unitOfWork))
-        {
-        }
-
-
-        internal ConstituentAddressService(IAddressService addressService, IUnitOfWork unitOfWork, ConstituentAddressLogic logic)
-        {
-            _logic = logic;
-            _addressService = addressService as AddressService;
-            _unitOfWork = unitOfWork;
+            _logic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
         }
 
         /// <summary>

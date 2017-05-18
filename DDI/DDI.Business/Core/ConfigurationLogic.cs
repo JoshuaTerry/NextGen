@@ -29,7 +29,7 @@ namespace DDI.Business.Core
 
         #region Constructors 
 
-        public ConfigurationLogic() : this(new UnitOfWorkEF()) { }
+        public ConfigurationLogic() : this(RepoFactory.CreateUnitOfWork()) { }
 
         public ConfigurationLogic(IUnitOfWork uow) : base(uow)
         {

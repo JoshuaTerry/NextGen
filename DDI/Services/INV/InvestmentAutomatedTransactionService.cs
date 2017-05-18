@@ -11,32 +11,6 @@ namespace DDI.Services
 {
     public class InvestmentAutomatedTransactionService : ServiceBase<InvestmentAutomatedTransaction>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentAutomatedTransaction> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentAutomatedTransactionService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentAutomatedTransactionService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentAutomatedTransaction>())
-        {
-        }
-
-        private InvestmentAutomatedTransactionService(IUnitOfWork uow, IRepository<InvestmentAutomatedTransaction> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
-
         #region Public Methods
 
         

@@ -19,7 +19,6 @@ namespace DDI.Business.GL
         #region Fields
 
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(LedgerLogic));
-        public LedgerLogic() : this(new UnitOfWorkEF()) { }
         private IRepository<Ledger> _ledgerRepository;
         private IRepository<SegmentLevel> _segmentLevelRepository;
         private CachedRepository<Ledger> _ledgerCache = null;

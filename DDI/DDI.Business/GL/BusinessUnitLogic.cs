@@ -22,16 +22,13 @@ namespace DDI.Business.GL
     {
         public static string IsMultipleCacheKey => "IsMultipleBusinessUnits";
 
-        #region Constructors 
-
-        public BusinessUnitLogic() : this(new UnitOfWorkEF()) { }
+        public BusinessUnitLogic() : this(RepoFactory.CreateUnitOfWork())
+        {
+        }
 
         public BusinessUnitLogic(IUnitOfWork uow) : base(uow)
         {
-           
         }
-
-        #endregion
 
         #region Validate Logic
 

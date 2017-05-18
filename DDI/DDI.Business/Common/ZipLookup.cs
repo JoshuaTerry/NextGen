@@ -28,7 +28,7 @@ namespace DDI.Business.Common
         #endregion
 
         #region Constructors 
-        public ZipLookup() : this(new UnitOfWorkEF()) { }
+        public ZipLookup() : this(RepoFactory.CreateUnitOfWork()) { }
 
         public ZipLookup(IUnitOfWork uow)
         {

@@ -12,28 +12,25 @@ namespace DDI.Services
 {
     public class AddressService : ServiceBase<Address>, IAddressService
     {
-        private readonly IRepository<Address> _repository;
-        private readonly AddressLogic _addressLogic;
-        private readonly ZipLookup _zipLookup;
+        private IRepository<Address> _repository;
+        private AddressLogic _addressLogic;
+        private ZipLookup _zipLookup;
 
-        public AddressService()
-            : this(new UnitOfWorkEF())
+        public AddressService(IUnitOfWork uow) : base(uow)
         {
         }
 
-        public AddressService(IUnitOfWork uow)
-            : this(uow, new AddressLogic(uow), uow.GetRepository<Address>(), new ZipLookup(uow))
+        public AddressService() : base() { }
+
+        protected override void Initialize()
         {
+            _addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
+            _zipLookup = new ZipLookup(UnitOfWork);
+            _repository = UnitOfWork.GetRepository<Address>();
         }
 
-        private AddressService(IUnitOfWork uow, AddressLogic addressLogic, IRepository<Address> repository, ZipLookup zipLookup)
-            :base(uow)
-        {
-            _addressLogic = addressLogic;
-            _repository = repository;
-            _zipLookup = zipLookup;
-        }
         #region Public Methods
+
         public IDataResponse<Address> RefineAddress(string addressLine1, string addressLine2, string city, Guid? countryId, Guid? countyId, Guid? stateId, string zip)
         {
             Country country = null;
@@ -77,7 +74,7 @@ namespace DDI.Services
 
         private void UpdateAddressRegions(Address address)
         {
-            RegionLogic rl = new RegionLogic();
+            RegionLogic rl = UnitOfWork.GetBusinessLogic<RegionLogic>();
             var regions = rl.GetRegionsByAddress(address.CountryId, address.StateId, address.CountyId, address.City, address.PostalCode);
 
             address.Region1 = regions.Where(r => r.Level == 1).FirstOrDefault();

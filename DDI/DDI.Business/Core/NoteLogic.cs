@@ -21,22 +21,9 @@ namespace DDI.Business.Core
     public class NoteLogic : EntityLogicBase<Note>
     {
 
-        #region Private Fields
-
-        IRepository<Note> _noteRepo = null;
-
-        #endregion
-
-        #region Constructors 
-
-        public NoteLogic() : this(new UnitOfWorkEF()) { }
-
         public NoteLogic(IUnitOfWork uow) : base(uow)
         {
-            _noteRepo = uow.GetRepository<Note>();
         }
-
-        #endregion
 
         #region Public Methods
 

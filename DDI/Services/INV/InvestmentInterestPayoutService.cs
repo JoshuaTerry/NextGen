@@ -10,32 +10,6 @@ namespace DDI.Services
 {
     public class InvestmentInterestPayoutService : ServiceBase<InvestmentInterestPayout>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentInterestPayout> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentInterestPayoutService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentInterestPayoutService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentInterestPayout>())
-        {
-        }
-
-        private InvestmentInterestPayoutService(IUnitOfWork uow, IRepository<InvestmentInterestPayout> repository)
-            : base(uow)
-        {
-           // _investmentrelationshiplogic = investmentRelationshipLogic;
-            _repository = repository;
-        }
-
-        #endregion
 
         #region Public Methods
 

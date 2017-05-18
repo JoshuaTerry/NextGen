@@ -15,16 +15,9 @@ namespace DDI.Business.CRM
     /// </summary>
     public class ConstituentAddressLogic : EntityLogicBase<ConstituentAddress>
     {
-
-        #region Constructors 
-
-        public ConstituentAddressLogic() : this(new UnitOfWorkEF()) { }
-
         public ConstituentAddressLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Methods
 

@@ -13,7 +13,6 @@ namespace DDI.Services
 
         #region Private Fields
 
-        private IUnitOfWork _uow;
 
         #endregion
 
@@ -24,16 +23,6 @@ namespace DDI.Services
         #endregion
 
         #region Constructors
-
-        public EducationService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public EducationService(IUnitOfWork uow)            
-        {
-            _uow = uow;
-        }
 
         #endregion
 

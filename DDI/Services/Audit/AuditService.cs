@@ -12,7 +12,7 @@ namespace DDI.Services
     public class AuditService
     { 
         private readonly IUnitOfWork _uow;
-        public AuditService() : this(new UnitOfWorkEF())
+        public AuditService() : this(RepoFactory.CreateUnitOfWork())
         { }
         public AuditService(IUnitOfWork uow)
         {

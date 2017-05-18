@@ -17,8 +17,6 @@ namespace DDI.Business.CRM
 
         #region Constructors 
 
-        public RelationshipLogic() : this(new UnitOfWorkEF()) { }
-
         public RelationshipLogic(IUnitOfWork uow) : base(uow)
         {
             _relationRepo = UnitOfWork.GetRepository<Relationship>();
