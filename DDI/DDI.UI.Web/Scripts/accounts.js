@@ -113,35 +113,100 @@ function LoadSummaryTab(AccountId) {
             if (data.IsSuccessful) {
 
                 groupLevels = data.Data.AccountGroupLevels;
-                for (i = 1; i <= groupLevels; i++) {
-                    $('.accountgroup' + i).css('visibility', 'visible');
-                    switch (i) {
-                        case 1:
-                            $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
-                            break;
-                        case 2:
-                            $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
-                            break;
-                        case 3:
-                            $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
-                            break;
-                        case 4:
-                            $('.group4prompt').html(data.Data.AccountGroup41Title + ':');
-                            break;
-                    }
-
-                    if (i < 4) {
-                        $('.Group' + i + 'Id').change(function () {
-                            GroupChange(i);
-                        })
-                    }
-                    $('.editgroup' + i).click(function (e) {
-                        e.preventDefault();
-                        EditGroup(i);
+                if (groupLevels > 0) {
+                    $('.accountgroup1').css('visibility', 'visible');
+                    $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
+                    $('.Group1Id').change(function () {
+                        GroupChange(1);
                     })
-                    $('.newgroup1' + i).click(function (e) {
+
+                    $('.editgroup1').click(function (e) {
                         e.preventDefault();
-                        NewGroup(i);
+                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
+                            alert($('.group1prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            EditGroupModal(1, $('.Group1Id').val(), null, data.Data.AccountGroup1Title);
+                        }
+                    })
+                    $('.newgroup1').click(function (e) {
+                        e.preventDefault();
+                        NewGroupModal(1, null, data.Data.AccountGroup1Title);
+                    })
+                }
+                if (groupLevels > 1) {
+                    $('.accountgroup2').css('visibility', 'visible');
+                    $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
+                    $('.Group2Id').change(function () {
+                        GroupChange(2);
+                    })
+                    $('.editgroup2').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group2Id').val() === null || $('.Group2Id').val() === '') {
+                            alert($('.group2prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            EditGroupModal(2, $('.Group2Id').val(), $('.Group1Id').val(), data.Data.AccountGroup2Title);
+                        }
+                    })
+                    $('.newgroup2').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group1Id').val() === null || $('.Group1Id').val() === '') {
+                            alert($('.group1prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            NewGroupModal(2, $('.Group1Id').val(), data.Data.AccountGroup2Title);
+
+                        }
+                    })
+                }
+                if (groupLevels > 2) {
+                    $('.accountgroup3').css('visibility', 'visible');
+                    $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
+                    $('.Group3Id').change(function () {
+                        GroupChange(3);
+                    })
+                    $('.editgroup3').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group3Id').val() === null || $('.Group3Id').val() === '') {
+                            alert($('.group3prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            EditGroupModal(3, $('.Group3Id').val(), $('.Group2Id').val(), data.Data.AccountGroup3Title);
+                        }
+                    })
+                    $('.newgroup3').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group2Id').val() === null || $('.Group2Id').val() === '') {
+                            alert($('.group2prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            NewGroupModal(3, $('.Group2Id').val(), data.Data.AccountGroup3Title);
+
+                        }
+                    })
+                }
+                if (groupLevels > 3) {
+                    $('.accountgroup4').css('visibility', 'visible');
+                    $('.group4prompt').html(data.Data.AccountGroup4Title + ':');
+                    $('.editgroup4').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group4Id').val() === null || $('.Group4Id').val() === '') {
+                            alert($('.group4prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            EditGroupModal(4, $('.Group4Id').val(), $('.Group3Id').val(), data.Data.AccountGroup2Title);
+                        }
+                    })
+                    $('.newgroup4').click(function (e) {
+                        e.preventDefault();
+                        if ($('.Group3Id').val() === null || $('.Group3Id').val() === '') {
+                            alert($('.group1prompt').html() + ' must be selected first');
+                        }
+                        else {
+                            NewGroupModal(4, $('.Group3Id').val(), data.Data.AccountGroup4Title);
+
+                        }
                     })
                 }
 
@@ -161,35 +226,6 @@ function LoadSummaryTab(AccountId) {
 
     }, null);
 
-}
-
-function EditGroup(level) {
-    var prevLevel = level - 1;
-    if ($('.Group' + level + 'Id').val() === null || $('.Group' + level + 'Id').val() === '') {
-        alert($('.group' + level + 'prompt').html() + ' must be selected first');
-        return;
-    }
-    if (level > 1) {
-        if ($('.Group' + prevLevel + 'Id').val() === null || $('.Group' + prevLevel + 'Id').val() === '') {
-            alert($('.group' + prevLevel + 'prompt').html() + ' must be selected first');
-            return;
-        }
-    }
-    EditGroupModal(level, $('.Group' + level + 'Id').val(), $('.Group' + prevLevel + 'Id').val(), $('.group' + level + 'prompt').html());
-}
-
-function NewGroup(level) {
-    var prevLevel = level - 1;
-    if (level > 1) {
-        if ($('.Group' + prevLevel + 'Id').val() === null || $('.Group' + prevLevel + 'Id').val() === '') {
-            alert($('.group' + prevLevel + 'prompt').html() + ' must be selected first');
-            return;
-        }
-        NewGroupModal(level, $('.Group' + prevLevel + 'Id').val(), $('.group' + level + 'prompt').html());
-    }
-    else {
-        NewGroupModal(level, null, $('.group' + level + 'prompt').html());
-    }
 }
 
 function RetrieveSegmentLevels(ledgerId) {
@@ -582,7 +618,7 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
     });
 
     LoadAccountGroups(groupId);
-    
+
     $('.cancelaccountgroupmodal').click(function (e) {
 
         e.preventDefault();
