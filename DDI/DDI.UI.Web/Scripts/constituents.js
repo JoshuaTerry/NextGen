@@ -1,6 +1,7 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
+var shownotealert = true;
 
 $(document).ready(function () {
 
@@ -15,8 +16,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
-
-    DisplayConstituentCustomFields();
     
     CreateEditControls();
 
@@ -27,8 +26,6 @@ $(document).ready(function () {
         $('.hidconstituentid').val(sessionStorage.getItem('constituentid'));
 
     }
-
-    
 
     GetConstituentData($('.hidconstituentid').val());
 
@@ -92,7 +89,7 @@ function LoadYears()
 function PopulateMonthDays()
 {
     var arrayLookup = {
-        '1': 31, '2': 29, '3': 31,
+        '1': 31, '2': 28, '3': 31,
         '4': 30, '5': 31,
         '6': 30, '7': 31,
         '8': 31, '9': 30,
@@ -241,7 +238,9 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
-        GetNoteAlerts();
+        GetNoteAlerts(shownotealert);
+
+        shownotealert = false;
 
         GenerateContactInfoSection();
 
@@ -249,7 +248,15 @@ function DisplayConstituentData() {
 
         LoadDBAGrid();
 
-        LoadEducationGrid();
+        if (currentEntity.ConstituentType.Category === 0) {
+            LoadEducationGrid();
+
+            PopulateMonthDays();
+
+            AmendMonthDays();
+
+            $('.BirthDay').val(currentEntity.BirthDay);
+        }
 
         LoadEthnicitiesTagBox();
 
@@ -262,18 +269,14 @@ function DisplayConstituentData() {
         LoadRelationshipsTab();
 
         LoadInvestmentsGrid();
-
-        PopulateMonthDays();
-
-        AmendMonthDays();
-
-        $('.BirthDay').val(currentEntity.BirthDay);
-    
+            
         PopulateUserIdDropDown();
 
         LoadRelationshipsQuickView();
         
         NewAddressModal();
+
+        DisplayConstituentCustomFields();
 
         DisplaySelectedTags($('.constituenttagselect'));
 
@@ -369,12 +372,11 @@ function DisplayConstituentType() {
 
     $('#tab-main-link').text(currentEntity.ConstituentType.DisplayName);
 
-    LoadTagSelector(currentEntity.Category, $('.constituenttagselect'));
+    LoadTagSelector($('.constituenttagselect'));
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
         $('.individualConstituent').show();
-        $('.organizationSection').hide();
         $('.DBASettingsSection').hide();
     } else {
         $('.organizationConstituent').show();
@@ -474,29 +476,65 @@ function LoadDBAGrid() {
         { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/doingbusinessas', 'doingbusinessas'
+    LoadGrid('.doingbusinessastable', 'dbagrid', columns, 'constituents/' + currentEntity.Id + '/doingbusinessas?fields=Id,StartDate,EndDate,Name', 'doingbusinessas'
         , null, 'dba-', '.dbamodal', '.dbamodal', 250, false, true, false, null);
 
 }
 
 /* End Doing Business As Section */
 
+function SetupSchoolAutocomplete() {   
+    MakeServiceCall('GET', 'schools?fields=Name', null, function (result) {
+        var items = [];
+
+        if (result.Data) {
+            $.map(result.Data, function (item) {
+                if (item.Name && item.Name.length > 0) {
+                    items.push(item.Name);
+                }
+            });
+        }
+
+        $('.schoolLookup').autocomplete({
+            source: items
+        });
+    }, null);
+}
+
+function SetupDegreeAutoComplete() {
+    MakeServiceCall('GET', 'degrees?fields=Name', null, function (result) {
+        var items = [];
+
+        if (result.Data) {
+            $.map(result.Data, function (item) {
+                if (item.Name && item.Name.length > 0) {
+                    items.push(item.Name);
+                }
+            });
+        }
+
+        $('.degreeLookup').autocomplete({
+            source: items
+        });
+    }, null);
+}
 
 /* Education Section */
 function LoadEducationGrid() {
-
     var columns = [
             { dataField: 'Id', width: '0px' },
             { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
             { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
-            { dataField: 'School.DisplayName', caption: 'School' },
-            { dataField: 'Degree.DisplayName', caption: 'Degree' },
+            { dataField: 'SchoolOther', caption: 'School' },
+            { dataField: 'DegreeOther', caption: 'Degree' },
             { dataField: 'Major', caption: 'Major' }
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 250, false, true, false, null);
+        , null, 'ed-', '.educationmodal', '.educationmodal', 350, false, false, false, null);
 
+    SetupSchoolAutocomplete();
+    SetupDegreeAutoComplete();
 }
 
 /* End Education Section */
@@ -522,8 +560,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'paymentmethods/constituents/' + currentEntity.Id, 'paymentmethods'
-        , null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 250, false, true, false, null);
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
 }
 
 /* End Payment Preference Section */
@@ -759,29 +796,27 @@ function PopulateAddressTypesInModal(selectedValue) {
 function PopulateCountriesInModal(selectedValue) {
 
     PopulateDropDown('.na-CountryId', 'countries', '', '', selectedValue, function () {
-        PopulateStatesInModal(null);
+        PopulateStatesInModal($('.na-CountryId').val(), null);
     });
 
 }
 
-function PopulateStatesInModal(selectedValue) {
+function PopulateStatesInModal(countryId, selectedValue) {
 
     ClearElement('.na-StateId');
     ClearElement('.na-CountyId');
 
-    var countryid = $('.na-CountryId').val();
+    //var countryid = $('.na-CountryId').val();
 
-    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryid, '', '', selectedValue, function () {
-        PopulateCountiesInModal(null)
+    PopulateDropDown('.na-StateId', 'states/?countryid=' + countryId, '', '', selectedValue, function () {
+        PopulateCountiesInModal($('.na-StateId').val(), null);
     });
 
 }
 
-function PopulateCountiesInModal(selectedValue) {
+function PopulateCountiesInModal(stateId, selectedValue) {  
 
-    var stateid = $('.na-StateId').val();
-
-    PopulateDropDown('.na-CountyId', 'counties/?stateid=' + stateid, '', '', selectedValue);
+    PopulateDropDown('.na-CountyId', 'states/' + stateId + '/counties', '', '', selectedValue);
 
 }
 
@@ -884,13 +919,12 @@ function LoadAddress(id) {
         $('.na-PostalCode').val(data.Data.Address.PostalCode);
 
         PopulateAddressTypesInModal(data.Data.AddressTypeId);
+
         PopulateCountriesInModal(data.Data.Address.CountryId);
 
-        PopulateDropDown('.na-StateId', 'states/?countryid=' + data.Data.Address.CountryId, '', '', data.Data.Address.StateId, function () {
-            PopulateCountiesInModal(null)
-        });
+        PopulateStatesInModal(data.Data.Address.CountryId, data.Data.Address.StateId);
 
-        PopulateCountiesInModal(data.Data.Address.CountyId);
+        PopulateCountiesInModal(data.Data.Address.StateId, data.Data.Address.CountyId);
 
         LoadAllRegionDropDowns(modal, '.na-', data.Data.Address);
     }, null);
@@ -1029,7 +1063,6 @@ function EditRelationship(id) {
 }
 
 function NewRelationshipModal() {
-
     var modalLinkClass = 'rs-newmodallink';
     var constituentId = $('.hidconstituentid').val();
 
@@ -1072,12 +1105,13 @@ function LoadRelationshipData(data, modal) {
 
 function LoadInvestmentsGrid() {
     var columns = [
-    { 
-        dataField: 'InvestmentRelationshipType', width: '0px', groupIndex: 0, sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
+    {
+        dataField: 'InvestmentRelationshipType', visible: false, groupIndex: 0, sortOrder: 'desc', sortIndex: 0, caption: "",
+            calculateCellValue: function (data) {
             return [GetRelationshipType(data.InvestmentRelationshipType)];
         }
     },
-    { dataField: 'InvestmentId', width: '0px', },
+    { dataField: 'InvestmentId', width: '0px' },
     { dataField: 'Investment.InvestmentNumber', caption: 'Inv Num', sortOrder: 'asc', sortIndex: 1, alignment: 'left' },
     { dataField: 'Investment.CurrentMaturityDate', caption: 'Maturity', dataType: 'date' },
     {
@@ -1109,10 +1143,10 @@ function GetRelationshipType(type) {
     return typeDesc;
 }
 
-function CallInvestmentDetail(id) {
+function CallInvestmentDetail(investmentid) {
 
-    if (id) {
-        sessionStorage.setItem("investmentid", id);
+    if (investmentid) {
+        sessionStorage.setItem("investmentid", investmentid);
         location.href = "../INV/InvestmentDetails.aspx";
     }
 

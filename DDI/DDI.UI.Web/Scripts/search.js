@@ -35,7 +35,7 @@ function Resize() {
 
     var windowHeight = $(window).height();
     var header = $('header').height();
-    var adjustedHeight = (windowHeight - header) - 55;
+    var adjustedHeight = (windowHeight - header) - 90;
 
     $('.searchcriteria div.scrollable').height(adjustedHeight);
 

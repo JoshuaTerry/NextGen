@@ -190,11 +190,8 @@
                         </div>
 
                         <h1>Automated Transactions</h1>
-                        <div class="editcontainer">
+                        <div class="dwgridcontainer"></div>
 
-                            <div class="dwgridcontainer"></div>
-
-                        </div>
 
                         <h1>Interest</h1>
                         <div class="editcontainer">
@@ -337,7 +334,7 @@
 
                                  <div class="fieldblock">
                                     <label>Renewal Investment Type</label>
-                                    <input type="text" class="RenewalInvestmentType editable datepicker" />
+                                    <input type="text" class="RenewalInvestmentType editable" />
                                 </div>
 
                             </div>
@@ -355,7 +352,7 @@
 
                                  <div class="fieldblock">
                                     <label>Number of Renewals</label>
-                                    <input type="text" class="NumberOfRenewals editable datepicker" />
+                                    <input type="text" class="NumberOfRenewals editable" />
                                 </div>
 
                             </div>

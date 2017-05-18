@@ -160,7 +160,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var constituent = Service.GetConstituentByConstituentNum(num);
 
-                return FinalizeResponse(constituent, fields);
+                return FinalizeResponse(constituent, ConvertFieldList(fields, FieldsForSingle));
             }
             catch (Exception ex)
             {
@@ -177,7 +177,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var constituent = Service.NewConstituent(constituenttypeid);
 
-                return FinalizeResponse(constituent, fields);
+                return FinalizeResponse(constituent, ConvertFieldList(fields, FieldsForSingle));
             }
             catch(Exception ex)
             {

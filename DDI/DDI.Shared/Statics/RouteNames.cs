@@ -8,6 +8,7 @@
         public const string AccountActivity = "AccountActivity";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
+        public const string Alert = "Alert";
         public const string AlternateId = "AlternateId";
         public const string Audit = "Audit";
         public const string BusinessDate = "BusinessDate";
@@ -28,6 +29,7 @@
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";
+        public const string CustomFieldData = "CustomFieldData";
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";

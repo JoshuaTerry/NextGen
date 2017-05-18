@@ -32,7 +32,7 @@
     <!-- FileUpload Files -->
 
     <!-- DevExtreme Files -->
-    <script type="text/javascript" src="..\..\Scripts/dx.web.js"></script>
+    <script type="text/javascript" src="..\..\Scripts/dx.all.js"></script>
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <!-- DevExtreme Files -->
@@ -77,15 +77,28 @@
             <div class="logo">
                 <a runat="server" href="~/Default.aspx" title="DDI"></a>
             </div>
-            <div class="topnav">
-                <asp:Menu ID="mainmenu" runat="server" DataSourceID="sitemapdatasource1" Orientation="Horizontal"
-                    DynamicEnableDefaultPopOutImage="false" 
-                    StaticEnableDefaultPopOutImage="false">
-                </asp:Menu>
-                <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
-                    ShowStartingNode="false" />
-            </div>
         </header>
+
+        <div class="topnav">
+            <div class="utilitynav">
+                <ul class="utilitymenu" style="display: none;">
+                    <li><a href="#">Edit</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li class="menu-break"></li>
+                    <li><a href="#">Import</a></li>
+                    <li><a href="#">Export</a></li>
+                    <li class="menu-break"></li>
+                    <li><a href="#">Edit History</a></li>
+                </ul>
+            </div>
+
+            <asp:Menu ID="mainmenu" runat="server" DataSourceID="sitemapdatasource1" Orientation="Horizontal"
+                DynamicEnableDefaultPopOutImage="false" 
+                StaticEnableDefaultPopOutImage="false">
+            </asp:Menu>
+            <asp:SiteMapDataSource ID="sitemapdatasource1" runat="server" SiteMapProvider="XmlSiteMapProvider"
+                ShowStartingNode="false" />
+        </div>
 
         <div class="maincontainer">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>

@@ -33,6 +33,8 @@ namespace DDI.UI.Web
                 request.PreAuthenticate = true;
                 request.Headers.Add("Authorization", "Bearer " + token);
 
+                HttpContext.Current.Session[Token.DDI_User_Token] = token;
+
                 using (WebResponse response = request.GetResponse())
                 {
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -69,6 +71,12 @@ namespace DDI.UI.Web
             Login.AuthorizeUser(token.UserName, token.Access_Token);
 
             return token.Access_Token;
+        }
+
+        [WebMethod]
+        public static void Logout()
+        {
+            HttpContext.Current.Response.Cookies.Remove(FormsAuthentication.FormsCookieName);
         }
     }
 }

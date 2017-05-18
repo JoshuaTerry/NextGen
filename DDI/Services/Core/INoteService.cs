@@ -1,7 +1,8 @@
-﻿using DDI.Shared;
+﻿using System;
+using System.Collections.Generic;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace DDI.Services.ServiceInterfaces
 {
@@ -9,7 +10,7 @@ namespace DDI.Services.ServiceInterfaces
     {
         IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds);
         IDataResponse RemoveTopicFromNote(Note note, Guid topicId);
-        IDataResponse GetNotesInAlertDateRange(Guid parentid);
+        IDataResponse<List<Note>> GetNotesInAlertDateRange(Guid parentid);
 
     }
 }

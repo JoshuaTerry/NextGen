@@ -5,6 +5,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Web.Http;
+using DDI.Services;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -12,6 +14,8 @@ namespace DDI.WebApi.Controllers.General
     public class NoteTopicsController : GenericController<NoteTopic>
     {
         protected override string FieldsForList => FieldLists.CodeFields;
+
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Notes);
 
         [HttpGet]
         [Route("api/v1/notetopics", Name = RouteNames.NoteTopic)]
@@ -28,14 +32,14 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/notetopics/{noteid}/notes")]
+        [Route("api/v1/notes/{noteid}/notetopics",Name = RouteNames.Note + RouteNames.NoteTopic)]
         public IHttpActionResult GetByNoteId(Guid noteId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, fields);
+                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -64,5 +68,58 @@ namespace DDI.WebApi.Controllers.General
         {
             return base.Delete(id);
         }
+
+        [HttpPost]
+        [Route("api/v1/notes/{id}/notetopics")]
+        public IHttpActionResult AddTopicsToNote(Guid id, [FromBody] JObject topic)
+        {
+            try
+            {
+                var noteService = new NoteService();
+
+                var note = noteService.GetById(id).Data;
+
+                if (note == null)
+                {
+                    return NotFound();
+                }
+
+                var response = noteService.AddTopicsToNote(note, topic);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/v1/notes/{id}/notetopics/{topicid}")]
+        public IHttpActionResult RemoveTopicFromNote(Guid id, Guid topicId)
+        {
+            try
+            {
+                var noteService = new NoteService();
+
+                var note = noteService.GetById(id).Data;
+
+                if (note == null)
+                {
+                    return NotFound();
+                }
+
+                var response = noteService.RemoveTopicFromNote(note, topicId);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+        }
+
     }
 }

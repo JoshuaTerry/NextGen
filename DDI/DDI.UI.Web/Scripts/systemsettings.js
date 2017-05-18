@@ -485,7 +485,7 @@ function DisplayConstituentTypeTags(tags) {
 }
 
 function LoadConstituentTypeTagSelector(typeId, container) {
-
+    
     $('.tagselect').each(function () {
 
         var img = $('.tagSelectImage');
@@ -504,7 +504,7 @@ function LoadConstituentTypeTagSelector(typeId, container) {
                     resizable: false
                 });
 
-                LoadAvailableTags(tagmodal);
+                LoadAvailableTags(tagmodal, false);
 
                 $('.cancelmodal').click(function (e) {
 
@@ -595,7 +595,7 @@ function LoadConstituentTypeSettingsGrid() {
     ];
 
     
-    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes', null, EditConstituentType, DeleteConstituentType);
+    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', null, EditConstituentType, DeleteConstituentType);
 
 }
 
@@ -1619,153 +1619,7 @@ function CreateRegionLevelSelector(container) {
 }
 
 function DisplayRegionLevels(container) {
-
-    MakeServiceCall('GET', 'regionlevels/', null, function (data) {
-
-        if (data.Data) {
-            if (data && data.Data && data.IsSuccessful) {
-
-                $.map(data.Data, function (level) {
-                    var li = $('<li>').attr('id', level.Id).click(function () {
-
-                        if ($('.parentregions').length) {
-                            $('.parentregions').remove();
-                        }
-
-                        $('.regiongridcontainer').empty();
-
-                        $('.regionlevellist li').removeClass('selected');
-                        $(this).addClass('selected');
-
-                        if (level.IsChildLevel) {
-                            var parents = $('<select>').addClass('parentregions');
-                            $('.regioncontainer').prepend($(parents));
-
-                            PopulateDropDown('.parentregions', 'regions/regionlevels/' + (level.Level - 1), '', '', null, function () {
-                                DisplayRegions(level.Level, $('.parentregions').val());
-                            });
-                        }
-                        else {
-                            DisplayRegions(level.Level, null);
-                        }
-                    });
-
-                    $('<a>').attr('href', '#').addClass('editregionlevellink').click(function (e) {
-                        e.preventDefault();
-
-                        $('.regionlevelid').val(level.Id);
-
-                        modal = $('.regionlevelmodal').dialog({
-                            closeOnEscape: false,
-                            modal: true,
-                            width: 250,
-                            resizable: false
-                        });
-
-                        LoadRegionLevel(level.Id);
-
-                        $('.cancelmodal').click(function (e) {
-
-                            e.preventDefault();
-
-                            CloseModal(modal);
-
-                        });
-
-                        $('.submitregionlevel').unbind('click');
-
-                        $('.submitregionlevel').click(function () {
-
-                            var id = $('.regionlevelid').val();
-
-                            var item = {
-                                Level: $(modal).find('.rl-Level').val(),
-                                Label: $(modal).find('.rl-Label').val(),
-                                Abbreviation: $(modal).find('.rl-Abbreviation').val(),
-                                IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
-                                IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked'),
-                            }
-
-                            MakeServiceCall('PATCH', 'regionlevels/' + id, item, function (data) {
-
-                                if (data.Data) {
-                                    DisplaySuccessMessage('Success', 'Region Level saved successfully.');
-
-                                    CloseModal(modal);
-
-                                    LoadRegionsSectionSettings();
-                                }
-
-                            }, null);
-
-                        });
-                    }).appendTo($(li));
-                    $('<span>').text(level.DisplayName).appendTo($(li));
-                    $(li).appendTo($(container));
-                });
-
-                // Add Region Level button
-                if (data.Data.length < 4) {
-
-                    var li = $('<li>')
-                        .attr('href', '#')
-                        .text('+ Add Region Level')
-                        .addClass('newregionlevellink')
-                        .click(function (e) {
-                            e.preventDefault();
-
-                            modal = $('.regionlevelmodal').dialog({
-                                closeOnEscape: false,
-                                modal: true,
-                                width: 250,
-                                resizable: false
-                            });
-
-                            $(modal).find('.rl-Level').val(data.Data.length + 1);
-
-                            $('.cancelmodal').click(function (e) {
-
-                                e.preventDefault();
-
-                                CloseModal(modal);
-
-                            });
-
-                            $('.submitregionlevel').unbind('click');
-
-                            $('.submitregionlevel').click(function () {
-
-                                var item = {
-                                    Level: $(modal).find('.rl-Level').val(),
-                                    Label: $(modal).find('.rl-Label').val(),
-                                    Abbreviation: $(modal).find('.rl-Abbreviation').val(),
-                                    IsRequired: $(modal).find('.rl-IsRequired').prop('checked'),
-                                    IsChildLevel: $(modal).find('.rl-IsChildLevel').prop('checked')
-                                }
-
-                                MakeServiceCall('POST', 'regionlevels', item, function (data) {
-
-                                    if (data.Data) {
-                                        DisplaySuccessMessage('Success', 'Region Level saved successfully.');
-
-                                        CloseModal(modal);
-
-                                        LoadRegionsSectionSettings();
-                                    }
-
-                                }, null);
-
-                            });
-                        });
-
-                    $(li).appendTo($(container));
-                }
-
-            }
-        }
-
-    }, null);
-
+    
     MakeServiceCall('GET', 'regionlevels/', null, function (data) {
 
         if (data.Data) {
@@ -1937,6 +1791,8 @@ function DisplayRegions(level, parentid) {
     if (parentid) {
         route = route + parentid;
     }
+
+    route = route + "?fields=Id,Code,Name,IsActive";
 
     var columns = [
        { dataField: 'Id', width: '0px' },
@@ -2598,7 +2454,7 @@ function TagGroupSelected(info) {
     CustomLoadGrid('tagsgrid',
         'tagscontainer',
         columns,
-        'taggroups/' + selectedRow.Id + '/tags',
+        'taggroups/' + selectedRow.Id + '/tags?fields=Id,Order,Code,Name,IsActive',
         TagGroupSelected,
         EditTag,
         null,
@@ -2818,7 +2674,7 @@ function LoadAccountingSettings(id) {
         $('.as-daysinadvance').val(data.Data.PostDaysInAdvance); 
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
-        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
+        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val() + '?fields=DisplayName', '', '', data.Data.DefaultFiscalYearId, null);
 
         if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
 
@@ -3276,7 +3132,7 @@ function LoadFiscalYearSectionSettings() {
             },
         ];
 
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=all', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
         
     });
 }
@@ -3374,7 +3230,7 @@ function LoadGLFormatSectionSettings() {
 
                 glaccountformat = data.Data.DisplayFormat;
 
-                if (data.Data.LedgerAccounts === null || data.Data.LedgerAccounts.length === 0) {
+                if (data.Data.HasLedgerAccounts === false) {
 
                     canDeleteSegmentLevels = true;
                     editModalClass = '.glformatmodal';

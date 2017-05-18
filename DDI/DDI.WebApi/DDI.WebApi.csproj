@@ -227,11 +227,11 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
-    <Compile Include="Controllers\Core\BusinessDateController.cs" />
     <Compile Include="Controllers\Core\BusinessUnitController.cs" />
     <Compile Include="Controllers\Core\CustomFieldDataController.cs" />
     <Compile Include="Controllers\Core\CustomFieldOptionsController.cs" />
     <Compile Include="Controllers\Core\CustomFieldsController.cs" />
+    <Compile Include="Controllers\Core\ConfigurationController.cs" />
     <Compile Include="Controllers\Core\EnvironmentController.cs" />
     <Compile Include="Controllers\Core\FileStorageController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
@@ -243,8 +243,8 @@
     <Compile Include="Controllers\Core\NoteTopicsController.cs" />
     <Compile Include="Controllers\Core\RolesController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
-    <Compile Include="Controllers\Core\TagGroupsController.cs" />
-    <Compile Include="Controllers\Core\TagsController.cs" />
+    <Compile Include="Controllers\CRM\TagGroupsController.cs" />
+    <Compile Include="Controllers\CRM\TagsController.cs" />
     <Compile Include="Controllers\Core\UserRolesController.cs" />
     <Compile Include="Controllers\Core\UsersController.cs" />
     <Compile Include="Controllers\CRM\AddressesController.cs" />
@@ -369,6 +369,9 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
+    <None Include="Web.Dev.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
@@ -408,6 +411,15 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

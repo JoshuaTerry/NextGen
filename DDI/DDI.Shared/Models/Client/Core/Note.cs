@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Helpers;
 
 namespace DDI.Shared.Models.Client.Core
 {
@@ -46,6 +47,8 @@ namespace DDI.Shared.Models.Client.Core
         public Guid? UserResponsibleId { get; set; }
         public User UserResponsible { get; set; }
 
-        public ICollection<NoteTopic> NoteTopics { get; set; } 
+        public ICollection<NoteTopic> NoteTopics { get; set; }
+
+        public override string DisplayName => StringHelper.FirstNonBlank(Title, StringHelper.Truncate(Text, 100), string.Empty);
     }
 }

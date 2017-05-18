@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Business.GL;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Enums.GL;
+using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.GL
 {
     public class JournalService : ServiceBase<Journal>, IJournalService
     {
+
+        #region Public Methods
 
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
@@ -52,8 +58,48 @@ namespace DDI.Services.GL
                                                           .ToList<ICanTransmogrify>();
 
             return new DataResponse<List<ICanTransmogrify>>(journalsFound) { TotalResults = results.TotalCount };
-        }       
-        
+        }
+
+        public IDataResponse<Journal> NewJournal(JournalType journalType, Guid? businessUnitId, Guid? fiscalYearId)
+        {
+            Journal journal = UnitOfWork.GetBusinessLogic<JournalLogic>().NewJournal(journalType, businessUnitId, fiscalYearId);
+            return new DataResponse<Journal>(journal) { TotalResults = 1 };
+        }
+
+        /// <summary>
+        /// Override of ProcessJTokenUpdate to handle JournalLines collection.
+        /// </summary>
+        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
+        {
+            if (name == nameof(Journal.JournalLines) && entity is Journal)
+            {
+                AddUpdateFromJArray(((Journal)entity).JournalLines, token as JArray);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Override of UpdateFromJObject to handle deleting journal line items where IsDeleted was set to TRUE.
+        /// </summary>
+        protected override void UpdateFromJObject<T1>(T1 entity, JObject changes) 
+        {
+            base.UpdateFromJObject(entity, changes);
+
+            if (entity is JournalLine)
+            {
+                JournalLine line = entity as JournalLine;
+                if (line.IsDeleted)
+                {
+                    UnitOfWork.Delete(line);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
         private IDocumentSearchResult<JournalDocument> PerformElasticSearch(JournalSearch search)
         {
             bool ignoreFiscalYear = false;
@@ -153,5 +199,7 @@ namespace DDI.Services.GL
             return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
             
         }
+
+        #endregion
     }
 }
