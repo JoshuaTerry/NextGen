@@ -88,9 +88,9 @@
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
     <Compile Include="Common\CountryService.cs" />
-    <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\FundService.cs" />
     <Compile Include="GL\FundFromToService.cs" />
     <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="CRM\EducationService.cs" />
@@ -135,9 +135,6 @@
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
-    
-    <Compile Include="Common\StateService.cs" />
-    
     <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
     <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
     <Compile Include="CRM\ITagGroupService.cs" />

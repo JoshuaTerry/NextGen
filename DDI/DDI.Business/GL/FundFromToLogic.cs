@@ -50,7 +50,7 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.FundFromToWrongFiscalYear);
             }
             
-            LedgerAccount account = UnitOfWork.GetReference(entity, p => p.FromAccount);
+            LedgerAccount account = UnitOfWork.GetReference(entity, p => p.FromLedgerAccount);
             if (account != null) 
             {
                 Fund otherFund = _fundLogic.GetFund(account, year);
@@ -60,7 +60,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            account = UnitOfWork.GetReference(entity, p => p.ToAccount);
+            account = UnitOfWork.GetReference(entity, p => p.ToLedgerAccount);
             if (account != null)
             {
                 Fund otherFund = _fundLogic.GetFund(account, year);
