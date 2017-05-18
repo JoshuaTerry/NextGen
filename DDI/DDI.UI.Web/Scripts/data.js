@@ -158,7 +158,9 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
             displayExpr: 'DisplayName',
             valueExpr: 'Id',
             showClearButton: true,
-            disabled: true
+            //disabled: true,
+            disabled: false,
+            height: data.length
         });
 
         $(tagBoxControl).appendTo(container);

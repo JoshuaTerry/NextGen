@@ -69,8 +69,10 @@ function LoadGroupsGrid() {
     LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
         , null, 'gp-', '.groupmodal', '.groupmodal', 250, true, true, false, null);
 
-    //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
-    DisplayTagBox('roles', 'rolestagbox', '.rolestagboxcontainer', null);
+    //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
+    //function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
+
+    DisplayTagBox('roles', 'rolestagbox', '.rolesdropdowncontainer', null);
     //MakeServiceCall('GET', 'roles', null, function (data) {
 
     //    $('.rolesdropdowncontainer').dxTagBox({
