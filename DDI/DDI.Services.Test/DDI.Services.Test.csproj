@@ -77,10 +77,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
-      <Name>DDI.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>
