@@ -99,14 +99,7 @@ function LoadTransactionGrid(accountId) {
             showOperationChooser: false
         },
         paging: {
-            enabled: true,
             pageSize: 50
-        },
-        pager: {
-            visible: true,
-            showPageSizeSelector: true,
-            allowedPageSizes: [50, 100, 200],
-            showInfo: true
         },
         groupPanel: {
             allowColumnDragging: true,
@@ -118,7 +111,6 @@ function LoadTransactionGrid(accountId) {
         scrolling: {
             mode: "virtual"
         },
-       
         summary: {
             groupItems: [{
                 column: "MonthYear",
