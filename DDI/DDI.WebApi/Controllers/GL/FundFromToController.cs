@@ -39,7 +39,7 @@ namespace DDI.WebApi.Controllers.GL
 
         protected override Expression<Func<FundFromTo, object>>[] GetDataIncludesForList() => GetDataIncludesForSingle();
 
-        private string _fields = new PathHelper.FieldListBuilder<FundFromTo>()
+        protected override string FieldsForList => FieldListBuilder
             .Include(p => p.FundId)
             .Include(p => p.Fund.FundSegment.Code)
             .Include(p => p.Fund.FundSegment.Name)
@@ -63,11 +63,7 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.FromAccountId)
             .Include(p => p.ToAccountId);
 
-        protected override string FieldsForList => _fields;
-
-        protected override string FieldsForSingle => _fields;
-
-        protected override string FieldsForAll => _fields;
+        protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
         [Route("api/v1/fundfromtos/{id}", Name = RouteNames.FundFromTo + RouteVerbs.Get)]

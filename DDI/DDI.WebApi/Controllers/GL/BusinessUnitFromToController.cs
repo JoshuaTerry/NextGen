@@ -37,7 +37,7 @@ namespace DDI.WebApi.Controllers.GL
 
         protected override Expression<Func<BusinessUnitFromTo, object>>[] GetDataIncludesForList() => GetDataIncludesForSingle();
 
-        private string _fields = new PathHelper.FieldListBuilder<BusinessUnitFromTo>()
+        protected override string FieldsForList => FieldListBuilder
             .Include(p => p.BusinessUnitId)
             .Include(p => p.BusinessUnit.Code)
             .Include(p => p.FiscalYearId)
@@ -59,11 +59,7 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.FromAccountId)
             .Include(p => p.ToAccountId);
 
-        protected override string FieldsForList => _fields;
-
-        protected override string FieldsForSingle => _fields;
-
-        protected override string FieldsForAll => _fields;
+        protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
         [Route("api/v1/businessunitfromtos/{id}", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Get)]
