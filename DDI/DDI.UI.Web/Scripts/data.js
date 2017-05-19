@@ -199,8 +199,7 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
                     .text('Edit')
                     .click(function(e) {
                         e.preventDefault();
-
-                        // var id = $(this).parent().parent().find('td:not(:empty):first').text();
+                        
                         EditEntity(saveRoute, prefix, options.data.Id, editModalClass, modalWidth, refreshGrid);
                     })
                     .appendTo(container);
@@ -219,8 +218,6 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
                     .text('Delete')
                     .click(function (e) {
                         e.preventDefault();
-
-                        // var id = $(this).parent().parent().find('td:not(:empty):first').text();
                         
                         ConfirmModal('Are you sure you want to delete this item?', function () {
                             DeleteEntity(saveRoute, options.data.Id, refreshGrid);
