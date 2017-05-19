@@ -354,7 +354,18 @@ namespace DDI.Data
         /// <returns></returns>
         private T Attach(T entity, System.Data.Entity.EntityState entityState)
         {
-            if (entity != null && _context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
+            if (entity == null)
+            {
+                return null;
+            }
+
+            DbEntityEntry<T> entityEntry = _context.Entry(entity);
+            if (entityEntry.State == entityState)
+            {
+                return entity;
+            }
+
+            if (entity != null && entityEntry.State == System.Data.Entity.EntityState.Detached)
             {
                 if (entity is IEntity)
                 {
@@ -376,7 +387,10 @@ namespace DDI.Data
            
             foreach (var entry in _context.ChangeTracker.Entries())
             {
-                stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                if (entry.Entity is IEntity)
+                {
+                    stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                }
             }
 
             // Then add the entity via the Add method.  
@@ -386,7 +400,7 @@ namespace DDI.Data
             _context.Entry(entity).State = entityState;
 
             // Finally check the state of all tracked entities, looking for ones that are in an Added State.
-            foreach (var entry in _context.ChangeTracker.Entries().Where(p => p.State == System.Data.Entity.EntityState.Added))
+            foreach (var entry in _context.ChangeTracker.Entries().Where(p => p.State == System.Data.Entity.EntityState.Added && p.Entity is IEntity))
             {
                 System.Data.Entity.EntityState state;
 
