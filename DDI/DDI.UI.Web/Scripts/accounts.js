@@ -18,8 +18,7 @@ function LoadAccountActivityAndBudgetTab(id) {
     MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
 
     var columns = [
-
-        { dataField: 'Id', width: '0px' },
+    
         { dataField: 'PeriodName', caption: 'Period' },
         { dataField: 'WorkingBudget', caption: data.Data.WorkingBudgetName, allowEditing: true },
         { dataField: 'FixedBudget', caption: data.Data.FixedBudgetName, allowEditing: true },

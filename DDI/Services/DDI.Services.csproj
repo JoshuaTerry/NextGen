@@ -30,6 +30,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
@@ -73,13 +82,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditService.cs" />
+    <Compile Include="Core\ConfigurationService.cs" />
+    <Compile Include="Core\IConfigurationService.cs" />
     <Compile Include="CRM\ConstituentAddressService.cs" />
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
     <Compile Include="Common\CountryService.cs" />
-    <Compile Include="Common\CountyService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="CRM\EducationService.cs" />
+    <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
     <Compile Include="INV\LinkedAccountService.cs" />
@@ -120,9 +132,8 @@
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
-    <Compile Include="Core\ITagGroupService.cs" />
-    <Compile Include="Common\StateService.cs" />
-    <Compile Include="Core\TagGroupService.cs" />
+    <Compile Include="CRM\ITagGroupService.cs" />
+    <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IJournalService.cs" />

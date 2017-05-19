@@ -1,14 +1,15 @@
-﻿using DDI.Shared.Models.Client.CRM;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ContactCategoryController : GenericController<ContactCategory>
     {
+
         protected override string FieldsForList => FieldLists.CodeFields + ",SectionTitle";
 
         [HttpGet]

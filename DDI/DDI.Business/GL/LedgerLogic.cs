@@ -285,6 +285,51 @@ namespace DDI.Business.GL
 
         }
 
+        /// <summary>
+        /// Generate a sample G/L account based on the ledger settings.
+        /// </summary>
+        public string GetGLAccountFormatSample(Ledger ledger)
+        {
+            if (ledger.SegmentLevels == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                var displayFormat = new StringBuilder();
+
+                foreach (SegmentLevel sl in ledger.SegmentLevels.OrderBy(t => t.Level))
+                {
+                    string character = "";
+                    switch (sl.Format)
+                    {
+                        case SegmentFormat.Both:
+                            character = "X";
+                            break;
+                        case SegmentFormat.Numeric:
+                            character = "9";
+                            break;
+                        case SegmentFormat.Alpha:
+                            character = "A";
+                            break;
+                    }
+
+                    for (int k = 1; k <= sl.Length; k++)
+                    {
+                        displayFormat.Append(character);
+                    }
+
+                    if (sl.Separator != null)
+                    {
+                        displayFormat.Append(sl.Separator);
+                    }
+
+                }
+
+                return displayFormat.ToString();
+            }
+        }
+
         #endregion
 
         #region Private Methods

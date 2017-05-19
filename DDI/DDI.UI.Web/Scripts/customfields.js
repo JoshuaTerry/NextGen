@@ -9,6 +9,7 @@ var CustomFieldEntity = {
     'OfficeIntegration': 20, 'ProcessManagement': 21, 'ProjectManagement': 22, 'JobProcessing': 23, 'HealthPolicy': 24, 'SystemAdministration': 25
 };
 var currentCustomFieldEntity = 0;
+var currentCustomFields = [];
 
 $(document).ready(function () {
 
@@ -26,7 +27,6 @@ function DisplayCustomFieldsGrid(container, entity) {
     var datagrid = $('<div>').addClass('customfieldgrid');
 
     var columns = [
-        { dataField: 'Id', width: "0px" },
         { dataField: 'FieldType', caption: 'Field Type' },
         { dataField: 'LabelText', caption: 'Label Text' },
         { dataField: 'MinValue', caption: 'Min Value' },
@@ -80,13 +80,14 @@ function DisplayCustomFields(container, entity, callback) {
 
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
-
-    MakeServiceCall('GET', route + 'entity/' + entity, null, function (data) {
+    // url: WEB_API_ADDRESS + route + 'entity/' + entity + '/constituent/' + currentEntity.Id
+    MakeServiceCall('GET', 'customfields/entity/' + entity + '/constituent/' + currentEntity.Id, null, function (data) {
 
         if (data && data.IsSuccessful) {
 
             $.map(data.Data, function (item) {
 
+                currentCustomFields[item.Id] = item;
                 $(container).append(CreateCustomField(item));
 
             });
@@ -102,7 +103,7 @@ function DisplayCustomFields(container, entity, callback) {
 
 function CreateCustomField(item) {
 
-    var div = $('<div>').addClass('fieldblock customField');
+    var div = $('<div>').attr('id', item.Id).addClass('fieldblock customField');
 
     $('<label>').text(item.LabelText).appendTo($(div));
 
@@ -133,7 +134,6 @@ function CreateCustomField(item) {
             break;
     }
 
-
     return div;
 
 }
@@ -142,8 +142,8 @@ function CreateNumberField(item) {
 
     var number = $('<input>').addClass('number editable');
 
-    if (item.Answer) {
-        $(number).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(number).val(item.Data[0].Value);
     }
 
     return number;
@@ -154,8 +154,8 @@ function CreateTextField(item) {
 
     var text = $('<input>').attr('type', 'text').addClass('editable');
 
-    if (item.Answer) {
-        $(text).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(text).val(item.Data[0].Value);
     }
 
     return text;
@@ -166,8 +166,8 @@ function CreateTextAreaField(item) {
 
     var textarea = $('<textarea>').addClass('editable');
 
-    if (item.Answer) {
-        $(textarea).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(textarea).val(item.Data[0].Value);
     }
 
     return textarea;
@@ -186,8 +186,8 @@ function CreateDropDownField(item) {
         });
     }
 
-    if (item.Answer) {
-        $(dropdown).val(item.Answer.Value);
+    if (item.Data[0]) {
+        $(dropdown).val(item.Data[0].Value);
     }
 
     return dropdown;
@@ -205,7 +205,7 @@ function CreateRadioField(item) {
             var i = $('<input>').attr('type', 'radio').attr('name', item.Id).val(o.Id).appendTo($(rd));
             $('<label>').addClass('inline').text(o.DisplayName).appendTo($(rd));
 
-            if (item.Answer && item.Answer.Value == $(i).val()) {
+            if (item.Data[0] && item.Data[0].Value == $(i).val()) {
                 $(i).attr('checked', 'checked');
             }
 
@@ -221,7 +221,7 @@ function CreateCheckBoxField(item) {
 
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('editable');
 
-    if (item.Answer && item.Answer.Value == '1') {
+    if (item.Data[0] && item.Data[0].Value == 'true') {
         $(checkbox).attr('checked', 'checked');
     }
 
@@ -233,8 +233,8 @@ function CreateDateField(item) {
 
     var date = $('<input>').attr('type', 'text').addClass('datepicker editable');
 
-    if (item.Answer) {
-        $(date).text(FormatJSONDate(item.Answer.Value));
+    if (item.Data[0]) {
+        $(date).val(item.Data[0].Value);
     }
 
     return date;
@@ -247,12 +247,118 @@ function CreateDateTimeField(item) {
     var date = $('<input>').attr('type', 'text').addClass('date').appendTo($(dt));
     var time = $('<input>').attr('type', 'text').addClass('time').appendTo($(dt));
 
-    if (item.Answer) {
-        $(date).text(FormatJSONDate(item.Answer.Value));
-        $(time).text(FormatJOSNTime(item.Answer.Value));
+    // Need to verify that the data is coming back appropriatly, then how to format it
+    // in a way that it goes into the text box....
+
+    if (item.Data[0] && item.Data[0].Value) {
+
+        var data = item.Data[0].Value.split(' ');
+
+        if (data[0]) {
+
+            $(date).val(data[0]);
+
+            if (data[1]) {
+                $(time).val(data[1]);
+            }
+        }
     }
 
     return dt;
+
+}
+
+function SaveCustomFields(container) {
+
+    $(container).find('div.fieldblock').each(function () {
+
+        var customFieldId = $(this).attr('id');
+        var cf = currentCustomFields[customFieldId];
+        var data = null;
+        var cfDataRoute = 'customfielddata';
+        var method = '';
+
+        var value = GetCustomFieldValue(this, cf);
+
+        if (cf.Data && cf.Data[0] && cf.Data[0].Id) {
+            // Update
+            if (value != cf.Data[0].Value)
+            {
+                data = {
+                    Value: value
+                }
+                method = 'PATCH';
+                cfDataRoute = cfDataRoute + '/' + cf.Data[0].Id;
+            }
+        }
+        else {
+            if (value) {
+                // Insert
+                data = {
+                    CustomFieldId: customFieldId,
+                    EntityType: cf.Entity,
+                    ParentEntityId: currentEntity.Id,
+                    Value: value
+                }
+                method = 'POST';
+            }
+        }
+
+        if (data) {
+            $.ajax({
+                url: WEB_API_ADDRESS + cfDataRoute,
+                method: method,
+                data: JSON.stringify(data),
+                headers: GetApiHeaders(),
+                contentType: 'application/json; charset-utf-8',
+                crossDomain: true,
+                success: function () {
+
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', 'An error occurred during saving a custom field.');
+                }
+            });
+        }
+
+    });
+
+}
+
+function GetCustomFieldValue(container, customField) {
+
+    var value = '';
+
+    switch (customField.FieldType) {
+        case CustomFieldType.Number:
+            value = $(container).find('input').val();
+            break;
+        case CustomFieldType.TextBox:
+            value = $(container).find('input').val();
+            break;
+        case CustomFieldType.TextArea:
+            value = $(container).find('input').text();
+            break;
+        case CustomFieldType.DropDown:
+            value = $(container).find('select').val();
+            break;
+        case CustomFieldType.Radio:
+            value = $('input[name=' + customField.Id + ']:checked').val();
+            break;
+        case CustomFieldType.CheckBox:
+            value = $(container).find('input').prop('checked');
+            break;
+        case CustomFieldType.Date:
+            value = $(container).find('input').val();
+            break;
+        case CustomFieldType.DateTime:
+            var d = $(container).find('input.date').val();
+            var t = $(container).find('input.time').val();
+            value = d + ' ' + t;
+            break;
+    }
+
+return value;
 
 }
 

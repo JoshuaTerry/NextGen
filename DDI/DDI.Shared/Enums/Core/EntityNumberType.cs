@@ -10,6 +10,7 @@ namespace DDI.Shared.Enums.Core
     {
         Constituent = 0,
         Journal = 1,
-        RecurringJournal = 2
+        RecurringJournal = 2,
+        JournalTemplate = 3,
     }
 }

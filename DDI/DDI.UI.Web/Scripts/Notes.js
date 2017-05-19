@@ -32,13 +32,12 @@ function SetupNotesTab() {
 function LoadNoteDetailsGrid() {
 
     var columns = [
-    { dataField: 'Id', width: '0px', },
+    { dataField: 'DisplayName', caption: 'Title' },
     { dataField: 'CreatedOn', caption: 'Created Date', dataType: 'date' },
-    { dataField: 'CreatedBy', caption: 'Created By' },
-    { dataField: 'Title', caption: 'Title' }
+    { dataField: 'CreatedBy', caption: 'Created By' }
     ];
 
-    CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, currentEntity.Id + '/notes/', null, EditNoteDetails, null, null);
+    CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, null);
 
     PopulateDropDown('.nd-Category', 'notecategories', '', '', ''); 
     PopulateDropDown('.nd-NoteCode', 'notecodes', '', '');
@@ -56,7 +55,7 @@ function NewNoteDetailsModal() {
 
     e.preventDefault();
 
-    modal = $('.notesdetailmodal').dialog({
+    var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 500,
@@ -71,13 +70,20 @@ function NewNoteDetailsModal() {
 
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelnotesmodal').click(function (e) {
 
         e.preventDefault();
 
         CloseModal(modal);
 
         ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
 
     });
 
@@ -87,7 +93,7 @@ function NewNoteDetailsModal() {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = GetNoteDetailsToSave();
+        var item = GetNoteDetailsToSave(modal);
 
         MakeServiceCall('POST', 'notes', item, function (data) {
 
@@ -104,6 +110,13 @@ function NewNoteDetailsModal() {
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
 
             ClearNoteTopicTagBox(modal);
 
@@ -128,6 +141,8 @@ function EditNoteDetails(id) {
         width: 500,
         resizable: false
     });
+
+    $('.editnoteinfo').show();
 
     LoadNoteDetails(id);
 
@@ -182,7 +197,7 @@ function EditNoteDetails(id) {
         $('.cancelnotetopics').click(function (e) {
 
             e.preventDefault();
-
+                        
             $(modal).find('.tagdropdowncontainer').hide();
 
             ClearNoteTopicSelectModal();
@@ -192,13 +207,20 @@ function EditNoteDetails(id) {
 
     });
 
-    $('.cancelmodal').click(function (e) {
+    $('.cancelnotesmodal').click(function (e) {
 
         e.preventDefault();
 
         CloseModal(modal);
 
         ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
 
     });
 
@@ -208,7 +230,7 @@ function EditNoteDetails(id) {
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = GetNoteDetailsToSave();
+        var item = GetNoteDetailsToSave(modal);
 
         MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
@@ -225,6 +247,13 @@ function EditNoteDetails(id) {
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
 
             ClearNoteTopicTagBox(modal);
 
@@ -250,14 +279,14 @@ function LoadNoteDetails(id) {
 
         $('.nd-Title').val(data.Data.Title),
         $('.nd-Description').val(data.Data.Text),
-        $('.nd-AlertStartDate').val(data.Data.AlertStartDate),
-        $('.nd-AlertEndDate').val(data.Data.AlertEndDate),
-        $('.nd-ContactDate').val(data.Data.ContactDate),
-        $('.nd-ContactDate').val(data.Data.NoteCode),
+        $('.nd-AlertStartDate').val(FormatJSONDate(data.Data.AlertStartDate)),
+        $('.nd-AlertEndDate').val(FormatJSONDate(data.Data.AlertEndDate)),
+        $('.nd-ContactDate').val(FormatJSONDate(data.Data.ContactDate)),
+        $('.nd-NoteCode').val(data.Data.NoteCode),
         $('.nd-CreatedBy').text(data.Data.CreatedBy),
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
-        $('.nd-CreatedOn').text(data.Data.CreatedOn),
-        $('.nd-UpdatedOn').text(data.Data.LastModifiedOn)
+        $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
+        $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
 
 
     }, function (xhr, status, err) {
@@ -266,7 +295,7 @@ function LoadNoteDetails(id) {
 
 }
 
-function GetNoteDetailsToSave() {
+function GetNoteDetailsToSave(modal) {
 
     var rawitem = {
 
@@ -382,7 +411,7 @@ function StyleAndSetupIndividualTags(topic, DeleteFunction) {
 
 function LoadSelectedNoteTopics(id) {
 
-    MakeServiceCall('GET', 'notetopics/' + id + '/notes', null, function (data) {
+    MakeServiceCall('GET', 'notes/' + id + '/notetopics', null, function (data) {
 
         $.map(data.Data, function (topic) {
 
@@ -466,38 +495,39 @@ function CreateMultiSelectTopics(topics, container) {
 
 /* Note Alerts Modal */
 
-function GetNoteAlerts() {
+function GetNoteAlerts(showalertsflag) {
 
-    MakeServiceCall('GET', 'notealert/' + currentEntity.Id, null, function (data) {
+       if (showalertsflag) {
 
-        if (data.Data.length > 0) {
+       	   MakeServiceCall('GET', 'entity/' + currentEntity.Id + '/notes/alert', null, function (data) {
 
-            SetupNoteAlertModal();
+            if (data.Data.length > 0) {
 
-            LoadNoteAlertGrid(data.Data);
+                SetupNoteAlertModal();
 
-            $('.notealertmodal').show();
+                LoadNoteAlertGrid(data.Data);
 
-        }
+                $('.notealertmodal').show();
 
-    },
+            }
 
-    function (xhr, status, err) {
+        },
 
-    });
+        function (xhr, status, err) {
+
+        });
+    }
 }
 
 function LoadNoteAlertGrid(data) {
 
     var columns = [
-        { dataField: 'Id', width: '0px', },
         { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
         { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
         { dataField: 'Title', caption: 'Title' }
     ];
-
-    CustomLoadGrid('notealertgrid', '.notealertgridcontainer', columns, 'notealert/' + currentEntity.Id, null, EditNoteDetails, null, null);
-
+    
+    LoadGridWithData('notealertgrid', '.notealertgridcontainer', columns, null, null, EditNoteDetails, null, data, null);
 }
 
 function SetupNoteAlertModal() {
