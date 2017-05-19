@@ -149,7 +149,7 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
 
 function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled) {
 
-    var tagBoxControl = $('<div>').addClass(tagBox).css("style", "overflow:scroll"); // will probably have to apply this to the tagbox itself...
+    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
 
     MakeServiceCall('GET', routeForAllOptions, null, function (data) {
         $(tagBoxControl).dxTagBox({

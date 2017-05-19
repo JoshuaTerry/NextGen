@@ -458,11 +458,11 @@ function GetConstituentPreferredContactInfo() {
 
 /* Demograpics Section */
 function LoadDenominationsTagBox() {
-    LoadTagBoxes('tagBoxDenominations', 'denominations', 'denominations', '/constituents/' + currentEntity.Id + '/denominations', false);
+    LoadTagBoxes('tagBoxDenominations', 'denominations', 'denominations', '/constituents/' + currentEntity.Id + '/denominations', true);
 }
 
 function LoadEthnicitiesTagBox() {
-    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities', false);
+    LoadTagBoxes('tagBoxEthnicities', 'ethnicities', 'ethnicities', '/constituents/' + currentEntity.Id + '/ethnicities', true);
 }
 /* End Demographics Section */
 

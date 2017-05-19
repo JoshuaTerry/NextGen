@@ -44,8 +44,8 @@
                     </div>
 
                     <div class="fieldblock">
-                        <label>Roles</label>
-                        <div class="rolesdropdowncontainer"></div>
+                        <label>Roles:</label>
+                        <div class="gp-rolesdropdowncontainer"></div>
                     </div>
 
                     <div class="modalbuttons">
@@ -56,13 +56,6 @@
 
             </div>
 
-            <div class="addrolesmodal" title="Add Roles" style="display: none;">
-
-                <div class="modalcontent">
-                    <div class="availableroles"></div>
-                </div>
-
-            </div>
             <!-- Users Tab -->
             <div id="tab-users">
                 <div class="usersgridcontainer">

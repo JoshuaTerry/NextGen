@@ -72,25 +72,7 @@ function LoadGroupsGrid() {
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
     //function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
 
-    DisplayTagBox('roles', 'rolestagbox', '.rolesdropdowncontainer', null, false);
-    //MakeServiceCall('GET', 'roles', null, function (data) {
-
-    //    $('.rolesdropdowncontainer').dxTagBox({
-
-    //        dataSource: data.Data,
-    //        visible: true,
-    //        tagTemplate: "tag",
-    //        opened: false,
-    //        valueExpr: 'Id',
-    //        displayExpr: 'DisplayName',
-    //        multiline: true,
-    //        onValueChanged: null,
-
-    //    });
-
-    //});
-
-    var asdf = $('.rolesdropdowncontainer').val();
+    DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
 
 }
 
