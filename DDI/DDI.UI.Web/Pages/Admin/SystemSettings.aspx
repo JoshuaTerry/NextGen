@@ -918,9 +918,9 @@
                 </select>
             </div>
 
-            <div class="fieldblock">
-                <label>Is Active</label>
+            <div class="fieldblock inline">
                 <input type="checkbox" class="tg-IsActive" />
+                <label>Is Active</label>
             </div>
 
             <div class="modalbuttons">
@@ -979,9 +979,9 @@
                 <input type="text" class="addrtype-Name" />
             </div>
 
-            <div class="fieldblock">
-                <label>Active</label>
+            <div class="fieldblock inline">
                 <input type="checkbox" class="addrtype-IsActive" />
+                <label>Active</label>
             </div>
 
             <div class="modalbuttons">
@@ -1021,12 +1021,12 @@
 
             <div class="fieldblock">
                 <label>Default Contact Type</label>
-                <select class="contcat-DefaultContactTypeId" />
+                <select class="contcat-DefaultContactTypeId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label>Active</label>
+            <div class="fieldblock inline">
                 <input type="checkbox" class="contcat-IsActive" />
+                <label>Active</label>
             </div>
 
             <div class="modalbuttons">
@@ -1056,22 +1056,17 @@
 
             <div class="fieldblock">
                 <label>Contact Category</label>
-                <select class="conttype-ContactCategoryId" />
+                <select class="conttype-ContactCategoryId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label>Always Show</label>
+            <div class="fieldblock inline">
                 <input type="checkbox" class="conttype-IsAlwaysShown" />
+                <label>Show When Adding Constituents</label>
             </div>
 
-            <div class="fieldblock">
-                <label>Can Delete</label>
-                <input type="checkbox" class="conttype-CanDelete" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Active</label>
+            <div class="fieldblock inline">
                 <input type="checkbox" class="conttype-IsActive" />
+                <label>Active</label>
             </div>
 
             <div class="modalbuttons">

@@ -5,6 +5,7 @@ using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace DDI.Business.CRM
 {
@@ -38,6 +39,8 @@ namespace DDI.Business.CRM
 
         public bool RequireVoidedCheck { get; set; }
         
+        public Guid DefaultCountryId { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -94,6 +97,11 @@ namespace DDI.Business.CRM
             
         }
 
+        public override void AfterLoad(IUnitOfWork uow)
+        {
+            // Set non-persistent values.
+            DefaultCountryId = uow.GetBusinessLogic<AddressLogic>().GetDefaultCountry().Id;
+        }
         #endregion
 
     }
