@@ -82,13 +82,7 @@
         <div class="topnav">
             <div class="utilitynav">
                 <ul class="utilitymenu" style="display: none;">
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Save</a></li>
-                    <li class="menu-break"></li>
-                    <li><a href="#">Import</a></li>
-                    <li><a href="#">Export</a></li>
-                    <li class="menu-break"></li>
-                    <li><a href="#">Edit History</a></li>
+                    <asp:ContentPlaceHolder ID="UtilityMenuContainer" runat="server"></asp:ContentPlaceHolder>
                 </ul>
             </div>
 
