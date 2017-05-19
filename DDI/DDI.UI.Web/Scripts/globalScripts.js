@@ -54,20 +54,30 @@ $(document).ready(function () {
         
     });
 
-    $('.utilitynav').click(function (e) {
+    if ($('.utilitymenu li').length > 0) {
 
-        e.preventDefault();
-        e.stopPropagation();
+        $('.utilitynav').show();
 
-        toolbox = $(this).find('.utilitymenu');
-        $(toolbox).toggle();
+        $('.utilitynav').click(function (e) {
 
-        //toolbox = $(this).next('.utilitymenu');
-        //$(toolbox).toggle();
+            e.preventDefault();
+            e.stopPropagation();
 
-        // $('.utilitymenu').toggle();
+            toolbox = $(this).find('.utilitymenu');
+            $(toolbox).toggle();
 
-    });
+            //toolbox = $(this).next('.utilitymenu');
+            //$(toolbox).toggle();
+
+            // $('.utilitymenu').toggle();
+
+        });
+    }
+    else {
+        $('.utilitynav').hide();
+    }
+
+    
 
     $(document).click(function (e) {
 
@@ -681,7 +691,7 @@ function LoadDatePickers() {
 
 function LoadDatePair() {
 
-    // if ($.timepicker) {
+    
     //$('.datepair .time').timepicker({
     //    'showDuration': true,
     //    'timeFormat': 'g:ia'
@@ -693,7 +703,7 @@ function LoadDatePair() {
     //});
 
     // $('.datepair').datepair();
-    // }
+    
 
 }
 
@@ -1174,27 +1184,32 @@ function StopEdit(editcontainer) {
 
 function SaveEdit(editcontainer) {
 
-    // Get just the fields that have been edited
-    var fields = GetEditedFields(editcontainer);
+    if ($(editcontainer).hasClass('customFieldContainer')) {
 
-    //SaveTagBoxes
-    SaveTagBoxes(editcontainer);
+        SaveCustomFields(editcontainer);
+    }
+    else {
+        var fields = GetEditedFields(editcontainer);
 
-    // Save the entity
-    MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
+        // Save the entity
+        MakeServiceCall('PATCH', SAVE_ROUTE + currentEntity.Id, fields, function (data) {
 
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+            if (data.Data) {
+                // Display success
+                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-            // Display updated entity data
-            currentEntity = data.Data;
+                // Display updated entity data
+                currentEntity = data.Data;
 
-            RefreshEntity();
-        }
+                RefreshEntity();
+            }
 
-    }, null);
+        }, null);
 
+        //SaveTagBoxes
+        SaveTagBoxes(editcontainer);
+    }
+    
 }
 
 function GetEditedFields(editcontainer) {

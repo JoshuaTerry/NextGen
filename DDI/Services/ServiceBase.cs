@@ -253,15 +253,24 @@ namespace DDI.Services
             return response;
         }
 
+        /// <summary>
+        /// Update an entity from a JObject (during a PATCH) then commit the changes to the database.
+        /// </summary>
+        /// <param name="id">Entity Id</param>
+        /// <param name="changes">Changes as a JObject.</param>
         public virtual IDataResponse<T> Update(Guid id, JObject changes)
         {
-            return Update(_unitOfWork.GetById<T>(id), changes);           
+            return Update(_unitOfWork.GetById<T>(id, IncludesForSingle), changes);           
         }
-                
+
+        /// <summary>
+        /// Update an entity from a JObject (during a PATCH) then commit the changes to the database.
+        /// </summary>
+        /// <param name="entity">Entity to update.</param>
+        /// <param name="changes">Changes as a JObject.</param>
         public virtual IDataResponse<T> Update(T entity, JObject changes)
         {
             var response = new DataResponse<T>();
-            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
 
             try
             {
@@ -270,16 +279,9 @@ namespace DDI.Services
                     throw new ArgumentNullException(nameof(entity));
                 }
 
-                foreach (var pair in changes)
-                {
-                    var convertedPair = JsonExtensions.ConvertToType<T>(pair);
-                    changedProperties.Add(convertedPair.Key, convertedPair.Value);
-                }
+                UpdateFromJObject(entity, changes);
 
-                IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork);
                 Guid id = entity.Id;
-
-                _unitOfWork.GetRepository<T>().UpdateChangedProperties(entity, changedProperties, p => logic.Validate(p));
 
                 _unitOfWork.SaveChanges();
 
@@ -294,7 +296,109 @@ namespace DDI.Services
 
             return response;
         }
-        
+
+
+        /// <summary>
+        /// Allows custom processing of a JToken during the Update method (during a PATCH).
+        /// </summary>
+        /// <param name="name">Property name</param>
+        /// <param name="token">Property value, as a JToken</param>
+        /// <returns>TRUE if the property was updated by the method override.</returns>
+        protected virtual bool ProcessJTokenUpdate(IEntity entity, string name, JToken token) => false;
+
+
+        /// <summary>
+        /// Update an entity's properties from a JObject (during a PATCH).  Validation is performed, but no changes are saved.
+        /// </summary>
+        /// <param name="entity">Entity to be updated.</param>
+        /// <param name="changes">Changes as a JObject.</param>
+        protected virtual void UpdateFromJObject<T1>(T1 entity, JObject changes) where T1 : class, IEntity
+        {
+            Dictionary<string, object> changedProperties = new Dictionary<string, object>();
+            Type entityType = typeof(T1);
+
+            foreach (var pair in changes)
+            {
+                if (!ProcessJTokenUpdate(entity, pair.Key, pair.Value))
+                {
+                    var convertedPair = JsonExtensions.ConvertToType<T1>(pair);
+                    changedProperties.Add(convertedPair.Key, convertedPair.Value);
+                }
+            }
+
+            IEntityLogic logic = BusinessLogicHelper.GetBusinessLogic<T1>(_unitOfWork);
+
+            _unitOfWork.GetRepository<T1>().UpdateChangedProperties(entity, changedProperties, p => logic.Validate(p));
+        }
+
+        /// <summary>
+        /// Add or update entities from a JArray of changes during a PATCH.
+        /// </summary>
+        /// <param name="entityCollection">Collection of entities:  New entities will be added to this collection.</param>
+        /// <param name="changeArray">JArray of changes.</param>
+        protected void AddUpdateFromJArray<T1>(ICollection<T1> entityCollection, JArray changeArray) where T1 : class, IEntity
+        {
+            if (changeArray == null)
+            {
+                return;
+            }
+
+            foreach (JObject jobject in changeArray)
+            {
+                T1 entity = jobject.ToObject<T1>();
+                if (entity != null)
+                {
+                    T1 foundEntity = null;
+                    if (entity.Id != Guid.Empty)
+                    {
+                        foundEntity = _unitOfWork.GetById<T1>(entity.Id);
+                    }
+                    if (foundEntity != null)
+                    {
+                        // The entity already exists.
+                        UpdateFromJObject(foundEntity, jobject);
+                    }
+                    else
+                    {
+                        // The entity doesn't exist - either the ID was empty, or it's a new ID.
+                        _unitOfWork.Insert(entity);
+                        entityCollection?.Add(entity);
+                        BusinessLogicHelper.GetBusinessLogic<T1>(_unitOfWork)?.Validate(entity);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add or update an entity from a JOBject during a PATCH.  The new or updated entity is returned.
+        /// </summary>
+        /// <param name="changeObject">JObject containing changes.</param>
+        /// <returns></returns>
+        protected T1 AddUpdateFromJObject<T1>(JObject changeObject) where T1 : class, IEntity
+        {
+            T1 entity = changeObject.ToObject<T1>();
+            if (entity != null)
+            {
+                T1 foundEntity = null;
+                if (entity.Id != Guid.Empty)
+                {
+                    foundEntity = _unitOfWork.GetById<T1>(entity.Id);
+                }
+                if (foundEntity != null)
+                {
+                    // The entity already exists.
+                    UpdateFromJObject(foundEntity, changeObject);
+                    entity = foundEntity;
+                }
+                else
+                {
+                    // The entity doesn't exist - either the ID was empty, or it's a new ID.
+                    _unitOfWork.Insert(entity);
+                    BusinessLogicHelper.GetBusinessLogic<T1>(_unitOfWork)?.Validate(entity);
+                }
+            }
+            return entity;
+        }
 
         public virtual IDataResponse<T> Add(T entity)
         {
@@ -302,7 +406,7 @@ namespace DDI.Services
             try
             {
                 _unitOfWork.Insert(entity);
-                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork).Validate(entity);
+                BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork)?.Validate(entity);
                 _unitOfWork.SaveChanges();
                 response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
                 FormatEntityForGet(response.Data);

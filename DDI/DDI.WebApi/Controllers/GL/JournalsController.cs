@@ -46,9 +46,19 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<Journal, object>>[]
             {
-                c => c.JournalLines
+                c => c.JournalLines, c => c.ParentJournal
             };
         }
+
+        protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Journal>().Exclude(p => p.BusinessUnit)
+                                                                                               .Exclude(p => p.FiscalYear)
+                                                                                               .Exclude(p => p.JournalLines.First().Journal)
+                                                                                               .Exclude(p => p.ChildJournals)
+                                                                                               .Exclude(p => p.ParentJournal.BusinessUnit)
+                                                                                               .Exclude(p => p.ParentJournal.FiscalYear)
+                                                                                               .Exclude(p => p.ParentJournal.JournalLines)
+                                                                                               .Exclude(p => p.ParentJournal.ChildJournals)
+                                                                                               .Exclude(p => p.ParentJournal.ParentJournal);
 
         [HttpGet]
         [Route("api/v1/journals/{id}", Name = RouteNames.Journal + RouteVerbs.Get)]
@@ -108,7 +118,27 @@ namespace DDI.WebApi.Controllers.GL
 
             return base.GetAll(RouteNames.Journal, search, fields);
         }
-        
+
+        [HttpGet]
+        [Route("api/v1/journals/new/{journaltype}")]
+        public IHttpActionResult NewJournal(string journaltype, Guid? businessUnitId = null, Guid? fiscalYearId = null, string fields=null)
+        {
+            try
+            {
+                JournalType type = EnumHelper.ConvertToEnum<JournalType>(journaltype);
+
+                var journal = Service.NewJournal(type, businessUnitId, fiscalYearId);
+                fields = ConvertFieldList(fields, FieldsForSingle);
+                return FinalizeResponse(journal, fields);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return InternalServerError(ex);
+            }
+
+        }
+
         [HttpPost]
         [Route("api/v1/journals", Name = RouteNames.Journal + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Journal item)

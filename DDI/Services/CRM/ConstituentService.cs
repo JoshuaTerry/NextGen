@@ -50,9 +50,8 @@ namespace DDI.Services
 
         #region Public Methods
 
-        protected override Action<Constituent> FormatEntityForGet => p => SetDateTimeKind(p, q => q.ConstituentStatusDate);
-		
-         
+        protected override Action<Constituent> FormatEntityForGet => FormatConstituentForGet;
+		               
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
             var criteria = (ConstituentSearch)search;
@@ -87,7 +86,6 @@ namespace DDI.Services
         public IDataResponse<Constituent> GetConstituentByConstituentNum(int constituentNum)
         {
             var constituent = _repository.Entities.FirstOrDefault(c => c.ConstituentNumber == constituentNum);
-            constituent = _constituentlogic.ConvertAgeRange(constituent);
             return GetById(constituent?.Id ?? Guid.Empty);
         }
 
@@ -111,8 +109,6 @@ namespace DDI.Services
 
         public override IDataResponse<Constituent> Add(Constituent entity)
         {
-            entity = _constituentlogic.ConvertAgeRange(entity);
-
             if (entity.ConstituentAddresses != null)
             {
                 foreach (var entry in entity.ConstituentAddresses)
@@ -142,32 +138,20 @@ namespace DDI.Services
             return base.Add(entity);
         }
 
-        public override IDataResponse Update(Constituent entity)
-        {
-            entity = _constituentlogic.ConvertAgeRange(entity);
-            return base.Update(entity);
-        }
 
-        public override IDataResponse<Constituent> Update(Guid id, JObject changes)
+
+       protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
-            foreach (var change in changes)
+            // If age range or birth year fields are being updated, clear the birth year range.
+            if (name == nameof(Constituent.AgeFrom) || name == nameof(Constituent.AgeTo) || name == nameof(Constituent.BirthYear))
             {
-                if (change.Key == nameof(Constituent.BirthYearFrom) || change.Key == nameof(Constituent.BirthYearTo))
+                if (entity is Constituent)
                 {
-                    if (change.Value != null)
-                    {
-                        try
-                        {
-                            _constituentlogic.ConvertAgeRange((int)change.Value);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError(ex.ToString());
-                        }
-                    }
+                    ((Constituent)entity).BirthYearFrom = ((Constituent)entity).BirthYearTo = null;
                 }
             }
-            return base.Update(id, changes);
+
+            return false;
         }
 
         public IDataResponse AddTagsToConstituent(Constituent constituent, JObject tagIds)
@@ -267,6 +251,12 @@ namespace DDI.Services
         #endregion
 
         #region Private Methods
+
+        private void FormatConstituentForGet(Constituent constituent)
+        {
+            SetDateTimeKind(constituent, q => q.ConstituentStatusDate);
+            _constituentlogic.CalculateAgeRange(constituent);
+        }
 
         /// <summary>
         /// Use ElasticSearch to search for constituents.
