@@ -92,7 +92,40 @@ namespace DDI.Services
 
         }
 
-        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
+        public override IDataResponse<Constituent> Add(Constituent entity)
+        {
+            if (entity.ConstituentAddresses != null)
+            {
+                foreach (var entry in entity.ConstituentAddresses)
+                {
+                    UnitOfWork.Insert(entry);
+                    entry.Constituent = entity;
+                    BusinessLogicHelper.GetBusinessLogic<ConstituentAddress>(UnitOfWork).Validate(entry);
+
+                    if (entry.Address != null)
+                    {
+                        BusinessLogicHelper.GetBusinessLogic<Address>(UnitOfWork).Validate(entry.Address);
+                    }
+                }
+
+            }
+
+            if (entity.ContactInfo != null)
+            {
+                foreach (var entry in entity.ContactInfo)
+                {
+                    UnitOfWork.Insert(entry);
+                    entry.Constituent = entity;  // Ensure contact info is linked back to the constituent.
+                    BusinessLogicHelper.GetBusinessLogic<ContactInfo>(UnitOfWork).Validate(entry);
+                }
+            }
+
+            return base.Add(entity);
+        }
+
+
+
+       protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
             // If age range or birth year fields are being updated, clear the birth year range.
             if (name == nameof(Constituent.AgeFrom) || name == nameof(Constituent.AgeTo) || name == nameof(Constituent.BirthYear))

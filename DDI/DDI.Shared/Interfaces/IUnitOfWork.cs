@@ -50,6 +50,8 @@ namespace DDI.Shared
 
         void Delete<T>(T entity) where T : class;
 
+        void AddPostSaveAction(Action action);
+
         void AddBusinessLogic(object blObj);
 
         T GetBusinessLogic<T>() where T : class;

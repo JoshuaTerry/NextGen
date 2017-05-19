@@ -214,3 +214,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 DDI/DDI.UI.Web/Scripts/configuration.js
 *.orig
+DDI/DDI.UI.Web/auth.config

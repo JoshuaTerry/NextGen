@@ -110,7 +110,7 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
     var activeSection = $('<div>').addClass('fieldblock');
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
-    $('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
+    $('<span>').text('Activate ' + section + ' section of ' + category).appendTo(activeSection);
     $(activeSection).appendTo(container);
 
     var sectionLabel = $('<div>').addClass('fieldblock');
@@ -862,7 +862,6 @@ function LoadContactInformationSectionSettings() {
                     Name: $(modal).find('.conttype-Name').val(),
                     ContactCategoryId: $(modal).find('.conttype-ContactCategoryId').val(),
                     IsAlwaysShown: $(modal).find('.conttype-IsAlwaysShown').prop('checked'),
-                    CanDelete: $(modal).find('.conttype-CanDelete').prop('checked'),
                     IsActive: $(modal).find('.conttype-IsActive').prop('checked')
                 }
 
@@ -1129,7 +1128,7 @@ function DeleteContactCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });
@@ -1246,7 +1245,7 @@ function DeleteContactType(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Type.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });
@@ -1272,7 +1271,6 @@ function LoadContactType(id) {
                 $(modal).find('.conttype-Name').val(data.Data.Name);
                 $(modal).find('.conttype-ContactCategoryId').val(data.Data.ContactCategoryId);
                 $(modal).find('.conttype-IsAlwaysShown').prop('checked', data.Data.IsAlwaysShown);
-                $(modal).find('.conttype-CanDelete').prop('checked', data.Data.CanDelete);
                 $(modal).find('.conttype-IsActive').prop('checked', data.Data.IsActive);
 
                 PopulateDropDown('.conttype-ContactCategoryId', 'contactcategory', '', '', data.Data.ContactCategoryId);

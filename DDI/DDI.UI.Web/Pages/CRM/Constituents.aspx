@@ -772,7 +772,7 @@
 
                 <div class="fieldblock">
                     <label>Is Preferred</label>
-                    <input type="checkbox" class="na-IsPreferred" />
+                    <input type="checkbox" class="na-IsPrimary" />
                 </div>
 
                 <div class="fieldblock">

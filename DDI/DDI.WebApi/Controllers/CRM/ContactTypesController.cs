@@ -4,14 +4,23 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Shared.Helpers;
 using DDI.Services.Search;
+using DDI.Shared.Helpers;
+using DDI.Services;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ContactTypesController : GenericController<ContactType>
     {
+        public ContactTypesController() : this(new ContactTypeService())
+        {
+        }
+
+        public ContactTypesController(ContactTypeService service) : base(service)
+        {
+        }
+
         protected override Expression<Func<ContactType, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<ContactType, object>>[]
@@ -31,6 +40,24 @@ namespace DDI.WebApi.Controllers.CRM
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(RouteNames.ContactType, limit, offset, orderBy, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/contacttypes/newconstituent", Name = RouteNames.ContactType + RouteNames.Constituent)]
+        public IHttpActionResult GetForNewConstituent()
+        {
+            try
+            {
+                var result = Service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true);
+                var search = PageableSearch.Max;
+                string fields = $"{nameof(ContactType.Id)},{nameof(ContactType.Name)},{nameof(ContactType.ContactCategory)}.{nameof(ContactCategory.Code)}";
+                return FinalizeResponse(result, RouteNames.ContactType + RouteNames.Constituent, search, fields);                
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpGet]

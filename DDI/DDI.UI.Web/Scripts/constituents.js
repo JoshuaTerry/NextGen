@@ -195,10 +195,7 @@ function DisplayConstituentData() {
         $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
-
-            if (typeof (value) == 'string')
-                value = value.replace('"', '').replace('"', '');
-
+         
             if (key != '$id') {
 
                 var classname = '.' + key;
@@ -737,7 +734,7 @@ function NewAddressModal() {
 
             var item = {
                 ConstituentId: currentEntity.Id,
-                IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+                IsPrimary: $(modal).find('.na-IsPrimary').prop('checked'),
                 Comment: $(modal).find('.na-Comment').val(),
                 StartDate: $(modal).find('.na-StartDate').val(),
                 EndDate: $(modal).find('.na-EndDate').val(),
@@ -865,7 +862,7 @@ function GetEditedAddressFields() {
     var item = {
         Id: $(modal).find('.hidconstituentaddressid').val(),
         ConstituentId: currentEntity.Id,
-        IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+        IsPrimary: $(modal).find('.na-IsPrimary').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
         StartDate: $(modal).find('.na-StartDate').val(),
         EndDate: $(modal).find('.na-EndDate').val(),
@@ -901,7 +898,7 @@ function LoadAddress(id) {
         $('.hidconstituentaddressid').val(data.Data.Id);
         $('.hidaddressid').val(data.Data.Address.Id);
 
-        $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+        $('.na-IsPrimary').prop('checked', data.Data.IsPrimary);
         $('.na-Comment').val(data.Data.Comment);
         $('.na-StartDate').val(data.Data.StartDate);
         $('.na-EndDate').val(data.Data.EndDate);

@@ -77,7 +77,6 @@ div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; mar
 div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
 div.fieldblock { margin: 0 0 10px 0; }
-div.fieldblock.inline { display: inline-block; }
 div.fieldblock label { display: block; }
 div.fieldblock label.inline { display: inline-block; }
 div.fieldblock input,
@@ -87,6 +86,9 @@ div.fieldblock select { height: 21px; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
+div.fieldblock.inline { display: inline-block; }
+div.fieldblock.inline label { display: inline-block }
+div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px; display: inline-block; }
 
 .datepair {  }
 .datepair input.date { width: auto; display: inline-block; }
@@ -202,4 +204,3 @@ div.fieldblock.range input { display: inline-block; width: 25%; }
 .accountselectiongrid {width:50%; display: none;}
 .accountdescription {padding-left: 4px; padding-right: 4px}
 /* End Account Number Selector*/
-
