@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DDI.Data;
-using DDI.Shared.Models.Client.CRM;
 using DDI.Services;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using DDI.Shared;
 
 namespace DDI.WebApi.Tests.Controllers
 {
