@@ -1,10 +1,9 @@
-﻿using DDI.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DDI.Business.CRM
 {

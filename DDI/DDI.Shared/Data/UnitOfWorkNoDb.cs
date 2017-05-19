@@ -1,12 +1,11 @@
-﻿using DDI.Shared;
-using DDI.Shared.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Data;
+using DDI.Shared.Extensions;
 
-namespace DDI.Data
+namespace DDI.Shared.Data
 {
     /// <summary>
     /// Unit of Work for tests - Manages a set of mocked repositories or RepositoryNoDb instances.
@@ -118,6 +117,11 @@ namespace DDI.Data
             }
 
             return repository;
+        }
+
+        public IList<T> GetRepositoryDataSource<T>() where T : class
+        {
+            return GetRepositoryOrNull<T>()?.Entities.ToList();
         }
 
         public IRepository<T> GetCachedRepository<T>() where T : class

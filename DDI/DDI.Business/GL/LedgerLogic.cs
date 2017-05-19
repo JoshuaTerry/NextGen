@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;

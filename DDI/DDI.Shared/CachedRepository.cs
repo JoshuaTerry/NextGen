@@ -1,13 +1,11 @@
-﻿using DDI.Shared.Caching;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using DDI.Shared;
 using System.Linq.Expressions;
+using DDI.Shared.Caching;
 using DDI.Shared.Models;
 
-namespace DDI.Data
+namespace DDI.Shared
 {
     public class CachedRepository<T> : IRepository<T> where T : class
     {
@@ -21,7 +19,7 @@ namespace DDI.Data
         private Expression<Func<T, object>>[] _includes { get; set; }
 
         public CachedRepository() :
-            this(new Repository<T>(), null, DEFAULT_TIMEOUT_SECONDS, false)
+            this(Factory.CreateRepository<T>(), null, DEFAULT_TIMEOUT_SECONDS, false)
         {
         }
 

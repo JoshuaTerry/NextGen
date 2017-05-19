@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Models.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,7 +14,7 @@ namespace DDI.Business.Tests.CRM
     {
 
         private const string TESTDESCR = "Business | CRM";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private IList<Country> _countries;
         private IList<State> _states;
         private AddressLogic _bl;
@@ -25,7 +22,9 @@ namespace DDI.Business.Tests.CRM
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
 
             _countries = CountryDataSource.GetDataSource(_uow);
             _states = StateDataSource.GetDataSource(_uow);

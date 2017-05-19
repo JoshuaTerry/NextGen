@@ -1,15 +1,14 @@
-﻿using DDI.Business.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DDI.Business.Core;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DDI.Business.CRM
 {
@@ -57,7 +56,7 @@ namespace DDI.Business.CRM
 
         #region Constructors 
 
-        public NameFormatter() : this(RepoFactory.CreateUnitOfWork()) { }
+        public NameFormatter() : this(Factory.CreateUnitOfWork()) { }
 
         public NameFormatter(IUnitOfWork uow)
         {

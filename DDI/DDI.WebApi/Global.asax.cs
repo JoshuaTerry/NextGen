@@ -21,7 +21,6 @@ namespace DDI.WebApi
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            InitializeRepoFactory();
         }
 
         private void InitializeLogging()
@@ -31,11 +30,6 @@ namespace DDI.WebApi
                 throw new FileNotFoundException("Could not find file", fileInfo.Name);
             LoggerManager.LoadAndWatchConfiguration(fileInfo);
             _logger.LogInformation("Logging configuration loaded from " + fileInfo.FullName);
-        }
-
-        private void InitializeRepoFactory()
-        {
-            RepoFactory.RegisterTypes(typeof(Data.UnitOfWorkEF), typeof(Data.Repository<>));
         }
 
         #endregion Protected Methods

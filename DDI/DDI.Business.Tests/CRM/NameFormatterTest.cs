@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -20,7 +17,7 @@ namespace DDI.Business.Tests.CRM
     {
 
         private const string TESTDESCR = "Business | CRM";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private List<Constituent> _constituents;
         private List<ConstituentAddress> _constituentAddresses;
         private List<Relationship> _relationships;
@@ -36,7 +33,8 @@ namespace DDI.Business.Tests.CRM
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
 
             _genders = GenderDataSource.GetDataSource(_uow);
             _constituentTypes = ConstituentTypeDataSource.GetDataSource(_uow);

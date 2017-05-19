@@ -30,7 +30,7 @@ namespace DDI.Services
         /// </summary>
         protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
-        public ServiceBase() : this(RepoFactory.CreateUnitOfWork())
+        public ServiceBase() : this(Factory.CreateUnitOfWork())
         {            
         }
         public ServiceBase(IUnitOfWork uow)

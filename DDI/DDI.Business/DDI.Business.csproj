@@ -82,7 +82,6 @@
     <Compile Include="Core\ConfigurationLogic.cs" />
     <Compile Include="EntityLogicBase.cs" />
     <Compile Include="CRM\CRMConfiguration.cs" />
-    <Compile Include="Extensions\EntityFrameworkExtensions.cs" />
     <Compile Include="Helpers\BusinessUnitHelper.cs" />
     <Compile Include="Helpers\BusinessLogicHelper.cs" />
     <Compile Include="Helpers\CodeEntityHelper.cs" />
@@ -93,10 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7dd8c5f7-4f2d-4d54-b8b0-b4d136007663}</Project>
-      <Name>DDI.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DDI.Logger\DDI.Logger.csproj">
       <Project>{F31674BF-F62C-4753-AED2-9BA3C2160577}</Project>
       <Name>DDI.Logger</Name>

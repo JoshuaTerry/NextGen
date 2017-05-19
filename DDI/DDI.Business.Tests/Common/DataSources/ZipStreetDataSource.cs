@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Shared.Helpers;
@@ -16,9 +12,9 @@ namespace DDI.Business.Tests.Common.DataSources
         private const string X13121 = "X13121";
         private const string X12558 = "X12558";
 
-        public static IList<ZipStreet> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<ZipStreet> GetDataSource(IUnitOfWork uow)
         {
-            IList<ZipStreet> existing = uow.GetRepositoryOrNull<ZipStreet>()?.Entities.ToList();
+            IList<ZipStreet> existing = uow.GetRepositoryDataSource<ZipStreet>();
             if (existing != null)
             {
                 return existing;

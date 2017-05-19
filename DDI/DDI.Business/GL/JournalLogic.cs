@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Data.Helpers;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Shared;
-using DDI.Shared.Caching;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
-using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Models.Client.Security;
-using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 

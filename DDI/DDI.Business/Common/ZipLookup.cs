@@ -1,15 +1,14 @@
-﻿using DDI.Business.Helpers;
-using DDI.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using DDI.Business.Helpers;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace DDI.Business.Common
 {
@@ -28,7 +27,7 @@ namespace DDI.Business.Common
         #endregion
 
         #region Constructors 
-        public ZipLookup() : this(RepoFactory.CreateUnitOfWork()) { }
+        public ZipLookup() : this(Factory.CreateUnitOfWork()) { }
 
         public ZipLookup(IUnitOfWork uow)
         {
@@ -69,7 +68,7 @@ namespace DDI.Business.Common
 
             if (zipCode.Length == 5)
             {
-                Zip z = _uow.GetEntities<Zip>().IncludePath(p => p.City.State).IncludePath(p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
+                Zip z = _uow.GetEntities<Zip>(p => p.City.State, p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
 
                 if (z != null)
                 {
@@ -106,7 +105,7 @@ namespace DDI.Business.Common
                 // No ZIP provided, use city & state to find branches & build a list of ZIPs.
                 var addressToFormatCity = addressToFormat.City;
                 var addressToFormatState = addressToFormat.State;
-                foreach (var branch in _uow.GetEntities<ZipBranch>().IncludePath(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
+                foreach (var branch in _uow.GetEntities<ZipBranch>(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
                 //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
                 {
                     if (!zipList.Contains(branch.Zip.ZipCode))
@@ -125,7 +124,7 @@ namespace DDI.Business.Common
                     zipCode = zipItem;
                     workAddr.CopyFrom(tempAddr);
 
-                    Zip zip = _uow.GetEntities<Zip>().IncludePath(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
+                    Zip zip = _uow.GetEntities<Zip>(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
 
                     List<ZipStreet> streetList = GetStreetList(zip.ZipStreets, workAddr);
 

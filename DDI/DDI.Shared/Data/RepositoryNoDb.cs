@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Interfaces;
 
-namespace DDI.Data
+namespace DDI.Shared.Data
 {
     /// <summary>
     /// Base Entity Framework repository implementation that provides a set of common data access
@@ -16,7 +17,7 @@ namespace DDI.Data
     /// functionality that is not covered by the basic add, update, delete, list operations that this
     /// class provides.
     /// </remarks>
-    public class RepositoryNoDb<T> : IRepository<T>, IRepository
+    public class RepositoryNoDb<T> : ITestRepository<T>, IRepository
         where T : class
     {
         #region Private Fields

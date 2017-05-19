@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Common;
-using DDI.Data;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using DDI.Shared.Models.Common;
+using DDI.Business.Tests.Common.DataSources;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
-using DDI.Business.Tests.Common.DataSources;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.Common
 {
@@ -20,7 +15,7 @@ namespace DDI.Business.Tests.Common
     public class ZipLookupTest : TestBase
     {
         private ZipLookup _zipLookup;
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private IList<Country> _countries;
         private IList<State> _states;
         private Country _us;
@@ -28,7 +23,9 @@ namespace DDI.Business.Tests.Common
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
             AbbreviationDataSource.GetDataSource(_uow);
             _countries = CountryDataSource.GetDataSource(_uow);
             _states = StateDataSource.GetDataSource(_uow);

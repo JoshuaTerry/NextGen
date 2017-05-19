@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using DDI.Business.GL;
-using DDI.Data;
-using DDI.Data.Statics;
-using DDI.Search;
+﻿using DDI.Search;
 using DDI.Search.Models;
 using DDI.Shared;
-using DDI.Shared.Caching;
-using DDI.Shared.Enums;
-using DDI.Shared.Enums.Core;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Business.Core
 {

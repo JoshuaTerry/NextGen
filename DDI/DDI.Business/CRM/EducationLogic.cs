@@ -1,7 +1,5 @@
-﻿using DDI.Data;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using System;
 using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -17,9 +12,9 @@ namespace DDI.Business.Tests.CRM.DataSources
     {
         public static Address CanadianAddress { get; private set; }
         public static Address FrenchAddress { get; private set; }
-        public static IList<Address> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Address> GetDataSource(IUnitOfWork uow)
         {
-            IList<Address> existing = uow.GetRepositoryOrNull<Address>()?.Entities.ToList();
+            IList<Address> existing = uow.GetRepositoryDataSource<Address>();
             if (existing != null)
             {
                 return existing;

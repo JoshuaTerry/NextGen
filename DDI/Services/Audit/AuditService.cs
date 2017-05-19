@@ -11,7 +11,7 @@ namespace DDI.Services
     public class AuditService
     { 
         private readonly IUnitOfWork _uow;
-        public AuditService() : this(RepoFactory.CreateUnitOfWork())
+        public AuditService() : this(Factory.CreateUnitOfWork())
         { }
         public AuditService(IUnitOfWork uow)
         {
@@ -38,11 +38,10 @@ namespace DDI.Services
 
         public IDataResponse<List<ObjectChange>> GetChanges(Guid id, DateTime start, DateTime end, IPageable search = null)
         {
-            var changes = _uow.GetRepository<ObjectChange>().Entities.IncludePath(o => o.ChangeSet)
-                                                                     .IncludePath(o => o.PropertyChanges)
-                                                                     .Where(o => o.EntityId == id.ToString() &&
-                                                                                 o.ChangeSet.Timestamp > start &&
-                                                                                 o.ChangeSet.Timestamp <= end).ToList();
+            var changes = _uow.GetEntities<ObjectChange>(o => o.ChangeSet, o => o.PropertyChanges)
+                              .Where(o => o.EntityId == id.ToString() &&
+                                          o.ChangeSet.Timestamp > start &&
+                                          o.ChangeSet.Timestamp <= end).ToList();
             var response = new DataResponse<List<ObjectChange>>();
             response.Data = changes;
             return response;
