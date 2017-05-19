@@ -16,6 +16,8 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected override string FieldsForList => FieldLists.CodeFields;
 
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents);
+
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
         private IConstituentService _constituentService;
         public EthnicitiesController()
@@ -77,7 +79,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Ethnicity, search, fields);
+                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Ethnicity, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

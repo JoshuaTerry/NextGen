@@ -3,12 +3,15 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RegionLevelsController : GenericController<RegionLevel>
     {
+        protected override string FieldsForList => FieldsForAll;
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Regions);
 
         [HttpGet]
         [Route("api/v1/regionlevels", Name = RouteNames.RegionLevel)]

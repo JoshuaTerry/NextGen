@@ -18,6 +18,9 @@ namespace DDI.Shared.Models.Client.CRM
 
         [MaxLength(128)]
         public string Name { get; set; }
+
+        public override string DisplayName => Name;
+
         #endregion Public Properties
     }
 }

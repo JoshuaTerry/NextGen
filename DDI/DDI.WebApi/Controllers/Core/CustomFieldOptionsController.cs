@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetAll()
         {
             try {
-                var result = _service.GetAll();
+                var result = Service.GetAll();
 
                 if (result == null)
                 {
@@ -36,7 +36,7 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var result = _service.GetById(id);
+                var result = Service.GetById(id);
                 if (result == null)
                 {
                     return NotFound();
@@ -62,7 +62,7 @@ namespace DDI.WebApi.Controllers.General
                     return BadRequest(ModelState);
                 }
 
-                var response = _service.Add(item);
+                var response = Service.Add(item);
                 return Ok();
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace DDI.WebApi.Controllers.General
                     return BadRequest(ModelState);
                 }
 
-                var response = _service.Update(id, changes);
+                var response = Service.Update(id, changes);
 
                 return Ok(response);
 
@@ -106,13 +106,13 @@ namespace DDI.WebApi.Controllers.General
                     return BadRequest(ModelState);
                 }
 
-                var entityToDelete = _service.GetById(id);
+                var entityToDelete = Service.GetById(id);
                 if (entityToDelete == null)
                 {
                     return NotFound();
                 }
 
-                var response = _service.Delete(entityToDelete.Data);
+                var response = Service.Delete(entityToDelete.Data);
 
                 return Ok(response);
             }
