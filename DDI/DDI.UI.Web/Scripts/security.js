@@ -72,7 +72,7 @@ function LoadGroupsGrid() {
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
     //function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
 
-    DisplayTagBox('roles', 'rolestagbox', '.rolesdropdowncontainer', null);
+    DisplayTagBox('roles', 'rolestagbox', '.rolesdropdowncontainer', null, false);
     //MakeServiceCall('GET', 'roles', null, function (data) {
 
     //    $('.rolesdropdowncontainer').dxTagBox({

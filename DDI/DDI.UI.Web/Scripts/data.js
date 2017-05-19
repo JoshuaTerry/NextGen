@@ -130,7 +130,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
 
 /* POPULATE TAGBOX CONTROLS */
-function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
+function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
@@ -142,14 +142,14 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
         data.Data.forEach(function (item) {
             selectedItems.push(item.Id);
         });
-        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
+        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled);
     }, null);
 
 }
 
-function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled) {
 
-    var tagBoxControl = $('<div>').addClass(tagBox);
+    var tagBoxControl = $('<div>').addClass(tagBox).css("style", "overflow:scroll"); // will probably have to apply this to the tagbox itself...
 
     MakeServiceCall('GET', routeForAllOptions, null, function (data) {
         $(tagBoxControl).dxTagBox({
@@ -159,8 +159,10 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
             valueExpr: 'Id',
             showClearButton: true,
             //disabled: true,
-            disabled: false,
-            height: data.length
+            disabled: disabled,
+            height: data.length,
+            scrollbar: true
+
         });
 
         $(tagBoxControl).appendTo(container);
