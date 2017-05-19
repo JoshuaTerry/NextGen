@@ -89,35 +89,35 @@ namespace DDI.Business.GL
                 fund.FundSegmentId = null;
             }
             
-            if (fund.ClosingRevenueAccountId == null)
+            if (fund.ClosingRevenueLedgerAccountId == null)
             {
-                if (fund.ClosingExpenseAccountId == null)
+                if (fund.ClosingExpenseLedgerAccountId == null)
                 {
-                    fund.ClosingRevenueAccount = fund.FundBalanceAccount;
-                    fund.ClosingRevenueAccountId = fund.FundBalanceAccountId;
+                    fund.ClosingRevenueLedgerAccount = fund.FundBalanceLedgerAccount;
+                    fund.ClosingRevenueLedgerAccountId = fund.FundBalanceLedgerAccountId;
                 }
                 else
                 {
-                    fund.ClosingRevenueAccount = fund.ClosingExpenseAccount;
-                    fund.ClosingRevenueAccountId = fund.ClosingExpenseAccountId;
+                    fund.ClosingRevenueLedgerAccount = fund.ClosingExpenseLedgerAccount;
+                    fund.ClosingRevenueLedgerAccountId = fund.ClosingExpenseLedgerAccountId;
                 }
             }
 
-            if (fund.ClosingExpenseAccountId == null)
+            if (fund.ClosingExpenseLedgerAccountId == null)
             {
-                if (fund.ClosingExpenseAccountId == null)
+                if (fund.ClosingExpenseLedgerAccountId == null)
                 {
-                    fund.ClosingExpenseAccount = fund.FundBalanceAccount;
-                    fund.ClosingExpenseAccountId = fund.FundBalanceAccountId;
+                    fund.ClosingExpenseLedgerAccount = fund.FundBalanceLedgerAccount;
+                    fund.ClosingExpenseLedgerAccountId = fund.FundBalanceLedgerAccountId;
                 }
                 else
                 {
-                    fund.ClosingExpenseAccount = fund.ClosingRevenueAccount;
-                    fund.ClosingExpenseAccountId = fund.ClosingRevenueAccountId;
+                    fund.ClosingExpenseLedgerAccount = fund.ClosingRevenueLedgerAccount;
+                    fund.ClosingExpenseLedgerAccountId = fund.ClosingRevenueLedgerAccountId;
                 }
             }
 
-            LedgerAccount account = UnitOfWork.GetReference(fund, p => p.FundBalanceAccount);
+            LedgerAccount account = UnitOfWork.GetReference(fund, p => p.FundBalanceLedgerAccount);
             if (account != null)
             {
                 if (account.LedgerId != ledger.Id)
@@ -134,7 +134,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            account = UnitOfWork.GetReference(fund, p => p.ClosingRevenueAccount);
+            account = UnitOfWork.GetReference(fund, p => p.ClosingRevenueLedgerAccount);
             if (account != null)
             {
                 if (account.LedgerId != ledger.Id)
@@ -151,7 +151,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            account = UnitOfWork.GetReference(fund, p => p.ClosingExpenseAccount);
+            account = UnitOfWork.GetReference(fund, p => p.ClosingExpenseLedgerAccount);
             if (account != null)
             {
                 if (account.LedgerId != ledger.Id)

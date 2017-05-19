@@ -12,7 +12,7 @@ using DDI.Shared.Helpers;
 namespace DDI.WebApi.Controllers.GL
 {
     
-    //[Authorize]
+    [Authorize]
     public class FundFromToController : GenericController<FundFromTo>
     {
         private const string ROUTENAME_GETBYFUND = RouteNames.Fund + RouteNames.FundFromTo + RouteVerbs.Get;
@@ -27,8 +27,9 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<FundFromTo, object>>[]
             {
-                c => c.FromAccount,
-                c => c.ToAccount,
+                c => c.FiscalYear,
+                c => c.FromLedgerAccount,
+                c => c.ToLedgerAccount,
                 c => c.Fund, 
                 c => c.Fund.FundSegment,
                 c => c.OffsettingFund,
@@ -38,7 +39,7 @@ namespace DDI.WebApi.Controllers.GL
 
         protected override Expression<Func<FundFromTo, object>>[] GetDataIncludesForList() => GetDataIncludesForSingle();
 
-        private string _fields = new PathHelper.FieldListBuilder<FundFromTo>()
+        protected override string FieldsForList => FieldListBuilder
             .Include(p => p.FundId)
             .Include(p => p.Fund.FundSegment.Code)
             .Include(p => p.Fund.FundSegment.Name)
@@ -47,24 +48,22 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.CreatedBy)
             .Include(p => p.CreatedOn)
             .Include(p => p.DisplayName)
-            .Include(p => p.FromAccount.AccountNumber)
-            .Include(p => p.FromAccount.Name)
-            .Include(p => p.FromAccountId)
-            .Include(p => p.ToAccount.AccountNumber)
-            .Include(p => p.ToAccount.Name)
-            .Include(p => p.ToAccountId)
+            .Include(p => p.FromLedgerAccount.AccountNumber)
+            .Include(p => p.FromLedgerAccount.Name)
+            .Include(p => p.FromLedgerAccountId)
+            .Include(p => p.ToLedgerAccount.AccountNumber)
+            .Include(p => p.ToLedgerAccount.Name)
+            .Include(p => p.ToLedgerAccountId)
             .Include(p => p.OffsettingFund.FundSegment.Code)
             .Include(p => p.OffsettingFund.FundSegment.Name)
             .Include(p => p.OffsettingFundId)
             .Include(p => p.LastModifiedBy)
             .Include(p => p.LastModifiedOn)
-            .Include(p => p.Id);
+            .Include(p => p.Id)
+            .Include(p => p.FromAccountId)
+            .Include(p => p.ToAccountId);
 
-        protected override string FieldsForList => _fields;
-
-        protected override string FieldsForSingle => _fields;
-
-        protected override string FieldsForAll => _fields;
+        protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
         [Route("api/v1/fundfromtos/{id}", Name = RouteNames.FundFromTo + RouteVerbs.Get)]

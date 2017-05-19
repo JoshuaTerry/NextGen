@@ -12,7 +12,7 @@ using DDI.Shared.Helpers;
 namespace DDI.WebApi.Controllers.GL
 {
     
-    //[Authorize]
+    [Authorize]
     public class BusinessUnitFromToController : GenericController<BusinessUnitFromTo>
     {
         private const string ROUTENAME_GETBYYEAR = RouteNames.FiscalYear + RouteNames.BusinessUnitFromTo + RouteVerbs.Get;
@@ -27,16 +27,17 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<BusinessUnitFromTo, object>>[]
             {
-                c => c.FromAccount,
-                c => c.ToAccount,
+                c => c.FromLedgerAccount,
+                c => c.ToLedgerAccount,
                 c => c.BusinessUnit, 
-                c => c.OffsettingBusinessUnit
+                c => c.OffsettingBusinessUnit,
+                c => c.FiscalYear
             };
         }
 
         protected override Expression<Func<BusinessUnitFromTo, object>>[] GetDataIncludesForList() => GetDataIncludesForSingle();
 
-        private string _fields = new PathHelper.FieldListBuilder<BusinessUnitFromTo>()
+        protected override string FieldsForList => FieldListBuilder
             .Include(p => p.BusinessUnitId)
             .Include(p => p.BusinessUnit.Code)
             .Include(p => p.FiscalYearId)
@@ -44,23 +45,21 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.CreatedBy)
             .Include(p => p.CreatedOn)
             .Include(p => p.DisplayName)
-            .Include(p => p.FromAccountId)
-            .Include(p => p.FromAccount.AccountNumber)
-            .Include(p => p.FromAccount.Name)
-            .Include(p => p.ToAccountId)
-            .Include(p => p.ToAccount.AccountNumber)
-            .Include(p => p.ToAccount.Name)
+            .Include(p => p.FromLedgerAccount.AccountNumber)
+            .Include(p => p.FromLedgerAccount.Name)
+            .Include(p => p.FromLedgerAccountId)
+            .Include(p => p.ToLedgerAccount.AccountNumber)
+            .Include(p => p.ToLedgerAccount.Name)
+            .Include(p => p.ToLedgerAccountId)
             .Include(p => p.OffsettingBusinessUnit.Code)
             .Include(p => p.OffsettingBusinessUnitId)
             .Include(p => p.LastModifiedBy)
             .Include(p => p.LastModifiedOn)
-            .Include(p => p.Id);
+            .Include(p => p.Id)
+            .Include(p => p.FromAccountId)
+            .Include(p => p.ToAccountId);
 
-        protected override string FieldsForList => _fields;
-
-        protected override string FieldsForSingle => _fields;
-
-        protected override string FieldsForAll => _fields;
+        protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
         [Route("api/v1/businessunitfromtos/{id}", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Get)]

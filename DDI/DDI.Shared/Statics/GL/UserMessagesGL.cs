@@ -62,8 +62,7 @@
         public static string FundFromToDFAccountWrongFund => "Fund from/to has a \"due from\" account in the wrong fund.";
         public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
 
-		public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
+        public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
         public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
-
     }
 }

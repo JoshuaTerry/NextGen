@@ -23,18 +23,30 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(FundSegmentId))]
         public Segment FundSegment { get; set; }
 
+        [Column("FundBalanceAccountId")]
+        public Guid? FundBalanceLedgerAccountId { get; set; }
+        [ForeignKey(nameof(FundBalanceLedgerAccountId))]
+        public LedgerAccount FundBalanceLedgerAccount { get; set; }
+
+        [Column("ClosingRevenueAccountId")]
+        public Guid? ClosingRevenueLedgerAccountId { get; set; }
+        [ForeignKey(nameof(ClosingRevenueLedgerAccountId))]
+        public LedgerAccount ClosingRevenueLedgerAccount { get; set; }
+
+        [Column("ClosingExpenseAccountId")]
+        public Guid? ClosingExpenseLedgerAccountId { get; set; }
+        [ForeignKey(nameof(ClosingExpenseLedgerAccountId))]
+        public LedgerAccount ClosingExpenseLedgerAccount { get; set; }    
+
+        [NotMapped]
         public Guid? FundBalanceAccountId { get; set; }
-        [ForeignKey(nameof(FundBalanceAccountId))]
-        public LedgerAccount FundBalanceAccount { get; set; }
 
+        [NotMapped]
         public Guid? ClosingRevenueAccountId { get; set; }
-        [ForeignKey(nameof(ClosingRevenueAccountId))]
-        public LedgerAccount ClosingRevenueAccount { get; set; }
 
+        [NotMapped]
         public Guid? ClosingExpenseAccountId { get; set; }
-        [ForeignKey(nameof(ClosingExpenseAccountId))]
-        public LedgerAccount ClosingExpenseAccount { get; set; }
-        
+
         [InverseProperty(nameof(FundFromTo.Fund))]
         public ICollection<FundFromTo> FundFromTos { get; set; }
 
