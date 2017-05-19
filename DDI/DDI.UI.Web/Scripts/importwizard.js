@@ -13,6 +13,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        $(modal).find('.stepsinner').css('left', 0);
+
         CloseModal(modal);
 
     });
