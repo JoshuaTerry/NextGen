@@ -7,8 +7,7 @@
 function LoadTransactionGrid(accountId) {
     
     var columns = [
-        { dataField: 'Id', visible: false },
-        { dataField: 'MonthYear', caption: 'Month/Year'},
+        { dataField: 'MonthYear', caption: 'Month/Year' },
         { dataField: 'TransactionNumber', caption: 'Trans #' },
         { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date'},
         { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision: 2, format: 'currency', allowGrouping: false },
@@ -17,13 +16,10 @@ function LoadTransactionGrid(accountId) {
         { dataField: 'SourceDescription', caption: 'Source Description', allowGrouping: false },
         {
             caption: 'View', cellTemplate: function (container, options) {
-              
-
                 $('<input>').attr("type", "button").attr("Id", "btnView").addClass("searchicon").appendTo(container);
             },
             allowGrouping: false
-        }
-       
+        }       
     ];
 
     var gridData = new DevExpress.data.CustomStore({
@@ -34,6 +30,7 @@ function LoadTransactionGrid(accountId) {
             var deferred = $.Deferred(),
                 args = {};
 
+            args.DefaultSort = 'TransactionDate';
             if (loadOptions.sort) {
                 args.orderby = loadOptions.sort[0].selector;
                 if (loadOptions.sort[0].desc)
@@ -77,22 +74,24 @@ function LoadTransactionGrid(accountId) {
             });
 
             return deferred.promise();
-        },
-        group: [
-            { selector: "MonthYear", groupInterval: 5, desc: false },
-        ]
-
+        }
         
-
     });
 
     $('.gridcontainer').dxDataGrid({
         columns: columns,
-        key: 'Id',
-        remoteOperations: {  grouping: true, groupPaging: true, paging: true, filtering: true, sorting: true, summary: false },
+        sorting: {
+            mode: "multiple"
+        },
+        remoteOperations: {
+            grouping: true, groupPaging: true, paging: true,
+            filtering: true, sorting: true, summary: false
+        },
         dataSource: {
             store: gridData,
-            group: "MonthYear"
+            group: [
+                { selector: "MonthYear", groupInterval: null, desc: false },
+            ]
         },
         filterRow: {
             visible: true,
