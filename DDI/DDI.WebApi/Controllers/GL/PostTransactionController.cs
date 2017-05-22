@@ -32,60 +32,13 @@ namespace DDI.WebApi.Controllers.GL
                 var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id,search);
                 var castResults = result.Data.Cast<PostedTransaction>();
                 var gridResults = DataSourceLoader.Load(castResults, loadOptions);
-               // var gridResults2 = 
-
-
-                PostTransactionBindingModel gridModel = new Models.BindingModels.PostTransactionBindingModel
-                {
-                    Data = gridResults,
-                    TotalCount = result.Data.Count
-
-                };
                
-                return Request.CreateResponse(HttpStatusCode.OK, gridModel); 
+                return Request.CreateResponse(HttpStatusCode.OK, gridResults); 
             }
             catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return Request.CreateResponse(HttpStatusCode.BadRequest, InternalServerError(new Exception(ex.Message)));
-            }
-        }
-        [HttpGet]
-        [Route("api/v1/posttransactions/totalcount/accountId/{Id}")]
-        public HttpResponseMessage GetTotalCountPTGridByAccountId(Guid id, DataSourceLoadOptions loadOptions)
-        {
-            try
-            {
-                //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
-                var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly => ly.AccountId == id).Data.FirstOrDefault();
-                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
-                var count = Json( DataSourceLoader.Load(result.Data.ToList(), loadOptions));
-               
-                return Request.CreateResponse(HttpStatusCode.OK, count);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-        }
-        [HttpGet]
-        [Route("api/v1/posttransactions/groupcount/accountId/{Id}")]
-        public HttpResponseMessage GetGroupCountPTGridByAccountId(Guid id, DataSourceLoadOptions loadOptions)
-        {
-            try
-            {
-                //DataSourceLoadOptions loadOptions = new DataSourceLoadOptions();
-                var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly => ly.AccountId == id).Data.FirstOrDefault();
-                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id);
-                var count = Json(DataSourceLoader.Load(result.Data.ToList(), loadOptions));
-
-                return Request.CreateResponse(HttpStatusCode.OK, count);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
     }
