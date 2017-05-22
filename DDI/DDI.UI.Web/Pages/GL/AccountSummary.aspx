@@ -5,8 +5,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            LoadSummaryTab('');    // test new
-            //LoadSummaryTab('BDF91701-0531-4787-91AA-1EEA7C65BF98');
+            //LoadSummaryTab('');    // test new
+            LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
         });
 
     </script>
@@ -41,7 +41,7 @@
                     <label class="segment1prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment1dropdown segmentselect" />
+                    <select class="Segment1Id segmentselect" />
                     <a href="#" title="" class="editsegment1 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment1 newbuttoninline"></a>
                 </span>
@@ -60,7 +60,7 @@
                     <label class="segment2prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment2dropdown segmentselect" />
+                    <select class="Segment2Id segmentselect" />
                     <a href="#" title="" class="editsegment2 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment2 newbuttoninline"></a>
                 </span>
@@ -79,7 +79,7 @@
                     <label class="segment3prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment3dropdown segmentselect" />
+                    <select class="Segment3Id segmentselect" />
                     <a href="#" title="" class="editsegment3 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment3 newbuttoninline"></a>
                 </span>
@@ -98,7 +98,7 @@
                     <label class="segment4prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment4dropdown segmentselect" />
+                    <select class="Segment4Id segmentselect" />
                     <a href="#" title="" class="editsegment4 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment4 newbuttoninline"></a>
                 </span>
@@ -117,7 +117,7 @@
                     <label class="segment5prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment5dropdown segmentselect" />
+                    <select class="Segment5Id segmentselect" />
                     <a href="#" title="" class="editsegment5 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment5 newbuttoninline"></a>
                 </span>
@@ -136,7 +136,7 @@
                     <label class="segment6prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment6dropdown segmentselect" />
+                    <select class="Segment6Id segmentselect" />
                     <a href="#" title="" class="editsegment6 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment6 newbuttoninline"></a>
                 </span>
@@ -155,7 +155,7 @@
                     <label class="segment7prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment7dropdown segmentselect" />
+                    <select class="Segment7Id segmentselect" />
                     <a href="#" title="" class="editsegment7 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment7 newbuttoninline"></a>
                 </span>
@@ -174,7 +174,7 @@
                     <label class="segment8prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment8dropdown segmentselect" />
+                    <select class="Segment8Id segmentselect" />
                     <a href="#" title="" class="editsegment8 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment8 newbuttoninline"></a>
                 </span>
@@ -193,7 +193,7 @@
                     <label class="segment9prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment9dropdown segmentselect" />
+                    <select class="Segment9Id segmentselect" />
                     <a href="#" title="" class="editsegment9 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment9 newbuttoninline"></a>
                 </span>
@@ -212,7 +212,7 @@
                     <label class="segment10prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
-                    <select class="segment10dropdown segmentselect" />
+                    <select class="Segment10Id segmentselect" />
                     <a href="#" title="" class="editsegment10 editbuttoninline"></a>
                     <a href="#" title="" class="newsegment10 newbuttoninline"></a>
                 </span>
@@ -388,8 +388,6 @@
             <input type="text" class="as-Name editable" />
         </div>
 
-        <input type="hidden" class="as-ParentSegmentId" />
-
         <div class="modalbuttons">
             <input type="button" class="saveaccountsegmentbutton" value="Save" />
             <a href="#" class="cancelaccountsegmentmodal">Cancel</a>
@@ -424,10 +422,6 @@
                 <option value="5">Expense</option>
             </select>
         </div>
-
-
-        <input type="hidden" class="ag-FiscalYearId" />
-        <input type="hidden" class="ag-ParentGroupId" />
 
         <div class="modalbuttons">
             <input type="button" class="saveaccountgroupbutton" value="Save" />
