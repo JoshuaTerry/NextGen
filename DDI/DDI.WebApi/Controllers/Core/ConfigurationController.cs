@@ -29,8 +29,6 @@ namespace DDI.WebApi.Controllers.General
             _service = service;
             _logger = LoggerManager.GetLogger(typeof(ConfigurationController));
         }
-
-        public ConfigurationController() : this(Factory.CreateService<ConfigurationService>()) { }
         
         #endregion Public Constructors
 

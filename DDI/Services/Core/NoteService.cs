@@ -136,9 +136,9 @@ namespace DDI.Services
             return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
         }
 
-        public IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds)
+        public IDataResponse<Note> AddTopicsToNote(Guid noteId, JObject topicIds)
         {
-            var noteToUpdate = UnitOfWork.GetById<Note>(note.Id, nt => nt.NoteTopics);
+            var noteToUpdate = UnitOfWork.GetById<Note>(noteId, nt => nt.NoteTopics);
             IDataResponse<Note> response = null;
             List<NoteTopic> passtedNoteTopics = new List<NoteTopic>();
             List<NoteTopic> noteTopics = new List<NoteTopic>();
@@ -166,27 +166,29 @@ namespace DDI.Services
 
             response = new DataResponse<Note>()
             {
-                Data = UnitOfWork.GetById<Note>(note.Id),
+                Data = noteToUpdate,
                 IsSuccessful = true
             };
             return response;
         }
 
-        public IDataResponse RemoveTopicFromNote(Note note, Guid topicId)
+        public IDataResponse RemoveTopicFromNote(Guid noteId, Guid topicId)
         {
+            var noteToUpdate = UnitOfWork.GetById<Note>(noteId, nt => nt.NoteTopics);
+
             IDataResponse response = null;
-            var topicToRemove = note.NoteTopics.Where(nt => nt.Id == topicId).FirstOrDefault();
+            var topicToRemove = noteToUpdate.NoteTopics.Where(nt => nt.Id == topicId).FirstOrDefault();
 
             if (topicToRemove != null)
             {
-                note.NoteTopics.Remove(topicToRemove);
+                noteToUpdate.NoteTopics.Remove(topicToRemove);
             }
 
             UnitOfWork.SaveChanges();
 
             response = new DataResponse<Note>
             {
-                Data = UnitOfWork.GetById<Note>(note.Id),
+                Data = noteToUpdate,
                 IsSuccessful = true
             };
 

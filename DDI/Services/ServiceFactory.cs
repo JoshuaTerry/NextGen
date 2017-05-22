@@ -48,6 +48,11 @@ namespace DDI.Services
                     {
                         concreteType = _iserviceBaseType.MakeGenericType(serviceType.GenericTypeArguments);
                     }
+                    // If serviceType is ServiceBase<entity> then use it.
+                    else if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == _iserviceBaseType)
+                    {
+                        concreteType = serviceType;
+                    }
                 }
                 if (concreteType == null)
                 {

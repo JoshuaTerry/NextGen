@@ -77,9 +77,9 @@ namespace DDI.WebApi.Controllers.GL
                 Fields = fields,
             };
 
-            ServiceBase<GLAccountSelection> _glAccount = Factory.CreateService<ServiceBase<GLAccountSelection>>();
+            IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
+            return FinalizeResponse(_glAccountService.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
         }
 
         [HttpGet]
@@ -111,9 +111,9 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var search = new PageableSearch(offset, limit, orderBy);
 
-                ServiceBase<GLAccountSelection> _glAccount = Factory.CreateService<ServiceBase<GLAccountSelection>>();
+                IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
-                var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
                 return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)

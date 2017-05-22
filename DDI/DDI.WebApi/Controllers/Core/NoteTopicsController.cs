@@ -78,15 +78,7 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 var noteService = Factory.CreateService<NoteService>();
-
-                var note = noteService.GetById(id).Data;
-
-                if (note == null)
-                {
-                    return NotFound();
-                }
-
-                var response = noteService.AddTopicsToNote(note, topic);
+                var response = noteService.AddTopicsToNote(id, topic);
 
                 return Ok(response);
             }
@@ -105,14 +97,7 @@ namespace DDI.WebApi.Controllers.General
             {
                 var noteService = Factory.CreateService<NoteService>();
 
-                var note = noteService.GetById(id).Data;
-
-                if (note == null)
-                {
-                    return NotFound();
-                }
-
-                var response = noteService.RemoveTopicFromNote(note, topicId);
+                var response = noteService.RemoveTopicFromNote(id, topicId);
 
                 return Ok(response);
             }
