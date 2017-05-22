@@ -40,6 +40,15 @@ namespace DDI.UI.Web {
         protected global::System.Web.UI.ScriptManager scriptmanager1;
         
         /// <summary>
+        /// UtilityMenuContainer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder UtilityMenuContainer;
+        
+        /// <summary>
         /// mainmenu control.
         /// </summary>
         /// <remarks>
