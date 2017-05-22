@@ -21,6 +21,7 @@
             <!-- Groups Tab -->
             <div id="tab-groups">
                 <h1 class="GroupsSectionLabel">Groups</h1>
+                <a href="#" class="newgroupmodal">New Group</a>
                 <div class="groupstable"></div>
 
                 <%--  <div class="newlinkcontainer">

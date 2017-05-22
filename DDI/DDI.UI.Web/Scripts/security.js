@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     LoadGroupsGrid();
 
+    NewGroupModal();
+
     LoadUsersGrid();
 
 });
@@ -64,17 +66,64 @@ function LoadGroupsGrid() {
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
-    //function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete) {
 
-    LoadGrid('.groupstable', 'groupgrid', columns, 'groups', 'groups'
-        , null, 'gp-', '.groupmodal', '.groupmodal', 250, true, true, false, null);
+    //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
+    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
+        , SaveGroup, null, null); 
 
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
-    //function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
 
     DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
 
 }
+
+function NewGroupModal() {
+
+    $('.newgroupmodal').click(function (e) {
+
+        e.preventDefault();
+
+        var modal = $('.groupmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 500,
+            resizable: false
+        });
+
+    });
+
+}
+
+function SaveGroup(id) {
+
+    MakeServiceCall('PATCH', 'groups/' + id, function () {
+        // save group title
+
+    }, function (xhr, status, err) {
+
+        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+
+    });
+
+    MakeServiceCall('PATCH', 'groups/' + id, function () {
+        // save roles to group
+
+    }, function (xhr, status, err) {
+
+        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+
+    });
+
+}
+
+function DeleteGroup() {
+
+
+
+}
+
 
 function LoadSecuritySettingsGrid() {
 
