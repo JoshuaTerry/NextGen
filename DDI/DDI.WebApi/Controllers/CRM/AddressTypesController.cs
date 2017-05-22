@@ -1,8 +1,9 @@
-﻿using DDI.Shared.Models.Client.CRM;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -10,6 +11,8 @@ namespace DDI.WebApi.Controllers.CRM
     public class AddressTypesController : GenericController<AddressType>
     {
         protected override string FieldsForList => FieldLists.CodeFields;
+
+        public AddressTypesController(IService<AddressType> service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/addresstypes", Name = RouteNames.AddressType)]

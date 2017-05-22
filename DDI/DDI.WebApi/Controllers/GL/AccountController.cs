@@ -3,12 +3,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
-using DDI.Shared;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
@@ -17,6 +16,8 @@ namespace DDI.WebApi.Controllers.GL
     public class AccountController : GenericController<Account>
     {
         protected new IAccountService Service => (IAccountService)base.Service;
+        public AccountController(IAccountService service) : base(service) { }
+
 
         private const string ROUTENAME_GETALLLEDGERACCOUNTS = RouteNames.Account + RouteNames.FiscalYear + RouteVerbs.Get;
 
@@ -62,11 +63,6 @@ namespace DDI.WebApi.Controllers.GL
             };
         }
 
-        public AccountController(IAccountService service)
-            : base(service) //Factory.CreateService<AccountService>())
-        {
-        }
-        
         [HttpGet]
         [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
         public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)

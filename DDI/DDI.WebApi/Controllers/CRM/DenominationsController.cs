@@ -20,7 +20,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
 
-        public DenominationsController() : base(Factory.CreateService<DenominationsService>()) { }
+        public DenominationsController(IDenominationsService service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/denominations", Name = RouteNames.Denomination)]

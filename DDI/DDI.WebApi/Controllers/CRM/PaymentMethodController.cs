@@ -1,22 +1,19 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using DDI.Shared.Helpers;
-using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class PaymentMethodController : GenericController<PaymentMethod>
     {
-        public PaymentMethodController() : base(Factory.CreateService<PaymentMethodService>()) { }
+        public PaymentMethodController(IService<PaymentMethod> service) : base(service) { }
 
         protected override string FieldsForList => $"{nameof(PaymentMethod.Id)},{nameof(PaymentMethod.DisplayName)}";
 

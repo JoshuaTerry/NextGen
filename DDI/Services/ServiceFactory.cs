@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Shared;
 using DDI.Shared.Extensions;
-using DDI.Shared.Helpers;
-using DDI.Shared.Models;
 
 namespace DDI.Services
 {
@@ -14,14 +10,88 @@ namespace DDI.Services
     {
         private static Dictionary<Type, Type> _serviceImplementations = null;
         private static Dictionary<Type, IList<ServiceParameter>> _parameterTypes = null;
-        private static Type iunitOfWorkType = typeof(IUnitOfWork);
-        private static Type ibusinessLogicType = typeof(IBusinessLogic);
+
+        private static Type _iunitOfWorkType = typeof(IUnitOfWork);
+        private static Type _ibusinessLogicType = typeof(IBusinessLogic);
+        private static Type _irepositoryType = typeof(IRepository<>);
+        private static Type _iserviceType = typeof(IService<>);
+        private static Type _iserviceBaseType = typeof(ServiceBase<>);
+
+        private static object _lockObject = new object();
+
+        #region Public Methods
 
         public T CreateService<T>(IUnitOfWork unitOfWork) where T : IService
         {
             return (T)CreateService(typeof(T), unitOfWork);
         }
 
+        /// <summary>
+        /// Create a service for a specified type, which can be a concrete class or interface.
+        /// </summary>
+        public IService CreateService(Type serviceType, IUnitOfWork unitOfWork)
+        {
+            lock (_lockObject)
+            {
+                if (_serviceImplementations == null)
+                {
+                    GetServiceImplementations();
+                }
+
+                // Try to get the concrete type from the set of known services.
+
+                Type concreteType = _serviceImplementations.GetValueOrDefault(serviceType);
+                if (concreteType == null)
+                {
+                    // If serviceType is IService<entity> then use ServiceBase<entity>
+                    if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == _iserviceType)
+                    {
+                        concreteType = _iserviceBaseType.MakeGenericType(serviceType.GenericTypeArguments);
+                    }
+                }
+                if (concreteType == null)
+                {
+                    throw new ArgumentException($"Type {serviceType.FullName} is not a valid Service type.", nameof(serviceType));
+                }
+
+                // Get the parameter types for the constructor
+                var paramTypes = GetParameterTypes(concreteType);
+                if (paramTypes == null)
+                {
+                    throw new InvalidOperationException($"Type { concreteType.FullName } does not have a usable constructor.");
+                }
+
+                // Create the parameters for the constructor, which will must be UnitOfWork, Repository, or BusinessLogic.
+
+                List<object> parameters = new List<object>();
+
+                foreach (var entry in paramTypes)
+                {
+                    if (entry.Mode == ServiceParameterMode.UnitOfWork)
+                    {
+                        parameters.Add(unitOfWork);
+                    }
+                    else if (entry.Mode == ServiceParameterMode.BusinessLogic)
+                    {
+                        parameters.Add(unitOfWork.GetBusinessLogic(entry.Type));
+                    }
+                    else if (entry.Mode == ServiceParameterMode.Repository)
+                    {
+                        parameters.Add(_iunitOfWorkType.GetMethod(nameof(IUnitOfWork.GetRepository)).MakeGenericMethod(entry.Type).Invoke(unitOfWork, null));
+                    }
+                }
+
+                return (IService)Activator.CreateInstance(concreteType, parameters.ToArray());
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Use Reflection to get all the services in this assembly and map them to their interfaces and base classes.
+        /// </summary>
         private void GetServiceImplementations()
         {
             Type serviceType = typeof(IService);
@@ -61,6 +131,8 @@ namespace DDI.Services
             }
         }
 
+        /// <summary>
+        /// Get the list of parameter types for the service constructor.
         private static IList<ServiceParameter> GetParameterTypes(Type serviceType)
         {
             if (_parameterTypes == null)
@@ -82,17 +154,32 @@ namespace DDI.Services
                     foreach (var param in entry.GetParameters())
                     {
                         Type paramType = param.ParameterType;
-                        if (ibusinessLogicType.IsAssignableFrom(paramType))
+                        if (_ibusinessLogicType.IsAssignableFrom(paramType))
                         {
                             paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.BusinessLogic));
                         }
-                        else if (paramType == iunitOfWorkType)
+                        else if (paramType == _iunitOfWorkType)
                         {
                             paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.UnitOfWork));
+                        }
+                        else if (paramType.IsConstructedGenericType && paramType.GetGenericTypeDefinition() == _irepositoryType)
+                        {
+                            var typeArgs = paramType.GenericTypeArguments;
+                            if (typeArgs.Length == 1)
+                            {
+                                paramTypes.Add(new ServiceParameter(typeArgs[0], ServiceParameterMode.Repository));
+                            }
+                            else
+                            {
+                                isValid = false;
+                            }
                         }
                         else
                         {
                             isValid = false;
+                        }
+                        if (!isValid)
+                        {
                             break;
                         }
                     }
@@ -110,46 +197,13 @@ namespace DDI.Services
 
                 _parameterTypes.Add(serviceType, paramTypes);
             }
-
             return paramTypes;
         }
 
 
-        public IService CreateService(Type serviceType, IUnitOfWork unitOfWork)
-        {
-            if (_serviceImplementations == null)
-            {
-                GetServiceImplementations();
-            }
+        #endregion
 
-            serviceType = _serviceImplementations.GetValueOrDefault(serviceType);
-            if (serviceType == null)
-            {
-                throw new ArgumentException($"Type {serviceType.FullName} is not a valid Service type.", nameof(serviceType));
-            }
-
-            var paramTypes = GetParameterTypes(serviceType);
-            if (paramTypes == null)
-            {
-                throw new InvalidOperationException($"Type { serviceType.FullName } does not have a usable constructor.");
-            }
-
-            // Create the parameters for the constructor, which will be the actual service objects.
-            List<object> parameters = new List<object>();
-            foreach (var entry in paramTypes)
-            {
-                if (entry.Mode == ServiceParameterMode.UnitOfWork)
-                {
-                    parameters.Add(unitOfWork);
-                }
-                else if (entry.Mode == ServiceParameterMode.BusinessLogic)
-                {
-                    parameters.Add(unitOfWork.GetBusinessLogic(entry.Type));
-                }
-            }
-
-            return (IService)Activator.CreateInstance(serviceType, parameters.ToArray());
-        }
+        #region Nested Types
 
         private class ServiceParameter
         {
@@ -165,7 +219,10 @@ namespace DDI.Services
 
         private enum ServiceParameterMode
         {
-            BusinessLogic, UnitOfWork
+            BusinessLogic, UnitOfWork, Repository
         }
+
+        #endregion
+
     }
 }

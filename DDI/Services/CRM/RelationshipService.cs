@@ -16,9 +16,9 @@ namespace DDI.Services
 
         #endregion
 
-        public RelationshipService(IUnitOfWork uow) : base(uow)
+        public RelationshipService(IUnitOfWork uow, RelationshipLogic logic) : base(uow)
         {
-            _logic = uow.GetBusinessLogic<RelationshipLogic>();
+            _logic = logic;
 
         }
 

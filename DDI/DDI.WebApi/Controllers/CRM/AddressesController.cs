@@ -15,7 +15,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected new IAddressService Service => (IAddressService) base.Service;
 
-        public AddressesController() : base(Factory.CreateService<AddressService>()) { }
+        public AddressesController(IAddressService service) : base(service) { }
 
         protected override Expression<Func<Address, object>>[] GetDataIncludesForSingle()
         {

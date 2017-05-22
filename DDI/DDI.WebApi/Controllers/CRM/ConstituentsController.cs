@@ -20,7 +20,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected new IConstituentService Service => (IConstituentService) base.Service;
 
-        public ConstituentsController() : base(Factory.CreateService<ConstituentService>()) { }
+        public ConstituentsController(IConstituentService service) : base(service) { }
      
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {

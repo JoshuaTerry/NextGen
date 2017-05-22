@@ -21,6 +21,8 @@ namespace DDI.Shared
         private static IFactoryProvider _defaultProvider = null;
         private static IFactoryProvider _provider = null;
         private static Dictionary<Type, IList<Type>> _controllerServices = null;
+        private static object _lockObject = new object();
+        private static Type _iserviceType = typeof(IService);
 
         private const string NOTREGISTERED = "The RepositoryFactory and/or ServiceFactory types have not been properly registered.";
 
@@ -130,51 +132,55 @@ namespace DDI.Shared
 
         private static IList<Type> GetServiceTypes(Type controllerType)
         {
-            if (_controllerServices == null)
+            lock (_lockObject)
             {
-                _controllerServices = new Dictionary<Type, IList<Type>>();
-            }
 
-            IList<Type> paramTypes = _controllerServices.GetValueOrDefault(controllerType);
-            if (paramTypes == null)
-            {
-                paramTypes = new List<Type>();
-
-                foreach (var entry in controllerType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
+                if (_controllerServices == null)
                 {
-                    paramTypes.Clear();
-                    bool isValid = true;
+                    _controllerServices = new Dictionary<Type, IList<Type>>();
+                }
 
-                    // Determine if the constructor contains only IService parameters
-                    foreach (var param in entry.GetParameters())
+                IList<Type> paramTypes = _controllerServices.GetValueOrDefault(controllerType);
+                if (paramTypes == null)
+                {
+                    paramTypes = new List<Type>();
+
+                    foreach (var entry in controllerType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
                     {
-                        Type paramType = param.ParameterType;
-                        if (typeof(IService).IsAssignableFrom(paramType))
+                        paramTypes.Clear();
+                        bool isValid = true;
+
+                        // Determine if the constructor contains only IService parameters
+                        foreach (var param in entry.GetParameters())
                         {
-                            paramTypes.Add(paramType);
+                            Type paramType = param.ParameterType;
+                            if (_iserviceType.IsAssignableFrom(paramType))
+                            {
+                                paramTypes.Add(paramType);
+                            }
+                            else
+                            {
+                                isValid = false;
+                                break;
+                            }
                         }
-                        else
+
+                        if (!isValid)
                         {
-                            isValid = false;
+                            continue;
+                        }
+                        if (paramTypes.Count > 0)
+                        {
+                            // Once we find a constructor that takes a service type, stop looking for other constructors.
                             break;
                         }
                     }
 
-                    if (!isValid)
-                    {
-                        continue;
-                    }
-                    if (paramTypes.Count > 0)
-                    {
-                        // Once we find a constructor that takes a service type, stop looking for other constructors.
-                        break;
-                    }
+                    _controllerServices[controllerType] = paramTypes;
                 }
 
-                _controllerServices.Add(controllerType, paramTypes);
+                return paramTypes;
             }
-
-            return paramTypes;
         }
 
         /// <summary>

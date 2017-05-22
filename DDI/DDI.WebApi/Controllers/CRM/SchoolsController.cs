@@ -3,12 +3,15 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class SchoolsController : GenericController<School>
-    {        
+    {
+        public SchoolsController(IService<School> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

@@ -17,9 +17,6 @@ namespace DDI.WebApi
 
             ConfigureAuth(app);
 
-            // Set the CacheHelper's cache provider
-            Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
-
         }
     }
 }

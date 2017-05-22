@@ -19,9 +19,9 @@ namespace DDI.WebApi.Controllers.General
         protected ILogger Logger => _logger;
 
 
-        public AuditController()
+        public AuditController(AuditService service)
         {
-            _service = new AuditService();
+            _service = service;
         }
 
         [HttpGet]

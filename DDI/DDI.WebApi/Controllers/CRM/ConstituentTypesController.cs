@@ -16,7 +16,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected new IConstituentTypeService Service => (IConstituentTypeService)base.Service;
 
-        public ConstituentTypesController() : base(Factory.CreateService<ConstituentTypeService>()) { }
+        public ConstituentTypesController(IConstituentTypeService service) : base(service) { }
 
         protected override Expression<Func<ConstituentType, object>>[] GetDataIncludesForList()
         {

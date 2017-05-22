@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize]
     public class ConstituentAddressesController : GenericController<ConstituentAddress>
     {
-        public ConstituentAddressesController() : base(Factory.CreateService<ConstituentAddressService>()) { }
+        public ConstituentAddressesController(ConstituentAddressService service) : base(service) { }
 
         protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
         {

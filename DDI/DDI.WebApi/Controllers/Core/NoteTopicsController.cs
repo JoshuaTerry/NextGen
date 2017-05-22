@@ -1,19 +1,20 @@
-﻿using DDI.Services.Search;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Http;
 using DDI.Services;
-using DDI.Shared.Helpers;
+using DDI.Services.Search;
 using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class NoteTopicsController : GenericController<NoteTopic>
     {
+        public NoteTopicsController(IService<NoteTopic> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Notes);

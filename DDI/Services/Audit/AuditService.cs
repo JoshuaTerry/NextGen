@@ -11,8 +11,7 @@ namespace DDI.Services
     public class AuditService : IService
     { 
         private readonly IUnitOfWork _uow;
-        public AuditService() : this(Factory.CreateUnitOfWork())
-        { }
+
         public AuditService(IUnitOfWork uow)
         {
             this._uow = uow;

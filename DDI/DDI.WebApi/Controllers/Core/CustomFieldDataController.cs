@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Web.Http;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
-using DDI.Services.Search;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     public class CustomFieldDataController : GenericController<CustomFieldData>
     {
+        public CustomFieldDataController(IService<CustomFieldData> service) : base(service) { }
+
         [HttpGet]
         [Route("api/v1/customfielddata")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

@@ -16,9 +16,9 @@ namespace DDI.WebApi.Controllers.INV
 
         InvestmentRelationshipService _invrelService;
 
-        public InvestmentRelationshipsController() : base(Factory.CreateService<InvestmentRelationshipService>())
+        public InvestmentRelationshipsController(InvestmentRelationshipService service) : base(service)
         {
-            _invrelService = (InvestmentRelationshipService)Service;
+            _invrelService = service;
         }
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]

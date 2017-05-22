@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize]
     public class ContactTypesController : GenericController<ContactType>
     {
-        public ContactTypesController() : base(Factory.CreateService<ContactTypeService>()) { }
+        public ContactTypesController(IService<ContactType> service) : base(service) { }
 
         protected override Expression<Func<ContactType, object>>[] GetDataIncludesForList()
         {

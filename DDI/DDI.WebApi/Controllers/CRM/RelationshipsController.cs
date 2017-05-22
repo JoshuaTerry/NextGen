@@ -17,8 +17,8 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected new IRelationshipService Service => (IRelationshipService)base.Service;
 
-        public RelationshipsController()
-            : base(Factory.CreateService<RelationshipService>()) { }
+        public RelationshipsController(IRelationshipService service)
+            : base(service) { }
 
         private string DefaultFields =>
                 string.Join(",", new string[]

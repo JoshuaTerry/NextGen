@@ -14,13 +14,13 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class EthnicitiesController : GenericController<Ethnicity>
     {
+        public EthnicitiesController(IService<Ethnicity> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents);
 
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
-
-        public EthnicitiesController() : base(Factory.CreateService<EthnicitiesService>()) { }
    
         [HttpGet]
         [Route("api/v1/ethnicities", Name = RouteNames.Ethnicity)]

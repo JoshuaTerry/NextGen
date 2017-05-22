@@ -13,10 +13,6 @@ namespace DDI.WebApi.Controllers
 {
     public class GenericController<T> : ControllerBase<T> where T : class, IEntity
     {
-        public GenericController() :this(Factory.CreateService<ServiceBase<T>>())
-        {
-        }
-
         public GenericController(IService<T> serviceBase) : base(serviceBase, new DynamicTransmogrifier(), new Pagination())
         {
         }

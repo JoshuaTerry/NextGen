@@ -3,10 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -21,8 +19,9 @@ namespace DDI.WebApi.Controllers.GL
     {
 
         protected new IJournalService Service => (IJournalService)base.Service;
-        public JournalsController()
-            : base(Factory.CreateService<JournalService>())
+
+        public JournalsController(IJournalService service)
+            : base(service)
         {
         }
 

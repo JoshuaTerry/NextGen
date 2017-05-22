@@ -15,9 +15,9 @@ namespace DDI.WebApi.Controllers.INV
     {
         private LinkedAccountService _laService;
 
-        public LinkedAccountController() : base(Factory.CreateService<LinkedAccountService>())
+        public LinkedAccountController(LinkedAccountService service) : base(service)
         {
-            _laService = (LinkedAccountService)Service;
+            _laService = service;
         }
         
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]

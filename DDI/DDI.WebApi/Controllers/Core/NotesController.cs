@@ -34,13 +34,8 @@ namespace DDI.WebApi.Controllers.General
 
         #region Public Constructors
 
-        public NotesController(ServiceBase<Note> service)
+        public NotesController(INoteService service)
             : base(service)
-        {
-        }
-
-        public NotesController()
-            : base(Factory.CreateService<NoteService>())
         {
         }
 

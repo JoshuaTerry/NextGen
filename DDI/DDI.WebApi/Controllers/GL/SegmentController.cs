@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -37,8 +35,8 @@ namespace DDI.WebApi.Controllers.GL
 
         protected new ISegmentService Service => (ISegmentService)base.Service;
 
-        public SegmentController()
-            : base(Factory.CreateService<SegmentService>())
+        public SegmentController(ISegmentService service)
+            : base(service)
         {
         }
 

@@ -30,10 +30,7 @@ namespace DDI.WebApi.Controllers.General
             };
         }
 
-        public CustomFieldsController() :base(Factory.CreateService<CustomFieldService>())
-        {
-            
-        }
+        public CustomFieldsController(ICustomFieldService service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/customfields", Name = RouteNames.CustomField)]

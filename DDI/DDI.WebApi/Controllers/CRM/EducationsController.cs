@@ -14,10 +14,7 @@ namespace DDI.WebApi.Controllers.CRM
     public class EducationsController : GenericController<Education>
     {
 
-        public EducationsController()
-            : base(Factory.CreateService<EducationService>())
-        {
-        }
+        public EducationsController(IService<Education> service) : base(service) { }
 
         protected override Expression<Func<Education, object>>[] GetDataIncludesForList()
         {

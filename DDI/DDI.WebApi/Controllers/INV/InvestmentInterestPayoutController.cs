@@ -15,9 +15,9 @@ namespace DDI.WebApi.Controllers.INV
     {
         private InvestmentInterestPayoutService _invpayService;
 
-        public InvestmentInterestPayoutController() : base(Factory.CreateService<InvestmentInterestPayoutService>())
+        public InvestmentInterestPayoutController(InvestmentInterestPayoutService service) : base(service)
         {
-            _invpayService = (InvestmentInterestPayoutService)Service;
+            _invpayService = service;
         }
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]

@@ -20,6 +20,7 @@ namespace DDI.WebApi
             AreaRegistration.RegisterAllAreas();
             InitializeLogging();
             FactoryConfig.Configure();
+            CachingConfig.Configure();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

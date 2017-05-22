@@ -14,6 +14,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
+        public FiscalYearController(IService<FiscalYear> service) : base(service) { }
+
         private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
         private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
 
@@ -33,9 +35,6 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.FiscalPeriods.First().Status)
             .Include(p => p.FiscalPeriods.First().IsAdjustmentPeriod)
             );
-
-        public FiscalYearController()
-            : base(Factory.CreateService<FiscalYearService>()) { }
 
         protected override Expression<Func<FiscalYear, object>>[] GetDataIncludesForSingle()
         {

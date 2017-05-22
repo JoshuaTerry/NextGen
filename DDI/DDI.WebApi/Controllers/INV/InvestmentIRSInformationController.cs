@@ -16,9 +16,9 @@ namespace DDI.WebApi.Controllers.INV
 
         private InvestmentIRSInformationService _irsInfoService;
 
-        public InvestmentIRSInformationController() : base(Factory.CreateService<InvestmentIRSInformationService>())
+        public InvestmentIRSInformationController(InvestmentIRSInformationService service) : base(service)
         {
-            _irsInfoService = (InvestmentIRSInformationService)Service;
+            _irsInfoService = service;
         }
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]

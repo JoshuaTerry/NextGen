@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalPeriodController : GenericController<FiscalPeriod>
     {
+        public FiscalPeriodController(IService<FiscalPeriod> service) : base(service) { }
+
         private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
 
         protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";

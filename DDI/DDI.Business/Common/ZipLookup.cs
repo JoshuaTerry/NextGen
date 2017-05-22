@@ -15,26 +15,30 @@ namespace DDI.Business.Common
     /// <summary>
     /// Business logic class for zip code lookups
     /// </summary>
-    public class ZipLookup : IDisposable
+    public class ZipLookup : IBusinessLogic
     {
         private char[] _trimChars = new char[] { ',', ' ', '#', '.', '(', ')', '"', ':', ':', '\'', '@', '&' };
         #region Fields
 
         private static IList<Abbreviation> _abbreviations = null;
-        private IUnitOfWork _uow = null;
         private string[] _writtenNumbers = { "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN" };
 
         #endregion
 
         #region Constructors 
-        public ZipLookup() : this(Factory.CreateUnitOfWork()) { }
-
         public ZipLookup(IUnitOfWork uow)
         {
-            _uow = uow;
+            UnitOfWork = uow;
         }
 
         #endregion
+
+        #region Properties 
+
+        public IUnitOfWork UnitOfWork { get; private set; }
+
+        #endregion
+
 
         #region Public Methods
         /// <summary>
@@ -63,12 +67,12 @@ namespace DDI.Business.Common
 
             if (addressToFormat.State != null)
             {
-                _uow.Attach(addressToFormat.State);
+                UnitOfWork.Attach(addressToFormat.State);
             }
 
             if (zipCode.Length == 5)
             {
-                Zip z = _uow.GetEntities<Zip>(p => p.City.State, p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
+                Zip z = UnitOfWork.GetEntities<Zip>(p => p.City.State, p => p.ZipBranches).FirstOrDefault(p => p.ZipCode == zipCode);
 
                 if (z != null)
                 {
@@ -88,7 +92,7 @@ namespace DDI.Business.Common
 
                 if (z != null && z.City != null)
                 {
-                    _uow.LoadReference(z.City, p => p.Zips);
+                    UnitOfWork.LoadReference(z.City, p => p.Zips);
                     // Add in all the other zips for this city.  They will be checked if we can't find a match for the provided zip.
                     foreach (Zip other in z.City.Zips)
                     {
@@ -105,7 +109,7 @@ namespace DDI.Business.Common
                 // No ZIP provided, use city & state to find branches & build a list of ZIPs.
                 var addressToFormatCity = addressToFormat.City;
                 var addressToFormatState = addressToFormat.State;
-                foreach (var branch in _uow.GetEntities<ZipBranch>(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
+                foreach (var branch in UnitOfWork.GetEntities<ZipBranch>(p => p.Zip).Where(p => p.Description == addressToFormatCity && p.Zip.City.StateId == addressToFormatState.Id))
                 //new XPCollection<ZipBranch>(uow, CriteriaOperator.Parse("Description == ? && Zip.City.State.StateCode == ?", addr.City, addr.StateCode)))
                 {
                     if (!zipList.Contains(branch.Zip.ZipCode))
@@ -124,13 +128,13 @@ namespace DDI.Business.Common
                     zipCode = zipItem;
                     workAddr.CopyFrom(tempAddr);
 
-                    Zip zip = _uow.GetEntities<Zip>(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
+                    Zip zip = UnitOfWork.GetEntities<Zip>(p => p.ZipStreets).FirstOrDefault(p => p.ZipCode == zipItem);
 
                     List<ZipStreet> streetList = GetStreetList(zip.ZipStreets, workAddr);
 
                     foreach (ZipStreet item in streetList)
                     {
-                        _uow.LoadReference(item, p => p.ZipPlus4s);
+                        UnitOfWork.LoadReference(item, p => p.ZipPlus4s);
 
                         foreach (ZipPlus4 z4item in item.ZipPlus4s)
                         {
@@ -223,7 +227,7 @@ namespace DDI.Business.Common
 
                     if (zipItem != null)
                     {
-                        Zip zip = _uow.GetEntities<Zip>().FirstOrDefault(p => p.ZipCode == zipItem);
+                        Zip zip = UnitOfWork.GetEntities<Zip>().FirstOrDefault(p => p.ZipCode == zipItem);
 
                         // If necessary, populate state, country, and county.
                         if (addressToFormat.State == null)
@@ -236,11 +240,11 @@ namespace DDI.Business.Common
                             addressToFormat.Country = addressToFormat.State?.Country;
                         }
 
-                        _uow.LoadReference(zip, p => p.City);
+                        UnitOfWork.LoadReference(zip, p => p.City);
 
                         if (addressToFormat.County == null && zip.City != null)
                         {
-                            addressToFormat.County = _uow.GetReference(zip.City, p => p.County);
+                            addressToFormat.County = UnitOfWork.GetReference(zip.City, p => p.County);
                         }
                     }
                 }
@@ -256,15 +260,15 @@ namespace DDI.Business.Common
             // Get the county and country.
             if (addressToFormat.County == null)
             {
-                _uow.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
-                _uow.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
+                UnitOfWork.LoadReference(bestZip4.ZipStreet.Zip, p => p.City);
+                UnitOfWork.LoadReference(bestZip4.ZipStreet.Zip.City, p => p.County);
 
                 addressToFormat.County = bestZip4.ZipStreet.Zip.City.County;
             }
 
             if (addressToFormat.Country == null && addressToFormat.State != null)
             {
-                addressToFormat.Country = _uow.GetReference(addressToFormat.State, p => p.Country);
+                addressToFormat.Country = UnitOfWork.GetReference(addressToFormat.State, p => p.Country);
             }
 
             // Build result address
@@ -338,7 +342,7 @@ namespace DDI.Business.Common
         {
             if (_abbreviations == null)
             {
-                _abbreviations = AbbreviationHelper.GetAbbreviations(_uow);                
+                _abbreviations = AbbreviationHelper.GetAbbreviations(UnitOfWork);                
             }
         }
 
@@ -988,29 +992,6 @@ namespace DDI.Business.Common
 
         #endregion
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _uow?.Dispose();
-                }
-
-                _uow = null;
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-        #endregion
 
         #region Nested Classes
         /// <summary>

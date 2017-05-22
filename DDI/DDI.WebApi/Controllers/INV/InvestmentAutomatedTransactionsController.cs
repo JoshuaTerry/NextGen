@@ -17,9 +17,9 @@ namespace DDI.WebApi.Controllers.INV
 
         private InvestmentAutomatedTransactionService _laService;
 
-        public InvestmentAutomatedTransactionsController() : base(Factory.CreateService<InvestmentAutomatedTransactionService>())
+        public InvestmentAutomatedTransactionsController(InvestmentAutomatedTransactionService service) : base(service)
         {
-            _laService = (InvestmentAutomatedTransactionService)Service;
+            _laService = service;
         }
 
         protected override Expression<Func<InvestmentAutomatedTransaction, object>>[] GetDataIncludesForList()

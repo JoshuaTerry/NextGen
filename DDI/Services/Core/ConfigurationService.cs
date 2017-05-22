@@ -16,9 +16,9 @@ namespace DDI.Services
 
         #endregion Private Fields
 
-        public ConfigurationService(IUnitOfWork uow) : base(uow)
+        public ConfigurationService(IUnitOfWork uow, ConfigurationLogic logic) : base(uow)
         {
-            _logic = uow.GetBusinessLogic<ConfigurationLogic>();
+            _logic = logic;
         }
 
         #region Public Methods

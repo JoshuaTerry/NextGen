@@ -1,27 +1,25 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Linq;
+using System.Web.Http;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq.Expressions;
-using System.Web.Http;
-using System.Linq;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class TagGroupsController : GenericController<TagGroup>
     {
+        public TagGroupsController(IService<TagGroup> service) : base(service) { }
+
         protected new ITagGroupService Service => (ITagGroupService)base.Service;
 
         protected override string FieldsForList => FieldLists.CodeFields;
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Tags.First().Constituents).Exclude(p => p.Tags.First().ConstituentTypes);
-
-        public TagGroupsController() : base(Factory.CreateService<TagGroupService>()) { }
 
         [HttpGet]
         [Route("api/v1/taggroups")]

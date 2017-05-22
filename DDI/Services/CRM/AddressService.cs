@@ -15,11 +15,11 @@ namespace DDI.Services
         private AddressLogic _addressLogic;
         private ZipLookup _zipLookup;
 
-        public AddressService(IUnitOfWork uow) : base(uow)
+        public AddressService(IUnitOfWork uow, AddressLogic addressLogic, ZipLookup zipLookup, IRepository<Address> repository) : base(uow)
         {
-            _addressLogic = uow.GetBusinessLogic<AddressLogic>();
-            _zipLookup = new ZipLookup(uow);
-            _repository = uow.GetRepository<Address>();
+            _addressLogic = addressLogic;
+            _zipLookup = zipLookup;
+            _repository = repository;
         }
 
         #region Public Methods

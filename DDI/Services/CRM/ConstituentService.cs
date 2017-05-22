@@ -26,10 +26,10 @@ namespace DDI.Services
 
         #endregion
 
-        public ConstituentService(IUnitOfWork uow) : base(uow)
+        public ConstituentService(IUnitOfWork uow, ConstituentLogic logic, IRepository<Constituent> repository) : base(uow)
         {
-            _repository = uow.GetRepository<Constituent>();
-            _constituentlogic = uow.GetBusinessLogic<ConstituentLogic>();
+            _repository = repository;
+            _constituentlogic = logic;
 
         }
 

@@ -25,9 +25,9 @@ namespace DDI.Services
 
         #region Public Constructors
 
-        public NoteService(IUnitOfWork uow) : base(uow)
+        public NoteService(IUnitOfWork uow, IRepository<Note> repository) : base(uow)
         {
-            _repository = uow.GetRepository<Note>();
+            _repository = repository;
         }
 
         #endregion Public Constructors

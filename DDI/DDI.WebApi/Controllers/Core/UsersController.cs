@@ -30,12 +30,12 @@ namespace DDI.WebApi.Controllers.General
         private UserService userService;
 
 
-        public UsersController()
+        public UsersController(UserService service) : base(service)
         {
-            userService = Factory.CreateService<UserService>();
+            userService = service;
         }
 
-        public UsersController(UserManager userManager, RoleManager roleManager) : this()
+        public UsersController(UserManager userManager, RoleManager roleManager) : this(Factory.CreateService<UserService>())
         {
             UserManager = userManager;
             RoleManager = roleManager;

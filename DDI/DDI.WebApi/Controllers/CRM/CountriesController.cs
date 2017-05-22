@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers.CRM
     public class CountriesController : GenericController<Country>
     {
 
-        public CountriesController() : base(Factory.CreateService<CountryService>()) { }
+        public CountriesController(IService<Country> service) : base(service) { }
 
         protected override string FieldsForList => $"{nameof(Country.Id)},{nameof(Country.DisplayName)}";
 

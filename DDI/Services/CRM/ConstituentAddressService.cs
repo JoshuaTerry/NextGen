@@ -10,9 +10,9 @@ namespace DDI.Services
     {
         private ConstituentAddressLogic _logic;
 
-        public ConstituentAddressService(IUnitOfWork uow) : base(uow)
+        public ConstituentAddressService(IUnitOfWork uow, ConstituentAddressLogic logic) : base(uow)
         {
-            _logic = uow.GetBusinessLogic<ConstituentAddressLogic>();
+            _logic = logic;
         }
 
         /// <summary>
