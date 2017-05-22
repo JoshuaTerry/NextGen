@@ -5,8 +5,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            //LoadSummaryTab('');    // test new
-            LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
+            LoadSummaryTab('');    // test new
+            //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
         });
 
     </script>
@@ -348,12 +348,8 @@
 
     <br />
 
-    <div class="closingaccountgroup inlinecontainer">
-        <span class="closingaccountcontainer">
-            <span class="summaryleftprompts">
-                <label>Closing Account: </label>
-            </span>
-        </span>
+    <div class="closingaccountgroup fieldblock inline inlinecontainer">
+        <label class="inline accountselectorlabel">Closing Account: </label>
     </div>
 
     <div class="modalbuttons saveaccountbuttons hidebuttons">

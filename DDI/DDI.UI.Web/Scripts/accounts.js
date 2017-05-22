@@ -58,18 +58,15 @@ var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
 function LoadSummaryTab(AccountId) {
 
     accountId = AccountId;
-    GLAccountSelector($('.closingaccountcontainer'), ledgerId, fiscalYearId);
-    //$('.closingaccountcontainer').find('.fieldblock').replaceWith(function () {
-    //    return "<span>" + this.innerHTML + "</span>";
-    //});
-    //$('.closingaccountcontainer').find('.fieldblock').removeClass('.fieldblock').css('inline')
+    GLAccountSelector($('.closingaccountgroup'), ledgerId, fiscalYearId);
+    //$('.accountselectorlabel').addClass("accountselectorprompt");
     //$('.accountnumberlookup').removeAttr('style');
-    //$('.accountnumberlookup').attr("style", "width:30%");
-    //$('.accountdescription').addClass("summaryleftinput");
+    //$('.accountnumberlookup').attr("style", "width:75%");
+    ////$('.accountdescription').addClass("summaryleftinput");
     //$('.accountselectionsearch').addClass("accountsearch");
 
-    $('.closingaccountgroup').attr('disabled', true);
-    $('.accountselectionsearch').css('visibility', 'hidden');
+    //$('.accountnumberlookup').attr('disabled', true);
+    //$('.accountselectionsearch').css('visibility', 'hidden');
 
     var container = '.accountsummarycontainer';
 
@@ -119,7 +116,8 @@ function LoadSummaryTab(AccountId) {
 
                 groupLevels = data.Data.AccountGroupLevels;
                 //refactor
-                if (groupLevels > 0) {
+//                for (i = 1; i <= groupLevels; i++) {
+                    if (groupLevels > 0) {
                     $('.accountgroup1').css('visibility', 'visible');
                     $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
                     $('.Group1Id').change(function () {
@@ -217,7 +215,7 @@ function LoadSummaryTab(AccountId) {
                 }
 
                 segmentLevels = data.Data.NumberOfSegments;
-                //store segment info to populate dd's on edit
+
                 for (i = (segmentLevels + 1) ; i <= 10; i++) {
                     $('.segmentgroup' + i).hide();
                 }
@@ -308,12 +306,12 @@ function RetrieveAccountSummaryData() {
                 category = data.Data.Category;
                 if (category < 4) {
                     $('.BeginningBalance').removeAttr("disabled");
-                    $('.closingaccountgroup').attr('disabled', true);
+                    $('.accountnumberlookup').attr('disabled', true);
                     $('.accountselectionsearch').css('visibility', 'hidden');
                 }
                 else {
                     $('.BeginningBalance').attr('disabled', true);
-                    $('.closingaccountgroup').removeAttr("disabled");
+                    $('.accountnumberlookup').removeAttr("disabled");
                     $('.accountselectionsearch').css('visibility', 'visible');
                 }
 
@@ -375,12 +373,12 @@ function GroupChange(groupLevel) {
             category = group1Data[i - 1].Category;
             if (category < 4) {
                 $('.BeginningBalance').removeAttr("disabled");
-                $('.closingaccountgroup').attr('disabled', true);
+                $('.accountnumberlookup').attr('disabled', true);
                 $('.accountselectionsearch').css('visibility', 'hidden');
             }
             else {
                 $('.BeginningBalance').attr('disabled', true);
-                $('.closingaccountgroup').removeAttr("disabled");
+                $('.accountnumberlookup').removeAttr("disabled");
                 $('.accountselectionsearch').css('visibility', 'visible');
             }
         }

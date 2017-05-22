@@ -6,6 +6,7 @@ div.accounts div.tabscontainer { width: 100%; }
 
 /* gl summary widths*/
 
+.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 span.summaryleftinput input,
 span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
