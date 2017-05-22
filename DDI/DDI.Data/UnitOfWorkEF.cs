@@ -32,6 +32,7 @@ namespace DDI.Data
         private bool _auditingEnabled;
         private DbContextTransaction _dbTransaction;
         private static object _lockObject;
+        private List<Action> _saveActions;
 
         #endregion Private Fields
 
@@ -60,6 +61,7 @@ namespace DDI.Data
             _businessLogic = new List<object>();
             _isAuditStatusInitialized = false;
             _dbTransaction = null;
+            _saveActions = new List<Action>();
         }
 
         static UnitOfWorkEF()
@@ -330,18 +332,7 @@ namespace DDI.Data
         /// </summary>
         public int SaveChanges()
         {
-            User user;
-
-            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
-            {
-                return (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
-                       (_commonContext?.SaveChanges() ?? 0);
-            }
-            else
-            {
-                return (_clientContext?.SaveChanges() ?? 0) +
-                       (_commonContext?.SaveChanges() ?? 0);
-            }
+            return SaveChanges(true);
         }
 
         public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
@@ -378,7 +369,7 @@ namespace DDI.Data
             {
                 try
                 {
-                    SaveChanges();
+                    SaveChanges(false);
                     _dbTransaction?.Commit();
                     _dbTransaction?.Dispose();
                     _dbTransaction = null;
@@ -389,7 +380,21 @@ namespace DDI.Data
                     success = false;
                 }
             }
+
+            if (success)
+            {
+                PerformSaveActions();
+            }
+            _saveActions.Clear();
             return success;
+        }
+
+        /// <summary>
+        /// Add an action to be performed after SaveChanges completes.
+        /// </summary>
+        public void AddPostSaveAction(Action action)
+        {
+            _saveActions.Add(action);
         }
 
         public void AddBusinessLogic(object logic)
@@ -454,6 +459,36 @@ namespace DDI.Data
         {
             _auditingEnabled = _auditModuleEnabled = EFAuditModule.IsAuditEnabled;
             _isAuditStatusInitialized = true;
+        }
+
+        private int SaveChanges(bool performSaveActions)
+        {
+            User user;
+            int result = 0;
+
+            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
+            {
+                result = (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
+                         (_commonContext?.SaveChanges() ?? 0);
+            }
+            else
+            {
+                result = (_clientContext?.SaveChanges() ?? 0) +
+                         (_commonContext?.SaveChanges() ?? 0);
+            }
+
+            if (performSaveActions)
+            {
+                PerformSaveActions();
+            }
+
+            return result;
+        }
+
+        private void PerformSaveActions()
+        {
+            _saveActions.ForEach(p => p.Invoke());
+            _saveActions.Clear();
         }
 
         #endregion

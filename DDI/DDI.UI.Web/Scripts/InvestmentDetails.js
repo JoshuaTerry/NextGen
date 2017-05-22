@@ -113,7 +113,6 @@ function DisplayInvestmentData() {
 function LoadDepositsAndWithdrawalsSection() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         // { dataField: 'AutomatedTransactionMethod', caption: 'Deposit/Withdrawal/Transfer' }, // group by
         { dataField: 'NextTransactionDate', caption: 'NextDate', dataType:'date'}, //order by
         { dataField: 'RecurringType', caption: 'Frequency' },
@@ -171,7 +170,6 @@ function LoadInterestPayoutsGrid() {
     var id = currentEntity.Id;
 
     var columns = [
-    { dataField: 'Id', width: '0px', },
     { dataField: 'Priority', caption: 'Priority', sortOrder: 'asc', sortIndex: 0, alignment: 'left' },
     {
         dataField: 'InterestPaymentMethod', caption: 'Method', calculateCellValue: function (data) {
@@ -343,7 +341,6 @@ function LoadIRSInformationSection() {
     var id = currentEntity.Id;
 
     var columns = [
-    { dataField: 'Id', width: '0px', },
     { dataField: 'Year', caption: 'Priority', sortOrder: 'asc', sortIndex: 0, alignment: 'left' },
     { dataField: 'InterestPaid', caption: 'Interest Paid', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
     { dataField: 'InterestWithheld', caption: 'Interest Withheld', dataType: 'number', format: 'currency', precision: 2, alignment: 'right' },
@@ -366,7 +363,6 @@ function InitLinkedAccounts() {
 
 function LoadLinkedAccountsGrid() {
     var columns = [
-    { dataField: 'Id', width: '0px', },
     {
         dataField: 'LinkedAccountType', caption: 'Type', sortOrder: 'asc', sortIndex: 0, caption: '', calculateCellValue: function (data) {
             return [GetLinkedType(data.LinkedAccountType)];

@@ -139,7 +139,15 @@ namespace DDI.Data
         /// </summary>
         public ICollection<TElement> GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
         {
-            var entryCollection = _context.Entry(entity).Collection(collection);
+            var entry = _context.Entry(entity);
+
+            if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
+            {
+                var method = collection.Compile();
+                return method.Invoke(entity) ?? new List<TElement>();
+            }
+
+            var entryCollection = entry.Collection(collection);
             if (!entryCollection.IsLoaded)
                 entryCollection.Load();
             return entryCollection.CurrentValue;
@@ -150,7 +158,15 @@ namespace DDI.Data
         /// </summary>
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
-            var reference = _context.Entry(entity).Reference(property);
+            var entry = _context.Entry(entity);
+
+            if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
+            {
+                var method = property.Compile();
+                return method.Invoke(entity);
+            }
+
+            var reference = entry.Reference(property);
 
             if (!reference.IsLoaded)
                 reference.Load();
@@ -338,7 +354,18 @@ namespace DDI.Data
         /// <returns></returns>
         private T Attach(T entity, System.Data.Entity.EntityState entityState)
         {
-            if (entity != null && _context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
+            if (entity == null)
+            {
+                return null;
+            }
+
+            DbEntityEntry<T> entityEntry = _context.Entry(entity);
+            if (entityEntry.State == entityState)
+            {
+                return entity;
+            }
+
+            if (entity != null && entityEntry.State == System.Data.Entity.EntityState.Detached)
             {
                 if (entity is IEntity)
                 {
@@ -360,7 +387,10 @@ namespace DDI.Data
            
             foreach (var entry in _context.ChangeTracker.Entries())
             {
-                stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                if (entry.Entity is IEntity)
+                {
+                    stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                }
             }
 
             // Then add the entity via the Add method.  
@@ -370,7 +400,7 @@ namespace DDI.Data
             _context.Entry(entity).State = entityState;
 
             // Finally check the state of all tracked entities, looking for ones that are in an Added State.
-            foreach (var entry in _context.ChangeTracker.Entries().Where(p => p.State == System.Data.Entity.EntityState.Added))
+            foreach (var entry in _context.ChangeTracker.Entries().Where(p => p.State == System.Data.Entity.EntityState.Added && p.Entity is IEntity))
             {
                 System.Data.Entity.EntityState state;
 
