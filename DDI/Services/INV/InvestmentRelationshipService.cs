@@ -8,10 +8,11 @@ namespace DDI.Services
 {
     public class InvestmentRelationshipService : ServiceBase<InvestmentRelationship>
     {
+        public InvestmentRelationshipService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public new IDataResponse<List<InvestmentRelationship>> GetAll(string fields, IPageable search)
         {
             List<InvestmentRelationship> invrelationship = MockData();

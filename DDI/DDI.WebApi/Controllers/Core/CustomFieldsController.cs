@@ -1,10 +1,11 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Http;
+using DDI.Services;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq.Expressions;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -29,7 +30,7 @@ namespace DDI.WebApi.Controllers.General
             };
         }
 
-        public CustomFieldsController() :base(new CustomFieldService())
+        public CustomFieldsController() :base(Factory.CreateService<CustomFieldService>())
         {
             
         }

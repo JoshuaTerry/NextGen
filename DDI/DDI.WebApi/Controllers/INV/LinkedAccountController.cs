@@ -7,13 +7,19 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.INV
 {
     public class LinkedAccountController : GenericController<LinkedAccount>
     {
+        private LinkedAccountService _laService;
 
-        LinkedAccountService _laService = new LinkedAccountService();
+        public LinkedAccountController() : base(Factory.CreateService<LinkedAccountService>())
+        {
+            _laService = (LinkedAccountService)Service;
+        }
+        
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         
         [HttpGet]

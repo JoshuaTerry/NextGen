@@ -1,5 +1,6 @@
 ﻿using DDI.Shared.Models.Client.CRM;
 using System;
+using DDI.Shared;
 
 namespace DDI.Services.ServiceInterfaces
 {

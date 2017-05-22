@@ -17,9 +17,9 @@ namespace DDI.Services.GL
     {
         private LedgerLogic _ledgerLogic = null;
 
-        public LedgerService()
+        public LedgerService(IUnitOfWork uow) : base(uow)
         {
-            _ledgerLogic = UnitOfWork.GetBusinessLogic<LedgerLogic>();
+            _ledgerLogic = uow.GetBusinessLogic<LedgerLogic>();
         }
 
         protected override Action<Ledger> FormatEntityForGet => ledger => FormatLedgerForGet(ledger);

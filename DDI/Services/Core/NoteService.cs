@@ -25,6 +25,11 @@ namespace DDI.Services
 
         #region Public Constructors
 
+        public NoteService(IUnitOfWork uow) : base(uow)
+        {
+            _repository = uow.GetRepository<Note>();
+        }
+
         #endregion Public Constructors
 
         #region Public Methods
@@ -209,11 +214,6 @@ namespace DDI.Services
         #endregion Public Methods
 
         #region Private Methods
-
-        protected override void Initialize()
-        {
-            _repository = UnitOfWork.GetRepository<Note>();
-        }
 
         private void SetEntityType(Note note)
         {

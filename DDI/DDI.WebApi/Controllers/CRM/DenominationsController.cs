@@ -18,18 +18,9 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents);
 
-        private IConstituentService _constituentService;
         protected new IDenominationsService Service => (IDenominationsService) base.Service;
-        public DenominationsController()
-            :this(new DenominationsService(), new ConstituentService())
-        {
-        }
 
-        internal DenominationsController(IDenominationsService denominationsService, IConstituentService constituentService)
-            :base(denominationsService)
-        {
-            _constituentService = constituentService;
-        }
+        public DenominationsController() : base(Factory.CreateService<DenominationsService>()) { }
 
         [HttpGet]
         [Route("api/v1/denominations", Name = RouteNames.Denomination)]
@@ -95,13 +86,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                var constituent = _constituentService.GetById(id).Data;
-                if (constituent == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.AddDenominationsToConstituent(constituent, denominations);
+                var response = Service.AddDenominationsToConstituent(id, denominations);
                 return Ok(response);
             }
             catch (Exception ex)

@@ -9,6 +9,7 @@ using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared.Helpers;
 using System.Linq;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -39,7 +40,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         public NotesController()
-            : base(new NoteService())
+            : base(Factory.CreateService<NoteService>())
         {
         }
 

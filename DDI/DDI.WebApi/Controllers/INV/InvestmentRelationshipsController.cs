@@ -7,13 +7,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.INV
 {
     public class InvestmentRelationshipsController : GenericController<InvestmentRelationship>
     {
 
-        InvestmentRelationshipService _invrelService = new InvestmentRelationshipService();
+        InvestmentRelationshipService _invrelService;
+
+        public InvestmentRelationshipsController() : base(Factory.CreateService<InvestmentRelationshipService>())
+        {
+            _invrelService = (InvestmentRelationshipService)Service;
+        }
+
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
 
         [HttpGet]

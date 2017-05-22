@@ -40,7 +40,7 @@ namespace DDI.Conversion
 
             log4net.Config.XmlConfigurator.Configure();
 
-            Factory.RegisterRepositoryFactory(new RepositoryFactoryEF());
+            Factory.RegisterRepositoryFactory<RepositoryFactoryEF>();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
             GuidHelper.GenerateSequentialGuids = true;            

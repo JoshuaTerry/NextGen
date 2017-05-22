@@ -18,8 +18,7 @@ namespace DDI.Services.Security
                                                   IUserPasswordStore<User, Guid>,
                                                   IQueryableUserStore<User, Guid>
     {
-
-        protected override void Initialize()
+        public UserService(IUnitOfWork uow) : base(uow)
         {
             IncludesForSingle = new Expression<Func<User, object>>[]
             {

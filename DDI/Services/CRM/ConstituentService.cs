@@ -22,16 +22,16 @@ namespace DDI.Services
         #region Private Fields
 
         private IRepository<Constituent> _repository;
-        private ConstituentLogic _constituentlogic; 
+        private ConstituentLogic _constituentlogic;
 
         #endregion
 
-        protected override void Initialize()
+        public ConstituentService(IUnitOfWork uow) : base(uow)
         {
-            _repository = UnitOfWork.GetRepository<Constituent>();
-            _constituentlogic = UnitOfWork.GetBusinessLogic<ConstituentLogic>();
-        }
+            _repository = uow.GetRepository<Constituent>();
+            _constituentlogic = uow.GetBusinessLogic<ConstituentLogic>();
 
+        }
 
         #region Public Methods
 

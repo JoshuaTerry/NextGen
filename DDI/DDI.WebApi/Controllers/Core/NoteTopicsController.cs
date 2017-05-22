@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Shared.Helpers;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -75,7 +76,7 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var noteService = new NoteService();
+                var noteService = Factory.CreateService<NoteService>();
 
                 var note = noteService.GetById(id).Data;
 
@@ -101,7 +102,7 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var noteService = new NoteService();
+                var noteService = Factory.CreateService<NoteService>();
 
                 var note = noteService.GetById(id).Data;
 

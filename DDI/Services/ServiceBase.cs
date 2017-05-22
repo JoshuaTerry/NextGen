@@ -1,18 +1,17 @@
-﻿using DDI.Business;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using DDI.Business;
 using DDI.Business.Helpers;
 using DDI.Logger;
 using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace DDI.Services
 {
@@ -30,16 +29,13 @@ namespace DDI.Services
         /// </summary>
         protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
-        public ServiceBase() : this(Factory.CreateUnitOfWork())
-        {            
-        }
         public ServiceBase(IUnitOfWork uow)
         {
             _unitOfWork = uow;
             Initialize();
         }
 
-        protected IUnitOfWork UnitOfWork
+        public IUnitOfWork UnitOfWork
         {
             get { return _unitOfWork; }
         }

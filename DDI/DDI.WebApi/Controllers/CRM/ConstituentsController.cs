@@ -19,11 +19,8 @@ namespace DDI.WebApi.Controllers.CRM
     public class ConstituentsController : GenericController<Constituent>
     {
         protected new IConstituentService Service => (IConstituentService) base.Service;
-        public ConstituentsController()
-            : base(new ConstituentService())
-        {
-        }
 
+        public ConstituentsController() : base(Factory.CreateService<ConstituentService>()) { }
      
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {

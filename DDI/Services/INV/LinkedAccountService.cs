@@ -9,9 +9,11 @@ namespace DDI.Services
     public class LinkedAccountService : ServiceBase<LinkedAccount>
     {
 
+        public LinkedAccountService(IUnitOfWork uow) : base(uow) { }
+
         #region Public Methods
 
-        
+
         public IDataResponse<LinkedAccount> GetLinkedAccountById(Guid Id)
         {
 

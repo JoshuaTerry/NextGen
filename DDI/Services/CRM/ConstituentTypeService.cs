@@ -14,10 +14,10 @@ namespace DDI.Services
 
         #endregion
 
+        public ConstituentTypeService(IUnitOfWork uow) : base(uow) { }
+
         #region Public Methods
-
-
-
+        
         public IDataResponse AddTagsToConstituentType(ConstituentType constituentType, JObject tagIds)
         {
             var constituentTypeToUpdate = UnitOfWork.GetById<ConstituentType>(constituentType.Id, c => c.Tags);

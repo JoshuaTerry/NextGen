@@ -13,12 +13,18 @@ namespace DDI.WebApi.Tests.Controllers
     {
         private const string TESTDESCR = "WebApi | Controllers";
 
+        [TestInitialize]
+        public void Initialize()
+        {
+            Factory.RegisterServiceFactory<ServiceFactory>();
+        }
+
         [TestMethod, TestCategory(TESTDESCR)]
         public void GetAllGenders_ReturnsGenderCollection()
         {
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Gender>(null)).Returns(SetupRepo());
-            var service = new ServiceBase<Gender>(uow.Object);
+            var service = Factory.CreateService<ServiceBase<Gender>>(uow.Object);
             var result = service.GetAll();
 
             Assert.IsTrue(result.Data.Count == 3);

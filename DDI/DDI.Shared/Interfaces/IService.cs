@@ -1,13 +1,12 @@
-﻿using DDI.Shared;
-using DDI.Shared.Models;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using DDI.Shared.Models;
+using Newtonsoft.Json.Linq;
 
-namespace DDI.Services.ServiceInterfaces
+namespace DDI.Shared
 {
-    public interface IService<T>
+    public interface IService<T> : IService
     {
         IDataResponse<List<ICanTransmogrify>> GetAll();
         IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null);
@@ -22,5 +21,9 @@ namespace DDI.Services.ServiceInterfaces
         Expression<Func<T, object>>[] IncludesForSingle { set; }
         Expression<Func<T, object>>[] IncludesForList { set; }
 
+    }
+
+    public interface IService
+    {
     }
 }

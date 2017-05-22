@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.INV
 {
@@ -16,7 +17,12 @@ namespace DDI.WebApi.Controllers.INV
 
     public class InvestmentsController : GenericController<Investment>
     {
-        InvestmentService _invService = new InvestmentService();
+        private InvestmentService _invService;
+
+        public InvestmentsController() : base(Factory.CreateService<InvestmentService>())
+        {
+            _invService = (InvestmentService)Service;
+        }
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
 

@@ -16,6 +16,11 @@ namespace DDI.Services
 
         #endregion Private Fields
 
+        public ConfigurationService(IUnitOfWork uow) : base(uow)
+        {
+            _logic = uow.GetBusinessLogic<ConfigurationLogic>();
+        }
+
         #region Public Methods
 
         public IDataResponse GetConfiguration(ModuleType moduleType)
@@ -69,10 +74,6 @@ namespace DDI.Services
         #endregion Public Methods
 
         #region Private Methods
-        protected override void Initialize()
-        {
-            _logic = UnitOfWork.GetBusinessLogic<ConfigurationLogic>();
-        }
 
         #endregion Private Methods
     }

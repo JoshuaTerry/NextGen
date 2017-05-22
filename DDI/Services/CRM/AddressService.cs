@@ -17,15 +17,9 @@ namespace DDI.Services
 
         public AddressService(IUnitOfWork uow) : base(uow)
         {
-        }
-
-        public AddressService() : base() { }
-
-        protected override void Initialize()
-        {
-            _addressLogic = UnitOfWork.GetBusinessLogic<AddressLogic>();
-            _zipLookup = new ZipLookup(UnitOfWork);
-            _repository = UnitOfWork.GetRepository<Address>();
+            _addressLogic = uow.GetBusinessLogic<AddressLogic>();
+            _zipLookup = new ZipLookup(uow);
+            _repository = uow.GetRepository<Address>();
         }
 
         #region Public Methods

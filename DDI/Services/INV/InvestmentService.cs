@@ -7,10 +7,11 @@ namespace DDI.Services
 {
     public class InvestmentService : ServiceBase<Investment>
     {
+        public InvestmentService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<Investment> GetInvestmentById(Guid Id)
         {
             Investment invest = new Investment();

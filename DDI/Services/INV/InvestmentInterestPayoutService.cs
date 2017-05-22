@@ -9,10 +9,11 @@ namespace DDI.Services
 {
     public class InvestmentInterestPayoutService : ServiceBase<InvestmentInterestPayout>
     {
+        public InvestmentInterestPayoutService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<InvestmentInterestPayout> GetInterestPayoutById(Guid Id)
         {
 

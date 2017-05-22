@@ -7,13 +7,19 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.INV
 {
     public class InvestmentInterestPayoutController : GenericController<InvestmentInterestPayout>
     {
+        private InvestmentInterestPayoutService _invpayService;
 
-        InvestmentInterestPayoutService _invpayService = new InvestmentInterestPayoutService();
+        public InvestmentInterestPayoutController() : base(Factory.CreateService<InvestmentInterestPayoutService>())
+        {
+            _invpayService = (InvestmentInterestPayoutService)Service;
+        }
+
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         
         [HttpGet]

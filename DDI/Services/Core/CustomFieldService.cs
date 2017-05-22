@@ -9,6 +9,7 @@ namespace DDI.Services
 {
     public class CustomFieldService : ServiceBase<CustomField>, ICustomFieldService
     {
+        public CustomFieldService(IUnitOfWork uow) : base(uow) { }
 
         public IDataResponse<List<CustomField>> GetByEntityId(int entityId, Guid constituentId)
         {

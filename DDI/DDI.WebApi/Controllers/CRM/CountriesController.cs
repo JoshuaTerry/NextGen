@@ -5,20 +5,15 @@ using DDI.Shared.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class CountriesController : GenericController<Country>
     {
-        public CountriesController(ServiceBase<Country> service)
-            : base(service)
-        {
-        }
-        public CountriesController()
-            : base(new CountryService())
-        {
-        }
+
+        public CountriesController() : base(Factory.CreateService<CountryService>()) { }
 
         protected override string FieldsForList => $"{nameof(Country.Id)},{nameof(Country.DisplayName)}";
 

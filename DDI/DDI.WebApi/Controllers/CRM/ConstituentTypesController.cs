@@ -13,7 +13,11 @@ namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class ConstituentTypesController : GenericController<ConstituentType>
-    {       
+    {
+        protected new IConstituentTypeService Service => (IConstituentTypeService)base.Service;
+
+        public ConstituentTypesController() : base(Factory.CreateService<ConstituentTypeService>()) { }
+
         protected override Expression<Func<ConstituentType, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<ConstituentType, object>>[]
@@ -120,10 +124,5 @@ namespace DDI.WebApi.Controllers.CRM
             }
         }
 
-        protected new IConstituentTypeService Service => (IConstituentTypeService)base.Service;
-        public ConstituentTypesController()
-            : base(new ConstituentTypeService())
-        {
-        }
     }
 }

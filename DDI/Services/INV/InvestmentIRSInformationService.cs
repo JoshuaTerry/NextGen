@@ -7,10 +7,11 @@ namespace DDI.Services
 {
     public class InvestmentIRSInformationService : ServiceBase<InvestmentIRSInformation>
     {
+        public InvestmentIRSInformationService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<List<InvestmentIRSInformation>> GetIRSInformationByInvestmentId(Guid Id)
         {
 

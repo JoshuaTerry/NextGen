@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
@@ -14,7 +15,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
 
         public EducationsController()
-            : base(new EducationService())
+            : base(Factory.CreateService<EducationService>())
         {
         }
 

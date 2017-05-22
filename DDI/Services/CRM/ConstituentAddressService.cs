@@ -10,9 +10,9 @@ namespace DDI.Services
     {
         private ConstituentAddressLogic _logic;
 
-        protected override void Initialize()
+        public ConstituentAddressService(IUnitOfWork uow) : base(uow)
         {
-            _logic = UnitOfWork.GetBusinessLogic<ConstituentAddressLogic>();
+            _logic = uow.GetBusinessLogic<ConstituentAddressLogic>();
         }
 
         /// <summary>

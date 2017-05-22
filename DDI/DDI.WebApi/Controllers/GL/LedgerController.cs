@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Routing;
 using System.Linq;
 using DDI.Services.GL;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -37,7 +38,7 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.DefaultFiscalYear.Name)
             ;
 
-        public LedgerController() : base(new LedgerService())
+        public LedgerController() : base(Factory.CreateService<LedgerService>())
         {
         }
 

@@ -20,8 +20,6 @@ namespace DDI.WebApi
             // Set the CacheHelper's cache provider
             Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
 
-            // Initialize the repository factory.
-            Factory.RegisterRepositoryFactory(new DDI.Data.RepositoryFactoryEF());
         }
     }
 }

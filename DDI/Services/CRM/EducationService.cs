@@ -1,4 +1,5 @@
 ﻿using System;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 
 namespace DDI.Services
@@ -18,6 +19,8 @@ namespace DDI.Services
         #endregion
 
         #region Constructors
+
+        public EducationService(IUnitOfWork uow) : base(uow) { }
 
         #endregion
 

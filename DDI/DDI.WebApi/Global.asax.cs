@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using DDI.Logger;
-using DDI.Shared;
 
 namespace DDI.WebApi
 {
@@ -18,6 +19,7 @@ namespace DDI.WebApi
         {
             AreaRegistration.RegisterAllAreas();
             InitializeLogging();
+            FactoryConfig.Configure();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -34,4 +36,7 @@ namespace DDI.WebApi
 
         #endregion Protected Methods
     }
+    
+
+
 }

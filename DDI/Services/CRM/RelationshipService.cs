@@ -16,6 +16,12 @@ namespace DDI.Services
 
         #endregion
 
+        public RelationshipService(IUnitOfWork uow) : base(uow)
+        {
+            _logic = uow.GetBusinessLogic<RelationshipLogic>();
+
+        }
+
         #region Properties
 
         protected override Action<Relationship> FormatEntityForGet => FormatRelationshipForTarget;
@@ -49,11 +55,6 @@ namespace DDI.Services
 
         #endregion
 
-
-        protected override void Initialize()
-        {
-            _logic = UnitOfWork.GetBusinessLogic<RelationshipLogic>();
-        }
 
         private void FormatRelationshipForTarget(Relationship entity)
         {

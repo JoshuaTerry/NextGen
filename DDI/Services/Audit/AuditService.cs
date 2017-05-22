@@ -8,7 +8,7 @@ using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Services
 {
-    public class AuditService
+    public class AuditService : IService
     { 
         private readonly IUnitOfWork _uow;
         public AuditService() : this(Factory.CreateUnitOfWork())

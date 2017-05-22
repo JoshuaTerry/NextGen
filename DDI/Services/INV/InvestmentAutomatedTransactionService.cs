@@ -10,9 +10,11 @@ namespace DDI.Services
 {
     public class InvestmentAutomatedTransactionService : ServiceBase<InvestmentAutomatedTransaction>
     {
+        public InvestmentAutomatedTransactionService(IUnitOfWork uow) : base(uow) { }
+
         #region Public Methods
 
-        
+
         public IDataResponse<InvestmentAutomatedTransaction> GetAutomatedTransactionById(Guid Id)
         {
             InvestmentAutomatedTransaction at = new InvestmentAutomatedTransaction();

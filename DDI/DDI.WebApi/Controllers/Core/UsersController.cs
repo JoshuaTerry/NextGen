@@ -32,10 +32,10 @@ namespace DDI.WebApi.Controllers.General
 
         public UsersController()
         {
-            
+            userService = Factory.CreateService<UserService>();
         }
 
-        public UsersController(UserManager userManager, RoleManager roleManager)
+        public UsersController(UserManager userManager, RoleManager roleManager) : this()
         {
             UserManager = userManager;
             RoleManager = roleManager;
@@ -79,7 +79,6 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult Get()
         {
             try {
-                userService = new UserService();
                 var results = userService.GetAll();
 
                 if (results == null)
@@ -102,7 +101,6 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                userService = new UserService();
                 var user = Service.GetById(id);
                 if (user == null)
                 {
@@ -124,7 +122,6 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                userService = new UserService();
                 var user = Service.GetWhereExpression(u => u.UserName == username);
                 if (user == null)
                 {
@@ -271,8 +268,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
         {
             try
-            {
-                userService = new UserService();
+            {                
                 var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
 
                 if (result == null)
@@ -295,8 +291,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
         {
             try
-            {
-                userService = new UserService();
+            {                
                 var result = userService.AddBusinessUnitToUser(id, buid);
 
                 if (result == null)

@@ -13,6 +13,8 @@ namespace DDI.Services.Security
                                                   IQueryableRoleStore<Role, Guid>
     {
 
+        public RoleService(IUnitOfWork uow) : base(uow) { }
+
         #region IQueryableRoleStore Implementation
 
         IQueryable<Role> IQueryableRoleStore<Role, Guid>.Roles => UnitOfWork.GetRepository<Role>().Entities;

@@ -8,6 +8,7 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Linq;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -20,10 +21,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Tags.First().Constituents).Exclude(p => p.Tags.First().ConstituentTypes);
 
-        public TagGroupsController() : base(new TagGroupService())
-        {
-
-        }
+        public TagGroupsController() : base(Factory.CreateService<TagGroupService>()) { }
 
         [HttpGet]
         [Route("api/v1/taggroups")]

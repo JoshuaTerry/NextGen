@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Shared.Statics;
+using DDI.Shared;
 
 namespace DDI.Services
 {
     public class CountryService : ServiceBase<Country>
     {
+        public CountryService(IUnitOfWork uow) : base(uow) { }
+
         /// <summary>
         /// Ensures the default country code (US) is listed first in the sorting order.
         /// </summary>

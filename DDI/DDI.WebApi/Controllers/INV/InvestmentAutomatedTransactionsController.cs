@@ -7,12 +7,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 //commented out code may be used once tables and real data in place
 namespace DDI.WebApi.Controllers.INV
 {
     public class InvestmentAutomatedTransactionsController : GenericController<InvestmentAutomatedTransaction>
     {
+
+        private InvestmentAutomatedTransactionService _laService;
+
+        public InvestmentAutomatedTransactionsController() : base(Factory.CreateService<InvestmentAutomatedTransactionService>())
+        {
+            _laService = (InvestmentAutomatedTransactionService)Service;
+        }
 
         protected override Expression<Func<InvestmentAutomatedTransaction, object>>[] GetDataIncludesForList()
         {
@@ -22,7 +30,6 @@ namespace DDI.WebApi.Controllers.INV
             };
         }
 
-        InvestmentAutomatedTransactionService _laService = new InvestmentAutomatedTransactionService();
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
         [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

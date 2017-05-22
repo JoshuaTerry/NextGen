@@ -5,28 +5,23 @@ using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
 {
     public class EthnicitiesService : ServiceBase<Ethnicity>, IEthnicitiesService
     {
-        private IConstituentService _constituentService;
+        public EthnicitiesService(IUnitOfWork uow) : base(uow) { }
 
-        public EthnicitiesService()
-            :this(new ConstituentService())
+        public IDataResponse AddEthnicitiesToConstituent(Guid constituentId, JObject ethnicityIds)
         {
-            
-        }
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituentId, p => p.Ethnicities);
+            if (constituentToUpdate == null)
+            {
+                return GetErrorResponse(UserMessagesCRM.ConstituentIdInvalid);
+            }
 
-        internal EthnicitiesService(IConstituentService constituentService)
-        {
-            _constituentService = constituentService;
-        }
-
-        public IDataResponse AddEthnicitiesToConstituent(Constituent constituent, JObject ethnicityIds)
-        {
-            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, p => p.Ethnicities);
             IDataResponse response = null;
             List<Ethnicity> passedEthnicities = new List<Ethnicity>();
             List<Ethnicity> constituentEthnicities = new List<Ethnicity>();

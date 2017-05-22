@@ -9,6 +9,7 @@ namespace DDI.Services
 {
     public class TagGroupService : ServiceBase<TagGroup>, ITagGroupService
     {
+        public TagGroupService(IUnitOfWork uow) : base(uow) { }
 
         public IDataResponse<List<TagGroup>> GetGroupsAndTags(ConstituentCategory category)
         {

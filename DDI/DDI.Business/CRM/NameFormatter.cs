@@ -15,7 +15,7 @@ namespace DDI.Business.CRM
     /// <summary>
     /// Constituent name formatting business logic
     /// </summary>
-    public class NameFormatter
+    public class NameFormatter : IBusinessLogic
     {
         private const string MALE = "M";
         private const string FEMALE = "F";

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared
 {
-    public interface IRepositoryFactory
+    public interface IRepositoryFactory : IDisposable
     {
         IUnitOfWork CreateUnitOfWork();
         IRepository<T> CreateRepository<T>() where T : class;

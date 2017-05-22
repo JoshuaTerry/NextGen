@@ -229,6 +229,7 @@ namespace DDI.Business.Tests.CRM
 
             _usPhoneContactInfo.ContactTypeId = _usPhoneContactInfo.ContactType.Id;
             _usPhoneContactInfo.ConstituentId = null;
+            _usPhoneContactInfo.Constituent = null;
             AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
 
         }

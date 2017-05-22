@@ -8,6 +8,7 @@ using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
+using DDI.Shared;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
@@ -19,9 +20,6 @@ namespace DDI.WebApi.Controllers.GL
 
         private const string ROUTENAME_GETALLLEDGERACCOUNTS = RouteNames.Account + RouteNames.FiscalYear + RouteVerbs.Get;
 
-        private ServiceBase<GLAccountSelection> _glAccount;
-        private ServiceBase<Ledger> _ledger;
-        private ServiceBase<FiscalYear> _fiscalYear;
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(Account.Id)},{nameof(Account.AccountNumber)},{nameof(Account.Name)}";
@@ -64,12 +62,9 @@ namespace DDI.WebApi.Controllers.GL
             };
         }
 
-        public AccountController()
-            : base(new AccountService())
+        public AccountController(IAccountService service)
+            : base(service) //Factory.CreateService<AccountService>())
         {
-            _glAccount = new ServiceBase<GLAccountSelection>();
-            _ledger = new ServiceBase<Ledger>();
-            _fiscalYear = new ServiceBase<FiscalYear>();
         }
         
         [HttpGet]
@@ -86,9 +81,9 @@ namespace DDI.WebApi.Controllers.GL
                 Fields = fields,
             };
 
-            var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
+            ServiceBase<GLAccountSelection> _glAccount = Factory.CreateService<ServiceBase<GLAccountSelection>>();
 
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
+            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
         }
 
         [HttpGet]
@@ -119,6 +114,8 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
+
+                ServiceBase<GLAccountSelection> _glAccount = Factory.CreateService<ServiceBase<GLAccountSelection>>();
 
                 var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
                 return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));

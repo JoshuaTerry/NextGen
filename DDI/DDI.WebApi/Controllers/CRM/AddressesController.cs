@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -14,10 +15,7 @@ namespace DDI.WebApi.Controllers.CRM
     {
         protected new IAddressService Service => (IAddressService) base.Service;
 
-        public AddressesController()
-            : base(new AddressService())
-        {
-        }
+        public AddressesController() : base(Factory.CreateService<AddressService>()) { }
 
         protected override Expression<Func<Address, object>>[] GetDataIncludesForSingle()
         {

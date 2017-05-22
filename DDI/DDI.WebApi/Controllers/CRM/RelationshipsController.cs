@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -17,9 +18,7 @@ namespace DDI.WebApi.Controllers.CRM
         protected new IRelationshipService Service => (IRelationshipService)base.Service;
 
         public RelationshipsController()
-            : base(new RelationshipService())
-        {
-        }
+            : base(Factory.CreateService<RelationshipService>()) { }
 
         private string DefaultFields =>
                 string.Join(",", new string[]
