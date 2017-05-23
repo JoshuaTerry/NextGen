@@ -51,7 +51,7 @@
 
                     <div class="modalbuttons">
                         <input type="button" class="savebutton" value="Save" />
-                        <a href="#" class="cancelmodal">Cancel</a>
+                        <a href="#" class="cancelgroupmodal">Cancel</a>
                     </div>
                 </div>
 

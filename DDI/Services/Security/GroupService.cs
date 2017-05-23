@@ -29,5 +29,17 @@ namespace DDI.Services.General
         {
             throw new NotImplementedException();
         }
+
+        public IDataResponse<ICollection<Role>> GetRolesInGroup(Guid groupId)
+        {
+            var roles = UnitOfWork.GetById<Group>(groupId).Roles;
+            var response =  new DataResponse<ICollection<Role>>()
+            {
+                Data = roles,
+                IsSuccessful = true
+            };
+            return response;
+
+        }
     }
 }

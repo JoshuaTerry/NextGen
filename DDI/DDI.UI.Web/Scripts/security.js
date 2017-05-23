@@ -69,7 +69,7 @@ function LoadGroupsGrid() {
 
     //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
     CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
-        , SaveGroup, null, null); 
+        , EditGroup, null, null); 
 
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
 
@@ -83,14 +83,37 @@ function NewGroupModal() {
 
         e.preventDefault();
 
-        var modal = $('.groupmodal').dialog({
+        modal = $('.groupmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 500,
+            width: 400,
             resizable: false
         });
 
+        $('.cancelgroupmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+            $('.rolestagbox').dxTagBox('instance').reset();
+
+        });
+
     });
+
+}
+
+function EditGroup() {
+
+    $('.groupmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    $('.groupmodal').show();
 
 }
 
@@ -124,6 +147,20 @@ function DeleteGroup() {
 
 }
 
+function LoadGroup(id) {
+
+    MakeServiceCall('GET', 'users/', null, function (e) {
+
+        $('.gp-Name').val(data.Data.DisplayName);
+
+    });
+
+    MakeServiceCall('GET', 'users/', null, function (e) {
+
+        $('.gp-Name').val(data.Data.DisplayName);
+
+    });
+}
 
 function LoadSecuritySettingsGrid() {
 
