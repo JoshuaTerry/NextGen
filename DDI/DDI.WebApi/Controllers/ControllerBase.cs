@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DDI.Logger;
-using DDI.Services;
 using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
@@ -36,21 +33,11 @@ namespace DDI.WebApi.Controllers
 
         #region Constructors 
 
-        public ControllerBase()
-            :this(Factory.CreateService<ServiceBase<T>>())
-        {
-        }
-
         public ControllerBase(IService<T> serviceBase)
-            : this(serviceBase, new DynamicTransmogrifier(), new Pagination())
         {
-        }
-
-        internal ControllerBase(IService<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
-        {
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
-            _service = serviceBase; 
+            _pagination = new Pagination();
+            _dynamicTransmogrifier = new DynamicTransmogrifier();
+            _service = serviceBase;
             _service.IncludesForSingle = GetDataIncludesForSingle();
             _service.IncludesForList = GetDataIncludesForList();
         }
