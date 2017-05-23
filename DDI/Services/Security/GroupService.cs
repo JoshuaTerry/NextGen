@@ -2,11 +2,13 @@
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebGrease.Css.Extensions;
 
 namespace DDI.Services.General
 {
@@ -40,6 +42,37 @@ namespace DDI.Services.General
             };
             return response;
 
+        }
+
+        public IDataResponse<Group> AddRolesToGroup(Guid groupId, JObject roleIds)
+        {
+            var group = UnitOfWork.GetById<Group>(groupId, r => r.Roles);
+            var rolesToAdd = new List<Role>();
+
+            foreach(var pair in roleIds)
+            {
+                if(pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    rolesToAdd.AddRange(from jToken in (JArray)pair.Value
+                                        select Guid.Parse(jToken.ToString()) 
+                                        into id select UnitOfWork.GetById<Role>(id));
+
+                }
+            }
+
+            var remove = group.Roles.Except(rolesToAdd);
+            var add = rolesToAdd.Except(group.Roles);
+            remove.ForEach(r => group.Roles.Remove(r));
+            add.ForEach(ra => group.Roles.Add(ra));
+
+            UnitOfWork.SaveChanges();
+            var response = new DataResponse<Group>
+            {
+                Data = group,
+                IsSuccessful = true
+            };
+
+            return response;
         }
     }
 }

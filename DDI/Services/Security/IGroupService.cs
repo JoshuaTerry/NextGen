@@ -1,5 +1,6 @@
 ﻿using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace DDI.Services.ServiceInterfaces
         IDataResponse AddUserToGroup(Guid userId, Guid groupId);
         IDataResponse RemoveUserFromGroup(Guid userId, Guid groupId);
         IDataResponse<ICollection<Role>> GetRolesInGroup(Guid groupId);
-        IDataResponse<ICollection<Role>> AddRoleToGroup(Guid groupId, Guid roleId);
+        IDataResponse<Group> AddRolesToGroup(Guid groupId, JObject roleIds);
+
     }
 }
