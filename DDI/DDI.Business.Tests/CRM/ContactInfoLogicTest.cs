@@ -7,6 +7,7 @@ using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
 using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -80,6 +81,31 @@ namespace DDI.Business.Tests.CRM
 
             AssertThrowsException<ArgumentNullException>(() => _bl.ValidatePhoneNumber(null), "Null argument should throw exception.");
         }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ContactInfoLogic_ValidateEmailAddress()
+        {
+            BuildConstituentDataSource();
+
+            _emailContactInfo.Info = "user@gmail.com";
+            AssertNoException(() => _bl.ValidateEmailAddress(_emailContactInfo), "user@gmail.com is valid.");
+
+            AssertThrowsException<ArgumentNullException>(() => _bl.ValidateEmailAddress(null), "Null argument should throw exception.");
+
+            _emailContactInfo.Info = "usergmail.com";
+            AssertThrowsException<ValidationException>(() => _bl.ValidateEmailAddress(_emailContactInfo), "Email address must contain '@'");
+
+            _emailContactInfo.Info = "us!er@gmail.com";
+            AssertThrowsException<ValidationException>(() => _bl.ValidateEmailAddress(_emailContactInfo), "Email address can't contain special chars.");
+
+            _emailContactInfo.Info = "user@gmail";
+            AssertThrowsException<ValidationException>(() => _bl.ValidateEmailAddress(_emailContactInfo), "Email address must have a zone.");
+
+            _emailContactInfo.Info = "@gmail.com";
+            AssertThrowsException<ValidationException>(() => _bl.ValidateEmailAddress(_emailContactInfo), "Email address must have an addressee.");
+
+        }
+
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void ContactInfoLogic_SimplifyPhoneNumberForCountry()

@@ -1,4 +1,5 @@
-﻿using DDI.Shared.Models.Client.GL;
+﻿using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.GL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -45,6 +46,10 @@ namespace DDI.Shared.Models.Client.Security
         public Guid? DefaultBusinessUnitId { get; set; }
         [ForeignKey(nameof(DefaultBusinessUnitId))]
         public BusinessUnit DefaultBusinessUnit { get; set; }
+
+        public Guid? ConstituentId { get; set; }
+        [ForeignKey(nameof(ConstituentId))]
+        public Constituent Constituent { get; set; }
 
         [InverseProperty(nameof(BusinessUnit.Users))]
         public ICollection<BusinessUnit> BusinessUnits { get; set; }
