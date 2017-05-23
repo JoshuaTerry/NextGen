@@ -125,7 +125,7 @@ function DoSearch() {
                         showOperationChooser: false
                     },
                     onRowClick: function (info) {
-                        DisplayConstituent(info.values[1]);
+                        DisplayConstituent(info.values[0]);
                     }
                 });
 
