@@ -2,6 +2,7 @@
 using DDI.Services.General;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,17 @@ namespace DDI.WebApi.Controllers.Core
     {
         protected override string FieldsForAll => FieldListBuilder
             .Include(p => p.Roles);
+
+        protected override string FieldsForSingle => FieldListBuilder
+            .Include(p => p.Roles);
+
+        protected override Expression<Func<Group, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Group, object>>[]
+            {
+                n => n.Roles
+            };
+        }
 
         protected new IGroupService Service => (IGroupService)base.Service;
 
@@ -41,29 +53,36 @@ namespace DDI.WebApi.Controllers.Core
         }
 
         [HttpGet]
-        [Route("api/v1/groups/{groupId}/roles")]
-        public IHttpActionResult GetRolesFromGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        [Route("api/v1/groups/{id}")]
+        public IHttpActionResult GetById(Guid id, string fields = null)
+        {
+            return base.GetById(id, fields);
+        }
+
+        [HttpGet]
+        [Route("api/v1/group/{groupId}/roles")]
+        public IHttpActionResult GetRolesByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
-                // need to get the roles, not populating? Should be in the database. Also need the roles off of data
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(g => g.Id == groupId);
-                var results = response.Data;
-                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, ConvertFieldList(fields, FieldsForList));
+                var group = Service.GetById(groupId);
+                var roles = group.Data.Roles.ToList();
+
+                var response = new DataResponse<List<Role>>
+                {
+                    Data = roles,
+                    IsSuccessful = true
+                };
+
+                //return FinalizeResponse<Role>(response);
+                return FinalizeResponse<Role>(response, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.ToString);
                 return InternalServerError();
             }
-        }
-
-        [HttpGet]
-        [Route("api/v1/groups/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
-        {
-            return base.GetById(id, fields);
         }
 
         [HttpPost]

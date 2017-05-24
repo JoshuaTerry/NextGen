@@ -44,15 +44,26 @@
                         <input type="text" class="gp-Name" />
                     </div>
 
+                    <div class="rolesgridcontainer"></div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="savebutton" value="Save" />
+                        <input type="button" class="testbutton" value="Do Thing" />
+                        <a href="#" class="cancelgroupmodal">Cancel</a>
+                    </div>
+                </div>
+
+            </div>
+
+              <div class="rolesmodal" title="Groups" style="display: none;">
+
+                <div class="modalcontent">
+
                     <div class="fieldblock">
                         <label>Roles:</label>
                         <div class="gp-rolesdropdowncontainer"></div>
                     </div>
 
-                    <div class="modalbuttons">
-                        <input type="button" class="savebutton" value="Save" />
-                        <a href="#" class="cancelgroupmodal">Cancel</a>
-                    </div>
                 </div>
 
             </div>

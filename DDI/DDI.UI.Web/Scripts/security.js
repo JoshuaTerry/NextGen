@@ -70,6 +70,7 @@ function LoadGroupsGrid() {
     CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
         , EditGroup, null, null); 
 
+    //LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
 
     DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
@@ -104,8 +105,14 @@ function NewGroupModal() {
 }
 
 function EditGroup() {
+    // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Roles' }
+    ];
 
-    $('.groupmodal').dialog({
+    //CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + currentEntity.Id + '/roles', '', null, null, null); // will need delete method, but no edit method (probably)
+
+    modal = $('.groupmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 400,
@@ -113,6 +120,29 @@ function EditGroup() {
     });
 
     $('.groupmodal').show();
+
+    $('.testbutton').click(function (e) {
+
+        var roleModal = $('.rolesmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            resizable: false
+        });
+
+
+
+    });
+
+    $('.cancelgroupmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        $('.rolestagbox').dxTagBox('instance').reset();
+
+    });
 
 }
 
