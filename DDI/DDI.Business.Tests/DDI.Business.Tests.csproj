@@ -76,6 +76,7 @@
     <Compile Include="Common\DataSources\StateDataSource.cs" />
     <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
+    <Compile Include="Core\DIContainerTest.cs" />
     <Compile Include="Core\TransactionLogicTest.cs" />
     <Compile Include="Core\EntityNumberLogicTest.cs" />
     <Compile Include="Core\ConfigurationLogicTest.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
     <Compile Include="ModuleInfo\ModuleInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegionLogicTests.cs" />
+    <Compile Include="CRM\RegionLogicTests.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>

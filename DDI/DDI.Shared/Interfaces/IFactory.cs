@@ -15,5 +15,6 @@ namespace DDI.Shared.Interfaces
         T CreateService<T>(IUnitOfWork unitOfWork) where T : IService;
         IService CreateService(Type serviceType, IUnitOfWork unitOfWork);
         object CreateController(Type controllerType);
+        object CreateController(Type controllerType, IUnitOfWork unitOfWork);
     }
 }

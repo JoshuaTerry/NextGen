@@ -21,7 +21,7 @@ namespace DDI.WebApi.Controllers
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ControllerBase<T>));
         private PathHelper.FieldListBuilder<T> _fieldListBuilder = null;
 
-        protected IService<T> Service => _service;
+        internal IService<T> Service => _service;
         protected ILogger Logger => _logger;
         protected DynamicTransmogrifier DynamicTransmogrifier => _dynamicTransmogrifier;
         protected IPagination Pagination => _pagination;
@@ -81,8 +81,7 @@ namespace DDI.WebApi.Controllers
 
         protected UrlHelper GetUrlHelper()
         {
-            var urlHelper = new UrlHelper(Request);
-            return urlHelper;
+            return new UrlHelper(Request);
         }
           
         protected IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)

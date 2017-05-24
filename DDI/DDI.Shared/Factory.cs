@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Shared.Data;
 using DDI.Shared.Interfaces;
-using System.Reflection;
-using DDI.Shared.Extensions;
 
 namespace DDI.Shared
 {
@@ -20,14 +14,12 @@ namespace DDI.Shared
 
         private static IFactoryProvider _defaultProvider = null;
         private static IFactoryProvider _provider = null;
-        private static Dictionary<Type, IList<Type>> _controllerServices = null;
-        private static object _lockObject = new object();
-        private static Type _iserviceType = typeof(IService);
+        private static bool _isForTesting = false;
 
         private const string NOTREGISTERED = "The RepositoryFactory and/or ServiceFactory types have not been properly registered.";
 
         /// <summary>
-        /// Register the Repository/UnitOfWork factory
+        /// Register the Repository/UnitOfWork factory class.
         /// </summary>
         public static void RegisterRepositoryFactory<T>() where T : IRepositoryFactory
         {
@@ -35,16 +27,15 @@ namespace DDI.Shared
         }
 
         /// <summary>
-        /// Register the Service factory.
+        /// Register the Service factory class.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         public static void RegisterServiceFactory<T>() where T : IServiceFactory
         {
             _serviceFactoryType = typeof(T);
         }
 
         /// <summary>
-        /// Register the factory provider class to be used (instead of the default factory provider.)
+        /// Register the factory provider class to be used (in place of the default factory provider.)
         /// </summary>
         public static void RegisterFactoryProvider<T>() where T : IFactoryProvider, new()
         {
@@ -77,6 +68,7 @@ namespace DDI.Shared
             {
                 _repositoryFactoryType = typeof(RepositoryFactoryNoDb);
             }
+            _isForTesting = true;
         }
 
         /// <summary>
@@ -96,7 +88,7 @@ namespace DDI.Shared
         }
 
         /// <summary>
-        /// Create a Service.
+        /// Create a Service using the DI container.
         /// </summary>
         public static IService CreateService(Type serviceType, IUnitOfWork unitOfWork)
         {
@@ -104,7 +96,21 @@ namespace DDI.Shared
         }
 
         /// <summary>
-        /// Create a disposable factory.
+        /// Create a Controller.
+        /// </summary>
+        /// <param name="controllerType">Type of controller to create.</param>
+        public static T CreateController<T>(IUnitOfWork unitOfWork) where T : class
+        {
+            if (!_isForTesting)
+            {
+                throw new InvalidOperationException("Controllers cannot be created outside of a unit testing project.");
+            }
+
+            return GetChildFactory().CreateController(typeof(T), unitOfWork) as T;
+        }
+
+        /// <summary>
+        /// Create a disposable factory, used for disposing objects created by the factory.
         /// </summary>
         public static IFactory CreateDisposableFactory()
         {
@@ -137,60 +143,7 @@ namespace DDI.Shared
             }
             return factory;
         }
-        /*
-        private static IList<Type> GetServiceTypes(Type controllerType)
-        {
-            lock (_lockObject)
-            {
 
-                if (_controllerServices == null)
-                {
-                    _controllerServices = new Dictionary<Type, IList<Type>>();
-                }
-
-                IList<Type> paramTypes = _controllerServices.GetValueOrDefault(controllerType);
-                if (paramTypes == null)
-                {
-                    paramTypes = new List<Type>();
-
-                    foreach (var entry in controllerType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
-                    {
-                        paramTypes.Clear();
-                        bool isValid = true;
-
-                        // Determine if the constructor contains only IService parameters
-                        foreach (var param in entry.GetParameters())
-                        {
-                            Type paramType = param.ParameterType;
-                            if (_iserviceType.IsAssignableFrom(paramType))
-                            {
-                                paramTypes.Add(paramType);
-                            }
-                            else
-                            {
-                                isValid = false;
-                                break;
-                            }
-                        }
-
-                        if (!isValid)
-                        {
-                            continue;
-                        }
-                        if (paramTypes.Count > 0)
-                        {
-                            // Once we find a constructor that takes a service type, stop looking for other constructors.
-                            break;
-                        }
-                    }
-
-                    _controllerServices[controllerType] = paramTypes;
-                }
-
-                return paramTypes;
-            }
-        }
-        */
         /// <summary>
         /// A Factory that implements IDisposable, used by the WebApi for each dependency scope.
         /// </summary>
@@ -270,34 +223,21 @@ namespace DDI.Shared
             /// Create a Controller.
             /// </summary>
             /// <param name="controllerType">Type of controller to create.</param>
-            public object CreateController(Type controllerType)
+            public object CreateController(Type controllerType) => CreateController(controllerType, null);
+
+            /// <summary>
+            /// Create a Controller.
+            /// </summary>
+            /// <param name="controllerType">Type of controller to create.</param>
+            /// <param name="unitOfWork">Unit of Work.</param>
+            public object CreateController(Type controllerType, IUnitOfWork unitOfWork)
             {
                 if (_serviceFactory == null || _repositoryFactory == null)
                 {
                     throw new InvalidOperationException(NOTREGISTERED);
                 }
 
-                return DIContainer.Resolve(controllerType);
-                /*
-                // Get the list of service parameters in the controller's contstructor.
-                IList<Type> paramTypes = GetServiceTypes(controllerType);
-
-                // Create the parameters for the constructor, which will be the actual service objects.
-                List<object> parameters = new List<object>();
-                if (paramTypes.Count > 0)
-                {
-                    // Create a single UnitOfWork for all services for this controller.
-                    IUnitOfWork uow = CreateUnitOfWork();
-
-                    foreach (var entry in paramTypes)
-                    {
-                        parameters.Add(_serviceFactory.CreateService(entry, uow));
-                    }
-                }
-
-                // Create the controller.
-                return Activator.CreateInstance(controllerType, parameters.ToArray());
-                */
+                return DIContainer.Resolve(controllerType, unitOfWork);
             }
 
             #region IDisposable Support

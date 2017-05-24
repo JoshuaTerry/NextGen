@@ -8,9 +8,18 @@ using DDI.Shared.Extensions;
 
 namespace DDI.Shared
 {
+    /// <summary>
+    /// Dependency Injection (DI) Container Class
+    /// </summary>
+    /// <remarks>
+    /// Simplified DI functionality targeted to Controllers, Services, and Business Logic. 
+    /// The only types of constructor parameters than be injected are services, UnitOfWork, Repository, and business logic.
+    /// Types can be registered via Register(), with the ability to register a mapping from an interface to a concrete class.
+    /// The container will auto-register types when Resolve() is called for a non-registered type.
+    /// 
+    /// </remarks>
     public static class DIContainer
     {
-
         private static Dictionary<Type, RegisteredType> _registeredTypes;
 
         private static Type _iunitOfWorkType = typeof(IUnitOfWork);
@@ -26,32 +35,51 @@ namespace DDI.Shared
             _lockObject = new object();
         }
 
-        public static void Register(Type fromType, Type toType)
-        {
-            RegisterWithReturn(fromType, toType);
-        }
+        #region Public Methods
 
-        private static RegisteredType RegisterWithReturn(Type fromType, Type toType)
-        {
-            lock (_lockObject)
-            {
-                RegisteredType rtype = new RegisteredType(toType);
-                _registeredTypes[fromType] = rtype;
-                return rtype;
-            }
-        }
+        /// <summary>
+        /// Register a type and the actual type it should resolve to.
+        /// </summary>
+        /// <param name="fromType">Type to be registered.</param>
+        /// <param name="toType">Type to be created by Resolve().</param>
+        public static void Register(Type fromType, Type toType) => RegisterWithReturn(fromType, toType);
 
+        /// <summary>
+        /// Register a type.
+        /// </summary>
+        public static void Register(Type type) =>  RegisterWithReturn(type, type);
+
+        /// <summary>
+        /// Return an instance of a type, injecting any dependencies to its constructor.
+        /// <param name="requestedType">Type to be resolved.</param>
+        /// </summary>
         public static object Resolve(Type requestedType) => Resolve(requestedType, null, null);
 
+        /// <summary>
+        /// Return an instance of a type, injecting any dependencies to its constructor.
+        /// <param name="requestedType">Type to be resolved.</param>
+        /// <param name="unitOfWork">A IUnitOfWork that will be used for any dependencies.</param>
+        /// </summary>
+        public static object Resolve(Type requestedType, IUnitOfWork unitOfWork) => Resolve(requestedType, unitOfWork, null);
+
+        /// <summary>
+        /// Return an instance of a type, injecting any dependencies to its constructor.
+        /// </summary>
+        /// <param name="requestedType">Type to be resolved.</param>
+        /// <param name="unitOfWork">A IUnitOfWork that will be used for any dependencies.</param>
+        /// <param name="typeResolver">A function that can be called to resolve unregistered types.</param>
+        /// <returns></returns>
         public static object Resolve(Type requestedType, IUnitOfWork unitOfWork, Func<Type,Type> typeResolver)
         {
             RegisteredType rtype = null;
             lock (_lockObject)
             {
-                 rtype = _registeredTypes.GetValueOrDefault(requestedType);
+                // If the type is registered, get the RegisteredType object.
+                rtype = _registeredTypes.GetValueOrDefault(requestedType);
             }
             if (rtype == null && typeResolver != null)
             {
+                // The type is not registered yet, but call the typeResolver to resolve it to a concrete class type.
                 Type otherType = typeResolver(requestedType);
                 if (otherType != null)
                 {
@@ -60,20 +88,23 @@ namespace DDI.Shared
             }
             if (rtype == null)
             {
+                // As a last resort, simply register the type.
                 rtype = RegisterWithReturn(requestedType, requestedType);
             }
 
             if (rtype.Parameters == null)
             {
+                // If the parameter list has not been determined, get it.
                 GetParameterTypes(rtype);
             }
 
+            // Build the parameter list.
             List<object> parameters = new List<object>();
             foreach (var entry in rtype.Parameters)
             {
                 switch (entry.Mode)
                 {
-                    case ServiceParameterMode.UnitOfWork:
+                    case ParameterMode.UnitOfWork:
                         if (unitOfWork == null)
                         {
                             unitOfWork = Factory.CreateUnitOfWork();
@@ -81,7 +112,7 @@ namespace DDI.Shared
                         parameters.Add(unitOfWork);
                         break;
 
-                    case ServiceParameterMode.BusinessLogic:
+                    case ParameterMode.BusinessLogic:
                         if (unitOfWork == null)
                         {
                             unitOfWork = Factory.CreateUnitOfWork();
@@ -89,7 +120,7 @@ namespace DDI.Shared
                         parameters.Add(unitOfWork.GetBusinessLogic(entry.Type));
                         break;
 
-                    case ServiceParameterMode.Repository:
+                    case ParameterMode.Repository:
                         if (unitOfWork == null)
                         {
                             unitOfWork = Factory.CreateUnitOfWork();
@@ -101,7 +132,7 @@ namespace DDI.Shared
                         parameters.Add(_getRepository.MakeGenericMethod(entry.Type).Invoke(unitOfWork, null));
                         break;
 
-                    case ServiceParameterMode.Service:
+                    case ParameterMode.Service:
                         if (unitOfWork == null)
                         {
                             unitOfWork = Factory.CreateUnitOfWork();
@@ -116,36 +147,66 @@ namespace DDI.Shared
                 }
             }
 
+            // Create an instance of the type.
             return Activator.CreateInstance(rtype.MappedType, parameters.ToArray());
         }
 
+        #endregion
+
+        #region Private Methods
+
+        private static RegisteredType RegisterWithReturn(Type fromType, Type toType)
+        {
+            if (fromType == null)
+            {
+                throw new ArgumentNullException(nameof(fromType));
+            }
+            if (toType == null)
+            {
+                throw new ArgumentNullException(nameof(toType));
+            }
+            if (!toType.IsClass)
+            {
+                throw new InvalidOperationException($"In order to register the type {fromType.FullName}, it must either be a class or be mapped to a class.");
+            }
+            lock (_lockObject)
+            {
+                RegisteredType rtype = new RegisteredType(toType);
+                _registeredTypes[fromType] = rtype;
+                return rtype;
+            }
+        }
+
+
         /// <summary>
-        /// Get the list of parameter types for the service constructor.
+        /// Get the list of parameter types for a registered type.
+        /// </summary>
         private static void GetParameterTypes(RegisteredType registeredType)
         {
             lock (_lockObject)
             {
-                IList<ServiceParameter> paramTypes = new List<ServiceParameter>();
+                List<Parameter> paramTypes = new List<Parameter>();
+                List<Parameter> maxParamTypes = new List<Parameter>();
 
                 foreach (var entry in registeredType.MappedType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
                 {
                     paramTypes.Clear();
                     bool isValid = true;
 
-                    // Look for constructor parameters that are IService, IBusinessLogic, IUnitOfWork, or IRepository.
+                    // Look for constructor parameters that are IService, IBusinessLogic, IUnitOfWork, or IRepository.  These are the only types that can be injected.
                     foreach (var param in entry.GetParameters())
                     {
                         Type paramType = param.ParameterType;
                         if (paramType == _iunitOfWorkType)
                         {
-                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.UnitOfWork));
+                            paramTypes.Add(new Parameter(paramType, ParameterMode.UnitOfWork));
                         }
                         else if (paramType.IsConstructedGenericType && paramType.GetGenericTypeDefinition() == _irepositoryType)
                         {
                             var typeArgs = paramType.GenericTypeArguments;
                             if (typeArgs.Length == 1)
                             {
-                                paramTypes.Add(new ServiceParameter(typeArgs[0], ServiceParameterMode.Repository));
+                                paramTypes.Add(new Parameter(typeArgs[0], ParameterMode.Repository));
                             }
                             else
                             {
@@ -154,14 +215,15 @@ namespace DDI.Shared
                         }
                         else if (_iserviceType.IsAssignableFrom(paramType))
                         {
-                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.Service));
+                            paramTypes.Add(new Parameter(paramType, ParameterMode.Service));
                         }
                         else if (_ibusinessLogicType.IsAssignableFrom(paramType))
                         {
-                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.BusinessLogic));
+                            paramTypes.Add(new Parameter(paramType, ParameterMode.BusinessLogic));
                         }
                         else
                         {
+                            // This type cannot be injected.
                             isValid = false;
                         }
                         if (!isValid)
@@ -170,26 +232,26 @@ namespace DDI.Shared
                         }
                     }
 
-                    if (!isValid)
+                    if (isValid && paramTypes.Count > maxParamTypes.Count)
                     {
-                        continue;
-                    }
-                    if (paramTypes.Count > 0)
-                    {
-                        // Once we find a constructor that takes a recognized parameter types, stop looking for other constructors.
-                        break;
+                        // Go with the constructor with the largest # of parameters that can be injected.
+                        maxParamTypes.Clear();
+                        maxParamTypes.AddRange(paramTypes);
                     }
                 }
 
-                registeredType.Parameters = paramTypes;
+                registeredType.Parameters = maxParamTypes;
             }
         }
 
+        #endregion
+
+        #region Nested Classes
 
         private class RegisteredType
         {
             public Type MappedType { get; set; }
-            public IList<ServiceParameter> Parameters { get; set; }
+            public IList<Parameter> Parameters { get; set; }
 
             public RegisteredType(Type type)
             {
@@ -198,22 +260,23 @@ namespace DDI.Shared
             }
         }
 
-
-        private class ServiceParameter
+        private class Parameter
         {
             public Type Type { get; set; }
-            public ServiceParameterMode Mode { get; set; }
+            public ParameterMode Mode { get; set; }
 
-            public ServiceParameter(Type type, ServiceParameterMode mode)
+            public Parameter(Type type, ParameterMode mode)
             {
                 Type = type;
                 Mode = mode;
             }
         }
 
-        private enum ServiceParameterMode
+        private enum ParameterMode
         {
             Service, BusinessLogic, UnitOfWork, Repository
         }
+
+        #endregion
     }
 }

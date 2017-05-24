@@ -145,11 +145,13 @@
   <ItemGroup>
     <Compile Include="Controllers\GendersControllerTests.cs" />
     <Compile Include="Controllers\AuthorizationsControllerTests.cs" />
+    <Compile Include="Controllers\DIContainerTest.cs" />
     <Compile Include="Fakes\FakeApplicationUserManager.cs" />
     <Compile Include="Helpers\PaginationTests.cs" />
     <Compile Include="Helpers\DynamicTransmogrifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EmailServiceTest.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

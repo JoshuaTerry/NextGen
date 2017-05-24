@@ -73,10 +73,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DIContainerTest.cs" />
     <Compile Include="Extensions\PageableSearchExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
+      <Project>{0E7D7E11-80B4-4751-8C21-B05A08A19473}</Project>
+      <Name>DDI.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997b56f7-612d-43d5-90bd-89f264d4c58d}</Project>
       <Name>DDI.Shared</Name>

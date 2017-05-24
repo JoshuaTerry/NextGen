@@ -26,7 +26,9 @@ namespace DDI.Business.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
 
             _countries = CountryDataSource.GetDataSource(_uow);
             _states = StateDataSource.GetDataSource(_uow);

@@ -10,6 +10,5 @@ namespace DDI.Shared
     {
         T CreateService<T>(IUnitOfWork unitOfWork) where T : IService;
         IService CreateService(Type serviceType, IUnitOfWork unitOfWork);
-        Type ServiceTypeResolver(Type serviceType);
     }
 }
