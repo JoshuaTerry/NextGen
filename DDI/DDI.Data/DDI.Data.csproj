@@ -87,6 +87,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201705241257537_ChangingGroupToAuditable.cs" />
+    <Compile Include="Migrations\Client\201705241257537_ChangingGroupToAuditable.Designer.cs">
+      <DependentUpon>201705241257537_ChangingGroupToAuditable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.cs" />
     <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.Designer.cs">
       <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
@@ -236,6 +240,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201705241257537_ChangingGroupToAuditable.resx">
+      <DependentUpon>201705241257537_ChangingGroupToAuditable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.resx">
       <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
     </EmbeddedResource>
