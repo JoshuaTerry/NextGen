@@ -72,9 +72,9 @@ namespace DDI.Business.Helpers
             }
             else
             {
-                using (var context = Factory.CreateUnitOfWork())
+                using (var unitOfwork = Factory.CreateUnitOfWork())
                 {
-                    return context.GetEntities<Abbreviation>().ToList();
+                    return unitOfwork.GetEntities<Abbreviation>().ToList();
                 }
             }
         }

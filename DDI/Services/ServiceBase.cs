@@ -31,8 +31,7 @@ namespace DDI.Services
 
         public ServiceBase(IUnitOfWork uow)
         {
-            _unitOfWork = uow;
-            Initialize();
+            _unitOfWork = uow;            
         }
 
         public IUnitOfWork UnitOfWork
@@ -50,9 +49,7 @@ namespace DDI.Services
         {
             protected get { return _includesForList; }
             set { _includesForList = value; }
-        }
-
-        protected virtual void Initialize() { }
+        }      
 
         public virtual IDataResponse<List<ICanTransmogrify>> GetAll()
         {

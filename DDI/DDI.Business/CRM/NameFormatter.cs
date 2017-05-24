@@ -56,8 +56,6 @@ namespace DDI.Business.CRM
 
         #region Constructors 
 
-        public NameFormatter() : this(Factory.CreateUnitOfWork()) { }
-
         public NameFormatter(IUnitOfWork uow)
         {
             UnitOfWork = uow;
