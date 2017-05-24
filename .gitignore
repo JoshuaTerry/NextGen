@@ -6,6 +6,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.orig
+DDI/DDI.UI.Web/Scripts/configuration.js
 auth.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
@@ -212,6 +214,3 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-DDI/DDI.UI.Web/Scripts/configuration.js
-*.orig
-DDI/DDI.UI.Web/auth.config
