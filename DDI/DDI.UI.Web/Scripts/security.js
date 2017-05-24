@@ -62,7 +62,6 @@ function SetupNewUserModal() {
 function LoadGroupsGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
@@ -179,7 +178,6 @@ function LoadSecuritySettingsGrid() {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'DisplayName', caption: 'User Name' },
         { dataField: 'Email', caption: 'Email Address' },
         { caption: 'Active', cellTemplate: function (container, options) {

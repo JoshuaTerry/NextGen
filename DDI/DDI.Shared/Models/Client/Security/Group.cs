@@ -8,17 +8,25 @@ using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
-    public class Group : EntityBase
+    public class Group : IEntity, IAuditableEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         [MaxLength(128)]
         public string Name { get; set; }
         [NotMapped]
-        public override string DisplayName => Name;
+        public string DisplayName => Name;
         public ICollection<User> Users { get; set; }
         public ICollection<Role> Roles { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string LastModifiedBy { get; set; }
+        public DateTime? LastModifiedOn { get; set; }
+
+        public void AssignPrimaryKey()
+        {
+        }
     }
 }

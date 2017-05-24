@@ -195,10 +195,7 @@ function DisplayConstituentData() {
         $('.hidconstituentid').val(id);
 
         $.map(currentEntity, function (value, key) {
-
-            if (typeof (value) == 'string')
-                value = value.replace('"', '').replace('"', '');
-
+         
             if (key != '$id') {
 
                 var classname = '.' + key;
@@ -470,7 +467,6 @@ function LoadEthnicitiesTagBox() {
 function LoadDBAGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px', },
         { dataField: 'StartDate', caption: 'From', dataType: 'date' },
         { dataField: 'EndDate', caption: 'To', dataType: 'date' },
         { dataField: 'Name', caption: 'Name' }
@@ -522,7 +518,6 @@ function SetupDegreeAutoComplete() {
 /* Education Section */
 function LoadEducationGrid() {
     var columns = [
-            { dataField: 'Id', width: '0px' },
             { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
             { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
             { dataField: 'SchoolOther', caption: 'School' },
@@ -543,7 +538,6 @@ function LoadEducationGrid() {
 function LoadPaymentPreferencesTable() {
 
     var columns = [
-            { dataField: 'Id', width: '0px' },
             { dataField: 'Description', caption: 'Description' },
             { dataField: 'RoutingNumber', caption: 'Routing Number' },
             { dataField: 'BankAccount', caption: 'Account Number' },
@@ -676,7 +670,6 @@ function LoadAuditTable() {
 function LoadAlternateIDTable() {
 
     var columns = [
-            { dataField: 'Id', width:'0px' },
             { dataField: 'Name', caption: 'Name' }
     ];
 
@@ -696,7 +689,6 @@ function LoadContactInfo() {
 function LoadAddressesGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'IsPrimary', caption: 'Is Primary' },
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
         { dataField: 'Address.AddressLine1', caption: 'Address' }
@@ -742,7 +734,7 @@ function NewAddressModal() {
 
             var item = {
                 ConstituentId: currentEntity.Id,
-                IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+                IsPrimary: $(modal).find('.na-IsPrimary').prop('checked'),
                 Comment: $(modal).find('.na-Comment').val(),
                 StartDate: $(modal).find('.na-StartDate').val(),
                 EndDate: $(modal).find('.na-EndDate').val(),
@@ -870,7 +862,7 @@ function GetEditedAddressFields() {
     var item = {
         Id: $(modal).find('.hidconstituentaddressid').val(),
         ConstituentId: currentEntity.Id,
-        IsPrimary: $(modal).find('.na-IsPreferred').prop('checked'),
+        IsPrimary: $(modal).find('.na-IsPrimary').prop('checked'),
         Comment: $(modal).find('.na-Comment').val(),
         StartDate: $(modal).find('.na-StartDate').val(),
         EndDate: $(modal).find('.na-EndDate').val(),
@@ -906,7 +898,7 @@ function LoadAddress(id) {
         $('.hidconstituentaddressid').val(data.Data.Id);
         $('.hidaddressid').val(data.Data.Address.Id);
 
-        $('.na-isIsPreferred').prop('checked', data.Data.Address.IsPreferred);
+        $('.na-IsPrimary').prop('checked', data.Data.IsPrimary);
         $('.na-Comment').val(data.Data.Comment);
         $('.na-StartDate').val(data.Data.StartDate);
         $('.na-EndDate').val(data.Data.EndDate);
@@ -970,7 +962,6 @@ function LoadCategories(CategoryTitles) {
 function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
 
     var columns = [
-        { dataField:  'Id', width: '0px' }, 
         { dataField: 'IsPreferred', caption: 'Is Preferred' },
         { dataField: 'ContactType.Name', caption: 'Type' }, 
         { dataField: 'Info', caption: displayText },
@@ -1040,7 +1031,6 @@ function RelationshipLinkClicked(id) {
 function LoadRelationshipsTab() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'RelationshipType.RelationshipCategory.Name', caption: 'Category', groupIndex: 0 },
         { dataField: 'RelationshipType.Name', caption: 'Relationship', width: '30%' },
         { dataField: 'Constituent1.ConstituentNumber', caption: 'ID', width: '20%' },
