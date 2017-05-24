@@ -27,13 +27,12 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var search = new PageableSearch(SearchParameters.OffsetDefault,10000000, OrderByProperties.TransactionDate);
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
-                var result = Service.GetAllWhereExpression(pt => pt.LedgerAccountYearId == ledgerAccountYear.Id,search);
-                var castResults = result.Data.Cast<PostedTransaction>();
-                var gridResults = DataSourceLoader.Load(castResults, loadOptions);
+                var results = new PostedTransactionService().GetPostedTransactionsForLedgerAccountYearId(ledgerAccountYear.Id);
                
-                return Request.CreateResponse(HttpStatusCode.OK, gridResults); 
+                //var gridResults = DataSourceLoader.Load(results, loadOptions);
+                
+                return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(results, loadOptions)); 
             }
             catch (Exception ex)
             {

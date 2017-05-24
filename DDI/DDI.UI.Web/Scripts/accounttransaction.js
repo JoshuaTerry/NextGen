@@ -8,23 +8,38 @@ function LoadTransactionGrid(accountId) {
     
     var columns = [
         {
-            dataField: 'MonthYear', caption: 'Month/Year',
-            calculateSortValue: function (data) {
-                var sortValue = data.TransactionDate.getMonth();
-                return sortValue;
-            }
-
+            dataField: 'PeriodNumber', caption: 'Period',
+            groupIndex: 0,
+            groupCellTemplate: function (groupCell, info) {
+                var groupheader = info.value + ' (count: ' + info.summaryItems[0].value + ')'
+                $('<div>').html(groupheader).appendTo(groupCell);
+            },
+            sortOrder: 'asc',
+            sortIndex: 0,
         },
-        { dataField: 'TransactionNumber', caption: 'Trans #' },
-        { dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date', sortOrder:'asc'},
+        {
+            dataField: 'TransactionNumber', caption: 'Trans #',
+            groupCellTemplate: function (groupCell, info) {
+                var groupheader = info.value + ' (count: ' + info.summaryItems[0].value + ')'
+                $('<div>').html(groupheader).appendTo(groupCell);
+            },
+        },
+        {
+            dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date',
+            sortOrder: 'asc', sortIndex: 1,
+            groupCellTemplate: function (groupCell, info) {
+
+                var groupheader = info.value.format('MM/dd/yyyy') + ' (count: ' + info.summaryItems[0].value + ')'
+                $('<div>').html(groupheader).appendTo(groupCell);
+            },
+        },
         { dataField: 'Amount', caption: 'Amount', dataType: 'number', precision: 2, format: 'currency', allowGrouping: false },
         { dataField: 'Description', caption: 'Description', allowGrouping: false },
-        { dataField: 'TransactionId', caption: 'Trans Id' },
+        { dataField: 'TransactionId', caption: 'Trans Id', allowGrouping: false  },
         { dataField: 'SourceDescription', caption: 'Source Description', allowGrouping: false },
         {
             caption: 'View', cellTemplate: function (container, options) {
-                
-                $('<input>').attr("type", "button").attr("Id", "btnView").addClass("searchicon").appendTo(container);
+               $('<input>').attr("type", "button").attr("Id", "btnView").addClass("searchicon").appendTo(container);
             },
             allowGrouping: false
         }       
@@ -48,9 +63,7 @@ function LoadTransactionGrid(accountId) {
         },
         dataSource: {
             store: gridData,
-            group: [
-                { selector: "MonthYear", groupInterval: 15, desc: false },
-            ]
+            type: "array",
         },
         filterRow: {
             visible: true,
@@ -71,7 +84,7 @@ function LoadTransactionGrid(accountId) {
         },
         summary: {
             groupItems: [{
-                column: "MonthYear",
+                column: "PeriodNumber",
                 summaryType: "count",
                 displayFormat: "count: {0}",
             }]
