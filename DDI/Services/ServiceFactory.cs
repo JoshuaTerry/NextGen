@@ -9,7 +9,7 @@ namespace DDI.Services
     public class ServiceFactory : IServiceFactory
     {
         private static Dictionary<Type, Type> _serviceImplementations = null;
-        private static Dictionary<Type, IList<ServiceParameter>> _parameterTypes = null;
+        //private static Dictionary<Type, IList<ServiceParameter>> _parameterTypes = null;
 
         private static Type _iunitOfWorkType = typeof(IUnitOfWork);
         private static Type _ibusinessLogicType = typeof(IBusinessLogic);
@@ -54,9 +54,10 @@ namespace DDI.Services
                 {
                     GetServiceImplementations();
                 }
+            }
+            return (IService)DIContainer.Resolve(serviceType, unitOfWork, ServiceTypeResolver);
 
-                return (IService)DIContainer.Resolve(serviceType, unitOfWork, ServiceTypeResolver);
-
+            /*
                 // Try to get the concrete type from the set of known services.
 
                 Type concreteType = _serviceImplementations.GetValueOrDefault(serviceType);
@@ -107,6 +108,7 @@ namespace DDI.Services
 
                 return (IService)Activator.CreateInstance(concreteType, parameters.ToArray());
             }
+            */
         }
 
         #endregion
@@ -157,7 +159,7 @@ namespace DDI.Services
                 }
             }
         }
-
+        /*
         /// <summary>
         /// Get the list of parameter types for the service constructor.
         private static IList<ServiceParameter> GetParameterTypes(Type serviceType)
@@ -248,8 +250,8 @@ namespace DDI.Services
         {
             BusinessLogic, UnitOfWork, Repository
         }
+        */
 
         #endregion
-
     }
 }

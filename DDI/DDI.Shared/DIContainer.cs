@@ -28,149 +28,161 @@ namespace DDI.Shared
 
         public static void Register(Type fromType, Type toType)
         {
-            _registeredTypes[fromType] = new RegisteredType(toType);
+            RegisterWithReturn(fromType, toType);
+        }
+
+        private static RegisteredType RegisterWithReturn(Type fromType, Type toType)
+        {
+            lock (_lockObject)
+            {
+                RegisteredType rtype = new RegisteredType(toType);
+                _registeredTypes[fromType] = rtype;
+                return rtype;
+            }
         }
 
         public static object Resolve(Type requestedType) => Resolve(requestedType, null, null);
 
         public static object Resolve(Type requestedType, IUnitOfWork unitOfWork, Func<Type,Type> typeResolver)
         {
+            RegisteredType rtype = null;
             lock (_lockObject)
             {
-                RegisteredType rtype = _registeredTypes.GetValueOrDefault(requestedType);
-                if (rtype == null && typeResolver != null)
-                {
-                    Type otherType = typeResolver(requestedType);
-                    if (otherType != null)
-                    {
-                        Register(requestedType, otherType);
-                        rtype = _registeredTypes[requestedType];
-                    }
-                }
-                if (rtype == null)
-                {
-                    Register(requestedType, requestedType);
-                    rtype = _registeredTypes[requestedType];
-                }
-
-                if (rtype.Parameters == null)
-                {
-                    GetParameterTypes(rtype);
-                }
-
-                List<object> parameters = new List<object>();
-                foreach (var entry in rtype.Parameters)
-                {
-                    switch (entry.Mode)
-                    {
-                        case ServiceParameterMode.UnitOfWork:
-                            if (unitOfWork == null)
-                            {
-                                unitOfWork = Factory.CreateUnitOfWork();
-                            }
-                            parameters.Add(unitOfWork);
-                            break;
-
-                        case ServiceParameterMode.BusinessLogic:
-                            if (unitOfWork == null)
-                            {
-                                unitOfWork = Factory.CreateUnitOfWork();
-                            }
-                            parameters.Add(unitOfWork.GetBusinessLogic(entry.Type));
-                            break;
-
-                        case ServiceParameterMode.Repository:
-                            if (unitOfWork == null)
-                            {
-                                unitOfWork = Factory.CreateUnitOfWork();
-                            }
-                            if (_getRepository == null)
-                            {
-                                _getRepository = _iunitOfWorkType.GetMethod(nameof(IUnitOfWork.GetRepository));
-                            }
-                            parameters.Add(_getRepository.MakeGenericMethod(entry.Type).Invoke(unitOfWork, null));
-                            break;
-
-                        case ServiceParameterMode.Service:
-                            if (unitOfWork == null)
-                            {
-                                unitOfWork = Factory.CreateUnitOfWork();
-                            }
-                            IService service = Factory.CreateService(entry.Type, unitOfWork);
-                            if (service == null)
-                            {
-                                throw new InvalidOperationException($"Cannot create a service of type {entry.Type.FullName}.");
-                            }
-                            parameters.Add(service);
-                            break;
-                    }
-                }
-
-                return Activator.CreateInstance(rtype.MappedType, parameters.ToArray());
+                 rtype = _registeredTypes.GetValueOrDefault(requestedType);
             }
+            if (rtype == null && typeResolver != null)
+            {
+                Type otherType = typeResolver(requestedType);
+                if (otherType != null)
+                {
+                    rtype = RegisterWithReturn(requestedType, otherType);
+                }
+            }
+            if (rtype == null)
+            {
+                rtype = RegisterWithReturn(requestedType, requestedType);
+            }
+
+            if (rtype.Parameters == null)
+            {
+                GetParameterTypes(rtype);
+            }
+
+            List<object> parameters = new List<object>();
+            foreach (var entry in rtype.Parameters)
+            {
+                switch (entry.Mode)
+                {
+                    case ServiceParameterMode.UnitOfWork:
+                        if (unitOfWork == null)
+                        {
+                            unitOfWork = Factory.CreateUnitOfWork();
+                        }
+                        parameters.Add(unitOfWork);
+                        break;
+
+                    case ServiceParameterMode.BusinessLogic:
+                        if (unitOfWork == null)
+                        {
+                            unitOfWork = Factory.CreateUnitOfWork();
+                        }
+                        parameters.Add(unitOfWork.GetBusinessLogic(entry.Type));
+                        break;
+
+                    case ServiceParameterMode.Repository:
+                        if (unitOfWork == null)
+                        {
+                            unitOfWork = Factory.CreateUnitOfWork();
+                        }
+                        if (_getRepository == null)
+                        {
+                            _getRepository = _iunitOfWorkType.GetMethod(nameof(IUnitOfWork.GetRepository));
+                        }
+                        parameters.Add(_getRepository.MakeGenericMethod(entry.Type).Invoke(unitOfWork, null));
+                        break;
+
+                    case ServiceParameterMode.Service:
+                        if (unitOfWork == null)
+                        {
+                            unitOfWork = Factory.CreateUnitOfWork();
+                        }
+                        IService service = Factory.CreateService(entry.Type, unitOfWork);
+                        if (service == null)
+                        {
+                            throw new InvalidOperationException($"Cannot create a service of type {entry.Type.FullName}.");
+                        }
+                        parameters.Add(service);
+                        break;
+                }
+            }
+
+            return Activator.CreateInstance(rtype.MappedType, parameters.ToArray());
         }
 
         /// <summary>
         /// Get the list of parameter types for the service constructor.
         private static void GetParameterTypes(RegisteredType registeredType)
         {
-            IList<ServiceParameter> paramTypes = new List<ServiceParameter>();
-
-            foreach (var entry in registeredType.MappedType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
+            lock (_lockObject)
             {
-                paramTypes.Clear();
-                bool isValid = true;
+                IList<ServiceParameter> paramTypes = new List<ServiceParameter>();
 
-                // Look for constructor parameters that are IService, IBusinessLogic, IUnitOfWork, or IRepository.
-                foreach (var param in entry.GetParameters())
+                foreach (var entry in registeredType.MappedType.GetConstructors().Where(p => p.IsPublic && !p.IsStatic))
                 {
-                    Type paramType = param.ParameterType;
-                    if (paramType == _iunitOfWorkType)
+                    paramTypes.Clear();
+                    bool isValid = true;
+
+                    // Look for constructor parameters that are IService, IBusinessLogic, IUnitOfWork, or IRepository.
+                    foreach (var param in entry.GetParameters())
                     {
-                        paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.UnitOfWork));
-                    }
-                    else if (paramType.IsConstructedGenericType && paramType.GetGenericTypeDefinition() == _irepositoryType)
-                    {
-                        var typeArgs = paramType.GenericTypeArguments;
-                        if (typeArgs.Length == 1)
+                        Type paramType = param.ParameterType;
+                        if (paramType == _iunitOfWorkType)
                         {
-                            paramTypes.Add(new ServiceParameter(typeArgs[0], ServiceParameterMode.Repository));
+                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.UnitOfWork));
+                        }
+                        else if (paramType.IsConstructedGenericType && paramType.GetGenericTypeDefinition() == _irepositoryType)
+                        {
+                            var typeArgs = paramType.GenericTypeArguments;
+                            if (typeArgs.Length == 1)
+                            {
+                                paramTypes.Add(new ServiceParameter(typeArgs[0], ServiceParameterMode.Repository));
+                            }
+                            else
+                            {
+                                isValid = false;
+                            }
+                        }
+                        else if (_iserviceType.IsAssignableFrom(paramType))
+                        {
+                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.Service));
+                        }
+                        else if (_ibusinessLogicType.IsAssignableFrom(paramType))
+                        {
+                            paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.BusinessLogic));
                         }
                         else
                         {
                             isValid = false;
                         }
+                        if (!isValid)
+                        {
+                            break;
+                        }
                     }
-                    else if (_iserviceType.IsAssignableFrom(paramType))
-                    {
-                        paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.Service));
-                    }
-                    else if (_ibusinessLogicType.IsAssignableFrom(paramType))
-                    {
-                        paramTypes.Add(new ServiceParameter(paramType, ServiceParameterMode.BusinessLogic));
-                    }
-                    else
-                    {
-                        isValid = false;
-                    }
+
                     if (!isValid)
                     {
+                        continue;
+                    }
+                    if (paramTypes.Count > 0)
+                    {
+                        // Once we find a constructor that takes a recognized parameter types, stop looking for other constructors.
                         break;
                     }
                 }
 
-                if (!isValid)
-                {
-                    continue;
-                }
-                if (paramTypes.Count > 0)
-                {
-                    // Once we find a constructor that takes a recognized parameter types, stop looking for other constructors.
-                    break;
-                }
+                registeredType.Parameters = paramTypes;
             }
-
-            registeredType.Parameters = paramTypes;            
         }
 
 

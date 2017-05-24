@@ -124,11 +124,6 @@ namespace DDI.Shared
             return new DisposableFactory(_repoFactory, _serviceFactory);
         }
 
-        public static Func<Type,Type> GetServiceTypeResolver()
-        {
-            return GetChildFactory().GetServiceTypeResolver();            
-        }
-
         private static IFactory GetChildFactory()
         {
             IFactory factory = _provider?.GetFactory();
@@ -142,7 +137,7 @@ namespace DDI.Shared
             }
             return factory;
         }
-
+        /*
         private static IList<Type> GetServiceTypes(Type controllerType)
         {
             lock (_lockObject)
@@ -195,7 +190,7 @@ namespace DDI.Shared
                 return paramTypes;
             }
         }
-
+        */
         /// <summary>
         /// A Factory that implements IDisposable, used by the WebApi for each dependency scope.
         /// </summary>
@@ -283,7 +278,7 @@ namespace DDI.Shared
                 }
 
                 return DIContainer.Resolve(controllerType);
-
+                /*
                 // Get the list of service parameters in the controller's contstructor.
                 IList<Type> paramTypes = GetServiceTypes(controllerType);
 
@@ -302,12 +297,7 @@ namespace DDI.Shared
 
                 // Create the controller.
                 return Activator.CreateInstance(controllerType, parameters.ToArray());
-                
-            }
-
-            public Func<Type,Type> GetServiceTypeResolver()
-            {
-                return _serviceFactory.ServiceTypeResolver;
+                */
             }
 
             #region IDisposable Support
