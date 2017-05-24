@@ -29,9 +29,6 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var ledgerAccountYear = _ledgerAccountYear.GetAllWhereExpression(ly=> ly.AccountId == id).Data.FirstOrDefault();
                 var results = new PostedTransactionService().GetPostedTransactionsForLedgerAccountYearId(ledgerAccountYear.Id);
-               
-                //var gridResults = DataSourceLoader.Load(results, loadOptions);
-                
                 return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(results, loadOptions)); 
             }
             catch (Exception ex)

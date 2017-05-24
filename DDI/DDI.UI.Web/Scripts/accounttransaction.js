@@ -1,17 +1,57 @@
-﻿$(document).ready(function () {
+﻿var _periodDescription = [];
+
+function GetPeriodDescription(periodNumber)
+{
+    for (var i = 0; i < _periodDescription.length ; i++)
+    {
+        if (_periodDescription[i].PeriodNumber == periodNumber)
+        {
+            return _periodDescription[i].MonthYear;
+        }
+    }
+}
+
+$(document).ready(function () {
 
     LoadTransactionGrid('1DA29C60-2792-46C3-9ED6-C398061885F8');
 
 });
 
 function LoadTransactionGrid(accountId) {
-    
+
+    MakeServiceCall("GET", "fiscalperiods/glaccount/" + accountId, null,
+        function (data) {
+            getMonthName = function (v) {
+                var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return month[v]
+            }
+
+            var periods = data.Data;
+            if (data != undefined)
+            {
+                $.map(data.Data, function (item) {
+                    var fiscalPeriodInfo = {
+                        PeriodNumber: item.PeriodNumber,
+                        MonthYear: item.IsAdjustmentPeriod ? "Adjustments" : getMonthName(new Date(item.StartDate).getMonth()) + ' ' + new Date(item.StartDate).getFullYear()
+                    }
+                    _periodDescription.push(fiscalPeriodInfo);
+                });
+            }
+
+        }, null
+    );
+
     var columns = [
         {
             dataField: 'PeriodNumber', caption: 'Period',
+            cellTemplate: function (container, options) {
+                var periodDescription = GetPeriodDescription(options.value)
+                $('<label>').text(periodDescription).appendTo(container);
+            },
             groupIndex: 0,
             groupCellTemplate: function (groupCell, info) {
-                var groupheader = info.value + ' (count: ' + info.summaryItems[0].value + ')'
+                var periodDescription = GetPeriodDescription(info.value);
+                var groupheader = periodDescription + ' (count: ' + info.summaryItems[0].value + ')'
                 $('<div>').html(groupheader).appendTo(groupCell);
             },
             sortOrder: 'asc',
@@ -28,7 +68,6 @@ function LoadTransactionGrid(accountId) {
             dataField: 'TransactionDate', caption: 'Tran Date', dataType: 'date',
             sortOrder: 'asc', sortIndex: 1,
             groupCellTemplate: function (groupCell, info) {
-
                 var groupheader = info.value.format('MM/dd/yyyy') + ' (count: ' + info.summaryItems[0].value + ')'
                 $('<div>').html(groupheader).appendTo(groupCell);
             },
