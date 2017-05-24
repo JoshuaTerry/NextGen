@@ -13,6 +13,8 @@ namespace DDI.Shared.Interfaces
         IRepository<T> CreateRepository<T>() where T : class;
         T CreateService<T>() where T : IService;
         T CreateService<T>(IUnitOfWork unitOfWork) where T : IService;
+        IService CreateService(Type serviceType, IUnitOfWork unitOfWork);
         object CreateController(Type controllerType);
+        Func<Type, Type> GetServiceTypeResolver();
     }
 }

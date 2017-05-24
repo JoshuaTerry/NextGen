@@ -13,10 +13,12 @@ namespace DDI.Data
     public class RepositoryFactoryEF : IRepositoryFactory
     {
         private IList<IDisposable> _objectsToDispose;
+        private object _lockObject;
 
         public RepositoryFactoryEF()
         {
             _objectsToDispose = new List<IDisposable>();
+            _lockObject = new object();
         }
 
         public IRepository<T> CreateRepository<T>() where T : class
@@ -31,9 +33,12 @@ namespace DDI.Data
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            IUnitOfWork uow = new UnitOfWorkEF();
-            _objectsToDispose.Add(uow);
-            return uow;
+            lock (_lockObject)
+            {
+                IUnitOfWork uow = new UnitOfWorkEF();
+                _objectsToDispose.Add(uow);
+                return uow;
+            }
         }
 
         #region IDisposable Support
@@ -45,7 +50,10 @@ namespace DDI.Data
             {
                 if (disposing)
                 {
-                    _objectsToDispose.ForEach(p => p.Dispose());
+                    lock (_lockObject)
+                    {
+                        _objectsToDispose.ForEach(p => p.Dispose());
+                    }
                 }
                 _objectsToDispose.Clear();
                 disposedValue = true;

@@ -26,6 +26,23 @@ namespace DDI.Services
             return (T)CreateService(typeof(T), unitOfWork);
         }
 
+        public Type ServiceTypeResolver(Type serviceType)
+        {
+            Type concreteType = null;
+
+            // If serviceType is IService<entity> then use ServiceBase<entity>
+            if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == _iserviceType)
+            {
+                concreteType = _iserviceBaseType.MakeGenericType(serviceType.GenericTypeArguments);
+            }
+            // If serviceType is ServiceBase<entity> then use it.
+            else if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == _iserviceBaseType)
+            {
+                concreteType = serviceType;
+            }
+            return concreteType;
+        }
+
         /// <summary>
         /// Create a service for a specified type, which can be a concrete class or interface.
         /// </summary>
@@ -37,6 +54,8 @@ namespace DDI.Services
                 {
                     GetServiceImplementations();
                 }
+
+                return (IService)DIContainer.Resolve(serviceType, unitOfWork, ServiceTypeResolver);
 
                 // Try to get the concrete type from the set of known services.
 
@@ -108,6 +127,7 @@ namespace DDI.Services
                 if (serviceType.IsAssignableFrom(type))
                 {
                     _serviceImplementations[type] = type;
+                    DIContainer.Register(type, type);
                 }
 
                 // Any IService interfaces should map to this type.
@@ -116,6 +136,7 @@ namespace DDI.Services
                     if (interfaceType != serviceType && serviceType.IsAssignableFrom(interfaceType))
                     {
                         _serviceImplementations[interfaceType] = type;
+                        DIContainer.Register(interfaceType, type);
                     }
                 }
 
@@ -127,6 +148,7 @@ namespace DDI.Services
                     {
                         _serviceImplementations[baseType] = type;
                         baseType = baseType.BaseType;
+                        DIContainer.Register(baseType, type);
                     }
                     else
                     {

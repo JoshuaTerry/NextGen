@@ -110,6 +110,7 @@
     <Compile Include="Data\RepositoryNoDb.cs" />
     <Compile Include="Data\UnitOfWorkNoDb.cs" />
     <Compile Include="DDIConfigurationManager.cs" />
+    <Compile Include="DIContainer.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />

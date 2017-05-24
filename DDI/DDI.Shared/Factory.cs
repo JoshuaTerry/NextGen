@@ -96,6 +96,14 @@ namespace DDI.Shared
         }
 
         /// <summary>
+        /// Create a Service.
+        /// </summary>
+        public static IService CreateService(Type serviceType, IUnitOfWork unitOfWork)
+        {
+            return GetChildFactory().CreateService(serviceType, unitOfWork);
+        }
+
+        /// <summary>
         /// Create a disposable factory.
         /// </summary>
         public static IFactory CreateDisposableFactory()
@@ -114,6 +122,11 @@ namespace DDI.Shared
             }
 
             return new DisposableFactory(_repoFactory, _serviceFactory);
+        }
+
+        public static Func<Type,Type> GetServiceTypeResolver()
+        {
+            return GetChildFactory().GetServiceTypeResolver();            
         }
 
         private static IFactory GetChildFactory()
@@ -247,6 +260,18 @@ namespace DDI.Shared
             }
 
             /// <summary>
+            /// Create a Service.
+            /// </summary>
+            public IService CreateService(Type serviceType, IUnitOfWork unitOfWork)
+            {
+                if (_serviceFactory == null)
+                {
+                    throw new InvalidOperationException(NOTREGISTERED);
+                }
+                return _serviceFactory.CreateService(serviceType, unitOfWork);
+            }
+
+            /// <summary>
             /// Create a Controller.
             /// </summary>
             /// <param name="controllerType">Type of controller to create.</param>
@@ -256,6 +281,8 @@ namespace DDI.Shared
                 {
                     throw new InvalidOperationException(NOTREGISTERED);
                 }
+
+                return DIContainer.Resolve(controllerType);
 
                 // Get the list of service parameters in the controller's contstructor.
                 IList<Type> paramTypes = GetServiceTypes(controllerType);
@@ -276,6 +303,11 @@ namespace DDI.Shared
                 // Create the controller.
                 return Activator.CreateInstance(controllerType, parameters.ToArray());
                 
+            }
+
+            public Func<Type,Type> GetServiceTypeResolver()
+            {
+                return _serviceFactory.ServiceTypeResolver;
             }
 
             #region IDisposable Support
