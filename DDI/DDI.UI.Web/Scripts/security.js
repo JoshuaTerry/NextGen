@@ -1,4 +1,5 @@
-﻿
+﻿var currentGroup = null;
+
 $(document).ready(function () {
 
    // SetupNewUserModal();
@@ -62,15 +63,29 @@ function SetupNewUserModal() {
 function LoadGroupsGrid() {
 
     var columns = [
+        { dataField: 'Id', width: '0px' },
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
+    MakeServiceCall('GET', 'groups/', null, function (data) {
+
+        //LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
+        LoadGridWithData('groupgrid', '.groupstable', columns, null, null, EditGroup, null, data, null);
+        //maybe define a currentGroup variable and set the id when edit is clicked?
+
+    }, function (xhr, status, err) {
+
+        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+
+        });
 
     //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
-    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
-        , EditGroup, null, null); 
+    //CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
+    //    , EditGroup, null, null); 
 
-    //LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
+
+
     //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
 
     DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
@@ -104,13 +119,14 @@ function NewGroupModal() {
 
 }
 
-function EditGroup() {
+function EditGroup(id) {
+    
     // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
     var columns = [
         { dataField: 'DisplayName', caption: 'Roles' }
     ];
 
-    //CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + currentEntity.Id + '/roles', '', null, null, null); // will need delete method, but no edit method (probably)
+    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, null, null); // will need delete method, but no edit method (probably)
 
     modal = $('.groupmodal').dialog({
         closeOnEscape: false,
