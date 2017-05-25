@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Services;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalPeriodController : GenericController<FiscalPeriod>
     {
+        private ServiceBase<Account> _account = new ServiceBase<Account>();
+
         private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
 
         protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
@@ -35,6 +38,24 @@ namespace DDI.WebApi.Controllers.GL
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/fiscalperiods/glaccount/{accountId}")]
+        public IHttpActionResult GetFiscalPeriodsByAccountId(Guid accountId)
+        {
+            try
+            {
+                var account = _account.GetById(accountId);
+
+                var result = Service.GetAllWhereExpression(fp => fp.FiscalYearId == account.Data.FiscalYearId);
+
+                return FinalizeResponse(result, null, null, null, null);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
         [HttpGet]
         [Route("api/v1/fiscalperiods/{id}", Name = RouteNames.FiscalPeriod + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)

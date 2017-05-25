@@ -13,6 +13,7 @@
         public const string Audit = "Audit";
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
+        public const string BusinessUnitFromTo = "BusinessUnitFromTo";
         public const string Card = "Card";
         public const string CategoryName = "CategoryName";
         public const string ClergyStatus = "ClergyStatus";
@@ -34,6 +35,8 @@
         public const string EFT = "EFT";
         public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
+        public const string Fund = "Fund";
+        public const string FundFromTo = "FundFromTo";
         public const string Degree = "Degree";
         public const string Denomination = "Denomination";
         public const string DoingBusinessAs = "DoingBusinessAs";
