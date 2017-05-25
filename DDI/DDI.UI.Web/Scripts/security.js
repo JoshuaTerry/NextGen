@@ -246,8 +246,7 @@ function RolesModal() {
 function AddRolesToGroup(id) {
 
     var items = $('.rolestagbox').dxTagBox('instance').option('values');
-    var doop = JSON.stringify(items);
-    var pood = "Items: " + doop
+    var pood = JSON.encode(items);
 
     MakeServiceCall('POST', 'groups/' + id + '/roles/', pood, function (data) {
 
