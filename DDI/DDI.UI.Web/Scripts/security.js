@@ -145,6 +145,8 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
+    $('.addrolesbutton').unbind('click');
+
     $('.addrolesbutton').click(function (e) {
 
         var roleModal = $('.rolesmodal').dialog({
@@ -162,6 +164,16 @@ function EditGroup(id) {
 
         });
 
+        $('.cancelrolesmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(roleModal);
+
+            $('.rolestagbox').dxTagBox('instance').reset();
+
+        });
+
     });
 
     $('.cancelgroupmodal').click(function (e) {
@@ -169,8 +181,6 @@ function EditGroup(id) {
         e.preventDefault();
 
         CloseModal(modal);
-
-        $('.rolestagbox').dxTagBox('instance').reset();
 
     });
 
@@ -245,12 +255,16 @@ function RolesModal() {
 
 function AddRolesToGroup(id) {
 
-    var items = $('.rolestagbox').dxTagBox('instance').option('values');
-    var pood = JSON.encode(items);
+    var values = $('.rolestagbox').dxTagBox('instance').option('values');
+    var items = "{ item: " + JSON.stringify(values) + " }";
 
-    MakeServiceCall('POST', 'groups/' + id + '/roles/', pood, function (data) {
+    MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
 
         DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
+
+        $('.rolesmodal').hide();
+
+        LoadGroup(id)
 
     }, function (xhr, status, err) {
         DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);

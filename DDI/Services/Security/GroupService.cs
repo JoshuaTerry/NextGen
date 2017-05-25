@@ -60,9 +60,9 @@ namespace DDI.Services.General
                 }
             }
 
-            var remove = group.Roles.Except(rolesToAdd);
+//            var remove = group.Roles.Except(rolesToAdd);
             var add = rolesToAdd.Except(group.Roles);
-            remove.ForEach(r => group.Roles.Remove(r));
+          //  remove.ForEach(r => group.Roles.Remove(r));
             add.ForEach(ra => group.Roles.Add(ra));
 
             UnitOfWork.SaveChanges();

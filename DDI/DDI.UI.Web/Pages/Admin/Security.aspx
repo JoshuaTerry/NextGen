@@ -56,7 +56,7 @@
 
             </div>
 
-              <div class="rolesmodal" title="Groups" style="display: none;">
+              <div class="rolesmodal" title="Roles" style="display: none;">
 
                 <div class="modalcontent">
 
