@@ -294,9 +294,12 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\FundFromToController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
+    <Compile Include="Controllers\GL\FundController.cs" />
     <Compile Include="Controllers\GL\JournalsController.cs" />
+    <Compile Include="Controllers\GL\BusinessUnitFromToController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
     <Compile Include="Controllers\GL\PostTransactionController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
@@ -334,6 +337,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="bin\DDI.WebApi.dll" />
+    <Content Include="bin\DDI.WebApi.pdb" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dx.android5.light.css" />

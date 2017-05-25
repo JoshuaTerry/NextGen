@@ -90,6 +90,9 @@
     <Compile Include="Common\CountryService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\FundService.cs" />
+    <Compile Include="GL\FundFromToService.cs" />
+    <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="CRM\EducationService.cs" />
     <Compile Include="CRM\ContactTypeService.cs" />
     <Compile Include="GL\PostedTransactions.cs" />
@@ -134,6 +137,8 @@
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
+    <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
+    <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
     <Compile Include="CRM\ITagGroupService.cs" />
     <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
