@@ -19,9 +19,11 @@ namespace DDI.WebApi.Controllers.Core
     public class GroupController : GenericController<Group>
     {
         protected override string FieldsForAll => FieldListBuilder
+            .Include(p => p.DisplayName)
             .Include(p => p.Roles);
 
         protected override string FieldsForSingle => FieldListBuilder
+            .Include(p => p.DisplayName)
             .Include(p => p.Roles);
 
         protected override Expression<Func<Group, object>>[] GetDataIncludesForSingle()

@@ -46,9 +46,10 @@
 
                     <div class="rolesgridcontainer"></div>
 
+                    <input type="button" class="addrolesbutton" value="Add Roles" />
+
                     <div class="modalbuttons">
                         <input type="button" class="savebutton" value="Save" />
-                        <input type="button" class="testbutton" value="Do Thing" />
                         <a href="#" class="cancelgroupmodal">Cancel</a>
                     </div>
                 </div>
@@ -62,6 +63,12 @@
                     <div class="fieldblock">
                         <label>Roles:</label>
                         <div class="gp-rolesdropdowncontainer"></div>
+                    </div>
+
+                    
+                    <div class="modalbuttons">
+                        <input type="button" class="saverolesbutton" value="Add" />
+                        <a href="#" class="cancelrolesmodal">Cancel</a>
                     </div>
 
                 </div>

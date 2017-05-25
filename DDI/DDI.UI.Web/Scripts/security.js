@@ -59,6 +59,17 @@ function SetupNewUserModal() {
 
 }
 
+function LoadSecuritySettingsGrid() {
+
+    var columns = [
+        { dataField: 'UserId', caption: 'User ID' },
+        { dataField: 'Name', caption: 'Name' }
+    ];
+
+    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
+
+}
+
 /* GROUPS TAB */
 function LoadGroupsGrid() {
 
@@ -70,7 +81,7 @@ function LoadGroupsGrid() {
     MakeServiceCall('GET', 'groups/', null, function (data) {
 
         //LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
-        LoadGridWithData('groupgrid', '.groupstable', columns, null, null, EditGroup, null, data, null);
+        LoadGridWithData('groupgrid', '.groupstable', columns, null, null, EditGroup, DeleteGroup, data, null);
         //maybe define a currentGroup variable and set the id when edit is clicked?
 
     }, function (xhr, status, err) {
@@ -122,11 +133,8 @@ function NewGroupModal() {
 function EditGroup(id) {
     
     // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
-    var columns = [
-        { dataField: 'DisplayName', caption: 'Roles' }
-    ];
 
-    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, null, null); // will need delete method, but no edit method (probably)
+    LoadGroup(id);
 
     modal = $('.groupmodal').dialog({
         closeOnEscape: false,
@@ -137,7 +145,7 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
-    $('.testbutton').click(function (e) {
+    $('.addrolesbutton').click(function (e) {
 
         var roleModal = $('.rolesmodal').dialog({
             closeOnEscape: false,
@@ -146,7 +154,13 @@ function EditGroup(id) {
             resizable: false
         });
 
+        $('.rolesmodal').show();
 
+        $('.saverolesbutton').click(function (e) {
+
+            AddRolesToGroup(id);
+
+        });
 
     });
 
@@ -186,37 +200,66 @@ function SaveGroup(id) {
 
 }
 
-function DeleteGroup() {
+function DeleteGroup(id) {
 
+    MakeServiceCall('DELETE', 'groups/' + id, null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Group deleted successfully.');
+
+        LoadGroupsGrid();
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+
+    });
 
 
 }
 
 function LoadGroup(id) {
 
-    MakeServiceCall('GET', 'users/', null, function (e) {
-
-        $('.gp-Name').val(data.Data.DisplayName);
-
-    });
-
-    MakeServiceCall('GET', 'users/', null, function (e) {
-
-        $('.gp-Name').val(data.Data.DisplayName);
-
-    });
-}
-
-function LoadSecuritySettingsGrid() {
-
     var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
+        { dataField: 'DisplayName', caption: 'Roles' }
     ];
 
-    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
+    MakeServiceCall('GET', 'groups/' + id, null, function (data) {
+
+        $('.gp-Name').val(data.Data.DisplayName);
+
+    });
+
+    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null); // will need delete method, but no edit method (probably)
 
 }
+
+function DeleteRole() {
+    // need route to remove role from group
+
+}
+
+function RolesModal() {
+
+
+}
+
+function AddRolesToGroup(id) {
+
+    var items = $('.rolestagbox').dxTagBox('instance').option('values');
+    var doop = JSON.stringify(items);
+    var pood = "Items: " + doop
+
+    MakeServiceCall('POST', 'groups/' + id + '/roles/', pood, function (data) {
+
+        DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+    });
+}
+
+
 /* END GROUPS TAB */
 
 
