@@ -18,6 +18,7 @@ namespace DDI.Data
         private bool _isDisposed = false;
         private Dictionary<Type, object> _repositories;
         private List<object> _businessLogic;
+        private List<Action> _saveActions;
 
         /// <summary>
         /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
@@ -39,6 +40,7 @@ namespace DDI.Data
         {
             _repositories = new Dictionary<Type, object>();
             _businessLogic = new List<object>();
+            _saveActions = new List<Action>();
         }
 
         #endregion Public Constructors
@@ -127,6 +129,9 @@ namespace DDI.Data
 
         public int SaveChanges()
         {
+            _saveActions.ForEach(p => p.Invoke());
+            _saveActions.Clear();
+
             return 0;
         }
 
@@ -245,6 +250,14 @@ namespace DDI.Data
         public void Delete<T>(T entity) where T : class
         {
             GetRepository<T>().Delete(entity);
+        }
+
+        /// <summary>
+        /// Add an action to be performed after SaveChanges completes.
+        /// </summary>
+        public void AddPostSaveAction(Action action)
+        {
+            _saveActions.Add(action);
         }
 
         public void AddBusinessLogic(object logic)

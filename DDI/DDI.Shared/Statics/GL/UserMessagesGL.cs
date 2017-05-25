@@ -14,11 +14,14 @@
         public static string BadBusinessUnitCode => "Invalid {0} \"{1}\".";
         public static string AccountMustBeInBusinessUnit => "G/L account must be in {0} \"{1}\".";
         public static string BadFiscalYearForBusinessUnit => "Fiscal year {0} not defined for {1} \"{2}\".";
+        public static string BadFiscalYear => "Fiscal year not defined.";
         public static string GLSegmentAlpha => "Segment code must contain only letters.";
         public static string GLSegmentAlphaNumeric => "Segment code must contain only letters and numbers.";
         public static string GLSegmentLength => "Segment code must be {0} characters long.";
         public static string GLSegmentNumeric => "Segment code must contain only numbers.";
         public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
+        public static string GLAccountSegmentInvalid => "Account segment is not specified or invalid.";
+        public static string GLAccountNoSegments => "Account has no account segments.";
 
         public static string SegmentLevelsNotEditable => "Segment level settings cannot be modified once accounts have been defined.";
         public static string SegmentLevelMissing => "Segment level {0} is not defined.";

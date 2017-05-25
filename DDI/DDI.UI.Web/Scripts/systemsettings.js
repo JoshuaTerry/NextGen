@@ -111,7 +111,7 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
     var activeSection = $('<div>').addClass('fieldblock');
     var checkbox = $('<input>').attr('type', 'checkbox').addClass('sectionAvailable').appendTo(activeSection);
-    $('<span>').text('Activate ' + section + ' of ' + category).appendTo(activeSection);
+    $('<span>').text('Activate ' + section + ' section of ' + category).appendTo(activeSection);
     $(activeSection).appendTo(container);
 
 
@@ -285,7 +285,7 @@ function LoadNoteSectionSettings() {
     $(noteCodes).appendTo($(accordion));
 
     var noteCodecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -297,7 +297,7 @@ function LoadNoteSectionSettings() {
     $(noteCategories).appendTo($(accordion));
 
     var noteCategorycolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Label', caption: 'Label' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -310,7 +310,7 @@ function LoadNoteSectionSettings() {
     $(noteTopics).appendTo($(accordion));
 
     var noteTopiccolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -357,7 +357,7 @@ function LoadClergySectionSettings() {
     $(status).appendTo($(accordion));
 
     var statuscolumns = [
-              { dataField: 'Id', width: '0px' },
+              
               { dataField: 'Code', caption: 'Code' },
               { dataField: 'Name', caption: 'Description' },
               { dataField: 'IsActive', caption: 'Active' }
@@ -369,7 +369,7 @@ function LoadClergySectionSettings() {
     $(types).appendTo($(accordion));
 
     var typecolumns = [
-    { dataField: 'Id', width: '0px' },
+    
     { dataField: 'Code', caption: 'Code' },
     { dataField: 'Name', caption: 'Description' },
     { dataField: 'IsActive', caption: 'Active' }
@@ -550,7 +550,7 @@ function LoadConstituentTypeTagSelector(typeId, container) {
 function LoadConstituentTypeSettingsGrid() {
 
     var typecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         {
@@ -864,7 +864,6 @@ function LoadContactInformationSectionSettings() {
                     Name: $(modal).find('.conttype-Name').val(),
                     ContactCategoryId: $(modal).find('.conttype-ContactCategoryId').val(),
                     IsAlwaysShown: $(modal).find('.conttype-IsAlwaysShown').prop('checked'),
-                    CanDelete: $(modal).find('.conttype-CanDelete').prop('checked'),
                     IsActive: $(modal).find('.conttype-IsActive').prop('checked')
                 }
 
@@ -906,7 +905,7 @@ function LoadContactInformationSectionSettings() {
 function LoadAddressTypeSettingsGrid() {
 
     var addresstypecolumns = [
-       { dataField: 'Id', width: '0px' },
+       
        { dataField: 'Code', caption: 'Code' },
        { dataField: 'Name', caption: 'Description' },
        { dataField: 'IsActive', caption: 'Active' }
@@ -919,7 +918,7 @@ function LoadAddressTypeSettingsGrid() {
 function LoadContactCategorySettingsGrid() {
 
     var contactcategorycolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'SectionTitle', caption: 'Section Title' },
@@ -934,7 +933,7 @@ function LoadContactCategorySettingsGrid() {
 function LoadContactTypeSettingsGrid() {
 
     var contacttypecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'ContactCategory.DisplayName', caption: 'Contact Category' },
@@ -1131,7 +1130,7 @@ function DeleteContactCategory(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Category.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });
@@ -1248,7 +1247,7 @@ function DeleteContactType(id) {
 
         },
         error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', 'An error occurred deleting the Contact Type.');
+            DisplayErrorMessage('Error', xhr.responseJSON.Message);
         }
 
     });
@@ -1274,7 +1273,6 @@ function LoadContactType(id) {
                 $(modal).find('.conttype-Name').val(data.Data.Name);
                 $(modal).find('.conttype-ContactCategoryId').val(data.Data.ContactCategoryId);
                 $(modal).find('.conttype-IsAlwaysShown').prop('checked', data.Data.IsAlwaysShown);
-                $(modal).find('.conttype-CanDelete').prop('checked', data.Data.CanDelete);
                 $(modal).find('.conttype-IsActive').prop('checked', data.Data.IsActive);
 
                 PopulateDropDown('.conttype-ContactCategoryId', 'contactcategory', '', '', data.Data.ContactCategoryId);
@@ -1322,7 +1320,7 @@ function LoadDemographicsSectionSettings() {
 function LoadDenominationSettingsGrid() {
 
     var denominationcolumns = [
-       { dataField: 'Id', width: '0px' },
+       
        { dataField: 'Code', caption: 'Code' },
        { dataField: 'Name', caption: 'Denomination' },
        {
@@ -1395,7 +1393,7 @@ function LoadDenominationSettingsGrid() {
 function LoadEthnicitySettingsGrid() {
 
     var ethnicitycolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Ethnicity' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1409,7 +1407,7 @@ function LoadEthnicitySettingsGrid() {
 function LoadLanguageSettingsGrid() {
 
     var languagecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Language' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1456,7 +1454,7 @@ function LoadEducationSectionSettings() {
 function LoadDegreeSettingsGrid() {
 
     var degreecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1470,7 +1468,7 @@ function LoadDegreeSettingsGrid() {
 function LoadEducationLevelSettingsGrid() {
 
     var educationLevelcolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1484,7 +1482,7 @@ function LoadEducationLevelSettingsGrid() {
 function LoadSchoolsSettingsGrid() {
 
     var schoolcolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1499,7 +1497,7 @@ function LoadSchoolsSettingsGrid() {
 function LoadGenderSectionSettings() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Gender' },
         { dataField: 'IsMasculine', caption: 'Masculine' },
@@ -1537,7 +1535,7 @@ function LoadPersonalSectionSettings() {
 function LoadPrefixSectionSettings() {
 
     var prefixcolumns = [
-       { dataField: 'Id', width: '0px' },
+       
        { dataField: 'Code', caption: 'Code' },
        { dataField: 'Name', caption: 'Description' },
        { dataField: 'Salutation', caption: 'Salutation Prefix' },
@@ -1573,7 +1571,7 @@ function LoadProfessionalSectionSettings() {
 function LoadIncomeLevelSettingsGrid() {
 
     var incomeLevelcolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1587,7 +1585,7 @@ function LoadIncomeLevelSettingsGrid() {
 function LoadProfessionSettingsGrid() {
 
     var professioncolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1797,7 +1795,7 @@ function DisplayRegions(level, parentid) {
     route = route + "?fields=Id,Code,Name,IsActive";
 
     var columns = [
-       { dataField: 'Id', width: '0px' },
+       
        { dataField: 'Code', caption: 'Code' },
        { dataField: 'Name', caption: 'Name' },
        { dataField: 'IsActive', caption: 'Active' }
@@ -2127,7 +2125,7 @@ function LoadRelationshipCategorySettingsGrid() {
 
 
     var relationshipcategorycolumns = [
-       { dataField: 'Id', width: '0px' },
+       
        { dataField: 'Code', caption: 'Code' },
        { dataField: 'Name', caption: 'Denomination' },
        { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
@@ -2142,7 +2140,7 @@ function LoadRelationshipCategorySettingsGrid() {
 function LoadRelationshipTypeSettingsGrid() {
 
     var relationshiptypecolumns = [
-        { dataField: 'Id', width: '0px' },
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal' },
@@ -2403,7 +2401,6 @@ function LoadTagGroupSectionSettings() {
     ];
 
     var columns = [
-        { dataField: 'Id', width: "0px" },
         { dataField: 'Order', caption: 'Order' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'TagSelectionType', caption: 'Multi/Single Select', lookup: { dataSource: selectOptions, valueExpr: 'Id', displayExpr: 'Description' } },
@@ -2446,7 +2443,6 @@ function TagGroupSelected(info) {
     }
 
     var columns = [
-        { dataField: 'Id', width: "0px" },
         { dataField: 'Order', caption: 'Order' },
         { dataField: 'Code', caption: "Code" },
         { dataField: 'Name', caption: 'Description' },
@@ -3035,7 +3031,7 @@ function LoadEntitiesSectionSettings() {
     $('.contentcontainer').empty();
 
     var entityColumns = [
-      { dataField: 'Id', width: '0px' },
+      
       { dataField: 'Code', caption: 'Code' },
       { dataField: 'Name', caption: 'Description' },
       {
@@ -3105,7 +3101,6 @@ function LoadFiscalYearSectionSettings() {
         var ledgerid = $('.LedgerId').val();
 
         var columns = [
-            { dataField: 'Id', width: "0px" },
             { dataField: 'Name', caption: 'Name' },
             {
                 caption: 'Status', cellTemplate: function (container, options) {
@@ -3157,7 +3152,6 @@ function LoadFiscalPeriods(info) {
     */
 
     var columns = [
-        { dataField: 'Id', width: "0px" },
         { dataField: 'PeriodNumber', caption: '' },
         { dataField: 'StartDate', caption: 'Start Date', dataType: 'date' },
         { dataField: 'EndDate', caption: 'End Date', dataType: 'date' },
@@ -3484,7 +3478,7 @@ function LoadGLFormatSectionSettings() {
                 }
 
                 var glformatcolumns = [
-            { dataField: 'Id', width: '0px' },
+            
             { dataField: 'Level', caption: 'Level' },
             {
                 caption: 'Type', cellTemplate: function (container, options) {

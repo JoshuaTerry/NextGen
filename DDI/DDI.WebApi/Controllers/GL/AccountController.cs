@@ -33,6 +33,7 @@ namespace DDI.WebApi.Controllers.GL
                                                         .Exclude(p => p.LedgerAccountYears)
                                                         .Include(p => p.AccountSegments.First().Id)
                                                         .Include(p => p.AccountSegments.First().Level)
+                                                        .Include(p => p.AccountSegments.First().SegmentId)
                                                         .Include(p => p.AccountSegments.First().Segment.Code)
                                                         .Include(p => p.AccountSegments.First().Segment.Name)
                                                         .Include(p => p.ClosingAccount.AccountNumber)
