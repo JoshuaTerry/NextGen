@@ -151,14 +151,11 @@
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\dx.aspnet.data.js" />
     <Content Include="Scripts\InvestmentDetails.js" />
     <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\accounttransaction.js" />
-    <Content Include="Scripts\devextreme-aspnet-data\js\dx.aspnet.data.js" />
     <Content Include="TabbedContent.Master" />
-    <Content Include="Scripts\devextreme-aspnet-data\.bower.json" />
-    <Content Include="Scripts\devextreme-aspnet-data\bower.json" />
-    <Content Include="Scripts\devextreme-aspnet-data\LICENSE" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
