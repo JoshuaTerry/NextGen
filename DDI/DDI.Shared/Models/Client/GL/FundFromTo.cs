@@ -27,13 +27,25 @@ namespace DDI.Shared.Models.Client.GL
         [ForeignKey(nameof(OffsettingFundId))]
         public Fund OffsettingFund { get; set; }
 
+        [Column("FromAccountId")]
+        public Guid? FromLedgerAccountId { get; set; }
+        [ForeignKey(nameof(FromLedgerAccountId))]
+        public LedgerAccount FromLedgerAccount { get; set; }
+
+        [Column("ToAccountId")]
+        public Guid? ToLedgerAccountId { get; set; }
+        [ForeignKey(nameof(ToLedgerAccountId))]
+        public LedgerAccount ToLedgerAccount { get; set; }
+
+        [NotMapped]
         public Guid? FromAccountId { get; set; }
-        [ForeignKey(nameof(FromAccountId))]
-        public LedgerAccount FromAccount { get; set; }
 
+        [NotMapped]
         public Guid? ToAccountId { get; set; }
-        [ForeignKey(nameof(ToAccountId))]
-        public LedgerAccount ToAccount { get; set; }
 
+        [NotMapped]
+        public string Name { get; set; }
+
+        public override string DisplayName => Name;
     }
 }
