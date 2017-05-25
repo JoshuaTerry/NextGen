@@ -109,6 +109,7 @@
     <Compile Include="Encryption.cs" />
     <Compile Include="Enums\Common\CustomFieldEntity.cs" />
     <Compile Include="Enums\Common\CustomFieldType.cs" />
+    <Compile Include="Enums\Common\EntityMappingType.cs" />
     <Compile Include="Enums\Common\EvenOddType.cs" />
     <Compile Include="Enums\Core\DateType.cs" />
     <Compile Include="Enums\Core\EntityTransactionRelationship.cs" />
@@ -185,8 +186,11 @@
     <Compile Include="Models\Client\Audit\ObjectChange.cs" />
     <Compile Include="Models\Client\Audit\PropertyChange.cs" />
     <Compile Include="Models\Client\Core\EntityApproval.cs" />
+    <Compile Include="Models\Client\Core\EntityMapping.cs" />
     <Compile Include="Models\Client\Core\EntityNumber.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
+    <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
+    <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
     <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />

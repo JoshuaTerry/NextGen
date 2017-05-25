@@ -9,6 +9,18 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#">Edit</a></li>
+    <li><a href="#">Save</a></li>
+    <li class="menu-break"></li>
+    <li><a href="#">Import</a></li>
+    <li><a href="#">Export</a></li>
+    <li class="menu-break"></li>
+    <li><a href="#">Edit History</a></li>
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <input id="hidconstituentid" runat="server" type="hidden" class="hidconstituentid" enableviewstate="true" />
@@ -760,7 +772,7 @@
 
                 <div class="fieldblock">
                     <label>Is Preferred</label>
-                    <input type="checkbox" class="na-IsPreferred" />
+                    <input type="checkbox" class="na-IsPrimary" />
                 </div>
 
                 <div class="fieldblock">

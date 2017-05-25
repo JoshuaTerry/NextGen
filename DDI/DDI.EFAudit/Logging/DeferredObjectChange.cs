@@ -56,10 +56,17 @@ namespace DDI.EFAudit.Logging
             if (propertyChange.IsForeignKey)
             {
                 var fkNameLookup = _entity.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ForeignKeyAttribute))).ToDictionary(p => p.GetCustomAttribute<ForeignKeyAttribute>().Name, p => p.Name);
-                var reference = _dbContext.Entry(_entity).Reference(fkNameLookup[propertyChange.PropertyName]);
-                if (reference != null)
+                try
                 {
-                    reference.Load();
+                    var reference = _dbContext.Entry(_entity).Reference(fkNameLookup[propertyChange.PropertyName]);
+                    if (reference != null)
+                    {
+                        reference.Load();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Ignore any argument exceptions - these result from trying to load a reference for a non-mapped property that has a foreign key attribute.  (Address is an example.)
                 }
 
                 var obj = _entity.GetType().GetProperty(fkNameLookup[propertyChange.PropertyName]).GetValue(_entity);

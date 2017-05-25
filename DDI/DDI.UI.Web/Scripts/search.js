@@ -102,7 +102,6 @@ function DoSearch() {
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
                     columns: [
-                        { dataField: 'Id', width: '0px' },
                         { dataField: 'ConstituentNumber', caption: 'ID', alignment: 'right', width: '100px' },
                         { dataField: 'FormattedName', caption: 'Name' },
                         { dataField: 'PrimaryAddress', caption: 'Primary Address' },
@@ -126,7 +125,7 @@ function DoSearch() {
                         showOperationChooser: false
                     },
                     onRowClick: function (info) {
-                        DisplayConstituent(info.values[1]);
+                        DisplayConstituent(info.values[0]);
                     }
                 });
 

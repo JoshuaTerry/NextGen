@@ -84,13 +84,7 @@
         <div class="topnav">
             <div class="utilitynav">
                 <ul class="utilitymenu" style="display: none;">
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Save</a></li>
-                    <li class="menu-break"></li>
-                    <li><a href="#">Import</a></li>
-                    <li><a href="#">Export</a></li>
-                    <li class="menu-break"></li>
-                    <li><a href="#">Edit History</a></li>
+                    <asp:ContentPlaceHolder ID="UtilityMenuContainer" runat="server"></asp:ContentPlaceHolder>
                 </ul>
             </div>
 
@@ -221,45 +215,44 @@
                                     <div>
                                         <div class="fieldblock">
                                             <label>Address Type</label>
-                                            <select class="nc-AddressType"></select>
+                                            <select class="nca-AddressType"></select>
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Address Line 1</label>
-                                            <input type="text" class="nc-AddressLine1 autoaddress1" />
+                                            <input type="text" class="nca-AddressLine1 autoaddress1" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Address Line 2</label>
-                                            <input type="text" class="nc-AddressLine2 autoaddress2" />
+                                            <input type="text" class="nca-AddressLine2 autoaddress2" />
                                         </div>
                                     </div>
 
                                     <div>
-
                                         <div class="fieldblock">
-                                            <label>Postal Code</label>
-                                            <input type="text" class="nc-PostalCode autozip" />
+                                            <label>Country</label>
+                                            <select class="nca-Country autocountry"></select>
                                         </div>
 
                                         <div class="fieldblock">
-                                            <label>Country</label>
-                                            <select class="nc-Country autocountry"></select>
+                                            <label>Postal Code</label>
+                                            <input type="text" class="nca-PostalCode autozip" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>State</label>
-                                            <select class="nc-State autostate"></select>
+                                            <select class="nca-State autostate"></select>
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>City</label>
-                                            <input type="text" class="nc-City autocity" />
+                                            <input type="text" class="nca-City autocity" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>County</label>
-                                            <select class="nc-County autocounty"></select>
+                                            <select class="nca-County autocounty"></select>
                                         </div>
 
                                     </div>
@@ -272,33 +265,7 @@
                 
                             <fieldset>
                                 <legend>Contact Information</legend>
-
-                                <div class="twocolumn">
-                                    <div class="twocolumn">
-                                        <div class="fieldblock">
-                                            <label>Email</label>
-                                            <input type="email" class="nc-Email" />
-                                        </div>
-
-                                        <div class="fieldblock">
-                                            <label>Email Type</label>
-                                            <select class="nc-EmailType"></select>
-                                        </div>
-                                    </div>
-
-                                    <div class="twocolumn">
-                                        <div class="fieldblock">
-                                            <label>Phone</label>
-                                            <input type="text" class="nc-Phone" />
-                                        </div>
-
-                                        <div class="fieldblock">
-                                            <label>Phone Type</label>
-                                            <select class="nc-PhoneType"></select>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <div class="editcontainer contactInformationContainer"></div>
                             </fieldset>
 
                             <div class="modalbuttons">
