@@ -433,9 +433,9 @@
 
                             </div>
 
-                            <div class="fieldblock">
-                                <label>First Row Has Column Headers</label>
+                            <div class="fieldblock checkbox">
                                 <input type="checkbox" class="HasColumnHeaders" />
+                                <label>First Row Has Column Headers</label>
                             </div>
 
                             <div class="modalbuttons">
@@ -446,7 +446,13 @@
                         </div>
 
                         <div class="step step2">
-                            <h2>Step 2</h2>
+                            
+                            <h2>Field Mappings</h2>
+                            <p>Map the fields from  your input filie to the ocrresponding fields in the target object.</p>
+
+                            <select class="mappings"></select>
+
+                            <div class="importmappinggridcontainer"></div>
 
                             <div class="modalbuttons">
                                 <input type="button" value="Back" class="prevstep" />
@@ -457,7 +463,10 @@
                         </div>
 
                         <div class="step step3">
-                            <h2>Step 3</h2>
+                            
+                            <h2>Preview Import</h2>
+
+                            <div class="importpreviewgridcontainer"></div>
 
                             <div class="modalbuttons">
                                 <input type="button" value="Back" class="prevstep" />
