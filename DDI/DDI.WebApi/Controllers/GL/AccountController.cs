@@ -83,7 +83,7 @@ namespace DDI.WebApi.Controllers.GL
                 QuickSearch = name,
                 Offset = SearchParameters.OffsetDefault,
                 Limit = 500,
-                Fields = fields,
+                Fields = null,
             };
 
             var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
@@ -121,7 +121,7 @@ namespace DDI.WebApi.Controllers.GL
                 var search = new PageableSearch(offset, limit, orderBy);
 
                 var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
-                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
             }
             catch (Exception ex)
             {
