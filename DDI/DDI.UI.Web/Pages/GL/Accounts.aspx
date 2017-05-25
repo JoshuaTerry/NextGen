@@ -21,6 +21,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     
     <div class="as-accounts">
+        <input type="hidden" class="hidaccountid" />
         <div class="gridContainer"></div>
     </div>
    
