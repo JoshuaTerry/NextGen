@@ -6,7 +6,6 @@ div.accounts div.tabscontainer { width: 100%; }
 
 /* gl summary widths*/
 
-.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 span.summaryleftinput input,
 span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
@@ -17,7 +16,7 @@ span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
 
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmentinput select {width: 10%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentinput select {width: 20%; display: inline-block; margin: 5px 0 5px 0}
 .segmentcode {display: none;}
 .segmentname {margin-left: 5px;}
 
@@ -28,6 +27,8 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 .activeadjust {margin: 0 0 0 -3px;}
 
 .invisible {visibility: hidden;}
+
+.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 .accountgroup {visibility: hidden;}
 .accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
 

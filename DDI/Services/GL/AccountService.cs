@@ -61,6 +61,10 @@ namespace DDI.Services.GL
                     entry.Id = GuidHelper.NewSequentialGuid();
                 }
             }
+            if (account.AccountSegments != null)
+            {
+                account.AccountSegments = account.AccountSegments.OrderBy(p => p.Level).ToList();
+            }
         }
 
         public override IDataResponse<Account> Add(Account account)

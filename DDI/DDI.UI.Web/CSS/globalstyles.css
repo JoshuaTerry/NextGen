@@ -11,6 +11,7 @@ a:hover { text-decoration: underline; }
 .justright {text-align: right}
 .justleft {text-align: left}
 .floatleft {float: left}
+.floatright {float: right}
 
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
 .editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }

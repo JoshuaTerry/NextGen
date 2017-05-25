@@ -5,8 +5,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            LoadSummaryTab('');    // test new
-            //LoadSummaryTab('0A5110A1-BA39-4D6B-BF83-E9D319D691C3');
+            //LoadSummaryTab('');    // test new
+            LoadSummaryTab('75ED3466-31E5-4043-8D6E-BD539835BFE4');
         });
 
     </script>
@@ -25,6 +25,10 @@
         </span>
         <span class="summaryleftinput">
             <input type="text" class="AccountNumber readonly editable" readonly="read-only" />
+        </span>
+
+        <span class="editaccountbutton hidebuttons floatright">
+            <a href="#" class="editaccount editbutton">Edit</a>
         </span>
     </div>
 
@@ -293,7 +297,7 @@
                 <label>Beginning Balance: </label>
             </span>
             <span class="summaryrightinput">
-                <input type="number" class="BeginningBalance editable money justright" disabled="disabled" />
+                <input type="text" class="BeginningBalance editable money justright" disabled="disabled" />
             </span>
         </span>
     </div>
@@ -348,17 +352,14 @@
 
     <br />
 
-    <div class="closingaccountgroup fieldblock inline inlinecontainer">
+    <div class="closingaccountgroup inline inlinecontainer">
         <label class="inline accountselectorlabel">Closing Account: </label>
     </div>
 
-    <div class="modalbuttons saveaccountbuttons hidebuttons">
+
+    <div class="saveaccountbuttons hidebuttons floatright">
         <input type="button" class="saveaccount" value="Save" />
         <a href="#" class="cancelsaveaccount">Cancel</a>
-    </div>
-
-    <div class="modalbuttons editaccountbutton hidebuttons">
-        <a href="#" class="editaccount">Edit</a>
     </div>
 
     </div>
