@@ -116,6 +116,24 @@ function NewGroupModal() {
             resizable: false
         });
 
+        $('.savegroupbutton').unblind('click');
+
+        $('.savegroupbutton').click(function (e) {
+
+            var data = {
+                Name: $('.gp-Name').val();
+            }
+
+            MakeServiceCall('POST', 'roles', data, function (data) {
+
+                $('.groupmodal').hide();
+
+                LoadGroupsGrid();
+            });
+
+        });
+
+
         $('.cancelgroupmodal').click(function (e) {
 
             e.preventDefault();
@@ -149,18 +167,13 @@ function EditGroup(id) {
 
     $('.addrolesbutton').click(function (e) {
 
-        var roleModal = $('.rolesmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            resizable: false
-        });
-
         $('.rolesmodal').show();
 
         $('.saverolesbutton').click(function (e) {
 
-            AddRolesToGroup(id);
+            //AddRolesToGroup(id);
+
+            $('.rolesmodal').hide();
 
         });
 
@@ -168,9 +181,9 @@ function EditGroup(id) {
 
             e.preventDefault();
 
-            CloseModal(roleModal);
-
             $('.rolestagbox').dxTagBox('instance').reset();
+
+            $('.rolesmodal').hide();
 
         });
 
@@ -245,11 +258,6 @@ function LoadGroup(id) {
 
 function DeleteRole() {
     // need route to remove role from group
-
-}
-
-function RolesModal() {
-
 
 }
 
