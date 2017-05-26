@@ -110,8 +110,19 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 .dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
 
 .regionscontainer label { margin-right: 3px; }
+.searchicon{
+   
+    background-image: url(../images/Search_16.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    cursor: pointer;        /* make the cursor like hovering over an <a> element */
+    height: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
 
-
+}
 /* EDIT CONTROLS */
 .editcontainer {  }
 .editcontainer.active { border: solid 2px #0f75b4; background-color: #cae9ff; }

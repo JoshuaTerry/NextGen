@@ -63,6 +63,9 @@
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
+    <Compile Include="GL\FundFromToLogic.cs" />
+    <Compile Include="GL\BusinessUnitFromToLogic.cs" />
+    <Compile Include="GL\FundLogic.cs" />
     <Compile Include="GL\JournalLogic.cs" />
     <Compile Include="GL\BusinessUnitLogic.cs" />
     <Compile Include="GL\FiscalYearLogic.cs" />

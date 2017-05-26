@@ -74,7 +74,7 @@ namespace DDI.WebApi.Controllers.GL
                 QuickSearch = name,
                 Offset = SearchParameters.OffsetDefault,
                 Limit = 500,
-                Fields = fields,
+                Fields = null,
             };
 
             IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
@@ -114,7 +114,7 @@ namespace DDI.WebApi.Controllers.GL
                 IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
                 var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
-                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
             }
             catch (Exception ex)
             {

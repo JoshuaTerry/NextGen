@@ -279,12 +279,30 @@ namespace DDI.Business.GL
         /// </summary>
         public LedgerAccount GetLedgerAccount(Account account)
         {
-            var ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
+            if (account == null)
+            {
+                return null;
+            }
+
+            LedgerAccountYear ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
             if (ledgerAccountYear != null)
             {
                 return UnitOfWork.GetReference(ledgerAccountYear, p => p.LedgerAccount);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get the default ledger account for an account.
+        /// </summary>
+        public LedgerAccount GetLedgerAccount(Guid? accountId)
+        {
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            return GetLedgerAccount(UnitOfWork.GetById<Account>(accountId.Value, p => p.LedgerAccountYears.First().LedgerAccount));
         }
 
         /// <summary>

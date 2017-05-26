@@ -74,8 +74,15 @@
     <Compile Include="Common\CountryService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\FiscalPeriodService.cs" />
+    <Compile Include="GL\FundService.cs" />
+    <Compile Include="GL\FundFromToService.cs" />
+    <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="CRM\EducationService.cs" />
     <Compile Include="CRM\ContactTypeService.cs" />
+    <Compile Include="ServiceInterfaces\IPostedTransactionService.cs" />
+    <Compile Include="ServiceInterfaces\IFiscalPeriodService.cs" />
+    <Compile Include="GL\PostedTransactionService.cs" />
     <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
@@ -116,6 +123,8 @@
     <Compile Include="CRM\IEthnicitiesService.cs" />
     <Compile Include="CRM\IRegionService.cs" />
     <Compile Include="CRM\AddressService.cs" />
+    <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
+    <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
     <Compile Include="CRM\ITagGroupService.cs" />
     <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceFactory.cs" />

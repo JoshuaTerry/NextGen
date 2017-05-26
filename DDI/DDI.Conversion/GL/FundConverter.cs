@@ -88,7 +88,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid fund balance ledger account legacy key \"{fundBalKey}\".");
                             continue;
                         }
-                        fund.FundBalanceAccountId = accountId;
+                        fund.FundBalanceLedgerAccountId = accountId;
                     }
 
                     if (closeRevKey > 0)
@@ -99,7 +99,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid closing revenue ledger account legacy key \"{closeRevKey}\".");
                             continue;
                         }
-                        fund.ClosingRevenueAccountId = accountId;
+                        fund.ClosingRevenueLedgerAccountId = accountId;
                     }
 
                     if (closeExpKey > 0)
@@ -110,7 +110,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid closing expense ledger account legacy key \"{closeExpKey}\".");
                             continue;
                         }
-                        fund.ClosingExpenseAccountId = accountId;
+                        fund.ClosingExpenseLedgerAccountId = accountId;
                     }
                                         
                     fund.AssignPrimaryKey();
@@ -184,7 +184,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
                             continue;
                         }
-                        fromTo.FromAccountId = accountId;
+                        fromTo.FromLedgerAccountId = accountId;
                     }
 
                     int toAccountKey = importer.GetInt(7);
@@ -196,7 +196,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
                             continue;
                         }
-                        fromTo.ToAccountId = accountId;
+                        fromTo.ToLedgerAccountId = accountId;
                     }
 
                     fromTo.AssignPrimaryKey();
@@ -258,7 +258,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
                             continue;
                         }
-                        fromTo.FromAccountId = accountId;
+                        fromTo.FromLedgerAccountId = accountId;
                     }
 
                     int toAccountKey = importer.GetInt(4);
@@ -270,7 +270,7 @@ namespace DDI.Conversion.GL
                             importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
                             continue;
                         }
-                        fromTo.ToAccountId = accountId;
+                        fromTo.ToLedgerAccountId = accountId;
                     }
 
                     fromTo.AssignPrimaryKey();

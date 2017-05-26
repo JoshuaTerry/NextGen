@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExtreme.AspNet.Data, Version=1.2.6.0, Culture=neutral, PublicKeyToken=982f5dab1439d0f7, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExtreme.AspNet.Data.1.2.6\lib\net40\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Mvc">
+      <HintPath>Solution Files\DevExtreme.AspNet.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
     </Reference>
@@ -59,6 +65,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -275,10 +282,14 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\FundFromToController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
+    <Compile Include="Controllers\GL\FundController.cs" />
     <Compile Include="Controllers\GL\JournalsController.cs" />
+    <Compile Include="Controllers\GL\BusinessUnitFromToController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\PostedTransactionController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
     <Compile Include="Controllers\INV\InvestmentAutomatedTransactionsController.cs" />
@@ -318,6 +329,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="bin\DDI.WebApi.dll" />
+    <Content Include="bin\DDI.WebApi.pdb" />
+    <Content Include="Content\dx.android5.light.css" />
+    <Content Include="Content\dx.common.css" />
+    <Content Include="Content\dx.contrast.compact.css" />
+    <Content Include="Content\dx.contrast.css" />
+    <Content Include="Content\dx.dark.compact.css" />
+    <Content Include="Content\dx.dark.css" />
+    <Content Include="Content\dx.ios7.default.css" />
+    <Content Include="Content\dx.light.compact.css" />
+    <Content Include="Content\dx.light.css" />
+    <Content Include="Content\dx.spa.css" />
+    <Content Include="Content\dx.win10.black.css" />
+    <Content Include="Content\dx.win10.white.css" />
+    <Content Include="Content\dx.win8.black.css" />
+    <Content Include="Content\dx.win8.white.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -340,8 +367,15 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="logging.config" />
+    <Content Include="Content\icons\dxicons.eot" />
+    <Content Include="Content\icons\dxicons.ttf" />
+    <Content Include="Content\icons\dxicons.woff" />
+    <Content Include="Content\icons\dxiconsios.eot" />
+    <Content Include="Content\icons\dxiconsios.ttf" />
+    <Content Include="Content\icons\dxiconsios.woff" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Solution Files\DevExtreme.AspNet.Mvc.dll" />
     <Content Include="Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <None Include="Web.Dev.config">

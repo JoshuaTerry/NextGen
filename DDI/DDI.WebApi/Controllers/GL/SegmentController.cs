@@ -80,7 +80,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/segments/{id}", Name = RouteNames.Segment + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }

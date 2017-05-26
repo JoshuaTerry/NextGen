@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DDI.Logger;
 using DDI.Shared;
+using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -215,9 +216,21 @@ namespace DDI.Business.GL
         {
             if (ledger.FundAccounting)
             {
+                if (ledger.SegmentLevels == null)
+                {
+                    UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
+                }
                 return ledger.SegmentLevels?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Level ?? 0;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Get the segment level (1 - n) of the fund segment.  If fund accounting is not enabled, returns zero.
+        /// </summary>
+        public int GetFundSegmentLevel(FiscalYear year)
+        {
+            return GetFundSegmentLevel(year.Ledger ?? GetCachedLedger(year.LedgerId));
         }
 
         /// <summary>
@@ -227,9 +240,21 @@ namespace DDI.Business.GL
         {
             if (ledger.FundAccounting)
             {
+                if (ledger.SegmentLevels == null)
+                {
+                    UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
+                }
                 return ledger.SegmentLevels?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Name ?? string.Empty;
             }
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Get the fund segment's label from SegmentLevel.Name.
+        /// </summary>
+        public string GetFundLabel(FiscalYear year)
+        {
+            return GetFundLabel(year.Ledger ?? GetCachedLedger(year.LedgerId));
         }
 
         /// <summary>

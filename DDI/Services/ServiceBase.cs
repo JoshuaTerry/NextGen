@@ -220,7 +220,7 @@ namespace DDI.Services
         /// <summary>
         /// Formatting and other logic for a list of entities retrieved for a GET.
         /// </summary>
-        private void FormatEntityListForGet(IList<T> list)
+        protected void FormatEntityListForGet(IList<T> list)
         {
             if (FormatEntityForGet != DefaultFormatEntityForGet && FormatEntityForGet != null) // If overridden
             {

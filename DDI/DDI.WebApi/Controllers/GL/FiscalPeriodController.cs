@@ -2,9 +2,11 @@
 using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared;
+using DDI.Services;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -38,6 +40,22 @@ namespace DDI.WebApi.Controllers.GL
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/fiscalperiods/glaccount/{accountId}")]
+        public IHttpActionResult GetFiscalPeriodsByAccountId(Guid accountId)
+        {
+            try
+            {
+                var result = ((IFiscalPeriodService)Service).GetFiscalPeriodsByAccountId(accountId);
+
+                return FinalizeResponse(result, null, PageableSearch.Max, null, null);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
         [HttpGet]
         [Route("api/v1/fiscalperiods/{id}", Name = RouteNames.FiscalPeriod + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
