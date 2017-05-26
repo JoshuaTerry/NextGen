@@ -15,7 +15,6 @@ namespace DDI.WebApi.Controllers
 {
     public abstract class ControllerBase<T> : ApiController where T : class, IEntity
     {
-        private readonly IPagination _pagination;
         private readonly DynamicTransmogrifier _dynamicTransmogrifier;
         private readonly IService<T> _service;
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ControllerBase<T>));
@@ -24,7 +23,6 @@ namespace DDI.WebApi.Controllers
         internal IService<T> Service => _service;
         protected ILogger Logger => _logger;
         protected DynamicTransmogrifier DynamicTransmogrifier => _dynamicTransmogrifier;
-        protected IPagination Pagination => _pagination;
         protected PathHelper.FieldListBuilder<T> FieldListBuilder => _fieldListBuilder?.Clear() ?? (_fieldListBuilder = new PathHelper.FieldListBuilder<T>());
 
         protected virtual string FieldsForList => string.Empty;
@@ -35,7 +33,6 @@ namespace DDI.WebApi.Controllers
 
         public ControllerBase(IService<T> serviceBase)
         {
-            _pagination = new Pagination();
             _dynamicTransmogrifier = new DynamicTransmogrifier();
             _service = serviceBase;
             _service.IncludesForSingle = GetDataIncludesForSingle();
@@ -121,7 +118,6 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = response.TotalResults;
 
-                _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
                 var dynamicResponse = _dynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {

@@ -78,9 +78,7 @@ namespace DDI.WebApi.Controllers.General
                 }
 
                 var totalCount = response.TotalResults;
-                var pager = new Pagination();
                 var transform = new DynamicTransmogrifier();
-                pager.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
                 var dynamicResponse = transform.ToDynamicResponse(response, null);
 
                 return Ok(dynamicResponse);

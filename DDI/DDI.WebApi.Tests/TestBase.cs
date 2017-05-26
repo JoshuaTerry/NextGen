@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.Mvc;
+using System.Web.Routing;
 using DDI.Shared;
 using DDI.Shared.Data;
 using DDI.Shared.Models;
