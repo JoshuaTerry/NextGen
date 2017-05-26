@@ -20,12 +20,12 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/posttransactions/accountId/{Id}")]
+        [Route("api/v1/postedtransactions/accountId/{Id}")]
         public HttpResponseMessage GetAllPTGridByAccountId(Guid id, DataSourceLoadOptions loadOptions)
         {
             try
             {
-                var results = Factory.CreateService<PostedTransactionService>().GetPostedTransactionsForAccountId(id);
+                var results = ((IPostedTransactionService)Service).GetPostedTransactionsForAccountId(id);
                 return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(results, loadOptions)); 
             }
             catch (Exception ex)
