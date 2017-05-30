@@ -36,12 +36,6 @@ namespace DDI.WebApi.Controllers.Core
 
         protected new IGroupService Service => (IGroupService)base.Service;
 
-        public GroupController(ServiceBase<Group> service)
-            : base(service)
-        {
-        }
-
-
         [HttpGet]
         [Route("api/v1/groups")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)

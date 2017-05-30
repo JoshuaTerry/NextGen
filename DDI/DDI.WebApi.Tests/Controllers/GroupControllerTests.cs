@@ -32,6 +32,9 @@ namespace DDI.WebApi.Tests.Controllers
             var content = GetResponse(result);
             Assert.AreEqual(3, content.TotalResults, "Correct # of results returned.");
 
+            var data = GetReponseData(content);
+            Assert.AreEqual("Group 1", data[0].DisplayName);
+
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
