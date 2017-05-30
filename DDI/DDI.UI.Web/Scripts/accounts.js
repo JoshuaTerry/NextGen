@@ -853,10 +853,6 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id)
 
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Segment.');
-
         });
 
     });
@@ -898,9 +894,6 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id)
 
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Segment.');
         });
 
     });

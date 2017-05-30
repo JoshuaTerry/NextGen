@@ -20,6 +20,7 @@
         public static string GLSegmentAlphaNumeric => "Segment code must contain only letters and numbers.";
         public static string GLSegmentLength => "Segment code must be {0} characters long.";
         public static string GLSegmentNumeric => "Segment code must contain only numbers.";
+        public static string GLSegmentNameBlank => "Segment name cannot be blank.";
         public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
         public static string GLAccountSegmentInvalid => "Account segment is not specified or invalid.";
         public static string GLAccountNoSegments => "Account has no account segments.";
