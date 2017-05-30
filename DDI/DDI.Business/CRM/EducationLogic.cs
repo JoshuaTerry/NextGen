@@ -1,27 +1,14 @@
-﻿using DDI.Data;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using System;
 using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.CRM
 {
     public class EducationLogic : EntityLogicBase<Education>
     {
-        #region Private Fields
-
-
-        #endregion
-
-        #region Constructors 
-
-        public EducationLogic() : this(new UnitOfWorkEF()) { }
-
         public EducationLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Methods
 

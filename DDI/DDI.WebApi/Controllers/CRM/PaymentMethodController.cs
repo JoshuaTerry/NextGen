@@ -1,32 +1,19 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using DDI.Shared.Helpers;
-using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class PaymentMethodController : GenericController<PaymentMethod>
     {
-        private IConstituentService ConstituentService;
-
-        public PaymentMethodController() : this(new PaymentMethodService(), new ConstituentService())
-        {
-
-        }
-
-        public PaymentMethodController(PaymentMethodService service, IConstituentService constituentService) : base(service)
-        {            
-            ConstituentService = constituentService;
-        }
+        public PaymentMethodController(IService<PaymentMethod> service) : base(service) { }
 
         protected override string FieldsForList => $"{nameof(PaymentMethod.Id)},{nameof(PaymentMethod.DisplayName)}";
 
@@ -56,36 +43,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
-            try
-            {
-                if (entityToSave.ConstituentId.HasValue)
-                {
-                    if (entityToSave.Constituents == null)
-                    {
-                        entityToSave.Constituents = new List<DDI.Shared.Models.Client.CRM.Constituent>();
-                    }
-
-                    var constituent = ConstituentService.GetById(entityToSave.ConstituentId.Value).Data;
-
-                    if (constituent.PaymentMethods == null)
-                    {
-                        constituent.PaymentMethods = new List<PaymentMethod>();
-                    }
-
-                    constituent.PaymentMethods.Add(entityToSave);
-
-                    return Ok(ConstituentService.Update(constituent));
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
+            return base.Post(entityToSave);
         }
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]

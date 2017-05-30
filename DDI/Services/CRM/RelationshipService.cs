@@ -1,5 +1,4 @@
 ﻿using DDI.Business.CRM;
-using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
@@ -14,9 +13,14 @@ namespace DDI.Services
         #region Private Fields
 
         private RelationshipLogic _logic;
-        private IUnitOfWork _uow;
 
         #endregion
+
+        public RelationshipService(IUnitOfWork uow, RelationshipLogic logic) : base(uow)
+        {
+            _logic = logic;
+
+        }
 
         #region Properties
 
@@ -44,35 +48,13 @@ namespace DDI.Services
                 }
                 else
                 {
-                    TargetConstituent = _uow.GetById<Constituent>(value.Value);
+                    TargetConstituent = UnitOfWork.GetById<Constituent>(value.Value);
                 }
             }
         }
 
         #endregion
 
-        #region Constructors
-
-        public RelationshipService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public RelationshipService(IUnitOfWork uow)
-            : this(uow, uow.GetBusinessLogic<RelationshipLogic>())
-        {
-            _uow = uow;
-        }
-
-        private RelationshipService(IUnitOfWork uow, RelationshipLogic relationshipLogic)
-            : base(uow)
-        {
-            _logic = relationshipLogic;
-        }
-
-        #endregion
-
-        #region Protected Methods
 
         private void FormatRelationshipForTarget(Relationship entity)
         {
@@ -120,7 +102,6 @@ namespace DDI.Services
 
             return base.Update(entity, changes);
         }
-        #endregion
 
     }
 }

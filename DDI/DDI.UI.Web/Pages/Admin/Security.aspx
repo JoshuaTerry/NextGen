@@ -104,6 +104,14 @@
                 </div>
             </div>
 
+            <div class="fieldblock">
+                 <div class="fieldblock">
+                    <input type="hidden" class="rs-Constituent1Id" />
+                    <label>Constituent</label>
+                    <input type="text" class="rs-Constituent1Information constituentlookup" />
+                </div>
+            </div>
+
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>

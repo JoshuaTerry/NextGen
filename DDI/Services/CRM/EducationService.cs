@@ -1,10 +1,6 @@
-﻿using DDI.Business.CRM;
-using DDI.Data;
-using DDI.Services.ServiceInterfaces;
+﻿using System;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace DDI.Services
 {
@@ -13,7 +9,6 @@ namespace DDI.Services
 
         #region Private Fields
 
-        private IUnitOfWork _uow;
 
         #endregion
 
@@ -25,15 +20,7 @@ namespace DDI.Services
 
         #region Constructors
 
-        public EducationService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public EducationService(IUnitOfWork uow)            
-        {
-            _uow = uow;
-        }
+        public EducationService(IUnitOfWork uow) : base(uow) { }
 
         #endregion
 

@@ -1,12 +1,10 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DDI.Business.Core;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DDI.Business.CRM
 {
@@ -15,16 +13,9 @@ namespace DDI.Business.CRM
     /// </summary>
     public class ConstituentAddressLogic : EntityLogicBase<ConstituentAddress>
     {
-
-        #region Constructors 
-
-        public ConstituentAddressLogic() : this(new UnitOfWorkEF()) { }
-
         public ConstituentAddressLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Methods
 

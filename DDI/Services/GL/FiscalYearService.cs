@@ -14,6 +14,10 @@ namespace DDI.Services.GL
 {
     public class FiscalYearService : ServiceBase<FiscalYear>, IFiscalYearService
     {
+        public FiscalYearService(IUnitOfWork uow) : base(uow)
+        {
+        }
+
         public IDataResponse<FiscalYear> Post(FiscalYear entityToSave)
         {
             var response = base.Add(entityToSave);

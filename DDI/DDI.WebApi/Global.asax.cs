@@ -1,10 +1,11 @@
-﻿using DDI.Logger;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
+using DDI.Logger;
 
 namespace DDI.WebApi
 {
@@ -18,10 +19,11 @@ namespace DDI.WebApi
         {
             AreaRegistration.RegisterAllAreas();
             InitializeLogging();
+            FactoryConfig.Configure();
+            CachingConfig.Configure();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
         private void InitializeLogging()
@@ -32,6 +34,10 @@ namespace DDI.WebApi
             LoggerManager.LoadAndWatchConfiguration(fileInfo);
             _logger.LogInformation("Logging configuration loaded from " + fileInfo.FullName);
         }
+
         #endregion Protected Methods
     }
+    
+
+
 }

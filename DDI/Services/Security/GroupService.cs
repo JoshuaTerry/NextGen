@@ -1,5 +1,4 @@
-﻿using DDI.Data;
-using DDI.Services.ServiceInterfaces;
+﻿using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using Newtonsoft.Json.Linq;
@@ -8,19 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebGrease.Css.Extensions;
+using DDI.Shared.Extensions;
 
 namespace DDI.Services.General
 {
     public class GroupService : ServiceBase<Group>, IGroupService
     {
-        public GroupService() : this(new UnitOfWorkEF())
-        {
-        }
-        public GroupService(IUnitOfWork uow) : base(uow)
-        {
-             
-        }
+
+        public GroupService(IUnitOfWork uow) : base(uow) { }
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {

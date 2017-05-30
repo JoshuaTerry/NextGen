@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
@@ -36,8 +35,8 @@ namespace DDI.WebApi.Controllers.GL
 
         protected new ISegmentService Service => (ISegmentService)base.Service;
 
-        public SegmentController()
-            : base(new SegmentService())
+        public SegmentController(ISegmentService service)
+            : base(service)
         {
         }
 
@@ -81,7 +80,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/segments/{id}", Name = RouteNames.Segment + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }

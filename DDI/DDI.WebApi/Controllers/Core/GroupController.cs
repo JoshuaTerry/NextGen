@@ -1,5 +1,4 @@
-﻿using DDI.Services;
-using DDI.Services.General;
+using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
@@ -33,16 +32,12 @@ namespace DDI.WebApi.Controllers.Core
                 n => n.Roles
             };
         }
+        public GroupController(IService<Group> service) : base(service) { }
 
         protected new IGroupService Service => (IGroupService)base.Service;
 
         public GroupController(ServiceBase<Group> service)
             : base(service)
-        {
-        }
-
-        public GroupController()
-            : base(new GroupService())
         {
         }
 

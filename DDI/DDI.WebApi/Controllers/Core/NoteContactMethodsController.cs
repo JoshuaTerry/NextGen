@@ -1,14 +1,17 @@
-﻿using DDI.Shared.Models.Client.Core;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class NoteContactMethodsController : GenericController<NoteContactMethod>
     {
+        public NoteContactMethodsController(IService<NoteContactMethod> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -12,9 +7,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class ConstituentStatusDataSource
     {
-        public static IList<ConstituentStatus> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<ConstituentStatus> GetDataSource(IUnitOfWork uow)
         {
-            IList<ConstituentStatus> existing = uow.GetRepositoryOrNull<ConstituentStatus>()?.Entities.ToList();
+            IList<ConstituentStatus> existing = uow.GetRepositoryDataSource<ConstituentStatus>();
             if (existing != null)
             {
                 return existing;

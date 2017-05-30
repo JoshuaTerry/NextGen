@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Common;
+﻿using DDI.Business.Helpers;
+using DDI.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -19,12 +11,13 @@ namespace DDI.Business.Tests.Helpers
 
         private const string TESTDESCR = "Business | Helpers";
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
             var abbreviations = Common.DataSources.AbbreviationDataSource.GetDataSource(_uow);
             AbbreviationHelper.SetAbbreviations(abbreviations);
         }

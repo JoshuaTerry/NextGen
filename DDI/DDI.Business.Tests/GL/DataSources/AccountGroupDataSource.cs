@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -14,9 +11,9 @@ namespace DDI.Business.Tests.GL.DataSources
     {
         private static int _nextSequence;
 
-        public static IList<AccountGroup> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<AccountGroup> GetDataSource(IUnitOfWork uow)
         {
-            IList<AccountGroup> existing = uow.GetRepositoryOrNull<AccountGroup>()?.Entities.ToList();
+            IList<AccountGroup> existing = uow.GetRepositoryDataSource<AccountGroup>();
             if (existing != null)
             {
                 return existing;

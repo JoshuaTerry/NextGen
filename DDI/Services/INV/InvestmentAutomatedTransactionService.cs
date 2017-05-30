@@ -1,55 +1,20 @@
-using DDI.Business.CRM;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Services.Search;
-using DDI.Shared;
-using DDI.Shared.Enums.INV;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.INV;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Enums.INV;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Models.Client.INV;
+
 
 namespace DDI.Services
 {
     public class InvestmentAutomatedTransactionService : ServiceBase<InvestmentAutomatedTransaction>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentAutomatedTransaction> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentAutomatedTransactionService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentAutomatedTransactionService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentAutomatedTransaction>())
-        {
-        }
-
-        private InvestmentAutomatedTransactionService(IUnitOfWork uow, IRepository<InvestmentAutomatedTransaction> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
+        public InvestmentAutomatedTransactionService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<InvestmentAutomatedTransaction> GetAutomatedTransactionById(Guid Id)
         {
             InvestmentAutomatedTransaction at = new InvestmentAutomatedTransaction();

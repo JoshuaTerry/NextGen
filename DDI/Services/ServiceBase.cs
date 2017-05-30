@@ -1,20 +1,17 @@
-﻿using DDI.Business;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using DDI.Business;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -32,15 +29,12 @@ namespace DDI.Services
         /// </summary>
         protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
 
-        public ServiceBase() : this(new UnitOfWorkEF())
-        {            
-        }
         public ServiceBase(IUnitOfWork uow)
         {
-            _unitOfWork = uow;  
+            _unitOfWork = uow;            
         }
 
-        protected IUnitOfWork UnitOfWork
+        public IUnitOfWork UnitOfWork
         {
             get { return _unitOfWork; }
         }
@@ -55,7 +49,7 @@ namespace DDI.Services
         {
             protected get { return _includesForList; }
             set { _includesForList = value; }
-        }
+        }      
 
         public virtual IDataResponse<List<ICanTransmogrify>> GetAll()
         {
@@ -226,7 +220,7 @@ namespace DDI.Services
         /// <summary>
         /// Formatting and other logic for a list of entities retrieved for a GET.
         /// </summary>
-        private void FormatEntityListForGet(IList<T> list)
+        protected void FormatEntityListForGet(IList<T> list)
         {
             if (FormatEntityForGet != DefaultFormatEntityForGet && FormatEntityForGet != null) // If overridden
             {

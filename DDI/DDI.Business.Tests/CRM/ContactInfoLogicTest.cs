@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.CRM;
 using DDI.Business.Tests.Common.DataSources;
 using DDI.Business.Tests.CRM.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
@@ -21,7 +18,7 @@ namespace DDI.Business.Tests.CRM
     public class ContactInfoLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | CRM";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private IList<Country> _countries;
         private List<Constituent> _constituents;
         private List<ConstituentAddress> _constituentAddresses;
@@ -41,7 +38,8 @@ namespace DDI.Business.Tests.CRM
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
 
             _countries = CountryDataSource.GetDataSource(_uow);
             _contactCategories = ContactCategoryDataSource.GetDataSource(_uow);
@@ -231,6 +229,7 @@ namespace DDI.Business.Tests.CRM
 
             _usPhoneContactInfo.ContactTypeId = _usPhoneContactInfo.ContactType.Id;
             _usPhoneContactInfo.ConstituentId = null;
+            _usPhoneContactInfo.Constituent = null;
             AssertThrowsException<Exception>(() => _bl.Validate(_usPhoneContactInfo), "Validate should fail if no parent.");
 
         }
