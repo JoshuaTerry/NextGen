@@ -417,7 +417,12 @@
                             <h2>Field Mappings</h2>
                             <p>Map the fields from  your input filie to the ocrresponding fields in the target object.</p>
 
-                            <select class="mappings"></select>
+                            <div class="mappingselection">
+                                <select class="mappings"></select>
+                                <input type="text" class="newmappingname" style="display: none;" />
+                                <a href="#" class="newmapping">New</a>
+                            </div>
+                            
 
                             <div class="importmappinggridcontainer"></div>
 

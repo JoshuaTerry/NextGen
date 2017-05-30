@@ -35,6 +35,26 @@ $(document).ready(function () {
 
     });
 
+    $('.newmapping').click(function (e) {
+
+        e.preventDefault();
+
+        if ($(this).text() === 'New') {
+            $('.newmappingname').show();
+            $('.mappings').hide();
+
+            $(this).text('Cancel');
+        }
+        else {
+            $('.newmappingname').hide();
+            $('.mappings').show();
+
+            $(this).text('New');
+        }
+        
+
+    });
+
 });
 
 function DisplayImportWizardModal() {
