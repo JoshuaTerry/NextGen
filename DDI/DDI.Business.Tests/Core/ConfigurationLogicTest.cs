@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.Common;
 using DDI.Business.Core;
-using DDI.Data;
 using DDI.Shared;
+using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDI.Shared.Enums;
 
 namespace DDI.Business.Tests.Core
 {
@@ -33,13 +29,15 @@ namespace DDI.Business.Tests.Core
         private Guid idBaptist = Guid.Parse(idBaptistString);
         private Guid idMethodist = Guid.Parse(idMethodistString);
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private List<Ethnicity> ethnicityDataSource;
         private List<Denomination> denominationDataSource;
 
         [TestInitialize]
         public void Initialize()
         {
+            Factory.ConfigureForTesting();
+
             ethnicityDataSource = new List<Ethnicity>();
             ethnicityDataSource.Add(new Ethnicity() { Code = "B", Name = "Blue", Id = idBlue });
             ethnicityDataSource.Add(new Ethnicity() { Code = "R", Name = "Red", Id = idRed });
@@ -49,7 +47,7 @@ namespace DDI.Business.Tests.Core
             denominationDataSource.Add(new Denomination { Code = "B", Name = "Baptist", Id = idBaptist });
             denominationDataSource.Add(new Denomination { Code = "M", Name = "Methodist", Id = idMethodist });
 
-            _uow = new UnitOfWorkNoDb();
+            _uow = Factory.CreateUnitOfWork();
             _uow.CreateRepositoryForDataSource(ethnicityDataSource.AsQueryable());
             _uow.CreateRepositoryForDataSource(denominationDataSource.AsQueryable());
             _uow.CreateRepositoryForDataSource(new List<Configuration>().AsQueryable());
@@ -143,7 +141,7 @@ namespace DDI.Business.Tests.Core
             CollectionAssert.AreEquivalent(configToSave.Ethnicities, configToLoad.Ethnicities, "Ethnicities loaded correctly.");
 
             // Blow away the Configuration datasource and ensure caching is working.
-            ((RepositoryNoDb<Configuration>)_uow.GetRepository<Configuration>()).Clear();
+            ((ITestRepository<Configuration>)_uow.GetRepository<Configuration>()).Clear();
 
             configToLoad = configurationLogic.GetConfiguration<TestConfiguration>(false);
 

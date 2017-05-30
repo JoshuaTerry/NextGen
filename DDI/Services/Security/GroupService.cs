@@ -1,5 +1,4 @@
-﻿using DDI.Data;
-using DDI.Services.ServiceInterfaces;
+﻿using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using System;
@@ -12,13 +11,8 @@ namespace DDI.Services.General
 {
     public class GroupService : ServiceBase<Group>, IGroupService
     {
-        public GroupService() : this(new UnitOfWorkEF())
-        {
-        }
-        public GroupService(IUnitOfWork uow) : base(uow)
-        {
-             
-        }
+
+        public GroupService(IUnitOfWork uow) : base(uow) { }
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {

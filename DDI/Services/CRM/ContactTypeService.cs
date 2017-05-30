@@ -7,6 +7,8 @@ namespace DDI.Services
 {
     public class ContactTypeService : ServiceBase<ContactType>
     {
+        public ContactTypeService(IUnitOfWork uow) : base(uow) { }
+
         public override IDataResponse Delete(ContactType entity)
         {
             if (!entity.CanDelete)

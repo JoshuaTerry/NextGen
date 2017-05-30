@@ -1,22 +1,10 @@
-﻿using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
-using DDI.Services.Search;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Shared.Models;
-using DDI.Shared.Enums;
-using DDI.Business.Core;
-using System.Reflection;
 using System.Dynamic;
+using DDI.Business.Core;
+using DDI.Shared;
+using DDI.Shared.Enums;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Services
 {
@@ -24,24 +12,14 @@ namespace DDI.Services
     {
         #region Private Fields
 
-        private IUnitOfWork _unitOfWork;
         private ConfigurationLogic _logic;
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public ConfigurationService()
+        public ConfigurationService(IUnitOfWork uow, ConfigurationLogic logic) : base(uow)
         {
-            Initialize(new UnitOfWorkEF());
+            _logic = logic;
         }
-
-        public ConfigurationService(IUnitOfWork uow)
-        {
-            Initialize(uow);
-        }
-
-        #endregion Public Constructors
 
         #region Public Methods
 
@@ -96,12 +74,6 @@ namespace DDI.Services
         #endregion Public Methods
 
         #region Private Methods
-
-        private void Initialize(IUnitOfWork uow)
-        {
-            _unitOfWork = uow;
-            _logic = uow.GetBusinessLogic<ConfigurationLogic>();
-        }
 
         #endregion Private Methods
     }

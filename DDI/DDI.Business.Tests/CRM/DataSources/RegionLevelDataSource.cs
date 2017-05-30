@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
+using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
@@ -11,9 +7,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class RegionLevelDataSource
     {
-        public static IList<RegionLevel> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<RegionLevel> GetDataSource(IUnitOfWork uow)
         {
-            IList<RegionLevel> existing = uow.GetRepositoryOrNull<RegionLevel>()?.Entities.ToList();
+            IList<RegionLevel> existing = uow.GetRepositoryDataSource<RegionLevel>();
             if (existing != null)
             {
                 return existing;

@@ -14,12 +14,12 @@ namespace DDI.WebApi.Controllers.General
 {
     public class RolesController : GenericController<Role>
     {
+        public RolesController(IService<Role> service) : base(service) { }
+
         private UserManager _userManager;
         private RoleManager _roleManager;
 
-        public RolesController() { }
-
-        public RolesController(UserManager userManager, RoleManager roleManager)
+        public RolesController(UserManager userManager, RoleManager roleManager) : base(Factory.CreateService<IService<Role>>())
         {
             UserManager = userManager;
             RoleManager = roleManager;

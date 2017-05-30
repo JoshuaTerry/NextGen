@@ -1,14 +1,16 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class CustomFieldOptionsController : GenericController<CustomFieldOption>
-    {     
+    {
+        public CustomFieldOptionsController(IService<CustomFieldOption> service) : base(service) { }
+
         [HttpGet]
         [Route("api/v1/customfieldoptions")]
         public IHttpActionResult GetAll()

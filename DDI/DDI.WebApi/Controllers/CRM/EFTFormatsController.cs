@@ -1,13 +1,16 @@
-﻿using DDI.Shared.Models.Client.CP;
-using DDI.Shared.Statics;
-using System;
+﻿using System;
 using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CP;
+using DDI.Shared.Statics;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class EFTFormatsController : GenericController<EFTFormat>
     {
+        public EFTFormatsController(IService<EFTFormat> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

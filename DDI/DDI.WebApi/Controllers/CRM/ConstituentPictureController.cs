@@ -3,12 +3,15 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ConstituentPictureController : GenericController<ConstituentPicture>
     {
+        public ConstituentPictureController(IService<ConstituentPicture> service) : base(service) { }
+
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/constituentpicture/{constituentid}")]

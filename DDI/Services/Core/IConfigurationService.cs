@@ -4,7 +4,7 @@ using DDI.Shared.Enums;
 
 namespace DDI.Services
 {
-    public interface IConfigurationService
+    public interface IConfigurationService : IService
     {
         IDataResponse GetConfiguration(ModuleType moduleType);
         IDataResponse<DateTime> GetBusinessDate();

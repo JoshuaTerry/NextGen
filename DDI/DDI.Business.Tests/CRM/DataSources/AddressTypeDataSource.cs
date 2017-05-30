@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
+using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
@@ -11,9 +7,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class AddressTypeDataSource
     {
-        public static IList<AddressType> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<AddressType> GetDataSource(IUnitOfWork uow)
         {
-            IList<AddressType> existing = uow.GetRepositoryOrNull<AddressType>()?.Entities.ToList();
+            IList<AddressType> existing = uow.GetRepositoryDataSource<AddressType>();
             if (existing != null)
             {
                 return existing;

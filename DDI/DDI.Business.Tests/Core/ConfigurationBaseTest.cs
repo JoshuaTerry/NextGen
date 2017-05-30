@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.Common;
 using DDI.Business.Core;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,18 +24,20 @@ namespace DDI.Business.Tests.Core
         private Guid idRed = Guid.Parse(idRedString);
         private Guid idGreen = Guid.Parse(idGreenString);
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private List<Ethnicity> datasource;
 
         [TestInitialize]
         public void Initialize()
         {
+            Factory.ConfigureForTesting();
+
             datasource = new List<Ethnicity>();
             datasource.Add(new Ethnicity() { Code = "B", Name = "Blue", Id = idBlue });
             datasource.Add(new Ethnicity() { Code = "R", Name = "Red", Id = idRed });
             datasource.Add(new Ethnicity() { Code = "G", Name = "Green", Id = idGreen });
 
-            _uow = new UnitOfWorkNoDb();
+            _uow = Factory.CreateUnitOfWork();
             _uow.CreateRepositoryForDataSource(datasource.AsQueryable());
         }
 

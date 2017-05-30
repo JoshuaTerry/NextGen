@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.Core;
-using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Shared;
@@ -28,8 +26,6 @@ namespace DDI.Business.CRM
         #endregion
 
         #region Constructors 
-
-        public ConstituentLogic() : this(new UnitOfWorkEF()) { }
 
         public ConstituentLogic(IUnitOfWork uow) : base(uow)
         {

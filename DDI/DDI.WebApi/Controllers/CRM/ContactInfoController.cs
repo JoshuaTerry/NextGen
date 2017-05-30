@@ -4,12 +4,15 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ContactInfoController : GenericController<ContactInfo>
     {
+        public ContactInfoController(IService<ContactInfo> service) : base(service) { }
+
         protected override Expression<Func<ContactInfo, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<ContactInfo, object>>[]

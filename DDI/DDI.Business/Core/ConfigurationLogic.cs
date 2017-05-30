@@ -1,15 +1,14 @@
-﻿using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Caching;
-using DDI.Shared.Enums;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using DDI.Shared;
+using DDI.Shared.Caching;
+using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models;
+using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Business.Core
 {
@@ -29,7 +28,7 @@ namespace DDI.Business.Core
 
         #region Constructors 
 
-        public ConfigurationLogic() : this(new UnitOfWorkEF()) { }
+        public ConfigurationLogic() : this(Factory.CreateUnitOfWork()) { }
 
         public ConfigurationLogic(IUnitOfWork uow) : base(uow)
         {

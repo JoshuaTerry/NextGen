@@ -1,54 +1,18 @@
-using DDI.Business.CRM;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Services.Search;
-using DDI.Shared;
-using DDI.Shared.Enums.INV;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.INV;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Enums.INV;
+using DDI.Shared.Models.Client.INV;
 
 namespace DDI.Services
 {
     public class InvestmentRelationshipService : ServiceBase<InvestmentRelationship>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentRelationship> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentRelationshipService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentRelationshipService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentRelationship>())
-        {
-        }
-
-        private InvestmentRelationshipService(IUnitOfWork uow, IRepository<InvestmentRelationship> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
+        public InvestmentRelationshipService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public new IDataResponse<List<InvestmentRelationship>> GetAll(string fields, IPageable search)
         {
             List<InvestmentRelationship> invrelationship = MockData();
