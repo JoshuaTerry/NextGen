@@ -40,6 +40,8 @@ namespace DDI.Conversion
 
             log4net.Config.XmlConfigurator.Configure();
 
+            Factory.RegisterRepositoryFactory<RepositoryFactoryEF>();
+
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
             GuidHelper.GenerateSequentialGuids = true;            
 
@@ -85,7 +87,7 @@ namespace DDI.Conversion
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccountMerges));
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountBudgets));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
-            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
+            Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
             //Run<GL.PostedTransactionConverter>(new ConversionMethodArgs(GL.PostedTransactionConverter.ConversionMethod.PostedTransactions));
 

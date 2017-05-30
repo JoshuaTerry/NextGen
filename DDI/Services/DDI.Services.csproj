@@ -40,18 +40,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
     </Reference>
@@ -75,10 +63,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditService.cs" />
@@ -90,8 +74,15 @@
     <Compile Include="Common\CountryService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\FiscalPeriodService.cs" />
+    <Compile Include="GL\FundService.cs" />
+    <Compile Include="GL\FundFromToService.cs" />
+    <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="CRM\EducationService.cs" />
     <Compile Include="CRM\ContactTypeService.cs" />
+    <Compile Include="ServiceInterfaces\IPostedTransactionService.cs" />
+    <Compile Include="ServiceInterfaces\IFiscalPeriodService.cs" />
+    <Compile Include="GL\PostedTransactionService.cs" />
     <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />
@@ -131,10 +122,12 @@
     <Compile Include="CRM\IDenominationsService.cs" />
     <Compile Include="CRM\IEthnicitiesService.cs" />
     <Compile Include="CRM\IRegionService.cs" />
-    <Compile Include="Core\IService.cs" />
     <Compile Include="CRM\AddressService.cs" />
+    <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
+    <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
     <Compile Include="CRM\ITagGroupService.cs" />
     <Compile Include="CRM\TagGroupService.cs" />
+    <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
     <Compile Include="ServiceInterfaces\IAccountService.cs" />
     <Compile Include="ServiceInterfaces\IJournalService.cs" />
@@ -144,10 +137,6 @@
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
       <Project>{0E7D7E11-80B4-4751-8C21-B05A08A19473}</Project>
       <Name>DDI.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7DD8C5F7-4F2D-4D54-B8B0-B4D136007663}</Project>
-      <Name>DDI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Search\DDI.Search.csproj">
       <Project>{9CB38EBA-C2BB-4153-B47D-73CEE54BB92F}</Project>

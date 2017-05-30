@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExtreme.AspNet.Data, Version=1.2.5.0, Culture=neutral, PublicKeyToken=982f5dab1439d0f7, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExtreme.AspNet.Data.1.2.5\lib\net40\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Mvc">
+      <HintPath>Solution Files\DevExtreme.AspNet.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
     </Reference>
@@ -59,6 +65,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -109,9 +116,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Optimization">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
@@ -128,15 +132,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -189,8 +185,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\CachingConfig.cs" />
+    <Compile Include="App_Start\FactoryConfig.cs" />
     <Compile Include="App_Start\RoleManager.cs" />
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IApplicationUserManager.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -288,10 +285,14 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\FundFromToController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
+    <Compile Include="Controllers\GL\FundController.cs" />
     <Compile Include="Controllers\GL\JournalsController.cs" />
+    <Compile Include="Controllers\GL\BusinessUnitFromToController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />
+    <Compile Include="Controllers\GL\PostedTransactionController.cs" />
     <Compile Include="Controllers\GL\SegmentLevelsController.cs" />
     <Compile Include="Controllers\GL\SegmentController.cs" />
     <Compile Include="Controllers\INV\InvestmentAutomatedTransactionsController.cs" />
@@ -307,6 +308,10 @@
     <Compile Include="Helpers\IPagination.cs" />
     <Compile Include="Helpers\Pagination.cs" />
     <Compile Include="Helpers\PaginationHeader.cs" />
+    <Compile Include="IoC\DependencyResolver.cs" />
+    <Compile Include="IoC\DependencyScope.cs" />
+    <Compile Include="IoC\MessageHandler.cs" />
+    <Compile Include="IoC\HttpFactoryScopeProvider.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
@@ -327,12 +332,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="bin\DDI.WebApi.dll" />
+    <Content Include="bin\DDI.WebApi.pdb" />
+    <Content Include="Content\dx.android5.light.css" />
+    <Content Include="Content\dx.common.css" />
+    <Content Include="Content\dx.contrast.compact.css" />
+    <Content Include="Content\dx.contrast.css" />
+    <Content Include="Content\dx.dark.compact.css" />
+    <Content Include="Content\dx.dark.css" />
+    <Content Include="Content\dx.ios7.default.css" />
+    <Content Include="Content\dx.light.compact.css" />
+    <Content Include="Content\dx.light.css" />
+    <Content Include="Content\dx.spa.css" />
+    <Content Include="Content\dx.win10.black.css" />
+    <Content Include="Content\dx.win10.white.css" />
+    <Content Include="Content\dx.win8.black.css" />
+    <Content Include="Content\dx.win8.white.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
@@ -353,23 +370,17 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="logging.config" />
+    <Content Include="Content\icons\dxicons.eot" />
+    <Content Include="Content\icons\dxicons.ttf" />
+    <Content Include="Content\icons\dxicons.woff" />
+    <Content Include="Content\icons\dxiconsios.eot" />
+    <Content Include="Content\icons\dxiconsios.ttf" />
+    <Content Include="Content\icons\dxiconsios.woff" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Solution Files\DevExtreme.AspNet.Mvc.dll" />
     <Content Include="Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <Content Include="Content\Site.css" />
-    <Content Include="Scripts\_references.js" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -399,13 +410,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\BusinessDate\" />
-    <Folder Include="Views\MemoCategories\" />
-    <Folder Include="Views\MemoCodes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

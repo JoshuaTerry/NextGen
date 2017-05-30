@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Data.Helpers;
+﻿using System.Text.RegularExpressions;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
-using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
@@ -22,16 +14,13 @@ namespace DDI.Business.GL
     {
         public static string IsMultipleCacheKey => "IsMultipleBusinessUnits";
 
-        #region Constructors 
-
-        public BusinessUnitLogic() : this(new UnitOfWorkEF()) { }
+        public BusinessUnitLogic() : this(Factory.CreateUnitOfWork())
+        {
+        }
 
         public BusinessUnitLogic(IUnitOfWork uow) : base(uow)
         {
-           
         }
-
-        #endregion
 
         #region Validate Logic
 
@@ -64,7 +53,7 @@ namespace DDI.Business.GL
         {
             if (IsMultiple)
             {
-                User user = EntityFrameworkHelpers.GetCurrentUser(UnitOfWork);
+                User user = UserHelper.GetCurrentUser(UnitOfWork);
                 return UnitOfWork.GetReference(user, p => p.DefaultBusinessUnit);
             }
 

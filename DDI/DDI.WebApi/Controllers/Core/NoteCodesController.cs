@@ -1,14 +1,17 @@
-﻿using DDI.Shared.Models.Client.Core;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class NoteCodesController : GenericController<NoteCode>
     {
+        public NoteCodesController(IService<NoteCode> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

@@ -1,11 +1,10 @@
-﻿using DDI.Business.Helpers;
-using DDI.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DDI.Business.Helpers;
 using DDI.Shared;
 using DDI.Shared.Models;
-using System;
-using System.Linq;
 using DDI.Shared.Statics;
-using System.Collections.Generic;
 
 namespace DDI.Business
 {
@@ -21,6 +20,8 @@ namespace DDI.Business
         private static object _lockObject = new object();
 
         #region Constructors 
+
+        public EntityLogicBase() : this(Factory.CreateUnitOfWork()) { }
 
         public EntityLogicBase(IUnitOfWork uow) : base(uow)
         {
@@ -80,7 +81,7 @@ namespace DDI.Business
 
                 Shared.TaskScheduler.ScheduleTask(() =>
                 {
-                    using (var unitOfWork = new UnitOfWorkEF())
+                    using (var unitOfWork = Factory.CreateUnitOfWork())
                     {
                         T entityToUpdate = unitOfWork.GetById<T>(id.Value);
                         if (entityToUpdate != null)

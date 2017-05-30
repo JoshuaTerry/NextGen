@@ -13,7 +13,8 @@ namespace DDI.WebApi.Controllers.Core
 {
     public class ImportController : GenericController<ImportFile>
     {
-        
+        public ImportController(IService<ImportFile> service) : base(service) { }
+
         [HttpPost]
         [Route("api/v1/import")] 
         public IHttpActionResult Post([FromBody] ImportFile item)

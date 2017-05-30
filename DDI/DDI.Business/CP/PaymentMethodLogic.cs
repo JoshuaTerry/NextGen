@@ -1,16 +1,14 @@
-﻿using DDI.Data;
+﻿using System.Text.RegularExpressions;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics.CP;
-using System.Text.RegularExpressions;
 
 namespace DDI.Business.CP
 {
     public class PaymentMethodLogic : EntityLogicBase<PaymentMethod>
     {
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(PaymentMethodLogic));
-        public PaymentMethodLogic() : this(new UnitOfWorkEF()) { }
 
         public PaymentMethodLogic(IUnitOfWork uow) : base(uow)
         {

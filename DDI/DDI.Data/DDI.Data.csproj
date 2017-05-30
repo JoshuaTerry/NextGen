@@ -44,10 +44,6 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.MappingAPI, Version=6.1.0.9, Culture=neutral, PublicKeyToken=7ee2e825d201459e, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.MappingAPI.6.1.0.9\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
@@ -76,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BatchUnitOfWork.cs" />
-    <Compile Include="CachedRepository.cs" />
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
     <Compile Include="Conventions\DecimalPrecisionAttributeConvention.cs" />
@@ -84,7 +79,6 @@
     <Compile Include="DomainContext.cs" />
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
-    <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
     <Compile Include="Migrations\201705301752207_ChangesToEntityMappings.cs" />
@@ -230,11 +224,10 @@
     <Compile Include="Extensions\DbMigrationExtensions.cs" />
     <Compile Include="Models\TransactionXref.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryNoDb.cs" />
+    <Compile Include="RepositoryFactoryEF.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="SQLUtilities.cs" />
     <Compile Include="Statics\Sequences.cs" />
-    <Compile Include="UnitOfWorkNoDb.cs" />
     <Compile Include="UnitOfWorkEF.cs" />
   </ItemGroup>
   <ItemGroup>

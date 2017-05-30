@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;
@@ -27,15 +25,9 @@ namespace DDI.Business.GL
 
         #endregion
 
-        #region Constructors
-
-        public AccountLogic() : this(new UnitOfWorkEF()) { }
-
-        public AccountLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {            
+        public AccountLogic(IUnitOfWork uow) : base(uow)
+        {
         }
-
-        #endregion
 
         #region Public Methods
 
@@ -287,12 +279,30 @@ namespace DDI.Business.GL
         /// </summary>
         public LedgerAccount GetLedgerAccount(Account account)
         {
-            var ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
+            if (account == null)
+            {
+                return null;
+            }
+
+            LedgerAccountYear ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
             if (ledgerAccountYear != null)
             {
                 return UnitOfWork.GetReference(ledgerAccountYear, p => p.LedgerAccount);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get the default ledger account for an account.
+        /// </summary>
+        public LedgerAccount GetLedgerAccount(Guid? accountId)
+        {
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            return GetLedgerAccount(UnitOfWork.GetById<Account>(accountId.Value, p => p.LedgerAccountYears.First().LedgerAccount));
         }
 
         /// <summary>

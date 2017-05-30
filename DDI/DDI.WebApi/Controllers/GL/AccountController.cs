@@ -3,9 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -16,12 +16,11 @@ namespace DDI.WebApi.Controllers.GL
     public class AccountController : GenericController<Account>
     {
         protected new IAccountService Service => (IAccountService)base.Service;
+        public AccountController(IAccountService service) : base(service) { }
+
 
         private const string ROUTENAME_GETALLLEDGERACCOUNTS = RouteNames.Account + RouteNames.FiscalYear + RouteVerbs.Get;
 
-        private ServiceBase<GLAccountSelection> _glAccount;
-        private ServiceBase<Ledger> _ledger;
-        private ServiceBase<FiscalYear> _fiscalYear;
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(Account.Id)},{nameof(Account.AccountNumber)},{nameof(Account.Name)}";
@@ -64,14 +63,6 @@ namespace DDI.WebApi.Controllers.GL
             };
         }
 
-        public AccountController()
-            : base(new AccountService())
-        {
-            _glAccount = new ServiceBase<GLAccountSelection>();
-            _ledger = new ServiceBase<Ledger>();
-            _fiscalYear = new ServiceBase<FiscalYear>();
-        }
-        
         [HttpGet]
         [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
         public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)
@@ -83,12 +74,12 @@ namespace DDI.WebApi.Controllers.GL
                 QuickSearch = name,
                 Offset = SearchParameters.OffsetDefault,
                 Limit = 500,
-                Fields = fields,
+                Fields = null,
             };
 
-            var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
+            IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
+            return FinalizeResponse(_glAccountService.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
         }
 
         [HttpGet]
@@ -120,8 +111,10 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var search = new PageableSearch(offset, limit, orderBy);
 
-                var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
-                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, ConvertFieldList(fields, FieldsForList));
+                IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
+
+                var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
             }
             catch (Exception ex)
             {

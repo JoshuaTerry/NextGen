@@ -1,27 +1,20 @@
-﻿using DDI.Data;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace DDI.Business.CRM
 {
     public class ContactInfoLogic : EntityLogicBase<ContactInfo>
     {
-        #region Constructors 
-
-        public ContactInfoLogic() : this(new UnitOfWorkEF()) { }
-
         public ContactInfoLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Methods
 
@@ -442,7 +435,7 @@ namespace DDI.Business.CRM
         {
             if (string.IsNullOrEmpty(categoryCode))
             {
-                var category = UnitOfWork.GetRepository<ContactType>().Entities.IncludePath(c => c.ContactCategory).FirstOrDefault(ct => ct.Id == contactInfo.ContactTypeId);
+                var category = UnitOfWork.GetEntities<ContactType>(c => c.ContactCategory).FirstOrDefault(ct => ct.Id == contactInfo.ContactTypeId);
                 if(category != null)
                 {
                     categoryCode = category.ContactCategory.Code;
@@ -454,7 +447,7 @@ namespace DDI.Business.CRM
             if (contactInfo.IsPreferred)
             {
 
-                var existingPreferredContactInfo = UnitOfWork.GetRepository<ContactInfo>().Entities.IncludePath(c => c.ContactType.ContactCategory).Where<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.Id != contactInfo.Id).ToList();
+                var existingPreferredContactInfo = UnitOfWork.GetEntities<ContactInfo>(c => c.ContactType.ContactCategory).Where<ContactInfo>(ci => ci.ConstituentId == contactInfo.ConstituentId && ci.ContactType.ContactCategory.Code == categoryCode && ci.IsPreferred && ci.Id != contactInfo.Id && ci.Id != contactInfo.Id).ToList();
 
                 existingPreferredContactInfo.ForEach(c =>
                 {

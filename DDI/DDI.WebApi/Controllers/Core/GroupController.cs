@@ -1,17 +1,17 @@
-﻿using DDI.Shared.Models.Client.Security;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.Security;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
 {
     [Authorize]
     public class GroupController : GenericController<Group>
     {
+        public GroupController(IService<Group> service) : base(service) { }
+
 
         [HttpGet]
         [Route("api/v1/groups")]

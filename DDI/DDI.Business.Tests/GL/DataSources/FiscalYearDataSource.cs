@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -17,9 +15,9 @@ namespace DDI.Business.Tests.GL.DataSources
         public const string EMPTY_YEAR = "2018";
         public const int CURRENT_PERIOD = 7;
 
-        public static IList<FiscalYear> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<FiscalYear> GetDataSource(IUnitOfWork uow)
         {
-            IList<FiscalYear> existing = uow.GetRepositoryOrNull<FiscalYear>()?.Entities.ToList();
+            IList<FiscalYear> existing = uow.GetRepositoryDataSource<FiscalYear>();
             if (existing != null)
             {
                 return existing;
