@@ -43,7 +43,7 @@ namespace DDI.WebApi.Controllers.GL
         [HttpGet]
         [Route("api/v1/fiscalyears/ledger/{ledgerId}", Name = RouteNames.FiscalYear + RouteNames.Ledger + RouteVerbs.Get)]
         [Route("api/v1/ledgers/{ledgerId}/fiscalyears", Name = ROUTENAME_GETALLBYLEDGER)]
-        public IHttpActionResult GetAllByLedgerId(Guid ledgerId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public IHttpActionResult GetAllByLedgerId(Guid ledgerId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = "all")
         {
             try
             {

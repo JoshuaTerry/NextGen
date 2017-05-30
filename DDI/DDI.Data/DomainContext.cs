@@ -34,6 +34,9 @@ namespace DDI.Data
         public DbSet<CustomField> CustomField { get; set; }
         public DbSet<CustomFieldData> CustomFieldData { get; set; }
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
+        public DbSet<EntityMapping> EntityMapping { get; set; }
+        public DbSet<SavedEntityMapping> SavedEntityMapping { get; set; }
+        public DbSet<SavedEntityMappingField> SavedEntityMappingField { get; set; }
         public DbSet<Language> Languages { get; set; } 
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }

@@ -1,4 +1,4 @@
-﻿using DDI.Logger;
+using DDI.Logger;
 using System.IO;
 using System.Web;
 using System.Web.Http;
@@ -31,7 +31,8 @@ namespace DDI.WebApi
                 throw new FileNotFoundException("Could not find file", fileInfo.Name);
             LoggerManager.LoadAndWatchConfiguration(fileInfo);
             _logger.LogInformation("Logging configuration loaded from " + fileInfo.FullName);
-        }
+        	DevExtremeBundleConfig.RegisterBundles(BundleTable.Bundles);
+		}
         #endregion Protected Methods
     }
 }

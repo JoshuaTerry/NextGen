@@ -7,6 +7,7 @@
         public static string GLAcctNumBlank => "G/L account number cannot be blank.";
         public static string GLAcctCategoryNone => "G/L account category cannot be set to \"None\".";
         public static string GLAcctBeginBalRandE => "Revenue and expense accounts cannot have a beginning balance.";
+        public static string GLAcctDuplicate => "G/L account number is already assigned for this fiscal year.";
         public static string AccountGroupLevelsRange => $"The number of account groups must be between 1 and {ConstantsGL.MaxAccountGroups}.";
         public static string AccountGroupLevelsChanged => "The number of account groups cannot be modified if any G/L accounts have been defined for this ledger.";
         public static string AccountSegmentsRange => $"The number of G/L account segments must be between 1 and {ConstantsGL.MaxAccountSegments}.";
@@ -43,6 +44,27 @@
         public static string AdjustmentPeriodNotLast => "Adjustment period for fiscal year {0} must be the last period.";
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
+
+        public static string FundNoFiscalYear => "Fund has no fiscal year.";
+        public static string FundNoFundSegment => "No fund segment specified for fund.";
+        public static string FundSegmentWrongFiscalYear => "Fund {0} is not in the same fiscal year as its fund segment.";
+        public static string FundFBAccountWrongLedger => "Fund's fund balance account is not in the same ledger as the fund.";
+        public static string FundFBAccountWrongFund => "The fund balance account for Fund {0} belongs to a different fund.";
+        public static string FundCRAccountWrongLedger => "Fund's closing revenue account is not in the same ledger as the fund.";
+        public static string FundCRAccountWrongFund => "The closing revenue account for Fund {0} belongs to a different fund.";
+        public static string FundCEAccountWrongLedger => "Fund's closing expense account is not in the same ledger as the fund.";
+        public static string FundCEAccountWrongFund => "The closing expense account for Fund {0} belongs to a different fund.";
+
+        public static string UnitFromToNoFiscalYear => "Business unit from/to has no fiscal year.";
+        public static string UnitFromToWrongUnit => "Business unit from/to has a mismatch between its business unit and fiscal year.";
+        public static string UnitFromToDFAccountWrongLedger => "Business unit from/to has a \"due from\" account in the wrong ledger.";
+        public static string UnitFromToDTAccountWrongLedger => "Business unit from/to has a \"due to\" account in the wrong ledger.";
+
+        public static string FundFromToNoFundAccounting => "Fund from/to cannot be validated if fund accounting is disabled.";
+        public static string FundFromToNoFiscalYear => "Fund unit from/to has no fiscal year.";
+        public static string FundFromToWrongFiscalYear => "Fund unit from/to is not in the same fiscal year as its fund segment.";
+        public static string FundFromToDFAccountWrongFund => "Fund from/to has a \"due from\" account in the wrong fund.";
+        public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
 
         public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
         public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";

@@ -87,6 +87,10 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201705241907595_MappingsForImport.cs" />
+    <Compile Include="Migrations\Client\201705241907595_MappingsForImport.Designer.cs">
+      <DependentUpon>201705241907595_MappingsForImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.cs" />
     <Compile Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.Designer.cs">
       <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
@@ -236,6 +240,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201705241907595_MappingsForImport.resx">
+      <DependentUpon>201705241907595_MappingsForImport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201705181841595_AddConstituentLinkToUser.resx">
       <DependentUpon>201705181841595_AddConstituentLinkToUser.cs</DependentUpon>
     </EmbeddedResource>

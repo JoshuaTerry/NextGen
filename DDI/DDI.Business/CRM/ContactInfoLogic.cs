@@ -7,6 +7,8 @@ using DDI.Shared.Statics.CRM;
 using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+
 namespace DDI.Business.CRM
 {
     public class ContactInfoLogic : EntityLogicBase<ContactInfo>
@@ -28,8 +30,6 @@ namespace DDI.Business.CRM
         /// </summary>
         public override void Validate(ContactInfo contactInfo)
         {
-            base.Validate(contactInfo);
-
             if (string.IsNullOrWhiteSpace(contactInfo.Info))
             {
                 throw new ValidationException(UserMessagesCRM.ContactInfoBlank);
@@ -40,7 +40,7 @@ namespace DDI.Business.CRM
                 throw new ValidationException(UserMessagesCRM.ContactTypeMissing);
             }
 
-            if (contactInfo.ConstituentId.IsNullOrEmpty() && contactInfo.ParentContactId.IsNullOrEmpty())
+            if (contactInfo.Constituent == null && contactInfo.ConstituentId.IsNullOrEmpty() && contactInfo.ParentContact == null && contactInfo.ParentContactId.IsNullOrEmpty())
             {
                 throw new ValidationException(UserMessagesCRM.ContactInfoNoParent);
             }
@@ -53,17 +53,37 @@ namespace DDI.Business.CRM
             {
                 ValidatePhoneNumber(contactInfo);                
             }
+            else if (categoryCode == ContactCategoryCodes.Email)
+            {
+                ValidateEmailAddress(contactInfo);
+            }
 
             // check for preferred contactinfos, one allowed per category
             ValidateIsPreferred(contactInfo, categoryCode);
             
         }
 
+        internal void ValidateEmailAddress(ContactInfo contactInfo)
+        {
+            if (contactInfo == null)
+            {
+                throw new ArgumentNullException(nameof(contactInfo));
+            }
+
+            if (!string.IsNullOrWhiteSpace(contactInfo.Info))
+            {
+                if (!Regex.IsMatch(contactInfo.Info, @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", RegexOptions.IgnoreCase))
+                {
+                    throw new ValidationException(UserMessagesCRM.EmailFormatNotValid);
+                }
+            }
+        }
+
         /// <summary>
         /// Validate a phone number, removing formatting characters.
         /// </summary>
         /// <param name="contactInfo">ContactInfo entity containing the phone number to be validated.</param>
-        public void ValidatePhoneNumber(ContactInfo contactInfo)
+        internal void ValidatePhoneNumber(ContactInfo contactInfo)
         {
             if (contactInfo == null)
             {

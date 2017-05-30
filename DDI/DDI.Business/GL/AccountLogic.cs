@@ -61,6 +61,17 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.GLAcctBeginBalRandE);
             }
 
+            // Try to find the account in the fiscal year.
+            Account result = new Account();
+            result = UnitOfWork.FirstOrDefault<Account>(p => p.AccountNumber == entity.AccountNumber && p.FiscalYearId == entity.FiscalYearId);
+            if (result != null)
+            {
+                if (result.Id != entity.Id)
+                {
+                    throw new ValidationException(UserMessagesGL.GLAcctDuplicate, entity.AccountNumber);
+                }
+            }
+
             //Logic to check for changing the account number or name (description).
             var repository = UnitOfWork.GetRepository<Account>();
             if (repository.GetEntityState(entity) == EntityState.Modified)
@@ -287,12 +298,30 @@ namespace DDI.Business.GL
         /// </summary>
         public LedgerAccount GetLedgerAccount(Account account)
         {
-            var ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
+            if (account == null)
+            {
+                return null;
+            }
+
+            LedgerAccountYear ledgerAccountYear = UnitOfWork.GetReference(account, p => p.LedgerAccountYears)?.FirstOrDefault();
             if (ledgerAccountYear != null)
             {
                 return UnitOfWork.GetReference(ledgerAccountYear, p => p.LedgerAccount);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get the default ledger account for an account.
+        /// </summary>
+        public LedgerAccount GetLedgerAccount(Guid? accountId)
+        {
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            return GetLedgerAccount(UnitOfWork.GetById<Account>(accountId.Value, p => p.LedgerAccountYears.First().LedgerAccount));
         }
 
         /// <summary>

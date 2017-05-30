@@ -27,7 +27,6 @@ function DisplayCustomFieldsGrid(container, entity) {
     var datagrid = $('<div>').addClass('customfieldgrid');
 
     var columns = [
-        { dataField: 'Id', width: "0px" },
         { dataField: 'FieldType', caption: 'Field Type' },
         { dataField: 'LabelText', caption: 'Label Text' },
         { dataField: 'MinValue', caption: 'Min Value' },

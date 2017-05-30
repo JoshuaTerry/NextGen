@@ -9,6 +9,7 @@ var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
 var toolbox = null;
+var newContactInformationFields = null;
 
 $(document).ready(function () {
 
@@ -53,20 +54,30 @@ $(document).ready(function () {
         
     });
 
-    $('.utilitynav').click(function (e) {
+    if ($('.utilitymenu li').length > 0) {
 
-        e.preventDefault();
-        e.stopPropagation();
+        $('.utilitynav').show();
 
-        toolbox = $(this).find('.utilitymenu');
-        $(toolbox).toggle();
+        $('.utilitynav').click(function (e) {
 
-        //toolbox = $(this).next('.utilitymenu');
-        //$(toolbox).toggle();
+            e.preventDefault();
+            e.stopPropagation();
 
-        // $('.utilitymenu').toggle();
+            toolbox = $(this).find('.utilitymenu');
+            $(toolbox).toggle();
 
-    });
+            //toolbox = $(this).next('.utilitymenu');
+            //$(toolbox).toggle();
+
+            // $('.utilitymenu').toggle();
+
+        });
+    }
+    else {
+        $('.utilitynav').hide();
+    }
+
+    
 
     $(document).click(function (e) {
 
@@ -127,6 +138,10 @@ function NewConstituentModal() {
 
         SetupConstituentTypeSelector();
 
+        if (newContactInformationFields == null) {
+            CreateContactInformationFields('contactInformationContainer');
+        }
+
         // Save Constituent
         $('.savenewconstituent').unbind('click');
 
@@ -151,10 +166,44 @@ function NewConstituentModal() {
 
         LoadNewConstituentModalDropDowns();
 
-        AutoZip(modal, '.nc-');
+        AutoZip(modal, '.nca-');
 
     });
 
+}
+
+function CreateContactInformationFields(containerClass) {
+    if ($.type(containerClass) === "string" && containerClass.indexOf('.') != 0)
+        containerClass = '.' + containerClass;
+
+    MakeServiceCall('GET', 'contacttypes/newconstituent', null, function (data) {
+        if (data && data.IsSuccessful) {
+
+            var column = 0;
+            var container = null;
+            newContactInformationFields = [];
+
+            $.map(data.Data, function (item) {
+                if (column == 0) {
+                    container = $('<div>').addClass('fourcolumn');
+                    $(containerClass).append(container);
+                }
+                container.append(CreateContactInformationField(item));
+                column = ++column % 4;
+            });
+        }
+    });
+}
+
+function CreateContactInformationField(item) {
+    var div = $('<div>').addClass('fieldblock');
+    $('<label>').text(item.Name).appendTo($(div));
+    var text = $('<input>').attr('type', 'text').addClass('editable');
+    $(div).append(text);
+
+    newContactInformationFields.push( { TextBox: text, Id: item.Id, Category: item.ContactCategory.Code } );
+
+    return div;
 }
 
 function SetupConstituentTypeSelector() {
@@ -294,6 +343,12 @@ function SetupNewConstituent(constituenttypeid) {
         }
     })
 
+    MakeServiceCall('GET', 'configurations?module=CRM', null, function (data) {
+        $('.nca-AddressType').val(data.Data.DefaultAddressType.Id);
+        $('.nca-Country').val(data.Data.DefaultCountryId);
+        
+    }, null);
+
 }
 
 function SaveNewConstituent(modal, addnew) {
@@ -302,44 +357,42 @@ function SaveNewConstituent(modal, addnew) {
     var fields = GetNewFields();
 
     // Save the Constituent
-    $.ajax({
-        url: WEB_API_ADDRESS + 'constituents',
-        method: 'POST',
-        headers: GetApiHeaders(),
-        data: fields,
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
 
-            if (data && data.IsSuccessful) {
+    MakeServiceCall('POST', 'constituents', fields, function (data) {
 
-                // Display success
-                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-                
-                if (addnew) {
-                    ClearFields('.modalcontent');
+        if (data && data.IsSuccessful) {
 
-                    $(modal).find('.constituenttypeselect').show('fast');
-                    $(modal).find('.constituentdetails').hide('fast');
-                }
-                else {
-                    CloseModal(modal);
+            // Display success
+            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
 
-                    currentEntity = data.Data;
+            if (addnew) {
+                ClearFields('.modalcontent');
 
-                    sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                    location.href = "Constituents.aspx";
-                }
+                $(modal).find('.constituenttypeselect').show('fast');
+                $(modal).find('.constituentdetails').hide('fast');
+            }
+            else {
+                CloseModal(modal);
 
+                currentEntity = data.Data;
+
+                sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
+                location.href = "Pages/CRM/Constituents.aspx";
             }
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
 
+    }, null);
+  
+}
+
+function PushField(fields, propertyName, propertyValue) {
+    if (propertyValue) {
+        propertyValue = propertyValue.trim();
+        if (propertyValue.length > 0) {
+            fields.push('"' + propertyName + '": ' + JSON.stringify(propertyValue));
+        }
+    }
 }
 
 function GetNewFields() {
@@ -348,21 +401,81 @@ function GetNewFields() {
 
     $(modal).find('.modalcontent div.fieldblock input').each(function () {
         var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
+        if (property[0].startsWith('nc-')) {
+            var propertyName = property[0].replace('nc-', '');
+            var value = $(this).val();
 
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
+            PushField(p, propertyName, value);
+        }
     });
 
     $(modal).find('.modalcontent div.fieldblock select').each(function () {
         var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
+        if (property[0].startsWith('nc-')) {
+            var propertyName = property[0].replace('nc-', '');
+            var value = $(this).val();
 
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
+            PushField(p, propertyName, value);
+        }
     });
+
+
+    // Address
+    var addr = [];
+    PushField(addr, "AddressLine1", $('.nca-AddressLine1').val());
+    PushField(addr, "AddressLine2", $('.nca-AddressLine2').val());
+    PushField(addr, "City", $('.nca-City').val());
+
+    var caddr = [];
+    PushField(caddr, 'AddressTypeId', $('.nca-AddressType').val());
+
+    var caddrSet = [];
+
+    if (addr.length > 0 && caddr.length > 0) {
+        // As long as there's an address line or city, continue with the rest of the address.
+        PushField(addr, "CountryId", $('.nca-Country').val());
+        PushField(addr, "StateId", $('.nca-State').val());
+        PushField(addr, "PostalCode", $('.nca-PostalCode').val());
+        PushField(addr, "CountyId", $('.nca-County').val());
+        PushField(addr, "Region1Id", $('.nca-Region1Id').val());
+        PushField(addr, "Region2Id", $('.nca-Region2Id').val());
+        PushField(addr, "Region3Id", $('.nca-Region3Id').val());
+        PushField(addr, "Region4Id", $('.nca-Region4Id').val());
+
+        PushField(caddr, "IsPrimary", "true");
+        PushField(caddr, "ResidentType", "0");
+
+        caddr.push('"Address": {' + addr + '}');
+        caddrSet.push('{' + caddr + '}');
+    }
+
+    // Contact information
+    primaries = [];
+    ciSet = [];
+    for (var idx = 0; idx < newContactInformationFields.length; idx++) {
+        var entry = newContactInformationFields[idx];
+        var value = entry.TextBox.val();
+        if (value && value.trim().length > 0) {
+            var ci = [];
+            PushField(ci, "Info", value.trim());
+            PushField(ci, "ContactTypeId", entry.Id);
+
+            // Make sure one of each category is flagged primary
+            if (primaries.indexOf(entry.Category) < 0) {
+                PushField(ci, "IsPreferred", "true");
+                primaries.push(entry.Category);
+            }
+
+            ciSet.push('{' + ci + '}');
+        }
+    }
+
+    if (caddrSet.length > 0) {
+        p.push('"ConstituentAddresses": [ ' + caddrSet + ']');
+    }
+    if (ciSet.length > 0) {
+        p.push('"ContactInfo": [ ' + ciSet + ']');
+    }
 
     p = '{' + p + '}';
 
@@ -430,16 +543,16 @@ function LoadNewConstituentModalDropDowns() {
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
-    PopulateDropDown('.nc-Country', 'countries', '', '');
-    PopulateDropDown('.nc-AddressType', 'addresstypes', '', '');
+    PopulateDropDown('.nca-Country', 'countries', '', '');
+    PopulateDropDown('.nca-AddressType', 'addresstypes', '', '');
 
-    $('.nc-Country').change(function () {
+    $('.nca-Country').change(function () {
 
-        PopulateDropDown('.nc-State', 'states/?countryid=' + $('.nc-Country').val(), '', '');
+        PopulateDropDown('.nca-State', 'states/?countryid=' + $('.nca-Country').val(), '', '');
 
     });
 
-    LoadRegions($(modal).find('.regionscontainer'), 'nc-');
+    LoadRegions($(modal).find('.regionscontainer'), 'nca-');
 
 }
 
@@ -459,54 +572,6 @@ function GetQueryString() {
     return vars;
 }
 
-function SaveNewConstituent(modal) {
-
-    // Get the fields
-    var fields = GetNewFields();
-
-    // Save the Constituent
-    MakeServiceCall('POST', 'constituents', fields, function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-            ClearFields();
-
-            CloseModal(modal);
-        }
-
-    }, null);
-
-}
-
-function GetNewFields() {
-
-    var p = [];
-
-    $(modal).find('.modalcontent div.fieldblock input').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    $(modal).find('.modalcontent div.fieldblock select').each(function () {
-        var property = $(this).attr('class').split(' ');
-        var propertyName = property[0].replace('nc-', '');
-        var value = $(this).val();
-
-        if (value && value.length > 0)
-            p.push('"' + propertyName + '": "' + value + '"');
-    });
-
-    p = '{' + p + '}';
-
-    return p;
-
-}
 
 function CloseModal(modal) {
 
@@ -1266,30 +1331,36 @@ function DeleteEntity(url, method, confirmationMessage) {
 // MESSAGING
 //
 function DisplayInfoMessage(heading, text) {
-    DisplayMessage(heading, text, 'info');
+    DisplayMessage(heading, text, 'info', false);
 }
 
 function DisplayErrorMessage(heading, text) {
-    DisplayMessage(heading, text, 'error');
+    DisplayMessage(heading, text, 'error', true);
 }
 
 function DisplayWarningMessage(heading, text) {
-    DisplayMessage(heading, text, 'warning');
+    DisplayMessage(heading, text, 'warning', true);
 }
 
 function DisplaySuccessMessage(heading, text) {
-    DisplayMessage(heading, text, 'success');
+    DisplayMessage(heading, text, 'success', false);
 }
 
-function DisplayMessage(heading, text, icon) {
+function DisplayMessage(heading, text, icon, sticky) {
 
-    $.toast({
+    var options = {
         heading: heading,
         text: text,
         icon: icon,
         showHideTransition: 'slide',
-        position: 'top-right'
-    });
+        allowToastClose: true,
+        position: { left: 'auto', right: 100, top: 35, bottom: 'auto' }, 
+    };
+    if (sticky) {
+        options.hideAfter = false;
+    }
+
+    $.toast(options);
 
 }
 //

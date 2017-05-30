@@ -21,7 +21,7 @@ namespace DDI.Shared.Models.Client.GL
 
         public Guid? SegmentLevelId { get; set; }
         [ForeignKey(nameof(SegmentLevelId))]
-        public SegmentLevel SegmentLevel { get; set; }
+        public SegmentLevel SegmentLevel {                                                                                                                                                                                                                                                                                                                                         get; set; }
 
         public int Level { get; set; }
 
