@@ -64,6 +64,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
       <Private>True</Private>
@@ -236,12 +237,14 @@
     <Compile Include="Controllers\Core\FileStorageController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
     <Compile Include="Controllers\Core\HomeController.cs" />
+    <Compile Include="Controllers\Core\ImportController.cs" />
     <Compile Include="Controllers\Core\NoteCategoriesController.cs" />
     <Compile Include="Controllers\Core\NoteCodesController.cs" />
     <Compile Include="Controllers\Core\NoteContactMethodsController.cs" />
     <Compile Include="Controllers\Core\NotesController.cs" />
     <Compile Include="Controllers\Core\NoteTopicsController.cs" />
     <Compile Include="Controllers\Core\RolesController.cs" />
+    <Compile Include="Controllers\Core\SavedEntityMappingController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
     <Compile Include="Controllers\CRM\TagGroupsController.cs" />
     <Compile Include="Controllers\CRM\TagsController.cs" />
