@@ -7,6 +7,7 @@ using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -14,6 +15,7 @@ namespace DDI.WebApi.Controllers.GL
     public class AccountGroupController : GenericController<AccountGroup>
     {
 
+        public AccountGroupController(IService<AccountGroup> service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/AccountGroups/{parentgroupid}/parent")]  

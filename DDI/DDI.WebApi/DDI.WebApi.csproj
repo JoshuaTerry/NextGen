@@ -282,6 +282,7 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\AccountGroupController.cs" />
     <Compile Include="Controllers\GL\FundFromToController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
