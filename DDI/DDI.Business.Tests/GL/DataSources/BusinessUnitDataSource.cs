@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -16,9 +13,9 @@ namespace DDI.Business.Tests.GL.DataSources
         public const string UNIT_CODE2 = "DEF";
         public const string UNIT_CODE_SEPARATE = "XYZ";
         
-        public static IList<BusinessUnit> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<BusinessUnit> GetDataSource(IUnitOfWork uow)
         {
-            IList<BusinessUnit> existing = uow.GetRepositoryOrNull<BusinessUnit>()?.Entities.ToList();
+            IList<BusinessUnit> existing = uow.GetRepositoryDataSource<BusinessUnit>();
             if (existing != null)
             {
                 return existing;

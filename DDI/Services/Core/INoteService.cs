@@ -8,8 +8,8 @@ namespace DDI.Services.ServiceInterfaces
 {
     public interface INoteService : IService<Note>
     {
-        IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds);
-        IDataResponse RemoveTopicFromNote(Note note, Guid topicId);
+        IDataResponse<Note> AddTopicsToNote(Guid id, JObject topicIds);
+        IDataResponse RemoveTopicFromNote(Guid id, Guid topicId);
         IDataResponse<List<Note>> GetNotesInAlertDateRange(Guid parentid);
 
     }

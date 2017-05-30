@@ -11,17 +11,15 @@ using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.GL
 {
-    
+
     [Authorize]
     public class BusinessUnitFromToController : GenericController<BusinessUnitFromTo>
     {
         private const string ROUTENAME_GETBYYEAR = RouteNames.FiscalYear + RouteNames.BusinessUnitFromTo + RouteVerbs.Get;
 
         protected new IBusinessUnitFromToService Service => (IBusinessUnitFromToService)base.Service;
-        public BusinessUnitFromToController()
-            : base(new BusinessUnitFromToService())
-        {
-        }
+
+        public BusinessUnitFromToController(IBusinessUnitFromToService service) : base(service) { }
 
         protected override Expression<Func<BusinessUnitFromTo, object>>[] GetDataIncludesForSingle()
         {

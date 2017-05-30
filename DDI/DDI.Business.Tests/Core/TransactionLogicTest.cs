@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
@@ -22,23 +20,22 @@ namespace DDI.Business.Tests.Core
         private TransactionLogic _bl;
         private IList<Account> _accounts;
         private IList<Transaction> _transactions;
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
 
             _accounts = AccountDataSource.GetDataSource(_uow);
             _transactions = new List<Transaction>();
-            _uow.SetRepository(new RepositoryNoDb<Transaction>(_transactions.AsQueryable()));
+            _uow.CreateRepositoryForDataSource(_transactions);
 
             _bl = _uow.GetBusinessLogic<TransactionLogic>();
 
         }
-
-
-
+        
         [TestMethod, TestCategory(TESTDESCR)]
         public void TransactionLogic_SetAccount()
         {

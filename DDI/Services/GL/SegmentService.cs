@@ -12,6 +12,8 @@ namespace DDI.Services.GL
 {
     public class SegmentService : ServiceBase<Segment>, ISegmentService
     {
+        public SegmentService(IUnitOfWork uow) : base(uow) { }
+
         public IDataResponse<List<ICanTransmogrify>> GetSegmentSearch(Guid fiscalYearId, Guid? parentId, string levelString, IPageable search)
         {
             var result = UnitOfWork.GetEntities<Segment>();

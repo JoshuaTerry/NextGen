@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DDI.Shared.Extensions
 {
@@ -9,6 +10,17 @@ namespace DDI.Shared.Extensions
             if (newCollection != null)
             {
                 self.AddRange(newCollection);
+            }
+        }
+
+        /// <summary>
+        /// Enumerate a collection and perform an action for each element.
+        /// </summary>
+        public static void ForEach<T>(this IEnumerable<T> self, Action<T> action)
+        {
+            foreach (var entry in self)
+            {
+                action?.Invoke(entry);
             }
         }
     }

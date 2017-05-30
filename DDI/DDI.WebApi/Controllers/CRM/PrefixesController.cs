@@ -1,19 +1,18 @@
-﻿using DDI.Services.Search;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.Security;
-using DDI.Shared.Statics;
-using Microsoft.AspNet.Identity;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class PrefixesController : GenericController<Prefix>
-    {   
+    {
+        public PrefixesController(IService<Prefix> service) : base(service) { }
+
         protected override Expression<Func<Prefix, object>>[] GetDataIncludesForList()
         {
             return new Expression<Func<Prefix, object>>[]

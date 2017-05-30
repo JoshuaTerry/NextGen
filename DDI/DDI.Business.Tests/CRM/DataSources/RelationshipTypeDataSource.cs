@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
@@ -13,9 +9,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class RelationshipTypeDataSource
     {
-        public static IList<RelationshipType> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<RelationshipType> GetDataSource(IUnitOfWork uow)
         {
-            IList<RelationshipType> existing = uow.GetRepositoryOrNull<RelationshipType>()?.Entities.ToList();
+            IList<RelationshipType> existing = uow.GetRepositoryDataSource<RelationshipType>();
             if (existing != null)
             {
                 return existing;

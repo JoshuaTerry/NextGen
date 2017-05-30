@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
@@ -17,7 +15,7 @@ namespace DDI.Business.Tests.GL
     public class AccountLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | GL";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private AccountLogic _bl;
         private IList<BusinessUnit> _units;
         private IList<Ledger> _ledgers;
@@ -28,7 +26,8 @@ namespace DDI.Business.Tests.GL
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
 
             _units = BusinessUnitDataSource.GetDataSource(_uow);
             _ledgers = LedgerDataSource.GetDataSource(_uow);
@@ -37,7 +36,6 @@ namespace DDI.Business.Tests.GL
             _accounts = AccountDataSource.GetDataSource(_uow);
 
             _bl = new AccountLogic(_uow);
-            //bool _ = _uow.GetBusinessLogic<BusinessUnitLogic>().IsMultiple; // Need to call this to establish the cached value via a UnitOfWork.
         }
 
 

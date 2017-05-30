@@ -1,7 +1,5 @@
-﻿using DDI.Data;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
-using System;
 
 namespace DDI.Business.CRM
 {
@@ -16,8 +14,6 @@ namespace DDI.Business.CRM
         #endregion
 
         #region Constructors 
-
-        public RelationshipLogic() : this(new UnitOfWorkEF()) { }
 
         public RelationshipLogic(IUnitOfWork uow) : base(uow)
         {

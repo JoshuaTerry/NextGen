@@ -18,10 +18,7 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETBYFUND = RouteNames.Fund + RouteNames.FundFromTo + RouteVerbs.Get;
 
         protected new IFundFromToService Service => (IFundFromToService)base.Service;
-        public FundFromToController()
-            : base(new FundFromToService())
-        {
-        }
+        public FundFromToController(IFundFromToService service) : base(service) { }
 
         protected override Expression<Func<FundFromTo, object>>[] GetDataIncludesForSingle()
         {

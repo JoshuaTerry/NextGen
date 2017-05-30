@@ -1,54 +1,17 @@
-using DDI.Business.CRM;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Services.Search;
-using DDI.Shared;
-using DDI.Shared.Enums.INV;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.INV;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Models.Client.INV;
 
 namespace DDI.Services
 {
     public class InvestmentIRSInformationService : ServiceBase<InvestmentIRSInformation>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentIRSInformation> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentIRSInformationService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentIRSInformationService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentIRSInformation>())
-        {
-        }
-
-        private InvestmentIRSInformationService(IUnitOfWork uow, IRepository<InvestmentIRSInformation> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
+        public InvestmentIRSInformationService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<List<InvestmentIRSInformation>> GetIRSInformationByInvestmentId(Guid Id)
         {
 

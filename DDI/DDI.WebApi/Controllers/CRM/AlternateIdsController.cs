@@ -1,15 +1,18 @@
+using System;
+using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class AlternateIdsController : GenericController<AlternateId>
     {
+        public AlternateIdsController(IService<AlternateId> service) : base(service) { }
+
         protected override string FieldsForList => $"{nameof(AlternateId.Id)},{nameof(AlternateId.Name)}";
 
         [HttpGet]

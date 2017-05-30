@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.Core;
-using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Business.Tests.Core.DataSources
 {
@@ -18,10 +13,10 @@ namespace DDI.Business.Tests.Core.DataSources
         public static Guid RangeIdForTest => _rangeIdForTest;
         public const int STARTING_NEXT_NUMBER = 12345;
 
-        public static IList<EntityNumber> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<EntityNumber> GetDataSource(IUnitOfWork uow)
         {
 
-            IList<EntityNumber> existing = uow.GetRepositoryOrNull<EntityNumber>()?.Entities.ToList();
+            IList<EntityNumber> existing = uow.GetRepositoryDataSource<EntityNumber>();
             if (existing != null)
             {
                 return existing;

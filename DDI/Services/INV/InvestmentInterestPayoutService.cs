@@ -1,55 +1,19 @@
-using DDI.Business.CRM;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Services.Search;
-using DDI.Shared;
-using DDI.Shared.Enums.INV;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.INV;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Enums.INV;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.INV;
 
 namespace DDI.Services
 {
     public class InvestmentInterestPayoutService : ServiceBase<InvestmentInterestPayout>
     {
-        #region Private Fields
-
-        private readonly IRepository<InvestmentInterestPayout> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public InvestmentInterestPayoutService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public InvestmentInterestPayoutService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<InvestmentInterestPayout>())
-        {
-        }
-
-        private InvestmentInterestPayoutService(IUnitOfWork uow, IRepository<InvestmentInterestPayout> repository)
-            : base(uow)
-        {
-           // _investmentrelationshiplogic = investmentRelationshipLogic;
-            _repository = repository;
-        }
-
-        #endregion
+        public InvestmentInterestPayoutService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<InvestmentInterestPayout> GetInterestPayoutById(Guid Id)
         {
 

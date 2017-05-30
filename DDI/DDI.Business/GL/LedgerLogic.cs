@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Caching;
@@ -20,7 +17,6 @@ namespace DDI.Business.GL
         #region Fields
 
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(LedgerLogic));
-        public LedgerLogic() : this(new UnitOfWorkEF()) { }
         private IRepository<Ledger> _ledgerRepository;
         private IRepository<SegmentLevel> _segmentLevelRepository;
         private CachedRepository<Ledger> _ledgerCache = null;

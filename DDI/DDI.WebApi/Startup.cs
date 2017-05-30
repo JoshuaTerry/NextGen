@@ -1,4 +1,5 @@
-﻿using DDI.WebApi;
+﻿using DDI.Shared;
+using DDI.WebApi;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
@@ -15,9 +16,6 @@ namespace DDI.WebApi
             app.UseCors(CorsOptions.AllowAll);
 
             ConfigureAuth(app);
-
-            // Set the CacheHelper's cache provider
-            Shared.Caching.CacheHelper.CacheProvider = new Providers.HttpCacheProvider();
 
         }
     }

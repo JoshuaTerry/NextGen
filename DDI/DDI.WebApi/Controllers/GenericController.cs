@@ -1,25 +1,16 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Web.Http;
+using System.Web.Http.Routing;
 using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
-using DDI.WebApi.Helpers;
-using System;
-using System.Web.Http;
-using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers
 {
     public class GenericController<T> : ControllerBase<T> where T : class, IEntity
     {
-        public GenericController() :this(new ServiceBase<T>())
-        {
-        }
-
-        public GenericController(IService<T> serviceBase) : base(serviceBase, new DynamicTransmogrifier(), new Pagination())
-        {
-        }
+        public GenericController(IService<T> serviceBase) : base(serviceBase) { }
          
         public IHttpActionResult GetAll(string routeName, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
         {
