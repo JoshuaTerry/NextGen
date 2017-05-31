@@ -116,13 +116,13 @@ function NewGroupModal() {
             resizable: false
         });
 
-        $('.savegroupbutton').unblind('click');
+        $('.savegroupbutton').unbind('click');
 
         $('.savegroupbutton').click(function (e) {
 
             var data = {
-                Name: $('.gp-Name').val();
-            }
+                Name: $('.gp-Name').val()
+            };
 
             MakeServiceCall('POST', 'roles', data, function (data) {
 
