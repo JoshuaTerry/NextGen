@@ -1,4 +1,6 @@
 ﻿using DDI.Services;
+using DDI.Services.General;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
@@ -8,6 +10,8 @@ using DDI.WebApi.Controllers.Core;
 using DDI.WebApi.Controllers.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,28 +42,64 @@ namespace DDI.WebApi.Tests.Controllers
 
             var service = new ServiceBase<Group>(uow.Object);
             var controller = new GroupController(service);
-            // end initialize 
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
+            // end initialize
 
             IHttpActionResult result = controller.GetAll();
             var contentResult = result as OkNegotiatedContentResult<IDataResponse>;
 
-            //return (dataResponse.Data as IList<ExpandoObject>).Cast<dynamic>().ToList();
             var data = ((contentResult.Content as DataResponse<object>).Data as List<ICanTransmogrify>).Cast<Group>().ToList();
             Assert.IsNotNull(contentResult, "IDataResponse is returned");
             Assert.IsNotNull(contentResult.Content, "IDataResponse is returned with content");
-            Assert.AreEqual(((contentResult.Content as DataResponse<object>).Data as List<ICanTransmogrify>).Count, 3, "Content is the correct size");
-
+            Assert.AreEqual(data.Count, 3, "Content is the correct size");
             Assert.AreEqual(data[1].DisplayName, "Group 2", "Content is accurate");
 
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void GroupController_AddRolesToGroup()
+        public void GroupController_AddRolesToGroup_NewRole()
         {
 
+            //initialize
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
+
+            IGroupService service = new GroupService(uow.Object);
+            var controller = new GroupController(service);
+            // end initialize 
+
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+            var group = service.GetAll().Data[0];
+            // test cases:
+            // add a new role to a group
+
+            Role role = new Role()
+            {
+                Id = GuidHelper.NewSequentialGuid(),
+                Module = "Test",
+                Name = "Read/Write"
+            };
+
+            JObject JRole = JObject.FromObject(role); // wil only need ID, not whole thing
+                                                      // add an existing role to a group
+
+            uow.Setup(m => m.GetById<Group>(group.Id, r => r.Roles)).Returns(group as Group);
+            IHttpActionResult result = controller.AddRolesToGroup(group.Id, JRole);
+            var contentResult = result as OkNegotiatedContentResult<IDataResponse>;
+
+            //successful call
+            Assert.IsNotNull(result, "Service call was successful");
+            //assert that group has one role
+            // assert that role is the one added
+
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void GroupController_AddRolesToGroup_ExistingRole()
+        {
             //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
@@ -68,25 +108,35 @@ namespace DDI.WebApi.Tests.Controllers
             var controller = new GroupController(service);
             // end initialize 
 
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+            var group = service.GetAll().Data[0];
 
-            // test cases:
-            // add a new role to a group
+            Role role = service.GetAll().Data.Cast<Group>().ToList()[1].Roles.ToList()[0];
+            // get the Role from the Group from the service
+            JObject JRole = JObject.FromObject(role);
 
-            // add an existing role to a group
-            // add an empty collection to a group (?)
+            IHttpActionResult result = controller.AddRolesToGroup(group.Id, JRole);
 
         }
 
-
         private IQueryable<Group> SetupRepo()
         {
+            List<Role> roleList = new List<Role>()
+            {
+                new Role { Name = "Read", Module = "Notes", Id = GuidHelper.NewSequentialGuid() },
+                new Role { Name = "Read/Write", Module = "Settings", Id = GuidHelper.NewSequentialGuid() }
+
+            };
+
             return new List<Group>()
             {
                 new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid() },
-                new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid() },
+                new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid(), Roles = roleList },
                 new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid() }
             }
             .AsQueryable<Group>();
         }
+
     }
 }
