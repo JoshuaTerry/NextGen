@@ -17,24 +17,24 @@ function LoadAccountActivityAndBudgetTab(id) {
 
     MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
 
-    var columns = [
-    
-        { dataField: 'PeriodName', caption: 'Period' },
-        { dataField: 'WorkingBudget', caption: data.Data.WorkingBudgetName, allowEditing: true },
-        { dataField: 'FixedBudget', caption: data.Data.FixedBudgetName, allowEditing: true },
-        { dataField: 'WhatIfBudget', caption: data.Data.WhatIfBudgetName, allowEditing: true },
-        { dataField: 'Debits', caption: 'Debits' },
-        { dataField: 'PriorCredits', caption: data.Data.PriorYearName },
-        { dataField: 'Credits', caption: 'Credits' }
-    ];
+        var columns = [
 
-    LoadGrid('.activitygridcontainer', 'activitygrid', columns, 'accounts/activity/' + id + '/detail', null, null, null, null, null, null, false, false, false, function (data) {
+            { dataField: 'PeriodName', caption: 'Period' },
+            { dataField: 'WorkingBudget', caption: data.Data.WorkingBudgetName, allowEditing: true },
+            { dataField: 'FixedBudget', caption: data.Data.FixedBudgetName, allowEditing: true },
+            { dataField: 'WhatIfBudget', caption: data.Data.WhatIfBudgetName, allowEditing: true },
+            { dataField: 'Debits', caption: 'Debits' },
+            { dataField: 'PriorCredits', caption: data.Data.PriorYearName },
+            { dataField: 'Credits', caption: 'Credits' }
+        ];
 
-        $('.activitytitle').empty();
+        LoadGrid('.activitygridcontainer', 'activitygrid', columns, 'accounts/activity/' + id + '/detail', null, null, null, null, null, null, false, false, false, function (data) {
 
-        $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
+            $('.activitytitle').empty();
 
-    });
+            $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
+
+        });
 
     }, null);
 
@@ -47,12 +47,13 @@ var segmentLevels;
 var segmentLevel;
 var groupLevels;
 var group1Data = [];
+var saveGroupId;
 var accountId;
 var segmentData = [];
 var category = '0';
-var addMode;
+var editMode = '';
+var activityTotal = 0;
 var summaryContainer = '.accountsummarycontainer';
-
 
 var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
 var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
@@ -77,9 +78,7 @@ function LoadSummaryTab(AccountId) {
 
     if (AccountId === '' || AccountId === null) {
         AccountAddMode();
-    }
-    else {
-        addMode = false;
+        editMode = 'add';
     }
 
     $('.editaccount').click(function (e) {
@@ -96,7 +95,7 @@ function LoadSummaryTab(AccountId) {
     $('.cancelsaveaccount').click(function (e) {
         e.preventDefault();
         ClearAccountFields();
-        if (addMode === true) {
+        if (editMode === 'add') {
             AccountAddMode();
         }
         else {
@@ -111,7 +110,7 @@ function LoadSummaryTab(AccountId) {
 }
 
 function AccountDisplayMode() {
-    addMode = false;
+    editMode = 'display';
     $('.accountsegmentscontainer').hide();
     $('.editaccountbutton').show();
     $('.saveaccountbuttons').hide();
@@ -120,18 +119,24 @@ function AccountDisplayMode() {
         $(this).prop('disabled', true);
 
     });
+    $('.accountnumberlookup').attr('disabled', true);
+    $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
     FormatFields();
 }
 
 function AccountAddMode() {
-    addMode = true;
+    editMode = 'add';
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
+    $('.accountsegmentscontainer').show();
 }
 
 function AccountEditMode() {
-    $('.accountsegmentscontainer').show();
+    editMode = 'edit';
+    if (activityTotal === 0){
+        $('.accountsegmentscontainer').show();
+    }
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
 
@@ -202,33 +207,38 @@ function RetrieveLedgerSettings() {
                             DisplayErrorMessage('Error', $(groupPrompt).html() + ' Must be selected first');
                             return;
                         }
+                        saveGroupId = $(groupId).val();               // save for initing drop down
                         if (groupLevel === '1') {
                             parentGroupId = null;
                         }
                         else {
-                            parentGroupId = $('.Group' + parseInt(groupLevel - 1) + 'Id').val()
+                            parentGroupId = $('.Group' + (parseInt(groupLevel) - 1) + 'Id').val()
                         }
-                        EditGroupModal(groupLevel, $('.Group' + groupLevel + 'Id').val(), parentGroupId, $(groupPrompt).html());
+                        ConfirmGroupModal(groupLevel, $('.Group' + groupLevel + 'Id').val(), parentGroupId, $(groupPrompt).html());
                     })
                     $('.newgroup' + i).click(function (e) {
+                        var parentGroupId;
                         e.preventDefault();
                         groupLevel = $(this).attr('class').substring(8, 9);
                         groupPrompt = '.group' + groupLevel + 'prompt';
-                        if (groupLevel > 1) {
-                            groupId = '.Group' + (groupLevel - 1) + 'Id';
-                            if ($(groupId).val() === null || $(groupId).val() === '') {
+                        if (groupLevel > '1') {
+                            parentGroupId = '.Group' + (parseInt(groupLevel) - 1) + 'Id';
+                            if ($(parentGroupId).val() === null || $(parentGroupId).val() === '') {
                                 DisplayErrorMessage('Error', $(groupPrompt).html() + ' Must be selected first');
                                 alert($('.group' + (groupLevel - 1) + 'prompt').html() + ' Must be selected first');
                                 return;
                             }
                         }
-                        if (i === 1) {
+                        groupId = '.Group' + groupLevel + 'Id';
+                        saveGroupId = $(groupId).val();               // save for initing drop down
+
+                        if (groupLevel === '1') {
                             parentGroupId = null;
                         }
                         else {
-                            parentGroupId = $('.Group' + parseInt(groupLevel - 1) + 'Id').val()
+                            parentGroupId = $('.Group' + (parseInt(groupLevel) - 1) + 'Id').val()
                         }
-                        NewGroupModal(groupLevel, $(groupId).val(), $(groupPrompt).html());
+                        NewGroupModal(groupLevel, parentGroupId, $(groupPrompt).html());
                     })
                 }
 
@@ -283,10 +293,10 @@ function RetrieveSegmentLevels() {
                                 parentSegmentId = null;
                             }
                             else {
-                                parentSegmentId = $('.Segment' + parseInt(segmentLevel - 1) + 'Id').val()
+                                parentSegmentId = $('.Segment' + (parseInt(segmentLevel) - 1) + 'Id').val()
                             }
                         }
-                        EditSegmentModal(segmentLevel, $('.Segment' + segmentLevel + 'Id').val(), parentSegmentId, $(segmentPrompt).html());
+                        ConfirmSegmentModal(segmentLevel, $('.Segment' + segmentLevel + 'Id').val(), parentSegmentId, $(segmentPrompt).html());
                     })
                     $('.newsegment' + i).click(function (e) {
                         e.preventDefault();
@@ -309,7 +319,7 @@ function RetrieveSegmentLevels() {
                                 parentSegmentId = null;
                             }
                             else {
-                                parentSegmentId = $('.Segment' + parseInt(segmentLevel - 1) + 'Id').val()
+                                parentSegmentId = $('.Segment' + (parseInt(segmentLevel) - 1) + 'Id').val()
                             }
                         }
                         NewSegmentModal(segmentLevel, $(segmentId).val(), $(segmentPrompt).html());
@@ -317,12 +327,11 @@ function RetrieveSegmentLevels() {
 
                 }
                 if (accountId === null || accountId === '') {
-                    $('.accountsegmentscontainer').show();
                     LoadGroupDropDown(1, '', null);
                     InitSegmentDropDowns();
                 }
                 else {
-                    $('.accountsegmentscontainer').hide();
+                    //$('.accountsegmentscontainer').hide();
                     RetrieveAccountSummaryData();
                 }
             }
@@ -369,6 +378,7 @@ function RetrieveAccountSummaryData() {
                 MakeServiceCall('GET', 'accounts/activity/' + accountId, null, function (data) {
                     if (data.Data) {
                         if (data.IsSuccessful) {
+                            activityTotal = data.Data.ActivityTotal;
                             $('.Activity').val(data.Data.ActivityTotal);
                             $('.EndingBalance').val(data.Data.FinalEndingBalance);
 
@@ -565,7 +575,7 @@ function SaveAccount() {
 
     var fields = GetAccountFields();
 
-    if (addMode === true) {
+    if (editMode === 'add') {
         var action = 'POST';
         var route = 'accounts'
     }
@@ -587,7 +597,7 @@ function SaveAccount() {
 
     },
     function () {
-        if (addMode === true) {
+        if (editMode === 'add') {
             AccountAddMode();
         }
         else {
@@ -723,11 +733,12 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 
             CloseModal(modal);
 
-            LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
-
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Group.');
+            if (editMode != 'display') {
+                LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
+            }
+            else {
+                LoadGroupDropDown(groupLevel, parentId, saveGroupId)
+            }
 
         });
 
@@ -735,8 +746,15 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 
 }
 
-function EditGroupModal(groupLevel, groupId, parentId, groupName) {
+function ConfirmGroupModal(groupLevel, groupId, parentId, groupName) {
 
+    ConfirmModal('Warning: Updating this group may impact other accounts within this group.  Are you sure you want to continue?', function () {
+        EditGroupModal(groupLevel, groupId, parentId, groupName);
+    }, function () { return; });
+
+}
+
+function EditGroupModal(groupLevel, groupId, parentId, groupName) {
     $('.modalGroupName').html(groupName);
     if (groupLevel != 1) {
         $('.ag-Category').val(0);
@@ -775,11 +793,10 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
             CloseModal(modal);
 
-            LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
+            if (editMode != 'display') {
+                LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
+            }
 
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Group.');
         });
 
     });
@@ -851,15 +868,21 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             CloseModal(modal);
 
-            LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id)
-
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Segment.');
+            if (editMode != 'display') {
+                LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+            }
 
         });
 
     });
+
+}
+
+function ConfirmSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
+
+    ConfirmModal('Warning: Updating this segment may impact other accounts within this segment.  Are you sure you want to continue?', function () {
+        EditSegmentModal(segmentLevel, segmentId, parentId, segmentName);
+    }, function () { return; });
 
 }
 
@@ -896,11 +919,10 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             CloseModal(modal);
 
-            LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id)
+            if (editMode != 'display') {
+                LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+            }
 
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Account Segment.');
         });
 
     });
