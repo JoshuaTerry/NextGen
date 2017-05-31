@@ -61,7 +61,6 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_AddRolesToGroup_NewRole()
         {
-
             //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
@@ -76,25 +75,17 @@ namespace DDI.WebApi.Tests.Controllers
             // test cases:
             // add a new role to a group
 
-            Role role = new Role()
-            {
-                Id = GuidHelper.NewSequentialGuid(),
-                Module = "Test",
-                Name = "Read/Write"
-            };
+            string roles = "{ Ids: ['" + GuidHelper.NewSequentialGuid().ToString() + "'] }";
 
-            JObject JRole = JObject.FromObject(role); // wil only need ID, not whole thing
-                                                      // add an existing role to a group
+            JObject JRole = JObject.Parse(roles); 
 
             uow.Setup(m => m.GetById<Group>(group.Id, r => r.Roles)).Returns(group as Group);
+            Assert.AreEqual((group as Group).Roles.Count, 0, "No roles to start with");
             IHttpActionResult result = controller.AddRolesToGroup(group.Id, JRole);
-            var contentResult = result as OkNegotiatedContentResult<IDataResponse>;
+            var contentResult = (result as OkNegotiatedContentResult<IDataResponse>).Content as DataResponse<object>;
 
-            //successful call
-            Assert.IsNotNull(result, "Service call was successful");
-            //assert that group has one role
-            // assert that role is the one added
-
+            Assert.AreEqual(contentResult.IsSuccessful, true,  "Service call was successful");
+            Assert.AreEqual(contentResult.TotalResults, 1, "One role was added");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -126,14 +117,13 @@ namespace DDI.WebApi.Tests.Controllers
             {
                 new Role { Name = "Read", Module = "Notes", Id = GuidHelper.NewSequentialGuid() },
                 new Role { Name = "Read/Write", Module = "Settings", Id = GuidHelper.NewSequentialGuid() }
-
             };
 
             return new List<Group>()
             {
-                new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid() },
+                new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid(), Roles = new List<Role>() },
                 new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid(), Roles = roleList },
-                new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid() }
+                new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid(), Roles = new List<Role>() }
             }
             .AsQueryable<Group>();
         }
