@@ -66,7 +66,6 @@ namespace DDI.WebApi.Controllers.Core
                     IsSuccessful = true
                 };
 
-                //return FinalizeResponse<Role>(response);
                 return FinalizeResponse<Role>(response, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)

@@ -1,13 +1,23 @@
-﻿using DDI.Shared;
+﻿using DDI.Services;
+using DDI.Shared;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Security;
+using DDI.Shared.Models.Common;
 using DDI.WebApi.Controllers.Core;
+using DDI.WebApi.Controllers.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace DDI.WebApi.Tests.Controllers
 {
@@ -22,18 +32,27 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_GetAll()
         {
-            var uow = Factory.CreateUnitOfWork();
-            uow.CreateRepositoryForDataSource(SetupRepo());
+            //initialize
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
-            GroupController controller = CreateController<GroupController>(uow);
+            var service = new ServiceBase<Group>(uow.Object);
+            var controller = new GroupController(service);
+            // end initialize 
 
-            var result = controller.GetAll();
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
 
-            var content = GetResponse(result);
-            Assert.AreEqual(3, content.TotalResults, "Correct # of results returned.");
+            IHttpActionResult result = controller.GetAll();
+            var contentResult = result as OkNegotiatedContentResult<IDataResponse>;
 
-            var data = GetReponseData(content);
-            Assert.AreEqual("Group 1", data[0].DisplayName);
+            //return (dataResponse.Data as IList<ExpandoObject>).Cast<dynamic>().ToList();
+            var data = ((contentResult.Content as DataResponse<object>).Data as List<ICanTransmogrify>).Cast<Group>().ToList();
+            Assert.IsNotNull(contentResult, "IDataResponse is returned");
+            Assert.IsNotNull(contentResult.Content, "IDataResponse is returned with content");
+            Assert.AreEqual(((contentResult.Content as DataResponse<object>).Data as List<ICanTransmogrify>).Count, 3, "Content is the correct size");
+
+            Assert.AreEqual(data[1].DisplayName, "Group 2", "Content is accurate");
 
         }
 
@@ -41,8 +60,18 @@ namespace DDI.WebApi.Tests.Controllers
         public void GroupController_AddRolesToGroup()
         {
 
+            //initialize
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
+
+            var service = new ServiceBase<Group>(uow.Object);
+            var controller = new GroupController(service);
+            // end initialize 
+
+
             // test cases:
             // add a new role to a group
+
             // add an existing role to a group
             // add an empty collection to a group (?)
 
@@ -51,12 +80,13 @@ namespace DDI.WebApi.Tests.Controllers
 
         private IQueryable<Group> SetupRepo()
         {
-            var list = new List<Group>();
-            list.Add(new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid() });
-            list.Add(new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid() });
-            list.Add(new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid() });
-
-            return list.AsQueryable();
+            return new List<Group>()
+            {
+                new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid() },
+                new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid() },
+                new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid() }
+            }
+            .AsQueryable<Group>();
         }
     }
 }
