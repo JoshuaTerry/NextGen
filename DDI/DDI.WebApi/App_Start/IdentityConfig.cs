@@ -1,13 +1,11 @@
-﻿using DDI.Services.Search;
+﻿using System;
+using System.Threading.Tasks;
 using DDI.Services.Security;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
-using DDI.WebApi.Models;
-using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using System;
-using System.Threading.Tasks;
 
 namespace DDI.WebApi
 {
@@ -20,7 +18,7 @@ namespace DDI.WebApi
         {
         }
 
-        public UserManager() : base(new UserService())
+        public UserManager() : base(Factory.CreateService<UserService>())
         {
         }
                 

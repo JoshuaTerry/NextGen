@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
 using DDI.Shared;
-using DDI.Shared.Models.Common;
 using DDI.Shared.Helpers;
+using DDI.Shared.Models.Common;
 
 namespace DDI.Business.Tests.Common.DataSources
 {
     public static class CountryDataSource
     {
-        public static IList<Country> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Country> GetDataSource(IUnitOfWork uow)
         {
-            IList<Country> existing = uow.GetRepositoryOrNull<Country>()?.Entities.ToList();
+            IList<Country> existing = uow.GetRepositoryDataSource<Country>();
             if (existing != null)
             {
                 return existing;

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -13,9 +9,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class ContactTypeDataSource
     {
-        public static IList<ContactType> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<ContactType> GetDataSource(IUnitOfWork uow)
         {
-            IList<ContactType> existing = uow.GetRepositoryOrNull<ContactType>()?.Entities.ToList();
+            IList<ContactType> existing = uow.GetRepositoryDataSource<ContactType>();
             if (existing != null)
             {
                 return existing;
@@ -23,14 +19,15 @@ namespace DDI.Business.Tests.CRM.DataSources
 
             var list = new List<ContactType>();
 
+            var categories = uow.GetRepositoryDataSource<ContactCategory>();
             // Email
-            ContactCategory category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Email);
+            ContactCategory category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Email);
             AddType(list, category, "H", "Home email", false, false, true);
             AddType(list, category, "C", "Contact email", false, false, false);
             AddType(list, category, "W", "Work email", false, false, false);
 
             // Phone
-            category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Phone);
+            category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Phone);
             AddType(list, category, "H", "Home phone", false, false, true);
             AddType(list, category, "F", "Fax #", false, false, false);
             AddType(list, category, "W", "Work phone", false, false, false);
@@ -38,19 +35,19 @@ namespace DDI.Business.Tests.CRM.DataSources
             AddType(list, category, "C", "Church phone", false, true, false);
 
             // Web
-            category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Web);
+            category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Web);
             AddType(list, category, "H", "Home page", false, false, true);
 
             // Social
-            category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Social);
+            category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Social);
             AddType(list, category, "F", "Facebook", false, false, false);
 
             // Person
-            category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Person);
+            category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Person);
             AddType(list, category, "C", "Contact person", false, false, true);
 
             // Other
-            category = uow.GetRepositoryOrNull<ContactCategory>()?.Entities.FirstOrDefault(p => p.Code == ContactCategoryCodes.Other);
+            category = categories.FirstOrDefault(p => p.Code == ContactCategoryCodes.Other);
             AddType(list, category, "M", "Mailing address", false, false, true);
             
             uow.CreateRepositoryForDataSource(list);

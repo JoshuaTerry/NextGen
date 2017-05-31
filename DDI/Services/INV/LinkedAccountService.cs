@@ -1,54 +1,19 @@
-using DDI.Business.CRM;
-using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Services.Search;
-using DDI.Shared;
-using DDI.Shared.Enums.INV;
-using DDI.Shared.Models;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.INV;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Enums.INV;
+using DDI.Shared.Models.Client.INV;
 
 namespace DDI.Services
 {
     public class LinkedAccountService : ServiceBase<LinkedAccount>
     {
-        #region Private Fields
 
-        private readonly IRepository<LinkedAccount> _repository;
-        
-        #endregion
-
-        #region Constructors
-
-        public LinkedAccountService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public LinkedAccountService(IUnitOfWork uow)
-            : this(uow,  uow.GetRepository<LinkedAccount>())
-        {
-        }
-
-        private LinkedAccountService(IUnitOfWork uow, IRepository<LinkedAccount> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
+        public LinkedAccountService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
-        
+
         public IDataResponse<LinkedAccount> GetLinkedAccountById(Guid Id)
         {
 

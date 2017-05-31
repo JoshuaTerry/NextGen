@@ -1,11 +1,10 @@
-﻿using DDI.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DDI.Business.Helpers
 {
@@ -73,9 +72,9 @@ namespace DDI.Business.Helpers
             }
             else
             {
-                using (var context = new UnitOfWorkEF())
+                using (var unitOfwork = Factory.CreateUnitOfWork())
                 {
-                    return context.GetEntities<Abbreviation>().ToList();
+                    return unitOfwork.GetEntities<Abbreviation>().ToList();
                 }
             }
         }

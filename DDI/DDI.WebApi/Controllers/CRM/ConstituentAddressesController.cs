@@ -6,18 +6,14 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class ConstituentAddressesController : GenericController<ConstituentAddress>
     {
-
-        public ConstituentAddressesController()
-            :base(new ConstituentAddressService())
-        {
-            
-        }
+        public ConstituentAddressesController(ConstituentAddressService service) : base(service) { }
 
         protected override Expression<Func<ConstituentAddress, object>>[] GetDataIncludesForSingle()
         {

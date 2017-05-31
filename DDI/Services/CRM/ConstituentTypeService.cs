@@ -1,11 +1,10 @@
-using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Shared;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models.Client.CRM;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
 {
@@ -13,34 +12,12 @@ namespace DDI.Services
     {
         #region Private Fields
 
-        private readonly IRepository<ConstituentType> _repository;
-
         #endregion
 
-        #region Constructors
-
-        public ConstituentTypeService()
-            : this(new UnitOfWorkEF())
-        {
-        }
-
-        public ConstituentTypeService(IUnitOfWork uow)
-            : this(uow, uow.GetRepository<ConstituentType>())
-        {
-        }
-
-        private ConstituentTypeService(IUnitOfWork uow, IRepository<ConstituentType> repository)
-            : base(uow)
-        {
-            _repository = repository;
-        }
-
-        #endregion
+        public ConstituentTypeService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
-
-
-
+        
         public IDataResponse AddTagsToConstituentType(ConstituentType constituentType, JObject tagIds)
         {
             var constituentTypeToUpdate = UnitOfWork.GetById<ConstituentType>(constituentType.Id, c => c.Tags);

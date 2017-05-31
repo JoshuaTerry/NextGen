@@ -76,6 +76,7 @@
     <Compile Include="Common\DataSources\StateDataSource.cs" />
     <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
+    <Compile Include="Core\DIContainerTest.cs" />
     <Compile Include="Core\TransactionLogicTest.cs" />
     <Compile Include="Core\EntityNumberLogicTest.cs" />
     <Compile Include="Core\ConfigurationLogicTest.cs" />
@@ -117,17 +118,13 @@
     <Compile Include="ModuleInfo\ModuleInfoCreatorTests.cs" />
     <Compile Include="ModuleInfo\ModuleInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegionLogicTests.cs" />
+    <Compile Include="CRM\RegionLogicTests.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDI.Business\DDI.Business.csproj">
       <Project>{0E7D7E11-80B4-4751-8C21-B05A08A19473}</Project>
       <Name>DDI.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DDI.Data\DDI.Data.csproj">
-      <Project>{7DD8C5F7-4F2D-4D54-B8B0-B4D136007663}</Project>
-      <Name>DDI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDI.Shared\DDI.Shared.csproj">
       <Project>{997B56F7-612D-43D5-90BD-89F264D4C58D}</Project>

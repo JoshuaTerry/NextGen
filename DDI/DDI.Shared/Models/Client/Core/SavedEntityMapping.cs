@@ -13,6 +13,7 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+        [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
         public string Description { get; set; }
         public EntityMappingType MappingType { get; set; }

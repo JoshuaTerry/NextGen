@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Helpers;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,7 +16,7 @@ namespace DDI.Business.Tests.Helpers
 
         private const string TESTDESCR = "Business | Helpers";
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private List<Tag> tags;
 
         [TestInitialize]
@@ -29,7 +27,9 @@ namespace DDI.Business.Tests.Helpers
             tags.Add(new Tag() { Code = "IN", Name = "Individual", Id = GuidHelper.NewSequentialGuid(), IsActive = true });
             tags.Add(new Tag() { Code = "XM", Name = "No Mail", Id = GuidHelper.NewSequentialGuid(), IsActive = true });
 
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
             _uow.CreateRepositoryForDataSource(tags.AsQueryable());
 
         }

@@ -1,17 +1,20 @@
-﻿using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class FileStorageController : GenericController<FileStorage>
     {
+        public FileStorageController(IService<FileStorage> service) : base(service) { }
+
         [HttpGet]
         [Route("api/v1/filestorage")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)

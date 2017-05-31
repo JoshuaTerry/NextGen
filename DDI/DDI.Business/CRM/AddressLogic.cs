@@ -1,15 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DDI.Business.CRM
 {
@@ -18,16 +16,9 @@ namespace DDI.Business.CRM
     /// </summary>
     public class AddressLogic : EntityLogicBase<Address>
     {
-
-        #region Constructors 
-
-        public AddressLogic() : this(new UnitOfWorkEF()) { }
-
         public AddressLogic(IUnitOfWork uow) : base(uow)
         {
         }
-
-        #endregion
 
         #region Public Properties
 

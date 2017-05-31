@@ -1,16 +1,17 @@
-using DDI.Shared.Models.Client.CRM;
-using DDI.Services;
-using DDI.Services.Search;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class GendersController : GenericController<Gender>
     {
+        public GendersController(IService<Gender> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

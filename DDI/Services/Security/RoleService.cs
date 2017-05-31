@@ -1,5 +1,4 @@
-﻿using DDI.Data;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity;
 using System;
@@ -13,15 +12,12 @@ namespace DDI.Services.Security
     public class RoleService : ServiceBase<Role>, IRoleStore<Role, Guid>,
                                                   IQueryableRoleStore<Role, Guid>
     {
-        private readonly IUnitOfWork _uow;
 
-        public RoleService()
-        {
-            _uow = new UnitOfWorkEF();
-        }
+        public RoleService(IUnitOfWork uow) : base(uow) { }
 
         #region IQueryableRoleStore Implementation
-        IQueryable<Role> IQueryableRoleStore<Role, Guid>.Roles => _uow.GetRepository<Role>().Entities;
+
+        IQueryable<Role> IQueryableRoleStore<Role, Guid>.Roles => UnitOfWork.GetRepository<Role>().Entities;
 
         #endregion  
 

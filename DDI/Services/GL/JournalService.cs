@@ -18,6 +18,7 @@ namespace DDI.Services.GL
 {
     public class JournalService : ServiceBase<Journal>, IJournalService
     {
+        public JournalService(IUnitOfWork uow) : base(uow) { }
 
         #region Public Methods
 
