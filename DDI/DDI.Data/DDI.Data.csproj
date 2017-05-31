@@ -81,9 +81,13 @@
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201705301752207_ChangesToEntityMappings.cs" />
-    <Compile Include="Migrations\201705301752207_ChangesToEntityMappings.Designer.cs">
+    <Compile Include="Migrations\Client\201705301752207_ChangesToEntityMappings.cs" />
+    <Compile Include="Migrations\Client\201705301752207_ChangesToEntityMappings.Designer.cs">
       <DependentUpon>201705301752207_ChangesToEntityMappings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201705311239483_EntityMappingNameUnique.cs" />
+    <Compile Include="Migrations\Client\201705311239483_EntityMappingNameUnique.Designer.cs">
+      <DependentUpon>201705311239483_EntityMappingNameUnique.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201705241907595_MappingsForImport.cs" />
     <Compile Include="Migrations\Client\201705241907595_MappingsForImport.Designer.cs">
@@ -237,8 +241,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201705301752207_ChangesToEntityMappings.resx">
+    <EmbeddedResource Include="Migrations\Client\201705301752207_ChangesToEntityMappings.resx">
       <DependentUpon>201705301752207_ChangesToEntityMappings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201705311239483_EntityMappingNameUnique.resx">
+      <DependentUpon>201705311239483_EntityMappingNameUnique.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201705241907595_MappingsForImport.resx">
       <DependentUpon>201705241907595_MappingsForImport.cs</DependentUpon>
