@@ -5,12 +5,31 @@
     <script type="text/javascript" src="../../Scripts/glaccountselection.js"></script>
 
     <script type="text/javascript">
-
+        
         $(document).ready(function () {
 
-            LoadAccountSelectorGrid();
+            LoadFiscalYears();
 
         });
+
+        function LoadFiscalYears() {
+
+            var today = new Date();
+            var date = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear();
+
+            MakeServiceCall('GET', 'ledgers/' + currentBusinessUnitId + '/currentfiscalyear/' + date, null, function (data) {
+                
+                PopulateDropDown('.as-fiscalyear', 'businessunits/' + currentBusinessUnitId + '/fiscalyears?fields=Id,DisplayName', '', '', data.Data.Id,
+                    function () { // change
+                        LoadAccountSelectorGrid($('.as-fiscalyear').val());
+                    },
+                    function () { // complete
+                        LoadAccountSelectorGrid($('.as-fiscalyear').val());
+                    });
+
+            }, null);
+            
+        }
 
     </script>
 
@@ -22,6 +41,13 @@
     
     <div class="as-accounts">
         <input type="hidden" class="hidaccountid" />
+
+        <div class="fiscalyearselectioncontainr">
+            Fiscal Year <select class="as-fiscalyear"></select>
+        </div>
+
+        <h1>Accounts</h1>
+        
         <div class="gridContainer"></div>
     </div>
    

@@ -2595,7 +2595,7 @@ function LoadAccountingSettingsSectionSettings() {
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
         LoadAccountingSettings($('.hidLedgerId').val());
@@ -2695,7 +2695,7 @@ function LoadBudgetSectionSettings() {
 
     $('.contentcontainer').empty();
 
-    var businessunitid = currentBusinessUnit.Id;
+    var businessunitid = currentBusinessUnitId;
     var ledgerid;
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
@@ -2830,7 +2830,7 @@ function LoadChartAccountsSectionSettings() {
     var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
         //update on change  (not working so added .change logic below
         //GetChartSetting();
     }, function () {
@@ -3096,7 +3096,7 @@ function LoadFiscalYearSectionSettings() {
     $(gridgroup).appendTo(container);
     $(container).appendTo($('.contentcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
         var ledgerid = $('.LedgerId').val();
 
@@ -3280,7 +3280,7 @@ function LoadFundAccountingSectionSettings() {
 
     var fiscalyearid = '';
 
-    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnit.Id + '?fields=all', null, function (data) {
+    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
         var ledger = data.Data[0];
         $('.FundLedgerId').text(ledger.Code);
 
@@ -3447,7 +3447,7 @@ function LoadGLFormatSectionSettings() {
 
 
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
         var ledgerId = $('.LedgerId').val();
         var canDeleteSegmentLevels = false;

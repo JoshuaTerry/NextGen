@@ -3,9 +3,11 @@
 div.accounts { width: 90%; margin: 10px auto 0 auto; }
 div.accounts div.tabscontainer { width: 100%; }
 
-.as-accounts { margin-top: 10px; }
-.as-accounts div.gridContainer { width: 90%; margin: 0 auto; }
+.as-accounts { margin-top: 10px; width: 90%; margin: 10px auto 0 auto; background-color: white; padding: 20px; }
+.as-accounts h1 { margin-bottom: 10px; }
+.as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
 
+.fiscalyearselectioncontainr { float: right; }
 
 
 

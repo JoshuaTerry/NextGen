@@ -8,6 +8,7 @@ var previousEntity = null;
 var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
+var currentBusinessUnitId = null;
 var toolbox = null;
 var newContactInformationFields = null;
 
@@ -16,6 +17,10 @@ $(document).ready(function () {
     $.support.cors = true;
 
     LoadDefaultAuthToken();
+
+    LoadCurrentUser();
+
+    LoadCurrentBusinessUnit();
 
     LoadDatePickers();
 
@@ -76,9 +81,7 @@ $(document).ready(function () {
     else {
         $('.utilitynav').hide();
     }
-
     
-
     $(document).click(function (e) {
 
         if (toolbox) {
@@ -115,6 +118,37 @@ function LoadDefaultAuthToken() {
 
     }
 
+}
+
+function LoadCurrentUser() {
+
+    var dummyUserId = 'D3BFB26C-4603-E711-80E5-005056B7555A';
+
+    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
+
+        currentUser = data.Data;
+
+        currentBusinessUnit = data.Data.DefaultBusinessUnit;
+        currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
+
+        sessionStorage.setItem('CURRENT_BUSINESS_UNIT', currentBusinessUnitId);
+
+        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
+
+    });
+
+}
+
+function LoadCurrentBusinessUnit() {
+
+    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
+    
+    if (currentBusinessUnitId == null) {
+        
+        LoadCurrentUser();
+
+    }
+    
 }
 
 /* NEW CONSTITUENT */
@@ -1408,15 +1442,22 @@ function RemoveValidation(formClassName) {
 // BUSINESS UNIT
 //
 
+function GetCurrentBusinessUnit() {
+
+    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
+
+    if (currentBusinessUnitId == null) {
+
+        BusinessUnitModal();
+
+    }
+}
+
 function BusinessUnitModal() {
-
-    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
-    // Uncomment this to use currentBusinessUnit
-    // Add the guid of the user you want to use
-
+    
     $('.editbusinessunit').click(function (e) {
 
-        LoadBusinessUnitDropDown(currentBusinessUnit);
+        LoadBusinessUnitDropDown(currentBusinessUnitId);
 
         e.preventDefault();
 
@@ -1433,7 +1474,7 @@ function BusinessUnitModal() {
 
              $.each(currentUser.BusinessUnits, function(index, value) {
                 
-                if(value.Id === $('.bu-currentbu').val()) {
+                if (value.Id === $('.bu-currentbu').val()) {
 
                     currentBusinessUnit = value;
                 }
@@ -1456,38 +1497,12 @@ function BusinessUnitModal() {
 
     });
 
-}
+} 
 
-function LoadBusinessUnitDropDown(currentBusinessUnit) {
+function LoadBusinessUnitDropDown(currentBusinessUnitId) {
 
-    if (currentBusinessUnit != null) {
-
-        PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit.Id);
-
-        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
-
-    } else {
-        
-        $('.editbusinessunit').text('BU');
-
-    }
-
-   
-
-}
-
-function DummyUser(dummyUserId) {
-    //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
-
-    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
-        
-        currentUser = data.Data;
-
-        currentBusinessUnit = data.Data.DefaultBusinessUnit;
-
-        LoadBusinessUnitDropDown(currentBusinessUnit);
-
-    });
+    PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnitId);
+    
 }
 
 //
