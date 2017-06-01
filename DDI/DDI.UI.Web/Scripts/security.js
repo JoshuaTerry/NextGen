@@ -84,7 +84,7 @@ function LoadSecuritySettingsGrid() {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'DisplayName', caption: 'User Name' },
+        { dataField: 'FullName', caption: 'Full Name' },
         { dataField: 'Email', caption: 'Email Address' },
         { caption: 'Active', cellTemplate: function (container, options) {
                 var type = 'Yes';

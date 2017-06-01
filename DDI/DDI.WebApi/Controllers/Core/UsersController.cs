@@ -5,6 +5,7 @@ using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
+using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
@@ -20,6 +21,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -195,13 +197,13 @@ namespace DDI.WebApi.Controllers.General
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/v1/users")]
+        [Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
         public async Task<IHttpActionResult> Add(RegisterBindingModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             var user = new User() { UserName = model.Email, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
             try
@@ -241,27 +243,35 @@ namespace DDI.WebApi.Controllers.General
             }        
         }
 
-        [HttpPost]
-        [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(Guid id, User user)
-        {             
-            try
-            {               
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                UserManager.Update(user);
-                var result = await UserManager.FindByIdAsync(user.Id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
+        //[Authorize(Roles = Permissions.CRM_ReadWrite)]
+        [HttpPatch]
+        [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
+        {
+            return base.Patch(id, constituentChanges);
         }
+
+        //[HttpPost]
+        //[Route("api/v1/users/{id}")]
+        //public async Task<IHttpActionResult> Update(Guid id, User user)
+        //{             
+        //    try
+        //    {               
+        //        if (user == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        UserManager.Update(user);
+        //        var result = await UserManager.FindByIdAsync(user.Id);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        base.Logger.LogError(ex);
+        //        return InternalServerError(new Exception(ex.Message));
+        //    }
+        //}
 
         [HttpPatch]
         [Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]

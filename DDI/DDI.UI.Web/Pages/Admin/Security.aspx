@@ -95,21 +95,16 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
+                <label>Full Name</label>
+                <input type="text" class="user-FullName" />
+            </div>
+        
+            <div class="fieldblock">
                 <label>Email</label>
                 <input type="email" name="email" class="user-Email" />
             </div>
 
             <div class="fieldblock">
-                <label>Password</label>
-                <input type="password" name="password" class="user-Password" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
-            </div>
-
-           <div class="fieldblock">
                 <label>Default Business Unit:</label>
                 <select class="user-DefaultBusinessUnitId"></select></div>
 
@@ -119,11 +114,8 @@
             </div>
 
             <div class="fieldblock">
-                 <div class="fieldblock">
-                    <input type="hidden" class="rs-Constituent1Id" />
-                    <label>Constituent</label>
-                    <input type="text" class="rs-Constituent1Information constituentlookup" />
-                </div>
+                <label>Active</label>
+                <input type="checkbox" class="user-IsActive" />
             </div>
 
             <div class="modalbuttons">
