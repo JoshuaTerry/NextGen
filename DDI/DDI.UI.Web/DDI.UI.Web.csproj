@@ -103,6 +103,7 @@
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
+    <Content Include="Pages\GL\JournalEntry.aspx" />
     <Content Include="Pages\GL\AccountSummary.aspx" />
     <Content Include="Pages\GL\AccountTransactions.aspx" />
     <Content Include="Pages\GL\ActivityAndBudget.aspx" />
@@ -355,6 +356,13 @@
     </Compile>
     <Compile Include="Pages\GL\AccountDetails.aspx.designer.cs">
       <DependentUpon>AccountDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\JournalEntry.aspx.cs">
+      <DependentUpon>JournalEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\JournalEntry.aspx.designer.cs">
+      <DependentUpon>JournalEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\GL\AccountSummary.aspx.cs">
       <DependentUpon>AccountSummary.aspx</DependentUpon>
