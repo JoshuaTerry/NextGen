@@ -12,15 +12,15 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DevExtreme.AspNet.Data;
-using DDI.WebApi.Models.BindingModels;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class PostTransactionController : GenericController<PostedTransaction>
     {
         private ServiceBase<LedgerAccountYear> _ledgerAccountYear = new ServiceBase<LedgerAccountYear>();
 
-
+        
         [HttpGet]
         [Route("api/v1/posttransactions/accountId/{Id}")]
         public HttpResponseMessage GetAllPTGridByAccountId(Guid id, DataSourceLoadOptions loadOptions)

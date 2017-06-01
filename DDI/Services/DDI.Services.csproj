@@ -95,6 +95,7 @@
     <Compile Include="GL\BusinessUnitFromToService.cs" />
     <Compile Include="CRM\EducationService.cs" />
     <Compile Include="CRM\ContactTypeService.cs" />
+    <Compile Include="GL\GLAccountSelection.cs" />
     <Compile Include="GL\PostedTransactions.cs" />
     <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />

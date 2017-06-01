@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using DDI.Services;
 using DDI.Services.GL;
@@ -9,6 +11,7 @@ using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DevExtreme.AspNet.Data;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -78,17 +81,9 @@ namespace DDI.WebApi.Controllers.GL
         {
             string fields = $"{nameof(GLAccountSelection.Id)},{nameof(GLAccountSelection.AccountNumber)},{nameof(GLAccountSelection.Description)}";
 
-            var search = new AccountNumberSearch()
-            {
-                QuickSearch = name,
-                Offset = SearchParameters.OffsetDefault,
-                Limit = 500,
-                Fields = null,
-            };
-
-            var ledgerId = _fiscalYear.GetById(fiscalYearId).Data.LedgerId;
-
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.LedgerId == ledgerId && a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
+            var search = PageableSearch.Max;
+            
+            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
         }
 
         [HttpGet]
@@ -113,15 +108,12 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/fiscalyear/{id}",Name = ROUTENAME_GETALLLEDGERACCOUNTS)]
-        public IHttpActionResult GetAllLedgerAccounts(Guid Id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        [Route("api/v1/accounts/fiscalyear/{fiscalyearId}/accountnumber/{accountnumber}")]
+        public IHttpActionResult GetAccountByAccountNumberFiscalYear(Guid fiscalYearId, string accountNumber)
         {
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
-
-                var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
-                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
+                return FinalizeResponse(_glAccount.GetAllWhereExpression((a => a.FiscalYearId == fiscalYearId && a.AccountNumber == accountNumber), null), null, null, null, null);
             }
             catch (Exception ex)
             {
@@ -129,7 +121,24 @@ namespace DDI.WebApi.Controllers.GL
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-       
+
+        [HttpGet]
+        [Route("api/v1/accounts/fiscalyear/{id}", Name = ROUTENAME_GETALLLEDGERACCOUNTS)]
+        public HttpResponseMessage GetAccountSelectorAccounts(Guid Id, DataSourceLoadOptions loadOptions)
+        {
+            try
+            {
+                var accounts = new GLAccountSelectionService().GetGLAccountsForFiscalYearId(Id);
+               // var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(accounts, loadOptions));
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, InternalServerError(new Exception(ex.Message)));
+            }
+        }
+
         [HttpPost]
         [Route("api/v1/accounts", Name = RouteNames.Account + RouteVerbs.Post)]
         public IHttpActionResult Post([FromBody] Account item)
