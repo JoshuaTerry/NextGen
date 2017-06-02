@@ -42,6 +42,7 @@ namespace DDI.Services.General
         {
             var group = UnitOfWork.GetById<Group>(groupId, r => r.Roles);
             var rolesToAdd = new List<Role>();
+            List<Role> roles = new List<Role>();
 
             foreach(var pair in roleIds)
             {
@@ -50,23 +51,31 @@ namespace DDI.Services.General
                     rolesToAdd.AddRange(from jToken in (JArray)pair.Value
                                         select Guid.Parse(jToken.ToString()) 
                                         into id select UnitOfWork.GetById<Role>(id));
-
                 }
             }
 
-//            var remove = group.Roles.Except(rolesToAdd);
-            var add = rolesToAdd.Except(group.Roles);
-          //  remove.ForEach(r => group.Roles.Remove(r));
-            add.ForEach(ra => group.Roles.Add(ra));
+            rolesToAdd.ForEach(r => group.Roles.Remove(r));
+            rolesToAdd.ForEach(ra => group.Roles.Add(ra));
 
             UnitOfWork.SaveChanges();
             var response = new DataResponse<Group>
             {
-                Data = group,
+               Data = UnitOfWork.GetById<Group>(group.Id),
+                //Data = group,
                 IsSuccessful = true
             };
 
             return response;
         }
+
+        public IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, JObject roleIds)
+        {
+            // I think I only need to remove one at a time 
+            // remove the role(s) from the Group
+            // Find the user(s) associated with this group
+            // remove the roles from them
+            return new DataResponse<Group>();
+        }
+
     }
 }
