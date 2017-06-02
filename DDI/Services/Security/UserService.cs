@@ -1,5 +1,4 @@
-﻿using DDI.Data;
-using DDI.Logger;
+﻿using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -19,11 +18,8 @@ namespace DDI.Services.Security
                                                   IUserPasswordStore<User, Guid>,
                                                   IQueryableUserStore<User, Guid>
     {
-        private readonly IUnitOfWork _uow; 
-        public UserService()
+        public UserService(IUnitOfWork uow) : base(uow)
         {
-            _uow = new UnitOfWorkEF();
-
             IncludesForSingle = new Expression<Func<User, object>>[]
             {
                u => u.Roles
@@ -32,8 +28,8 @@ namespace DDI.Services.Security
 
         public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
         {
-            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
-            var defaultbu = _uow.GetById<BusinessUnit>(defaultbuid);
+            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
+            var defaultbu = UnitOfWork.GetById<BusinessUnit>(defaultbuid);
 
             if (!result.BusinessUnits.Contains(defaultbu))
             {
@@ -42,7 +38,7 @@ namespace DDI.Services.Security
 
             result.DefaultBusinessUnitId = defaultbuid;
 
-            _uow.SaveChanges();
+           UnitOfWork.SaveChanges();
 
             DataResponse<User> response = new DataResponse<User>
             {
@@ -55,13 +51,13 @@ namespace DDI.Services.Security
 
         public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
         {
-            var result = _uow.GetRepository<User>().Entities.IncludePath(u => u.BusinessUnits).FirstOrDefault(u => u.Id == id);
-            var bu = _uow.GetById<BusinessUnit>(buid);
+            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
+            var bu = UnitOfWork.GetById<BusinessUnit>(buid);
 
             if (!result.BusinessUnits.Contains(bu))
             {
                 result.BusinessUnits.Add(bu);
-                _uow.SaveChanges();
+                UnitOfWork.SaveChanges();
             }
 
             IDataResponse response = new DataResponse<User>
@@ -86,7 +82,7 @@ namespace DDI.Services.Security
             if (string.IsNullOrEmpty(roleName))
                 throw new ArgumentNullException("RoleName can not be empty.");
 
-            var role = _uow.GetRepository<Role>().Entities.FirstOrDefault(r => r.Name == roleName);
+            var role = UnitOfWork.FirstOrDefault<Role>(r => r.Name == roleName);
 
             if (role == null)
                 throw new ArgumentNullException($"No role with the name {roleName} was found.");
@@ -97,18 +93,18 @@ namespace DDI.Services.Security
         private List<Role> GetRoles(User user)
         {
             CheckUser(user);
-            var roles = _uow.GetRepository<Role>().Entities.Where(r => user.Roles.Select(ur => ur.RoleId).Contains(r.Id)).ToList();
+            var roles = UnitOfWork.Where<Role>(r => user.Roles.Select(ur => ur.RoleId).Contains(r.Id)).ToList();
             return roles;
         }
 
         public User GetUserByUsername(string username)
         {
-            var user = _uow.GetRepository<User>().Entities.FirstOrDefault(u => u.UserName == username);
+            var user = UnitOfWork.FirstOrDefault<User>(u => u.UserName == username);
             return user;
         }
 
         #region IQueryableUserStore Implementation
-        IQueryable<User> IQueryableUserStore<User, Guid>.Users => _uow.GetRepository<User>().Entities; 
+        IQueryable<User> IQueryableUserStore<User, Guid>.Users => UnitOfWork.GetEntities<User>();
         #endregion
 
         #region IUserRoleStore Implementation
@@ -119,8 +115,8 @@ namespace DDI.Services.Security
 
             var role = GetRole(roleName);
 
-            _uow.GetRepository<UserRole>().Insert(new UserRole { UserId = user.Id, RoleId = role.Id });
-            _uow.SaveChanges();
+            UnitOfWork.Insert(new UserRole { UserId = user.Id, RoleId = role.Id });
+            UnitOfWork.SaveChanges();
 
             return Task.FromResult<object>(null);
         }
@@ -129,7 +125,7 @@ namespace DDI.Services.Security
         {
             CheckUser(user);
             var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();              
-            var roles = _uow.GetRepository<Role>().Entities.Where(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
+            var roles = UnitOfWork.Where<Role>(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
             return Task.FromResult<IList<string>>(roles);
         }
 
@@ -153,8 +149,8 @@ namespace DDI.Services.Security
             if (userRole != null)
             {
                 user.Roles.Remove(userRole);
-                _uow.Update(user);
-                _uow.SaveChanges();
+                UnitOfWork.Update(user);
+                UnitOfWork.SaveChanges();
             }
 
             return Task.FromResult<object>(null);
@@ -213,8 +209,8 @@ namespace DDI.Services.Security
 
             // Email Business Logic?
             user.Email = email;
-            _uow.Update(user);
-            _uow.SaveChanges();
+            UnitOfWork.Update(user);
+            UnitOfWork.SaveChanges();
 
             return Task.FromResult<object>(null);
         }
@@ -239,15 +235,15 @@ namespace DDI.Services.Security
         Task IUserEmailStore<User, Guid>.SetEmailConfirmedAsync(User user, bool confirmed)
         {
             CheckUser(user);
-            user.EmailConfirmed = confirmed; 
-            _uow.SaveChanges();
+            user.EmailConfirmed = confirmed;
+            UnitOfWork.SaveChanges();
 
             return Task.FromResult<object>(null);
         }
 
         Task<User> IUserEmailStore<User, Guid>.FindByEmailAsync(string email)
         {
-            var user = _uow.GetRepository<User>().Entities.FirstOrDefault(u => u.Email == email);
+            var user = UnitOfWork.FirstOrDefault<User>(u => u.Email == email);
 
             return Task.FromResult<User>(user);
         }

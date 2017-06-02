@@ -1,19 +1,17 @@
-﻿using DDI.Data;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Audit;
-using DDI.Shared.Models.Client.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared;
+using DDI.Shared.Models.Client.Audit;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Services
 {
-    public class AuditService
+    public class AuditService : IService
     { 
         private readonly IUnitOfWork _uow;
-        public AuditService() : this(new UnitOfWorkEF())
-        { }
+
         public AuditService(IUnitOfWork uow)
         {
             this._uow = uow;
@@ -39,11 +37,10 @@ namespace DDI.Services
 
         public IDataResponse<List<ObjectChange>> GetChanges(Guid id, DateTime start, DateTime end, IPageable search = null)
         {
-            var changes = _uow.GetRepository<ObjectChange>().Entities.IncludePath(o => o.ChangeSet)
-                                                                     .IncludePath(o => o.PropertyChanges)
-                                                                     .Where(o => o.EntityId == id.ToString() &&
-                                                                                 o.ChangeSet.Timestamp > start &&
-                                                                                 o.ChangeSet.Timestamp <= end).ToList();
+            var changes = _uow.GetEntities<ObjectChange>(o => o.ChangeSet, o => o.PropertyChanges)
+                              .Where(o => o.EntityId == id.ToString() &&
+                                          o.ChangeSet.Timestamp > start &&
+                                          o.ChangeSet.Timestamp <= end).ToList();
             var response = new DataResponse<List<ObjectChange>>();
             response.Data = changes;
             return response;

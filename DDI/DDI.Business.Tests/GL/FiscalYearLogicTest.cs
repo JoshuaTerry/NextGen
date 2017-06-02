@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
@@ -16,28 +15,30 @@ namespace DDI.Business.Tests.GL
     public class FiscalYearLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | GL";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private FiscalYearLogic _bl;
         private IList<BusinessUnit> _units;
         private IList<Ledger> _ledgers;
         private IList<FiscalYear> _fiscalYears;
         private const string INVALID_DATE = "1/1/1970";
                 
-        RepositoryNoDb<FiscalYear> _fiscalYearRepo;
-        RepositoryNoDb<FiscalPeriod> _fiscalPeriodRepo;
+        ITestRepository<FiscalYear> _fiscalYearRepo;
+        ITestRepository<FiscalPeriod> _fiscalPeriodRepo;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
 
             _units = BusinessUnitDataSource.GetDataSource(_uow);
             _ledgers = LedgerDataSource.GetDataSource(_uow);
             _fiscalYears = FiscalYearDataSource.GetDataSource(_uow);
 
             _bl = new FiscalYearLogic(_uow);
-            _fiscalYearRepo = _uow.GetRepository<FiscalYear>() as RepositoryNoDb<FiscalYear>;
-            _fiscalPeriodRepo = _uow.GetRepository<FiscalPeriod>() as RepositoryNoDb<FiscalPeriod>;
+            _fiscalYearRepo = _uow.GetRepository<FiscalYear>() as ITestRepository<FiscalYear>;
+            _fiscalPeriodRepo = _uow.GetRepository<FiscalPeriod>() as ITestRepository<FiscalPeriod>;
         }
 
 

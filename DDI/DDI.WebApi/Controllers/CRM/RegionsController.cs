@@ -1,16 +1,18 @@
-﻿using DDI.Services.Search;
+﻿using System;
+using System.Web.Http;
+using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
-using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RegionsController : GenericController<Region>
     {
+        public RegionsController(IService<Region> service) : base(service) { }
+
         protected override string FieldsForList => $"{FieldLists.CodeFields},{nameof(Region.Level)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.ChildRegions).Exclude(p => p.ParentRegion);

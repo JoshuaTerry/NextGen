@@ -1,12 +1,13 @@
 ﻿
 using System;
+using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared
 {
     public interface ISQLUtilities
     {
-        void SetNextSequenceValue(string sequenceName, Int64 newValue);
+        void SetNextSequenceValue(DatabaseSequence sequence, Int64 newValue);
 
-        Int64 GetNextSequenceValue(string sequenceName);
+        Int64 GetNextSequenceValue(DatabaseSequence sequence);
     }
 }

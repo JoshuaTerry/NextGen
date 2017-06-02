@@ -1,15 +1,15 @@
-﻿using DDI.Logger;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq.Expressions;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
     public class BusinessUnitController : GenericController<BusinessUnit>
     {
+        public BusinessUnitController(IService<BusinessUnit> service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/businessunits", Name = RouteNames.BusinessUnit)]

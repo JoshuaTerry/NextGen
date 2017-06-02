@@ -12,6 +12,10 @@ namespace DDI.WebApi
             //var corsAttr = new EnableCorsAttribute("*", "*", "*");
             //config.EnableCors(corsAttr);
 
+            //IoC Configuration
+            config.DependencyResolver = new IoC.DependencyResolver();
+            config.MessageHandlers.Add(new IoC.MessageHandler());
+
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
@@ -29,7 +33,7 @@ namespace DDI.WebApi
             // Set data return type to JSON
             var json = config.Formatters.JsonFormatter;
             json.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.Remove(config.Formatters.XmlFormatter);            
         }
     }
 }

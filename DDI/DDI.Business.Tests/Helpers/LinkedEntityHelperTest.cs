@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Helpers;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,7 +16,7 @@ namespace DDI.Business.Tests.Helpers
 
         private const string TESTDESCR = "Business | Helpers";
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private List<Constituent> constituents;
         private List<TestNote> notes;
 
@@ -30,7 +28,8 @@ namespace DDI.Business.Tests.Helpers
             constituents.Add(new Constituent() { ConstituentNumber = 2, Name = "Jane", Id = Guid.NewGuid() });
             constituents.Add(new Constituent() { ConstituentNumber = 3, Name = "Jim", Id = Guid.NewGuid() });
 
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
             _uow.CreateRepositoryForDataSource(constituents.AsQueryable());
 
             notes = new List<TestNote>();

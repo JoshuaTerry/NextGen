@@ -1,15 +1,18 @@
-﻿using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
     public class SegmentLevelsController : GenericController<SegmentLevel>
     {
+        public SegmentLevelsController(IService<SegmentLevel> service) : base(service) { }
+
 
         private const string ROUTENAME_GETBYLEDGERID = RouteNames.Ledger + RouteNames.SegmentLevel + RouteVerbs.Get;
         private const string ROUTENAME_GETBYUNITID = RouteNames.BusinessUnit + RouteNames.SegmentLevel + RouteVerbs.Get;

@@ -1,16 +1,18 @@
+using System;
+using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
-using DDI.Shared.Helpers;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class DoingBusinessAsController : GenericController<DoingBusinessAs>
     {
+        public DoingBusinessAsController(IService<DoingBusinessAs> service) : base(service) { }
+
         protected override string FieldsForList => $"{nameof(DoingBusinessAs.Id)},{nameof(DoingBusinessAs.DisplayName)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituent);

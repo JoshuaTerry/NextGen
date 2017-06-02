@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
+using DDI.Services.GL;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -12,6 +14,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
+        public FiscalYearController(IService<FiscalYear> service) : base(service) { }
+
         private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
         private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
 

@@ -20,6 +20,7 @@ using DDI.Shared.Models.Common;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Conversion.Core;
+using DDI.Data.Helpers;
 
 namespace DDI.Conversion.CRM
 {    
@@ -666,7 +667,7 @@ namespace DDI.Conversion.CRM
             CommonContext commonContext = new CommonContext();
 
             // Need to delete all region areas first...
-            context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<RegionArea>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<RegionArea>()}");
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -881,8 +882,8 @@ namespace DDI.Conversion.CRM
             // Need to delete all tag related tables.
             context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituents"); // Currently no way to retrieve these many-to-many table names.
             context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituentTypes"); // Currently no way to retrieve these many-to-many table names.
-            context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<Tag>()}");
-            context.Database.ExecuteSqlCommand($"DELETE FROM {context.GetTableName<TagGroup>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<Tag>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<TagGroup>()}");
 
             Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
 

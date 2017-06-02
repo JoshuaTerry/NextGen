@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
@@ -12,9 +8,9 @@ namespace DDI.Business.Tests.Common.DataSources
 {
     public static class StateDataSource
     {
-        public static IList<State> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<State> GetDataSource(IUnitOfWork uow)
         {
-            IList<State> existing = uow.GetRepositoryOrNull<State>()?.Entities.ToList();
+            IList<State> existing = uow.GetRepositoryDataSource<State>();
             if (existing != null)
             {
                 return existing;

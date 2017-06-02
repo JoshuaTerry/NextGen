@@ -84,7 +84,7 @@ function LoadTransactionGrid(accountId) {
         }       
     ];
 
-    var url = WEB_API_ADDRESS + 'posttransactions/accountId/' + accountId;
+    var url = WEB_API_ADDRESS + 'postedtransactions/accountId/' + accountId;
     var gridData = DevExpress.data.AspNet.createStore({
         key: "Id",
         loadUrl: url,

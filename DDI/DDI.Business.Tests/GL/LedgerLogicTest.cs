@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
@@ -12,24 +11,26 @@ using DDI.Shared.Statics.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DDI.Business.Tests.GL
-{
+{    
     [TestClass]
     public class LedgerLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | GL";
         private const string MODIFIED = "Modified";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private LedgerLogic _bl;
         private IList<BusinessUnit> _units;
         private IList<Ledger> _ledgers;
         private IList<FiscalYear> _fiscalYears;
-        private RepositoryNoDb<Ledger> _ledgerRepo;
-        private RepositoryNoDb<SegmentLevel> _segmentLevelRepo;
+        private ITestRepository<Ledger> _ledgerRepo;
+        private ITestRepository<SegmentLevel> _segmentLevelRepo;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
 
             _units = BusinessUnitDataSource.GetDataSource(_uow);
             _ledgers = LedgerDataSource.GetDataSource(_uow);
@@ -37,8 +38,8 @@ namespace DDI.Business.Tests.GL
 
             _bl = new LedgerLogic(_uow);
 
-            _ledgerRepo = _uow.GetRepository<Ledger>() as RepositoryNoDb<Ledger>;
-            _segmentLevelRepo = _uow.GetRepository<SegmentLevel>() as RepositoryNoDb<SegmentLevel>;
+            _ledgerRepo = _uow.GetRepository<Ledger>() as ITestRepository<Ledger>;
+            _segmentLevelRepo = _uow.GetRepository<SegmentLevel>() as ITestRepository<SegmentLevel>;
         }
 
 
