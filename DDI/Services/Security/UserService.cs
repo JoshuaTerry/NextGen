@@ -69,48 +69,48 @@ namespace DDI.Services.Security
             return response;
         }
 
-        public IDataResponse AddGroupToUser(Guid id, ICollection<Group> groups)
-        {
-            //ARECA
-            var user = UnitOfWork.GetById<User>(id, u => u.Groups);
-            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituentId, p => p.Ethnicities);
-            if (constituentToUpdate == null)
-            {
-                return GetErrorResponse(UserMessagesCRM.ConstituentIdInvalid);
-            }
-            //var bu = UnitOfWork.GetById<BusinessUnit>(buid);
+        //public IDataResponse AddGroupToUser(Guid id, ICollection<Group> groups)
+        //{
+        //    //ARECA
+        //    var user = UnitOfWork.GetById<User>(id, u => u.Groups);
+        //    var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituentId, p => p.Ethnicities);
+        //    if (constituentToUpdate == null)
+        //    {
+        //        return GetErrorResponse(UserMessagesCRM.ConstituentIdInvalid);
+        //    }
+        //    //var bu = UnitOfWork.GetById<BusinessUnit>(buid);
 
 
-            //delete all the roles tied to this user
-            if (id != null)
-            {
-                removes.ForEach(e => constituentToUpdate.Ethnicities.Remove(e));
-                adds.ForEach(e => constituentToUpdate.Ethnicities.Add(e));
-            }
+        //    //delete all the roles tied to this user
+        //    if (id != null)
+        //    {
+        //        removes.ForEach(e => constituentToUpdate.Ethnicities.Remove(e));
+        //        adds.ForEach(e => constituentToUpdate.Ethnicities.Add(e));
+        //    }
             
-            // for each group
-            // look up all the roles for that group
-            // check to see if user has the role
-            // add these roles to the user
+        //    // for each group
+        //    // look up all the roles for that group
+        //    // check to see if user has the role
+        //    // add these roles to the user
 
-            foreach (Group group in groups)
-            {
-                base.Delete(pic.Id);
-            }
-            if (!result.BusinessUnits.Contains(bu))
-            {
-                result.BusinessUnits.Add(bu);
-                UnitOfWork.SaveChanges();
-            }
+        //    foreach (Group group in groups)
+        //    {
+        //        base.Delete(pic.Id);
+        //    }
+        //    if (!result.BusinessUnits.Contains(bu))
+        //    {
+        //        result.BusinessUnits.Add(bu);
+        //        UnitOfWork.SaveChanges();
+        //    }
 
-            IDataResponse response = new DataResponse<User>
-            {
-                Data = result,
-                IsSuccessful = true
-            };
+        //    IDataResponse response = new DataResponse<User>
+        //    {
+        //        Data = result,
+        //        IsSuccessful = true
+        //    };
 
-            return response;
-        }
+        //    return response;
+        //}
 
         private void CheckUser(User user)
         {

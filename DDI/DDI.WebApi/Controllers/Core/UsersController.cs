@@ -215,7 +215,7 @@ namespace DDI.WebApi.Controllers.General
                 }
                 if (user.Groups != null)
                     {
-                    var groupResult = AddGroupToUser(user.Id, user.Groups);
+                    //var groupResult = AddGroupToUser(user.Id, user.Groups);
                 }
                 return Ok();
             }
