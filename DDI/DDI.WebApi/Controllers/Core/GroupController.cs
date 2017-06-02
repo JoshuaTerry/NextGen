@@ -112,5 +112,20 @@ namespace DDI.WebApi.Controllers.Core
         {
             return base.Delete(id);
         }
+
+        public IHttpActionResult RemoveRolesFromGroup(Guid groupId, [FromBody] Guid role, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = Service.RemoveRolesFromGroup(groupId, role);
+                return FinalizeResponse(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
+        }
     }
 }

@@ -61,20 +61,33 @@ namespace DDI.Services.General
             var response = new DataResponse<Group>
             {
                Data = UnitOfWork.GetById<Group>(group.Id),
-                //Data = group,
                 IsSuccessful = true
             };
 
             return response;
         }
 
-        public IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, JObject roleIds)
+        public IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, Guid roleId)
         {
-            // I think I only need to remove one at a time 
-            // remove the role(s) from the Group
-            // Find the user(s) associated with this group
-            // remove the roles from them
-            return new DataResponse<Group>();
+            var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles); // group
+            var roleToRemove = group.Roles.Where(r => r.Id == roleId).FirstOrDefault(); // role 
+            var groupUserIds = group.Users.Select(u => u.Id).ToList(); // user Ids in that group
+            var roleUserIds = roleToRemove.Users.Select(u => u.UserId); // user Ids in role
+            var usersToRemove = groupUserIds.Intersect(roleUserIds).ToList(); // intersection of users in group and role
+            usersToRemove.ForEach(u => roleToRemove.Users.Remove(roleToRemove.Users.FirstOrDefault(uu => uu.UserId == u))); // for each role, remove user where the id is equal to the user we want to remove..
+            // Will need to find users associated with this role
+            // Collection<User> users = getwhereexpression(user.Roles.Contains(roleID)
+            // foreach(User in users) {
+            // user.roles.remove(role)
+            // and remove it from them too
+
+            UnitOfWork.SaveChanges();
+
+            return new DataResponse<Group>()
+            {
+                Data = UnitOfWork.GetById<Group>(group.Id),
+                IsSuccessful = true
+            };
         }
 
     }
