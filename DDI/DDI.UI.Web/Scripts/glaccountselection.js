@@ -99,6 +99,13 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 $(container).find('.gridContainer').hide();
             }
             else {
+                if ($(container).find(".accountnumber").val() != $(container).find(".hidaccountnumber").val())
+                {
+                    $(container).attr("gridOpen", "");
+                    var dataGrid = $(container).find('.gridContainer').dxDataGrid("instance");
+                    dataGrid.repaint();
+                }
+
                 $(container).find('.gridContainer').show();
             }
         }
@@ -120,7 +127,7 @@ function CreateGLAccountSelector(container)
 {
     var glcontrol = $('<div>').addClass("fieldblock");
     
-    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:35%").addClass("accountnumber").addClass("accountnumberlookup").appendTo($(glcontrol));
+    $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:45%").addClass("accountnumber").addClass("accountnumberlookup").appendTo($(glcontrol));
     $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
     $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
 
@@ -203,7 +210,7 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
         },
         onContentReady: function () {
            
-            if ($(container).find(".hidaccountid").val().length > 0) {
+            if (($(container).find(".hidaccountid").val().length > 0) && ($(container).attr("gridOpen") != "true")) {
                 var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
                 var keyId = $(container).find(".hidaccountid").val();
                 dataGrid.selectRows(keyId);
@@ -225,6 +232,8 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
                         dataGrid.expandRow(groupToExpand);
                     });
                 });
+
+                $(container).attr("gridopen", true)
             }
 
             $(container).find('.gridContainer').show();
