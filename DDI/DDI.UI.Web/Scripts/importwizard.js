@@ -55,6 +55,8 @@ $(document).ready(function () {
 
     });
 
+    GetFieldMappings();
+
 });
 
 function DisplayImportWizardModal() {
@@ -66,6 +68,12 @@ function DisplayImportWizardModal() {
         height: 480,
         resizable: false
     });
+
+}
+
+function GetFieldMappings() {
+
+    PopulateDropDown('.mappings', 'savedentitymapping', '', '', null, null, null);
 
 }
 
