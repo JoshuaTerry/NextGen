@@ -343,7 +343,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function(e) {
                         e.preventDefault();
 
-                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        editMethod(options.data.Id);
                     })
                     .appendTo(container);
             }
@@ -361,7 +361,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        deleteMethod(options.data.Id);
                     })
                     .appendTo(container);
             }

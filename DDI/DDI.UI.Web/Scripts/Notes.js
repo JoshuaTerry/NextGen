@@ -11,23 +11,21 @@ var NoteEntity = {
     26: 'Accounting'
 };
 
+var shownotealert = true;
+
 $(document).ready(function () {
 
-    SetupNotesTab();
+    $('.tabscontainer').tabs();
+
+    LoadNoteDetailsGrid();
+
+    NewNoteDetailsModal();
+
+    GetNoteAlerts(shownotealert);
+
+    shownotealert = false;
 
 });
-
-/* Notes Tab */
-
-function SetupNotesTab() {
-    $('#tab-notes-main').click(function (e) {
-
-        LoadNoteDetailsGrid();
-
-        NewNoteDetailsModal();
-
-    });
-}
 
 function LoadNoteDetailsGrid() {
 

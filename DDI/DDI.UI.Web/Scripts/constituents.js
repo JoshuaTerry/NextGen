@@ -1,7 +1,6 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
-var shownotealert = true;
 
 $(document).ready(function () {
 
@@ -234,10 +233,6 @@ function DisplayConstituentData() {
         DisplayConstituentSideBar();
 
         DisplayConstituentType();
-
-        GetNoteAlerts(shownotealert);
-
-        shownotealert = false;
 
         GenerateContactInfoSection();
 
