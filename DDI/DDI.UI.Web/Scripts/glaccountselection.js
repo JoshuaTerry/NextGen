@@ -19,11 +19,8 @@ function LoadAccountSelectorGrid() {
         LoadGLAccounts('.as-accounts', data.Data.LedgerId, data.Data.Id, function (d) {
 
             if (d) {
-
                 sessionStorage.setItem(ACCOUNT_ID, d.AccountNumber);
-
                 location.href = "/Pages/GL/AccountDetails.aspx";
-
             }
 
         });
@@ -46,7 +43,6 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     $('.accountnumberlookup',container).autocomplete({
         source: function (request, response) {
             MakeServiceCall('GET', 'fiscalyears/' + fiscalYearId + '/accounts/lookup/' + request.term , null, function (result) {
-
                 if (result.Data.length == 1) {
                     var item = {
                         label: result.Data[0].AccountNumber,
@@ -67,7 +63,6 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     response(results);
                 }
             }, null);
-
         },
         select: function (event, ui) {
             event.preventDefault();
@@ -78,10 +73,8 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     
     $(".accountselectionsearch",container).click(function () {
         var grid = $(' .gridContainer .dx-widget', container).length;
-       
         if (grid == 0) {
             LoadGLAccounts(container, ledgerId, fiscalYearId, function (d) {
-
                 if (d) {
                     $(container).find(".accountnumber").val(d.AccountNumber);
                     $(container).find(".hidaccountnumber").val(d.AccountNumber);
@@ -90,7 +83,6 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     $(container).find(".accountnumber").focus();
                     $(container).find(".gridContainer").hide();
                 }
-
             });
             $(container).find('.gridContainer').show();
         }
@@ -99,13 +91,9 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 $(container).find('.gridContainer').hide();
             }
             else {
-                if ($(container).find(".accountnumber").val() != $(container).find(".hidaccountnumber").val())
-                {
-                    $(container).attr("gridOpen", "");
-                    var dataGrid = $(container).find('.gridContainer').dxDataGrid("instance");
-                    dataGrid.repaint();
-                }
-
+                $(container).attr("gridOpen", "");
+                var dataGrid = $(container).find('.gridContainer').dxDataGrid("instance");
+                dataGrid.repaint();
                 $(container).find('.gridContainer').show();
             }
         }
@@ -115,7 +103,6 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
 }
 
 function SelectAccountNumberLookup(item, container) {
-
     $(container).find(".accountdescription").html(item.description);
     $(container).find(".accountnumber").val(item.label);
     $(container).find(".hidaccountid").val(item.value);
@@ -126,7 +113,6 @@ function SelectAccountNumberLookup(item, container) {
 function CreateGLAccountSelector(container)
 {
     var glcontrol = $('<div>').addClass("fieldblock");
-    
     $('<input>').attr("type", "text").attr("maxlength", "25").attr("style", "width:45%").addClass("accountnumber").addClass("accountnumberlookup").appendTo($(glcontrol));
     $('<span>').addClass("accountselectionsearch").addClass("inline").appendTo($(glcontrol));
     $('<label>').addClass("accountdescription").addClass("inline").appendTo($(glcontrol));
@@ -141,9 +127,7 @@ function CreateGLAccountSelector(container)
 function LoadGLAccounts(container, ledgerId, fiscalYearId, onSelect) {
    
     MakeServiceCall('GET', 'ledgers/' + ledgerId, null,
-
         function (data) {
-
             var numberOfAccountGroups = data.Data.AccountGroupLevels;
             var columns = [];
 
@@ -165,10 +149,8 @@ function LoadGLAccounts(container, ledgerId, fiscalYearId, onSelect) {
 
             columns.push({ dataField: 'AccountNumber', caption: 'Account Number', sortOrder: 'asc', sortIndex: 0});
             columns.push("Description");
-           
 
             LoadGLAccountGrid(container, fiscalYearId, columns, onSelect);
-
         }
         , null
     );
@@ -202,14 +184,12 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
            mode: 'single' // 'multiple'
         },
         onSelectionChanged: function (selectedItems) {
-
             if (onSelect) {
                 var data = selectedItems.selectedRowsData[0];
                 onSelect(data);
             }
         },
         onContentReady: function () {
-           
             if (($(container).find(".hidaccountid").val().length > 0) && ($(container).attr("gridOpen") != "true")) {
                 var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
                 var keyId = $(container).find(".hidaccountid").val();
@@ -235,26 +215,19 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
 
                 $(container).attr("gridopen", true)
             }
-
             $(container).find('.gridContainer').show();
-           
         }
     });
-
 }
 
 function LoadSelectedAccount(container, value)
 {
-
     MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
-       
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);
             $(container).find(".hidaccountnumber").val(data.Data.AccountNumber);
-            $(container).find(".accountdescription").text(data.Data.Name);
-           
+            $(container).find(".accountdescription").text(data.Data.Name);          
     }, null);
-
 }
 
 function LoadNewAccountNumber(container, accountNumber,fiscalYearId)

@@ -12,7 +12,7 @@
             var fiscalYearId = '18888509-AA22-42E6-85DD-0D29240E72EC'
 
             GLAccountSelector(container, ledgerId, fiscalYearId);
-            //LoadSelectedAccount($('.accountcontrol'), 'f8ea9e78-4931-4a5d-b547-fef72bce2511');
+            LoadSelectedAccount($('.accountcontrol'), 'f8ea9e78-4931-4a5d-b547-fef72bce2511');
   
         });
     </script>
