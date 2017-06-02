@@ -1,5 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.WebApi.Models.BindingModels
 {
@@ -21,5 +25,11 @@ namespace DDI.WebApi.Models.BindingModels
         public string ConfirmPassword { get; set; }
         [Display(Name = "Default Business Unit")]
         public Guid? DefaultBusinessUnitId { get; set; }
+        public string UserName { get; internal set; }
+        public string FullName { get; internal set; }
+        [InverseProperty(nameof(BusinessUnit.Users))]
+        public ICollection<BusinessUnit> BusinessUnits { get; set; }
+        [InverseProperty(nameof(Group.Users))]
+        public ICollection<Group> Groups { get; set; }
     }
 }

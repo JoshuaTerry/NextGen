@@ -205,14 +205,19 @@ namespace DDI.WebApi.Controllers.General
             //    return BadRequest(ModelState);
             //}
 
-            var user = new User() { UserName = model.Email, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
+            var user = new User() { UserName = model.UserName, FullName = model.FullName, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
             try
             {
-                var result = UserManager.Create(user, model.Password);
+                var result = UserManager.Create(user);
                 if (user.DefaultBusinessUnitId.HasValue)
                 {
                     var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
                 }
+                if (user.Groups != null)
+                    {
+                    var groupResult = AddGroupToUser(user.Id, user.Groups);
+                }
+                return Ok();
             }
             catch(Exception ex)
             {
@@ -220,27 +225,27 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
 
-            try
-            {
-                var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                code = HttpUtility.UrlEncode(code);
-                var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
+            //try
+            //{
+            //    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            //    code = HttpUtility.UrlEncode(code);
+            //    var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
 
-                var service = new EmailService();
-                var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
-                var to = new MailAddress(model.Email);
-                var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
-                var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
+            //    var service = new EmailService();
+            //    var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            //    var to = new MailAddress(model.Email);
+            //    var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
+            //    var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
 
-                service.SendMailMessage(message);
+            //    service.SendMailMessage(message);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }        
+            //    return Ok();
+            //}
+            //catch (Exception ex)
+            //{
+            //    base.Logger.LogError(ex);
+            //    return InternalServerError(new Exception(ex.Message));
+            //}        
         }
 
         //[Authorize(Roles = Permissions.CRM_ReadWrite)]

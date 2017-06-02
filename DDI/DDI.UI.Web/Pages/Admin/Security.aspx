@@ -98,6 +98,11 @@
                 <label>Full Name</label>
                 <input type="text" class="user-FullName" />
             </div>
+
+            <div class="fieldblock">
+                <label>User Name</label>
+                <input type="text" class="user-UserName" />
+            </div>
         
             <div class="fieldblock">
                 <label>Email</label>
