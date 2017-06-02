@@ -9,8 +9,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <br />
-    <a href="JournalInquiry.aspx">Journal Inquiry</a>
-    <br />
     <br />
     <a href="JournalEntry.aspx">Journal Entry</a>
 

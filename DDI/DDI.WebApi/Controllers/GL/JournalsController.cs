@@ -46,7 +46,7 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<Journal, object>>[]
             {
-                c => c.JournalLines, c => c.ParentJournal
+                c => c.JournalLines, c => c.JournalLines.First().LedgerAccount, c => c.ParentJournal
             };
         }
 

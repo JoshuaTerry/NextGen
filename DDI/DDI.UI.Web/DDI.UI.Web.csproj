@@ -103,6 +103,7 @@
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
+    <Content Include="Pages\GL\JournalDetail.aspx" />
     <Content Include="Pages\GL\JournalEntry.aspx" />
     <Content Include="Pages\GL\AccountSummary.aspx" />
     <Content Include="Pages\GL\AccountTransactions.aspx" />
@@ -150,6 +151,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\JournalEntry.js" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
     <Content Include="Scripts\dx.aspnet.data.js" />
@@ -356,6 +358,13 @@
     </Compile>
     <Compile Include="Pages\GL\AccountDetails.aspx.designer.cs">
       <DependentUpon>AccountDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\JournalDetail.aspx.cs">
+      <DependentUpon>JournalDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\JournalDetail.aspx.designer.cs">
+      <DependentUpon>JournalDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\GL\JournalEntry.aspx.cs">
       <DependentUpon>JournalEntry.aspx</DependentUpon>
