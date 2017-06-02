@@ -24,6 +24,8 @@
 
     </div>
 
+    <input type="hidden" class="hidjournalid" />
+
 
 
 

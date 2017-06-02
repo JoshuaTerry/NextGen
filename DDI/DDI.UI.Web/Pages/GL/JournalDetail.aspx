@@ -2,15 +2,14 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
-<%--    <script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
-            //LoadJournalData('');    // test new
-            LoadJournalData('E2A35D00-2452-11E7-833C-00C0DD01025C');
+            JournalDetailLoad();
         });
 
     </script>
---%>
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
