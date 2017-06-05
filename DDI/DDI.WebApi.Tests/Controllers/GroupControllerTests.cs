@@ -1,5 +1,6 @@
 ﻿using DDI.Services;
 using DDI.Services.General;
+using DDI.Services.Security;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
@@ -29,21 +30,11 @@ namespace DDI.WebApi.Tests.Controllers
     public class GroupControllerTests : TestBase
     {
         private const string TESTDESCR = "WebApi | Controllers";
+        private User user;
 
         [TestInitialize]
         public override void Initialize() => base.Initialize();
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void GroupController_AddUserToGroup()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void GroupController_RemoveUserFromGroup()
-        {
-            throw new NotImplementedException();
-        }
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_GetAll()
@@ -82,7 +73,7 @@ namespace DDI.WebApi.Tests.Controllers
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
-            var group = service.GetAll().Data[0];
+            var group = service.GetAll().Data[2];
 
             Role role = service.GetAll().Data.Cast<Group>().ToList()[1].Roles.ToList()[0];
             string roles = "{ Ids: ['" + role.Id.ToString() + "'] }";
@@ -91,7 +82,7 @@ namespace DDI.WebApi.Tests.Controllers
             uow.Setup(m => m.GetById<Group>(group.Id, r => r.Roles)).Returns(group as Group);
             uow.Setup(m => m.GetById<Group>(group.Id)).Returns(group as Group);
             uow.Setup(m => m.GetById<Role>(role.Id)).Returns(role);
-            Assert.AreEqual((group as Group).Roles.Count, 0, "No roles to start with");
+            Assert.AreEqual( 0, (group as Group).Roles.Count, "No roles to start with");
 
             IHttpActionResult result = controller.AddRolesToGroup(group.Id, JRole);
             var contentResult = (result as OkNegotiatedContentResult<IDataResponse>).Content as DataResponse<object>;
@@ -102,7 +93,7 @@ namespace DDI.WebApi.Tests.Controllers
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
-        public void GropuController_AddRolesToGroup_DuplicateRole()
+        public void GroupController_AddRolesToGroup_DuplicateRole()
         {
             //initialize
             var uow = new Mock<IUnitOfWork>();
@@ -150,16 +141,22 @@ namespace DDI.WebApi.Tests.Controllers
 
             Group group = service.GetAll().Data[0] as Group;
             Role role = service.GetAll().Data.Cast<Group>().ToList()[1].Roles.ToList()[0];
+           
 
             uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles)).Returns(group);
             uow.Setup(m => m.GetById<Group>(group.Id)).Returns(group);
+            uow.Setup(m => m.GetRepository<User>().GetById(user.Id)).Returns(user);
+
             Assert.AreEqual(2, group.Roles.Count, "2 Roles in Group at first");
 
             IHttpActionResult result = controller.RemoveRolesFromGroup(group.Id, role.Id);
             var contentResult = (result as OkNegotiatedContentResult<IDataResponse>).Content as DataResponse<object>;
 
             Assert.AreEqual(1, (contentResult.Data as Group).Roles.Count, "Role was removed from Group");
+            Assert.AreEqual("Read/Write", (contentResult.Data as Group).Roles.ToList()[0].Name, "Remaining role is correct");
+            Assert.AreEqual(0, user.Roles.Count, "Role was removed from user");
             //Assert.AreEqual("Read", (contentResult.Data as Group).Roles[0].Nam, "Role was removed from Group");
+
 
         }
 
@@ -193,23 +190,27 @@ namespace DDI.WebApi.Tests.Controllers
         private IQueryable<Group> SetupRepo()
         {
 
-            User user = new User()
+            user = new User()
             {
+                Id = GuidHelper.NewSequentialGuid(),
                 Email = "JohnDoe@DDI.org",
-                FullName = "John Doe"
+                FullName = "John Doe",
             };
 
             List<Role> roleList = new List<Role>()
             {
-                new Role { Name = "Read", Module = "Notes", Id = GuidHelper.NewSequentialGuid() },
+                new Role { Name = "Read", Module = "Notes", Id = GuidHelper.NewSequentialGuid()  },
                 new Role { Name = "Read/Write", Module = "Settings", Id = GuidHelper.NewSequentialGuid() }
             };
 
+            user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = roleList[0].Id });
+            roleList[0].Users.Add(new UserRole { RoleId = roleList[0].Id, UserId = user.Id});
+
             return new List<Group>()
             {
-                new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid(), Roles = new List<Role>() },
+                new Group { Name = "Group 1", Id = GuidHelper.NewSequentialGuid(), Roles = new List<Role>(), Users = new List<User>() { user } },
                 new Group { Name = "Group 2", Id = GuidHelper.NewSequentialGuid(), Roles = roleList },
-                new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid(), Roles = new List<Role>(), Users = new List<User> { user } }
+                new Group { Name = "Group 3", Id = GuidHelper.NewSequentialGuid(), Roles = roleList, Users = new List<User> { user } }
 
             }
             .AsQueryable<Group>();
