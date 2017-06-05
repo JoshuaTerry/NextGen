@@ -84,7 +84,6 @@
     <Compile Include="ServiceInterfaces\IFiscalPeriodService.cs" />
     <Compile Include="GL\PostedTransactionService.cs" />
     <Compile Include="GL\GLAccountSelection.cs" />
-    <Compile Include="GL\PostedTransactions.cs" />
     <Compile Include="GL\LedgerService.cs" />
     <Compile Include="GL\SegmentService.cs" />
     <Compile Include="INV\InvestmentAutomatedTransactionService.cs" />

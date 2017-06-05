@@ -14,6 +14,10 @@ namespace DDI.Services.GL
 {
     public class GLAccountSelectionService : ServiceBase<GLAccountSelection>
     {
+        public GLAccountSelectionService(IUnitOfWork uow) : base(uow)
+        {
+          
+        }
         public IEnumerable<GLAccountSelection> GetGLAccountsForFiscalYearId(Guid fiscalYearId)
         {
             return UnitOfWork.GetEntities<GLAccountSelection>().Where(gs=> gs.FiscalYearId == fiscalYearId) ; 

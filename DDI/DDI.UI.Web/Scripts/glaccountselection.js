@@ -45,6 +45,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
             MakeServiceCall('GET', 'fiscalyears/' + fiscalYearId + '/accounts/lookup/' + request.term , null, function (result) {
                 if (result.Data.length == 1) {
                     var item = {
+                        description: result.Data[0].Description,
                         label: result.Data[0].AccountNumber,
                         value: result.Data[0].Id
                     };
@@ -106,7 +107,7 @@ function SelectAccountNumberLookup(item, container) {
     $(container).find(".accountdescription").html(item.description);
     $(container).find(".accountnumber").val(item.label);
     $(container).find(".hidaccountid").val(item.value);
-    $(container).find(".hidaccountnumber").val(item.AccountNumber);
+    $(container).find(".hidaccountnumber").val(item.label);
     $(container).find(".gridContainer").hide();
 }
 
@@ -249,7 +250,7 @@ function LoadNewAccountNumber(container, accountNumber,fiscalYearId)
         }
     },
     function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        DisplayErrorMessage('Error', err);
     });
 }
 

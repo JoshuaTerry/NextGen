@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DDI.Services;
+using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
@@ -12,6 +13,7 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -70,11 +72,11 @@ namespace DDI.WebApi.Controllers.GL
         [Route("api/v1/fiscalyears/{fiscalYearId}/accounts/lookup/{name}")]
         public IHttpActionResult AccountLookup(Guid fiscalYearId, string name)
         {
-            string fields = $"{nameof(GLAccountSelection.Id)},{nameof(GLAccountSelection.AccountNumber)},{nameof(GLAccountSelection.Description)}";
-
             var search = PageableSearch.Max;
-            
-            return FinalizeResponse(_glAccount.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
+
+            var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
+
+            return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
         }
 
         [HttpGet]
@@ -104,11 +106,11 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
+                var search = PageableSearch.Max;
 
                 IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
-                var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == fiscalYearId && l.AccountNumber == accountNumber, search);
                 return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
             }
             catch (Exception ex)
@@ -124,8 +126,9 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var accounts = new GLAccountSelectionService().GetGLAccountsForFiscalYearId(Id);
-               // var accounts = _glAccount.GetAllWhereExpression(l => l.FiscalYearId == Id, search);
+                var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
+                var accounts = glAccountSelectionService.GetGLAccountsForFiscalYearId(Id);
+               
                 return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(accounts, loadOptions));
             }
             catch (Exception ex)
