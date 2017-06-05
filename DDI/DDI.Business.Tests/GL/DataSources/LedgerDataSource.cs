@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.GL;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -15,9 +12,9 @@ namespace DDI.Business.Tests.GL.DataSources
     {
         public const string NEW_LEDGER_CODE = "NEW";
 
-        public static IList<Ledger> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Ledger> GetDataSource(IUnitOfWork uow)
         {
-            IList<Ledger> existing = uow.GetRepositoryOrNull<Ledger>()?.Entities.ToList();
+            IList<Ledger> existing = uow.GetRepositoryDataSource<Ledger>();
             if (existing != null)
             {
                 return existing;

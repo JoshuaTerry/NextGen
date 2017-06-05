@@ -1,22 +1,21 @@
-﻿using DDI.Business.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DDI.Business.Core;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics.CRM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DDI.Business.CRM
 {
     /// <summary>
     /// Constituent name formatting business logic
     /// </summary>
-    public class NameFormatter
+    public class NameFormatter : IBusinessLogic
     {
         private const string MALE = "M";
         private const string FEMALE = "F";
@@ -56,8 +55,6 @@ namespace DDI.Business.CRM
         private const int TOKEN_CACHE_LIMIT = 5000;
 
         #region Constructors 
-
-        public NameFormatter() : this(new UnitOfWorkEF()) { }
 
         public NameFormatter(IUnitOfWork uow)
         {

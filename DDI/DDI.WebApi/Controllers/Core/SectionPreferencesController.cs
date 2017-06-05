@@ -5,12 +5,15 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
     [Authorize]
     public class SectionPreferencesController : GenericController<SectionPreference>
-    {         
+    {
+        public SectionPreferencesController(IService<SectionPreference> service) : base(service) { }
+
         [HttpGet]
         [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Helpers;
@@ -16,13 +14,14 @@ namespace DDI.Business.Tests.GL
     public class BusinessUnitLogicTest : TestBase
     {
         private const string TESTDESCR = "Business | GL";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private BusinessUnitLogic _bl;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+            _uow = Factory.CreateUnitOfWork();
 
             BusinessUnitDataSource.GetDataSource(_uow);
            
@@ -57,7 +56,7 @@ namespace DDI.Business.Tests.GL
             Assert.AreEqual(true, _bl.IsMultiple, "Multiple business objects defined.");
 
             // Set up tests for a single business unit.
-            using (var uow2 = new UnitOfWorkNoDb())
+            using (var uow2 = Factory.CreateUnitOfWork())
             {
                 var businessUnits = new List<BusinessUnit>();
                 businessUnits.Add(new BusinessUnit() { Code = "*", Name = "Organizational Business Unit", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Organization, Id = GuidHelper.NewSequentialGuid() });

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
-using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
@@ -16,11 +15,9 @@ namespace DDI.Services.GL
         protected override Action<BusinessUnitFromTo> FormatEntityForGet => AddLedgerAccountIds;
         private AccountLogic _accountLogic;
 
-        public BusinessUnitFromToService() : this(new UnitOfWorkEF())  { }
-
-        public BusinessUnitFromToService(IUnitOfWork uow) : base(uow)          
+        public BusinessUnitFromToService(IUnitOfWork uow, AccountLogic accountLogic) : base(uow)          
         {
-            _accountLogic = uow.GetBusinessLogic<AccountLogic>();
+            _accountLogic = accountLogic;
         }
 
         private void AddLedgerAccountIds(BusinessUnitFromTo entity)

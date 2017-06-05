@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Routing;
 using System.Linq;
 using DDI.Services.GL;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -14,6 +15,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class LedgerController : GenericController<Ledger>
     {
+        public LedgerController(IService<Ledger> service) : base(service) { }
+
         private const string ROUTENAME_GETBYUNIT = RouteNames.BusinessUnit + RouteNames.Ledger + RouteVerbs.Get;
         
         protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
@@ -37,9 +40,6 @@ namespace DDI.WebApi.Controllers.GL
             .Include(p => p.DefaultFiscalYear.Name)
             ;
 
-        public LedgerController() : base(new LedgerService())
-        {
-        }
 
         [HttpGet]
         [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Get)]

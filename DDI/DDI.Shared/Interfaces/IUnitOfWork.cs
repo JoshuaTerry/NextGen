@@ -68,6 +68,11 @@ namespace DDI.Shared
 
         bool CommitTransaction();
 
+        IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class;
+        IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class;
+
+        IList<T> GetRepositoryDataSource<T>() where T : class;
+
         #endregion Public Methods
     }
 }

@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using DDI.Business.GL;
-using DDI.Data;
-using DDI.Data.Statics;
 using DDI.Shared;
-using DDI.Shared.Caching;
-using DDI.Shared.Enums;
 using DDI.Shared.Enums.Core;
-using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
 
@@ -28,8 +20,6 @@ namespace DDI.Business.Core
         #endregion
 
         #region Constructors 
-
-        public TransactionLogic() : this(new UnitOfWorkEF()) { }
 
         public TransactionLogic(IUnitOfWork uow) : base(uow)
         {
@@ -49,12 +39,12 @@ namespace DDI.Business.Core
                 return 1 + (_transactionRepo.Entities.Max(p => p.TransactionNumber));
             }
 
-            return _transactionRepo.Utilities.GetNextSequenceValue(Sequences.TransactionNumber);
+            return _transactionRepo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
         }
 
         public void SetNextTransactionNumber(Int64 newValue)
         {
-            _transactionRepo.Utilities?.SetNextSequenceValue(Sequences.TransactionNumber, newValue);
+            _transactionRepo.Utilities?.SetNextSequenceValue(DatabaseSequence.TransactionNumber, newValue);
         }
 
         /// <summary>

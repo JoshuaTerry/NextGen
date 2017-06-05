@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
+using DDI.Shared;
 
 namespace DDI.WebApi
 {
@@ -14,7 +15,7 @@ namespace DDI.WebApi
         public RoleManager(IRoleStore<Role, Guid> store) : base(store)
         {
         }
-        public RoleManager() : base(new RoleService()) { }
+        public RoleManager() : base(Factory.CreateService<RoleService>()) { }
 
         public static RoleManager Create(IdentityFactoryOptions<RoleManager> options,
             IOwinContext context)

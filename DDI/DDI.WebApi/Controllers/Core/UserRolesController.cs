@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -15,12 +16,10 @@ namespace DDI.WebApi.Controllers.General
         private UserManager _userManager;
         private RoleManager _roleManager;
 
-        public UserRolesController()
-        {
+        public UserRolesController(IService<UserRole> service) : base(service) { }
 
-        }
 
-        internal UserRolesController(UserManager userManager, RoleManager roleManager)
+        internal UserRolesController(UserManager userManager, RoleManager roleManager) : base(Factory.CreateService<IService<UserRole>>())
         {
             UserManager = userManager;
             RoleManager = roleManager;

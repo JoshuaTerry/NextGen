@@ -14,23 +14,14 @@ namespace DDI.WebApi.Controllers.CRM
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class EthnicitiesController : GenericController<Ethnicity>
     {
+        public EthnicitiesController(IService<Ethnicity> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituents);
 
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
-        private IConstituentService _constituentService;
-        public EthnicitiesController()
-            :this(new EthnicitiesService(), new ConstituentService())
-        {
-        }
-
-        internal EthnicitiesController(IEthnicitiesService ethnicitiesService, IConstituentService constituentService)
-            :base(ethnicitiesService)
-        {
-            _constituentService = constituentService;
-        }
-
+   
         [HttpGet]
         [Route("api/v1/ethnicities", Name = RouteNames.Ethnicity)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -95,13 +86,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                var constituent = _constituentService.GetById(id).Data;
-                if (constituent == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.AddEthnicitiesToConstituent(constituent, ethnicityIds);
+                var response = Service.AddEthnicitiesToConstituent(id, ethnicityIds);
                 return Ok(response);
             }
             catch (Exception ex)

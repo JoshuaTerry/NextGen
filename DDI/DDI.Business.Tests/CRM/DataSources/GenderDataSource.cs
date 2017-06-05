@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
+using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 
@@ -11,9 +7,9 @@ namespace DDI.Business.Tests.CRM.DataSources
 {
     public static class GenderDataSource
     {
-        public static IList<Gender> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Gender> GetDataSource(IUnitOfWork uow)
         {
-            IList<Gender> existing = uow.GetRepositoryOrNull<Gender>()?.Entities.ToList();
+            IList<Gender> existing = uow.GetRepositoryDataSource<Gender>();
             if (existing != null)
             {
                 return existing;

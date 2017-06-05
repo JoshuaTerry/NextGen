@@ -1,20 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using DDI.Business.CRM;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Services.Search;
 using DDI.Shared;
+using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using WebGrease.Css.Extensions;
 
 namespace DDI.Services
 {
@@ -22,31 +21,17 @@ namespace DDI.Services
     {
         #region Private Fields
 
-        private readonly IRepository<Constituent> _repository;
-        private readonly ConstituentLogic _constituentlogic; 
+        private IRepository<Constituent> _repository;
+        private ConstituentLogic _constituentlogic;
 
         #endregion
 
-        #region Constructors
-
-        public ConstituentService()
-            : this(new UnitOfWorkEF())
+        public ConstituentService(IUnitOfWork uow, ConstituentLogic logic, IRepository<Constituent> repository) : base(uow)
         {
-        }
-
-        public ConstituentService(IUnitOfWork uow)
-            : this(uow, new ConstituentLogic(uow), uow.GetRepository<Constituent>())
-        {
-        }
-
-        private ConstituentService(IUnitOfWork uow, ConstituentLogic constituentLogic, IRepository<Constituent> repository)
-            : base(uow)
-        {
-            _constituentlogic = constituentLogic;
             _repository = repository;
-        }
+            _constituentlogic = logic;
 
-        #endregion
+        }
 
         #region Public Methods
 

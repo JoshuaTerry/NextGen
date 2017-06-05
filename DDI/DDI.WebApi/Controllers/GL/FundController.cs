@@ -21,10 +21,7 @@ namespace DDI.WebApi.Controllers.GL
 
         private const string ROUTENAME_FUND = RouteNames.Ledger + RouteNames.Fund + RouteVerbs.Get;
 
-        public FundController()
-            : base(new FundService())
-        {
-        }
+        public FundController(FundService service) : base(service) { }
 
         protected override Expression<Func<Fund, object>>[] GetDataIncludesForList()
         {
