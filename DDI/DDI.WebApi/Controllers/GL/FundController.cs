@@ -97,14 +97,10 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
+                orderBy= orderBy == "Order"  ? "DisplayName": orderBy;
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid);
-                //if (result == null)
-                //{
-                //    NotFound();
-                //}
-
-                //return Ok(result);
+                var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid , search);
+                
                 return FinalizeResponse(result, "", search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
