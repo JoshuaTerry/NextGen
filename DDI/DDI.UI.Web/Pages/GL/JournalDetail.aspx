@@ -18,53 +18,67 @@
 
         <h1 class="journaltype"></h1>
 
-        <div class="threecolumn inlinecontainer">
-            <span class="journalnumbergroup">
-                <label class="journallabel">Journal #: </label>
-                <label class="JournalNumber"></label>
-            </span>
-            <span class="journalstatusgroup">
-                <label class="journalstatus">Status: </label>
-                <label class="JournalStatus"></label>
-            </span>
-            <span class="editjournalbutton hidebuttons floatright">
-                <a href="#" class="editaccount editbutton">Edit</a>
-            </span>
-        </div>
+        <br />
 
-        <div class="threecolumn">
-            <div class="fieldblock">
-                <label>Transaction Date:</label>
-                <input type="text" class="editable TransactionDate datepicker" />
+        <div class="editcontainer">
+            <div class="threecolumn">
+                <div class="journalnumbergroup">
+                    <label class="journallabel">Journal #: </label>
+                    <label class="JournalNumber"></label>
+                </div>
+                <div class="journalstatusgroup">
+                    <label class="journalstatus">Status: </label>
+                    <label class="JournalStatus"></label>
+                </div>
+                <div class="editjournalbutton hidebuttons floatright">
+                    <a href="#" class="editaccount editbutton">Edit</a>
+                </div>
             </div>
-            <div class="fieldblock">
-                <label>Journal Memo:</label>
-                <textarea rows="2" cols="70" maxlength="255" class="Comment"></textarea>
-            </div>
-            <div class="fieldblock">
-                <label>Journal Information:</label>
-            </div>
-        </div>
 
-        <div class="threecolumn">
-            <span class="fieldblock reverseondategroup">
-                <label>Reverse on this Date:</label>
-                <input type="text" class="editable ReverseOnDate datepicker" />
-            </span>
-            <span class="fieldblock"></span>
-            <span class="fieldblock">
-                <label>Created by: </label>
-                <label class="CreatedBy"></label>
-                <label>on: </label>
-                <label class="CreatedOn date"></label>
-            </span>
-        </div>
-
-        <div>
-            <a href="#" class="newjournalentrymodallink">New Item</a>
-            <div class="journalgridcontainer">
-                <div class="journalgrid"></div>
+            <div class="threecolumn">
+                <div class="fieldblock">
+                    <label>Transaction Date:</label>
+                </div>
+                <div class="fieldblock">
+                    <label>Journal Memo:</label>
+                </div>
+                <div class="fieldblock">
+                    <label>Journal Information:</label>
+                </div>
             </div>
+
+            <div class="threecolumn">
+                <div class="fieldblock">
+                    <input type="text" class="editable TransactionDate date datepicker" />
+                </div>
+                <div class="fieldblock">
+                    <textarea rows="2" cols="60" maxlength="255" class="Comment"></textarea>
+                </div>
+                <div class="fieldblock">
+                </div>
+            </div>
+
+            <div class="threecolumn">
+                <span class="fieldblock reverseondategroup">
+                    <label>Reverse on this Date:</label>
+                    <input type="text" class="editable ReverseOnDate date datepicker" />
+                </span>
+                <span class="fieldblock"></span>
+                <span class="fieldblock">
+                    <label>Created by: </label>
+                    <label class="CreatedBy"></label>
+                    <label>on: </label>
+                    <label class="CreatedOn date"></label>
+                </span>
+            </div>
+
+            <div>
+                <a href="#" class="newjournalentrymodallink">New Item</a>
+                <div class="journalgridcontainer">
+                    <div class="journalgrid"></div>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -80,12 +94,14 @@
             <div class="threecolumn">
                 <div class="fieldblock">
                     <label>Amount: </label>
-                    <input type="text" class="Amount editable money justright"/>
+                    <input type="text" class="Amount editable money justright" />
                 </div>
 
                 <div class="fieldblock">
-                    <input type="radio" name="debitcreditradio" value="Debit"/> Debit<br/>
-                    <input type="radio" name="debitcreditradio" value="Credit"/> Credit<br/>
+                    <input type="radio" name="debitcreditradio" value="Debit" />
+                    Debit<br />
+                    <input type="radio" name="debitcreditradio" value="Credit" />
+                    Credit<br />
                 </div>
 
                 <div class="fieldblock">

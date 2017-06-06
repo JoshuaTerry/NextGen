@@ -110,31 +110,28 @@ function InitJournalImages() {
     })
 }
 
-function ProcessJournal(journalType) {
-    $('.journaltype').html(journalType)
+function ProcessJournal(journalTypeDescr) {
+    $('.journaltype').html(journalTypeDescr)
     $('.journaltypeselect').hide()
     $('.tabscontainer').show()
     $('.journalbody').show()
     $('.journallabel').hide()
-    //LoadDatePickers()
+    LoadDatePickers()
 }
 
 function LoadJournalData() {
     $('.tabscontainer').show()
     $('.journallabel').show()
-    //LoadDatePickers()
+    LoadDatePickers()
     MakeServiceCall('GET', 'journals/' + journalId, null, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
-                $('.journaltype').html(function(){
-                    GetJournalType(data)
-                })
+                $('.journaltype').html(GetJournalType(data))
                 $('.JournalNumber').html(data.Data.JournalNumber)
-                $('.TransactionDate').html(data.Data.TransactionsDate)
+                $('.TransactionDate').val(data.Data.TransactionDate)
                 $('.Comment').val(data.Data.Comment)
-                $('.ReverseOnDate').html(data.Data.ReverseOnDate)
-                $('.journaltype').html(data.Data.journalType)
+                $('.ReverseOnDate').val(data.Data.ReverseOnDate)
                 $('.CreatedBy').html(data.Data.CreatedBy)
                 $('.CreatedOn').html(data.Data.CreatedOn)
                 JournalDisplayMode();
