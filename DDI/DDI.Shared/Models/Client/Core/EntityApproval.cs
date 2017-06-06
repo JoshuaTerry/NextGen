@@ -21,8 +21,8 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(128)]
         public string EntityType { get; set; }
 
-        public Guid? AppprovedById { get; set; }
-        [ForeignKey(nameof(AppprovedById))]
+        public Guid? ApprovedById { get; set; }
+        [ForeignKey(nameof(ApprovedById))]
         public User ApprovedBy { get; set; }
 
         public DateTime? ApprovedOn { get; set; }
