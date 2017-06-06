@@ -42,8 +42,6 @@ $(document).ready(function () {
 
         ExecuteFunction(functionToCall, window);
 
-        InitRequiredLabels("educationLevelmodal")
-
     });
 
 });
@@ -1453,6 +1451,8 @@ function LoadEducationSectionSettings() {
     $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
+
+    InitRequiredLabels("educationLevelmodal")
 }
 
 function LoadDegreeSettingsGrid() {
@@ -2912,8 +2912,6 @@ function LoadChartAccountsSectionSettings() {
     $(controlContainer).appendTo(container);
 
     $(container).appendTo($('.contentcontainer'));
-
-    InitRequiredLabels("chartsettingscontainer")
 }
 
 function SaveBudgetSetting(id) {

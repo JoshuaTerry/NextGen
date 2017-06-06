@@ -1479,7 +1479,9 @@ function InitRequiredLabels(formClassName) {
     formClassName.replace(".", "");
     $('.' + formClassName).find('.required').each(function (index, el) {
         var labelElement = $(this).prev();
-        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        if (labelElement[0].innerHTML.indexOf("*") === -1){
+            labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        }
     });
 }
 
