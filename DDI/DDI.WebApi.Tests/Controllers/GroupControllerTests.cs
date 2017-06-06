@@ -39,7 +39,6 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_GetAll()
         {
-            //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
@@ -48,7 +47,6 @@ namespace DDI.WebApi.Tests.Controllers
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
-            // end initialize
 
             IHttpActionResult result = controller.GetAll();
             var contentResult = result as OkNegotiatedContentResult<IDataResponse>;
@@ -64,7 +62,6 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_AddRolesToGroup_NewRole()
         {
-            //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
@@ -95,13 +92,11 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_AddRolesToGroup_DuplicateRole()
         {
-            //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
             IGroupService service = new GroupService(uow.Object);
             var controller = new GroupController(service);
-            // end initialize 
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
@@ -128,13 +123,11 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_RemoveRolesFromGroup_RoleIsInGroup()
         {
-            //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
             IGroupService service = new GroupService(uow.Object);
             var controller = new GroupController(service);
-            // end initialize 
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
@@ -154,8 +147,7 @@ namespace DDI.WebApi.Tests.Controllers
 
             Assert.AreEqual(1, (contentResult.Data as Group).Roles.Count, "Role was removed from Group");
             Assert.AreEqual("Read/Write", (contentResult.Data as Group).Roles.ToList()[0].Name, "Remaining role is correct");
-            Assert.AreEqual(0, user.Roles.Count, "Role was removed from user");
-            //Assert.AreEqual("Read", (contentResult.Data as Group).Roles[0].Nam, "Role was removed from Group");
+            Assert.AreEqual(1, user.Roles.Count, "Role was removed from user");
 
 
         }
@@ -163,13 +155,11 @@ namespace DDI.WebApi.Tests.Controllers
         [TestMethod, TestCategory(TESTDESCR)]
         public void GroupController_RemoveRolesFromGroup_RoleIsNotInGroup()
         {
-            //initialize
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
 
             IGroupService service = new GroupService(uow.Object);
             var controller = new GroupController(service);
-            // end initialize 
 
             controller.Request = new HttpRequestMessage();
             controller.Configuration = new HttpConfiguration();
@@ -184,7 +174,7 @@ namespace DDI.WebApi.Tests.Controllers
             var contentResult = (result as OkNegotiatedContentResult<IDataResponse>).Content as DataResponse<object>;
 
             Assert.AreEqual(0, (contentResult.Data as Group).Roles.Count, "Group collection is unchanged");
-            //Assert.IsTrue(user.Roles.Empty, "Role removed from a group is removed from user in that group")
+            Assert.AreEqual(1, user.Roles.Count, "Role removed from a group is removed from user in that group");
         }
 
         private IQueryable<Group> SetupRepo()
@@ -205,6 +195,9 @@ namespace DDI.WebApi.Tests.Controllers
 
             user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = roleList[0].Id });
             roleList[0].Users.Add(new UserRole { RoleId = roleList[0].Id, UserId = user.Id});
+
+            user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = roleList[1].Id });
+            roleList[1].Users.Add(new UserRole { RoleId = roleList[1].Id, UserId = user.Id });
 
             return new List<Group>()
             {

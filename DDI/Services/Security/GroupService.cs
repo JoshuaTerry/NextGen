@@ -72,20 +72,23 @@ namespace DDI.Services.General
             var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles); // group
             var roleToRemove = group.Roles.Where(r => r.Id == roleId).FirstOrDefault(); // role 
 
-            group.Roles.Remove(roleToRemove);
-            var groupUserIds = group.Users.Select(u => u.Id).ToList(); // user Ids in that group
-            var roleUserIds = roleToRemove.Users.Select(u => u.UserId); // user Ids in role
-            var usersToRemove = groupUserIds.Intersect(roleUserIds).ToList(); // intersection of users in group and role
-            //usersToRemove.ForEach(u => roleToRemove.Users.Remove(roleToRemove.Users.FirstOrDefault(uu => uu.UserId == u))); // for each role, remove user where the id is equal to the user we want to remove..
-
-            foreach (Guid userId in usersToRemove)
+            if (roleToRemove != null)
             {
-                roleToRemove.Users.Remove(roleToRemove.Users.FirstOrDefault(u => u.UserId == userId));
-                var userToRemoveRoles = UnitOfWork.GetRepository<User>().GetById(userId);
-                userToRemoveRoles.Roles.Remove(userToRemoveRoles.Roles.FirstOrDefault(r => r.RoleId == roleToRemove.Id));
-            }
+                group.Roles.Remove(roleToRemove);
+                var groupUserIds = group.Users.Select(u => u.Id).ToList(); // user Ids in that group
+                var roleUserIds = roleToRemove.Users.Select(u => u.UserId); // user Ids in role
+                var usersToRemove = groupUserIds.Intersect(roleUserIds).ToList(); // intersection of users in group and role
 
-            UnitOfWork.SaveChanges();
+                foreach (Guid userId in usersToRemove)
+                {
+                    roleToRemove.Users.Remove(roleToRemove.Users.FirstOrDefault(u => u.UserId == userId));
+                    var userToRemoveRoles = UnitOfWork.GetRepository<User>().GetById(userId);
+                    userToRemoveRoles.Roles.Remove(userToRemoveRoles.Roles.FirstOrDefault(r => r.RoleId == roleToRemove.Id));
+                }
+
+                UnitOfWork.SaveChanges();
+
+            }
 
             return new DataResponse<Group>()
             {
