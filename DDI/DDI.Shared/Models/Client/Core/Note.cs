@@ -30,21 +30,23 @@ namespace DDI.Shared.Models.Client.Core
         public DateTime? ContactDate { get; set; }
 
         public Guid? CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
+        [ForeignKey(nameof(CategoryId))]
         public NoteCategory Category { get; set; }
 
         public Guid? NoteCodeId { get; set; }
+        [ForeignKey(nameof(NoteCodeId))]
         public NoteCode NoteCode { get; set; }
 
         public Guid? PrimaryContactId { get; set; }
-        [ForeignKey("PrimaryContactId")]
+        [ForeignKey(nameof(PrimaryContactId))]
         public Constituent PrimaryContact { get; set; }
 
         public Guid? ContactMethodId { get; set; }
-        [ForeignKey("ContactMethodId")]
+        [ForeignKey(nameof(ContactMethodId))]
         public NoteContactMethod ContactMethod { get; set; }
 
         public Guid? UserResponsibleId { get; set; }
+        [ForeignKey(nameof(UserResponsibleId))]
         public User UserResponsible { get; set; }
 
         public ICollection<NoteTopic> NoteTopics { get; set; }
