@@ -82,6 +82,7 @@
     <Compile Include="ConversionBase.cs" />
     <Compile Include="ConversionMethodArgs.cs" />
     <Compile Include="Core\EntityNumberConverter.cs" />
+    <Compile Include="Core\FileStorageLoader.cs" />
     <Compile Include="Core\Initialize.cs" />
     <Compile Include="Core\ApprovalConverter.cs" />
     <Compile Include="Core\NoteSearchIndexer.cs" />
