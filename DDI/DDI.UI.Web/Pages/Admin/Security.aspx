@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="usermodal" title="New User" style="display: none;">
+    <div class="usermodal" title="User Maintenance" style="display: none;">
         <div class="modalcontent">
 
             <div class="fieldblock">
@@ -110,12 +110,18 @@
             </div>
 
             <div class="fieldblock">
-                <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select></div>
+                <label>Default Business Unit</label>
+                <select class="user-DefaultBusinessUnitId"></select>
+            </div>
 
             <div class="fieldblock">
-                <div class="businessUnits">
-                </div>
+                <label>Business Units</label>
+                <div class="tagselect user-BusinessUnits"></div>
+            </div>
+
+            <div class="fieldblock">
+                <label>Group</label>
+                <select class="user-Groups"></select>
             </div>
 
             <div class="fieldblock">
@@ -124,7 +130,7 @@
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
+                <input type="button" class="submituser" value="Save" />
                 <a href ="#" class="cancelmodal">Cancel</a>
             </div>
 

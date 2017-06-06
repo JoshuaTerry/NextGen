@@ -251,11 +251,19 @@ namespace DDI.WebApi.Controllers.General
         //[Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
-        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
+        public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
-            return base.Patch(id, constituentChanges);
+            //if (Groups != null)
+            //{ delete previous group and roles add the group and strip from the userChanges }
+            return base.Patch(id, userChanges);
+            //if (user.DefaultBusinessUnitId.HasValue)
+            //{
+            //    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
+           // }
+           // if (userChanges.BusinessUnits != null) { }
+            
         }
-
+        
         //[HttpPost]
         //[Route("api/v1/users/{id}")]
         //public async Task<IHttpActionResult> Update(Guid id, User user)
