@@ -439,7 +439,11 @@ function LoadConstituentTypesSectionSettings() {
                         LoadConstituentTypeSettingsGrid();
                     }
 
-                }, null);
+                }, function (xhr, status, err) {
+
+                    DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+
+                });
 
             });
         })
@@ -3752,10 +3756,25 @@ function LoadGLFormatSectionSettings() {
                 LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
                     editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
 
-                        $('.AccountFormat').remove();
-                        $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                        MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
+
+                            if (data && data.Data && data.IsSuccessful) {
+
+                                glaccountformat = data.Data.DisplayFormat;
+
+                            }
+                            else {
+                                glaccountformat = '';
+                            }
+                            $('.AccountFormat').remove();
+                            $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                        }, null);
+
+                        
 
                     });
+
+               
             }
 
 
