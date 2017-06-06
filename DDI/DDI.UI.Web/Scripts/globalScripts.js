@@ -1578,7 +1578,10 @@ function MaskFields() {
     $('.date').mask('00/00/0000');
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
-    $('.money').mask("#,##0.00", { reverse: true });
+    $('.money').mask("#0.00", { reverse: true });
+    $('.money').each(function () {
+        $(this).val($(this).val().replace('$', '').replace(',', ''));
+    })
     $('.moneynegative').maskMoney({ prefix: '$', allowNegative: true, thousands: ',', decimal: '.', affixesStay: false });
     $('.phone').mask('(000) 000-0000');
     $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
