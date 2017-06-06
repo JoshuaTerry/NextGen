@@ -89,6 +89,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\journals.css" />
     <Content Include="CSS\accounts.css" />
     <Content Include="CSS\autocomplete.css" />
     <Content Include="CSS\constituents.css" />

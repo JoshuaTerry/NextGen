@@ -51,8 +51,7 @@
                 <label>Reverse on this Date:</label>
                 <input type="text" class="editable ReverseOnDate datepicker" />
             </span>
-            <span class="fieldblock">
-            </span>
+            <span class="fieldblock"></span>
             <span class="fieldblock">
                 <label>Created by: </label>
                 <label class="CreatedBy"></label>
@@ -70,4 +69,49 @@
 
     </div>
 
+    <div class="journallinemodal" title="Account Groups" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="journallineaccountgroup">
+                <label class="accountselectorlabel">GL Account: </label>
+            </div>
+
+            <div class="threecolumn">
+                <div class="fieldblock">
+                    <label>Amount: </label>
+                    <input type="text" class="Amount editable money justright"/>
+                </div>
+
+                <div class="fieldblock">
+                    <input type="radio" name="debitcreditradio" value="Debit"/> Debit<br/>
+                    <input type="radio" name="debitcreditradio" value="Credit"/> Credit<br/>
+                </div>
+
+                <div class="fieldblock">
+                    <textarea rows="2" cols="70" maxlength="255" class="JournalLineComment"></textarea>
+                </div>
+            </div>
+
+            <div class="threecolumn">
+                <div class="fieldblock">
+                    <label>Due: </label>
+                    <select class="DoToMode editable">
+                        <option value="0">None</option>
+                        <option value="1">Due From</option>
+                        <option value="2">Due To</option>
+                    </select>
+                    <label>Entity: </label>
+                </div>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savenewjournallinebutton" value="Save/New" />
+                <input type="button" class="savejournallinebutton" value="Save" />
+                <a href="#" class="canceljournallinemodal">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
 </asp:Content>

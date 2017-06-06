@@ -1,6 +1,4 @@
-﻿//$(document).ready(function () {
-
-var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
+﻿var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
 var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
@@ -45,7 +43,7 @@ function JournalDisplayMode() {
     editMode = 'display'
     $('.editjournalbutton').show()
     $('.savejournalbuttons').hide()
-    $(summaryContainer).find('.editable').each(function () {
+    $(journalContainer).find('.editable').each(function () {
 
         $(this).prop('disabled', true)
 
@@ -129,8 +127,8 @@ function LoadJournalData() {
 
         if (data.Data) {
             if (data.IsSuccessful) {
-                $('.journaltype').html(function(data){
-                    GetJournalType()
+                $('.journaltype').html(function(){
+                    GetJournalType(data)
                 })
                 $('.JournalNumber').html(data.Data.JournalNumber)
                 $('.TransactionDate').html(data.Data.TransactionsDate)
@@ -139,7 +137,7 @@ function LoadJournalData() {
                 $('.journaltype').html(data.Data.journalType)
                 $('.CreatedBy').html(data.Data.CreatedBy)
                 $('.CreatedOn').html(data.Data.CreatedOn)
-                AccountDisplayMode();
+                JournalDisplayMode();
             }
         }
 
@@ -268,30 +266,23 @@ function ClearJournalFields() {
 
     $(journalContainer + ' input[type="text"]').val('')
     $(journalContainer + ' input[type="number"]').val('')
-    $(journalContainer + ' .segmentname').html('')
-    $(journalContainer + ' .segmentcode').html('')
+    $(journalContainer + ' textarea').val('')
     $(journalContainer + ' select').val(0)
     $(journalContainer + ' input:checkbox').prop('checked', false)
     $(journalContainer).find(".journaldescription").html('')
-    $(journalContainer).find(".journalnumber").val('')
-    $(journalContainer).find(".hidjournalid").val('')
+    $(journalContainer).find(".JournalNumber").val('')
+    $(journalContainer).find(".JournalStatus").val('')
+    $(journalContainer).find(".CreatedBy").val('')
+    $(journalContainer).find(".CreatedOn").val('')
+    $('.journalgridcontainer').hide()
 }
 
 
 //group modal section
 
-function NewJournalLineModal(groupLevel, parentId, groupName) {
-    $('.modalGroupName').html(groupName)
-    $('.ag-Category').val(0)
-    $('.ag_Name').val('')
-    if (groupLevel != 1) {
-        $('.group1only').hide()
-    }
-    else {
-        $('.group1only').show()
-    }
+function NewJournalLineModal() {
 
-    modal = $('.journalJournalLineModal').dialog({
+    modal = $('.journallinemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 500,
@@ -306,13 +297,13 @@ function NewJournalLineModal(groupLevel, parentId, groupName) {
 
     })
 
-    $('.savejournalgroupbutton').unbind('click')
+    $('.savejournallinebutton').unbind('click')
 
-    $('.savejournalgroupbutton').click(function () {
+    $('.savejournallinebutton').click(function () {
 
-        var item = GetJournalGroupItemsToSave(modal, parentId)
+        var item = GetjournallineItemsToSave(modal)
 
-        MakeServiceCall('POST', 'JournalGroups', item, function (data) {
+        MakeServiceCall('POST', 'journallines', item, function (data) {
 
             DisplaySuccessMessage('Success', 'Journal Group saved successfully.')
 
@@ -331,16 +322,7 @@ function NewJournalLineModal(groupLevel, parentId, groupName) {
 
 }
 
-function EditJournalLineModal(groupLevel, groupId, parentId, groupName) {
-    $('.modalGroupName').html(groupName)
-    if (groupLevel != 1) {
-        $('.ag-Category').val(0)
-        $('.group1only').hide()
-    }
-    else {
-        $('.group1only').show()
-    }
-
+function EditJournalLineModal() {
     var modal = $('.journalJournalLineModal').dialog({
         closeOnEscape: false,
         modal: true,
@@ -348,9 +330,7 @@ function EditJournalLineModal(groupLevel, groupId, parentId, groupName) {
         resizable: false
     })
 
-    LoadJournalGroups(groupId)
-
-    $('.canceljournalgroupmodal').click(function (e) {
+    $('.canceljournallinemodal').click(function (e) {
 
         e.preventDefault()
 
@@ -358,13 +338,13 @@ function EditJournalLineModal(groupLevel, groupId, parentId, groupName) {
 
     })
 
-    $('.savejournalgroupbutton').unbind('click')
+    $('.savejournallinebutton').unbind('click')
 
-    $('.savejournalgroupbutton').click(function () {
+    $('.savejournallinebutton').click(function () {
 
-        var item = GetJournalGroupItemsToSave(modal, parentId)
+        var item = GetjournallineItemsToSave(modal, parentId)
 
-        MakeServiceCall('PATCH', 'JournalGroups/' + groupId, item, function (data) {
+        MakeServiceCall('PATCH', 'journallines/' + groupId, item, function (data) {
 
             DisplaySuccessMessage('Success', 'Journal Group saved successfully.')
 
