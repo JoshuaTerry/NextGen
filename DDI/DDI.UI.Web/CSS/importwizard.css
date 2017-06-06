@@ -19,5 +19,8 @@
 .importsteps .step4 {  }
 .importsteps .step5 {  }
 
-
+.importmappinggridcontainer { padding: 0 0 0 1%; }
+.mappingselection { margin-bottom: 10px; }
+.mappingcolumns { display: inline-block; width: 48%; margin-right: 1%; min-height: 100px; }
+.importfilecolumns { display: inline-block; width: 48%; min-height: 100px; }
 
