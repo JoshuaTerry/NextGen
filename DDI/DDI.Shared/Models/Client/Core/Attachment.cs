@@ -22,6 +22,10 @@ namespace DDI.Shared.Models.Client.Core
         [ForeignKey(nameof(FileId))]
         public FileStorage File { get; set; }
 
+        public Guid? NoteId { get; set; }
+        [ForeignKey(nameof(NoteId))]
+        public Note Note { get; set; }
+
         public override string DisplayName => File?.Name ?? string.Empty;
     }
 }
