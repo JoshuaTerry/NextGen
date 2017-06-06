@@ -81,6 +81,10 @@
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
+    <Compile Include="Migrations\Client\201706061801583_Attachments_v2.cs" />
+    <Compile Include="Migrations\Client\201706061801583_Attachments_v2.Designer.cs">
+      <DependentUpon>201706061801583_Attachments_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201706061710127_Attachments.cs" />
     <Compile Include="Migrations\Client\201706061710127_Attachments.Designer.cs">
       <DependentUpon>201706061710127_Attachments.cs</DependentUpon>
@@ -245,6 +249,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201706061801583_Attachments_v2.resx">
+      <DependentUpon>201706061801583_Attachments_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706061710127_Attachments.resx">
       <DependentUpon>201706061710127_Attachments.cs</DependentUpon>
     </EmbeddedResource>

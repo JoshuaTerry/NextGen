@@ -51,6 +51,8 @@ namespace DDI.Shared.Models.Client.Core
 
         public ICollection<NoteTopic> NoteTopics { get; set; }
 
+        public ICollection<Attachment> Attachments { get; set; }
+
         public override string DisplayName => StringHelper.FirstNonBlank(Title, StringHelper.Truncate(Text, 100), string.Empty);
     }
 }
