@@ -203,6 +203,7 @@
     <Compile Include="Models\Client\Core\EntityApproval.cs" />
     <Compile Include="Models\Client\Core\EntityMapping.cs" />
     <Compile Include="Models\Client\Core\EntityNumber.cs" />
+    <Compile Include="Models\Client\Core\ImportFile.cs" />
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
