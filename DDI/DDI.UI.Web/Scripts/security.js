@@ -1,7 +1,7 @@
 ﻿
 $(document).ready(function () {
 
-   // SetupNewUserModal();
+    SetupNewUserModal();
 
     LoadGroupsGrid();
     PopulateDropDown('.ConstituentId', 'constituents', '', '');
@@ -15,7 +15,7 @@ function SetupNewUserModal() {
 
         e.preventDefault();
 
-        $('.newusermodal').dialog({
+        $('.usermodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 400,
@@ -23,7 +23,7 @@ function SetupNewUserModal() {
             resizable: false
         });
 
-        $('.submitnewuser').click(function () {
+        $('.submituser').click(function () {
 
             var model = {
                 Email: $('.newusername').val(),
@@ -100,78 +100,7 @@ function LoadUsersGrid() {
     PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
     PopulateDropDown($('.user-Groups'), 'groups', null);
     
-    //PopulateBusinessUnits();
-//    //LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
-//    //   , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
     CustomLoadGrid('usergrid', 'usersgridcontainer', columns, 'users?fields=all', null, EditUser, null);
-   
-//    //var accordion = $('<div>').addClass('accordions');
-//    //var types = $('<div>').addClass('userscontainer');
-
-
-//    //var header = $('<h1>').text('Users').appendTo($(accordion));
-//    //$('<a>').attr('href', '#').addClass('newusermodallink modallink newbutton')
-//    //    .click(function (e) {
-//    //        e.preventDefault();
-
-//    //        modal = $('.usermodal').dialog({
-//    //            closeOnEscape: false,
-//    //            modal: true,
-//    //            width: 400,
-//    //            resizable: false
-//    //        });
-
-//    //        $('.user-BusinessUnits').hide();
-//    //        $('.tagSelectImage').hide();
-//    //        $('.tagSelect').hide();
-
-//    //        $('.cancelusermodal').click(function (e) {
-
-//    //            e.preventDefault();
-
-//    //            CloseModal(modal);
-
-//    //        });
-
-//    //        $('.submituser').unbind('click');
-
-//    //        $('.submituser').click(function () {
-
-//    //            var item = {
-//    //                FullName: $(modal).find('.user-FullName').val(),
-//    //                UserName: $(modal).find('.user-UserName').val(),
-//    //                Email: $(modal).find('.user-Email').val(),
-//    //                DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-//    //                GroupId: $(modal).find('.user-GroupId').val(),
-//    //                IsActive: true
-//    //            }
-
-//    //            MakeServiceCall('POST', 'users', item, function (data) {
-
-//    //                if (data.Data) {
-//    //                    DisplaySuccessMessage('Success', 'User saved successfully.');
-
-//    //                    CloseModal(modal);
-
-//    //                    LoadUsersGrid();
-//    //                }
-
-//    //            }, null);
-
-//    //        });
-//    //    })
-//    //    .appendTo($(header));
-
-//    //$(types).appendTo($(accordion));
-
-//    LoadUsersGrid();
-
-//    $(accordion).appendTo($('.usergrid'));
-//    //$(accordion).appendTo($('.usersgridcontainer'));
-//    //$(accordion).appendTo($('.tab-users'));
-//    //$(accordion).appendTo($('.contentcontainer'));
-
-//    LoadAccordions();
 
 }
 function DisplayUserBusinessUnits(businessUnits) {
@@ -266,26 +195,6 @@ function LoadUserBusinessUnitSelector(id, container) {
     });
 }
 
-//function LoadUsersGrid() {
-
-//    var columns = [
-
-//        { dataField: 'FullName', caption: 'Full Name' },
-//        { dataField: 'Email', caption: 'Email Address' },
-//        { caption: 'Active', cellTemplate: function (container, options) {
-//                var type = 'Yes';
-
-//                if (options.data.IsActive != '1') {
-//                    type = 'No';
-//                }
-//                $('<label>').text(type).appendTo(container);
-//            }
-//        }
-//    ];
-
-//    CustomLoadGrid('usergrid', 'userscontainer', columns, 'users?fields=all', null, EditUser, null);
-
-//}
 
 
 // USER SETTINGS 
@@ -322,11 +231,11 @@ function EditUser(id) {
             UserName: $(modal).find('.user-UserName').val(),
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-            GroupId: $(modal).find('.user-GroupId').val(),
+            //GroupId: $(modal).find('.user-GroupId').val(),
             IsActive: true
         }
 
-        MakeServiceCall('PATCH', 'users/' + id, item, function (data) {
+        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
 
             if (data.Data) {
                 DisplaySuccessMessage('Success', 'User saved successfully.');
@@ -336,7 +245,10 @@ function EditUser(id) {
                 LoadUsersGrid();
             }
 
-        }, null);
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred while saving the User.');
+        });
 
     });
 

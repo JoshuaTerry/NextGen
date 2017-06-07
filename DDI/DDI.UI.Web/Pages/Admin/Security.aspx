@@ -131,7 +131,7 @@
 
             <div class="modalbuttons">
                 <input type="button" class="submituser" value="Save" />
-                <a href ="#" class="cancelmodal">Cancel</a>
+                <a href ="#" class="cancelusermodal">Cancel</a>
             </div>
 
         </div>
