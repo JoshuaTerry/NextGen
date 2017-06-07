@@ -48,6 +48,60 @@ namespace DDI.Conversion
 
         #endregion
 
+        #region Static Methods
+
+        public static string CreateOutputFilename(string filename, string suffix)
+        {
+            if (!string.IsNullOrWhiteSpace(suffix))
+            {
+                string extension = Path.GetExtension(filename);
+                filename = filename.Replace(extension, "_" + suffix) + extension;
+            }
+
+            return filename;
+        }
+
+        /// <summary>
+        /// Load a set of legacy Id's and EF Id's that were previously saved to a file.
+        /// </summary>
+        public static Dictionary<string, Guid> LoadLegacyIds(string baseDirectory, string filename)
+        {
+            Dictionary<string, Guid> legacyIds = new Dictionary<string, Guid>();
+
+            using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
+            {
+                while (importer.GetNextRow())
+                {
+                    string legacyKey = importer.GetString(0);
+                    if (!string.IsNullOrWhiteSpace(legacyKey))
+                    {
+                        legacyIds[legacyKey] = importer.GetGuid(1);
+                    }
+                }
+            }
+            return legacyIds;
+        }
+
+        /// <summary>
+        /// Load a set of legacy Id's and EF Id's that were previously saved to a file.
+        /// </summary>
+        public static Dictionary<int, Guid> LoadIntLegacyIds(string baseDirectory, string filename)
+        {
+            Dictionary<int, Guid> legacyIds = new Dictionary<int, Guid>();
+
+            using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
+            {
+                while (importer.GetNextRow())
+                {
+                    int legacyKey = importer.GetInt(0);
+                    legacyIds[legacyKey] = importer.GetGuid(1);
+                }
+            }
+            return legacyIds;
+        }
+
+        #endregion
+
         #region Protected Methods
 
         /// <summary>
@@ -106,45 +160,6 @@ namespace DDI.Conversion
 
             // Create the FileImport and return it.
             return new FileImport(filename, logName, delimiter);
-        }
-
-        /// <summary>
-        /// Load a set of legacy Id's and EF Id's that were previously saved to a file.
-        /// </summary>
-        protected Dictionary<string,Guid> LoadLegacyIds(string baseDirectory, string filename) 
-        {
-            Dictionary<string, Guid> legacyIds = new Dictionary<string, Guid>();
-
-            using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
-            {
-                while (importer.GetNextRow())
-                {
-                    string legacyKey = importer.GetString(0);                    
-                    if (!string.IsNullOrWhiteSpace(legacyKey))
-                    {
-                        legacyIds[legacyKey] = importer.GetGuid(1);
-                    }
-                }
-            }
-            return legacyIds;
-        }
-
-        /// <summary>
-        /// Load a set of legacy Id's and EF Id's that were previously saved to a file.
-        /// </summary>
-        protected Dictionary<int, Guid> LoadIntLegacyIds(string baseDirectory, string filename) 
-        {
-            Dictionary<int, Guid> legacyIds = new Dictionary<int, Guid>();
-
-            using (var importer = new FileImport(Path.Combine(baseDirectory, filename), string.Empty))
-            {
-                while (importer.GetNextRow())
-                {
-                    int legacyKey = importer.GetInt(0);
-                    legacyIds[legacyKey] = importer.GetGuid(1);
-                }
-            }
-            return legacyIds;
         }
 
         /// <summary>

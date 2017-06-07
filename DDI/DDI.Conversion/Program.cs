@@ -51,7 +51,7 @@ namespace DDI.Conversion
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.NoteCategories));
-            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Configuration));
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Configuration));
             //Run<Core.NoteConverter>(new ConversionMethodArgs(Core.NoteConverter.ConversionMethod.Notes_CRM));
 
 
@@ -71,6 +71,11 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Notes));
+
+            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.FileStorage));
+            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Attachments));
+
 
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
@@ -87,7 +92,7 @@ namespace DDI.Conversion
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccountMerges));
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountBudgets));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
-            Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
+            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
             //Run<GL.PostedTransactionConverter>(new ConversionMethodArgs(GL.PostedTransactionConverter.ConversionMethod.PostedTransactions));
 

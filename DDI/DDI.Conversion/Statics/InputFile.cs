@@ -45,6 +45,9 @@ namespace DDI.Conversion.Statics
 
         public static string CRM_MemoConstituent => "Memo_Constituent.csv";
         public static string CRM_EntityNumber => "EntityNumber_Constituent.csv";
+        public static string CRM_FileStorageConstituent => "FileStorage_Constituent.csv";
+        public static string CRM_Attachment => "Attachment_Constituent.csv";
+
         #endregion
 
         #region DDI Files

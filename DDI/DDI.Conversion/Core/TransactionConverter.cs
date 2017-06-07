@@ -39,7 +39,7 @@ namespace DDI.Conversion.Core
             Directory.CreateDirectory(_outputDirectory);
 
             // Create the output filename for transactions.
-            string outputFilename = CreateOutputFilename(OutputFile.Core_TransactionFile, outputFileNameSuffix);
+            string outputFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_TransactionFile, outputFileNameSuffix);
 
 
             // Import the transactions.
@@ -143,7 +143,7 @@ namespace DDI.Conversion.Core
             }
 
             // Create the output filename for transaction xrefs.
-            outputFilename = CreateOutputFilename(OutputFile.Core_TransactionXrefFile, outputFileNameSuffix);
+            outputFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_TransactionXrefFile, outputFileNameSuffix);
 
             // Read the posted transaction ID mapping file and populate postedTranKeys dictionary
             // which will map legacy ids to PostedTransaction.Id
@@ -195,7 +195,7 @@ namespace DDI.Conversion.Core
 
 
             // Create the output filename for entity transactions.
-            outputFilename = CreateOutputFilename(OutputFile.Core_EntityTransactionFile, outputFileNameSuffix);
+            outputFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_EntityTransactionFile, outputFileNameSuffix);
 
             // Import the entity transactions
 
@@ -246,17 +246,6 @@ namespace DDI.Conversion.Core
                 outputFile.Dispose();
             }
             
-        }
-
-        private string CreateOutputFilename(string filename, string suffix)
-        {
-            if (!string.IsNullOrWhiteSpace(suffix))
-            {
-                string extension = Path.GetExtension(filename);
-                filename = filename.Replace(extension, "_" + suffix) + extension;
-            }
-
-            return filename;
         }
 
     }

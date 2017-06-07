@@ -164,6 +164,7 @@
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
+    <Compile Include="Extensions\IoExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
