@@ -9,8 +9,14 @@ a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
 
 .justright {text-align: right}
+.justleft {text-align: left}
+.floatleft {float: left}
+.floatright {float: right}
 
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }
+.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
+.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
@@ -22,7 +28,7 @@ input:disabled,
 select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }
 select:disabled::-ms-expand { display: none; }
 
-.readonly { border: solid 1px transparent; background-color: #eeeeee; color: #333333; }
+.readonly { border: solid 1px transparent; background-color: #eeeeee; color: #333333; margin-bottom: 10px; }
 
 .scrollable { overflow-y: scroll; }
 

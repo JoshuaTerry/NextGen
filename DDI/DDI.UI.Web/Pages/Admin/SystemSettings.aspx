@@ -1240,6 +1240,51 @@
         </div>
 
     </div>
+
+     <div class="businessunitduemodal" title="BusinessUnitFromTo" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Due From Account</label>
+                <div class="bus-FromLedgerAccount"></div>
+            </div>
+
+            <div class="fieldblock">
+                <label>Due To Account</label>
+                <div class="bus-ToLedgerAccount"></div>
+            </div>
+
+             <div class="modalbuttons">
+                <input type="button" class="Savebusinessunitduedetails" value="Save" />
+                 <a href="#" class="cancelbusinessunitduedetailsmodal">Cancel</a>
+            </div>
+
+          </div>
+
+    </div>
+
+     <div class="fundduemodal" title="Test" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Due From Account</label>
+               <div class="fn-DueFromAccount" ></div>
+            </div>
+
+            <div class="fieldblock">
+                <label>Due To Account</label>
+                <div class="fn-DueToAccount" ></div>
+            </div>
+             <div class="modalbuttons">
+                <input type="button" class="Savefundduedetails" value="Save" />
+                <a href="#" class="cancelfundduemodal">Cancel</a>
+            </div>
+
+          </div>
+
+    </div>
     <div class="entitymodal" title="Business Units" style="display: none;">
 
         <div class="modalcontent">

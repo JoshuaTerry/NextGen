@@ -145,9 +145,6 @@
     <Content Include="CSS\icons\dxiconsios.ttf" />
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
-    <Content Include="auth.config">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
