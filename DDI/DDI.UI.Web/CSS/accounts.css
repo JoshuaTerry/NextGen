@@ -1,11 +1,41 @@
 ﻿body {  }
 
+
 div.accounts { width: 90%; margin: 10px auto 0 auto; }
 div.accounts div.tabscontainer { width: 100%; }
 
-.as-accounts {  }
-.as-accounts div.gridContainer { width: 90%; margin: 0 auto; }
+.as-accounts { margin-top: 10px; width: 90%; margin: 10px auto 0 auto; background-color: white; padding: 20px; }
+.as-accounts h1 { margin-bottom: 10px; }
+.as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
+/* gl summary widths*/
 
+span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
+span.summaryleftinput input,
+span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
+
+span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
+span.summaryrightinput input,
+span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
+
+span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentinput select {width: 20%; display: inline-block; margin: 5px 0 5px 0}
+.segmentcode {display: none;}
+.segmentname {margin-left: 5px;}
+
+div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
+
+.accountsegmentscontainer {display: none;}
+.hidebuttons {display: none;}
+.activeadjust {margin: 0 0 0 -3px;}
+
+.invisible {visibility: hidden;}
+
+.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
+.accountgroup {visibility: hidden;}
+.accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
+
+.fiscalyearselectioncontainr { float: right; }
 
 
 

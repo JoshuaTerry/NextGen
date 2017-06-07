@@ -64,6 +64,24 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
+        [Route("api/v1/ledgers/{unitId}/currentfiscalyear/{currentDate}")]
+        public IHttpActionResult GetCurrentFiscalYear(Guid unitId, DateTime currentDate)
+        {
+            try
+            {
+                // var result = Service.GetWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId && fy.StartDate <= currentDate && fy.EndDate >= currentDate);
+                var result = Service.GetWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId && fy.Id == fy.Ledger.DefaultFiscalYearId);
+
+                return FinalizeResponse(result, null, null);
+            }
+            catch(Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
         [Route("api/v1/fiscalyears/businessunit/{unitId}", Name = RouteNames.FiscalYear + RouteNames.BusinessUnit + RouteVerbs.Get)]
         [Route("api/v1/businessunits/{unitId}/fiscalyears", Name = ROUTENAME_GETALLBYUNIT)]
         public IHttpActionResult GetAllByBusinessUnitId(Guid unitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
