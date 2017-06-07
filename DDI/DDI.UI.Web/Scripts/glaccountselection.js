@@ -72,9 +72,12 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
     });
 
     
-    $(".accountselectionsearch",container).click(function () {
+    $(".accountselectionsearch", container).click(function () {
+
         var grid = $(' .gridContainer .dx-widget', container).length;
+
         if (grid == 0) {
+
             LoadGLAccounts(container, ledgerId, fiscalYearId, function (d) {
                 if (d) {
                     $(container).find(".accountnumber").val(d.AccountNumber);
@@ -82,13 +85,16 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     $(container).find(".hidaccountid").val(d.Id);
                     $(container).find(".accountdescription").text(d.Description);
                     $(container).find(".accountnumber").focus();
-                    $(container).find(".gridContainer").hide();
+                    // $(container).find(".gridContainer").hide();
                 }
             });
+
             $(container).find('.gridContainer').show();
+
         }
-        else{
-            if ( ($(container).find('.gridContainer').css("display") == 'block')){
+        else {
+
+            if (($(container).find('.gridContainer').css("display") == 'block')){
                 $(container).find('.gridContainer').hide();
             }
             else {
@@ -97,6 +103,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 dataGrid.repaint();
                 $(container).find('.gridContainer').show();
             }
+
         }
     });
 
@@ -187,13 +194,16 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
         onSelectionChanged: function (selectedItems) {
             if (onSelect) {
                 var data = selectedItems.selectedRowsData[0];
+                // $(container).find('.gridContainer').hide();
                 onSelect(data);
             }
         },
         onContentReady: function () {
             if (($(container).find(".hidaccountid").val().length > 0) && ($(container).attr("gridOpen") != "true")) {
+
                 var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
                 var keyId = $(container).find(".hidaccountid").val();
+
                 dataGrid.selectRows(keyId);
 
                 var groupedColumns = dataGrid.getVisibleColumns().filter(function(column) {
@@ -203,19 +213,25 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
                 }).map(function(column) {
                     return column.dataField;
                 });
-                dataGrid.byKey(keyId).done(function(row) {
+
+                dataGrid.byKey(keyId).done(function (row) {
+
                     var keys = groupedColumns.map(function(col) {
                         return row[col];
                     });
+
                     var groupToExpand = [];
+
                     keys.forEach(function(key) {
                         groupToExpand.push(key);
                         dataGrid.expandRow(groupToExpand);
                     });
+
                 });
 
                 $(container).attr("gridopen", true)
             }
+
             $(container).find('.gridContainer').show();
         }
     });
