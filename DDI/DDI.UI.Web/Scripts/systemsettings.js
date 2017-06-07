@@ -3013,12 +3013,6 @@ function GroupLevelsChange() {
             break;
     }
 }
-
-
-function LoadEntitiesSectionSettings() {
-
-
-}
 function LoadChartAccountsSettingsSectionSettings() {
 
 
@@ -3052,17 +3046,13 @@ function LoadEntitiesSectionSettings() {
 
               $('<label>').text(entity).appendTo(container);
           }
-      },
-      {
-          caption: '', cellTemplate: function (container, options) {
-
-
-          }
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
+    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
+
+    InitRequiredLabels("entitymodal")
 
 }
 /// End Entities/Business Untis Settings
