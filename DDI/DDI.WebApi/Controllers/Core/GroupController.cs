@@ -113,6 +113,8 @@ namespace DDI.WebApi.Controllers.Core
             return base.Delete(id);
         }
 
+        [HttpPatch]
+        [Route("api/v1/groups/remove/{role}/role")]
         public IHttpActionResult RemoveRolesFromGroup(Guid groupId, [FromBody] Guid role, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try

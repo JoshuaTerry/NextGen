@@ -5,6 +5,8 @@ $(document).ready(function () {
    // SetupNewUserModal();
 
     LoadGroupsGrid();
+    LoadRolesTagBox();
+
 
     NewGroupModal();
     PopulateDropDown('.ConstituentId', 'constituents', '', '');
@@ -78,30 +80,17 @@ function LoadGroupsGrid() {
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
-    MakeServiceCall('GET', 'groups/', null, function (data) {
+    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', '', EditGroup, null, null); 
 
-        //LoadGridWithData(grid, container, columns, route, selected, editMethod, deleteMethod, data, oncomplete);
-        LoadGridWithData('groupgrid', '.groupstable', columns, null, null, EditGroup, DeleteGroup, data, null);
-        //maybe define a currentGroup variable and set the id when edit is clicked?
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+}
 
 
-        });
-
-    //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
-    //CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', ''
-    //    , EditGroup, null, null); 
-
-
-
-    //function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) 
+function LoadRolesTagBox() {
 
     DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
 
 }
+
 
 function NewGroupModal() {
 
@@ -136,13 +125,32 @@ function NewGroupModal() {
 
                 $('.rolesgriditems').show();
 
-                // on save, setup roles stuff
-
                 $('.addrolesbutton').unbind('click');
 
                 $('.addrolesbutton').click(function (e) {
 
+                    $('.rolesmodal').show();
 
+                    $('.saverolesbutton').click(function (e) {
+
+                        AddRolesToGroup(data.Data.Id);
+
+                        $('.rolesmodal').hide();
+
+                        LoadGroup(data.Data.Id);
+
+                    });
+
+                    $('.cancelrolesmodal').click(function (e) {
+
+                        e.preventDefault();
+
+                        $('.rolesmodal').hide();
+
+                        $('.rolestagbox').dxTagBox('instance').reset();
+
+
+                    });
                 });
 
                 LoadGroupsGrid();
@@ -169,8 +177,6 @@ function NewGroupModal() {
 
 function EditGroup(id) {
     
-    // CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
-
     LoadGroup(id);
 
     modal = $('.groupmodal').dialog({
@@ -203,9 +209,10 @@ function EditGroup(id) {
 
             $('.rolesgriditems').show();
 
-            //$('.groupmodal').hide();
-
             LoadGroupsGrid();
+
+            $('.groupmodal').hide();
+
         });
 
     });
@@ -218,7 +225,7 @@ function EditGroup(id) {
 
         $('.saverolesbutton').click(function (e) {
 
-            //AddRolesToGroup(id);
+            AddRolesToGroup(id);
 
             $('.rolesmodal').hide();
 
@@ -304,12 +311,20 @@ function LoadGroup(id) {
 
     });
 
-    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null); // will need delete method, but no edit method (probably)
+    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null); 
 
 }
 
-function DeleteRole() {
-    // need route to remove role from group
+function DeleteRole(id, role) {
+
+    MakeServiceCall('PATCH', '/groups/remove/' + role + '/role', null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
+
+        LoadGroup(id);
+
+
+    });
 
 }
 
