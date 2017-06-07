@@ -109,24 +109,41 @@ function NewGroupModal() {
 
         e.preventDefault();
 
+
         modal = $('.groupmodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 400,
-            resizable: false
+            resizable: false,
+            beforeClose: function (e) {
+
+                $('.rolesmodal, .rolesgriditems').hide();
+
+            }
         });
 
         $('.savegroupbutton').unbind('click');
 
         $('.savegroupbutton').click(function (e) {
 
-            var data = {
+            var item = {
                 Name: $('.gp-Name').val()
             };
 
-            MakeServiceCall('POST', 'roles', data, function (data) {
+            MakeServiceCall('POST', 'groups', JSON.stringify(item), function (data) {
 
-                $('.groupmodal').hide();
+                LoadGroup(data.Data.Id);
+
+                $('.rolesgriditems').show();
+
+                // on save, setup roles stuff
+
+                $('.addrolesbutton').unbind('click');
+
+                $('.addrolesbutton').click(function (e) {
+
+
+                });
 
                 LoadGroupsGrid();
             });
@@ -139,6 +156,8 @@ function NewGroupModal() {
             e.preventDefault();
 
             CloseModal(modal);
+
+            $('.rolesmodal, .rolesgriditems').hide();
 
             $('.rolestagbox').dxTagBox('instance').reset();
 
@@ -158,10 +177,38 @@ function EditGroup(id) {
         closeOnEscape: false,
         modal: true,
         width: 400,
-        resizable: false
+        resizable: false,
+        beforeClose: function (e) {
+
+            $('.rolesmodal, .rolesgriditems').hide();
+
+        }
     });
 
+    $('.rolesgriditems').show();
+
     $('.groupmodal').show();
+
+    $('.savegroupbutton').unbind('click');
+
+    $('.savegroupbutton').click(function (e) {
+
+        var data = {
+            Name: $('.gp-Name').val()
+        };
+
+        MakeServiceCall('POST', 'roles', data, function (data) {
+
+            LoadGroup(data.Data.Id);
+
+            $('.rolesgriditems').show();
+
+            //$('.groupmodal').hide();
+
+            LoadGroupsGrid();
+        });
+
+    });
 
     $('.addrolesbutton').unbind('click');
 
@@ -181,9 +228,12 @@ function EditGroup(id) {
 
             e.preventDefault();
 
+            $('.rolesmodal').hide();
+
+
             $('.rolestagbox').dxTagBox('instance').reset();
 
-            $('.rolesmodal').hide();
+            
 
         });
 
@@ -194,6 +244,8 @@ function EditGroup(id) {
         e.preventDefault();
 
         CloseModal(modal);
+
+        $('.rolesmodal, .rolesgriditems').hide();
 
     });
 

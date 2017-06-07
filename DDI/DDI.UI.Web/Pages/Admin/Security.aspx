@@ -31,31 +31,35 @@
 
                     <div class="fieldblock">
                         <label>Name:</label>
-                        <input type="text" class="gp-Name" />
+                        <input type="text" class="gp-Name required" />
                     </div>
 
-                      <div class="rolesmodal" style="display: none;">
+                    <div class="rolesmodal" style="display: none;">
 
                         <div class="fieldblock">
                             <label>Roles:</label>
                             <div class="gp-rolesdropdowncontainer"></div>
                         </div>
                     
-                        <div class="modalbuttons">
+                        <div class="modalbuttons roleaddbuttons">
                             <input type="button" class="saverolesbutton" value="Add" />
                             <a href="#" class="cancelrolesmodal">Cancel</a>
                         </div>
 
                     </div>
 
-                    <div class="rolesgridcontainer"></div>
+                    <div class="rolesgriditems" style="display: none;">
 
-                    <input type="button" class="addrolesbutton" value="Add Roles" />
+                        <div class="rolesgridcontainer"></div>
+
+                        <input type="button" class="addrolesbutton" value="Add Roles" />
+                    </div>
 
                     <div class="modalbuttons">
                         <input type="button" class="savegroupbutton" value="Save" />
                         <a href="#" class="cancelgroupmodal">Cancel</a>
                     </div>
+
                 </div>
 
             </div>
