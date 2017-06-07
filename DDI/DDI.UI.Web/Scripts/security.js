@@ -99,8 +99,36 @@ function LoadUsersGrid() {
 
     PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
     PopulateDropDown($('.user-Groups'), 'groups', null);
-    
+
+    //LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
+    //          '.prefixmodal', '.prefixmodal', 250, true, false, false, null);
+    //LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users', null, 'user-',
+      //  '.usermodal', '.usermodal', 250, true, true, true, null); // DELETE after following path to new modal link stuff
     CustomLoadGrid('usergrid', 'usersgridcontainer', columns, 'users?fields=all', null, EditUser, null);
+    //NewModalLink('.usersgridcontainer', 'users', 'user-', '.usermodal', 250, '');
+    //NewModalLink('.usergrid', 'users', 'user-', '.usermodal', 250, '');
+    //NewModalLink('.tab-users', 'users', 'user-', '.usermodal', 250, '');
+    //NewModalLink('.usersgridcontainer', 'users', 'user-', '.usermodal', 250, '');
+    //NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
+
+
+    var modalLinkClass = 'user-newmodallink';
+
+    $('.' + modalLinkClass).remove();
+
+    var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .addClass(modalLinkClass)
+            .text('New Item')
+            .click(function (e) {
+                e.preventDefault();
+
+                NewEntityModal('users', 'user-', '.usermodal', 250, '');
+
+            });
+    $('.usersgridcontainer').prepend($(link));
+    
 
 }
 function DisplayUserBusinessUnits(businessUnits) {
