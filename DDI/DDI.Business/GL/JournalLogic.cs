@@ -1,43 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.Helpers;
-using DDI.Data;
-using DDI.Data.Helpers;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Shared;
-using DDI.Shared.Caching;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
-using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Models.Client.Security;
-using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
     public class JournalLogic : EntityLogicBase<Journal>
-    {        
-
-        #region Constructors 
-
-        public JournalLogic() : this(new UnitOfWorkEF()) { }
-
+    {
         public JournalLogic(IUnitOfWork uow) : base(uow)
         {
-           
         }
-
-        #endregion
-
 
         public override void Validate(Journal journal)
         {
@@ -108,7 +91,7 @@ namespace DDI.Business.GL
                 var approvals = UnitOfWork.Where<EntityApproval>(p => p.EntityType == journalTypeName && p.ParentEntityId == entity.Id);
                 if (approvals.Count() > 0)
                 {
-                    if (approvals.All(p => p.AppprovedById != null))
+                    if (approvals.All(p => p.ApprovedById != null))
                     {
                         statusTerms.Add(EntityStatus.Approved);
                     }

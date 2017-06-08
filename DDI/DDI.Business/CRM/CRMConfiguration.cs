@@ -1,11 +1,11 @@
-﻿using DDI.Business.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DDI.Business.Core;
 using DDI.Shared;
 using DDI.Shared.Enums;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 
 namespace DDI.Business.CRM
 {

@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.CP;
-using DDI.Data;
+using DDI.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DDI.Business.Tests.CP 
+namespace DDI.Business.Tests.CP
 {
     [TestClass]
     public class PaymentMethodTest : TestBase
     {
 
         private const string TESTDESCR = "Business | CP";
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
         private PaymentMethodLogic _bl;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
 
             _bl = new PaymentMethodLogic(_uow);
 

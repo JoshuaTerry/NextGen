@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Shared.Helpers;
@@ -14,9 +10,9 @@ namespace DDI.Business.Tests.Common.DataSources
 {
     public static class ZipPlus4DataSource
     {
-        public static IList<ZipPlus4> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<ZipPlus4> GetDataSource(IUnitOfWork uow)
         {
-            IList<ZipPlus4> existing = uow.GetRepositoryOrNull<ZipPlus4>()?.Entities.ToList();
+            IList<ZipPlus4> existing = uow.GetRepositoryDataSource<ZipPlus4>();
             if (existing != null)
             {
                 return existing;

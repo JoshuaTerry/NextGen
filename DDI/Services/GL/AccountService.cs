@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
-using DDI.Data;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
@@ -17,16 +16,10 @@ namespace DDI.Services.GL
     {
         private AccountLogic _accountLogic = null;
 
-        public AccountService()
-            : this(new UnitOfWorkEF())
+        public AccountService(IUnitOfWork uow, AccountLogic accountLogic) : base(uow)
         {
+            _accountLogic = accountLogic;
         }
-
-        public AccountService(IUnitOfWork uow) : base(uow)
-        {
-            _accountLogic = uow.GetBusinessLogic<AccountLogic>();
-        }
-
 
         public IDataResponse<AccountActivitySummary> GetAccountActivity(Guid accountId)
         {
@@ -60,6 +53,10 @@ namespace DDI.Services.GL
                 {
                     entry.Id = GuidHelper.NewSequentialGuid();
                 }
+            }
+            if (account.AccountSegments != null)
+            {
+                account.AccountSegments = account.AccountSegments.OrderBy(p => p.Level).ToList();
             }
         }
 

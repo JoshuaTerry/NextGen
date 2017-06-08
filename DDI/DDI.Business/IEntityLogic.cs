@@ -1,8 +1,9 @@
-﻿using DDI.Shared.Models;
+﻿using DDI.Shared;
+using DDI.Shared.Models;
 
 namespace DDI.Business
 {
-    public interface IEntityLogic
+    public interface IEntityLogic : IBusinessLogic
     {
         /// <summary>
         /// Validate an entity.

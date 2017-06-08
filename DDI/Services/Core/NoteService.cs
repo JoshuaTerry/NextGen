@@ -1,18 +1,17 @@
-﻿using DDI.Business.Helpers;
-using DDI.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DDI.Business.Helpers;
+using DDI.Search;
+using DDI.Search.Models;
+using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WebGrease.Css.Extensions;
-using DDI.Services.Search;
-using DDI.Search;
-using DDI.Search.Models;
-using DDI.Shared.Models;
 
 namespace DDI.Services
 {
@@ -22,20 +21,13 @@ namespace DDI.Services
 
         private IRepository<Note> _repository;
 
-        private IUnitOfWork _unitOfWork;
-
         #endregion Private Fields
 
         #region Public Constructors
 
-        public NoteService()
+        public NoteService(IUnitOfWork uow, IRepository<Note> repository) : base(uow)
         {
-            Initialize(new UnitOfWorkEF());
-        }
-
-        public NoteService(IUnitOfWork uow)
-        {
-            Initialize(uow);
+            _repository = repository;
         }
 
         #endregion Public Constructors
@@ -144,9 +136,9 @@ namespace DDI.Services
             return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
         }
 
-        public IDataResponse<Note> AddTopicsToNote(Note note, JObject topicIds)
+        public IDataResponse<Note> AddTopicsToNote(Guid noteId, JObject topicIds)
         {
-            var noteToUpdate = UnitOfWork.GetById<Note>(note.Id, nt => nt.NoteTopics);
+            var noteToUpdate = UnitOfWork.GetById<Note>(noteId, nt => nt.NoteTopics);
             IDataResponse<Note> response = null;
             List<NoteTopic> passtedNoteTopics = new List<NoteTopic>();
             List<NoteTopic> noteTopics = new List<NoteTopic>();
@@ -174,27 +166,29 @@ namespace DDI.Services
 
             response = new DataResponse<Note>()
             {
-                Data = UnitOfWork.GetById<Note>(note.Id),
+                Data = noteToUpdate,
                 IsSuccessful = true
             };
             return response;
         }
 
-        public IDataResponse RemoveTopicFromNote(Note note, Guid topicId)
+        public IDataResponse RemoveTopicFromNote(Guid noteId, Guid topicId)
         {
+            var noteToUpdate = UnitOfWork.GetById<Note>(noteId, nt => nt.NoteTopics);
+
             IDataResponse response = null;
-            var topicToRemove = note.NoteTopics.Where(nt => nt.Id == topicId).FirstOrDefault();
+            var topicToRemove = noteToUpdate.NoteTopics.Where(nt => nt.Id == topicId).FirstOrDefault();
 
             if (topicToRemove != null)
             {
-                note.NoteTopics.Remove(topicToRemove);
+                noteToUpdate.NoteTopics.Remove(topicToRemove);
             }
 
             UnitOfWork.SaveChanges();
 
             response = new DataResponse<Note>
             {
-                Data = UnitOfWork.GetById<Note>(note.Id),
+                Data = noteToUpdate,
                 IsSuccessful = true
             };
 
@@ -222,12 +216,6 @@ namespace DDI.Services
         #endregion Public Methods
 
         #region Private Methods
-
-        private void Initialize(IUnitOfWork uow)
-        {
-            _unitOfWork = uow;
-            _repository = _unitOfWork.GetRepository<Note>();
-        }
 
         private void SetEntityType(Note note)
         {

@@ -1,16 +1,18 @@
-﻿using DDI.Shared.Helpers;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Http;
+using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq.Expressions;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class RelationshipTypesController : GenericController<RelationshipType>
     {
+        public RelationshipTypesController(IService<RelationshipType> service) : base(service) { }
+
         private string _allFields = null;
 
         [HttpGet]

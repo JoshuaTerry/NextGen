@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DDI.Business.Helpers;
-using DDI.Data;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Enums.GL;
@@ -27,15 +25,9 @@ namespace DDI.Business.GL
 
         #endregion
 
-        #region Constructors
-
-        public AccountLogic() : this(new UnitOfWorkEF()) { }
-
-        public AccountLogic(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {            
+        public AccountLogic(IUnitOfWork uow) : base(uow)
+        {
         }
-
-        #endregion
 
         #region Public Methods
 
@@ -59,6 +51,17 @@ namespace DDI.Business.GL
             if (entity.BeginningBalance != 0m && (entity.Category == AccountCategory.Revenue || entity.Category == AccountCategory.Expense))
             {
                 throw new ValidationException(UserMessagesGL.GLAcctBeginBalRandE);
+            }
+
+            // Try to find the account in the fiscal year.
+            Account result = new Account();
+            result = UnitOfWork.FirstOrDefault<Account>(p => p.AccountNumber == entity.AccountNumber && p.FiscalYearId == entity.FiscalYearId);
+            if (result != null)
+            {
+                if (result.Id != entity.Id)
+                {
+                    throw new ValidationException(UserMessagesGL.GLAcctDuplicate, entity.AccountNumber);
+                }
             }
 
             //Logic to check for changing the account number or name (description).
@@ -892,6 +895,7 @@ namespace DDI.Business.GL
             // Generate all other calculated columns
             decimal balance = 0m;
             decimal priorBalance = 0m;
+            decimal activityTotal = 0;
 
             foreach (var row in detail.OrderBy(p => p.PeriodNumber))
             {
@@ -909,10 +913,11 @@ namespace DDI.Business.GL
 
                 balance = row.EndingBalance;
                 priorBalance = row.PriorEndingBalance;
+                activityTotal += row.Activity;
             }
 
-            var activityTotal = summary.Detail.Sum(p => p.Activity);
-            var finalEndingBalance = summary.Detail.OrderBy(p => p.PeriodNumber).Last().EndingBalance;
+            summary.ActivityTotal = activityTotal;
+            summary.FinalEndingBalance = balance;
 
             return summary;
         }

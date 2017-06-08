@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
+﻿using System.Collections.Generic;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
@@ -13,9 +8,9 @@ namespace DDI.Business.Tests.CRM.DataSources
     public static class PrefixDataSource
     {
 
-        public static IList<Prefix> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Prefix> GetDataSource(IUnitOfWork uow)
         {
-            IList<Prefix> existing = uow.GetRepositoryOrNull<Prefix>()?.Entities.ToList();
+            IList<Prefix> existing = uow.GetRepositoryDataSource<Prefix>();
             if (existing != null)
             {
                 return existing;

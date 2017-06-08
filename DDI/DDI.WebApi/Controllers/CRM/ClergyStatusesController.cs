@@ -1,14 +1,17 @@
-﻿using DDI.Shared.Models.Client.CRM;
+﻿using System;
+using System.Web.Http;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class ClergyStatusesController : GenericController<ClergyStatus>
     {
+        public ClergyStatusesController(IService<ClergyStatus> service) : base(service) { }
+
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]

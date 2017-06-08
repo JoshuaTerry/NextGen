@@ -1,17 +1,18 @@
-﻿using DDI.Services;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
-using System;
-using System.Web.Http;
-using DDI.Shared.Helpers;
-using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
     [Authorize]
     public class CountiesController : GenericController<County>
     {
+        public CountiesController(IService<County> service) : base(service) { }
+
         protected override string FieldsForList => $"{nameof(County.Id)},{nameof(County.DisplayName)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Cities).Include(p => p.State.DisplayName).Include(p => p.State.StateCode);

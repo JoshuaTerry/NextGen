@@ -1,32 +1,28 @@
-﻿using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebGrease.Css.Extensions;
+using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Statics.CRM;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services
 {
     public class DenominationsService : ServiceBase<Denomination>, IDenominationsService
     {
-        private IConstituentService _constituentService;
+        public DenominationsService(IUnitOfWork uow) : base(uow) { }
 
-        public DenominationsService()
-            :this(new ConstituentService())
+        public IDataResponse AddDenominationsToConstituent(Guid constituentId, JObject denominationIds)
         {
 
-        }
+            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituentId, c => c.Denominations);
+            if (constituentToUpdate == null)
+            {
+                return GetErrorResponse(UserMessagesCRM.ConstituentIdInvalid);
+            }
 
-        internal DenominationsService(IConstituentService constituentService)
-        {
-            _constituentService = constituentService;
-        }
-
-        public IDataResponse AddDenominationsToConstituent(Constituent constituent, JObject denominationIds)
-        {
-            var constituentToUpdate = UnitOfWork.GetById<Constituent>(constituent.Id, c => c.Denominations);
             IDataResponse response = null;
             List<Denomination> passedDenominations = new List<Denomination>();
             List<Denomination> constituentDenominations = new List<Denomination>();

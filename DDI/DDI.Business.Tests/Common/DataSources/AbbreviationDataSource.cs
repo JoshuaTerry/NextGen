@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.Tests.Helpers;
-using DDI.Data;
+﻿using System.Collections.Generic;
 using DDI.Shared;
 using DDI.Shared.Models.Common;
 
@@ -12,9 +6,9 @@ namespace DDI.Business.Tests.Common.DataSources
 {
     public static class AbbreviationDataSource
     {
-        public static IList<Abbreviation> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Abbreviation> GetDataSource(IUnitOfWork uow)
         {
-            IList<Abbreviation> existing = uow.GetRepositoryOrNull<Abbreviation>()?.Entities.ToList();
+            IList<Abbreviation> existing = uow.GetRepositoryDataSource<Abbreviation>();
             if (existing != null)
             {
                 return existing;

@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Common;
-using DDI.Shared.Statics.CRM;
 
 namespace DDI.Business.Tests.Common.DataSources
 {
     public static class ZipBranchDataSource
     {
-        public static IList<ZipBranch> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<ZipBranch> GetDataSource(IUnitOfWork uow)
         {
-            IList<ZipBranch> existing = uow.GetRepositoryOrNull<ZipBranch>()?.Entities.ToList();
+            IList<ZipBranch> existing = uow.GetRepositoryDataSource<ZipBranch>();
             if (existing != null)
             {
                 return existing;

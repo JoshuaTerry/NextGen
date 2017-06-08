@@ -4,9 +4,7 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using DDI.Logger;
-using DDI.Services;
 using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
@@ -17,16 +15,14 @@ namespace DDI.WebApi.Controllers
 {
     public abstract class ControllerBase<T> : ApiController where T : class, IEntity
     {
-        private readonly IPagination _pagination;
         private readonly DynamicTransmogrifier _dynamicTransmogrifier;
         private readonly IService<T> _service;
         private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ControllerBase<T>));
         private PathHelper.FieldListBuilder<T> _fieldListBuilder = null;
 
-        protected IService<T> Service => _service;
+        internal IService<T> Service => _service;
         protected ILogger Logger => _logger;
         protected DynamicTransmogrifier DynamicTransmogrifier => _dynamicTransmogrifier;
-        protected IPagination Pagination => _pagination;
         protected PathHelper.FieldListBuilder<T> FieldListBuilder => _fieldListBuilder?.Clear() ?? (_fieldListBuilder = new PathHelper.FieldListBuilder<T>());
 
         protected virtual string FieldsForList => string.Empty;
@@ -35,21 +31,10 @@ namespace DDI.WebApi.Controllers
 
         #region Constructors 
 
-        public ControllerBase()
-            :this(new ServiceBase<T>())
-        {
-        }
-
         public ControllerBase(IService<T> serviceBase)
-            : this(serviceBase, new DynamicTransmogrifier(), new Pagination())
         {
-        }
-
-        internal ControllerBase(IService<T> serviceBase, DynamicTransmogrifier dynamicTransmogrifier, IPagination pagination)
-        {
-            _pagination = pagination;
-            _dynamicTransmogrifier = dynamicTransmogrifier;
-            _service = serviceBase; 
+            _dynamicTransmogrifier = new DynamicTransmogrifier();
+            _service = serviceBase;
             _service.IncludesForSingle = GetDataIncludesForSingle();
             _service.IncludesForList = GetDataIncludesForList();
         }
@@ -85,7 +70,7 @@ namespace DDI.WebApi.Controllers
             {
                 fields = FieldsForAll;
             }
-
+            
             return fields;
         }
 
@@ -93,8 +78,7 @@ namespace DDI.WebApi.Controllers
 
         protected UrlHelper GetUrlHelper()
         {
-            var urlHelper = new UrlHelper(Request);
-            return urlHelper;
+            return new UrlHelper(Request);
         }
           
         protected IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)
@@ -134,7 +118,6 @@ namespace DDI.WebApi.Controllers
 
                 var totalCount = response.TotalResults;
 
-                _pagination.AddPaginationHeaderToResponse(urlHelper, search, totalCount, routeName);
                 var dynamicResponse = _dynamicTransmogrifier.ToDynamicResponse(response, fields);
                 if (!dynamicResponse.IsSuccessful)
                 {
@@ -188,8 +171,9 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    throw new Exception("Model Invalid");
                 }
+
 
                 var response = _service.Add(entity);
 

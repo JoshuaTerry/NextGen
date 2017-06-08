@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.GL;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
@@ -26,9 +24,9 @@ namespace DDI.Business.Tests.GL.DataSources
         private static SegmentLevel[] _segmentLevels;
         private static AccountGroup _accountGroup1, _accountGroup2, _accountGroup3;
 
-        public static IList<Account> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<Account> GetDataSource(IUnitOfWork uow)
         {
-            IList<Account> existing = uow.GetRepositoryOrNull<Account>()?.Entities.ToList();
+            IList<Account> existing = uow.GetRepositoryDataSource<Account>();
             if (existing != null)
             {
                 return existing;

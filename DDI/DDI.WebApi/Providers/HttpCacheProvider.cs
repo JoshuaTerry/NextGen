@@ -22,7 +22,7 @@ namespace DDI.WebApi.Providers
 
         public void RemoveEntry(string key)
         {
-            CurrentCache[key] = null;
+            CurrentCache.Remove(key);
         }
 
         public T GetEntry<T>(string key, int timeoutSeconds, bool isSlidingTimeout, Func<T> entryProvider, Action<T> callback) where T : class

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
@@ -16,7 +15,7 @@ namespace DDI.WebApi.Controllers.GL
         private const string ROUTENAME_GETALL = RouteNames.FiscalYear + RouteNames.Segment + RouteVerbs.Get;
         private const string ROUTENAME_GETALLFORPARENT = RouteNames.FiscalYear + RouteNames.Segment + RouteNames.SegmentChildren + RouteVerbs.Get;
 
-        protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)}";
+        protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)},{nameof(Segment.DisplayName)}";
 
         protected override string FieldsForAll => FieldListBuilder
             .Exclude(p => p.AccountSegments)
@@ -36,8 +35,8 @@ namespace DDI.WebApi.Controllers.GL
 
         protected new ISegmentService Service => (ISegmentService)base.Service;
 
-        public SegmentController()
-            : base(new SegmentService())
+        public SegmentController(ISegmentService service)
+            : base(service)
         {
         }
 

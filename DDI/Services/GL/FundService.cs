@@ -1,16 +1,9 @@
-﻿using DDI.Shared.Models.Client.GL;
-using DDI.Services.ServiceInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using DDI.Business.GL;
 using DDI.Shared;
 using DDI.Shared.Models;
+using DDI.Shared.Models.Client.GL;
 using Newtonsoft.Json.Linq;
-using System.Linq.Expressions;
-using DDI.Business.GL;
-using DDI.Data;
 
 namespace DDI.Services.GL
 {
@@ -19,11 +12,9 @@ namespace DDI.Services.GL
         protected override Action<Fund> FormatEntityForGet => AddLedgerAccountIds;
         private AccountLogic _accountLogic;
 
-        public FundService() : this(new UnitOfWorkEF())  { }
-
-        public FundService(IUnitOfWork uow) : base(uow)          
+        public FundService(IUnitOfWork uow, AccountLogic accountLogic) : base(uow)
         {
-            _accountLogic = uow.GetBusinessLogic<AccountLogic>();
+            _accountLogic = accountLogic;
         }
 
         private void AddLedgerAccountIds (Fund entity)

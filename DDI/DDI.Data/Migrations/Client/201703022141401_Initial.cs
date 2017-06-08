@@ -1,5 +1,6 @@
 namespace DDI.Data.Migrations.Client
 {
+    using System;
     using System.Data.Entity.Migrations;
 
     public partial class Initial : DbMigration
@@ -828,6 +829,35 @@ namespace DDI.Data.Migrations.Client
                 .ForeignKey("dbo.CustomField", t => t.CustomFieldId, cascadeDelete: true)
                 .Index(t => t.CustomFieldId);
 
+            string UniqueFileGroupName = "FileGroup_" + DateTime.Now.Ticks.ToString();
+
+            Sql(@"
+                    IF NOT EXISTS (SELECT * FROM sys.filegroups where name = '" + UniqueFileGroupName + @"') BEGIN
+                        ALTER DATABASE CURRENT
+                            ADD FILEGROUP [" + UniqueFileGroupName + @"] contains filestream
+                    END
+                ", true);
+             
+            Sql(@"
+                IF EXISTS (SELECT * FROM sys.filegroups where name = '" + UniqueFileGroupName + @"') AND NOT EXISTS (SELECT * FROM sys.master_files where name = DB_NAME() + '_" + UniqueFileGroupName + @"') BEGIN
+                    DECLARE @DatabasePath nvarchar(max)
+                    DECLARE @SQL nvarchar(max)
+                    
+                    select @DatabasePath = 'F:\Foo.ndf'
+                    
+                    SET @SQL = N'ALTER DATABASE CURRENT
+                                    ADD FILE (
+                                        NAME = [' + DB_NAME() + '" + UniqueFileGroupName + @"],
+                                        FILENAME =  N''' + @DatabasePath + ''', 
+                                        MAXSIZE = UNLIMITED
+                                        )
+                                    TO FILEGROUP [" + UniqueFileGroupName + @"]'
+                    EXECUTE sp_executesql @SQL
+                END
+            ", true);
+
+
+            
             Sql(@"
                     CREATE TABLE [dbo].[FileStorage](
 	                    [Id] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
@@ -842,26 +872,10 @@ namespace DDI.Data.Migrations.Client
                      CONSTRAINT [PK_FileStorage] PRIMARY KEY CLUSTERED 
                     (
 	                    [Id] ASC
-                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] FILESTREAM_ON [Demo_Filestream]
-                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY] FILESTREAM_ON [Demo_Filestream]
+                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] FILESTREAM_ON [Demo1_Filestream]
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY] FILESTREAM_ON [" + UniqueFileGroupName + @"]
                     ");
-
-            //CreateTable(
-            //    "dbo.FileStorage",
-            //    c => new
-            //        {
-            //            Id = c.Guid(nullable: false),
-            //            Name = c.String(),
-            //            Extension = c.String(maxLength: 256),
-            //            Size = c.Long(nullable: false),
-            //            Data = c.Binary(),
-            //            CreatedBy = c.Guid(),
-            //            CreatedOn = c.DateTime(defaultValueSql: "GETUTCDATE()"),
-            //            LastModifiedBy = c.Guid(),
-            //            LastModifiedOn = c.DateTime(),
-            //        })
-            //    .PrimaryKey(t => t.Id);
-            
+             
             CreateTable(
                 "dbo.LogEntry",
                 c => new

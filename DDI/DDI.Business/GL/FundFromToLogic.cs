@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DDI.Data;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 
@@ -13,9 +9,7 @@ namespace DDI.Business.GL
         private LedgerLogic _ledgerLogic = null;
         private FundLogic _fundLogic = null;
 
-        #region Constructors 
-
-        public FundFromToLogic() : this(new UnitOfWorkEF()) { }
+        #region Constructors        
 
         public FundFromToLogic(IUnitOfWork uow) : base(uow)
         {

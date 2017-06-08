@@ -125,6 +125,47 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
 }
 
+function PopulateDropDownData(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
+
+    ClearElement(element);
+
+    AddDefaultOption(element, defaultText, defaultValue);
+
+    MakeServiceCall('GET', route, null, function (data) {
+        if (data.Data) {
+
+            $.map(data.Data, function (item) {
+
+                option = $('<option>').val(item.Id).text(item.DisplayName);
+                $(option).appendTo($(element));
+
+            });
+
+            if (selectedValue) {
+                $(element).val(selectedValue);
+            }
+
+            if (completecallback) {
+
+                completecallback(element, data);
+
+            }
+
+        }
+    }, null);
+
+    if (changecallback) {
+
+        $(element).unbind('change');
+
+        $(element).change(function () {
+            changecallback(element);
+        });
+
+    }
+
+}
+
 /* END POPULATE DROPDOWN CONTROLS */
 
 
@@ -343,7 +384,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function(e) {
                         e.preventDefault();
 
-                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        editMethod(options.data.Id);
                     })
                     .appendTo(container);
             }
@@ -361,7 +402,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        deleteMethod(options.data.Id);
                     })
                     .appendTo(container);
             }

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Business.GL;
-using DDI.Data;
-using DDI.Shared.Enums.GL;
-using DDI.Shared.Helpers;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Business.Tests.GL.DataSources
@@ -21,9 +16,9 @@ namespace DDI.Business.Tests.GL.DataSources
         public const decimal TOTAL_CREDITS = 3000m;
         public const string ACCOUNT_NUMBER = "01-100-10-01";
 
-        public static IList<AccountBalance> GetDataSource(UnitOfWorkNoDb uow)
+        public static IList<AccountBalance> GetDataSource(IUnitOfWork uow)
         {
-            IList<AccountBalance> existing = uow.GetRepositoryOrNull<AccountBalance>()?.Entities.ToList();
+            IList<AccountBalance> existing = uow.GetRepositoryDataSource<AccountBalance>();
             if (existing != null)
             {
                 return existing;

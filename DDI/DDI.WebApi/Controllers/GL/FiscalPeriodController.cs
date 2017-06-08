@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Web.Http;
 using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Services;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using DDI.Services.ServiceInterfaces;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
     public class FiscalPeriodController : GenericController<FiscalPeriod>
     {
-        private ServiceBase<Account> _account = new ServiceBase<Account>();
+        public FiscalPeriodController(IService<FiscalPeriod> service) : base(service) { }
 
         private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
 
@@ -44,11 +46,9 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var account = _account.GetById(accountId);
+                var result = ((IFiscalPeriodService)Service).GetFiscalPeriodsByAccountId(accountId);
 
-                var result = Service.GetAllWhereExpression(fp => fp.FiscalYearId == account.Data.FiscalYearId);
-
-                return FinalizeResponse(result, null, null, null, null);
+                return FinalizeResponse(result, null, PageableSearch.Max, null, null);
             }
             catch (Exception ex)
             {

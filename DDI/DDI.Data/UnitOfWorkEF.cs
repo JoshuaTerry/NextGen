@@ -1,14 +1,15 @@
-using DDI.Data.Helpers;
-using DDI.EFAudit;
-using DDI.Logger;
-using DDI.Shared;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.EFAudit;
+using DDI.Logger;
+using DDI.Shared;
+using DDI.Shared.Data;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.Security;
-using System.Data;
 
 namespace DDI.Data
 {
@@ -427,6 +428,39 @@ namespace DDI.Data
             return logic;
         }
 
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IQueryable<T> dataSource) where T : class
+        {
+            RepositoryNoDb<T> repository = null;
+            var type = typeof(T);
+            if (!_repositories.ContainsKey(type))
+            {
+                repository = new RepositoryNoDb<T>(dataSource);
+                _repositories[type] = repository;
+                repository.AssignForeignKeys();
+            }
+            else
+            {
+                repository = _repositories[type] as RepositoryNoDb<T>;
+            }
+
+            return repository;
+        }
+
+        /// <summary>
+        /// Create a RepositoryNoDb for a data source.
+        /// </summary>
+        public IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class
+        {
+            return CreateRepositoryForDataSource(dataSource.AsQueryable());
+        }
+
+        public IList<T> GetRepositoryDataSource<T>() where T : class
+        {
+            return GetEntities<T>().ToList();
+        }
 
         #endregion Public Methods
 
@@ -466,7 +500,7 @@ namespace DDI.Data
             User user;
             int result = 0;
 
-            if (AuditingEnabled && (user = EntityFrameworkHelpers.GetCurrentUser(this)) != null)
+            if (AuditingEnabled && (user = UserHelper.GetCurrentUser(this)) != null)
             {
                 result = (_clientContext?.Save(user).AffectedObjectCount ?? 0) +
                          (_commonContext?.SaveChanges() ?? 0);

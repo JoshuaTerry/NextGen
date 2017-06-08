@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.Tests.Core.DataSources;
-using DDI.Data;
+using DDI.Shared;
 using DDI.Shared.Enums.Core;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.Core;
@@ -21,12 +18,14 @@ namespace DDI.Business.Tests.Core
         private IList<EntityNumber> _entityNumbers;
         private EntityNumberLogic _bl;
 
-        private UnitOfWorkNoDb _uow;
+        private IUnitOfWork _uow;
 
         [TestInitialize]
         public void Initialize()
         {
-            _uow = new UnitOfWorkNoDb();
+            Factory.ConfigureForTesting();
+
+            _uow = Factory.CreateUnitOfWork();
             _entityNumbers = EntityNumberDataSource.GetDataSource(_uow);
             _bl = _uow.GetBusinessLogic<EntityNumberLogic>();
         }

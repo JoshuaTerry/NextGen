@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DDI.Services
 {
-    public interface ICustomFieldService
+    public interface ICustomFieldService : IService<CustomField>
     {
         IDataResponse<List<CustomField>> GetByEntityId(int entityId, Guid constituentId);
     }
