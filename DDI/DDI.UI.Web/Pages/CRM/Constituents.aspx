@@ -63,6 +63,7 @@
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
                 <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
+                <li><a href="#tab-attachments">Attachments</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li style="display: none;"><a href="#tab-donor">Donor</a></li>
                 <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
@@ -506,38 +507,16 @@
 
              <!-- Notes Tab -->
             <div id="tab-notes" class="scrollable">
-
-                <div class="tabscontainer inner">
-
-                    <ul> 
-                        <li><a href="#tab-notedetail">Note Detail</a></li>
-                        <li><a href="#tab-attachments">Attachments</a></li>
-                    </ul>
-
-                    <div id="tab-notedetail">
-
-                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
-                        <div class="notedetailsgridcontainer"></div>
-                        
-                    </div>
-
-                    <div id="tab-attachments">
-
-                        <table class="datagrid attachmentstable">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>File Name</th>
-                                    <th>Private</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
-                    </div>
-                    
+                <h1>Notes  <a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
+                <div id="tab-notedetail">
+                    <div class="notedetailsgridcontainer"></div>
                 </div>
+            </div>
 
+            <!--Attachments Tab -->
+            <div id="tab-attachments" class="scrollable">
+                <h1>Attachments</h1>
+                <div class="gridattachments"></div>
             </div>
             
             <!-- Relationships Tab -->
