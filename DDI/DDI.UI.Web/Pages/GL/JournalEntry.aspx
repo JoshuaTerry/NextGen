@@ -2,13 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script type="text/javascript" src="..\..\Scripts\JournalEntry.js"></script>
+    <link rel="stylesheet" href="../../../CSS/journals.css" />
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="journaltypeselect" style="display: none">
         <div class="threecolumn">
-            <img src="../../Images/Calendar_16.png" alt="General Journal" class="generaljournaloption" />
+            <img src="../../Images/Calendar_16.png" alt="One-Time Journal" class="onetimejournaloption" />
             <img src="../../Images/Calendar1_16.png" alt="Recurring Journal" class="recurringjournaloption" />
             <img src="../../Images/Calendar5_16.png" alt="Journal Template" class="journaltemplateoption" />
         </div>

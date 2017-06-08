@@ -93,10 +93,10 @@ function JournalDetailLoad() {
 }
 
 function InitJournalImages() {
-    $('.generaljournaloption').click(function (e) {
+    $('.onetimejournaloption').click(function (e) {
         e.preventDefault()
         $('.reverseondategroup').show()
-        ProcessJournal('General Journal')
+        ProcessJournal('One-Time Journal')
     })
     $('.recurringjournaloption').click(function (e) {
         e.preventDefault()
@@ -134,7 +134,11 @@ function LoadJournalData() {
                 $('.ReverseOnDate').val(data.Data.ReverseOnDate)
                 $('.CreatedBy').html(data.Data.CreatedBy)
                 $('.CreatedOn').html(data.Data.CreatedOn)
+                $('.LastChangedBy').html(data.Data.LastChangedBy)
+                $('.LastChangedOn').html(data.Data.LastChangedOn)
+                InitJournalLine();
                 JournalDisplayMode();
+                LoadJournalLineGrid(data)
             }
         }
 
@@ -145,13 +149,13 @@ function LoadJournalData() {
 function GetJournalType(data) {
     switch (data.Data.JournalType) {
         case 0:
-            return 'General Journal'
+            return 'One-Time Journal #' + data.Data.JournalNumber
             break
         case 1:
-            return 'Recurring Journal'
+            return 'Recurring Journal' + data.Data.JournalNumber
             break
         case 2:
-            return 'Journal Template'
+            return 'Journal Template' + data.Data.JournalNumber
             break
     }
 }
@@ -276,6 +280,183 @@ function ClearJournalFields() {
 
 
 //group modal section
+
+//linked accounts section
+
+function InitJournalLine() {
+
+    LoadJournalLineGrid();
+    NewJournalLineModal();
+}
+
+function LoadJournalLineGrid(data) {
+    var columns = [
+        {
+            dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0, caption: ''
+        },
+        { dataField: 'LedgerAccount.AccountNumber', caption: 'FL Account', alignment: 'left' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'Name', caption: 'Debit' },
+        { dataField: 'Name', caption: 'Credit' },
+        { dataField: 'Name', caption: '%' },
+        { dataField: 'Name', caption: 'Due' },
+        { dataField: 'Name', caption: 'Fund' },
+        { dataField: 'Name', caption: 'Entity' },
+    ];
+
+    LoadGridWithData('journalgrid', '.journalgridcontainer', columns, '', '', EditJournalLineModal, '', data.Data.JournalLines, 'JournalLoadComplete')
+
+}
+
+function NewJournalLineModal() {
+
+
+    $('.newJournalLinemodallink').click(function (e) {
+
+        e.preventDefault();
+
+        modal = $('.JournalLinemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 500,
+            resizable: false
+        });
+
+        $('.cancelmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+        });
+
+        $('.saveJournalLine').unbind('click');
+
+        $('.saveJournalLine').click(function () {
+
+            var item = GetJournalLineToSave();
+
+            MakeServiceCall('POST', 'JournalLine', item, function (data) {
+
+                DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
+
+                CloseModal(modal);
+
+                LoadJournalLineGrid();
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+
+            });
+
+        });
+
+    });
+}
+
+function EditJournalLine(id) {
+
+    var modal = $('.JournalLinemodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    LoadJournalLine(id);
+
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.saveJournalLine').unbind('click');
+
+    $('.saveJournalLine').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetJournalLineToSave();
+
+        MakeServiceCall('PATCH', 'JournalLine/' + id, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
+
+            CloseModal(modal);
+
+            LoadJournalLineGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+        });
+
+    });
+}
+
+function LoadJournalLine(id) {
+
+    MakeServiceCall('GET', 'JournalLine/' + id, null, function (data) {
+
+        $('.LinkedAccountType').val(data.Data.LinkedAccountType),
+            $('.LinkedAccountInd').val((data.Data.LinkedAccountNumber > 0) ? 1 : 0),
+            $('.LinkedAccountNumber').val(data.Data.LinkedAccountNumber),
+            $('.CollateralTypePercent').prop("checked", (data.Data.CollateralType === 0) ? true : false),
+            $('.CollateralTypeAmount').prop("checked", (data.Data.CollateralType === 1) ? true : false),
+            $('.CollateralType').val(data.Data.CollateralType),
+            $('.Collateral').val(data.Data.Collateral),
+            $('.BlockOtherLoanLinks').val(data.Data.BlockOtherLoanLinks)
+
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Linked Account.');
+    });
+
+}
+
+function GetJournalLineToSave() {
+
+    var rawitem = {
+
+        LinkedAccountType: $(modal).find('.LinkedAccountType').val(),
+        //LinkedAccountInd: ($.isNumeric($(modal).find('.LinkedAccountNumber').val()) ? 1 : 0),    // when the item is available
+        LinkedAccountNumber: $(modal).find('.LinkedAccountNumber').val(),
+        CollateralType: ($('.CollateralTypePercent').prop("checked" === true) ? 0 : 1),
+        Collateral: $(modal).find('.Collateral').val(),
+        BlockOtherLoanLinks: $(modal).find('.BlockOtherLoanLinks').val()
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
+}
+
+function GetLinkedType(type) {
+    var typeDesc;
+    switch (type) {
+        case 0:
+            typeDesc = "Loan Support";
+            break;
+        case 1:
+            typeDesc = "Pool";
+            break;
+        case 2:
+            typeDesc = "Down Payment";
+            break;
+        case 3:
+            typeDesc = "Grant";
+            break;
+    }
+    return typeDesc;
+}
+//end linked accounts section
 
 function NewJournalLineModal() {
 

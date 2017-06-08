@@ -2,8 +2,6 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="head" runat="server">
 
-    <link rel="stylesheet" href="..\..\CSS\globalstyles.css" />
-
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">

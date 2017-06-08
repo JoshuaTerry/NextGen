@@ -10,65 +10,69 @@
 
     </script>
 
+    <%--<link rel="stylesheet" href="../../../CSS/journals.css" />--%>
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <div class="journalbody">
+    <div class="journalbody maincontainer">
 
         <h1 class="journaltype"></h1>
 
         <br />
 
         <div class="editcontainer">
-            <div class="threecolumn">
-                <div class="journalnumbergroup">
-                    <label class="journallabel">Journal #: </label>
-                    <label class="JournalNumber"></label>
-                </div>
-                <div class="journalstatusgroup">
+            <div>
+                <div class="fieldblock">
                     <label class="journalstatus">Status: </label>
                     <label class="JournalStatus"></label>
                 </div>
-                <div class="editjournalbutton hidebuttons floatright">
+                <div class="editjournalbutton hidebuttons floatright journalcolumn">
                     <a href="#" class="editaccount editbutton">Edit</a>
                 </div>
             </div>
 
-            <div class="threecolumn">
-                <div class="fieldblock">
+            <div class="inlinecontainer">
+                <span class="journalcolumn fieldblock">
                     <label>Transaction Date:</label>
-                </div>
-                <div class="fieldblock">
-                    <label>Journal Memo:</label>
-                </div>
-                <div class="fieldblock">
-                    <label>Journal Information:</label>
-                </div>
-            </div>
-
-            <div class="threecolumn">
-                <div class="fieldblock">
-                    <input type="text" class="editable TransactionDate date datepicker" />
-                </div>
-                <div class="fieldblock">
-                    <textarea rows="2" cols="60" maxlength="255" class="Comment"></textarea>
-                </div>
-                <div class="fieldblock">
-                </div>
-            </div>
-
-            <div class="threecolumn">
-                <span class="fieldblock reverseondategroup">
-                    <label>Reverse on this Date:</label>
-                    <input type="text" class="editable ReverseOnDate date datepicker" />
                 </span>
-                <span class="fieldblock"></span>
-                <span class="fieldblock">
+                <span class="journalcolumn fieldblock">
+                    <label>Journal Memo:</label>
+                </span>
+                <span class="journalcolumn fieldblock">
+                    <label>Journal Information:</label>
+                </span>
+            </div>
+
+            <div class="inlinecontainer">
+                <span class="journalcolumn fieldblock">
+                    <input type="text" class="editable TransactionDate date datepicker" />
+                </span>
+                <span class="journalcolumn fieldblock">
+                    <textarea rows="2" cols="60" maxlength="255" class="Comment"></textarea>
+                </span>
+                <span class="journalcolumn fieldblock">
                     <label>Created by: </label>
                     <label class="CreatedBy"></label>
                     <label>on: </label>
                     <label class="CreatedOn date"></label>
+                </span>
+                </div>
+
+            <div class="inlinecontainer">
+                <span class="journalcolumn fieldblock reverseondategroup">
+                    <label>Reverse on this Date:</label>
+                    <input type="text" class="editable ReverseOnDate date datepicker" />
+                </span>
+                <span class="journalcolumn fieldblock">
+
+                </span>
+                <span class="journalcolumn fieldblock">
+                    <label>Last changed by: </label>
+                    <label class="LastModifiedBy"></label>
+                    <label>on: </label>
+                    <label class="LastModifiedOn date"></label>
                 </span>
             </div>
 
