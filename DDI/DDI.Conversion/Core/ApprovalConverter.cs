@@ -66,7 +66,7 @@ namespace DDI.Conversion.Core
                         approval.EntityType = entityType;
                         approval.ParentEntityId = id;
                         approval.ApprovedOn = importer.GetDateTime(2);
-                        approval.AppprovedById = GetUserByName(users, importer.GetString(3))?.Id;
+                        approval.ApprovedById = GetUserByName(users, importer.GetString(3))?.Id;
                         approval.AssignPrimaryKey();
 
                         outputFile.AddRow(approval);

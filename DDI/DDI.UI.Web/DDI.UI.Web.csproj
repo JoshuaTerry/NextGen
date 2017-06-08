@@ -95,12 +95,14 @@
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
     <Content Include="CSS\fileupload\jquery.fileupload.css" />
     <Content Include="CSS\fileupload\uploader.css" />
+    <Content Include="CSS\importwizard.css" />
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
     <Content Include="CSS\search.css" />
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
     <Content Include="Pages\GL\AccountSummary.aspx" />
@@ -148,6 +150,7 @@
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\importwizard.js" />
     <Content Include="Scripts\dx.aspnet.data.js" />
     <Content Include="Scripts\InvestmentDetails.js" />
     <Content Include="Scripts\PaymentPreferencesModal.js" />
@@ -339,6 +342,13 @@
     <Compile Include="Code\ApiRoleProvider.cs" />
     <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Code\CustomSiteMapProvider.cs" />
+    <Compile Include="Pages\Common\Notes.aspx.cs">
+      <DependentUpon>Notes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\Notes.aspx.designer.cs">
+      <DependentUpon>Notes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -662,7 +672,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Pages\Common\" />
     <Folder Include="Pages\CP\" />
     <Folder Include="Pages\DDI\" />
     <Folder Include="Pages\MM\" />

@@ -12,10 +12,16 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-        public Guid CustomFieldId { get; set; }
+
+        [MaxLength(16)]
         public string Code { get; set; }
+
+        [MaxLength(256)]
         public string Description { get; set; }
+
         public int SortOrder { get; set; }
+
+        public Guid CustomFieldId { get; set; }
         [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 

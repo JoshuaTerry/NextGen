@@ -91,7 +91,7 @@ namespace DDI.Business.GL
                 var approvals = UnitOfWork.Where<EntityApproval>(p => p.EntityType == journalTypeName && p.ParentEntityId == entity.Id);
                 if (approvals.Count() > 0)
                 {
-                    if (approvals.All(p => p.AppprovedById != null))
+                    if (approvals.All(p => p.ApprovedById != null))
                     {
                         statusTerms.Add(EntityStatus.Approved);
                     }
