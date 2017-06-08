@@ -1402,7 +1402,197 @@ function DisplayMessage(heading, text, icon, sticky) {
 
 
 
-// END MESSAGING
+/* Note Alerts Modal */
+function GetNoteAlerts(showalertsflag) {
+
+    if (showalertsflag) {
+
+        MakeServiceCall('GET', 'entity/' + currentEntity.Id + '/notes/alert', null, function (data) {
+
+            if (data.Data.length > 0) {
+
+                SetupNoteAlertModal();
+
+                LoadNoteAlertGrid(data.Data);
+
+                $('.notealertmodal').show();
+
+            }
+
+        },
+
+            function (xhr, status, err) {
+
+            });
+    }
+}
+
+function LoadNoteAlertGrid(data) {
+
+    var columns = [
+        { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
+        { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
+        { dataField: 'Title', caption: 'Title' }
+    ];
+
+    LoadGridWithData('notealertgrid', '.notealertgridcontainer', columns, null, null, EditNoteDetails, null, data, null);
+}
+
+function EditNoteDetails(id) {
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.editnoteinfo').show();
+
+    LoadNoteDetails(id);
+
+    $('.noteTopicSelectImage').unbind('click');
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        SetupNoteTopicsMultiselectModal();
+
+        $(modal).find('.tagdropdowncontainer').show();
+
+        $('.savenotetopics').unbind('click');
+
+        $('.savenotetopics').click(function (e) {
+
+            var newsavednotetopics = GetCheckedNoteTopics();
+
+            $.map(newsavednotetopics, function (topicid) {
+
+                MakeServiceCall('GET', 'notetopics/' + topicid, null, function (data) {
+
+                    var topic = data.Data;
+
+                    StyleAndSetupIndividualTags(topic, function () {
+
+                        var removeid = '#' + data.Data.Id;
+
+                        $('.noteTopicSelect > div').remove(removeid);
+
+                        MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
+
+                            function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                            });
+
+                    }, function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                    });
+
+                });
+
+            });
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+            newsavednotetopics = null;
+
+        });
+
+        $('.cancelnotetopics').click(function (e) {
+
+            e.preventDefault();
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+        });
+
+
+    });
+
+    $('.cancelnotesmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetNoteDetailsToSave(modal);
+
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
+
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
+
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+
+            });
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+            CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
+            ClearNoteTopicTagBox(modal);
+
+            LoadNoteDetailsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+        });
+
+    });
+}
+
+function SetupNoteAlertModal() {
+
+    var modal = $('.notealertmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelnotealertmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+}
+/* End Note Alerts Modal */
+
+
 
 // BUSINESS UNIT
 //

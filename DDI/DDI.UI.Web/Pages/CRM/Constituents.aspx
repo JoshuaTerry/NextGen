@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
@@ -1172,17 +1173,4 @@
 
     </div>
 
-    <div class="notealertmodal" title="Note Alerts" style="display: none;">
-
-        <div class="modalcontent">
-
-            <div class="notealertgridcontainer"></div>
-
-            <div class="modalbuttons">
-                <a href="#" class="cancelnotealertmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
 </asp:Content>

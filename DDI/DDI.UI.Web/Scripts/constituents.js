@@ -2,6 +2,8 @@
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
 
+var shownotealert = true;
+
 $(document).ready(function () {
 
     $('#form1').validate();
@@ -274,7 +276,9 @@ function DisplayConstituentData() {
 
 		ShowAuditData(currentEntity.Id);
 
-		FormatFields();
+        FormatFields();
+
+        GetNoteAlerts(shownotealert);
 
     }
 }
