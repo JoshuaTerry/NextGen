@@ -340,12 +340,17 @@ function EditUser(id) {
 
     $('.submituser').click(function () {
 
+        // Make the call to add the group to the user here
+        // if the call is successful then proceed with saving the rest of user data
+        // otherwise, display an error
+        // GroupId: $(modal).find('.user-GroupId').val(),
+
+
         var item = {
             FullName: $(modal).find('.user-FullName').val(),
             UserName: $(modal).find('.user-UserName').val(),
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-            //GroupId: $(modal).find('.user-GroupId').val(),
             IsActive: true
         }
 
