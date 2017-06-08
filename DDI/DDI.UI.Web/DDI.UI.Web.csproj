@@ -102,6 +102,7 @@
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\GLAccountSelection.aspx" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
@@ -146,6 +147,56 @@
     <Content Include="CSS\icons\dxiconsios.ttf" />
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
+    <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\accounts.js" />
+    <Content Include="Scripts\dx.all.js" />
+    <Content Include="Pages\GL\Accounting.aspx" />
+    <Content Include="Pages\GL\AccountDetails.aspx" />
+    <Content Include="Pages\GL\AccountSummary.aspx" />
+    <Content Include="Pages\GL\AccountTransactions.aspx" />
+    <Content Include="Pages\GL\ActivityAndBudget.aspx" />
+    <Content Include="Pages\INV\InvestmentDetails.aspx" />
+    <Content Include="Pages\Reports\AccountingReports.aspx" />
+    <Content Include="Pages\GL\Accounts.aspx" />
+    <Content Include="Pages\GL\AccountsPayable.aspx" />
+    <Content Include="Pages\GL\AccountsReceivable.aspx" />
+    <Content Include="Pages\Admin\Admin.aspx" />
+    <Content Include="Pages\Reports\ArchivedReports.aspx" />
+    <Content Include="Pages\FR\BatchDeposits.aspx" />
+    <Content Include="Pages\Reports\ChartOfAccountListing.aspx" />
+    <Content Include="Connect.aspx" />
+    <Content Include="Pages\Reports\ConstituentReport.aspx" />
+    <Content Include="Pages\Reports\CRMReports.aspx" />
+    <Content Include="CSS\jquery.toast.min.css" />
+    <Content Include="CSS\jquery.validators.css" />
+    <Content Include="Dashboard.aspx" />
+    <Content Include="Pages\FR\Disbursements.aspx" />
+    <Content Include="Pages\Reports\DonationActivityGLAccount.aspx" />
+    <Content Include="Pages\FR\DonationInquiry.aspx" />
+    <Content Include="Pages\Reports\DonationReports.aspx" />
+    <Content Include="Pages\FR\Donations.aspx" />
+    <Content Include="Pages\FR\FinancialTransactions.aspx" />
+    <Content Include="Pages\GL\FixedAssets.aspx" />
+    <Content Include="Pages\GL\GeneralLedger.aspx" />
+    <Content Include="Pages\JP\JobProcessing.aspx" />
+    <Content Include="Pages\JP\JobQueues.aspx" />
+    <Content Include="Pages\JP\Jobs.aspx" />
+    <Content Include="Pages\GL\Journals.aspx" />
+    <Content Include="Pages\Reports\LetterAndStatementReport.aspx" />
+    <Content Include="Login.aspx" />
+    <Content Include="packages.config" />
+    <Content Include="Main.Master" />
+    <Content Include="CSS\icons\dxicons.eot" />
+    <Content Include="CSS\icons\dxicons.ttf" />
+    <Content Include="CSS\icons\dxicons.woff" />
+    <Content Include="CSS\icons\dxiconsios.eot" />
+    <Content Include="CSS\icons\dxiconsios.ttf" />
+    <Content Include="CSS\icons\dxiconsios.woff" />
+    <Content Include="Blank.Master" />
+    <Content Include="auth.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
@@ -348,6 +399,13 @@
     </Compile>
     <Compile Include="Pages\Common\Notes.aspx.designer.cs">
       <DependentUpon>Notes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Common\GLAccountSelection.aspx.cs">
+      <DependentUpon>GLAccountSelection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\GLAccountSelection.aspx.designer.cs">
+      <DependentUpon>GLAccountSelection.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\GL\Accounting.aspx.cs">
       <DependentUpon>Accounting.aspx</DependentUpon>
