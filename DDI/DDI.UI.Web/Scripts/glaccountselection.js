@@ -200,27 +200,16 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
                 }
 
                 onSelect(item.data);
-
             }
 
         },
-        //onSelectionChanged: function (selectedItems) {
-        //    if (onSelect) {
-        //        var data = selectedItems.selectedRowsData[0];
-
-        //        if ($(container).find('.gridContainer').css('display') == 'block') {
-        //            $(container).find('.gridContainer').hide();
-        //        }
-
-        //        onSelect(data);
-        //    }
-        //},
         onContentReady: function () {
             if (($(container).find(".hidaccountid").val().length > 0) && ($(container).attr("gridOpen") != "true")) {
 
                 var dataGrid = $(container).find('.gridContainer').dxDataGrid('instance');
                 var keyId = $(container).find(".hidaccountid").val();
-                
+
+                dataGrid.collapseAll();
                 dataGrid.selectRows(keyId);
 
                 var groupedColumns = dataGrid.getVisibleColumns().filter(function(column) {
