@@ -53,7 +53,7 @@
 
              <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
             </ul>
 
 
