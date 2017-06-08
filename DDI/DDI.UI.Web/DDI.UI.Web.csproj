@@ -95,6 +95,7 @@
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
     <Content Include="CSS\fileupload\jquery.fileupload.css" />
     <Content Include="CSS\fileupload\uploader.css" />
+    <Content Include="CSS\Journals.css" />
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
     <Content Include="CSS\search.css" />
@@ -144,13 +145,12 @@
     <Content Include="CSS\icons\dxiconsios.ttf" />
     <Content Include="CSS\icons\dxiconsios.woff" />
     <Content Include="Blank.Master" />
-    <Content Include="auth.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="auth.config" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\gljournals.js" />
     <Content Include="Scripts\InvestmentDetails.js" />
     <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\accounttransaction.js" />

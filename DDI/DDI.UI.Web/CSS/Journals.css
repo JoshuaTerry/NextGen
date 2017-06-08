@@ -1,0 +1,71 @@
+﻿
+
+.systemsettings { vertical-align: top; }
+.systemsettings div.contentcontainer { padding-top: 10px; margin-left: 1%; width: 85%; display: inline-block; vertical-align: top; background-color: white; padding: 0px 10px; min-height: 500px; }
+.systemsettings div.ui-accordion-content { padding: 0px; }
+.systemsettings div.left-accordions { width: 12%; display: inline-block; }
+.systemsettings div.left-accordions ul { list-style: none; margin: 0px; padding: 0px; }
+.systemsettings div.left-accordions ul li {  }
+.systemsettings div.left-accordions ul li a { display: block; text-decoration: none; padding: 3px 8px; }
+.systemsettings div.left-accordions ul li a:hover { text-decoration: none; background-color: #999999; color: white; }
+.systemsettings div.left-accordions ul li a.selected { background-color: #999999; color: white; font-weight: bold; }
+
+.systemsettings div.fieldblock label { display: inline-block; margin-right: 1%; }
+.systemsettings div.fieldblock input.sectionLabel { width: 50%; }
+
+.systemsettings div.controlContainer { width: 10%; text-align: right; display: inline-block; }
+.systemsettings div.controlContainer a { margin-left: 10px; }
+
+.systemsettingsheader { display: inline-block; width: 86%; margin-bottom: 10px; }
+
+.gridcontainer { vertical-align: top; }
+
+div.options div.threecolumn > div { width: auto; }
+
+div.options { margin-left: 0px; }
+div.options fieldset { width: 96%; }
+
+div.fieldblock input { height: auto; }
+div.fieldblock input.cfoptioncode { width: 25px; }
+div.fieldblock input.cfoptiondesc { width: 140px; }
+div.fieldblock input.cfoptionorder { width: 25px; }
+
+a.customfieldmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
+a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
+
+div.taggroupsgrid { height: 50vh }
+div.tagscontainer { height: 50vh }
+
+
+/* REGION SETTINGS */
+.regionlevelcontainer { display: inline-block; width: 15%; vertical-align: top; }
+.regionlevellist { list-style: none; }
+.regionlevellist li { font-weight: bold; display: block; padding: 8px 15px; text-align: right; }
+.regionlevellist li:hover { background-color: #333333; color: white; cursor: pointer; }
+.regionlevellist li.selected { background-color: white; color: black; }
+.regionlevellist li.selected:hover { color: black; }
+
+.regioncontainer { display: inline-block; width: 70%; background-color: white; vertical-align: top; min-height: 250px; }
+
+.editregionlevellink { background: url('../../Images/Edit_11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
+.deleteregionlevellink { background: url('../../Images/trashcan-11.png') no-repeat; width: 11px; height: 11px; display: inline-block; margin-right: 5px; }
+/* END REGION SETTINGS */
+.tagselect { width: 85% !important; }
+.tagSelectorContainer ul li input { width: auto; }
+.consttype-tagselect { position: absolute; z-index: 950; background-color: white; border: solid 1px #333333; width: 85%; }
+.tagselectgridcontainer { height: 175px; }
+.tagSelectImage { margin-left: 350px; }
+
+.dx-data-row:hover { background-color: #cccccc; cursor: pointer; }
+
+.searchcriteria { width: 15%; display: inline-block; margin: 10px 0 0 1%; vertical-align: top; }
+.searchcriteria div.fieldblock input,
+.searchcriteria div.fieldblock select { width: 100%; }
+.searchcriteria div.buttons { margin-top: 10px; }
+
+.searchcriteria fieldset { background-color: white; }
+
+.searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
+.searchresults div.scrollable { width: 100%; }
+
+
