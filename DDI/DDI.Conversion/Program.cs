@@ -43,7 +43,7 @@ namespace DDI.Conversion
             Factory.RegisterRepositoryFactory<RepositoryFactoryEF>();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            GuidHelper.GenerateSequentialGuids = true;            
+            GuidHelper.GenerateSequentialGuids = true;
 
             // These can be uncommented to run individual conversions.
 
@@ -73,8 +73,8 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Notes));
 
-            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.FileStorage));
-            Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Attachments));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.FileStorage));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Attachments));
 
 
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
@@ -102,6 +102,9 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalApprovals));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
+
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.FileStorage));
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.Attachments));
 
             //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
             //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));

@@ -83,6 +83,8 @@ namespace DDI.Conversion.Statics
         public static string GL_JournalEntityNumbers => "EntityNumber_Journal.csv";
         public static string GL_JournalApprovals => "Approval_Journal.csv";
         public static string GL_MemoJournals => "Memo_Journal.csv";
+        public static string GL_FileStorage => "FileStorage_Journal.csv";
+        public static string GL_Attachment => "Attachment_Journal.csv";
 
         #endregion
 
