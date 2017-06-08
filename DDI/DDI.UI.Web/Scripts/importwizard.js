@@ -62,6 +62,8 @@ $(document).ready(function () {
 
 function DisplayImportWizardModal() {
 
+    SetupCustomStep();
+
     modal = $('.importwizardmodal').dialog({
         closeOnEscape: false,
         modal: true,
@@ -77,6 +79,25 @@ function DisplayImportWizardModal() {
         }
 
     });
+
+}
+
+function SetupCustomStep() {
+
+    var content = $('.customstep').find('.customstepcontent').html();
+
+    if (content.length > 0) {
+        // Custom Content Loaded
+        $('.customstep').show();
+
+        $('.step1').find('.modalbuttons').find('.prevstep').show();
+    }
+    else {
+        // Nothing Loaded
+        $('.customstep').hide();
+
+        $('.step1').find('.modalbuttons').find('.prevstep').hide();
+    }
 
 }
 

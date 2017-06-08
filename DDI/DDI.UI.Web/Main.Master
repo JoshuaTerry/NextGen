@@ -377,7 +377,25 @@
 
                 <div class="importsteps">
                     <div class="stepsinner">
+                        
+                        <!-- Custom Step -->
+                        <div class="step customstep">
 
+                            <div class="customstepcontent">
+                                <div class="fieldblock">
+                                    <label>Fiscal Year</label>
+                                    <select class="importfiscalyear"></select>
+                                </div>
+                            </div>
+
+                            <div class="modalbuttons">
+                                <input type="button" value="Next" class="nextstep" />
+                                <a href="#" class="cancelmodal">Cancel</a>
+                            </div>
+
+                        </div>
+
+                        <!-- File Upload -->
                         <div class="step step1">
 
                             <h2>Select Source File</h2>
@@ -409,12 +427,14 @@
                             </div>
 
                             <div class="modalbuttons">
+                                <input type="button" value="Back" class="prevstep" />
                                 <input type="button" value="Next" class="nextstep" />
                                 <a href="#" class="cancelmodal">Cancel</a>
                             </div>
 
                         </div>
 
+                        <!-- Field Mappings -->
                         <div class="step step2">
                             
                             <h2>Field Mappings</h2>
@@ -440,6 +460,7 @@
                         
                         </div>
 
+                        <!-- Import Preview -->
                         <div class="step step3">
                             
                             <h2>Preview Import</h2>
@@ -454,24 +475,15 @@
 
                         </div>
 
-                        <div class="step step4">
-                            <h2>Step 4</h2>
-
-                            <div class="modalbuttons">
-                                <input type="button" value="Back" class="prevstep" />
-                                <input type="button" value="Next" class="nextstep" />
-                                <a href="#" class="cancelmodal">Cancel</a>
-                            </div>
-                        </div>
-
+                        <!-- Complete Import -->
                         <div class="step step5">
-                            <h2>Step 5</h2>
-
+                            
                             <div class="modalbuttons">
                                 <input type="button" value="Back" class="prevstep" />
                                 <input type="button" value="Save" class="finishimport" />
                                 <a href="#" class="cancelmodal">Cancel</a>
                             </div>
+
                         </div>
 
                     </div>
