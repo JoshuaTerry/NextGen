@@ -17,6 +17,8 @@ $(document).ready(function () {
 
     $('.tabscontainer').tabs();
 
+    LoadDatePickers()
+
     LoadNoteDetailsGrid();
 
     NewNoteDetailsModal();
