@@ -1,6 +1,7 @@
 ﻿
 var SAVE_ROUTE = 'constituents/';
 var currentaddress = null;
+
 var shownotealert = true;
 
 $(document).ready(function () {
@@ -235,10 +236,6 @@ function DisplayConstituentData() {
 
         DisplayConstituentType();
 
-        GetNoteAlerts(shownotealert);
-
-        shownotealert = false;
-
         GenerateContactInfoSection();
 
         LoadDenominationsTagBox();
@@ -279,7 +276,9 @@ function DisplayConstituentData() {
 
 		ShowAuditData(currentEntity.Id);
 
-		FormatFields();
+        FormatFields();
+
+        GetNoteAlerts(shownotealert);
 
     }
 }

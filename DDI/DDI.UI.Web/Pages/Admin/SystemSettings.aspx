@@ -1291,12 +1291,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="en-Code" />
+                <input type="text" class="en-Code required" maxlength ="8" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="en-Name" />
+                <input type="text" class="en-Name required" maxlength ="128" />
             </div>
 
             <div class="fieldblock">
