@@ -1,11 +1,12 @@
 ﻿
 $(document).ready(function () {
 
-    SetupNewUserModal();
+    //SetupNewUserModal();
 
     LoadGroupsGrid();
     PopulateDropDown('.ConstituentId', 'constituents', '', '');
-     LoadUsersGrid();
+    LoadUsersGrid();
+    NewUserModal();
 
 });
 
@@ -112,25 +113,109 @@ function LoadUsersGrid() {
     //NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
 
 
-    var modalLinkClass = 'user-newmodallink';
+    //var modalLinkClass = 'user-newmodallink';
 
-    $('.' + modalLinkClass).remove();
+    //$('.' + modalLinkClass).remove();
 
-    var link = $('<a>')
-            .attr('href', '#')
-            .addClass('newmodallink')
-            .addClass(modalLinkClass)
-            .text('New Item')
-            .click(function (e) {
-                e.preventDefault();
+    //var link = $('<a>')
+    //        .attr('href', '#')
+    //        .addClass('newmodallink')
+    //        .addClass(modalLinkClass)
+    //        .text('New Item')
+    //        .click(function (e) {
+    //            e.preventDefault();
 
-                NewEntityModal('users', 'user-', '.usermodal', 250, '');
+    //            NewEntityModal('users', 'user-', '.usermodal', 250, '');
 
-            });
-    $('.usersgridcontainer').prepend($(link));
+    //        });
+    //$('.usersgridcontainer').prepend($(link));
     
 
 }
+
+function NewUserModal() {
+
+    $('.newusermodal').click(function (e) {
+
+        e.preventDefault();
+
+
+        modal = $('.usermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            resizable: false,
+            beforeClose: function (e) {
+
+                //$('.rolesmodal, .rolesgriditems').hide();
+
+            }
+        });
+
+        $('.submituser').unbind('click');
+
+        $('.submituser').click(function (e) {
+
+            ////var item = {
+            //    Name: $('.gp-Name').val()
+            //};
+
+            //MakeServiceCall('POST', 'groups', JSON.stringify(item), function (data) {
+
+            //    LoadGroup(data.Data.Id);
+
+            //    $('.rolesgriditems').show();
+
+            //    $('.addrolesbutton').unbind('click');
+
+            //    $('.addrolesbutton').click(function (e) {
+
+            //        $('.rolesmodal').show();
+
+            //        $('.saverolesbutton').click(function (e) {
+
+            //            AddRolesToGroup(data.Data.Id);
+
+            //            $('.rolesmodal').hide();
+
+            //            LoadGroup(data.Data.Id);
+
+            //        });
+
+            //        $('.cancelrolesmodal').click(function (e) {
+
+            //            e.preventDefault();
+
+            //            $('.rolesmodal').hide();
+
+            //            $('.rolestagbox').dxTagBox('instance').reset();
+
+
+            //        });
+            //    });
+
+            //    LoadGroupsGrid();
+            //});
+
+        });
+
+
+        $('.cancelgroupmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+            //$('.rolesmodal, .rolesgriditems').hide();
+
+            //$('.rolestagbox').dxTagBox('instance').reset();
+
+        });
+
+    });
+
+}
+
 function DisplayUserBusinessUnits(businessUnits) {
 
     $(modal).find('.tagselect').empty();
@@ -207,7 +292,7 @@ function LoadUserBusinessUnitSelector(id, container) {
                     }
                 });
 
-                MakeServiceCall('POST', 'users/' + constTypeId + '/businessunits', JSON.stringify({ businessUnits: buIds }), function (data) {
+                MakeServiceCall('POST', 'users/' + userId + '/businessunits', JSON.stringify({ businessUnits: buIds }), function (data) {
 
                     if (data.Data) {
                         DisplaySuccessMessage('Success', 'BusinessUnits saved successfully.');
@@ -238,7 +323,8 @@ function EditUser(id) {
         resizable: false
     });
 
-    $('.user-tagselect').show();
+
+    $('.editonly').show();
 
     $('.cancelusermodal').click(function (e) {
 

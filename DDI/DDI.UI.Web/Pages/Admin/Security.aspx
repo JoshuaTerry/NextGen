@@ -79,6 +79,7 @@
 
             <!-- Users Tab -->
             <div id="tab-users">
+                <div class="newlinkcontainer"><a href="#" class="newusermodal newlink">New User</a></div>
                 <div class="usersgridcontainer">
                     <div class="usergrid"></div>
                 </div>
@@ -114,14 +115,16 @@
                 <select class="user-DefaultBusinessUnitId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label>Business Units</label>
-                <div class="tagselect user-BusinessUnits"></div>
-            </div>
+            <div class="editonly" style="display: none;">
+                <div class="fieldblock">
+                    <label>Business Units</label>
+                    <div class="tagselect user-BusinessUnits"></div>
+                </div>
 
-            <div class="fieldblock">
-                <label>Group</label>
-                <select class="user-Groups"></select>
+                <div class="fieldblock">
+                    <label>Group</label>
+                    <select class="user-Groups"></select>
+                </div>
             </div>
 
             <div class="fieldblock">
