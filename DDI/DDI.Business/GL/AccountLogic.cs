@@ -53,6 +53,17 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.GLAcctBeginBalRandE);
             }
 
+            // Try to find the account in the fiscal year.
+            Account result = new Account();
+            result = UnitOfWork.FirstOrDefault<Account>(p => p.AccountNumber == entity.AccountNumber && p.FiscalYearId == entity.FiscalYearId);
+            if (result != null)
+            {
+                if (result.Id != entity.Id)
+                {
+                    throw new ValidationException(UserMessagesGL.GLAcctDuplicate, entity.AccountNumber);
+                }
+            }
+
             //Logic to check for changing the account number or name (description).
             var repository = UnitOfWork.GetRepository<Account>();
             if (repository.GetEntityState(entity) == EntityState.Modified)
@@ -884,6 +895,7 @@ namespace DDI.Business.GL
             // Generate all other calculated columns
             decimal balance = 0m;
             decimal priorBalance = 0m;
+            decimal activityTotal = 0;
 
             foreach (var row in detail.OrderBy(p => p.PeriodNumber))
             {
@@ -901,10 +913,11 @@ namespace DDI.Business.GL
 
                 balance = row.EndingBalance;
                 priorBalance = row.PriorEndingBalance;
+                activityTotal += row.Activity;
             }
 
-            var activityTotal = summary.Detail.Sum(p => p.Activity);
-            var finalEndingBalance = summary.Detail.OrderBy(p => p.PeriodNumber).Last().EndingBalance;
+            summary.ActivityTotal = activityTotal;
+            summary.FinalEndingBalance = balance;
 
             return summary;
         }

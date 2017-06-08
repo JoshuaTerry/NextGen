@@ -1,0 +1,26 @@
+﻿
+
+.importsteps { vertical-align: top; overflow: hidden; position: relative; }
+.importsteps .stepsinner {
+    width: 3100px;
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+}
+
+.importsteps .step { width: 615px; height: 415px; display: inline-block; vertical-align: top; margin: 0px; padding: 0px; position: relative; }
+
+.importsteps .step .modalbuttons { position: absolute; bottom: 0px; right: 0px; }
+
+.importsteps .step1 {  }
+.importsteps .step1 .fileuploadcontainer { height: auto; margin-bottom: 10px; }
+.importsteps .step2 {  }
+.importsteps .step3 {  }
+.importsteps .step4 {  }
+.importsteps .step5 {  }
+
+.importmappinggridcontainer { padding: 0 0 0 1%; }
+.mappingselection { margin-bottom: 10px; }
+.mappingcolumns { display: inline-block; width: 48%; margin-right: 1%; min-height: 100px; }
+.importfilecolumns { display: inline-block; width: 48%; min-height: 100px; }
+

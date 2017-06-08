@@ -8,6 +8,7 @@ var previousEntity = null;
 var modal = null;
 var currentUser = null;
 var currentBusinessUnit = null;
+var currentBusinessUnitId = null;
 var toolbox = null;
 var newContactInformationFields = null;
 
@@ -16,6 +17,10 @@ $(document).ready(function () {
     $.support.cors = true;
 
     LoadDefaultAuthToken();
+
+    LoadCurrentUser();
+
+    LoadCurrentBusinessUnit();
 
     LoadDatePickers();
 
@@ -76,9 +81,7 @@ $(document).ready(function () {
     else {
         $('.utilitynav').hide();
     }
-
     
-
     $(document).click(function (e) {
 
         if (toolbox) {
@@ -116,6 +119,37 @@ function LoadDefaultAuthToken() {
 
     }
 
+}
+
+function LoadCurrentUser() {
+
+    var dummyUserId = 'D3BFB26C-4603-E711-80E5-005056B7555A';
+
+    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
+
+        currentUser = data.Data;
+
+        currentBusinessUnit = data.Data.DefaultBusinessUnit;
+        currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
+
+        sessionStorage.setItem('CURRENT_BUSINESS_UNIT', currentBusinessUnitId);
+
+        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
+
+    });
+
+}
+
+function LoadCurrentBusinessUnit() {
+
+    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
+    
+    if (currentBusinessUnitId == null) {
+        
+        LoadCurrentUser();
+
+    }
+    
 }
 
 /* NEW CONSTITUENT */
@@ -1367,57 +1401,219 @@ function DisplayMessage(heading, text, icon, sticky) {
 //
 // END MESSAGING
 
-// FORM VALIDATION
-//
-function InitRequiredLabels(formClassName) {
-    formClassName.replace(".", "");
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var labelElement = $(this).prev();
-        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+
+
+/* Note Alerts Modal */
+function GetNoteAlerts(showalertsflag) {
+
+    if (showalertsflag) {
+
+        MakeServiceCall('GET', 'entity/' + currentEntity.Id + '/notes/alert', null, function (data) {
+
+            if (data.Data.length > 0) {
+
+                SetupNoteAlertModal();
+
+                LoadNoteAlertGrid(data.Data);
+
+                $('.notealertmodal').show();
+
+            }
+
+        },
+
+            function (xhr, status, err) {
+
+            });
+    }
+}
+
+function LoadNoteAlertGrid(data) {
+
+    var columns = [
+        { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
+        { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
+        { dataField: 'Title', caption: 'Title' }
+    ];
+
+    LoadGridWithData('notealertgrid', '.notealertgridcontainer', columns, null, null, EditNoteDetails, null, data, null);
+}
+
+function EditNoteDetails(id) {
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.editnoteinfo').show();
+
+    LoadNoteDetails(id);
+
+    $('.noteTopicSelectImage').unbind('click');
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        SetupNoteTopicsMultiselectModal();
+
+        $(modal).find('.tagdropdowncontainer').show();
+
+        $('.savenotetopics').unbind('click');
+
+        $('.savenotetopics').click(function (e) {
+
+            var newsavednotetopics = GetCheckedNoteTopics();
+
+            $.map(newsavednotetopics, function (topicid) {
+
+                MakeServiceCall('GET', 'notetopics/' + topicid, null, function (data) {
+
+                    var topic = data.Data;
+
+                    StyleAndSetupIndividualTags(topic, function () {
+
+                        var removeid = '#' + data.Data.Id;
+
+                        $('.noteTopicSelect > div').remove(removeid);
+
+                        MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
+
+                            function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                            });
+
+                    }, function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                    });
+
+                });
+
+            });
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+            newsavednotetopics = null;
+
+        });
+
+        $('.cancelnotetopics').click(function (e) {
+
+            e.preventDefault();
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+        });
+
+
+    });
+
+    $('.cancelnotesmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetNoteDetailsToSave(modal);
+
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
+
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
+
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+
+            });
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+            CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
+            ClearNoteTopicTagBox(modal);
+
+            LoadNoteDetailsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+        });
+
     });
 }
 
-function ValidateForm(formClassName) {
-    var validform = true;
-    formClassName.replace(".", "");
-    // required items
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
-        $("#" + errorId).remove();
-        if ($(this).val() === "") {
-            $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
-            validform = false;
-        }
+function SetupNoteAlertModal() {
+
+    var modal = $('.notealertmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
     });
-    return validform;
-}
 
-function RemoveValidation(formClassName) {
-    formClassName.replace(".", "");
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
-        $("#" + errorId).remove();
+    $('.cancelnotealertmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
     });
+
 }
-//
-// END FORM VALIDATION
+/* End Note Alerts Modal */
 
 
-
-// END MESSAGING
 
 // BUSINESS UNIT
 //
 
+function GetCurrentBusinessUnit() {
+
+    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
+
+    if (currentBusinessUnitId == null) {
+
+        BusinessUnitModal();
+
+    }
+}
+
 function BusinessUnitModal() {
-
-    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
-    // Uncomment this to use currentBusinessUnit
-    // Add the guid of the user you want to use
-
+    
     $('.editbusinessunit').click(function (e) {
 
-        LoadBusinessUnitDropDown(currentBusinessUnit);
+        LoadBusinessUnitDropDown(currentBusinessUnitId);
 
         e.preventDefault();
 
@@ -1434,7 +1630,7 @@ function BusinessUnitModal() {
 
              $.each(currentUser.BusinessUnits, function(index, value) {
                 
-                if(value.Id === $('.bu-currentbu').val()) {
+                if (value.Id === $('.bu-currentbu').val()) {
 
                     currentBusinessUnit = value;
                 }
@@ -1457,38 +1653,12 @@ function BusinessUnitModal() {
 
     });
 
-}
+} 
 
-function LoadBusinessUnitDropDown(currentBusinessUnit) {
+function LoadBusinessUnitDropDown(currentBusinessUnitId) {
 
-    if (currentBusinessUnit != null) {
-
-        PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit.Id);
-
-        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
-
-    } else {
-        
-        $('.editbusinessunit').text('BU');
-
-    }
-
-   
-
-}
-
-function DummyUser(dummyUserId) {
-    //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
-
-    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
-        
-        currentUser = data.Data;
-
-        currentBusinessUnit = data.Data.DefaultBusinessUnit;
-
-        LoadBusinessUnitDropDown(currentBusinessUnit);
-
-    });
+    PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnitId);
+    
 }
 
 //
@@ -1500,9 +1670,11 @@ function InitRequiredLabels(formClassName) {
     formClassName.replace(".", "");
     $('.' + formClassName).find('.required').each(function (index, el) {
         var labelElement = $(this).prev();
-        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        if (labelElement[0].innerHTML.indexOf("*") === -1){
+            labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        }
     });
-}
+    }
 
 function ValidateForm(formClassName) {
     var validform = true;
@@ -1564,7 +1736,10 @@ function MaskFields() {
     $('.date').mask('00/00/0000');
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
-    $('.money').mask("#,##0.00", { reverse: true });
+    $('.money').mask("#0.00", { reverse: true });
+    $('.money').each(function () {
+        $(this).val($(this).val().replace('$', '').replace(',', ''));
+    })
     $('.moneynegative').maskMoney({ prefix: '$', allowNegative: true, thousands: ',', decimal: '.', affixesStay: false });
     $('.phone').mask('(000) 000-0000');
     $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {

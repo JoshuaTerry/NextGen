@@ -1240,18 +1240,63 @@
         </div>
 
     </div>
+
+     <div class="businessunitduemodal" title="BusinessUnitFromTo" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Due From Account</label>
+                <div class="bus-FromLedgerAccount"></div>
+            </div>
+
+            <div class="fieldblock">
+                <label>Due To Account</label>
+                <div class="bus-ToLedgerAccount"></div>
+            </div>
+
+             <div class="modalbuttons">
+                <input type="button" class="Savebusinessunitduedetails" value="Save" />
+                 <a href="#" class="cancelbusinessunitduedetailsmodal">Cancel</a>
+            </div>
+
+          </div>
+
+    </div>
+
+     <div class="fundduemodal" title="Test" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Due From Account</label>
+               <div class="fn-DueFromAccount" ></div>
+            </div>
+
+            <div class="fieldblock">
+                <label>Due To Account</label>
+                <div class="fn-DueToAccount" ></div>
+            </div>
+             <div class="modalbuttons">
+                <input type="button" class="Savefundduedetails" value="Save" />
+                <a href="#" class="cancelfundduemodal">Cancel</a>
+            </div>
+
+          </div>
+
+    </div>
     <div class="entitymodal" title="Business Units" style="display: none;">
 
         <div class="modalcontent">
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="en-Code" />
+                <input type="text" class="en-Code required" maxlength ="8" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="en-Name" />
+                <input type="text" class="en-Name required" maxlength ="128" />
             </div>
 
             <div class="fieldblock">
