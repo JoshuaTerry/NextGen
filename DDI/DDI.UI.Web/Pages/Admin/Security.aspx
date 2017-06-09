@@ -95,27 +95,29 @@
     <div class="usermodal" title="User Maintenance" style="display: none;">
         <div class="modalcontent">
 
-            <div class="fieldblock">
-                <label>Full Name</label>
-                <input type="text" class="user-FullName" />
+            <div class="user-editonly1" style="display: none;">
+                <div class="fieldblock">
+                    <label>Full Name</label>
+                    <input type="text" class="user-FullName" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>User Name</label>
+                    <input type="text" class="user-UserName" />
+                </div>
             </div>
 
-            <div class="fieldblock">
-                <label>User Name</label>
-                <input type="text" class="user-UserName" />
-            </div>
-        
             <div class="fieldblock">
                 <label>Email</label>
                 <input type="email" name="email" class="user-Email" />
             </div>
 
-            <div class="fieldblock">
-                <label>Default Business Unit</label>
-                <select class="user-DefaultBusinessUnitId"></select>
-            </div>
+            <div class="user-editonly2" style="display: none;">
+                <div class="fieldblock">
+                    <label>Default Business Unit</label>
+                    <select class="user-DefaultBusinessUnitId"></select>
+                </div>
 
-            <div class="editonly" style="display: none;">
                 <div class="fieldblock">
                     <label>Business Units</label>
                     <div class="tagselect user-BusinessUnits"></div>
@@ -125,13 +127,23 @@
                     <label>Group</label>
                     <select class="user-Groups"></select>
                 </div>
+
+                <div class="fieldblock">
+                    <div class="fieldblock">
+                        <input type="hidden" class="user-Constituent1Id" />
+                        <label>Constituent</label>
+                        <input type="text" class="user-Constituent1Information constituentlookup" />
+                    </div>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Active</label>
+                    <input type="checkbox" class="user-IsActive" />
+                </div>
+
             </div>
 
-            <div class="fieldblock">
-                <label>Active</label>
-                <input type="checkbox" class="user-IsActive" />
-            </div>
-
+            
             <div class="modalbuttons">
                 <input type="button" class="submituser" value="Save" />
                 <a href ="#" class="cancelusermodal">Cancel</a>

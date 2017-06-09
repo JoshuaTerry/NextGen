@@ -156,51 +156,36 @@ function NewUserModal() {
 
         $('.submituser').click(function (e) {
 
-            ////var item = {
-            //    Name: $('.gp-Name').val()
-            //};
+            var item = {
+                Email: $(modal).find('.user-Email').val()
+            }
 
-            //MakeServiceCall('POST', 'groups', JSON.stringify(item), function (data) {
+            $.ajax({
+                type: 'POST',
+                url: WEB_API_ADDRESS + 'users',
+                data: item,
+                contentType: 'application/x-www-form-urlencoded',
+                crossDomain: true,
+                headers: GetApiHeaders(),
+                success: function (data) {
 
-            //    LoadGroup(data.Data.Id);
+                    //AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
 
-            //    $('.rolesgriditems').show();
+                    DisplaySuccessMessage('Success', 'User saved successfully.');
 
-            //    $('.addrolesbutton').unbind('click');
-
-            //    $('.addrolesbutton').click(function (e) {
-
-            //        $('.rolesmodal').show();
-
-            //        $('.saverolesbutton').click(function (e) {
-
-            //            AddRolesToGroup(data.Data.Id);
-
-            //            $('.rolesmodal').hide();
-
-            //            LoadGroup(data.Data.Id);
-
-            //        });
-
-            //        $('.cancelrolesmodal').click(function (e) {
-
-            //            e.preventDefault();
-
-            //            $('.rolesmodal').hide();
-
-            //            $('.rolestagbox').dxTagBox('instance').reset();
-
-
-            //        });
-            //    });
-
-            //    LoadGroupsGrid();
-            //});
+                    CloseModal(modal);
+                    EditUser(data.Id);
+                            
+                },
+                error: function (xhr, status, err) {
+                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                }
+            });
 
         });
 
 
-        $('.cancelgroupmodal').click(function (e) {
+        $('.cancelusermodal').click(function (e) {
 
             e.preventDefault();
 
@@ -267,7 +252,9 @@ function LoadUserBusinessUnitSelector(id, container) {
                 resizable: false
             });
 
-            LoadAvailableBusinessUnits(tagmodal, false);
+            LoadAvailableBusinessUnits(tagmodal, true);
+            //LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions)
+            //LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
 
             $('.cancelmodal').click(function (e) {
 
@@ -308,7 +295,63 @@ function LoadUserBusinessUnitSelector(id, container) {
     });
 }
 
+function LoadAvailableBusinessUnits(container, isCategorySpecific) {
 
+    var route = 'businessunits';
+
+    MakeServiceCall('GET', route, null, function (data) {
+
+        if (data.Data) {
+
+            $(container).find('.tagselectgridcontainer').html('');
+
+            $.map(data.Data, function (group) {
+
+                var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
+                var tagsContainer = $('<div>').addClass('tagSelectorContainer');
+
+                if (group.Tags) {
+
+                    switch (group.TagSelectionType) {
+
+                        case 0:
+                            CreateMultiSelectTags(group.Tags, tagsContainer);
+                            break;
+                        case 1:
+                            CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+                $(header).appendTo($(container).find('.tagselectgridcontainer'));
+                $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
+
+            });
+
+            RefreshBusinessUnits();
+
+        }
+
+    }, null);
+
+}
+
+function RefreshBusinessUnits() {
+
+    if (currentEntity && currentEntity.BusinessUnits) {
+
+        $.map(currentEntity.BusinessUnits, function (item) {
+
+            $('input[value=' + item.Id + ']').prop('checked', true);
+
+        });
+
+    };
+
+}
 
 // USER SETTINGS 
 function EditUser(id) {
@@ -324,7 +367,8 @@ function EditUser(id) {
     });
 
 
-    $('.editonly').show();
+    $('.user-editonly1').show();
+    $('.user-editonly2').show();
 
     $('.cancelusermodal').click(function (e) {
 
@@ -351,12 +395,24 @@ function EditUser(id) {
             UserName: $(modal).find('.user-UserName').val(),
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
+            ConstituentId: $(modal).find('.user-Constituent1Id').val(),
             IsActive: true
         }
 
         MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
 
             if (data.Data) {
+
+                if (item.DefaultBusinessUnitId != null && item.DefaultBusinessUnitId != '') {
+
+                    MakeServiceCall('PATCH', 'users/' + id + '/businessunit/' + item.DefaultBusinessUnitId, JSON.stringify(item), null, null);
+                }
+
+                var group = $(modal).find('.user-Constituent1Id').val();
+                if (group != null && group != '') {
+                    MakeServiceCall ('PATCH', 'users/' + id + '/group/' + group, '', null, null);
+                }
+
                 DisplaySuccessMessage('Success', 'User saved successfully.');
 
                 CloseModal(modal);
@@ -369,6 +425,8 @@ function EditUser(id) {
             DisplayErrorMessage('Error', 'An error occurred while saving the User.');
         });
 
+        
+        
     });
 
 }
@@ -386,16 +444,18 @@ function LoadUser(id) {
                 $(modal).find('.user-UserName').val(data.Data.UserName);
                 $(modal).find('.user-Email').val(data.Data.Email);
                 $(modal).find('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
+                $(modal).find('.user-Constituent1Id').val(data.Data.ConstituentId);
                 $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
                 
-                LoadUserBusinessUnitSelector(data.Data.Id, $('.user-BusinessUnits'));
+                LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
+                //LoadUserBusinessUnitSelector(data.Data.Id, $('.user-BusinessUnits'));
 
-                if (data.Data.BusinessUnits.length > 0) {
-                    DisplayUserBusinessUnits($(data.Data.BusinessUnits));
-                }
-                else {
-                    $(modal).find('.user-BusinessUnits').empty();
-                }
+                //if (data.Data.BusinessUnits.length > 0) {
+                //    DisplayUserBusinessUnits($(data.Data.BusinessUnits));
+                //}
+                //else {
+                //    $(modal).find('.user-BusinessUnits').empty();
+                //}
             }
         }
 

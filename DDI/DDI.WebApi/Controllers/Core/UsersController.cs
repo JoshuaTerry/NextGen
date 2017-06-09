@@ -205,19 +205,19 @@ namespace DDI.WebApi.Controllers.General
             //    return BadRequest(ModelState);
             //}
 
-            var user = new User() { UserName = model.UserName, FullName = model.FullName, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
+            var user = new User() { UserName = model.Email, FullName = model.FullName, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
             try
             {
                 var result = UserManager.Create(user);
-                if (user.DefaultBusinessUnitId.HasValue)
-                {
-                    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
-                }
-                if (user.Groups != null)
-                    {
-                    //var groupResult = AddGroupToUser(user.Id, user.Groups);
-                }
-                return Ok();
+                //if (user.DefaultBusinessUnitId.HasValue)
+                //{
+                //    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
+                //}
+                //if (user.Groups != null)
+                //    {
+                //    //var groupResult = AddGroupToUser(user.Id, user.Groups);
+                //}
+                return Ok(user);
             }
             catch(Exception ex)
             {
@@ -253,17 +253,19 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
-            //if (Groups != null)
-            //{ delete previous group and roles add the group and strip from the userChanges }
             return base.Patch(id, userChanges);
-            //if (user.DefaultBusinessUnitId.HasValue)
-            //{
-            //    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
-           // }
-           // if (userChanges.BusinessUnits != null) { }
-            
         }
-        
+
+        [HttpPatch]
+        [Route("api/v1/users/{id}/group/{gid}", Name = RouteNames.User + RouteNames.Group + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, Guid gid)
+        {
+            // ARECA
+            //var groupResult = AddGroupToUser(id, gid);
+            //return Ok(groupResult);
+            return Ok();
+        }
+
         //[HttpPost]
         //[Route("api/v1/users/{id}")]
         //public async Task<IHttpActionResult> Update(Guid id, User user)
