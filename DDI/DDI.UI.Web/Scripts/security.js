@@ -76,7 +76,6 @@ function LoadSecuritySettingsGrid() {
 function LoadGroupsGrid() {
 
     var columns = [
-        { dataField: 'Id', width: '0px' },
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
