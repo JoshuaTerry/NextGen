@@ -53,7 +53,6 @@
                     <li><a href="#" class="LoadDBA">Doing Business As</a></li>
                     <li><a href="#" class="LoadEducation">Education</a></li>
                     <li><a href="#" class="LoadGender">Gender</a></li>
-                    <li><a href="#" class="LoadHubSearch">Hub Search</a></li>
                     <li><a href="#" class="LoadOrganization">Organization</a></li>
                     <li><a href="#" class="LoadPaymentPreferences">Payment Preferences</a></li>
                     <li><a href="#" class="LoadPersonal">Personal</a></li>

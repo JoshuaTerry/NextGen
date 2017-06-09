@@ -30,6 +30,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        $('.customfieldmodallink').remove();
+
         $('.gridcontainer').html('');
 
         $('.systemsettings a').removeClass('selected');
@@ -2590,9 +2592,9 @@ function LoadDonationHomeScreenSectionSettings() {
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
+    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.gridcontainer'));
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
@@ -2697,7 +2699,7 @@ function PickLedger() {
 
 function LoadBudgetSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var businessunitid = currentBusinessUnitId;
     var ledgerid;
@@ -2774,7 +2776,7 @@ function LoadBudgetSectionSettings() {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
     InitRequiredLabels('budgetsettingscontainer')
 
@@ -2813,7 +2815,7 @@ function GetBudgetSetting() {
 
 function LoadChartAccountsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var ledgerid;
 
@@ -2911,7 +2913,7 @@ function LoadChartAccountsSectionSettings() {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 }
 
 function SaveBudgetSetting(id) {
@@ -3024,7 +3026,7 @@ function LoadChartAccountsSettingsSectionSettings() {
 /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var entityColumns = [
       
@@ -3051,17 +3053,15 @@ function LoadEntitiesSectionSettings() {
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
+    LoadGrid('.gridcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
-
-    InitRequiredLabels("entitymodal")
 
 }
 /// End Entities/Business Untis Settings
 
 function LoadFiscalYearSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
@@ -3086,7 +3086,7 @@ function LoadFiscalYearSectionSettings() {
     $(fpcontainer).appendTo(gridgroup);
 
     $(gridgroup).appendTo(container);
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
@@ -3181,8 +3181,8 @@ function LoadFundAccountingSectionSettings() {
     var container = $('<div>').addClass('fundsettingscontainer onecolumn');
 
     /* FISCAL YEAR */
-    $('.contentcontainer').empty();
-    var container = $('<div>').appendTo('.contentcontainer');
+    $('.gridcontainer').empty();
+    var container = $('<div>').appendTo('.gridcontainer');
     var header = $('<div>');
     $('<label>').text('Setting for ').appendTo(header);
     var fundnamedisplay = $('<label>').addClass('FundLedgerId').appendTo(header);
@@ -3207,7 +3207,7 @@ function LoadFundAccountingSectionSettings() {
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
     var header = $('<h1>').text('G/L Account Settings ').appendTo($(accordions));
     $(accountrevenuegroup).appendTo($(accordions));
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
     var selectfundbalanceaccountgroup = $('<div>');
@@ -3327,7 +3327,7 @@ function LoadFundAccountingSectionSettings() {
     var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordions));
     $(funddue).appendTo($(accordions));
 
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -3592,7 +3592,7 @@ function EditFundDue(funddueid) {
 
 function LoadGLFormatSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var container = $('<div>');
 
@@ -3608,7 +3608,7 @@ function LoadGLFormatSectionSettings() {
     $(glformat).appendTo($(container));
 
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
 
 
@@ -3781,14 +3781,14 @@ function LoadGLFormatSectionSettings() {
 
 function LoadJournalSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
 
 }
 
 function LoadUtilitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
 
 }
@@ -3860,7 +3860,7 @@ function RefreshCustomFieldsGrid() {
 
 function CreateNewCustomFieldModalLink(entity, title) {
 
-    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.gridcontainer'));
+    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field');
     $('.gridcontainer').before($(modallink));
 
     $(modallink).unbind('click');
