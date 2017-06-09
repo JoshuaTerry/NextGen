@@ -18,7 +18,14 @@ namespace DDI.Services.General
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {
-            throw new NotImplementedException();
+            var user = UnitOfWork.GetRepository<User>().Entities.FirstOrDefault(u => u.Id == userId);
+            var group = UnitOfWork.GetById<Group>(groupId);
+
+            group.Users.Add(user);
+            UpdateUserRoles(userId, group.Roles.ToList());
+
+
+
         }
 
         public IDataResponse RemoveUserFromGroup(Guid userId, Guid groupId)
@@ -97,5 +104,51 @@ namespace DDI.Services.General
             };
         }
 
+        public IDataResponse<Group> UpdateGroup(Guid groupId, JObject roleIds)
+        {
+
+
+            // need to be able to set IsSuccessful to false if something goes wrong
+            var group = UnitOfWork.GetById<Group>(groupId, r => r.Roles);
+            var rolesToAdd = new List<Role>();
+
+            group.Roles.Clear(); 
+
+            foreach (var pair in roleIds)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    rolesToAdd.AddRange(from jToken in (JArray)pair.Value
+                                        select Guid.Parse(jToken.ToString())
+                                        into id
+                                        select UnitOfWork.GetById<Role>(id));
+                }
+            }
+
+            rolesToAdd.ForEach(r => group.Roles.Add(r));
+
+            var groupUserIds = group.Users.Select(u => u.Id).ToList(); // user Ids in that group
+            foreach(var userId in groupUserIds)
+            {
+                UpdateUserRoles(userId, rolesToAdd);
+
+            }
+
+            UnitOfWork.SaveChanges();
+
+            return new DataResponse<Group>()
+            {
+                Data = UnitOfWork.GetById<Group>(group.Id),
+                IsSuccessful = true
+            };
+        }
+
+        private void UpdateUserRoles(Guid userId, List<Role> rolesToAdd)
+        {
+            var user = UnitOfWork.GetRepository<User>().GetById(userId);
+            user.Roles.Clear();
+
+            rolesToAdd.ForEach(r => user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = r.Id }));
+        }
     }
 }

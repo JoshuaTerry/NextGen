@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DDI.Shared.Extensions;
+using DDI.Services.General;
 
 namespace DDI.Services.Security
 {
@@ -72,9 +73,9 @@ namespace DDI.Services.Security
 
         public IDataResponse AddGroupToUser(Guid id, Guid groupId)
         {
-            //ARECA
             var user = UnitOfWork.GetById<User>(id);
             var group = UnitOfWork.GetById<Group>(id);
+            IDataResponse response = new DataResponse<User>();
 
             if (user == null)
             {
@@ -86,38 +87,11 @@ namespace DDI.Services.Security
             // Delete all groups tied to this user
             user.Roles.Clear();
             // Delete all roles tied to this user
-            user.Groups.Add(group);
-            // Add group to user
-            //group.Roles.ForEach(r => user.Roles.Add(r.));
-            group.Roles.ForEach(r => Microsoft.AspNet.Identity.UserManagerExtensions.AddToRoles(user.Id, group.Roles);
-            //UserManager.AddToRolesAsync(user.Id, model.Roles);
-            //UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
-            //user.Roles.Add(group.Roles.ToList());
-            // Add all roles for group to this user
+            GroupService groupService = new GroupService(UnitOfWork);
+            groupService.AddUserToGroup(id, groupId);
 
-            //if (id != null)
-            //{
-            //    removes.ForEach(e => constituentToUpdate.Ethnicities.Remove(e));
-            //    adds.ForEach(e => constituentToUpdate.Ethnicities.Add(e));
-            //}
-
-
-            //foreach (Group group in groups)
-            //{
-            //    base.Delete(pic.Id);
-            //}
-            //if (!result.BusinessUnits.Contains(bu))
-            //{
-            //    result.BusinessUnits.Add(bu);
-            //    UnitOfWork.SaveChanges();
-            //}
-
-            var result = user;
-            IDataResponse response = new DataResponse<User>
-            {
-                Data = result,
-                IsSuccessful = true
-            };
+            response.data;
+            response.IsSuccessful = true;
 
             return response;
         }
