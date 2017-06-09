@@ -508,10 +508,7 @@
 
              <!-- Notes Tab -->
             <div id="tab-notes" class="scrollable">
-                <h1>Notes  <a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
-                <div id="tab-notedetail">
-                    <div class="notedetailsgridcontainer"></div>
-                </div>
+               
             </div>
 
             <!--Attachments Tab -->
