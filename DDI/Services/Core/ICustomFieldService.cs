@@ -7,6 +7,7 @@ namespace DDI.Services
 {
     public interface ICustomFieldService : IService<CustomField>
     {
-        IDataResponse<List<CustomField>> GetByEntityId(int entityId, Guid constituentId);
+        IDataResponse<List<CustomField>> GetByEntityId(int entityId);
+        IDataResponse<List<CustomField>> GetByEntityIdConstituentId(int entityId, Guid constituentId);
     }
 }

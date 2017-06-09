@@ -33,6 +33,7 @@
 
     <!-- DevExtreme Files -->
     <script type="text/javascript" src="..\..\Scripts/dx.all.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\dx.aspnet.data.js" ></script>
     <link rel="stylesheet" type="text/css" href="CSS/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="CSS/generic.light.custom.css" />
     <!-- DevExtreme Files -->
@@ -96,7 +97,6 @@
         </div>
 
         <div class="maincontainer">
-            <a href="#" class="import">Import</a>
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
         </div>
 
