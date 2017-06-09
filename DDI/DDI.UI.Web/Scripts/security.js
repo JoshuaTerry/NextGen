@@ -413,7 +413,7 @@ function LoadUsersGrid() {
     ];
 
     PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    PopulateDropDown($('.user-Groups'), 'groups', null);
+    PopulateDropDown($('.user-GroupId'), 'groups', null);
 
     //LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
     //          '.prefixmodal', '.prefixmodal', 250, true, false, false, null);
@@ -710,6 +710,7 @@ function EditUser(id) {
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
             ConstituentId: $(modal).find('.user-Constituent1Id').val(),
+            GroupId: $(modal).find('.user-GroupId').val(),
             IsActive: true
         }
 
@@ -717,15 +718,15 @@ function EditUser(id) {
 
             if (data.Data) {
 
-                if (item.DefaultBusinessUnitId != null && item.DefaultBusinessUnitId != '') {
+                //if (item.DefaultBusinessUnitId != null && item.DefaultBusinessUnitId != '') {
 
-                    MakeServiceCall('PATCH', 'users/' + id + '/businessunit/' + item.DefaultBusinessUnitId, JSON.stringify(item), null, null);
-                }
+                //    MakeServiceCall('PATCH', 'users/' + id + '/businessunit/' + item.DefaultBusinessUnitId, JSON.stringify(item), null, null);
+                //}
 
-                var group = $(modal).find('.user-Constituent1Id').val();
-                if (group != null && group != '') {
-                    MakeServiceCall ('PATCH', 'users/' + id + '/group/' + group, '', null, null);
-                }
+                //var group = $(modal).find('.user-Constituent1Id').val();
+                //if (group != null && group != '') {
+                //    MakeServiceCall ('PATCH', 'users/' + id + '/group/' + group, '', null, null);
+                //}
 
                 DisplaySuccessMessage('Success', 'User saved successfully.');
 

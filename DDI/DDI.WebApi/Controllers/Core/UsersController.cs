@@ -253,10 +253,10 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
-
-            // handle adding default business unit to allowed business units.
-            // handle group assignment here
-            // strip out the data regarding group before sending to patch
+            //User user = JObject.Parse(userChanges);
+            //GetById
+            //AddGroupToUser(id, userChanges.);
+            // strip out the data regarding group before sending to patch if needed
             return base.Patch(id, userChanges);
         }
 

@@ -24,7 +24,12 @@ namespace DDI.Services.General
             group.Users.Add(user);
             UpdateUserRoles(userId, group.Roles.ToList());
 
-
+            var response = new DataResponse<User>()
+            {
+                Data = user,
+                IsSuccessful = true
+            };
+            return response;
 
         }
 

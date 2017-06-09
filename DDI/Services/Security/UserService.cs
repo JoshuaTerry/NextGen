@@ -75,13 +75,13 @@ namespace DDI.Services.Security
         {
             var user = UnitOfWork.GetById<User>(id);
             var group = UnitOfWork.GetById<Group>(id);
-            IDataResponse response = new DataResponse<User>();
+            //IDataResponse response = new DataResponse<User>();
 
-            if (user == null)
-            {
-                // create a message for here
-                //return GetErrorResponse('User');
-            }
+            //if (user == null)
+            //{
+            //    // create a message for here
+            //    //return GetErrorResponse('User');
+            //}
 
             user.Groups.Clear();
             // Delete all groups tied to this user
@@ -90,8 +90,13 @@ namespace DDI.Services.Security
             GroupService groupService = new GroupService(UnitOfWork);
             groupService.AddUserToGroup(id, groupId);
 
-            response.data;
-            response.IsSuccessful = true;
+            //response.Data = user;
+            //response.IsSuccessful = true;
+            IDataResponse response = new DataResponse<User>
+            {
+                Data = user,
+                IsSuccessful = true
+            };
 
             return response;
         }

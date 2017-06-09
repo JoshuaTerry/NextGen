@@ -116,7 +116,7 @@
 
                 <div class="fieldblock">
                     <label>Group</label>
-                    <select class="user-Groups"></select>
+                    <select class="user-GroupId"></select>
                 </div>
 
                 <div class="fieldblock">
