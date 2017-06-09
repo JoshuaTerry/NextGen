@@ -5,6 +5,8 @@
 
 .fileupload { width: 742px; height: 200px; margin: 20px auto; padding: 54px 54px; border: 2px dashed #0087F7; border-radius: 5px; background: white; text-align: center; font-size: 24px; }
 
+.filemessage { display: block; margin-top: 10px; }
+
 .progress p { display: block; }
 
 .uploadcomplete { width: 500px; margin: 0 auto; padding: 25px 0; text-align: center; background-color: honeydew; border: solid 2px green; color: green; font-weight: bold; font-size: 14px; }

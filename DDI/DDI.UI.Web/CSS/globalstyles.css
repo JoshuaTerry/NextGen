@@ -92,6 +92,7 @@ div.fieldblock select { height: 21px; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
+div.fieldblock.checkbox label { display: inline-block; }
 div.fieldblock.inline { display: inline-block; }
 div.fieldblock.inline label { display: inline-block }
 div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px; display: inline-block; }
