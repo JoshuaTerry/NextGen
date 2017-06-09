@@ -704,15 +704,15 @@ function LoadAccordions() {
             active: false
         });
 
-        $(".ui-accordion-content").hide('fast');
-        $('.ui-accordion-header').removeClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
     });
 
     $('.accordion-expandall').click(function (e) {
         e.preventDefault();
 
-        $(".ui-accordion-content").show('fast');
-        $('.ui-accordion-header').addClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').show('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').addClass('ui-state-active');
 
     });
 
