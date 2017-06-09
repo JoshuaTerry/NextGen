@@ -1,4 +1,7 @@
-﻿
+﻿var fiscalYearId;
+var ledgerId;
+var accountId;
+
 $(document).ready(function () {
 
     LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
@@ -11,7 +14,7 @@ $(document).ready(function () {
 
     });
 
-    var fiscalYearId = sessionStorage.getItem('FISCAL_YEAR_ID');
+    fiscalYearId = sessionStorage.getItem('FISCAL_YEAR_ID');
 
     if (fiscalYearId) {
 
@@ -59,19 +62,92 @@ var segmentLevel;
 var groupLevels;
 var group1Data = [];
 var saveGroupId;
-var accountId;
 var segmentData = [];
 var category = '0';
 var editMode = '';
 var activityTotal = 0;
 var summaryContainer = '.accountsummarycontainer';
 
-var fiscalYearId = 'E20F3200-8E69-4DE2-9339-1EC57EC89597';    // testing
-var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'         // testing
+function LoadSummaryTab() {
 
-function LoadSummaryTab(AccountId) {
+    accountId = sessionStorage.getItem('ACCOUNT_ID');
+    if (accountId) {
+        RetrieveAccountSummaryData();
+    }
+    else {
+        accountId = ''
+        if (fiscalYearId) {
+            RetrieveLedgerId();
+        }
+    }
+}
 
-    accountId = AccountId;
+function RetrieveAccountSummaryData() {
+    MakeServiceCall('GET', 'accounts/' + accountId, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                fiscalYearId = data.Data.FiscalYearId;
+                $('.AccountNumber').val(data.Data.AccountNumber);
+                $('.Name').val(data.Data.Name);
+                $('.IsActive').prop('checked', (data.Data.IsActive));
+                $('.IsNormallyDebit').val((data.Data.IsNormallyDebit === true ? 1 : 0));
+                $('.BeginningBalance').val(data.Data.BeginningBalance);
+
+                category = data.Data.Category;
+
+                if (groupLevels > 0 && data.Data.Group1Id != null) {
+                    LoadGroupDropDown(1, '', data.Data.Group1Id)
+                }
+                if (groupLevels > 1 && data.Data.Group2Id != null) {
+                    LoadGroupDropDown(2, data.Data.Group1Id, data.Data.Group2Id)
+                }
+                if (groupLevels > 2 && data.Data.Group3Id != null) {
+                    LoadGroupDropDown(3, data.Data.Group2Id, data.Data.Group3Id)
+                }
+                if (groupLevels > 3 && data.Data.Group4Id != null) {
+                    LoadGroupDropDown(4, data.Data.Group3Id, data.Data.Group4Id)
+                }
+
+                $('.closingaccountgroup').find(".hidaccountid").val(data.Data.ClosingAccountId);
+                if (data.Data.ClosingAccountId != null) {
+                    $('.closingaccountgroup').find(".accountnumber").val(data.Data.ClosingAccount.AccountNumber);
+                    $('.closingaccountgroup').find(".accountdescription").val(data.Data.ClosingAccount.Name);
+                }
+
+                MakeServiceCall('GET', 'accounts/activity/' + accountId, null, function (data) {
+                    if (data.Data) {
+                        if (data.IsSuccessful) {
+                            activityTotal = data.Data.ActivityTotal;
+                            $('.Activity').val(data.Data.ActivityTotal);
+                            $('.EndingBalance').val(data.Data.FinalEndingBalance);
+                            RetrieveLedgerId();
+                        }
+                    }
+                }, null);
+            }
+
+        }
+
+    }, null);
+
+}
+
+function RetrieveLedgerId() {
+    MakeServiceCall('GET', 'fiscalyears/' + fiscalYearId, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                ledgerId = data.Data.LedgerId;
+                LoadSummaryTabContinued();
+            }
+        }
+
+    }, null);
+
+}
+
+function LoadSummaryTabContinued() {
     GLAccountSelector($('.closingaccountgroup'), ledgerId, fiscalYearId);
     $('.accountselectorlabel').addClass("accountselectorprompt");
     $('.accountnumberlookup').removeAttr('style');
@@ -87,10 +163,10 @@ function LoadSummaryTab(AccountId) {
     $('.accountnumberlookup').attr('disabled', true);
     $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
 
-    if (AccountId === '' || AccountId === null) {
-        AccountAddMode();
-        editMode = 'add';
-    }
+    //if (AccountId === '' || AccountId === null) {
+    //    AccountAddMode();
+    //    editMode = 'add';
+    //}
 
     $('.editaccount').click(function (e) {
         e.preventDefault();
@@ -111,64 +187,12 @@ function LoadSummaryTab(AccountId) {
         }
         else {
             $('.accountsegmentscontainer').hide();
-            RetrieveAccountSummaryData();
+            //RetrieveAccountSummaryData();
             AccountDisplayMode();
         }
     });
 
     RetrieveLedgerSettings();
-
-}
-
-function AccountDisplayMode() {
-    editMode = 'display';
-    $('.accountsegmentscontainer').hide();
-    $('.editaccountbutton').show();
-    $('.saveaccountbuttons').hide();
-    $(summaryContainer).find('.editable').each(function () {
-
-        $(this).prop('disabled', true);
-
-    });
-    $('.accountnumberlookup').attr('disabled', true);
-    $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
-    FormatFields();
-}
-
-function AccountAddMode() {
-    editMode = 'add';
-    MaskFields();
-    $('.editaccountbutton').hide();
-    $('.saveaccountbuttons').show();
-    $('.accountsegmentscontainer').show();
-}
-
-function AccountEditMode() {
-    editMode = 'edit';
-    if (activityTotal === 0){
-        $('.accountsegmentscontainer').show();
-    }
-    $('.editaccountbutton').hide();
-    $('.saveaccountbuttons').show();
-
-    MaskFields();
-
-    $(summaryContainer).find('.editable').each(function () {
-
-        $(this).prop('disabled', false);
-
-    });
-
-    if (category < 4) {
-        $('.BeginningBalance').removeAttr("disabled");
-        $('.accountnumberlookup').attr('disabled', true);
-        $('.accountselectionsearch').css('visibility', 'hidden');
-    }
-    else {
-        $('.BeginningBalance').attr('disabled', true);
-        $('.accountnumberlookup').removeAttr("disabled");
-        $('.accountselectionsearch').css('visibility', 'visible');
-    }
 
 }
 
@@ -256,7 +280,7 @@ function RetrieveLedgerSettings() {
                 //segments
                 segmentLevels = data.Data.NumberOfSegments;
 
-                for (i = (segmentLevels + 1) ; i <= 10; i++) {
+                for (i = (segmentLevels + 1); i <= 10; i++) {
                     $('.segmentgroup' + i).hide();
                 }
 
@@ -340,10 +364,12 @@ function RetrieveSegmentLevels() {
                 if (accountId === null || accountId === '') {
                     LoadGroupDropDown(1, '', null);
                     InitSegmentDropDowns();
+                    AccountAddMode();
                 }
                 else {
-                    //$('.accountsegmentscontainer').hide();
-                    RetrieveAccountSummaryData();
+                //    RetrieveAccountSummaryData();
+                    LoadSegmentDropDowns(data.Data);
+                    AccountDisplayMode();
                 }
             }
         }
@@ -352,56 +378,55 @@ function RetrieveSegmentLevels() {
 
 }
 
-function RetrieveAccountSummaryData() {
-    MakeServiceCall('GET', 'accounts/' + accountId, null, function (data) {
+function AccountDisplayMode() {
+    editMode = 'display';
+    $('.accountsegmentscontainer').hide();
+    $('.editaccountbutton').show();
+    $('.saveaccountbuttons').hide();
+    $(summaryContainer).find('.editable').each(function () {
 
-        if (data.Data) {
-            if (data.IsSuccessful) {
-                $('.AccountNumber').val(data.Data.AccountNumber);
-                $('.Name').val(data.Data.Name);
-                $('.IsActive').prop('checked', (data.Data.IsActive));
-                $('.IsNormallyDebit').val((data.Data.IsNormallyDebit === true ? 1 : 0));
-                $('.BeginningBalance').val(data.Data.BeginningBalance);
+        $(this).prop('disabled', true);
 
-                category = data.Data.Category;
+    });
+    $('.accountnumberlookup').attr('disabled', true);
+    $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
+    FormatFields();
+}
 
-                if (groupLevels > 0 && data.Data.Group1Id != null) {
-                    LoadGroupDropDown(1, '', data.Data.Group1Id)
-                }
-                if (groupLevels > 1 && data.Data.Group2Id != null) {
-                    LoadGroupDropDown(2, data.Data.Group1Id, data.Data.Group2Id)
-                }
-                if (groupLevels > 2 && data.Data.Group3Id != null) {
-                    LoadGroupDropDown(3, data.Data.Group2Id, data.Data.Group3Id)
-                }
-                if (groupLevels > 3 && data.Data.Group4Id != null) {
-                    LoadGroupDropDown(4, data.Data.Group3Id, data.Data.Group4Id)
-                }
+function AccountAddMode() {
+    editMode = 'add';
+    MaskFields();
+    $('.editaccountbutton').hide();
+    $('.saveaccountbuttons').show();
+    $('.accountsegmentscontainer').show();
+}
 
-                $('.closingaccountgroup').find(".hidaccountid").val(data.Data.ClosingAccountId);
-                if (data.Data.ClosingAccountId != null) {
-                    $('.closingaccountgroup').find(".accountnumber").val(data.Data.ClosingAccount.AccountNumber);
-                    $('.closingaccountgroup').find(".accountdescription").val(data.Data.ClosingAccount.Name);
-                }
+function AccountEditMode() {
+    editMode = 'edit';
+    if (activityTotal === 0) {
+        $('.accountsegmentscontainer').show();
+    }
+    $('.editaccountbutton').hide();
+    $('.saveaccountbuttons').show();
 
-                LoadSegmentDropDowns(data.Data);
+    MaskFields();
 
-                MakeServiceCall('GET', 'accounts/activity/' + accountId, null, function (data) {
-                    if (data.Data) {
-                        if (data.IsSuccessful) {
-                            activityTotal = data.Data.ActivityTotal;
-                            $('.Activity').val(data.Data.ActivityTotal);
-                            $('.EndingBalance').val(data.Data.FinalEndingBalance);
+    $(summaryContainer).find('.editable').each(function () {
 
-                            AccountDisplayMode();
-                        }
-                    }
-                }, null);
-            }
+        $(this).prop('disabled', false);
 
-        }
+    });
 
-    }, null);
+    if (category < 4) {
+        $('.BeginningBalance').removeAttr("disabled");
+        $('.accountnumberlookup').attr('disabled', true);
+        $('.accountselectionsearch').css('visibility', 'hidden');
+    }
+    else {
+        $('.BeginningBalance').attr('disabled', true);
+        $('.accountnumberlookup').removeAttr("disabled");
+        $('.accountselectionsearch').css('visibility', 'visible');
+    }
 
 }
 
@@ -446,7 +471,7 @@ function GroupChange(element) {
     }
 
     //populate or clear subsequent group level dropdowns
-    for (var i = (parseInt(level) + 1) ; i <= groupLevels; i++) {
+    for (var i = (parseInt(level) + 1); i <= groupLevels; i++) {
         if (i === (parseInt(level) + 1)) {
             if (parentVal != null && parentVal != '') {
                 PopulateDropDownData('.Group' + i + 'Id', 'AccountGroups/' + parentVal + '/parent', '', null, null, GroupChange);
@@ -539,7 +564,7 @@ function SegmentChange(element) {
     BuildAccountNumber();
 
     //populate or clear subsequent segment level dropdowns
-    for (var i = (parseInt(level) + 1) ; i <= segmentLevels; i++) {
+    for (var i = (parseInt(level) + 1); i <= segmentLevels; i++) {
         if (i === (parseInt(level) + 1)) {
             if (segmentLevelArray[i - 1].IsLinked === true && parentVal != null) {
                 PopulateDropDownData('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
@@ -603,18 +628,19 @@ function SaveAccount() {
                 $('.Activity').val(0);
             }
             $('.EndingBalance').val($('.BeginningBalance').val() + $('.Activity').val());
+            sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
             AccountDisplayMode();
         }
 
     },
-    function () {
-        if (editMode === 'add') {
-            AccountAddMode();
+        function () {
+            if (editMode === 'add') {
+                AccountAddMode();
+            }
+            else {
+                AccountEditMode();
+            }
         }
-        else {
-            AccountEditMode();
-        }
-    }
     );
 }
 
@@ -818,7 +844,7 @@ function LoadAccountGroups(id) {
     MakeServiceCall('GET', 'AccountGroups/' + id, null, function (data) {
 
         $('.ag-Name').val(data.Data.Name),
-        $('.ag-Category').val(data.Data.Category)
+            $('.ag-Category').val(data.Data.Category)
 
     }, function (xhr, status, err) {
         DisplayErrorMessage('Error', 'An error occurred during loading the Account Group.');
@@ -944,7 +970,7 @@ function LoadAccountSegments(id) {
     MakeServiceCall('GET', 'Segments/' + id, null, function (data) {
 
         $('.as-Code').val(data.Data.Code),
-        $('.as-Name').val(data.Data.Name)
+            $('.as-Name').val(data.Data.Name)
 
     }, function (xhr, status, err) {
         DisplayErrorMessage('Error', 'An error occurred during loading the Account Segment.');
