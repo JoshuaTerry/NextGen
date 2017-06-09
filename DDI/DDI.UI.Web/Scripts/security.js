@@ -447,15 +447,15 @@ function LoadUser(id) {
                 $(modal).find('.user-Constituent1Id').val(data.Data.ConstituentId);
                 $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
                 
-                LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
-                //LoadUserBusinessUnitSelector(data.Data.Id, $('.user-BusinessUnits'));
+                //LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
+                LoadUserBusinessUnitSelector(data.Data.Id, $('.user-BusinessUnits'));
 
-                //if (data.Data.BusinessUnits.length > 0) {
-                //    DisplayUserBusinessUnits($(data.Data.BusinessUnits));
-                //}
-                //else {
-                //    $(modal).find('.user-BusinessUnits').empty();
-                //}
+                if (data.Data.BusinessUnits.length > 0) {
+                    DisplayUserBusinessUnits($(data.Data.BusinessUnits));
+                }
+                else {
+                    $(modal).find('.user-BusinessUnits').empty();
+                }
             }
         }
 
