@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using DDI.Shared.Extensions;
 
 namespace DDI.Services.Security
 {
@@ -81,9 +82,17 @@ namespace DDI.Services.Security
                 //return GetErrorResponse('User');
             }
 
+            user.Groups.Clear();
             // Delete all groups tied to this user
+            user.Roles.Clear();
             // Delete all roles tied to this user
+            user.Groups.Add(group);
             // Add group to user
+            //group.Roles.ForEach(r => user.Roles.Add(r.));
+            group.Roles.ForEach(r => Microsoft.AspNet.Identity.UserManagerExtensions.AddToRoles(user.Id, group.Roles);
+            //UserManager.AddToRolesAsync(user.Id, model.Roles);
+            //UserManager.RemoveFromRolesAsync(user.Id, model.Roles);
+            //user.Roles.Add(group.Roles.ToList());
             // Add all roles for group to this user
 
             //if (id != null)
