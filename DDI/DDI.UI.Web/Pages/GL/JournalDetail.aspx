@@ -121,7 +121,9 @@
                         <option value="1">Due From</option>
                         <option value="2">Due To</option>
                     </select>
-                    <label>Entity: </label>
+                    <label>Fund: </label>
+                        <select class="SourceFundId">
+                    </select>
                 </div>
             </div>
 

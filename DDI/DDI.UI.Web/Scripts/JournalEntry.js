@@ -136,7 +136,8 @@ function LoadJournalData() {
                 $('.CreatedOn').html(data.Data.CreatedOn)
                 $('.LastChangedBy').html(data.Data.LastChangedBy)
                 $('.LastChangedOn').html(data.Data.LastChangedOn)
-                InitJournalLine();
+                //InitJournalLine();
+                NewJournalLineModal();
                 JournalDisplayMode();
                 LoadJournalLineGrid(data)
             }
@@ -291,9 +292,7 @@ function InitJournalLine() {
 
 function LoadJournalLineGrid(data) {
     var columns = [
-        {
-            dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0, caption: ''
-        },
+        { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0, caption: ''},
         { dataField: 'LedgerAccount.AccountNumber', caption: 'FL Account', alignment: 'left' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'Name', caption: 'Debit' },
@@ -312,6 +311,8 @@ function NewJournalLineModal() {
 
 
     $('.newJournalLinemodallink').click(function (e) {
+
+        GLAccountSelector($('.closingaccountgroup'), ledgerId, fiscalYearId);
 
         e.preventDefault();
 
