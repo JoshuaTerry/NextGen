@@ -79,7 +79,7 @@ namespace DDI.WebApi.Controllers.GL
 
             IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
-            return FinalizeResponse(_glAccountService.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, search.Fields, null);
+            return FinalizeResponse(_glAccountService.GetAllWhereExpression((a=>  a.FiscalYearId == fiscalYearId), search), null, search, null, null);
         }
 
         [HttpGet]
