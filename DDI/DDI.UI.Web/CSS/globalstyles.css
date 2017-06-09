@@ -13,10 +13,10 @@ a:hover { text-decoration: underline; }
 .floatleft {float: left}
 .floatright {float: right}
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
-.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }
-.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
-.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
+.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
