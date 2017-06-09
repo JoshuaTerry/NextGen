@@ -3275,7 +3275,9 @@ function LoadFundAccountingSectionSettings() {
 
     MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
         var ledger = data.Data[0];
+        $('.FundLedgerId').val(ledger.Id);
         $('.FundLedgerId').text(ledger.Code);
+       
         fundid = $('.selectfund').val();
 
         //fiscalyearid = ledger.DefaultFiscalYearId;
@@ -3441,7 +3443,7 @@ function EditBusinessUnit(bufromtoid) {
         modal = $('.businessunitduemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 400,
+            width: 900,
             resizable: false,
             beforeClose: function (e) {
                 $('.bus-FromLedgerAccount').empty();
@@ -3450,15 +3452,15 @@ function EditBusinessUnit(bufromtoid) {
          
         });
 
-        $('.businessunitduemodal').show();
+        // $('.businessunitduemodal').show();
 
-                    
-            GLAccountSelector($('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-            GLAccountSelector($('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+        var foo = currentBusinessUnit;
+            GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+            GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
      
             
-            LoadSelectedAccount($('.bus-FromLedgerAccount'), data.Data.FromAccountId);
-            LoadSelectedAccount($('.bus-ToLedgerAccount'), data.Data.ToAccountId);
+            LoadSelectedAccount($(modal).find('.bus-FromLedgerAccount'), data.Data.FromAccountId);
+            LoadSelectedAccount($(modal).find('.bus-ToLedgerAccount'), data.Data.ToAccountId);
       
        //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
 
@@ -3520,7 +3522,7 @@ function EditFundDue(funddueid) {
         modal = $('.fundduemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 400,
+            width: 900,
             resizable: false,
             beforeClose: function (e) {
                 $('.fn-DueFromAccount').empty();

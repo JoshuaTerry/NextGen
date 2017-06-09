@@ -219,6 +219,6 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 
 /*Account Number Selector*/
 .accountselectionsearch {background: url('../../Images/Search_16.png') no-repeat; width: 16px; height: 16px; display: inline-block; margin-right: 5px;  }
-.accountselectiongrid {width:50%; display: none;}
+.accountselectiongrid {width:100%; display: none;}
 .accountdescription {padding-left: 4px; padding-right: 4px}
 /* End Account Number Selector*/
