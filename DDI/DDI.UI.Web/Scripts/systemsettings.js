@@ -3493,7 +3493,7 @@ function EditBusinessUnit(bufromtoid) {
                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                CloseModal(modal);
                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                             
+              // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
                $('.bus-FromLedgerAccount').empty();
                $('.bus-ToLedgerAccount').empty();
               

@@ -109,7 +109,8 @@ function DoSearch() {
                         showOperationChooser: false
                     },
                     onRowClick: function (info) {
-                        DisplayConstituent(info.values[0]);
+                     
+                        DisplayJournals(info.values[0]);
                     }
                 });
 
