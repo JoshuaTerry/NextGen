@@ -2706,16 +2706,6 @@ function LoadBudgetSectionSettings() {
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
 
-    var ledgernamegroup = $('<div>');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').addClass('').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
-
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
     var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
@@ -2802,7 +2792,6 @@ function GetBudgetSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.workingBudgetName').val(data.Data.WorkingBudgetName)
                 $('.fixedBudgetName').val(data.Data.FixedBudgetName)
                 $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
@@ -2820,16 +2809,6 @@ function LoadChartAccountsSectionSettings() {
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>').addClass('');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
 
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
@@ -2956,7 +2935,6 @@ function GetChartSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
                 $('.groupLevels').val(data.Data.AccountGroupLevels);
                 $('.accountGroup1Title').val(data.Data.AccountGroup1Title)
