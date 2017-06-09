@@ -11,6 +11,16 @@ $(document).ready(function () {
 
     });
 
+    var fiscalYearId = sessionStorage.getItem('FISCAL_YEAR_ID');
+
+    if (fiscalYearId) {
+
+        sessionStorage.removeItem('FISCAL_YEAR_ID');
+
+        $('.tabscontainer').tabs("option", "active", 1);;
+
+    }
+
 });
 
 
