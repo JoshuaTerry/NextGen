@@ -20,62 +20,53 @@
 
             <!-- Groups Tab -->
             <div id="tab-groups">
-                <h1 class ="GroupsSectionLabel">Groups</h1>
-                    <div>
-                        <div class="groupstable"></div>
-                    </div>
-
-              <%--  <div class="newlinkcontainer">
-                    <a href="#" class="newlink addnewgroup">New Group</a>
-                </div>
-
-                <div class="groupsgridcontainer"></div>
-
-                <div class="groupmembersgridcontainer"></div>
-
-                <div class="securitysettingsgridcontainer"></div>--%>
-
+                <h1 class="GroupsSectionLabel">Groups</h1>
+                <div class="newlinkcontainer"><a href="#" class="newgroupmodal newlink">New Group</a></div>
+                <div class="groupstable"></div>
             </div>
 
             <div class="groupmodal" title="Groups" style="display: none;">
 
-        <div class="modalcontent">
-             
-            <div class="fieldblock">
-                <label>Name:</label>
-                <input type="text" class="dba-Name" />
+                <input type="hidden" class="hidgroupid" />
+
+                <div class="modalcontent">
+
+                    <div class="fieldblock">
+                        <label>Name:</label>
+                        <input type="text" class="gp-Name required" />
+                    </div>
+
+                    <div class="rolesmodal" style="display: none;">
+
+                        <div class="fieldblock">
+                            <label>Roles:</label>
+                            <div class="gp-rolesdropdowncontainer"></div>
+                        </div>
+                    
+                        <div class="modalbuttons roleaddbuttons">
+                            <input type="button" class="saverolesbutton" value="Add" />
+                            <a href="#" class="cancelrolesmodal">Cancel</a>
+                        </div>
+
+                    </div>
+
+                    <div class="rolesgriditems" style="display: none;">
+
+                        <div class="rolesgridcontainer"></div>
+
+                        <input type="button" class="addrolesbutton" value="Add Roles" />
+                    </div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="savegroupbutton" value="Save" />
+                        <a href="#" class="cancelgroupmodal">Cancel</a>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="threecolumn">
-
-                <div class="fieldblock">
-                    <label>Assigned Roles</label>
-                    <select class="gp-Roles" size="5"> 
-                    </select>
-
-                </div>
-                 
-                <div>
-                    <input type="button" value="Add" /> <br />
-                    <input type="button" value="Remove" /> <br />
-                </div>
-
-                <div class="fieldblock">
-                    <label>Available Roles</label>
-                    <select class="AllRoles" size="5"> 
-                    </select>
-                </div>
-
-                <div class="modalbuttons">
-                    <input type="button" class="savebutton" value="Save" />
-                    <a href="#" class="cancelmodal">Cancel</a>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+            
 
             <!-- Users Tab -->
             <div id="tab-users">
@@ -87,7 +78,7 @@
         </div>
     </div>
 
-    <div class="newgroupmodal" title="New Group" style="display: none;">
+    <div class="newgroupmodal " title="New Group" style="display: none;">
         <div class="modalcontent">
         </div>
     </div>
