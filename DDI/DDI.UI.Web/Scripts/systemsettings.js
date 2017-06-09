@@ -30,6 +30,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        $('.customfieldmodallink').remove();
+
         $('.gridcontainer').html('');
 
         $('.systemsettings a').removeClass('selected');
@@ -41,8 +43,6 @@ $(document).ready(function () {
         $('.systemsettingsheader').text($(this).text());
 
         ExecuteFunction(functionToCall, window);
-
-        InitRequiredLabels("educationLevelmodal")
 
     });
 
@@ -1453,6 +1453,8 @@ function LoadEducationSectionSettings() {
     $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
+
+    InitRequiredLabels("educationLevelmodal")
 }
 
 function LoadDegreeSettingsGrid() {
@@ -2590,16 +2592,16 @@ function LoadDonationHomeScreenSectionSettings() {
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
+    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.gridcontainer'));
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
         LoadAccountingSettings($('.hidLedgerId').val());
@@ -2697,22 +2699,12 @@ function PickLedger() {
 
 function LoadBudgetSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var businessunitid = currentBusinessUnit.Id;
+    var businessunitid = currentBusinessUnitId;
     var ledgerid;
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').addClass('').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
 
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
@@ -2774,7 +2766,7 @@ function LoadBudgetSectionSettings() {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
     InitRequiredLabels('budgetsettingscontainer')
 
@@ -2800,7 +2792,6 @@ function GetBudgetSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.workingBudgetName').val(data.Data.WorkingBudgetName)
                 $('.fixedBudgetName').val(data.Data.FixedBudgetName)
                 $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
@@ -2813,28 +2804,18 @@ function GetBudgetSetting() {
 
 function LoadChartAccountsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>').addClass('');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
 
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
     var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
         //update on change  (not working so added .change logic below
         //GetChartSetting();
     }, function () {
@@ -2911,9 +2892,7 @@ function LoadChartAccountsSectionSettings() {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
-
-    InitRequiredLabels("chartsettingscontainer")
+    $(container).appendTo($('.gridcontainer'));
 }
 
 function SaveBudgetSetting(id) {
@@ -2956,7 +2935,6 @@ function GetChartSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
                 $('.groupLevels').val(data.Data.AccountGroupLevels);
                 $('.accountGroup1Title').val(data.Data.AccountGroup1Title)
@@ -3017,12 +2995,6 @@ function GroupLevelsChange() {
             break;
     }
 }
-
-
-function LoadEntitiesSectionSettings() {
-
-
-}
 function LoadChartAccountsSettingsSectionSettings() {
 
 
@@ -3032,7 +3004,7 @@ function LoadChartAccountsSettingsSectionSettings() {
 /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var entityColumns = [
       
@@ -3056,16 +3028,10 @@ function LoadEntitiesSectionSettings() {
 
               $('<label>').text(entity).appendTo(container);
           }
-      },
-      {
-          caption: '', cellTemplate: function (container, options) {
-
-
-          }
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
+    LoadGrid('.gridcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
@@ -3073,7 +3039,7 @@ function LoadEntitiesSectionSettings() {
 
 function LoadFiscalYearSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
@@ -3098,9 +3064,9 @@ function LoadFiscalYearSectionSettings() {
     $(fpcontainer).appendTo(gridgroup);
 
     $(gridgroup).appendTo(container);
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
         var ledgerid = $('.LedgerId').val();
 
@@ -3193,8 +3159,8 @@ function LoadFundAccountingSectionSettings() {
     var container = $('<div>').addClass('fundsettingscontainer onecolumn');
 
     /* FISCAL YEAR */
-    $('.contentcontainer').empty();
-    var container = $('<div>').appendTo('.contentcontainer');
+    $('.gridcontainer').empty();
+    var container = $('<div>').appendTo('.gridcontainer');
     var header = $('<div>');
     $('<label>').text('Setting for ').appendTo(header);
     var fundnamedisplay = $('<label>').addClass('FundLedgerId').appendTo(header);
@@ -3219,7 +3185,7 @@ function LoadFundAccountingSectionSettings() {
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
     var header = $('<h1>').text('G/L Account Settings ').appendTo($(accordions));
     $(accountrevenuegroup).appendTo($(accordions));
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
     var selectfundbalanceaccountgroup = $('<div>');
@@ -3285,7 +3251,7 @@ function LoadFundAccountingSectionSettings() {
 
    // var fiscalyearid = '';
 
-    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnit.Id + '?fields=all', null, function (data) {
+    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
         var ledger = data.Data[0];
         $('.FundLedgerId').text(ledger.Code);
         fundid = $('.selectfund').val();
@@ -3339,7 +3305,7 @@ function LoadFundAccountingSectionSettings() {
     var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordions));
     $(funddue).appendTo($(accordions));
 
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     LoadAccordions();
 
@@ -3604,7 +3570,7 @@ function EditFundDue(funddueid) {
 
 function LoadGLFormatSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var container = $('<div>');
 
@@ -3620,11 +3586,11 @@ function LoadGLFormatSectionSettings() {
     $(glformat).appendTo($(container));
 
 
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
 
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
         var ledgerId = $('.LedgerId').val();
         var canDeleteSegmentLevels = false;
@@ -3793,14 +3759,14 @@ function LoadGLFormatSectionSettings() {
 
 function LoadJournalSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
 
 }
 
 function LoadUtilitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
 
 }
@@ -3872,7 +3838,7 @@ function RefreshCustomFieldsGrid() {
 
 function CreateNewCustomFieldModalLink(entity, title) {
 
-    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.gridcontainer'));
+    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field');
     $('.gridcontainer').before($(modallink));
 
     $(modallink).unbind('click');

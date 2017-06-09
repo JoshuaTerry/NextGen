@@ -4,6 +4,9 @@
 div.accounts { width: 90%; margin: 10px auto 0 auto; }
 div.accounts div.tabscontainer { width: 100%; }
 
+.as-accounts { margin-top: 10px; width: 90%; margin: 10px auto 0 auto; background-color: white; padding: 20px; }
+.as-accounts h1 { margin-bottom: 10px; }
+.as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
 /* gl summary widths*/
 
 span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
@@ -32,6 +35,12 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 .accountgroup {visibility: hidden;}
 .accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
 
+.fiscalyearselectioncontainr { float: right; }
+
+.newbutton { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+.editbutton { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }
+.newbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
+.editbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
 
 
 

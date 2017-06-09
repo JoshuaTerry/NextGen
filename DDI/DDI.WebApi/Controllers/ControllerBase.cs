@@ -171,8 +171,9 @@ namespace DDI.WebApi.Controllers
                 urlHelper = urlHelper ?? GetUrlHelper();
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    throw new Exception("Model Invalid");
                 }
+
 
                 var response = _service.Add(entity);
 
