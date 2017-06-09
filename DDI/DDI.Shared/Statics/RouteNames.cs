@@ -5,6 +5,7 @@
         // NOTE: RouteNames need to match their entity type name
 
         public const string Account = "Account";
+        public const string AccountGroup = "AccountGroup";
         public const string AccountActivity = "AccountActivity";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
@@ -73,7 +74,8 @@
         public const string Relationship = "Relationship";
         public const string RelationshipCategories = "RelationshipCategories";
         public const string RelationshipTypes = "RelationshipTypes";
-        public const string Role = "Role";
+		public const string Role = "Role";
+        public const string SavedEntityMapping = "SavedEntityMapping";
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";
         public const string Segment = "Segment";

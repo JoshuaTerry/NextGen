@@ -11,7 +11,8 @@ namespace DDI.WebApi.Helpers
         public void AddPaginationHeaderToResponse<T>(UrlHelper urlHelper, T search, int? totalCount, string routeName)
             where T : IPageable
         {
-                var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
+            var paginationHeader = CreatePaginationHeader(urlHelper, search, totalCount, routeName);
+            if (HttpContext.Current != null)
                 HttpContext.Current.Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
         }
 
@@ -26,10 +27,10 @@ namespace DDI.WebApi.Helpers
                 totalPages = (int) Math.Ceiling((double) totalCount / limit);
             }
 
-            var prevLink = offset > 0 ? urlHelper.Link(routeName, search.ForPreviousPage()) : "";
-            var nextLink = offset + 1 < totalPages ? urlHelper.Link(routeName, search.ForNextPage()) : "";
-            var firstLink = urlHelper.Link(routeName, search.ForFirstPage());
-            var lastLink = urlHelper.Link(routeName, search.ForLastPage(totalPages));
+            //var prevLink = offset > 0 ? urlHelper.Link(routeName, search.ForPreviousPage()) : "";
+            //var nextLink = offset + 1 < totalPages ? urlHelper.Link(routeName, search.ForNextPage()) : "";
+            //var firstLink = urlHelper.Link(routeName, search.ForFirstPage());
+            //var lastLink = urlHelper.Link(routeName, search.ForLastPage(totalPages));
 
 
             var paginationHeader = new PaginationHeader
@@ -38,10 +39,10 @@ namespace DDI.WebApi.Helpers
                 PageSize = limit,
                 TotalCount = totalCount,
                 TotalPages = totalPages,
-                PreviousPageLink = prevLink,
-                NextPageLink = nextLink,
-                FirstPageLink = firstLink,
-                LastPageLink = lastLink
+                //PreviousPageLink = prevLink,
+                //NextPageLink = nextLink,
+                //FirstPageLink = firstLink,
+                //LastPageLink = lastLink
             };
             return paginationHeader;
         }

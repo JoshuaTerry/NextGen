@@ -79,7 +79,7 @@ function LoadGroupsGrid() {
         { dataField: 'DisplayName', caption: 'Group Name' }
     ];
 
-    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', '', EditGroup, null, null); 
+    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', '', EditGroup, DeleteGroup, null); 
 
 }
 
@@ -120,9 +120,11 @@ function NewGroupModal() {
 
             MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
 
-                LoadGroup(data.Data.Id);
+                id = data.Data.Id;
 
-                $('.hidgroupid').val(data.Data.Id);
+                LoadGroup(id);
+
+                $('.hidgroupid').val(id);
 
                 $('.rolesgriditems').show();
 
@@ -134,11 +136,31 @@ function NewGroupModal() {
 
                     $('.saverolesbutton').click(function (e) {
 
-                        AddRolesToGroup(data.Data.Id);
+                        AddRolesToGroup(id);
 
                         $('.rolesmodal').hide();
 
-                        LoadGroup(data.Data.Id);
+                        LoadGroup(id);
+
+                    });
+
+                    $('.savegroupbutton').unbind('click');
+
+                    $('.savegroupbutton').click(function (e) {
+
+                        var item = {
+                            Name: $('.gp-Name').val()
+                        };
+
+                        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
+
+                            LoadGroup(id);
+
+                            CloseModal(modal);
+
+                            LoadGroupsGrid();
+
+                        });
 
                     });
 

@@ -12,10 +12,14 @@ namespace DDI.Shared.Models.Client.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-        public Guid CustomFieldId { get; set; }
+
         public DDI.Shared.Enums.Common.CustomFieldEntity EntityType { get; set; }
+
         public Guid? ParentEntityId { get; set; }
+
         public string Value { get; set; }
+
+        public Guid CustomFieldId { get; set; }
         [ForeignKey("CustomFieldId")]
         public CustomField CustomField { get; set; }
 

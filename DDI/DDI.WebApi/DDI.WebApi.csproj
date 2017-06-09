@@ -71,6 +71,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
       <Private>True</Private>
@@ -233,12 +234,14 @@
     <Compile Include="Controllers\Core\FileStorageController.cs" />
     <Compile Include="Controllers\Core\GroupController.cs" />
     <Compile Include="Controllers\Core\HomeController.cs" />
+    <Compile Include="Controllers\Core\ImportController.cs" />
     <Compile Include="Controllers\Core\NoteCategoriesController.cs" />
     <Compile Include="Controllers\Core\NoteCodesController.cs" />
     <Compile Include="Controllers\Core\NoteContactMethodsController.cs" />
     <Compile Include="Controllers\Core\NotesController.cs" />
     <Compile Include="Controllers\Core\NoteTopicsController.cs" />
     <Compile Include="Controllers\Core\RolesController.cs" />
+    <Compile Include="Controllers\Core\SavedEntityMappingController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
     <Compile Include="Controllers\CRM\TagGroupsController.cs" />
     <Compile Include="Controllers\CRM\TagsController.cs" />
@@ -282,6 +285,7 @@
     <Compile Include="Controllers\CRM\StatesController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\GL\AccountController.cs" />
+    <Compile Include="Controllers\GL\AccountGroupController.cs" />
     <Compile Include="Controllers\GL\FundFromToController.cs" />
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
@@ -331,20 +335,6 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="bin\DDI.WebApi.dll" />
     <Content Include="bin\DDI.WebApi.pdb" />
-    <Content Include="Content\dx.android5.light.css" />
-    <Content Include="Content\dx.common.css" />
-    <Content Include="Content\dx.contrast.compact.css" />
-    <Content Include="Content\dx.contrast.css" />
-    <Content Include="Content\dx.dark.compact.css" />
-    <Content Include="Content\dx.dark.css" />
-    <Content Include="Content\dx.ios7.default.css" />
-    <Content Include="Content\dx.light.compact.css" />
-    <Content Include="Content\dx.light.css" />
-    <Content Include="Content\dx.spa.css" />
-    <Content Include="Content\dx.win10.black.css" />
-    <Content Include="Content\dx.win10.white.css" />
-    <Content Include="Content\dx.win8.black.css" />
-    <Content Include="Content\dx.win8.white.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -367,12 +357,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="logging.config" />
-    <Content Include="Content\icons\dxicons.eot" />
-    <Content Include="Content\icons\dxicons.ttf" />
-    <Content Include="Content\icons\dxicons.woff" />
-    <Content Include="Content\icons\dxiconsios.eot" />
-    <Content Include="Content\icons\dxiconsios.ttf" />
-    <Content Include="Content\icons\dxiconsios.woff" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Solution Files\DevExtreme.AspNet.Mvc.dll" />
