@@ -27,6 +27,9 @@
 
             <div class="groupmodal" title="Groups" style="display: none;">
 
+                <input type="hidden" class="hidgroupid" />
+
+
                 <div class="modalcontent">
 
                     <div class="fieldblock">

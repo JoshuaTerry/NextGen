@@ -119,9 +119,11 @@ function NewGroupModal() {
                 Name: $('.gp-Name').val()
             };
 
-            MakeServiceCall('POST', 'groups', JSON.stringify(item), function (data) {
+            MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
 
                 LoadGroup(data.Data.Id);
+
+                $('.hidgroupid').val(data.Data.Id);
 
                 $('.rolesgriditems').show();
 
@@ -179,6 +181,8 @@ function EditGroup(id) {
     
     LoadGroup(id);
 
+    $('.hidgroupid').val(id);
+
     modal = $('.groupmodal').dialog({
         closeOnEscape: false,
         modal: true,
@@ -199,19 +203,17 @@ function EditGroup(id) {
 
     $('.savegroupbutton').click(function (e) {
 
-        var data = {
+        var item = {
             Name: $('.gp-Name').val()
         };
 
-        MakeServiceCall('POST', 'roles', data, function (data) {
+        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
 
-            LoadGroup(data.Data.Id);
+            LoadGroup(id);
 
-            $('.rolesgriditems').show();
+            CloseModal(modal);
 
             LoadGroupsGrid();
-
-            $('.groupmodal').hide();
 
         });
 
@@ -315,9 +317,11 @@ function LoadGroup(id) {
 
 }
 
-function DeleteRole(id, role) {
+function DeleteRole(role) {
 
-    MakeServiceCall('PATCH', '/groups/remove/' + role + '/role', null, function (data) {
+    var groupid = $('.hidgroupid').val();
+
+    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role', null, function (data) {
 
         DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
 

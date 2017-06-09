@@ -136,7 +136,7 @@ namespace DDI.WebApi.Tests.Controllers
             Role role = service.GetAll().Data.Cast<Group>().ToList()[1].Roles.ToList()[0];
            
 
-            uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles)).Returns(group);
+            uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles, g => g.Users)).Returns(group);
             uow.Setup(m => m.GetById<Group>(group.Id)).Returns(group);
             uow.Setup(m => m.GetRepository<User>().GetById(user.Id)).Returns(user);
 
@@ -167,14 +167,14 @@ namespace DDI.WebApi.Tests.Controllers
             Group group = service.GetAll().Data[2] as Group;
             Role role = service.GetAll().Data.Cast<Group>().ToList()[1].Roles.ToList()[0];
 
-            uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles)).Returns(group);
+            uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles, g => g.Users)).Returns(group);
             uow.Setup(m => m.GetById<Group>(group.Id)).Returns(group);
 
             IHttpActionResult result = controller.RemoveRolesFromGroup(group.Id, role.Id);
             var contentResult = (result as OkNegotiatedContentResult<IDataResponse>).Content as DataResponse<object>;
 
             Assert.AreEqual(0, (contentResult.Data as Group).Roles.Count, "Group collection is unchanged");
-            Assert.AreEqual(1, user.Roles.Count, "Role removed from a group is removed from user in that group");
+            Assert.AreEqual(2, user.Roles.Count, "User collection is unchanged");
         }
 
         private IQueryable<Group> SetupRepo()

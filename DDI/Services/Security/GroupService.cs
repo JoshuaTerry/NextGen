@@ -69,7 +69,7 @@ namespace DDI.Services.General
 
         public IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, Guid roleId)
         {
-            var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles); // group
+            var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles, g => g.Users); // group
             var roleToRemove = group.Roles.Where(r => r.Id == roleId).FirstOrDefault(); // role 
 
             if (roleToRemove != null)
