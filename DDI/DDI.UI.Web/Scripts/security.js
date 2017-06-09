@@ -97,7 +97,6 @@ function NewGroupModal() {
 
         e.preventDefault();
 
-
         modal = $('.groupmodal').dialog({
             closeOnEscape: false,
             modal: true,
@@ -106,6 +105,8 @@ function NewGroupModal() {
             beforeClose: function (e) {
 
                 $('.rolesmodal, .rolesgriditems').hide();
+
+                $('.gp-Name').val("");
 
             }
         });
@@ -142,6 +143,9 @@ function NewGroupModal() {
 
                         LoadGroup(id);
 
+                        $('.rolestagbox').dxTagBox('instance').reset();
+
+
                     });
 
                     $('.savegroupbutton').unbind('click');
@@ -159,6 +163,8 @@ function NewGroupModal() {
                             CloseModal(modal);
 
                             LoadGroupsGrid();
+
+                            $('.gp-Name').val("");
 
                         });
 
@@ -192,6 +198,8 @@ function NewGroupModal() {
 
             $('.rolestagbox').dxTagBox('instance').reset();
 
+            $('.gp-Name').val("");
+
         });
 
     });
@@ -212,6 +220,8 @@ function EditGroup(id) {
         beforeClose: function (e) {
 
             $('.rolesmodal, .rolesgriditems').hide();
+
+            $('.gp-Name').val("");
 
         }
     });
@@ -236,6 +246,10 @@ function EditGroup(id) {
 
             LoadGroupsGrid();
 
+            $('.rolestagbox').dxTagBox('instance').reset();
+
+            $('.gp-Name').val("");
+
         });
 
     });
@@ -252,6 +266,8 @@ function EditGroup(id) {
 
             $('.rolesmodal').hide();
 
+            $('.rolestagbox').dxTagBox('instance').reset();
+
         });
 
         $('.cancelrolesmodal').click(function (e) {
@@ -260,9 +276,7 @@ function EditGroup(id) {
 
             $('.rolesmodal').hide();
 
-
             $('.rolestagbox').dxTagBox('instance').reset();
-
             
 
         });
@@ -276,6 +290,10 @@ function EditGroup(id) {
         CloseModal(modal);
 
         $('.rolesmodal, .rolesgriditems').hide();
+
+        $('.rolestagbox').dxTagBox('instance').reset();
+
+        $('.gp-Name').val("");
 
     });
 
