@@ -47,7 +47,7 @@ function Resize() {
 function AddColumnHeaders() {
 
     var header = $('.searchresultstable thead');
-    var columns = ['ID', 'Journal#', 'Type', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Year', 'Status'];
+    var columns = ['ID', 'Journal#', 'JournalType', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Year', 'Status'];
     var tr = $('<tr>');
 
     $(columns).each(function () {

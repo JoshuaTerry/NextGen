@@ -30,7 +30,8 @@
                         <div class="fieldblock">
                             <label>Type</label>
                              <select class="searchtype">
-                                    <option value="0">One-time</option>
+                                    <option ></option>
+                                    <option value="0">Normal</option>
                                     <option value="1">Recurring</option>
                                     <option value="2">Template</option>
                                    
@@ -65,6 +66,7 @@
                         <div class="fieldblock">
                             <label>Status</label>
                           <select class="searchstatus">
+                                   <option ></option>
                                    <option value="1">Active</option>
                                     <option value="2">Expired</option>
                                     <option value="4">Approved</option>
