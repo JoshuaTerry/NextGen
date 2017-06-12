@@ -700,10 +700,6 @@ function LoadAccordions() {
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
 
-        $('.accordions').accordion({
-            active: false
-        });
-
         $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
         $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
     });
