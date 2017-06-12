@@ -1,13 +1,15 @@
-﻿
-$(document).ready(function () {
+﻿var accountId = sessionStorage.getItem('ACCOUNT_ID');
 
-    LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
+
+$(document).ready(function () {
+    
+    LoadAccountActivityAndBudgetTab(accountId);
 
     $('#activity-and-budget-tab').click(function (e) {
 
         e.preventDefault();
 
-        LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
+        LoadAccountActivityAndBudgetTab(accountId);
 
     });
 
@@ -59,7 +61,7 @@ var segmentLevel;
 var groupLevels;
 var group1Data = [];
 var saveGroupId;
-var accountId;
+
 var segmentData = [];
 var category = '0';
 var editMode = '';
