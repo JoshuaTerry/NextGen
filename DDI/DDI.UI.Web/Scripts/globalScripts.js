@@ -88,6 +88,7 @@ $(document).ready(function () {
             toolbox.hide();
             toolbox = null;
         }
+
         
     });
 
@@ -1673,7 +1674,7 @@ function InitRequiredLabels(formClassName) {
             labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
         }
     });
-}
+    }
 
 function ValidateForm(formClassName) {
     var validform = true;

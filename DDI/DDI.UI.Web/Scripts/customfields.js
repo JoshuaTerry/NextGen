@@ -58,7 +58,7 @@ function DisplayCustomFieldsGrid(container, entity) {
                     showOperationChooser: false
                 },
                 onRowClick: function (info) {
-                    EditCustomControl(info.values[0]);
+                    EditCustomControl(info.data.Id);
                 }
             });
 

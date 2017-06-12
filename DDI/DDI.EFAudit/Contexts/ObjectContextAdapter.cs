@@ -15,7 +15,7 @@ namespace DDI.EFAudit.Contexts
     public abstract class ObjectContextAdapter<TChangeSet, TPrincipal> : IAuditLogContext<TChangeSet, TPrincipal> where TChangeSet : IChangeSet<TPrincipal>
     {
         private const string ID = "Id";
-        private const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.IgnoreCase;
+        private const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly;
         private ObjectContext _context;
 
         public ObjectContextAdapter(ObjectContext context)

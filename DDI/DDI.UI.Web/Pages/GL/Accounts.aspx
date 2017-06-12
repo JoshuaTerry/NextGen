@@ -10,6 +10,16 @@
 
             LoadFiscalYears();
 
+            $('.newaccountlink').click(function (e) {
+
+                e.preventDefault();
+
+                sessionStorage.setItem('FISCAL_YEAR_ID', $('.as-fiscalyear').val());
+
+                location.href = "/Pages/GL/AccountDetails.aspx";
+
+            });
+
         });
 
         function LoadFiscalYears() {
@@ -45,6 +55,10 @@
 
         <h1>Accounts</h1>
         
+        <div class="newaccountlinkcontainer">
+            <a href="#" class="newaccountlink">New Account</a>
+        </div>
+
         <div class="gridContainer"></div>
     </div>
    

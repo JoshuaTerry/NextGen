@@ -6,3 +6,6 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .adminsecurity { width: 900px; margin: 10px auto 0 auto; }
 .adminsecurity .tabscontainer { width: 100%;  }
 
+.dx-popup-content {  overflow: scroll; }
+
+.roleaddbuttons { margin : 0 0 15px 0; }
