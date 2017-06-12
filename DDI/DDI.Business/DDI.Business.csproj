@@ -64,7 +64,8 @@
     <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="GL\AccountGroup.cs" />
-    <Compile Include="GL\Segment.cs" />
+    <Compile Include="GL\ClosingLogic.cs" />
+    <Compile Include="GL\SegmentLogic.cs" />
     <Compile Include="GL\FundFromToLogic.cs" />
     <Compile Include="GL\BusinessUnitFromToLogic.cs" />
     <Compile Include="GL\FundLogic.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Helpers\BusinessUnitHelper.cs" />
     <Compile Include="Helpers\BusinessLogicHelper.cs" />
     <Compile Include="Helpers\CodeEntityHelper.cs" />
+    <Compile Include="Helpers\EntityMapper.cs" />
     <Compile Include="Helpers\LinkedEntityHelper.cs" />
     <Compile Include="IEntityLogic.cs" />
     <Compile Include="ModuleInfo\ModuleInfoCreator.cs" />
