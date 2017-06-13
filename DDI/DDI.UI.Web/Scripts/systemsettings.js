@@ -3043,22 +3043,25 @@ function LoadFiscalYearSectionSettings() {
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
-    var selectledgergroup = $('<div>').addClass('twocolumn');
-    var selectledgername = $('<h1>').text('Fiscal Year Settings for Ledger: ');
+    var selectledgergroup = $('<div style="margin-bottom: 20px;">');
+    var selectledgername = $('<h2>').text('Ledger: ');
+
     $('<select>').addClass('LedgerId').appendTo(selectledgername);
     $(selectledgername).appendTo(selectledgergroup);
     $(selectledgergroup).appendTo(container);
 
     var gridgroup = $('<div>').addClass('twocolumn');
 
-    var fycontainer = $('<div>').addClass('fiscalyearcontainer');
+    var fycontainer = $('<fieldset style="display: none;">').addClass('fiscalyearcontainer');
+    $('<legend>').text('Fiscal Years').appendTo($(fycontainer));
     $('.gridcontainer').append($(fycontainer));
-    $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
+    // $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
 
     $('.fiscalperiodscontainer').remove();
-    var fpcontainer = $('<div>').addClass('fiscalperiodscontainer');
+    var fpcontainer = $('<fieldset style="display: none;">').addClass('fiscalperiodscontainer');
+    $('<legend>').text('Fiscal Perods').appendTo($(fpcontainer));
     $('.gridcontainer').append($(fpcontainer));
-    $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
+    // $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
 
     $(fycontainer).appendTo(gridgroup);
     $(fpcontainer).appendTo(gridgroup);
@@ -3066,7 +3069,7 @@ function LoadFiscalYearSectionSettings() {
     $(gridgroup).appendTo(container);
     $(container).appendTo($('.gridcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
         var ledgerid = $('.LedgerId').val();
 
@@ -3100,7 +3103,25 @@ function LoadFiscalYearSectionSettings() {
             },
         ];
 
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
+
+            if (data.Data.length > 0) {
+                $('.fiscalyearcontainer').show();
+            }
+            else {
+                $('.fiscalyearcontainer').hide();
+            }
+
+        });
+
+
+
+    }, function (element, data) {
+
+        if (data.Data.length == 1) {
+            $(element).val(data.Data[0].Id);
+            $(element).change();
+        }
 
     });
 }
@@ -3108,7 +3129,7 @@ function LoadFiscalYearSectionSettings() {
 function LoadFiscalPeriods(info) {
 
     if (!info) {
-        var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
+        var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
     } else {
@@ -3147,7 +3168,16 @@ function LoadFiscalPeriods(info) {
         }
     ]
 
-    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
+    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
+
+        if (data.Data.length > 0) {
+            $('.fiscalperiodscontainer').show();
+        }
+        else {
+            $('.fiscalperiodscontainer').hide();
+        }
+
+    });
 
 }
 
