@@ -39,6 +39,7 @@
 
         public static string FiscalYearNotEditable => "Fiscal year settings cannot be modified once transactions have been posted.";
         public static string FiscalPeriodClosed => "Fiscal period {0} in year {0} has already been closed.";
+        public static string FiscalPeriodOpen => "Fiscal period {0} in year {0} is open.";
         public static string FiscalYearClosed => "Fiscal year {0} has been closed.";
         public static string FiscalPeriodsRange => $"The number of fiscal periods must be between 1 and {ConstantsGL.MaxFiscalPeriods}.";
         public static string CurrentPeriodRange => "The current period number must be between 1 and {0}.";

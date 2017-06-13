@@ -344,6 +344,24 @@ namespace DDI.Business.GL
             return GetAccount(ledgerAccount, year);
         }
 
+
+        /// <summary>
+        /// Get a specific account for specfied fiscal year.
+        /// </summary>
+        /// <param name="ledgerAccountId">Ledger account Id</param>
+        /// <param name="year">Fiscal year</param>
+        /// <param name="anyBusinessUnit">TRUE if fiscal year can be in another business unit.</param>
+        public Account GetAccount(Guid? ledgerAccountId, FiscalYear year, bool anyBusinessUnit = false)
+        {
+            if (ledgerAccountId == null)
+            {
+                return null;
+            }
+
+            LedgerAccount ledgerAccount = UnitOfWork.GetById<LedgerAccount>(ledgerAccountId.Value, p => p.LedgerAccountYears.First().Account);
+            return GetAccount(ledgerAccount, year, anyBusinessUnit);
+        }
+
         /// <summary>
         /// Get a specific account for the fiscal year containing the specified date.
         /// </summary>
@@ -743,6 +761,47 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
+        /// Get the list of next year accounts for a G/L account.  Next year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
+        /// </summary>
+        /// <returns></returns>
+        public List<MappedAccount> GetNextYearAccounts(Account account, FiscalYear nyear = null)
+        {
+            var list = new List<MappedAccount>();
+
+            if (nyear == null)
+            {
+                nyear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetNextFiscalYear(UnitOfWork.GetReference(account, p => p.FiscalYear), true);
+                if (nyear == null)
+                {
+                    return list;
+                }
+            }
+
+            // Look in NextYearAccounts collection.
+            foreach (var entry in UnitOfWork.GetEntities<AccountPriorYear>(p => p.Account).Where(p => p.PriorAccountId == account.Id))
+            {
+                if (!list.Any(p => p.Account.Id == entry.Account.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.Account, Factor = entry.Percentage / 100m });
+                }
+            }
+
+            LedgerAccount ledgerAccount = GetLedgerAccount(account);
+
+            // Get the account in the next year.
+            foreach (var entry in UnitOfWork.GetEntities<LedgerAccountYear>(p => p.FiscalYear, p => p.Account)
+                                            .Where(p => p.LedgerAccountId == ledgerAccount.Id && p.FiscalYearId == nyear.Id))
+            {
+                if (entry.Account != null && !list.Any(p => p.Account.Id == entry.Account.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.Account, Factor = 1m });
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Get calculated account activity for an account.
         /// </summary>
         public AccountActivitySummary GetAccountActivity(Account account)
@@ -922,6 +981,98 @@ namespace DDI.Business.GL
             return summary;
         }
         		
+
+        /// <summary>
+        /// Get the specific or default closing account for a G/L account.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Account GetClosingAccount(Account account)
+        {
+            if (account.ClosingAccountId != null && account.ClosingAccount == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.ClosingAccount);
+            }
+            return account.ClosingAccount ?? GetDefaultClosingAccount(account);
+        }
+
+        /// <summary>
+        /// Get the default closing account for a G/L account.
+        /// </summary>
+        public Account GetDefaultClosingAccount(Account account)
+        {
+            Account closeAcct = null;
+
+            // Get the fund
+            Fund fund = UnitOfWork.GetBusinessLogic<FundLogic>().GetFund(account);
+            if (fund == null)
+            {
+                return closeAcct;
+            }
+
+            // Revenue/Expense accounts:
+            if (account.FiscalYear == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.FiscalYear);
+            }
+
+            if (account.Category == AccountCategory.Revenue || account.Category == AccountCategory.Expense)
+            {
+                // Determine the closing account based on category.  Final default is the fund's balance account.
+                if (account.Category == AccountCategory.Revenue)
+                {
+                    closeAcct = GetAccount(fund.ClosingRevenueLedgerAccountId, account.FiscalYear);
+                }
+                else if (account.Category == AccountCategory.Expense)
+                {
+                    closeAcct = GetAccount(fund.ClosingExpenseLedgerAccountId, account.FiscalYear);
+                }
+                if (closeAcct == null)
+                {
+                    closeAcct = GetAccount(fund.FundBalanceLedgerAccountId, account.FiscalYear);
+                }
+            }
+            else
+            {
+                if ((AccountIsEquivalent(account, fund.ClosingExpenseLedgerAccountId) || AccountIsEquivalent(account, fund.ClosingRevenueLedgerAccountId))
+                     &&
+                    !AccountIsEquivalent(account, fund.FundBalanceLedgerAccountId))
+                {
+                    closeAcct = GetAccount(fund.FundBalanceLedgerAccountId, account.FiscalYear);
+                }
+            }
+
+            return closeAcct;
+        }
+
+        /// <summary>
+        /// Determines if an account is equivalent to another Account, LedgerAccountYear, or LedgerAccount.
+        /// </summary>
+        /// <param name="account">Account entity.</param>
+        /// <param name="id">Id of another Account, LedgerAccountYear, or LedgerAccount.</param>
+        /// <returns>True if equivalent.</returns>
+        public bool AccountIsEquivalent(Account account, Guid? id)
+        {
+            if (id == null)
+            {
+                return false;
+            }
+
+            Guid idValue = id.Value;
+
+            if (account.Id == idValue)
+            {
+                return true;
+            }
+
+            if (account.LedgerAccountYears == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.LedgerAccountYears);
+            }
+
+            return account.LedgerAccountYears.Any(p => p.Id == idValue || p.LedgerAccountId == idValue);
+        }
+
         #endregion
 
         #region Private Methods

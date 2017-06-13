@@ -61,7 +61,8 @@ namespace DDI.Business.Tests.GL.DataSources
 
                     SetAccountGroups(year, "Equity", "", "");
                     AddAccount(year, "3001.CORP", "Capital", AccountCategory.Fund);
-                    AddAccount(year, "3001.CORP", "Retained Earnings", AccountCategory.Fund);
+                    AddAccount(year, "3002.CORP", "Accumulated Revenue", AccountCategory.Fund);
+                    AddAccount(year, "3003.CORP", "Accumulated Expense", AccountCategory.Fund);
 
                     SetAccountGroups(year, "Revenue", "", "");
                     AddAccount(year, "4001.MIDW", "Sales Midwest", AccountCategory.Revenue);
@@ -84,7 +85,7 @@ namespace DDI.Business.Tests.GL.DataSources
                         Account = current,
                         PriorAccount = prior1,
                         Percentage = 100m,
-                        Id = GuidHelper.NewGuid()
+                        Id = GuidHelper.NewSequentialGuid()
                     });
 
                     _accountPriorYears.Add(new AccountPriorYear()
@@ -92,7 +93,7 @@ namespace DDI.Business.Tests.GL.DataSources
                         Account = current,
                         PriorAccount = prior2,
                         Percentage = 100m,
-                        Id = GuidHelper.NewGuid()
+                        Id = GuidHelper.NewSequentialGuid()
                     });                    
    
                 }
@@ -134,13 +135,14 @@ namespace DDI.Business.Tests.GL.DataSources
                     AddAccount(year, "01-310-50-02", "Accumulated Revenue", AccountCategory.Fund, -225m);
                     SetAccountGroups(year, "FUND BALANCES", "TEMPORARY", "");
                     AddAccount(year, "02-380-50-02", "Accumulated Revenue", AccountCategory.Fund);
+                    AddAccount(year, "02-380-90-01", "NCE Accumulated Revenue", AccountCategory.Fund);
                     SetAccountGroups(year, "FUND BALANCES", "PERMANENT", "");
                     AddAccount(year, "03-390-50-02", "Accumulated Revenue", AccountCategory.Fund);
 
                     // Revenue
                     SetAccountGroups(year, "INCOME", "GIFTS", "");
                     AddAccount(year, "01-470-80-10-05", "Undesignated Gifts", AccountCategory.Revenue);
-                    AddAccount(year, "02-480-80-10-07", "NCE Endowment ETF Gifts", AccountCategory.Revenue);
+                    AddAccount(year, "02-480-80-10-07", "NCE Endowment ETF Gifts", AccountCategory.Revenue, 0, "02-380-90-01");
 
                     // Expense
                     SetAccountGroups(year, "EXPENSE", "INTEREST", "");
@@ -158,7 +160,8 @@ namespace DDI.Business.Tests.GL.DataSources
             return _accounts;
         }
 
-        private static void AddAccount(FiscalYear year, string accountNumber, string description, AccountCategory category, decimal beginBalance = 0m)
+        private static void AddAccount(FiscalYear year, string accountNumber, string description, AccountCategory category, 
+            decimal beginBalance = 0m, string closingAccount = null)
         {
             var ledgerAccount = _ledgerAccounts.FirstOrDefault(p => p.Ledger == year.Ledger && p.AccountNumber == accountNumber);
             if (ledgerAccount == null)
@@ -196,6 +199,11 @@ namespace DDI.Business.Tests.GL.DataSources
                 PriorYearAccounts = new List<AccountPriorYear>(),
                 Id = GuidHelper.NewSequentialGuid()
             };
+
+            if (closingAccount != null)
+            {
+                account.ClosingAccount = _accounts.FirstOrDefault(p => p.AccountNumber == closingAccount && p.FiscalYear == year);
+            }
 
             account.AccountSegments = GetAccountSegments(year, account);
 

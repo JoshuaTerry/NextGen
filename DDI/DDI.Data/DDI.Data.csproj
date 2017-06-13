@@ -79,7 +79,6 @@
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
-    <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
     <Compile Include="Migrations\Client\201706061801583_Attachments_v2.cs" />
     <Compile Include="Migrations\Client\201706061801583_Attachments_v2.Designer.cs">
       <DependentUpon>201706061801583_Attachments_v2.cs</DependentUpon>
@@ -369,7 +368,9 @@
       <Name>DDI.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

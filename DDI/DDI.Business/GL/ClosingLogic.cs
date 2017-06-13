@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Business.Helpers;
+using DDI.Data.Helpers;
 using DDI.Shared;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 
@@ -86,6 +90,73 @@ namespace DDI.Business.GL
             year.CurrentPeriodNumber = newPeriod.PeriodNumber;
 
             UnitOfWork.SaveChanges();
+        }
+
+        public void ReopenFiscalPeriod(Guid fiscalPeriodId)
+        {
+            FiscalPeriod period = UnitOfWork.GetById<FiscalPeriod>(fiscalPeriodId, p => p.FiscalYear, p => p.FiscalYear.FiscalPeriods);
+
+            if (period == null)
+            {
+                throw new InvalidOperationException(UserMessagesGL.BadFiscalPeriod);
+            }
+
+            if (period.FiscalYear.Status == FiscalYearStatus.Closed)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearClosed, period.FiscalYear.Name));
+            }
+
+            if (period.Status != FiscalPeriodStatus.Closed)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalPeriodOpen, period.PeriodNumber, period.FiscalYear.Name));
+            }
+
+            FiscalYear year = period.FiscalYear;
+
+            // Open all periods after the one being re-opened.
+            foreach (var entry in year.FiscalPeriods.Where(p => p.PeriodNumber >= period.PeriodNumber && p.Status == FiscalPeriodStatus.Closed))
+            {
+                entry.Status = FiscalPeriodStatus.Open;
+            }
+
+            // Update the fiscal year
+            if (year.CurrentPeriodNumber > period.PeriodNumber)
+            {
+                year.CurrentPeriodNumber = period.PeriodNumber;
+            }
+
+            UnitOfWork.SaveChanges();
+        }
+
+        public void CloseFiscalYear(Guid fiscalYearId)
+        {
+            FiscalYear year = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.FiscalPeriods);
+
+            if (year == null)
+            {
+                throw new InvalidOperationException(UserMessagesGL.BadFiscalYear);
+            }
+
+            if (year.Status == FiscalYearStatus.Closed)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearClosed, year.Name));
+            }
+
+            // Get the final non-adjustment period in the year
+            FiscalPeriod finalPeriod = year.FiscalPeriods.Where(p => p.IsAdjustmentPeriod == false).OrderByDescending(p => p.PeriodNumber).FirstOrDefault();
+
+            // if this period isn't closed, then close it.
+            if (finalPeriod != null && finalPeriod.Status != FiscalPeriodStatus.Closed)
+            {
+                CloseFiscalPeriod(finalPeriod.Id);
+            }
+
+            // Update the fiscal year.
+            year.Status = FiscalYearStatus.Closed;
+            UnitOfWork.SaveChanges();
+
+            // Perform the year closing procedure.
+            PerformYearClose(year);
         }
 
         public void CreateNewFiscalYear(Guid fiscalYearId, string newYearName, DateTime startDate, bool copyInactiveAccounts)
@@ -417,6 +488,230 @@ namespace DDI.Business.GL
                 }
             }
 
+        }
+
+
+        private void PerformYearClose(FiscalYear year)
+        {
+            var closeDict = new Dictionary<Account, CloseTo>();
+            AccountLogic accountLogic = UnitOfWork.GetBusinessLogic<AccountLogic>();
+            FiscalYearLogic fiscalYearLogic = UnitOfWork.GetBusinessLogic<FiscalYearLogic>();
+
+            if (year == null)
+                throw new ArgumentNullException(nameof(year));
+
+            FiscalYear nextYear = fiscalYearLogic.GetNextFiscalYear(year);
+
+            FiscalPeriod finalPeriod = year.FiscalPeriods.Where(p => p.IsAdjustmentPeriod == false).OrderByDescending(p => p.PeriodNumber).FirstOrDefault();
+
+            int finalPeriodNumber = finalPeriod?.PeriodNumber ?? 0;
+
+            IRepository<PostedTransaction> repo = UnitOfWork.GetRepository<PostedTransaction>();
+
+            // Physically delete all PostedTran rows with a type of "CloseFrom" and "CloseTo" for the fiscal year.
+            string sql = $"DELETE FROM {EntityFrameworkHelper.GetTableName<PostedTransaction>()} WHERE " +
+                         $"[{nameof(PostedTransaction.FiscalYearId)}] = '{year.Id}' AND " +
+                         $"([{nameof(PostedTransaction.PostedTransactionType)}] = {(int)PostedTransactionType.CloseFrom} OR " +
+                         $"[{nameof(PostedTransaction.PostedTransactionType)}] = {(int)PostedTransactionType.CloseTo})";
+
+            repo.Utilities.ExecuteSQL(sql);
+
+            // Closing from:
+
+            // Iterate through each revenue & expense account in the fiscal year
+            using (var batch = new BatchUnitOfWork<Account>(p => p.ClosingAccount, p => p.FiscalYear, p => p.LedgerAccountYears)
+                .Where(p => p.FiscalYearId == year.Id && (p.Category == AccountCategory.Revenue || p.Category == AccountCategory.Expense))
+                .AutoSaveChanges())
+            {
+                long transactionNumber = repo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
+                int lineNumber = 0;
+
+                foreach (Account account in batch)
+                {
+                    // Calculate activity balance
+                    var balances = UnitOfWork.Where<AccountBalance>(p => p.Id == account.Id);
+                    decimal activityBalance = balances.Where(p => p.DebitCredit == "DB").Sum(p => p.TotalAmount) -
+                                              balances.Where(p => p.DebitCredit == "CR").Sum(p => p.TotalAmount);
+
+                    // If zero, no further action is taken.
+                    if (activityBalance == 0m)
+                    {
+                        continue;
+                    }
+
+                    // Determine the closing account.
+                    Account closingAccount = accountLogic.GetClosingAccount(account);
+
+                    if (closingAccount == null)
+                    {
+                        continue;
+                    }
+
+                    // Create the "Close From" transaction
+                    PostedTransaction tran = new PostedTransaction();
+                    tran.FiscalYearId = year.Id;
+                    tran.PostedTransactionType = PostedTransactionType.CloseFrom;
+                    tran.LedgerAccountYearId = accountLogic.GetLedgerAccountYear(account)?.Id;
+                    tran.TransactionDate = year.EndDate;
+                    tran.Amount = -activityBalance;
+                    tran.PeriodNumber = finalPeriodNumber;
+                    tran.TransactionType = TransactionType.ClosingBalance;
+                    tran.TransactionNumber = transactionNumber;
+                    tran.LineNumber = ++lineNumber;
+                    repo.Insert(tran);
+
+                    CloseTo info = closeDict.GetValueOrDefault(closingAccount);
+                    if (info == null)
+                    {
+                        info = new CloseTo();
+                        info.Id = accountLogic.GetLedgerAccountYear(closingAccount)?.Id ?? Guid.Empty;
+                        closeDict.Add(closingAccount, info);
+                    }
+                    if (activityBalance >= 0m)
+                    {
+                        info.DebitAmount += activityBalance;
+                    }
+                    else
+                    {
+                        info.CreditAmount += activityBalance;
+                    }
+                }
+            }
+
+            // Closing To:
+            using (var batch = new BatchUnitOfWork<CloseTo>().Where(p => p.DebitAmount != 0m && p.CreditAmount != 0m).AutoSaveChanges())
+            {
+                long transactionNumber = repo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
+                int lineNumber = 0;
+
+                foreach (var entry in batch)
+                {
+                    // Separate transactions for debit amounts vs. credit amounts.
+                    if (entry.DebitAmount != 0m)
+                    {
+                        PostedTransaction tran = new PostedTransaction();
+                        tran.FiscalYearId = year.Id;
+                        tran.PostedTransactionType = PostedTransactionType.CloseTo;
+                        tran.LedgerAccountYearId = entry.Id;
+                        tran.TransactionDate = year.EndDate;
+                        tran.Amount = entry.DebitAmount;
+                        tran.PeriodNumber = finalPeriodNumber;
+                        tran.TransactionType = TransactionType.ClosingBalance;
+                        tran.TransactionNumber = transactionNumber;
+                        tran.LineNumber = ++lineNumber;
+                        repo.Insert(tran);
+                    }
+                    if (entry.CreditAmount != 0m)
+                    {
+                        PostedTransaction tran = new PostedTransaction();
+                        tran.FiscalYearId = year.Id;
+                        tran.PostedTransactionType = PostedTransactionType.CloseTo;
+                        tran.LedgerAccountYearId = entry.Id;
+                        tran.TransactionDate = year.EndDate;
+                        tran.Amount = entry.CreditAmount;
+                        tran.PeriodNumber = finalPeriodNumber;
+                        tran.TransactionType = TransactionType.ClosingBalance;
+                        tran.TransactionNumber = transactionNumber;
+                        tran.LineNumber = ++lineNumber;
+                        repo.Insert(tran);
+                    }
+                }
+            }
+
+            // Ending and beginning balances
+            if (nextYear != null)
+            {
+                using (var batch = new BatchUnitOfWork<Account>(p => p.LedgerAccountYears)
+                    .Where(p => p.FiscalYearId == year.Id)
+                    .AutoSaveChanges())
+                {
+                    long transactionNumberEnd = repo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
+                    long transactionNumberBegin = repo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
+                    int lineNumberEnd = 0;
+                    int lineNumberBegin = 0;
+
+                    foreach (var account in batch)
+                    {
+                        // Calculate the final balance, including all closing and ending balance posted transactions.
+                        decimal finalBalance = account.BeginningBalance;
+                        foreach (var entry in account.LedgerAccountYears)
+                        {
+                            finalBalance += UnitOfWork.Where<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id && p.PostedTransactionType != PostedTransactionType.BeginBal).Sum(p => p.Amount);
+                        }
+
+                        if (finalBalance == 0m)
+                        {
+                            continue;
+                        }
+
+                        // Determine which G/L account receives the beginning balance.
+                        Account toAccount;
+                        if (account.Category == AccountCategory.Asset || account.Category == AccountCategory.Liability || account.Category == AccountCategory.Fund)
+                        {
+                            toAccount = accountLogic.GetClosingAccount(account) ?? account;
+                        }
+                        else
+                        {
+                            toAccount = account;
+                        }
+
+                        // Determine the next year accounts that will receive the beginning balance.
+                        var nextAccounts = accountLogic.GetNextYearAccounts(toAccount, nextYear);
+                        if (nextAccounts.Count > 0)
+                        {
+                            // Create the "EndBal" transaction for the current year account (being closed)
+                            PostedTransaction tran = new PostedTransaction();
+                            tran.FiscalYearId = year.Id;
+                            tran.PostedTransactionType = PostedTransactionType.EndBal;
+                            tran.LedgerAccountYearId = accountLogic.GetLedgerAccountYear(toAccount)?.Id;
+                            tran.TransactionDate = year.EndDate;
+                            tran.Amount = -finalBalance;
+                            tran.PeriodNumber = finalPeriodNumber;
+                            tran.TransactionType = TransactionType.BeginningBalance;
+                            tran.TransactionNumber = transactionNumberEnd;
+                            tran.LineNumber = ++lineNumberEnd;                                
+                            repo.Insert(tran);
+
+                            // Create the "BeginBal" transaction(s) for the next year account(s)
+                            decimal rem = 0m; // Roundoff error
+                            foreach (var entry in nextAccounts)
+                            {
+                                decimal amt = (finalBalance * entry.Factor) + rem; // Unrounded amount
+
+                                tran = new PostedTransaction();
+                                tran.FiscalYearId = year.Id;
+                                tran.PostedTransactionType = PostedTransactionType.BeginBal;
+                                tran.LedgerAccountYearId = accountLogic.GetLedgerAccountYear(entry.Account)?.Id;
+                                tran.TransactionDate = nextYear.StartDate;
+                                tran.Amount = Math.Round(amt, 2);
+                                tran.PeriodNumber = 1;
+                                tran.TransactionType = TransactionType.BeginningBalance;
+                                tran.TransactionNumber = transactionNumberBegin;
+                                tran.LineNumber = ++lineNumberBegin;
+                                repo.Insert(tran);
+
+                                rem += amt - tran.Amount; // Accumulate roundoff error
+                                entry.Account.BeginningBalance += tran.Amount;
+                            }
+                        }                        
+                    } // Each account in batch
+                } // Using batch
+            } // Ending and beginning balances
+        } // PerformYearClose()
+
+        #endregion
+
+        #region Nested Classes
+
+        private class CloseTo : IEntity
+        {
+            public Guid Id { get; set; }
+            public decimal DebitAmount { get; set; }
+            public decimal CreditAmount { get; set; }
+
+            public string DisplayName => string.Empty;
+
+            public void AssignPrimaryKey() { }            
         }
 
         #endregion
