@@ -40,12 +40,34 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}", Name = RouteNames.CustomField + RouteNames.Entity)]
-        public IHttpActionResult GetByEntity(int entityId, Guid constituentId)
+        [Route("api/v1/customfields/entity/{entityId}", Name = RouteNames.CustomField + RouteNames.Entity)]
+        public IHttpActionResult GetByEntity(int entityId)
         {
             try
             {
-                var result = Service.GetByEntityId(entityId, constituentId);
+                var result = Service.GetByEntityId(entityId);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}", Name = RouteNames.CustomField + RouteNames.Entity + RouteNames.Constituent)]
+        public IHttpActionResult GetByEntityConstituent(int entityId, Guid constituentId)
+        {
+            try
+            {
+                var result = Service.GetByEntityIdConstituentId(entityId, constituentId);
 
                 if (result == null)
                 {

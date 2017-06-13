@@ -10,14 +10,21 @@
 
             LoadFiscalYears();
 
+            $('.newaccountlink').click(function (e) {
+
+                e.preventDefault();
+
+                sessionStorage.setItem('FISCAL_YEAR_ID', $('.as-fiscalyear').val());
+
+                location.href = "/Pages/GL/AccountDetails.aspx";
+
+            });
+
         });
 
         function LoadFiscalYears() {
 
-            var today = new Date();
-            var date = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear();
-
-            MakeServiceCall('GET', 'ledgers/' + currentBusinessUnitId + '/currentfiscalyear/' + date, null, function (data) {
+            MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId + '/currentfiscalyear', null, function (data) {
                 
                 PopulateDropDown('.as-fiscalyear', 'businessunits/' + currentBusinessUnitId + '/fiscalyears?fields=Id,DisplayName', '', '', data.Data.Id,
                     function () { // change
@@ -46,6 +53,10 @@
 
         <h1>Accounts</h1>
         
+        <div class="newaccountlinkcontainer">
+            <a href="#" class="newaccountlink">New Account</a>
+        </div>
+
         <div class="gridContainer"></div>
     </div>
    

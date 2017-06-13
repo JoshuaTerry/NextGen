@@ -171,7 +171,7 @@ function PopulateDropDownData(element, route, defaultText, defaultValue, selecte
 
 
 /* POPULATE TAGBOX CONTROLS */
-function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
+function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
@@ -183,14 +183,14 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
         data.Data.forEach(function (item) {
             selectedItems.push(item.Id);
         });
-        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
+        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled);
     }, null);
 
 }
 
-function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled) {
 
-    var tagBoxControl = $('<div>').addClass(tagBox);
+    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
 
     MakeServiceCall('GET', routeForAllOptions, null, function (data) {
         $(tagBoxControl).dxTagBox({
@@ -199,7 +199,11 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
             displayExpr: 'DisplayName',
             valueExpr: 'Id',
             showClearButton: true,
-            disabled: true
+            //disabled: true,
+            disabled: disabled,
+            height: data.length,
+            scrollbar: true
+
         });
 
         $(tagBoxControl).appendTo(container);
@@ -384,7 +388,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function(e) {
                         e.preventDefault();
 
-                        editMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        editMethod(options.data.Id);
                     })
                     .appendTo(container);
             }
@@ -402,7 +406,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .click(function (e) {
                         e.preventDefault();
 
-                        deleteMethod($(this).parent().parent().find('td:not(:empty):first').text());
+                        deleteMethod(options.data.Id);
                     })
                     .appendTo(container);
             }
