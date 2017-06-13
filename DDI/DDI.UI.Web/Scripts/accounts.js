@@ -2,7 +2,9 @@
 
 
 $(document).ready(function () {
-    
+
+    $('.editbusinessunit').addClass('disabled');
+
     LoadAccountActivityAndBudgetTab(accountId);
 
     $('#activity-and-budget-tab').click(function (e) {

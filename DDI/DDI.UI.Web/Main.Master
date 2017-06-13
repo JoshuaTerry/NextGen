@@ -361,7 +361,7 @@
 
                 <div class="modalbuttons">
                     <input type="button" class="savebusinessunit" value="Save" />
-                    <a href="#" class="cancelmodal">Cancel</a>
+                    <a href="#" class="cancelbumodal">Cancel</a>
                 </div>
                             
             </div>        

@@ -57,7 +57,7 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 /* POPULATE DROPDOWN CONTROLS */
 function AddDefaultOption(element, text, val) {
 
-    var option = $('<option>').val('').text('');
+    var option = $('<option>').val(val).text(text);
     $(option).appendTo($(element));
 
 }
