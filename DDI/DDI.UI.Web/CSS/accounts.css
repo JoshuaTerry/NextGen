@@ -37,6 +37,12 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 
 .fiscalyearselectioncontainr { float: right; }
 
+.newbutton { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+.editbutton { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }
+.newbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
+.editbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
+
+.newaccountlinkcontainer { text-align: right; margin-bottom: 10px; }
 
 
 

@@ -160,7 +160,6 @@ namespace DDI.Services
                 removes.ForEach(nt => noteToUpdate.NoteTopics.Remove(nt));
                 adds.ForEach(na => noteToUpdate.NoteTopics.Add(na));
             }
-
             
             UnitOfWork.SaveChanges();
 

@@ -11,7 +11,14 @@ namespace DDI.Services
     {
         public CustomFieldService(IUnitOfWork uow) : base(uow) { }
 
-        public IDataResponse<List<CustomField>> GetByEntityId(int entityId, Guid constituentId)
+        public IDataResponse<List<CustomField>> GetByEntityId(int entityId)
+        {
+            var customfields = UnitOfWork.GetEntities(base.IncludesForList).Where(c => c.Entity == (CustomFieldEntity)entityId).ToList();
+
+            return GetIDataResponse(() => customfields);
+        }
+
+        public IDataResponse<List<CustomField>> GetByEntityIdConstituentId(int entityId, Guid constituentId)
         {
             var answers = UnitOfWork.GetEntities<CustomFieldData>().Where(a => a.ParentEntityId == constituentId).ToList();
             var customfields = UnitOfWork.GetEntities(base.IncludesForList).Where(c => c.Entity == (CustomFieldEntity)entityId).ToList();
