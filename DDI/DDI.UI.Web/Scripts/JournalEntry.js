@@ -3,16 +3,17 @@ var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
 var editMode = ''
-var journalContainer = 'journalbody'
+var journalContainer = '.journalbody'
 
-$(document).ready(function () {
+//$(document).ready(function () {
+function JournalDetailLoad() {
     //if (sessionStorage.getItem('journalid')) {
     //    $('.hidjournalid').val(sessionStorage.getItem('journalid'))
     //}
     //else {
     //    $('.hidjournalid').val('')
     //}
-    $('.hidjournalid').val(journalId)       // testing
+    //$('.hidjournalid').val(journalId)       // testing
 
     $('.editjournal').click(function (e) {
         e.preventDefault()
@@ -37,7 +38,9 @@ $(document).ready(function () {
         }
     })
 
-})
+    JournalLoad()
+    NewJournalLineModal()
+}
 
 function JournalDisplayMode() {
     editMode = 'display'
@@ -48,6 +51,8 @@ function JournalDisplayMode() {
         $(this).prop('disabled', true)
 
     })
+    $('.journalgrid').prop('disabled', true)
+    $('.newjournalentrymodallink').prop('disabled', true)
     FormatFields()
 }
 
@@ -56,20 +61,20 @@ function JournalAddMode() {
     MaskFields()
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
-    $('.journalsegmentscontainer').show()
+    $('.journalgrid').prop('disabled', false)
+    $('.newjournalentrymodallink').prop('disabled', false)
 }
 
 function JournalEditMode() {
     editMode = 'edit'
-    if (activityTotal === 0) {
-        $('.journalsegmentscontainer').show()
-    }
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
+    $('.journalgrid').prop('disabled', false)
+    $('.newjournalentrymodallink').prop('disabled', false)
 
     MaskFields()
 
-    $(summaryContainer).find('.editable').each(function () {
+    $(journalContainer).find('.editable').each(function () {
 
         $(this).prop('disabled', false)
 
@@ -77,8 +82,7 @@ function JournalEditMode() {
 
 }
 
-function JournalDetailLoad() {
-    journalId = $('.hidjournalid').val()
+function JournalLoad() {
 
     if (journalId === '') {
         JournalAddMode()
@@ -278,19 +282,9 @@ function ClearJournalFields() {
 }
 
 
-//group modal section
-
-//linked accounts section
-
-function InitJournalLine() {
-
-    LoadJournalLineGrid();
-    NewJournalLineModal();
-}
-
 function LoadJournalLineGrid(data) {
     var columns = [
-        { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0, caption: ''},
+        { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0},
         { dataField: 'LedgerAccount.AccountNumber', caption: 'GL Account', alignment: 'left' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'Name', caption: 'Debit' },
@@ -306,12 +300,14 @@ function LoadJournalLineGrid(data) {
     });
 }
 
+// modal section
+
 function NewJournalLineModal() {
 
 
     $('.newJournalLinemodallink').click(function (e) {
 
-        GLAccountSelector($('.closingaccountgroup'), ledgerId, fiscalYearId);
+        GLAccountSelector($('.journallineaccountgroup'), ledgerId, fiscalYearId);
 
         e.preventDefault();
 
@@ -355,7 +351,7 @@ function NewJournalLineModal() {
     });
 }
 
-function EditJournalLine(id) {
+function EditJournalLineModal(id) {
 
     var modal = $('.JournalLinemodal').dialog({
         closeOnEscape: false,
@@ -452,105 +448,4 @@ function GetJournalLineToSave() {
     return item;
 
 }
-
-function GetLinkedType(type) {
-    var typeDesc;
-    switch (type) {
-        case 0:
-            typeDesc = "Loan Support";
-            break;
-        case 1:
-            typeDesc = "Pool";
-            break;
-        case 2:
-            typeDesc = "Down Payment";
-            break;
-        case 3:
-            typeDesc = "Grant";
-            break;
-    }
-    return typeDesc;
-}
-//end linked accounts section
-
-function NewJournalLineModal() {
-
-    modal = $('.journallinemodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 500,
-        resizable: false
-    })
-
-    $('.canceljournalJournalLineModal').click(function (e) {
-
-        e.preventDefault()
-
-        CloseModal(modal)
-
-    })
-
-    $('.savejournallinebutton').unbind('click')
-
-    $('.savejournallinebutton').click(function () {
-
-        var item = GetjournallineItemsToSave(modal)
-
-        MakeServiceCall('POST', 'journallines', item, function (data) {
-
-            DisplaySuccessMessage('Success', 'Journal Group saved successfully.')
-
-            CloseModal(modal)
-
-            if (editMode != 'display') {
-                LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
-            }
-            else {
-                LoadGroupDropDown(groupLevel, parentId, saveGroupId)
-            }
-
-        })
-
-    })
-
-}
-
-function EditJournalLineModal() {
-    var modal = $('.journalJournalLineModal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 500,
-        resizable: false
-    })
-
-    $('.canceljournallinemodal').click(function (e) {
-
-        e.preventDefault()
-
-        CloseModal(modal)
-
-    })
-
-    $('.savejournallinebutton').unbind('click')
-
-    $('.savejournallinebutton').click(function () {
-
-        var item = GetjournallineItemsToSave(modal, parentId)
-
-        MakeServiceCall('PATCH', 'journallines/' + groupId, item, function (data) {
-
-            DisplaySuccessMessage('Success', 'Journal Group saved successfully.')
-
-            CloseModal(modal)
-
-            if (editMode != 'display') {
-                LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
-            }
-
-        })
-
-    })
-}
-
-
 

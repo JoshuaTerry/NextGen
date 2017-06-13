@@ -4,17 +4,22 @@
 .hidebuttons {display: none;}
 .invisible {visibility: hidden;}
 
-/*.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
-.accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}*/
+span.leftprompt label {
+    width: 35%;
+    display: inline-block;
+}
+
+span.leftinput input,
+span.leftinput select {
+    width: 50%;
+    display: inline-block;
+}
 
 span.journalcolumn {
     width: 30%;
     display: inline-block;
+    margin: 5px 0 5px 0;
     vertical-align: top;
-}
-
-span.leftprompt{
-    min-width: 50%;
 }
 
 div.inlinecontainer {

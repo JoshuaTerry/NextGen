@@ -10,8 +10,6 @@
 
     </script>
 
-    <%--<link rel="stylesheet" href="../../../CSS/journals.css" />--%>
-
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -28,8 +26,8 @@
                     <label class="journalstatus">Status: </label>
                     <label class="JournalStatus"></label>
                 </div>
-                <div class="editjournalbutton hidebuttons floatright journalcolumn">
-                    <a href="#" class="editaccount editbutton">Edit</a>
+                <div class="editjournalbutton hidebuttons floatright">
+                    <a href="#" class="editjournal editbutton">Edit</a>
                 </div>
             </div>
 
@@ -38,7 +36,7 @@
                     <span class="fieldblock leftprompt">
                         <label>Transaction Date:</label>
                     </span>
-                    <span>
+                    <span class="fieldblock leftinput">
                         <input type="text" class="editable TransactionDate date datepicker" />
                     </span>
                 </span>
@@ -50,17 +48,19 @@
                 </span>
             </div>
 
+            <br />
+
             <div class="inlinecontainer">
                 <span class="journalcolumn">
                     <span class="fieldblock leftprompt reverseondategroup">
                         <label>Reverse on this Date:</label>
                     </span>
-                    <span>
+                    <span class="fieldblock leftinput">
                         <input type="text" class="editable ReverseOnDate date datepicker" />
                     </span>
                 </span>
                 <span class="journalcolumn fieldblock">
-                    <textarea rows="2" cols="60" maxlength="255" class="Comment"></textarea>
+                    <textarea rows="2" cols="60" maxlength="255" class="Comment editable"></textarea>
                 </span>
                 <span class="journalcolumn fieldblock">
                     <label>Created by: </label>
@@ -68,13 +68,13 @@
                     <label>on: </label>
                     <label class="CreatedOn date"></label>
                 </span>
-                </div>
+            </div>
+
+            <br />
 
             <div class="inlinecontainer">
-                <span class="journalcolumn fieldblock">
-                </span>
-                <span class="journalcolumn fieldblock">
-                </span>
+                <span class="journalcolumn fieldblock"></span>
+                <span class="journalcolumn fieldblock"></span>
                 <span class="journalcolumn fieldblock">
                     <label>Last changed by: </label>
                     <label class="LastModifiedBy"></label>
@@ -83,12 +83,24 @@
                 </span>
             </div>
 
+            <br />
+            <br />
+
             <div>
                 <a href="#" class="newjournalentrymodallink">New Item</a>
                 <div class="journalgridcontainer">
                     <div class="journalgrid"></div>
                 </div>
             </div>
+
+            <br />
+            <br />
+
+            <div class="savejournalbuttons hidebuttons floatright">
+                <input type="button" class="savejournal" value="Save" />
+                <a href="#" class="cancelsavejournal">Cancel</a>
+            </div>
+
 
         </div>
 
@@ -129,7 +141,7 @@
                         <option value="2">Due To</option>
                     </select>
                     <label>Fund: </label>
-                        <select class="SourceFundId">
+                    <select class="SourceFundId">
                     </select>
                 </div>
             </div>

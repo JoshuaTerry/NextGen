@@ -20,8 +20,8 @@
 
         <ul>
             <li><a href="JournalDetail.aspx">Journal</a></li>
-            <li><a href="JournalNotes.aspx">Summary</a></li>
-            <li><a href="Journal.aspx">Transations</a></li>
+            <li><a href="JournalNotes.aspx">Notes</a></li>
+            <li><a href="JournalCustom.aspx">Awesome Custom Stuff</a></li>
         </ul>
 
     </div>
