@@ -3008,7 +3008,7 @@ function LoadEntitiesSectionSettings() {
 
     var entityColumns = [
       
-      { dataField: 'Code', caption: 'Code' },
+      { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
       { dataField: 'Name', caption: 'Description' },
       {
           caption: 'Entity Type', cellTemplate: function (container, options) {
@@ -3031,7 +3031,7 @@ function LoadEntitiesSectionSettings() {
       }
     ];
 
-    LoadGrid('.gridcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
+    LoadGrid('gridcontainer', 'bugridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
