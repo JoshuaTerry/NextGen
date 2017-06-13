@@ -13,6 +13,10 @@ span.journalcolumn {
     vertical-align: top;
 }
 
+span.leftprompt{
+    min-width: 50%;
+}
+
 div.inlinecontainer {
     width: 100%;
     display: inline;

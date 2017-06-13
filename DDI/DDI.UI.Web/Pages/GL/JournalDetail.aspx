@@ -34,8 +34,13 @@
             </div>
 
             <div class="inlinecontainer">
-                <span class="journalcolumn fieldblock">
-                    <label>Transaction Date:</label>
+                <span class="journalcolumn">
+                    <span class="fieldblock leftprompt">
+                        <label>Transaction Date:</label>
+                    </span>
+                    <span>
+                        <input type="text" class="editable TransactionDate date datepicker" />
+                    </span>
                 </span>
                 <span class="journalcolumn fieldblock">
                     <label>Journal Memo:</label>
@@ -46,8 +51,13 @@
             </div>
 
             <div class="inlinecontainer">
-                <span class="journalcolumn fieldblock">
-                    <input type="text" class="editable TransactionDate date datepicker" />
+                <span class="journalcolumn">
+                    <span class="fieldblock leftprompt reverseondategroup">
+                        <label>Reverse on this Date:</label>
+                    </span>
+                    <span>
+                        <input type="text" class="editable ReverseOnDate date datepicker" />
+                    </span>
                 </span>
                 <span class="journalcolumn fieldblock">
                     <textarea rows="2" cols="60" maxlength="255" class="Comment"></textarea>
@@ -61,12 +71,9 @@
                 </div>
 
             <div class="inlinecontainer">
-                <span class="journalcolumn fieldblock reverseondategroup">
-                    <label>Reverse on this Date:</label>
-                    <input type="text" class="editable ReverseOnDate date datepicker" />
+                <span class="journalcolumn fieldblock">
                 </span>
                 <span class="journalcolumn fieldblock">
-
                 </span>
                 <span class="journalcolumn fieldblock">
                     <label>Last changed by: </label>
@@ -87,7 +94,7 @@
 
     </div>
 
-    <div class="journallinemodal" title="Account Groups" style="display: none;">
+    <div class="journallinemodal" title="Journal Line" style="display: none;">
 
         <div class="modalcontent">
 

@@ -136,8 +136,6 @@ function LoadJournalData() {
                 $('.CreatedOn').html(data.Data.CreatedOn)
                 $('.LastChangedBy').html(data.Data.LastChangedBy)
                 $('.LastChangedOn').html(data.Data.LastChangedOn)
-                //InitJournalLine();
-                NewJournalLineModal();
                 JournalDisplayMode();
                 LoadJournalLineGrid(data)
             }
@@ -293,7 +291,7 @@ function InitJournalLine() {
 function LoadJournalLineGrid(data) {
     var columns = [
         { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0, caption: ''},
-        { dataField: 'LedgerAccount.AccountNumber', caption: 'FL Account', alignment: 'left' },
+        { dataField: 'LedgerAccount.AccountNumber', caption: 'GL Account', alignment: 'left' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'Name', caption: 'Debit' },
         { dataField: 'Name', caption: 'Credit' },
@@ -303,8 +301,9 @@ function LoadJournalLineGrid(data) {
         { dataField: 'Name', caption: 'Entity' },
     ];
 
-    LoadGridWithData('journalgrid', '.journalgridcontainer', columns, '', '', EditJournalLineModal, '', data.Data.JournalLines, 'JournalLoadComplete')
-
+    LoadGridWithData('journalgrid', '.journalgridcontainer', columns, '', '', EditJournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
+        var test = data
+    });
 }
 
 function NewJournalLineModal() {
@@ -400,6 +399,21 @@ function EditJournalLine(id) {
     });
 }
 
+function DeleteJournalLine(id) {
+
+    MakeServiceCall('DELETE', 'JournalLines/' + id, null, function (data) {
+
+        if (data.Data) {
+            DisplaySuccessMessage('Success', 'Journal Line deleted successfully.');
+
+            CloseModal(modal);
+
+            DisplayJournalLines($('.currentlevel').val(), $('.parentJournalLines').val());
+        }
+
+    }, null);
+
+}
 function LoadJournalLine(id) {
 
     MakeServiceCall('GET', 'JournalLine/' + id, null, function (data) {
