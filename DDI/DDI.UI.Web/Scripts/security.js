@@ -709,7 +709,7 @@ function EditUser(id) {
             UserName: $(modal).find('.user-UserName').val(),
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-            ConstituentId: $(modal).find('.user-Constituent1Id').val(),
+            ConstituentId: $(modal).find('.user-ConstituentId').val(),
             GroupId: $(modal).find('.user-GroupId').val(),
             IsActive: true
         }
@@ -759,7 +759,8 @@ function LoadUser(id) {
                 $(modal).find('.user-UserName').val(data.Data.UserName);
                 $(modal).find('.user-Email').val(data.Data.Email);
                 $(modal).find('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
-                $(modal).find('.user-Constituent1Id').val(data.Data.ConstituentId);
+                $(modal).find('.user-ConstituentId').val(data.Data.Constituent.DisplayName);
+                //$(modal).find('.user-ConstituentId').val(data.Data.ConstituentId);
                 $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
                 
                 //LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
@@ -770,6 +771,17 @@ function LoadUser(id) {
                 }
                 else {
                     $(modal).find('.user-BusinessUnits').empty();
+                }
+
+                if (data.Data.Groups.length > 0) {
+                    $(data.Data.Groups).each(function (i, group) {
+
+                        $(modal).find('.user-GroupId').val(group.Id);
+                        
+                    });
+                }
+                else {
+                    $(modal).find('.user-GroupId').empty();
                 }
             }
         }

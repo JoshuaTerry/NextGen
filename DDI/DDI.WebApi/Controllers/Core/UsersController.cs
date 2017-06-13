@@ -72,7 +72,9 @@ namespace DDI.WebApi.Controllers.General
             return new Expression<Func<User, object>>[]
             {
                 c => c.DefaultBusinessUnit,
-                c => c.BusinessUnits
+                c => c.BusinessUnits,
+                c => c.Groups, 
+                c => c.Constituent
             };
         }
 
@@ -200,23 +202,11 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
         public async Task<IHttpActionResult> Add(RegisterBindingModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
 
-            var user = new User() { UserName = model.Email, FullName = model.FullName, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
+            var user = new User() { UserName = model.Email, Email = model.Email};
             try
             {
                 var result = UserManager.Create(user);
-                //if (user.DefaultBusinessUnitId.HasValue)
-                //{
-                //    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
-                //}
-                //if (user.Groups != null)
-                //    {
-                //    //var groupResult = AddGroupToUser(user.Id, user.Groups);
-                //}
                 return Ok(user);
             }
             catch(Exception ex)
@@ -225,27 +215,6 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
 
-            //try
-            //{
-            //    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            //    code = HttpUtility.UrlEncode(code);
-            //    var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
-
-            //    var service = new EmailService();
-            //    var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
-            //    var to = new MailAddress(model.Email);
-            //    var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
-            //    var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
-
-            //    service.SendMailMessage(message);
-
-            //    return Ok();
-            //}
-            //catch (Exception ex)
-            //{
-            //    base.Logger.LogError(ex);
-            //    return InternalServerError(new Exception(ex.Message));
-            //}        
         }
 
         //[Authorize(Roles = Permissions.CRM_ReadWrite)]
@@ -253,45 +222,24 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
-            //User user = JObject.Parse(userChanges);
-            //GetById
-            //AddGroupToUser(id, userChanges.);
-            // strip out the data regarding group before sending to patch if needed
+            string groupId = userChanges["GroupId"].ToString();
+            if (groupId != null && groupId != "")
+            {
+
+                Guid gId = new Guid(groupId);
+                IDataResponse response = userService.AddGroupToUser(id, gId);
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+
+            }
+            userChanges["GroupId"].Parent.Remove();
             return base.Patch(id, userChanges);
         }
 
-        [HttpPatch]
-        [Route("api/v1/users/{id}/group/{gid}", Name = RouteNames.User + RouteNames.Group + RouteVerbs.Patch)]
-        public IHttpActionResult Patch(Guid id, Guid gid)
-        {
-            // ARECA
-            //var groupResult = AddGroupToUser(id, gid);
-            //return Ok(groupResult);
-            return Ok();
-        }
-
-        //[HttpPost]
-        //[Route("api/v1/users/{id}")]
-        //public async Task<IHttpActionResult> Update(Guid id, User user)
-        //{             
-        //    try
-        //    {               
-        //        if (user == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        UserManager.Update(user);
-        //        var result = await UserManager.FindByIdAsync(user.Id);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        base.Logger.LogError(ex);
-        //        return InternalServerError(new Exception(ex.Message));
-        //    }
-        //}
-
+        
+        
         [HttpPatch]
         [Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
         public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)

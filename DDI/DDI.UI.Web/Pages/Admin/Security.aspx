@@ -121,9 +121,9 @@
 
                 <div class="fieldblock">
                     <div class="fieldblock">
-                        <input type="hidden" class="user-Constituent1Id" />
+                        <%--<input type="hidden" class="user-ConstituentId" />--%>
                         <label>Constituent</label>
-                        <input type="text" class="user-Constituent1Information constituentlookup" />
+                        <input type="text" class="user-ConstituentId constituentlookup" />
                     </div>
                 </div>
 

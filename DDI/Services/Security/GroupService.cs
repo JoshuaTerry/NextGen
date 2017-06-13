@@ -18,11 +18,19 @@ namespace DDI.Services.General
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {
-            var user = UnitOfWork.GetRepository<User>().Entities.FirstOrDefault(u => u.Id == userId);
-            var group = UnitOfWork.GetById<Group>(groupId);
+            var user = UnitOfWork.GetById<User>(userId, u => u.Groups);
+            var group = UnitOfWork.GetById<Group>(groupId, u => u.Users);
 
+            user.Groups.Clear();
+            user.Groups.Add(group);
             group.Users.Add(user);
-            UpdateUserRoles(userId, group.Roles.ToList());
+
+            if (group.Roles != null)
+            {
+                UpdateUserRoles(userId, group.Roles.ToList());
+            }
+
+            UnitOfWork.SaveChanges();
 
             var response = new DataResponse<User>()
             {

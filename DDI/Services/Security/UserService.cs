@@ -53,7 +53,7 @@ namespace DDI.Services.Security
 
         public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
         {
-            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
+            var result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
             var bu = UnitOfWork.GetById<BusinessUnit>(buid);
 
             if (!result.BusinessUnits.Contains(bu))
@@ -73,28 +73,12 @@ namespace DDI.Services.Security
 
         public IDataResponse AddGroupToUser(Guid id, Guid groupId)
         {
-            var user = UnitOfWork.GetById<User>(id);
-            var group = UnitOfWork.GetById<Group>(id);
-            //IDataResponse response = new DataResponse<User>();
-
-            //if (user == null)
-            //{
-            //    // create a message for here
-            //    //return GetErrorResponse('User');
-            //}
-
-            user.Groups.Clear();
-            // Delete all groups tied to this user
-            user.Roles.Clear();
-            // Delete all roles tied to this user
             GroupService groupService = new GroupService(UnitOfWork);
             groupService.AddUserToGroup(id, groupId);
 
-            //response.Data = user;
-            //response.IsSuccessful = true;
-            IDataResponse response = new DataResponse<User>
+            IDataResponse response = new DataResponse<Guid>
             {
-                Data = user,
+                Data = id,
                 IsSuccessful = true
             };
 
