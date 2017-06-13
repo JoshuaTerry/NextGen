@@ -28,7 +28,7 @@ namespace DDI.Shared.Models.Client.GL
 
         [DecimalPrecision(14, 2)]
         public decimal BeginningBalance { get; set; }
-
+        
         public AccountCategory Category { get; set; }            
             
         public bool IsNormallyDebit { get; set; } 
@@ -57,8 +57,8 @@ namespace DDI.Shared.Models.Client.GL
         public AccountGroup Group4 { get; set; }
 
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
-        public ICollection<AccountBudget> Budgets { get; set; }        
-        public ICollection<AccountSegment> AccountSegments { get; set; }
+        public ICollection<AccountBudget> Budgets { get; set; }
+        public ICollection<AccountSegment> AccountSegments { get; set; } = new List<AccountSegment>();
 
         [InverseProperty(nameof(AccountPriorYear.PriorAccount))]
         public ICollection<AccountPriorYear> PriorYearAccounts { get; set; }

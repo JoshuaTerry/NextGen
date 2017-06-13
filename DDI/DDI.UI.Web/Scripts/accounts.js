@@ -19,12 +19,19 @@ $(document).ready(function () {
 
         sessionStorage.removeItem('FISCAL_YEAR_ID');
 
-        $('.tabscontainer').tabs("option", "active", 1);;
+        $('.tabscontainer').tabs("option", "active", 1);
 
     }
 
-});
+    $('.copyaccount').click(function (e) {
 
+        e.preventDefault();
+
+        DisplayAccountCopyModal();
+
+    });
+
+});
 
 function LoadAccountActivityAndBudgetTab(id) {
 
@@ -973,4 +980,68 @@ function GetAccountSegmentItemsToSave(modal, parentId, level) {
 }
 
 //end segments modal section
+
+// COPY ACCOUNT
+
+function DisplayAccountCopyModal() {
+
+    modal = $('.accountcopymodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    //$(modal).find('.ac-AccountNumber').keyup(function () {
+    //    ValidateAccountNumber();
+    //});
+
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.savebutton').unbind('click');
+
+    $('.savebutton').click(function () {
+
+        CopyAccount();
+
+    });
+
+}
+
+function ValidateAccountNumber() {
+
+    var bar = '';
+
+    MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId + '/accountnumber/' + $(modal).find('.ac-AccountNumber').val(), null, function (data) {
+
+        var foo = data.Data;
+
+    }, null);
+
+}
+
+function CopyAccount() {
+    
+    MakeServiceCall('POST', 'accounts/copy/source/' + accountId + '/dest/' + $(modal).find('.ac-AccountNumber').val(), null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Account Copied successfully.');
+
+        CloseModal(modal);
+
+        sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
+        sessionStorage.setItem('FISCAL_YEAR_ID', 'asdf');
+
+        location.href = "/Pages/GL/AccountDetails.aspx";
+        
+    });
+
+}
+
+// END COPY ACCOUNT
 

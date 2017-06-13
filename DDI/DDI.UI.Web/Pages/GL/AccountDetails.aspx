@@ -8,6 +8,12 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#" class="copyaccount">Copy Account</a></li>
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="accounts">
@@ -24,6 +30,24 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="accountcopymodal" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>New Account #:</label>
+                <input type="text" class="ac-AccountNumber" />
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="savebutton" value="Save" />
+                <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+
+        </div>
+
     </div>
 
 </asp:Content>

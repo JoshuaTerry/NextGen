@@ -25,6 +25,7 @@ div.options div.threecolumn > div { width: auto; }
 div.options { margin-left: 0px; }
 div.options fieldset { width: 96%; }
 
+div.fieldblock label { width: 24%; }
 div.fieldblock input { height: auto; }
 div.fieldblock input.cfoptioncode { width: 25px; }
 div.fieldblock input.cfoptiondesc { width: 140px; }

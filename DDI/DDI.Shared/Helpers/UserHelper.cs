@@ -31,7 +31,8 @@ namespace DDI.Shared.Helpers
         public static User GetCurrentUser(IUnitOfWork unitOfWork)
         {
             User user = GetCurrentUser((userId) => unitOfWork.FirstOrDefault<User>(p => p.UserName == userId));
-            return (user != null ? unitOfWork.Attach(user) : null);
+            // return (user != null ? unitOfWork.Attach(user) : null);
+            return user;
         }
 
         /// <summary>
