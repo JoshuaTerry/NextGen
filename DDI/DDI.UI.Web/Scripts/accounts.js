@@ -1,16 +1,17 @@
-﻿var fiscalYearId;
+var fiscalYearId;
 var ledgerId;
 var accountId;
 
 $(document).ready(function () {
+    accountId = sessionStorage.getItem('ACCOUNT_ID');
 
-    LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
+    LoadAccountActivityAndBudgetTab(accountId);
 
     $('#activity-and-budget-tab').click(function (e) {
 
         e.preventDefault();
 
-        LoadAccountActivityAndBudgetTab('05523233-784D-4D6E-920B-0019EFAF9912');
+        LoadAccountActivityAndBudgetTab(accountId);
 
     });
 
@@ -25,7 +26,6 @@ $(document).ready(function () {
     }
 
 });
-
 
 function LoadAccountActivityAndBudgetTab(id) {
 
@@ -63,6 +63,12 @@ var groupLevels;
 var group1Data = [];
 var saveGroupId;
 var segmentData = [];
+var accountSegmentItem = {Id: '', SegmentId: '', Segment: ''};
+var accountSegmentArray = [];
+var group1Id;
+var group2Id;
+var group3Id;
+var group4Id;
 var category = '0';
 var editMode = '';
 var activityTotal = 0;
@@ -96,23 +102,24 @@ function RetrieveAccountSummaryData() {
 
                 category = data.Data.Category;
 
-                if (groupLevels > 0 && data.Data.Group1Id != null) {
-                    LoadGroupDropDown(1, '', data.Data.Group1Id)
-                }
-                if (groupLevels > 1 && data.Data.Group2Id != null) {
-                    LoadGroupDropDown(2, data.Data.Group1Id, data.Data.Group2Id)
-                }
-                if (groupLevels > 2 && data.Data.Group3Id != null) {
-                    LoadGroupDropDown(3, data.Data.Group2Id, data.Data.Group3Id)
-                }
-                if (groupLevels > 3 && data.Data.Group4Id != null) {
-                    LoadGroupDropDown(4, data.Data.Group3Id, data.Data.Group4Id)
-                }
+                group1Id = data.Data.Group1Id;
+                group2Id = data.Data.Group2Id;
+                group3Id = data.Data.Group3Id;
+                group4Id = data.Data.Group4Id;
 
                 $('.closingaccountgroup').find(".hidaccountid").val(data.Data.ClosingAccountId);
                 if (data.Data.ClosingAccountId != null) {
                     $('.closingaccountgroup').find(".accountnumber").val(data.Data.ClosingAccount.AccountNumber);
                     $('.closingaccountgroup').find(".accountdescription").val(data.Data.ClosingAccount.Name);
+                }
+
+                accountSegmentArray = [];
+                for (var i = 0; i < data.Data.AccountSegments.length; i++) {
+                    accountSegmentItem = {Id: data.Data.AccountSegments[i].Id,
+                        SegmentId: data.Data.AccountSegments[i].SegmentId,
+                        Segment: data.Data.AccountSegments[i].Segment
+                    }
+                    accountSegmentArray.push(accountSegmentItem);
                 }
 
                 MakeServiceCall('GET', 'accounts/activity/' + accountId, null, function (data) {
@@ -163,11 +170,6 @@ function LoadSummaryTabContinued() {
     $('.accountnumberlookup').attr('disabled', true);
     $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
 
-    //if (AccountId === '' || AccountId === null) {
-    //    AccountAddMode();
-    //    editMode = 'add';
-    //}
-
     $('.editaccount').click(function (e) {
         e.preventDefault();
         AccountEditMode();
@@ -181,13 +183,12 @@ function LoadSummaryTabContinued() {
 
     $('.cancelsaveaccount').click(function (e) {
         e.preventDefault();
-        ClearAccountFields();
         if (editMode === 'add') {
+            ClearAccountFields();
             AccountAddMode();
         }
         else {
             $('.accountsegmentscontainer').hide();
-            //RetrieveAccountSummaryData();
             AccountDisplayMode();
         }
     });
@@ -211,25 +212,32 @@ function RetrieveLedgerSettings() {
 
                 for (var i = 1; i <= groupLevels; i++) {
                     $('.accountgroup' + i).css('visibility', 'visible');
+
                     switch (i) {
                         case 1:
                             $('.group1prompt').html(data.Data.AccountGroup1Title + ':');
+                            if (group1Id != null) {
+                                LoadGroupDropDown(1, '', group1Id)
+                            }
                             break;
                         case 2:
                             $('.group2prompt').html(data.Data.AccountGroup2Title + ':');
+                            if (group2Id != null) {
+                                LoadGroupDropDown(2, group1Id, group2Id)
+                            }
                             break;
                         case 3:
                             $('.group3prompt').html(data.Data.AccountGroup3Title + ':');
+                            if (group3Id != null) {
+                                LoadGroupDropDown(3, group2Id, group3Id)
+                            }
                             break;
                         case 4:
                             $('.group4prompt').html(data.Data.AccountGroup41Title + ':');
+                            if (group4Id != null) {
+                                LoadGroupDropDown(4, group3Id, group4Id)
+                            }
                             break;
-                    }
-
-                    if (i < 4) {
-                        $('.Group' + i + 'Id').change(function () {
-                            GroupChange(i);
-                        })
                     }
 
                     $('.editgroup' + i).click(function (e) {
@@ -367,8 +375,7 @@ function RetrieveSegmentLevels() {
                     AccountAddMode();
                 }
                 else {
-                //    RetrieveAccountSummaryData();
-                    LoadSegmentDropDowns(data.Data);
+                    LoadSegmentDropDowns();
                     AccountDisplayMode();
                 }
             }
@@ -501,24 +508,24 @@ function InitSegmentDropDowns() {
 }
 
 // load all drop downs for edits
-function LoadSegmentDropDowns(data) {
+function LoadSegmentDropDowns() {
 
     for (var i = 0; i < segmentLevels; i++) {
-        if (i < data.AccountSegments.length) {
+        if (i < accountSegmentArray.length) {
             if (segmentLevelArray[i].IsLinked === false) {
-                LoadSegmentDropDown((i + 1), '', data.AccountSegments[i].SegmentId);
+                LoadSegmentDropDown((i + 1), '', accountSegmentArray[i].SegmentId);
             }
             else {
-                if (data.AccountSegments[i - 1].Id === null) {
-                    LoadSegmentDropDown((i + 1), '', data.AccountSegments[i].SegmentId);
+                if (accountSegmentArray[i - 1].Id === null) {
+                    LoadSegmentDropDown((i + 1), '', accountSegmentArray[i].SegmentId);
                 }
                 else {
-                    LoadSegmentDropDown((i + 1), data.AccountSegments[i - 1].SegmentId, data.AccountSegments[i].SegmentId);
+                    LoadSegmentDropDown((i + 1), accountSegmentArray[i - 1].SegmentId, accountSegmentArray[i].SegmentId);
                 }
             }
-            if (data.AccountSegments[i].Id != null) {
-                $('.segment' + (i + 1) + 'code').html(data.AccountSegments[i].Segment.Code);
-                $('.segment' + (i + 1) + 'name').html(data.AccountSegments[i].Segment.Name);
+            if (accountSegmentArray[i].Id != null) {
+                $('.segment' + (i + 1) + 'code').html(accountSegmentArray[i].Segment.Code);
+                $('.segment' + (i + 1) + 'name').html(accountSegmentArray[i].Segment.Name);
             }
         }
         else {
@@ -627,8 +634,9 @@ function SaveAccount() {
             if ($('.Activity').val() === '' || $('.Activity').val() === null) {
                 $('.Activity').val(0);
             }
-            $('.EndingBalance').val($('.BeginningBalance').val() + $('.Activity').val());
+            $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
             sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
+            accountId = data.Data.Id;
             AccountDisplayMode();
         }
 
