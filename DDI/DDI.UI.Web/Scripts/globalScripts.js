@@ -1759,3 +1759,23 @@ function FormatFields() {
         $(this).val($(this).val() + '%');
     });
 }
+
+// Take a string like "Approved on 2017-06-09T13:37:09.1111520Z" and return "Approved on 6/9/2017, 9:37:09 AM"
+// DateTime values should be in ToString("O") format.
+function FormatDateTimeStrings(str) { 
+    var rexp = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(.\d{0,9})?(Z|[+-]\d\d:\d\d)?/;
+    do {
+        var result = rexp.exec(str);
+        if (result) {
+            var dt = new Date(result[0]);
+            if (dt.getMilliseconds() == 0 && dt.getSeconds() == 0 && dt.getMinutes() == 0 && dt.getHours() == 0) {
+                str = str.replace(rexp, dt.toLocaleDateString());
+            }
+            else {
+                str = str.replace(rexp, dt.toLocaleString());
+            }
+        }
+    } while (result);    
+
+    return str;
+}

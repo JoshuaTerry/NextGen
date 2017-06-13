@@ -22,9 +22,9 @@ namespace DDI.Services.GL
             _ledgerLogic = logic;
         }
 
-        protected override Action<Ledger> FormatEntityForGet => ledger => FormatLedgerForGet(ledger);
+        protected override Action<Ledger, string> FormatEntityForGet => FormatLedgerForGet;
 
-        private void FormatLedgerForGet(Ledger ledger)
+        private void FormatLedgerForGet(Ledger ledger, string fields)
         {
             ledger.DisplayFormat = _ledgerLogic.GetGLAccountFormatSample(ledger);
             ledger.HasLedgerAccounts = UnitOfWork.Any<LedgerAccount>(p => p.LedgerId == ledger.Id);

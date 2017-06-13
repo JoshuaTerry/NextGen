@@ -79,6 +79,20 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(ParentJournal))]
         public ICollection<Journal> ChildJournals { get; set; }
 
+        #region NotMapped Properties
+
+        [NotMapped]
+        public string JournalDescription { get; set; }
+
+        [NotMapped]
+        public string StatusDescription { get; set; }
+
+        [NotMapped]
+        public string CreatedFrom { get; set; }
+
+        #endregion
+
+
 
     }
 }
