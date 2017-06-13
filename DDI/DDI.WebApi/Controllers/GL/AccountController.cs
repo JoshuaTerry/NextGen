@@ -145,6 +145,14 @@ namespace DDI.WebApi.Controllers.GL
             return base.Post(item);
         }
 
+        //[HttpPost]
+        //[Route("api/v1/accounts/merge", Name = RouteNames.Account + RouteVerbs.Post)]
+        //public IHttpActionResult Merge(Guid sourceAccount, Guid destinationAccount)
+        //{
+
+        //    return base.Post(item);
+        //}
+
         [HttpPatch]
         [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject changes)

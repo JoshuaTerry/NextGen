@@ -39,6 +39,17 @@ namespace DDI.Services.GL
             return new DataResponse<List<AccountActivityDetail>>(activityDetailList);
         }
 
+        //public IDataResponse<bool> MergeAccounts(Guid source, Guid destination, Guid fiscalYearId)
+        //{
+        //    Account sourceAccount = UnitOfWork.GetById<Account>(source, p => p.LedgerAccountYears);
+        //    Account destinationAccount = UnitOfWork.GetById<Account>(destination, p => p.LedgerAccountYears);
+
+        //    var sourceLAYId = destinationAccount.LedgerAccountYears.FirstOrDefault(l => l.FiscalYearId == fiscalYearId);
+             
+
+        //    return new DataResponse<bool>();
+        //}
+
         protected override Action<Account> FormatEntityForGet => account => PopulateAccountBalanceIds(account);
 
         /// <summary>
