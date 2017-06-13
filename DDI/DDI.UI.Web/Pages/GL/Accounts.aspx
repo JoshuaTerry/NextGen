@@ -24,10 +24,7 @@
 
         function LoadFiscalYears() {
 
-            var today = new Date();
-            var date = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear();
-
-            MakeServiceCall('GET', 'ledgers/' + currentBusinessUnitId + '/currentfiscalyear/' + date, null, function (data) {
+            MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId + '/currentfiscalyear', null, function (data) {
                 
                 PopulateDropDown('.as-fiscalyear', 'businessunits/' + currentBusinessUnitId + '/fiscalyears?fields=Id,DisplayName', '', '', data.Data.Id,
                     function () { // change
