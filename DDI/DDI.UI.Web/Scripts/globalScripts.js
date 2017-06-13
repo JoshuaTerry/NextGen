@@ -105,7 +105,16 @@ function LoadDefaultAuthToken() {
             dataType: 'json',
             success: function (data) {
                 if (data.d) {
-                    sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+
+                    split_token = data.d.split(' ');
+
+                    sessionStorage.setItem(AUTH_TOKEN_KEY, split_token[0]);
+
+                    MakeServiceCall('GET', 'userbyname/' + split_token[1] + '/', null, function (data) {
+
+                        sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
+
+                    }, null);
 
                     location.href = "/Default.aspx";
                 }
