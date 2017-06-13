@@ -73,9 +73,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 
 .maincontainer { width: 100%; }
 
-.dx-row:not(.dx-header-row):hover { background-color: #e9e9e9 !important; }
+.dx-row:not(.dx-header-row):hover { background-color: #e9e9e9 !important; cursor: pointer; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; margin-right: .8%; }
+div.twocolumn>fieldset { width: 47%; display: inline-block; vertical-align: top; margin: 0px .8% 0px 0px; }
 div.threecolumn>div { width: 32%; display: inline-block; vertical-align: top; margin-right: 1% }
 div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; margin-right: .7%; }
 div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; margin-right: .7%; }
@@ -219,6 +220,6 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 
 /*Account Number Selector*/
 .accountselectionsearch {background: url('../../Images/Search_16.png') no-repeat; width: 16px; height: 16px; display: inline-block; margin-right: 5px;  }
-.accountselectiongrid {width:50%; display: none;}
+.accountselectiongrid {width:75%; display: none;}
 .accountdescription {padding-left: 4px; padding-right: 4px}
 /* End Account Number Selector*/

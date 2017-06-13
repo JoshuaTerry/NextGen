@@ -19,7 +19,7 @@ function LoadAccountSelectorGrid(fiscalyearid) {
         LoadGLAccounts('.as-accounts', data.Data.LedgerId, data.Data.Id, function (d) {
 
             if (d) {
-                sessionStorage.setItem(ACCOUNT_ID, d.AccountNumber);
+                sessionStorage.setItem(ACCOUNT_ID, d.Id);
                 location.href = "/Pages/GL/AccountDetails.aspx";
             }
 

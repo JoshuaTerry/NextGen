@@ -1,21 +1,20 @@
-﻿using DDI.Shared.Models.Client.GL;
-using DDI.Services.ServiceInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DDI.Business.GL;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
-using Newtonsoft.Json.Linq;
-using System.Linq.Expressions;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics.GL;
 
 namespace DDI.Services.GL
 {
     public class FiscalYearService : ServiceBase<FiscalYear>, IFiscalYearService
     {
-        public FiscalYearService(IUnitOfWork uow) : base(uow)
+        private FiscalYearLogic _logic;
+        public FiscalYearService(IUnitOfWork uow, FiscalYearLogic logic) : base(uow)
         {
+            _logic = logic;
         }
 
         public IDataResponse<FiscalYear> Post(FiscalYear entityToSave)
@@ -23,6 +22,32 @@ namespace DDI.Services.GL
             var response = base.Add(entityToSave);
 
             SetFiscalPeriods(entityToSave);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Get the equivalent fiscal year for a different business unit.
+        /// </summary>
+        /// <param name="unitId">Target business unit ID</param>
+        /// <param name="fiscalYearId">Fiscal year ID</param>
+        public IDataResponse<List<ICanTransmogrify>> GetYearForOtherBusinessUnit(Guid unitId, Guid fiscalYearId)
+        {
+            FiscalYear year = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.Ledger);
+            if (year == null)
+            {
+                return GetErrorResponse<List<ICanTransmogrify>>(UserMessagesGL.BadFiscalYear);
+            }
+
+            year = _logic.GetFiscalYearForBusinessUnit(year, unitId);
+            var results = new List<ICanTransmogrify>();
+            if (year != null)
+            {
+                results.Add(year);
+            }
+
+            var response = GetIDataResponse(() => results);
+            response.TotalResults = results.Count;
 
             return response;
         }
