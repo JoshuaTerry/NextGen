@@ -13,10 +13,10 @@ a:hover { text-decoration: underline; }
 .floatleft {float: left}
 .floatright {float: right}
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
-.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_24.png'); width: 16px; height: 16px; }
-.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
-.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
+.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
@@ -219,6 +219,6 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 
 /*Account Number Selector*/
 .accountselectionsearch {background: url('../../Images/Search_16.png') no-repeat; width: 16px; height: 16px; display: inline-block; margin-right: 5px;  }
-.accountselectiongrid {width:50%; display: none;}
+.accountselectiongrid {width:75%; display: none;}
 .accountdescription {padding-left: 4px; padding-right: 4px}
 /* End Account Number Selector*/
