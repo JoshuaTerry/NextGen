@@ -126,8 +126,6 @@ function LoadCurrentUser() {
 
         MakeServiceCall('GET', 'users/' + userId, null, function (data) {
 
-            currentUser = data.Data;
-
             if (data.Data.DefaultBusinessUnitId === null) {
 
                 currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
