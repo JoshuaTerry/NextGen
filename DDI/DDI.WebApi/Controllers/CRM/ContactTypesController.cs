@@ -43,9 +43,9 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                var result = Service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true);
-                var search = PageableSearch.Max;
                 string fields = $"{nameof(ContactType.Id)},{nameof(ContactType.Name)},{nameof(ContactType.ContactCategory)}.{nameof(ContactCategory.Code)}";
+                var search = PageableSearch.Max;
+                var result = Service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true, search, fields);
                 return FinalizeResponse(result, RouteNames.ContactType + RouteNames.Constituent, search, fields);                
             }
             catch (Exception ex)
@@ -61,9 +61,10 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                var result = Service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid);
                 var search = new PageableSearch(offset, limit, orderBy);
-                return FinalizeResponse(result, string.Empty, search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid, search, fields);
+                return FinalizeResponse(result, string.Empty, search, fields);
             }
             catch (Exception ex)
             {

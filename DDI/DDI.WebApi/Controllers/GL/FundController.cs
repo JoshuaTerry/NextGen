@@ -94,11 +94,12 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                orderBy= orderBy == "Order"  ? "DisplayName": orderBy;
+                orderBy = (orderBy == "Order"  ? "DisplayName": orderBy);
+                fields = ConvertFieldList(fields, FieldsForList);
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid , search);
+                var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid , search, fields);
                 
-                return FinalizeResponse(result, "", search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, "", search, fields);
             }
             catch (Exception ex)
             {

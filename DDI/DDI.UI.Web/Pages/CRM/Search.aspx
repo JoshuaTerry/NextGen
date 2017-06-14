@@ -32,7 +32,7 @@
                     <div>
                         <div class="fieldblock">
                             <label>ID</label>
-                            <input type="number" class="searchconstituentnumber" />
+                            <input type="number" class="searchconstituentnumber" maxlength="64" />
                         </div>
 
                         <div class="fieldblock">
@@ -42,7 +42,7 @@
 
                         <div class="fieldblock">
                             <label>Name</label>
-                            <input type="text" class="searchname" />
+                            <input type="text" class="searchname" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
@@ -57,37 +57,37 @@
 
                         <div class="fieldblock">
                             <label>City</label>
-                            <input type="text" class="searchcity" />
+                            <input type="text" class="searchcity" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Zip From</label>
-                            <input type="text" class="searchzipfrom" />
+                            <input type="text" class="searchzipfrom" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Zip To</label>
-                            <input type="text" class="searchzipto" />
+                            <input type="text" class="searchzipto" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 1</label>
-                            <input type="text" class="searchregion1" />
+                            <input type="text" class="searchregion1" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 2</label>
-                            <input type="text" class="searchregion2" />
+                            <input type="text" class="searchregion2" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 3</label>
-                            <input type="text" class="searchregion3" />
+                            <input type="text" class="searchregion3" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Region 4</label>
-                            <input type="text" class="searchregion4" />
+                            <input type="text" class="searchregion4" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
@@ -112,17 +112,17 @@
 
                         <div class="fieldblock">
                             <label>Alternate Id</label>
-                            <input type="text" class="searchaltid" />
+                            <input type="text" class="searchaltid" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Created From</label>
-                            <input type="text" class="searchcreatedfrom datepicker" />
+                            <input type="text" class="searchcreatedfrom datepicker" maxlength="10" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Created To</label>
-                            <input type="text" class="searchcreatedto datepicker" />
+                            <input type="text" class="searchcreatedto datepicker" maxlength="10" />
                         </div>
                     </div>
 

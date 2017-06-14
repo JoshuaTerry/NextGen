@@ -55,8 +55,9 @@ namespace DDI.WebApi.Controllers.GL
         {
             try
             {
-                var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid);
-                return FinalizeResponse(result, ROUTENAME_GETBYUNIT, null, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid, null, fields);
+                return FinalizeResponse(result, ROUTENAME_GETBYUNIT, null, fields);
             }
             catch (Exception ex)
             {
