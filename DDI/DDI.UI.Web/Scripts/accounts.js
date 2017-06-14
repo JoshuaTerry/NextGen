@@ -3,6 +3,9 @@ var ledgerId;
 var accountId;
 
 $(document).ready(function () {
+
+    $('.editbusinessunit').addClass('disabled');
+
     accountId = sessionStorage.getItem('ACCOUNT_ID');
 
     if (accountId) {
