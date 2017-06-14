@@ -66,12 +66,15 @@ namespace DDI.Services.GL
             dest.Name = source.Name;
             
             source.AccountSegments.ToList().ForEach(s => dest.AccountSegments.Add(new AccountSegment() { Level = s.Level, Segment = s.Segment }));
+        
 
             UnitOfWork.Insert<Account>(dest);
             UnitOfWork.SaveChanges();
 
             return new DataResponse<Account>(dest);
         }
+
+		protected override Action<Account,string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
 
         public IDataResponse<Account> ValidateAccountNumber(Guid fiscalYearId, string accountNumber)
         {
@@ -81,7 +84,6 @@ namespace DDI.Services.GL
             return new DataResponse<Account>(new Account());
         }
 
-        protected override Action<Account> FormatEntityForGet => account => PopulateAccountBalanceIds(account);
 
         /// <summary>
         /// The Ids coming back from the SQL view put the account ID into AccountBalance.Id.  This confuses the dynamic transmogrifier, 

@@ -418,10 +418,10 @@ function RetrieveAccountSummaryData() {
 
 function LoadGroupDropDown(groupLevel, parentId, initialId) {
     if (parentId === '' || parentId === null) {
-        PopulateDropDownData('.Group' + groupLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId, GroupChange, StoreGroupData);
+        PopulateDropDown('.Group' + groupLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/AccountGroups', '', '', initialId, GroupChange, StoreGroupData);
     }
     else {
-        PopulateDropDownData('.Group' + groupLevel + 'Id', 'AccountGroups/' + parentId + '/parent', '', '', initialId, GroupChange, StoreGroupData);
+        PopulateDropDown('.Group' + groupLevel + 'Id', 'AccountGroups/' + parentId + '/parent', '', '', initialId, GroupChange, StoreGroupData);
     }
 }
 
@@ -458,7 +458,7 @@ function GroupChange(element) {
     for (var i = (parseInt(level) + 1) ; i <= groupLevels; i++) {
         if (i === (parseInt(level) + 1)) {
             if (parentVal != null && parentVal != '') {
-                PopulateDropDownData('.Group' + i + 'Id', 'AccountGroups/' + parentVal + '/parent', '', null, null, GroupChange);
+                PopulateDropDown('.Group' + i + 'Id', 'AccountGroups/' + parentVal + '/parent', '', null, null, GroupChange);
             }
             else {
                 $('.Group' + i + 'Id').empty();
@@ -515,10 +515,10 @@ function LoadSegmentDropDowns(data) {
 
 function LoadSegmentDropDown(segmentLevel, parentId, initialId) {
     if (parentId === '' || parentId === null) {
-        PopulateDropDownData('.Segment' + segmentLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/level/' + segmentLevel, '', null, initialId, SegmentChange, StoreSegmentData);
+        PopulateDropDown('.Segment' + segmentLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/level/' + segmentLevel, '', null, initialId, SegmentChange, StoreSegmentData);
     }
     else {
-        PopulateDropDownData('.Segment' + segmentLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentId + '/level/' + segmentLevel, '', null, initialId, SegmentChange, StoreSegmentData);
+        PopulateDropDown('.Segment' + segmentLevel + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentId + '/level/' + segmentLevel, '', null, initialId, SegmentChange, StoreSegmentData);
     }
 }
 
@@ -551,7 +551,7 @@ function SegmentChange(element) {
     for (var i = (parseInt(level) + 1) ; i <= segmentLevels; i++) {
         if (i === (parseInt(level) + 1)) {
             if (segmentLevelArray[i - 1].IsLinked === true && parentVal != null) {
-                PopulateDropDownData('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
+                PopulateDropDown('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
                 $('.segment' + i + 'code').html('');
                 $('.segment' + i + 'name').html('');
             }

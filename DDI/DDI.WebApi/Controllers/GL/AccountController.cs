@@ -74,6 +74,8 @@ namespace DDI.WebApi.Controllers.GL
         {
             var search = PageableSearch.Max;
 
+            search.OrderBy = OrderByProperties.SortKey;
+
             var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
 
             return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
