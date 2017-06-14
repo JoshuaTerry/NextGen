@@ -700,19 +700,15 @@ function LoadAccordions() {
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
 
-        $('.accordions').accordion({
-            active: false
-        });
-
-        $(".ui-accordion-content").hide('fast');
-        $('.ui-accordion-header').removeClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
     });
 
     $('.accordion-expandall').click(function (e) {
         e.preventDefault();
 
-        $(".ui-accordion-content").show('fast');
-        $('.ui-accordion-header').addClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').show('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').addClass('ui-state-active');
 
     });
 
@@ -1733,7 +1729,13 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 // END DYNAMIC MARKUP
 
 function MaskFields() {
-    $('.date').mask('00/00/0000');
+    $('.date').each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('mm/dd/yy', new Date($(this).val())));
+        }
+        $(this).mask('00/00/0000');
+    })
+
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
     $('.money').mask("#0.00", { reverse: true });
@@ -1779,5 +1781,22 @@ function FormatFields() {
     });
 }
 
-//$(this).html($.datepicker.formatDate('D M dd, yy', $(this).html()));
-//$(this).html($.datepicker.formatDate('D M dd, yy', $(this).val()));
+// Take a string like "Approved on 2017-06-09T13:37:09.1111520Z" and return "Approved on 6/9/2017, 9:37:09 AM"
+// DateTime values should be in ToString("O") format.
+function FormatDateTimeStrings(str) { 
+    var rexp = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(.\d{0,9})?(Z|[+-]\d\d:\d\d)?/;
+    do {
+        var result = rexp.exec(str);
+        if (result) {
+            var dt = new Date(result[0]);
+            if (dt.getMilliseconds() == 0 && dt.getSeconds() == 0 && dt.getMinutes() == 0 && dt.getHours() == 0) {
+                str = str.replace(rexp, dt.toLocaleDateString());
+            }
+            else {
+                str = str.replace(rexp, dt.toLocaleString());
+            }
+        }
+    } while (result);    
+
+    return str;
+}

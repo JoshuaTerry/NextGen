@@ -5,8 +5,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            //LoadSummaryTab('');    // test new
-            LoadSummaryTab('75ED3466-31E5-4043-8D6E-BD539835BFE4');
+            LoadSummaryTab();
         });
 
     </script>

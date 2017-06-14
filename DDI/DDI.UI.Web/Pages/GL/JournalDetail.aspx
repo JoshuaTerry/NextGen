@@ -87,18 +87,18 @@
             <br />
 
             <div>
-                <a href="#" class="newjournalentrymodallink">New Item</a>
-                <div class="journalgridcontainer">
-                    <div class="journalgrid"></div>
+                <a href="#" class="newjournallinemodallink">New Item</a>
+                <div class="journallinegridcontainer">
+                    <div class="journallinegrid"></div>
                 </div>
             </div>
 
             <br />
             <br />
 
-            <div class="savejournalbuttons hidebuttons floatright">
-                <input type="button" class="savejournal" value="Save" />
-                <a href="#" class="cancelsavejournal">Cancel</a>
+            <div class="savejournallinebuttons hidebuttons floatright">
+                <input type="button" class="savejournalline" value="Save" />
+                <a href="#" class="cancelsavejournalline">Cancel</a>
             </div>
 
 

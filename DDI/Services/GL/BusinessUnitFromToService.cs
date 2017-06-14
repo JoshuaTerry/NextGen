@@ -6,13 +6,14 @@ using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.GL
 {
     public class BusinessUnitFromToService : ServiceBase<BusinessUnitFromTo>, IBusinessUnitFromToService
     {
-        protected override Action<BusinessUnitFromTo> FormatEntityForGet => AddLedgerAccountIds;
+        protected override Action<BusinessUnitFromTo,string> FormatEntityForGet => AddLedgerAccountIds;
         private AccountLogic _accountLogic;
 
         public BusinessUnitFromToService(IUnitOfWork uow, AccountLogic accountLogic) : base(uow)          
@@ -20,7 +21,7 @@ namespace DDI.Services.GL
             _accountLogic = accountLogic;
         }
 
-        private void AddLedgerAccountIds(BusinessUnitFromTo entity)
+        private void AddLedgerAccountIds(BusinessUnitFromTo entity, string fields)
         {
             entity.FromAccountId = _accountLogic.GetAccount(entity.FromLedgerAccount, entity.FiscalYear)?.Id;
             entity.ToAccountId = _accountLogic.GetAccount(entity.ToLedgerAccount, entity.FiscalYear)?.Id;
@@ -86,7 +87,7 @@ namespace DDI.Services.GL
 
             }
 
-            FormatEntityListForGet(results);
+            FormatEntityListForGet(results, FieldLists.AllFields);
             var response = GetIDataResponse(() => results.ToList<ICanTransmogrify>());
             response.TotalResults = results.Count;
             return response;

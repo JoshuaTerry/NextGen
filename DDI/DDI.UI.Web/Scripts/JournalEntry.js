@@ -39,7 +39,7 @@ function JournalDetailLoad() {
     })
 
     JournalLoad()
-    NewJournalLineModal()
+    InitJournalLineModal()
 }
 
 function JournalDisplayMode() {
@@ -51,7 +51,7 @@ function JournalDisplayMode() {
         $(this).prop('disabled', true)
 
     })
-    $('.journalgrid').prop('disabled', true)
+    $('.journallinegrid').prop('disabled', true)
     $('.newjournalentrymodallink').prop('disabled', true)
     FormatFields()
 }
@@ -61,7 +61,7 @@ function JournalAddMode() {
     MaskFields()
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
-    $('.journalgrid').prop('disabled', false)
+    $('.journallinegrid').prop('disabled', false)
     $('.newjournalentrymodallink').prop('disabled', false)
 }
 
@@ -69,7 +69,7 @@ function JournalEditMode() {
     editMode = 'edit'
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
-    $('.journalgrid').prop('disabled', false)
+    $('.journallinegrid').prop('disabled', false)
     $('.newjournalentrymodallink').prop('disabled', false)
 
     MaskFields()
@@ -84,7 +84,7 @@ function JournalEditMode() {
 
 function JournalLoad() {
 
-    if (journalId === '') {
+    if (journalId === null || journalId === '') {
         JournalAddMode()
         editMode = 'add'
         $('.journaltypeselect').show()
@@ -278,7 +278,7 @@ function ClearJournalFields() {
     $(journalContainer).find(".JournalStatus").val('')
     $(journalContainer).find(".CreatedBy").val('')
     $(journalContainer).find(".CreatedOn").val('')
-    $('.journalgridcontainer').hide()
+    $('.journallinegridcontainer').hide()
 }
 
 
@@ -295,30 +295,31 @@ function LoadJournalLineGrid(data) {
         { dataField: 'Name', caption: 'Entity' },
     ];
 
-    LoadGridWithData('journalgrid', '.journalgridcontainer', columns, '', '', EditJournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
+    $('.journallinegridcontainer').show()
+    LoadGridWithData('journallinegrid', '.journallinegridcontainer', columns, '', '', EditJournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
         var test = data
     });
 }
 
 // modal section
 
-function NewJournalLineModal() {
+function InitJournalLineModal() {
 
 
-    $('.newJournalLinemodallink').click(function (e) {
+    $('.newjournallinemodallink').click(function (e) {
 
         GLAccountSelector($('.journallineaccountgroup'), ledgerId, fiscalYearId);
 
         e.preventDefault();
 
-        modal = $('.JournalLinemodal').dialog({
+        modal = $('.journallinemodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 500,
             resizable: false
         });
 
-        $('.cancelmodal').click(function (e) {
+        $('.canceljournallinemodal').click(function (e) {
 
             e.preventDefault();
 
@@ -326,9 +327,9 @@ function NewJournalLineModal() {
 
         });
 
-        $('.saveJournalLine').unbind('click');
+        $('.savejournalline').unbind('click');
 
-        $('.saveJournalLine').click(function () {
+        $('.savejournalline').click(function () {
 
             var item = GetJournalLineToSave();
 
@@ -353,7 +354,7 @@ function NewJournalLineModal() {
 
 function EditJournalLineModal(id) {
 
-    var modal = $('.JournalLinemodal').dialog({
+    var modal = $('.journallinemodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 500,
@@ -363,7 +364,7 @@ function EditJournalLineModal(id) {
     LoadJournalLine(id);
 
 
-    $('.cancelmodal').click(function (e) {
+    $('.canceljournallinemodal').click(function (e) {
 
         e.preventDefault();
 
@@ -371,9 +372,9 @@ function EditJournalLineModal(id) {
 
     });
 
-    $('.saveJournalLine').unbind('click');
+    $('.savejournalline').unbind('click');
 
-    $('.saveJournalLine').click(function () {
+    $('.savejournalline').click(function () {
 
         var topicsavelist = GetNoteTopicsToSave();
 

@@ -15,6 +15,7 @@
                 e.preventDefault();
 
                 sessionStorage.setItem('FISCAL_YEAR_ID', $('.as-fiscalyear').val());
+                sessionStorage.removeItem('ACCOUNT_ID');
 
                 location.href = "/Pages/GL/AccountDetails.aspx";
 

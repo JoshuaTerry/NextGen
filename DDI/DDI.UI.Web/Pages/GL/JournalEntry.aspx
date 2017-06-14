@@ -1,7 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="JournalEntry.aspx.cs" Inherits="DDI.UI.Web.Pages.GL.JournalEntry" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <script type="text/javascript" src="..\..\Scripts\JournalEntry.js"></script>
+    <script type="text/javascript" src="../../Scripts/JournalEntry.js"></script>
+    <script type="text/javascript" src="../../Scripts/glaccountselection.js"></script>
     <link rel="stylesheet" href="../../../CSS/journals.css" />
 
 </asp:Content>
