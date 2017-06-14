@@ -28,17 +28,32 @@ $(document).ready(function () {
 
 function LoadAccountActivityAndBudgetTab(id) {
 
+
     MakeServiceCall('GET', 'accounts/activity/' + id, null, function (data) {
 
         var columns = [
+            { dataField: 'PeriodNumber', caption: 'Period Number' },
+            { dataField: 'PeriodName', caption: 'Period Name' },
 
-            { dataField: 'PeriodName', caption: 'Period' },
-            { dataField: 'WorkingBudget', caption: data.Data.WorkingBudgetName, allowEditing: true },
-            { dataField: 'FixedBudget', caption: data.Data.FixedBudgetName, allowEditing: true },
-            { dataField: 'WhatIfBudget', caption: data.Data.WhatIfBudgetName, allowEditing: true },
-            { dataField: 'Debits', caption: 'Debits' },
-            { dataField: 'PriorCredits', caption: data.Data.PriorYearName },
-            { dataField: 'Credits', caption: 'Credits' }
+            { dataField: 'BeginningBalance', caption: 'Beginning Balance', format: 'currency' },
+            { dataField: 'Debits', caption: 'Debits', format: 'currency' },
+            { dataField: 'Credits', caption: 'Credits', format: 'currency' },
+            { dataField: 'Activity', caption: 'Activity', format: 'currency' },
+            { dataField: 'EndingBalance', caption: 'Ending Balance', format: 'currency' },
+
+            { dataField: 'PriorBeginningBalance', caption: 'Prior Beginning Balance', format: 'currency', visible: false },
+            { dataField: 'PriorDebits', caption: 'Prior Debits',  format: 'currency', visible: false },
+            { dataField: 'PriorCredits', caption: 'Prior Credits',  format: 'currency', visible: false },
+            { dataField: 'PriorActivity', caption: 'Prior Activity',  format: 'currency', visible: false },
+            { dataField: 'PriorEndingBalance', caption: 'Prior Ending Balance',  format: 'currency', visible: false },
+
+            { dataField: 'WorkingBudget', caption: data.Data.WorkingBudgetName, allowEditing: true, format: 'currency' },
+            { dataField: 'FixedBudget', caption: data.Data.FixedBudgetName, allowEditing: true, format: 'currency' },
+            { dataField: 'WhatIfBudget', caption: data.Data.WhatIfBudgetName, allowEditing: true, format: 'currency' },
+
+            { dataField: 'WorkingBudgetVariance', caption: 'Working Budget Variance', allowEditing: true, format: 'currency' },
+            { dataField: 'FixedBudgetVariance', caption: 'Fixed Budget Variance', allowEditing: true, format: 'currency' },
+            { dataField: 'WhatIfBudgetVariance', caption: 'What-If Budget Variance', allowEditing: true, format: 'currency' }
         ];
 
         LoadGrid('.activitygridcontainer', 'activitygrid', columns, 'accounts/activity/' + id + '/detail', null, null, null, null, null, null, false, false, false, function (data) {
@@ -46,6 +61,11 @@ function LoadAccountActivityAndBudgetTab(id) {
             $('.activitytitle').empty();
 
             $('<label>').text(data.Data.AccountName).appendTo($('.activitytitle'));
+
+            $('.activitygrid').dxDataGrid({ columnChooser: { enabled: true, mode: 'select' } });
+
+
+
 
         });
 
@@ -89,7 +109,7 @@ function LoadSummaryTab(AccountId) {
     $('.accountnumberlookup').attr('disabled', true);
     $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
 
-    if (AccountId === '' || AccountId === null) {
+    if (accountId === '' || accountId === null) {
         AccountAddMode();
         editMode = 'add';
     }
