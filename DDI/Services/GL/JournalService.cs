@@ -18,7 +18,14 @@ namespace DDI.Services.GL
 {
     public class JournalService : ServiceBase<Journal>, IJournalService
     {
-        public JournalService(IUnitOfWork uow) : base(uow) { }
+        private JournalLogic _logic;
+
+        public JournalService(IUnitOfWork uow, JournalLogic logic) : base(uow)
+        {
+            _logic = logic;
+        }
+
+        protected override Action<Journal, string> FormatEntityForGet => FormatJournalForGet;
 
         #region Public Methods
 
@@ -100,6 +107,27 @@ namespace DDI.Services.GL
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Populate calculated properties (based on supplied field list)
+        /// </summary>
+        /// <param name="journal"></param>
+        /// <param name="fields"></param>
+        private void FormatJournalForGet(Journal journal, string fields)
+        {
+            if (FieldListHasProperties(fields, p => p.JournalDescription))
+            {
+                journal.JournalDescription = _logic.GetJournalDescription(journal);
+            }
+            if (FieldListHasProperties(fields, p => p.StatusDescription))
+            {
+                journal.StatusDescription = _logic.GetJournalStatusDescription(journal);
+            }
+            if (FieldListHasProperties(fields, p => p.CreatedFrom))
+            {
+                journal.CreatedFrom = _logic.GetJournalParentDescription(journal);
+            }
+        }
 
         private IDocumentSearchResult<JournalDocument> PerformElasticSearch(JournalSearch search)
         {

@@ -9,6 +9,7 @@ using DDI.Logger;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Extensions;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -27,7 +28,7 @@ namespace DDI.Services
         /// <summary>
         /// Formatting and other logic for an entity retrieved for a GET.
         /// </summary>
-        protected virtual Action<T> FormatEntityForGet => DefaultFormatEntityForGet;
+        protected virtual Action<T,string> FormatEntityForGet => DefaultFormatEntityForGet;
 
         public ServiceBase(IUnitOfWork uow)
         {
@@ -59,10 +60,10 @@ namespace DDI.Services
         public virtual IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search = null)
         {
             var queryable = _unitOfWork.GetEntities(_includesForList);
-            return GetPagedResults(queryable, search);
+            return GetPagedResults(queryable, search, fields);
         }
 
-        protected IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null)
+        protected IDataResponse<List<ICanTransmogrify>> GetPagedResults(IQueryable<T> queryable, IPageable search = null, string fields = null)
         {
             if (search == null)
             {
@@ -95,7 +96,7 @@ namespace DDI.Services
                 queryDataList.Cast<IAuditableEntity>().ForEach(p => SetDateTimeKind(p));
             }
 
-            FormatEntityListForGet(queryDataList);
+            FormatEntityListForGet(queryDataList, fields);
 
             var response = GetIDataResponse(() => ModifySortOrder(search.OrderBy, queryDataList).ToList<ICanTransmogrify>());
 
@@ -187,7 +188,49 @@ namespace DDI.Services
             var properties = typeof(T1).GetProperties().Select(p => p.Name.ToUpper());
             return fields.ToUpper().Split(',').All(f => properties.Contains(f));
         }
-        
+
+        /// <summary>
+        /// Determine if a field list contains any of the specified properties.<para/>
+        /// Returns true if the field list is "all".<para/>
+        /// Returns <false if the field list is null or empty.
+        /// </summary>
+        internal bool FieldListHasProperties(string fields, params Expression<Func<T, object>>[] properties)
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                return false;
+            }
+            else if (string.Compare(fields, FieldLists.AllFields, true) == 0)
+            {
+                return true;
+            }
+
+            var fieldsUpper = fields.ToUpper().Split(',');
+
+            return properties.Any(p => fieldsUpper.Contains(PathHelper.NameFor<T>(p).ToUpper()));
+        }
+
+        /// <summary>
+        /// Determine if a field list contains any of the specified properties.<para/>
+        /// Returns true if the field list is "all".<para/>
+        /// Returns false if the field list is null or empty.
+        /// </summary>
+        internal bool FieldListHasProperties(string fields, params string[] properties)
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                return false;
+            }
+            else if (string.Compare(fields, FieldLists.AllFields, true) == 0)
+            {
+                return true;
+            }
+
+            var fieldsUpper = fields.ToUpper().Split(',');
+
+            return properties.Any(p => fieldsUpper.Contains(p.ToUpper()));
+        }
+
         public virtual IDataResponse<T> GetById(Guid id)
         {
             T result = _unitOfWork.GetById(id, _includesForSingle);
@@ -195,36 +238,40 @@ namespace DDI.Services
             {
                 SetDateTimeKind((IAuditableEntity)result);
             }
-            FormatEntityForGet(result);
+            FormatEntityForGet(result, FieldLists.AllFields);
             return GetIDataResponse(() => result);
         }
 
         public IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression)
         {
             IDataResponse<T> response = GetIDataResponse(() => UnitOfWork.GetRepository<T>().GetEntities(_includesForSingle).Where(expression).FirstOrDefault());
-            FormatEntityForGet(response.Data);
+            FormatEntityForGet(response.Data, FieldLists.AllFields);
             return response;
         }
 
-        public IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null)
+        public IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null, string fields = null)
         {
             var queryable = UnitOfWork.GetEntities(_includesForList).Where(expression);
-            return GetPagedResults(queryable, search);
+            return GetPagedResults(queryable, search, fields);
         }
         
         /// <summary>
         /// Formatting and other logic for a single entity retrieved for a GET.
         /// </summary>
-        private void DefaultFormatEntityForGet(T entity) { }
+        private void DefaultFormatEntityForGet(T entity, string fields) { }
 
         /// <summary>
         /// Formatting and other logic for a list of entities retrieved for a GET.
         /// </summary>
-        protected void FormatEntityListForGet(IList<T> list)
+        protected void FormatEntityListForGet(IList<T> list, string fields)
         {
             if (FormatEntityForGet != DefaultFormatEntityForGet && FormatEntityForGet != null) // If overridden
             {
-                list.ForEach(p => FormatEntityForGet(p));
+                if (fields == null)
+                {
+                    fields = string.Empty;
+                }
+                list.ForEach(p => FormatEntityForGet(p, fields));
             }
         }
 
@@ -280,7 +327,7 @@ namespace DDI.Services
                 _unitOfWork.SaveChanges();
 
                 response.Data = _unitOfWork.GetById(id, IncludesForSingle);
-                FormatEntityForGet(response.Data);
+                FormatEntityForGet(response.Data, FieldLists.AllFields);
             }
             catch (Exception ex)
             {
@@ -403,7 +450,7 @@ namespace DDI.Services
                 BusinessLogicHelper.GetBusinessLogic<T>(_unitOfWork)?.Validate(entity);
                 _unitOfWork.SaveChanges();
                 response.Data = _unitOfWork.GetById(entity.Id, IncludesForSingle);
-                FormatEntityForGet(response.Data);
+                FormatEntityForGet(response.Data, FieldLists.AllFields);
             }
             catch (Exception ex)
             {

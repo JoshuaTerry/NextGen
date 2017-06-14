@@ -5,6 +5,7 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Services.Search;
 using Newtonsoft.Json.Linq;
+using DDI.Shared.Enums.GL;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -24,7 +25,8 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetAllExceptOrganization(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             var search = PageableSearch.Max;
-            var results = Service.GetAllWhereExpression(bu => bu.Code.Trim() != "*",search);
+            fields = ConvertFieldList(fields, FieldsForList);
+            var results = Service.GetAllWhereExpression(bu => bu.BusinessUnitType != BusinessUnitType.Organization, search, fields);
             return base.FinalizeResponse(results,null,search, null, null);
         }
 
