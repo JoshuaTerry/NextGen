@@ -14,7 +14,7 @@
 
         <div class="fieldblock">
             <label class="inline">Email</label>
-            <input type="text" name="email" class="username" />
+            <input type="text" name="email" class="username required" maxlength="256" />
         </div>
 
         <div class="fieldblock">
