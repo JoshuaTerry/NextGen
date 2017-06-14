@@ -700,8 +700,14 @@ function LoadAccordions() {
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
 
+        $(this).parent().next('.accordions').accordion({
+            active: false
+        });
+
         $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
         $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-s').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
     });
 
     $('.accordion-expandall').click(function (e) {
@@ -709,6 +715,8 @@ function LoadAccordions() {
 
         $(this).parent().next('.accordions').find('.ui-accordion-content').show('fast');
         $(this).parent().next('.accordions').find('.ui-accordion-header').addClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
 
     });
 
