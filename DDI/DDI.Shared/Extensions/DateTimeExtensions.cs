@@ -49,5 +49,30 @@ public static class DateTimeExtensions
         return dt.HasValue ? dt.Value.ToShortDateString() : string.Empty;
     }
 
+    /// <summary>
+    /// Returns a DateTime formated as 0000-00-00T00:00:00.0000000Z
+    /// </summary>
+    public static string ToRoundTripString(this DateTime? dt)
+    {
+        if (!dt.HasValue)
+        {
+            return string.Empty;
+        }
+
+        return ToRoundTripString(dt.Value);
+    }
+
+    /// <summary>
+    /// Returns a DateTime formated as 0000-00-00T00:00:00.0000000Z
+    /// </summary>
+    public static string ToRoundTripString(this DateTime dt)
+    {        
+        if (dt.Kind == DateTimeKind.Unspecified)
+        {
+            // Assume Datetime is UTC if not specified.
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+        }
+        return dt.ToString("O");
+    }
 }
 

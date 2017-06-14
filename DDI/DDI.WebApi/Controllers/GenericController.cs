@@ -29,7 +29,8 @@ namespace DDI.WebApi.Controllers
             try
             {
                 urlHelper = urlHelper ?? GetUrlHelper();
-                return FinalizeResponse(Service.GetAll(fields, search), routeName, search, ConvertFieldList(fields, FieldsForList), urlHelper);
+                fields = ConvertFieldList(fields, FieldsForList);
+                return FinalizeResponse(Service.GetAll(fields, search), routeName, search, fields, urlHelper);
             }
             catch (Exception ex)
             {
