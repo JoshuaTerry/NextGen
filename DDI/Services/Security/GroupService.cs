@@ -18,20 +18,27 @@ namespace DDI.Services.General
 
         public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
         {
-            var user = UnitOfWork.GetById<User>(userId, u => u.Groups);
-            var group = UnitOfWork.GetById<Group>(groupId, u => u.Users);
+            var user = UnitOfWork.GetById<User>(userId, u => u.Groups, u => u.Roles);
+            var group = UnitOfWork.GetById<Group>(groupId, u => u.Users, u => u.Roles);
 
             user.Groups.Clear();
             user.Groups.Add(group);
             group.Users.Add(user);
 
-            if (group.Roles != null)
+            UnitOfWork.SaveChanges();
+
+            if (group.Roles == null)
+            {
+                user.Roles.Clear();
+                UnitOfWork.SaveChanges();
+
+            }
+            else
             {
                 UpdateUserRoles(userId, group.Roles.ToList());
             }
 
-            UnitOfWork.SaveChanges();
-
+            
             var response = new DataResponse<User>()
             {
                 Data = user,
@@ -158,7 +165,7 @@ namespace DDI.Services.General
 
         private void UpdateUserRoles(Guid userId, List<Role> rolesToAdd)
         {
-            var user = UnitOfWork.GetRepository<User>().GetById(userId);
+            var user = UnitOfWork.GetRepository<User>().GetById(userId, u => u.Roles );
             user.Roles.Clear();
 
             rolesToAdd.ForEach(r => user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = r.Id }));

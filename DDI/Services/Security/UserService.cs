@@ -71,6 +71,48 @@ namespace DDI.Services.Security
             return response;
         }
 
+        public IDataResponse SyncBusinessUnitsToUser(Guid id, List<Guid> buids)
+        {
+            User result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
+
+            List<Guid> currentBusinessUnitIds = new List<Guid>();
+            //remove any business units that should not be there
+            foreach (BusinessUnit bu in result.BusinessUnits)
+            {
+                currentBusinessUnitIds.Add(bu.Id);
+
+            }
+
+            foreach (Guid cbuId in currentBusinessUnitIds)
+            { 
+                if (!buids.Contains(cbuId))
+                {
+                    BusinessUnit bu = UnitOfWork.GetById<BusinessUnit>(cbuId);
+                    result.BusinessUnits.Remove(bu);
+                }
+            }
+
+            //add any business units that are not there already
+            foreach (Guid buid in buids)
+            {
+                BusinessUnit bu = UnitOfWork.GetById<BusinessUnit>(buid);
+                if (!result.BusinessUnits.Contains(bu))
+                {
+                    result.BusinessUnits.Add(bu);
+                }
+            }
+
+            UnitOfWork.SaveChanges();
+
+            IDataResponse response = new DataResponse<User>
+            {
+                Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
         public IDataResponse AddGroupToUser(Guid id, Guid groupId)
         {
             GroupService groupService = new GroupService(UnitOfWork);

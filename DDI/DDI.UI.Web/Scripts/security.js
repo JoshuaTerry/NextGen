@@ -6,72 +6,29 @@ $(document).ready(function () {
 
     LoadGroupsGrid();
     LoadRolesTagBox();
-
-
     NewGroupModal();
-    PopulateDropDown('.ConstituentId', 'constituents', '', '');
+
     LoadUsersGrid();
     NewUserModal();
 
+    PopulateDropDown('.ConstituentId', 'constituents', '', '');
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+    PopulateDropDown($('.user-GroupId'), 'groups', null);
+
+
 });
 
-function SetupNewUserModal() {
 
-    $('.addnewuser').click(function (e) {
+//function LoadSecuritySettingsGrid() {
 
-        e.preventDefault();
+//    var columns = [
+//        { dataField: 'UserId', caption: 'User ID' },
+//        { dataField: 'Name', caption: 'Name' }
+//    ];
 
-        $('.usermodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            height: 225,
-            resizable: false
-        });
+//    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
 
-        $('.submituser').click(function () {
-
-            var model = {
-                Email: $('.newusername').val(),
-                Password: $('.newpassword').val(),
-                ConfirmPassword: $('.newconfirmpassword').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'users',
-                data: model,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                headers: GetApiHeaders(),
-                success: function () {
-
-                    AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
-
-                    location.href = "/Login.aspx";
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                }
-            });
-
-        });
-
-    });
-
-}
-
-function LoadSecuritySettingsGrid() {
-
-    var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
-    ];
-
-    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
-
-}
+//}
 
 /* GROUPS TAB */
 function LoadGroupsGrid() {
@@ -111,6 +68,8 @@ function NewGroupModal() {
 
             }
         });
+
+        $('.savegroupbutton').attr('value', 'Next...');
 
         $('.savegroupbutton').unbind('click');
 
@@ -231,6 +190,8 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
+    $('.savegroupbutton').attr('value', 'Save');
+    
     $('.savegroupbutton').unbind('click');
 
     $('.savegroupbutton').click(function (e) {
@@ -360,12 +321,12 @@ function LoadGroup(id) {
 function DeleteRole(role) {
 
     var groupid = $('.hidgroupid').val();
-
-    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role', null, function (data) {
+    
+    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role/' + role, null, function (data) {
 
         DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
 
-        LoadGroup(id);
+        LoadGroup(groupid);
 
 
     });
@@ -412,39 +373,7 @@ function LoadUsersGrid() {
         }
     ];
 
-    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    PopulateDropDown($('.user-GroupId'), 'groups', null);
-
-    //LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
-    //          '.prefixmodal', '.prefixmodal', 250, true, false, false, null);
-    //LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users', null, 'user-',
-      //  '.usermodal', '.usermodal', 250, true, true, true, null); // DELETE after following path to new modal link stuff
     CustomLoadGrid('usergrid', 'usersgridcontainer', columns, 'users?fields=all', null, EditUser, null);
-    //NewModalLink('.usersgridcontainer', 'users', 'user-', '.usermodal', 250, '');
-    //NewModalLink('.usergrid', 'users', 'user-', '.usermodal', 250, '');
-    //NewModalLink('.tab-users', 'users', 'user-', '.usermodal', 250, '');
-    //NewModalLink('.usersgridcontainer', 'users', 'user-', '.usermodal', 250, '');
-    //NewModalLink(container, saveRoute, prefix, newModalClass, modalWidth, refreshGrid);
-
-
-    //var modalLinkClass = 'user-newmodallink';
-
-    //$('.' + modalLinkClass).remove();
-
-    //var link = $('<a>')
-    //        .attr('href', '#')
-    //        .addClass('newmodallink')
-    //        .addClass(modalLinkClass)
-    //        .text('New Item')
-    //        .click(function (e) {
-    //            e.preventDefault();
-
-    //            NewEntityModal('users', 'user-', '.usermodal', 250, '');
-
-    //        });
-    //$('.usersgridcontainer').prepend($(link));
-    
-
 }
 
 function NewUserModal() {
@@ -453,18 +382,18 @@ function NewUserModal() {
 
         e.preventDefault();
 
+        $('.user-editonly1').hide();
+        $('.user-editonly2').hide();
 
         modal = $('.usermodal').dialog({
             closeOnEscape: false,
             modal: true,
             width: 400,
             resizable: false,
-            beforeClose: function (e) {
-
-                //$('.rolesmodal, .rolesgriditems').hide();
-
-            }
+            beforeClose: function (e) {}
         });
+
+        $('.submituser').attr('value', 'Next...');
 
         $('.submituser').unbind('click');
 
@@ -482,8 +411,6 @@ function NewUserModal() {
                 crossDomain: true,
                 headers: GetApiHeaders(),
                 success: function (data) {
-
-                    //AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
 
                     DisplaySuccessMessage('Success', 'User saved successfully.');
 
@@ -504,168 +431,10 @@ function NewUserModal() {
             e.preventDefault();
 
             CloseModal(modal);
-
-            //$('.rolesmodal, .rolesgriditems').hide();
-
-            //$('.rolestagbox').dxTagBox('instance').reset();
-
         });
-
-    });
-
-}
-
-function DisplayUserBusinessUnits(businessUnits) {
-
-    $(modal).find('.tagselect').empty();
-    $(modal).find('.user-BusinessUnits').empty();
-
-    $(businessUnits).each(function (i, businessUnit) {
-
-        var id = businessUnit.Id;
-        var name = businessUnit.Name;
-
-        var t = $('<div>').addClass('dx-tag-content').attr('id', id).appendTo($('.tagselect'));
-        $('<span>').text(name).appendTo($(t));
-        $('<div>').addClass('dx-tag-remove-button')
-            .click(function () {
-                MakeServiceCall('GET', 'DELETE' + $(modal).find('.user-Id').val() + '/businessunits/' + businessUnit.Id, null, function (data) {
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Business Unit was deleted successfully.');
-                        CloseModal(modal);
-                        EditConstituentType($(modal).find('.user-Id').val());
-                    }
-
-                }, null)
-            })
-            .appendTo($(t));
-
-    });
-
-
-}
-
-function LoadUserBusinessUnitSelector(id, container) {
-
-    $('.tagselect').each(function () {
-
-        var img = $('.tagSelectImage');
-        var userId = id;
-
-        if (img.length === 0) {
-            img = $('<div>').addClass('tagSelectImage');
-        }
-
-        $(img).click(function () {
-
-            tagmodal = $('.tagselectmodal').dialog({
-                closeOnEscape: false,
-                modal: true,
-                width: 450,
-                resizable: false
-            });
-
-            LoadAvailableBusinessUnits(tagmodal, true);
-            //LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions)
-            //LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
-
-            $('.cancelmodal').click(function (e) {
-
-                e.preventDefault();
-
-                CloseModal(tagmodal);
-                CloseModal(modal);
-                EditUser(userId);
-
-            });
-
-            $('.saveselectedbusinessunits').unbind('click');
-
-            $('.saveselectedbusinessunits').click(function () {
-
-                var buIds = [];
-
-                $('.tagselectgridcontainer').find('input').each(function (index, value) {
-
-                    if ($(value).prop('checked')) {
-                        buIds.push($(value).val());
-                    }
-                });
-
-                MakeServiceCall('POST', 'users/' + userId + '/businessunits', JSON.stringify({ businessUnits: buIds }), function (data) {
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'BusinessUnits saved successfully.');
-                        CloseModal(tagmodal);
-                        EditUser(userId);
-                    }
-
-                }, null);
-
-            });
-        });
-        $(this).after($(img));
     });
 }
 
-function LoadAvailableBusinessUnits(container, isCategorySpecific) {
-
-    var route = 'businessunits';
-
-    MakeServiceCall('GET', route, null, function (data) {
-
-        if (data.Data) {
-
-            $(container).find('.tagselectgridcontainer').html('');
-
-            $.map(data.Data, function (group) {
-
-                var header = $('<div>').addClass('tagSelectorHeader').text(group.DisplayName);
-                var tagsContainer = $('<div>').addClass('tagSelectorContainer');
-
-                if (group.Tags) {
-
-                    switch (group.TagSelectionType) {
-
-                        case 0:
-                            CreateMultiSelectTags(group.Tags, tagsContainer);
-                            break;
-                        case 1:
-                            CreateSingleSelectTags(group.Tags, group.Id, tagsContainer);
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
-
-                $(header).appendTo($(container).find('.tagselectgridcontainer'));
-                $(tagsContainer).appendTo($(container).find('.tagselectgridcontainer'));
-
-            });
-
-            RefreshBusinessUnits();
-
-        }
-
-    }, null);
-
-}
-
-function RefreshBusinessUnits() {
-
-    if (currentEntity && currentEntity.BusinessUnits) {
-
-        $.map(currentEntity.BusinessUnits, function (item) {
-
-            $('input[value=' + item.Id + ']').prop('checked', true);
-
-        });
-
-    };
-
-}
 
 // USER SETTINGS 
 function EditUser(id) {
@@ -694,23 +463,22 @@ function EditUser(id) {
 
     });
 
+    $('.submituser').attr('value', 'Save');
+
     $('.submituser').unbind('click');
 
     $('.submituser').click(function () {
 
-        // Make the call to add the group to the user here
-        // if the call is successful then proceed with saving the rest of user data
-        // otherwise, display an error
-        // GroupId: $(modal).find('.user-GroupId').val(),
-
+        var buIds = $('.tagBoxBusinessUnits').dxTagBox('instance').option('values');
 
         var item = {
             FullName: $(modal).find('.user-FullName').val(),
             UserName: $(modal).find('.user-UserName').val(),
             Email: $(modal).find('.user-Email').val(),
             DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-            ConstituentId: $(modal).find('.user-ConstituentId').val(),
+            ConstituentId: $(modal).find('.rs-Constituent1Id').val(),
             GroupId: $(modal).find('.user-GroupId').val(),
+            BusinessUnitIds: buIds,
             IsActive: true
         }
 
@@ -718,29 +486,16 @@ function EditUser(id) {
 
             if (data.Data) {
 
-                //if (item.DefaultBusinessUnitId != null && item.DefaultBusinessUnitId != '') {
-
-                //    MakeServiceCall('PATCH', 'users/' + id + '/businessunit/' + item.DefaultBusinessUnitId, JSON.stringify(item), null, null);
-                //}
-
-                //var group = $(modal).find('.user-Constituent1Id').val();
-                //if (group != null && group != '') {
-                //    MakeServiceCall ('PATCH', 'users/' + id + '/group/' + group, '', null, null);
-                //}
-
                 DisplaySuccessMessage('Success', 'User saved successfully.');
-
                 CloseModal(modal);
-
                 LoadUsersGrid();
             }
 
         }, function (xhr, status, err) {
 
             DisplayErrorMessage('Error', 'An error occurred while saving the User.');
-        });
 
-        
+        });
         
     });
 
@@ -759,19 +514,18 @@ function LoadUser(id) {
                 $(modal).find('.user-UserName').val(data.Data.UserName);
                 $(modal).find('.user-Email').val(data.Data.Email);
                 $(modal).find('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
-                $(modal).find('.user-ConstituentId').val(data.Data.Constituent.DisplayName);
-                //$(modal).find('.user-ConstituentId').val(data.Data.ConstituentId);
+                $(modal).find('.rs-Constituent1Id').val(data.Data.ConstituentId);
                 $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
-                
-                //LoadTagBoxes('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
-                LoadUserBusinessUnitSelector(data.Data.Id, $('.user-BusinessUnits'));
 
-                if (data.Data.BusinessUnits.length > 0) {
-                    DisplayUserBusinessUnits($(data.Data.BusinessUnits));
+                if (data.Data.Constituent != null) {
+                    var constituentLabel = data.Data.Constituent.ConstituentNumber + ": " + data.Data.Constituent.Name + ", " + data.Data.Constituent.PrimaryAddress;
+                    $(modal).find('.rs-Constituent1Information').val(constituentLabel);
                 }
                 else {
-                    $(modal).find('.user-BusinessUnits').empty();
+                    $(modal).find('.rs-Constituent1Information').empty();
                 }
+
+                LoadBusinessUnits('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
 
                 if (data.Data.Groups.length > 0) {
                     $(data.Data.Groups).each(function (i, group) {
@@ -780,9 +534,9 @@ function LoadUser(id) {
                         
                     });
                 }
-                else {
-                    $(modal).find('.user-GroupId').empty();
-                }
+                //else {
+                    //$(modal).find('.user-GroupId').empty();
+                //}
             }
         }
 
@@ -790,85 +544,46 @@ function LoadUser(id) {
 
 }
 
-//function LoadBusinessUnits()
-//{
-   
-//}
+function LoadBusinessUnits(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
+        container = '.' + container;
 
-//function CreateBusinessUnitCheckBoxes(data)
-//{
+    $(container).html('');
+
+    var selectedItems = [];
+
+    MakeServiceCall('GET', routeForSelectedOptions, null, function (data) {
+        data.Data.forEach(function (item) {
+            selectedItems.push(item.Id);
+        });
+        DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled);
+    }, null);
+
+}
+
+function DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled) {
+
+    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
+
+    MakeServiceCall('GET', routeForAllOptions, null, function (data) {
+        $(tagBoxControl).dxTagBox({
+            items: data.Data,
+            value: selectedItems,
+            displayExpr: 'DisplayName',
+            valueExpr: 'Id',
+            showClearButton: true,
+            disabled: disabled,
+            height: data.length,
+            scrollbar: true
+
+        });
+
+        $(tagBoxControl).appendTo(container);
+    }, null);
+
+}
 
 
-//}
-
-//function LoadUsersGroupsGrid() {
-
-//    var columns = [
-//        { dataField: 'UserId', caption: 'User ID' },
-//        { dataField: 'Name', caption: 'Name' }
-//    ];
-
-//    LoadGrid('usersgroupsgrid', 'usergroupsgridcontainer', columns, 'usergroups');
-
-//}
-
-//function DisplayUserInfo(id) {
-
-//    $.ajax({
-//        url: WEB_API_ADDRESS + 'users/' + id,
-//        method: 'GET',
-//        contentType: 'application/json; charset-utf-8',
-//        dataType: 'json',
-//        crossDomain: true,
-//        headers: GetApiHeaders(),
-//        success: function (data) {
-
-//            if (IsSuccessful) {
-
-//                $('.userid').val(data.Data.UserId);
-//                $('.username').val(data.Data.Name);
-//                $('.useremail').val(data.Data.Email);
-
-//                if (data.Data.IsActive && data.Data.IsActive == 1) {
-//                    $('.userstatus').prop('checked', true);
-//                }
-//                else {
-//                    $('.userstatus').prop('checked', false);
-//                }
-                
-//            }
-
-//        },
-//        error: function (xhr, status, err) {
-//            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-//        }
-//    })
-
-//}
-
-//function AddUsersToRoles(user, roles) {
-
-//    var data = {
-//        Email: user,
-//        Roles: roles
-//    }
-
-//    $.ajax({
-//        type: 'POST',
-//        url: WEB_API_ADDRESS + 'users/roles/add',
-//        data: data,
-//        contentType: 'application/x-www-form-urlencoded',
-//        crossDomain: true,
-//        headers: GetApiHeaders(),
-//        success: function () {
-
-//        },
-//        error: function (xhr, status, err) {
-//            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-//        }
-//    });
-
-//}
 /* END USERS TAB */
 
 

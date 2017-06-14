@@ -222,6 +222,8 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
+            // add user to the group
+            // we only one group allowed at a time, which is why it is done outside the basic user patch
             string groupId = userChanges["GroupId"].ToString();
             if (groupId != null && groupId != "")
             {
@@ -232,9 +234,34 @@ namespace DDI.WebApi.Controllers.General
                 {
                     return BadRequest(response.ErrorMessages.ToString());
                 }
-
             }
             userChanges["GroupId"].Parent.Remove();
+
+            List<Guid> businessUnits = new List<Guid>();
+            foreach (var child in userChanges["BusinessUnitIds"].Children())
+            {
+                string bu = child.ToString();
+                businessUnits.Add(new Guid(bu));
+            }
+            
+            //make sure default business unit is an allowed business unit for user and add if necessary
+            string defaultBusinessUnitId = userChanges["DefaultBusinessUnitId"].ToString();
+            if (defaultBusinessUnitId != null && defaultBusinessUnitId != "")
+            {
+                Guid dbuId = new Guid(defaultBusinessUnitId);
+                if (!businessUnits.Contains(dbuId))
+                {
+                    businessUnits.Add(dbuId);
+                }
+            }
+
+            IDataResponse response2 = userService.SyncBusinessUnitsToUser(id, businessUnits);
+            if (!response2.IsSuccessful)
+            {
+                return BadRequest(response2.ErrorMessages.ToString());
+            }
+            userChanges["BusinessUnitIds"].Parent.Remove();
+
             return base.Patch(id, userChanges);
         }
 

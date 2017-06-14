@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="DDI - Security" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Security.aspx.cs" Inherits="DDI.UI.Web.Security" %>
 
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="../../Scripts/security.js"></script>
@@ -121,9 +122,9 @@
 
                 <div class="fieldblock">
                     <div class="fieldblock">
-                        <%--<input type="hidden" class="user-ConstituentId" />--%>
+                        <input type="hidden" class="rs-Constituent1Id" />
                         <label>Constituent</label>
-                        <input type="text" class="user-ConstituentId constituentlookup" />
+                        <input type="text" class="rs-Constituent1Information constituentlookup" />
                     </div>
                 </div>
 
