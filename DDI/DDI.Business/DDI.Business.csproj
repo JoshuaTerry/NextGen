@@ -76,6 +76,7 @@
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
     <Compile Include="GL\AccountGroup.cs" />
     <Compile Include="GL\ClosingLogic.cs" />
+    <Compile Include="GL\AccountGroupLogic.cs" />
     <Compile Include="GL\SegmentLogic.cs" />
     <Compile Include="GL\FundFromToLogic.cs" />
     <Compile Include="GL\BusinessUnitFromToLogic.cs" />

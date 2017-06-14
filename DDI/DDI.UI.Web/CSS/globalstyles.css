@@ -7,6 +7,7 @@ h3 {  }
 
 a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
+a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-events: none; }
 
 .justright {text-align: right}
 .justleft {text-align: left}
