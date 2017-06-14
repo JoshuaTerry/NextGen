@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DDI.Shared.Models;
 
-namespace DDI.Data.Helpers
+namespace DDI.Shared.Helpers
 {
     public static class EntityFrameworkHelper
     {
