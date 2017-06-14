@@ -35,7 +35,7 @@ namespace DDI.Services
 
         #region Public Methods
 
-        protected override Action<Constituent> FormatEntityForGet => FormatConstituentForGet;
+        protected override Action<Constituent,string> FormatEntityForGet => FormatConstituentForGet;
 		               
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
@@ -237,10 +237,14 @@ namespace DDI.Services
 
         #region Private Methods
 
-        private void FormatConstituentForGet(Constituent constituent)
+        private void FormatConstituentForGet(Constituent constituent, string fields)
         {
             SetDateTimeKind(constituent, q => q.ConstituentStatusDate);
-            _constituentlogic.CalculateAgeRange(constituent);
+
+            if (FieldListHasProperties(fields, p => p.AgeFrom, p => p.AgeTo, p => p.BirthYear))
+            {
+                _constituentlogic.CalculateAgeRange(constituent);
+            }
         }
 
         /// <summary>
