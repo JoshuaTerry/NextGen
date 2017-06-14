@@ -5,6 +5,12 @@ var accountId;
 $(document).ready(function () {
     accountId = sessionStorage.getItem('ACCOUNT_ID');
 
+    if (accountId) {
+
+        sessionStorage.removeItem('ACCOUNT_ID');
+
+    }
+
     LoadAccountActivityAndBudgetTab(accountId);
 
     $('#activity-and-budget-tab').click(function (e) {
@@ -76,12 +82,10 @@ var summaryContainer = '.accountsummarycontainer';
 
 function LoadSummaryTab() {
 
-    accountId = sessionStorage.getItem('ACCOUNT_ID');
-    if (accountId) {
+    if (accountId != null && accountId != '') {
         RetrieveAccountSummaryData();
     }
     else {
-        accountId = ''
         if (fiscalYearId) {
             RetrieveLedgerId();
         }
