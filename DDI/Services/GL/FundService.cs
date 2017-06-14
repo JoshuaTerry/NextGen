@@ -9,7 +9,7 @@ namespace DDI.Services.GL
 {
     public class FundService : ServiceBase<Fund>
     {
-        protected override Action<Fund> FormatEntityForGet => AddLedgerAccountIds;
+        protected override Action<Fund, string> FormatEntityForGet => AddLedgerAccountIds;
         private AccountLogic _accountLogic;
 
         public FundService(IUnitOfWork uow, AccountLogic accountLogic) : base(uow)
@@ -17,7 +17,7 @@ namespace DDI.Services.GL
             _accountLogic = accountLogic;
         }
 
-        private void AddLedgerAccountIds (Fund entity)
+        private void AddLedgerAccountIds (Fund entity, string fields)
         {
             entity.FundBalanceAccountId = _accountLogic.GetAccount(entity.FundBalanceLedgerAccount, entity.FiscalYear)?.Id;
             entity.ClosingRevenueAccountId = _accountLogic.GetAccount(entity.ClosingRevenueLedgerAccount, entity.FiscalYear)?.Id;

@@ -39,7 +39,7 @@ namespace DDI.Services.GL
             return new DataResponse<List<AccountActivityDetail>>(activityDetailList);
         }
 
-        protected override Action<Account> FormatEntityForGet => account => PopulateAccountBalanceIds(account);
+        protected override Action<Account,string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
 
         /// <summary>
         /// The Ids coming back from the SQL view put the account ID into AccountBalance.Id.  This confuses the dynamic transmogrifier, 

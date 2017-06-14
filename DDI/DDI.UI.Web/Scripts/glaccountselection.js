@@ -19,7 +19,7 @@ function LoadAccountSelectorGrid(fiscalyearid) {
         LoadGLAccounts('.as-accounts', data.Data.LedgerId, data.Data.Id, function (d) {
 
             if (d) {
-                sessionStorage.setItem(ACCOUNT_ID, d.AccountNumber);
+                sessionStorage.setItem(ACCOUNT_ID, d.Id);
                 location.href = "/Pages/GL/AccountDetails.aspx";
             }
 
@@ -85,7 +85,6 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     $(container).find(".hidaccountid").val(d.Id);
                     $(container).find(".accountdescription").text(d.Description);
                     $(container).find(".accountnumber").focus();
-                    // $(container).find(".gridContainer").hide();
                 }
             });
 
@@ -132,31 +131,59 @@ function CreateGLAccountSelector(container)
     $('<input>').attr("type", "hidden").addClass("hidaccountnumber").addClass("inline").appendTo($(container));
 }
 
+function Descend(data) {
+    while (!data.AccountNumber) {
+        if (data.collapsedItems)
+            data = data.collapsedItems[0];
+        else
+            data = data.items[0];
+    }
+    return data;
+}
+
 function LoadGLAccounts(container, ledgerId, fiscalYearId, onSelect) {
    
     MakeServiceCall('GET', 'ledgers/' + ledgerId, null,
         function (data) {
             var numberOfAccountGroups = data.Data.AccountGroupLevels;
             var columns = [];
-
+           
             for (var i = 0; i < numberOfAccountGroups; i++) {
                 columns.push({
-                    dataField: "Level" + (i + 1),
+                    dataField: "LevelSequence" + (i + 1),
                     caption: "",
                     groupIndex: i,
                     groupCellTemplate: function (groupCell, info) {
-                        var groupheader = info.value;
-                        if (groupheader == undefined)
-                        {
+
+                        groupheader = "";
+                        foundData = Descend(info.data);
+                        switch (info.columnIndex) {
+                            case 0: groupheader = foundData.Level1; break;
+                            case 1: groupheader = foundData.Level2; break;
+                            case 2: groupheader = foundData.Level3; break;
+                            case 3: groupheader = foundData.Level4; break;
+                        }
+                        if (groupheader == undefined) {
                             groupheader = "Accounts"
                         }
                         $('<label>').html(groupheader).appendTo(groupCell);
                     },
+                    
                 });
             }
 
-            columns.push({ dataField: 'AccountNumber', caption: 'Account Number', sortOrder: 'asc', sortIndex: 0});
+            columns.push({
+                dataField: 'SortKey',
+                caption: 'Account Number', 
+                sortOrder: 'asc',
+                sortIndex:0,
+                cellTemplate: function (container, options) {
+                    $('<label>').text(options.data.AccountNumber).appendTo(container);
+                }
+            });
             columns.push("Description");
+           
+          
 
             LoadGLAccountGrid(container, fiscalYearId, columns, onSelect);
         }
@@ -181,6 +208,9 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
         dataSource: {
             store: gridData,
             type: "array"
+        },
+        sorting: {
+            mode: "multiple"
         },
         scrolling: {
             mode: "virtual"
@@ -245,6 +275,7 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
 
 function LoadSelectedAccount(container, value)
 {
+    $(container).find(".gridContainer").hide();
     MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);

@@ -1,10 +1,4 @@
 ﻿
-function AddDefaultOption(e, text, val) {
-
-    var option = $('<option>').val('').text('');
-    $(option).appendTo($(e));
-
-}
 
 function GetApiHeaders() {
 
@@ -57,7 +51,7 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 /* POPULATE DROPDOWN CONTROLS */
 function AddDefaultOption(element, text, val) {
 
-    var option = $('<option>').val('').text('');
+    var option = $('<option>').val(val).text(text);
     $(option).appendTo($(element));
 
 }
@@ -106,47 +100,6 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
             if (completecallback) {
 
-                completecallback();
-
-            }
-
-        }
-    }, null);
-
-    if (changecallback) {
-
-        $(element).unbind('change');
-
-        $(element).change(function () {
-            changecallback();
-        });
-
-    }
-
-}
-
-function PopulateDropDownData(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
-
-    ClearElement(element);
-
-    AddDefaultOption(element, defaultText, defaultValue);
-
-    MakeServiceCall('GET', route, null, function (data) {
-        if (data.Data) {
-
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.DisplayName);
-                $(option).appendTo($(element));
-
-            });
-
-            if (selectedValue) {
-                $(element).val(selectedValue);
-            }
-
-            if (completecallback) {
-
                 completecallback(element, data);
 
             }
@@ -171,7 +124,7 @@ function PopulateDropDownData(element, route, defaultText, defaultValue, selecte
 
 
 /* POPULATE TAGBOX CONTROLS */
-function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions) {
+function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
     if ($.type(container) === "string" && container.indexOf('.') != 0)
         container = '.' + container;
 
@@ -183,14 +136,14 @@ function LoadTagBoxes(tagBox, container, routeForAllOptions, routeForSelectedOpt
         data.Data.forEach(function (item) {
             selectedItems.push(item.Id);
         });
-        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems);
+        DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled);
     }, null);
 
 }
 
-function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
+function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems, disabled) {
 
-    var tagBoxControl = $('<div>').addClass(tagBox);
+    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
 
     MakeServiceCall('GET', routeForAllOptions, null, function (data) {
         $(tagBoxControl).dxTagBox({
@@ -199,7 +152,11 @@ function DisplayTagBox(routeForAllOptions, tagBox, container, selectedItems) {
             displayExpr: 'DisplayName',
             valueExpr: 'Id',
             showClearButton: true,
-            disabled: true
+            //disabled: true,
+            disabled: disabled,
+            height: data.length,
+            scrollbar: true
+
         });
 
         $(tagBoxControl).appendTo(container);
