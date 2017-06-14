@@ -110,7 +110,11 @@ namespace DDI.Conversion
 
             var uow = new UnitOfWorkEF();
             var bl = uow.GetBusinessLogic<Business.GL.ClosingLogic>();
-            bl.CreateNewFiscalYear(new Guid("1a67ed6f-0fd8-47cd-9476-dc09d94e5f28"), "2017", DateTime.Parse("1/1/2017"), false);
+            var fy = uow.FirstOrDefault<FiscalYear>(p => p.Name == "2014" && p.Ledger.Code == "DCEF");
+            bl.CloseFiscalYear(fy.Id);
+
+            //bl.CreateNewFiscalYear(new Guid("1a67ed6f-0fd8-47cd-9476-dc09d94e5f28"), "2017", DateTime.Parse("1/1/2017"), false);
+
 
 
         }

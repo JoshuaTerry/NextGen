@@ -144,7 +144,7 @@ namespace DDI.Business.GL
 
             // Get the final non-adjustment period in the year
             FiscalPeriod finalPeriod = year.FiscalPeriods.Where(p => p.IsAdjustmentPeriod == false).OrderByDescending(p => p.PeriodNumber).FirstOrDefault();
-
+            
             // if this period isn't closed, then close it.
             if (finalPeriod != null && finalPeriod.Status != FiscalPeriodStatus.Closed)
             {
@@ -154,7 +154,7 @@ namespace DDI.Business.GL
             // Update the fiscal year.
             year.Status = FiscalYearStatus.Closed;
             UnitOfWork.SaveChanges();
-
+            
             // Perform the year closing procedure.
             PerformYearClose(year);
         }
@@ -494,7 +494,6 @@ namespace DDI.Business.GL
         private void PerformYearClose(FiscalYear year)
         {
             var closeDict = new Dictionary<Account, CloseTo>();
-            AccountLogic accountLogic = UnitOfWork.GetBusinessLogic<AccountLogic>();
             FiscalYearLogic fiscalYearLogic = UnitOfWork.GetBusinessLogic<FiscalYearLogic>();
 
             if (year == null)
@@ -530,14 +529,17 @@ namespace DDI.Business.GL
                 {
                     // Calculate activity balance
                     var balances = UnitOfWork.Where<AccountBalance>(p => p.Id == account.Id);
-                    decimal activityBalance = balances.Where(p => p.DebitCredit == "DB").Sum(p => p.TotalAmount) -
-                                              balances.Where(p => p.DebitCredit == "CR").Sum(p => p.TotalAmount);
+
+                    decimal activityBalance = balances.Where(p => p.DebitCredit == "DB").Sum(p => (decimal?)p.TotalAmount) -
+                                              balances.Where(p => p.DebitCredit == "CR").Sum(p => (decimal?)p.TotalAmount) ?? 0m;
 
                     // If zero, no further action is taken.
                     if (activityBalance == 0m)
                     {
                         continue;
                     }
+
+                    AccountLogic accountLogic = batch.UnitOfWork.GetBusinessLogic<AccountLogic>();
 
                     // Determine the closing account.
                     Account closingAccount = accountLogic.GetClosingAccount(account);
@@ -636,13 +638,17 @@ namespace DDI.Business.GL
                         decimal finalBalance = account.BeginningBalance;
                         foreach (var entry in account.LedgerAccountYears)
                         {
-                            finalBalance += UnitOfWork.Where<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id && p.PostedTransactionType != PostedTransactionType.BeginBal).Sum(p => p.Amount);
+                            finalBalance += UnitOfWork.Where<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id && p.PostedTransactionType != PostedTransactionType.BeginBal)
+                                                      .Sum(p => (decimal?)p.Amount) 
+                                                      ?? 0m;
                         }
 
                         if (finalBalance == 0m)
                         {
                             continue;
                         }
+
+                        AccountLogic accountLogic = batch.UnitOfWork.GetBusinessLogic<AccountLogic>();
 
                         // Determine which G/L account receives the beginning balance.
                         Account toAccount;
