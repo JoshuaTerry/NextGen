@@ -40,8 +40,9 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search);
-                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search, fields);
+                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, fields);
             }
             catch (Exception ex)
             {

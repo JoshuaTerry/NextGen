@@ -107,10 +107,10 @@ namespace DDI.WebApi.Controllers.General
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId, search, fields);
 
-                var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId, search);
-
-                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note, search, fields);
             }
             catch (Exception ex)
             {

@@ -718,19 +718,23 @@ function LoadAccordions() {
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
 
-        $('.accordions').accordion({
+        $(this).parent().next('.accordions').accordion({
             active: false
         });
 
-        $(".ui-accordion-content").hide('fast');
-        $('.ui-accordion-header').removeClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-s').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
     });
 
     $('.accordion-expandall').click(function (e) {
         e.preventDefault();
 
-        $(".ui-accordion-content").show('fast');
-        $('.ui-accordion-header').addClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').show('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').addClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
 
     });
 
@@ -1775,4 +1779,24 @@ function FormatFields() {
     $(".percent").each(function () {
         $(this).val($(this).val() + '%');
     });
+}
+
+// Take a string like "Approved on 2017-06-09T13:37:09.1111520Z" and return "Approved on 6/9/2017, 9:37:09 AM"
+// DateTime values should be in ToString("O") format.
+function FormatDateTimeStrings(str) { 
+    var rexp = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(.\d{0,9})?(Z|[+-]\d\d:\d\d)?/;
+    do {
+        var result = rexp.exec(str);
+        if (result) {
+            var dt = new Date(result[0]);
+            if (dt.getMilliseconds() == 0 && dt.getSeconds() == 0 && dt.getMinutes() == 0 && dt.getHours() == 0) {
+                str = str.replace(rexp, dt.toLocaleDateString());
+            }
+            else {
+                str = str.replace(rexp, dt.toLocaleString());
+            }
+        }
+    } while (result);    
+
+    return str;
 }

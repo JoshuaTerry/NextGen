@@ -1,10 +1,4 @@
 ﻿
-function AddDefaultOption(e, text, val) {
-
-    var option = $('<option>').val('').text('');
-    $(option).appendTo($(e));
-
-}
 
 function GetApiHeaders() {
 
@@ -85,47 +79,6 @@ function PopulateDropDown(element, route, selectedValue) {
 }
 
 function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
-
-    ClearElement(element);
-
-    AddDefaultOption(element, defaultText, defaultValue);
-
-    MakeServiceCall('GET', route, null, function (data) {
-        if (data.Data) {
-
-            $.map(data.Data, function (item) {
-
-                option = $('<option>').val(item.Id).text(item.DisplayName);
-                $(option).appendTo($(element));
-
-            });
-
-            if (selectedValue) {
-                $(element).val(selectedValue);
-            }
-
-            if (completecallback) {
-
-                completecallback();
-
-            }
-
-        }
-    }, null);
-
-    if (changecallback) {
-
-        $(element).unbind('change');
-
-        $(element).change(function () {
-            changecallback();
-        });
-
-    }
-
-}
-
-function PopulateDropDownData(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
 
     ClearElement(element);
 

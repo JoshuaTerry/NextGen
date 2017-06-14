@@ -45,9 +45,10 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(fp => fp.StateId == id, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(fp => fp.StateId == id, search, fields);
 
-                return FinalizeResponse(result, RouteNames.State + RouteNames.County, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, RouteNames.State + RouteNames.County, search, fields);
             }
             catch (Exception ex)
             {
