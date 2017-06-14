@@ -21,7 +21,7 @@ namespace DDI.Shared.Models.Client.GL
         public int? LevelSequence2 { get; set; }
         public int? LevelSequence3 { get; set; }
         public int? LevelSequence4 { get; set; }
-
+        public string SortKey { get; set; }
         public Guid LedgerId { get; set; }
         public Guid FiscalYearId { get; set; }
 
