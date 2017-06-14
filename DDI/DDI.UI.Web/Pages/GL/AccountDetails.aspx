@@ -32,22 +32,4 @@
         </div>
     </div>
 
-    <div class="accountcopymodal" style="display: none;">
-
-        <div class="modalcontent">
-
-            <div class="fieldblock">
-                <label>New Account #:</label>
-                <input type="text" class="ac-AccountNumber" />
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
 </asp:Content>

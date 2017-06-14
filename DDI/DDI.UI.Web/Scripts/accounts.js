@@ -27,7 +27,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        DisplayAccountCopyModal();
+        CopyAccount();
 
     });
 
@@ -983,37 +983,6 @@ function GetAccountSegmentItemsToSave(modal, parentId, level) {
 
 // COPY ACCOUNT
 
-function DisplayAccountCopyModal() {
-
-    modal = $('.accountcopymodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 500,
-        resizable: false
-    });
-
-    //$(modal).find('.ac-AccountNumber').keyup(function () {
-    //    ValidateAccountNumber();
-    //});
-
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.savebutton').unbind('click');
-
-    $('.savebutton').click(function () {
-
-        CopyAccount();
-
-    });
-
-}
-
 function ValidateAccountNumber() {
 
     var bar = '';
@@ -1027,20 +996,15 @@ function ValidateAccountNumber() {
 }
 
 function CopyAccount() {
-    
-    MakeServiceCall('POST', 'accounts/copy/source/' + accountId + '/dest/' + $(modal).find('.ac-AccountNumber').val(), null, function (data) {
 
-        DisplaySuccessMessage('Success', 'Account Copied successfully.');
+    // Clear the account Id and all other information except
+    // FiscalYear, four account groups, the Category, IsNormallyDebit, AccountNumber, ClosingAccount, Name, and the AccountSegment collection.  Also set IsActive to true.  
 
-        CloseModal(modal);
+    LoadSummaryTab(accountId);
 
-        sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
-        sessionStorage.setItem('FISCAL_YEAR_ID', 'asdf');
+    $('.IsActive').prop('checked', true);
 
-        location.href = "/Pages/GL/AccountDetails.aspx";
-        
-    });
-
+    AccountAddMode();
 }
 
 // END COPY ACCOUNT
