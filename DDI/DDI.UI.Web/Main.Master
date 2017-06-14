@@ -71,7 +71,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Business Unit"><a href="#" class="editbusinessunit">BU</a> </li>
+                    <li title="Business Unit"><a href="#" class="editbusinessunit">No Business Units Available</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
                 </ul>
