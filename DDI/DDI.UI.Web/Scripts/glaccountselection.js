@@ -275,6 +275,7 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
 
 function LoadSelectedAccount(container, value)
 {
+    $(container).find(".gridContainer").hide();
     MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);
