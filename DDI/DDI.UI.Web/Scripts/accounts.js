@@ -106,7 +106,7 @@ function LoadSummaryTab(AccountId) {
     $('.accountnumberlookup').attr('disabled', true);
     $('.accountselectionsearch').css('visibility', 'hidden').addClass('accountsearch');
 
-    if (accountId === '' || accountId === null) {
+    if (AccountId === '' || AccountId === null) {
         AccountAddMode();
         editMode = 'add';
     }
