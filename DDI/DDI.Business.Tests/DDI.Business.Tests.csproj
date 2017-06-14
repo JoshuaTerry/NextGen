@@ -105,6 +105,7 @@
     <Compile Include="GL\DataSources\AccountDataSource.cs" />
     <Compile Include="GL\DataSources\AccountGroupDataSource.cs" />
     <Compile Include="GL\DataSources\FundDataSource.cs" />
+    <Compile Include="GL\DataSources\PostedTransactionDataSource.cs" />
     <Compile Include="GL\DataSources\SegmentDataSource.cs" />
     <Compile Include="GL\DataSources\FiscalYearDataSource.cs" />
     <Compile Include="GL\AccountLogicTest.cs" />

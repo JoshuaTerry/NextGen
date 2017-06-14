@@ -146,7 +146,7 @@ namespace DDI.Business.Tests.GL.DataSources
 
                     // Expense
                     SetAccountGroups(year, "EXPENSE", "INTEREST", "");
-                    AddAccount(year, "01-500-10-01-02", "Interest on Notes & Balances", AccountCategory.Revenue);
+                    AddAccount(year, "01-500-10-01-02", "Interest on Notes & Balances", AccountCategory.Expense);
 
                 }
             }

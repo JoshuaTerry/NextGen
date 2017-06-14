@@ -22,7 +22,7 @@ namespace DDI.Business.Tests.GL
         private IList<Ledger> _ledgers;
         private IList<FiscalYear> _fiscalYears;
         private const string INVALID_DATE = "1/1/1970";
-                
+
         ITestRepository<FiscalYear> _fiscalYearRepo;
         ITestRepository<FiscalPeriod> _fiscalPeriodRepo;
 
@@ -105,5 +105,81 @@ namespace DDI.Business.Tests.GL
             Assert.AreEqual(1, year.CurrentPeriodNumber, $"Fiscal year current period number was updated to 1.");
         }
 
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ClosingLogic_CloseFiscalYear()
+        {
+            IList<Account> accounts = AccountDataSource.GetDataSource(_uow);
+            PostedTransactionDataSource.GetDataSource(_uow);
+            FundDataSource.GetDataSource(_uow);
+
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
+
+            // Get the next fiscal year.
+            FiscalYear nextYear = _uow.GetBusinessLogic<FiscalYearLogic>().GetNextFiscalYear(year);
+
+            // First we must blow away any beginning balances in the next fiscal year.
+            foreach (var account in _uow.Where<Account>(p => p.FiscalYear == nextYear))
+            {
+                account.BeginningBalance = 0m;
+            }
+
+            // Close the open year.
+            _bl.CloseFiscalYear(year.Id);
+
+            // Need to fixup PostedTransactions that were created
+            foreach (var tran in _uow.Where<PostedTransaction>(p => p.LedgerAccountYear == null))
+            {
+                tran.LedgerAccountYear = _uow.GetById<LedgerAccountYear>(tran.LedgerAccountYearId.Value);
+                tran.FiscalYear = _uow.GetById<FiscalYear>(tran.FiscalYearId.Value);
+            }
+
+            // Recalculate the AccountBalance "view" datasource.
+            AccountBalanceDataSource.CalculateDataSourceForTransactions(_uow);
+
+            // Get the transactions for the now-closed year.
+            var trans = _uow.Where<PostedTransaction>(p => p.FiscalYear == year);
+
+            // Verify that there are CloseFrom, CloseTo, and EndBal transactions.
+            Assert.IsTrue(trans.Where(p => p.PostedTransactionType == PostedTransactionType.CloseFrom).Count() > 0, "CloseFrom transactions created.");
+            Assert.IsTrue(trans.Where(p => p.PostedTransactionType == PostedTransactionType.CloseTo).Count() > 0, "CloseTo transactions created.");
+            Assert.IsTrue(trans.Where(p => p.PostedTransactionType == PostedTransactionType.EndBal).Count() > 0, "EndBal transactions created.");
+
+            // Verify that the new year has BeginBal transactions.
+            Assert.IsTrue(_uow.Where<PostedTransaction>(p => p.FiscalYear == nextYear && p.PostedTransactionType == PostedTransactionType.BeginBal).Count() > 0, "BeginBal transactions created.");
+
+            // Balance the balance sheet accounts:  Sum their beginning balances and all transactions (excluding EndBal & BeginBal transactions).
+            decimal balance = accounts.Where(p => p.FiscalYear == year &&
+            (p.Category == AccountCategory.Asset || p.Category == AccountCategory.Liability || p.Category == AccountCategory.Fund))
+            .Select(p => p.BeginningBalance + (
+                p.LedgerAccountYears
+                 .Join(trans, outer => outer.Id, inner => inner.LedgerAccountYearId, (outer, inner) => inner)
+                 .Where(t => t.PostedTransactionType != PostedTransactionType.BeginBal && t.PostedTransactionType != PostedTransactionType.EndBal)
+                 .Sum(t => t.Amount)))
+            .Sum(p => p);
+
+            Assert.AreEqual(0m, balance, "Balance sheet accounts now sum to zero.");
+
+            // All accounts should sum to zero when EndBal transactions are included.
+            Assert.IsTrue(_uow.Where<Account>(p => p.FiscalYear == year)
+                              .All(p => p.BeginningBalance +
+                                        (p.LedgerAccountYears
+                                          .Join(trans, outer => outer.Id, inner => inner.LedgerAccountYearId, (outer, inner) => inner)
+                                          .Where(t => t.PostedTransactionType != PostedTransactionType.BeginBal)
+                                          .Sum(t => t.Amount))
+                                   == 0), "All accounts sum to zero.");
+
+            bool isEqual = true;
+            AccountLogic accountLogic = _uow.GetBusinessLogic<AccountLogic>();
+
+            // Use the GetAccountActivity logic to calculate the balances and activity for each account in the new year.
+            // Final period ending balance for all accounts should equal the beginning balance for the account in the next year.
+            foreach (var account in _uow.Where<Account>(p => p.FiscalYear == nextYear))
+            {
+                var activity = accountLogic.GetAccountActivity(account);
+                isEqual &= account.BeginningBalance == activity.Detail.OrderByDescending(p => p.PeriodNumber).First().PriorEndingBalance;
+            }
+            Assert.IsTrue(isEqual, "Beginning balance and prior year ending balance are equal.");
+
+        }
     }
 }

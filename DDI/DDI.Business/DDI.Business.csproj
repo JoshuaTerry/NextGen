@@ -74,7 +74,6 @@
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
-    <Compile Include="GL\AccountGroup.cs" />
     <Compile Include="GL\ClosingLogic.cs" />
     <Compile Include="GL\AccountGroupLogic.cs" />
     <Compile Include="GL\SegmentLogic.cs" />

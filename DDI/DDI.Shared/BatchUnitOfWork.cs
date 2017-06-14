@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Data;
 using DDI.Shared.Models;
 
 namespace DDI.Shared
@@ -26,6 +27,8 @@ namespace DDI.Shared
         private List<ISorter> _sorters = null;
         private int _count;
         private bool _autoSaveChanges = false;
+        private bool _hasDataSource = false;
+        private IUnitOfWork _parentUnitOfWork = null;
 
         #endregion
 
@@ -61,19 +64,51 @@ namespace DDI.Shared
 
         #region Constructors
 
+        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes) : this(null, includes) { }
+
         /// <summary>
         /// Create a new BatchUnitOfWork.
         /// </summary>
         /// <param name="autoSaveChanges">True to automatically save changed entities in each batch.</param>
         /// <param name="includes">Paths to include for the entity.</param>
-        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes)
+        public BatchUnitOfWork(IUnitOfWork unitOfWork, params Expression<Func<T, object>>[] includes) : this()
+        {
+            _includes = includes;
+            _hasDataSource = false;
+            _parentUnitOfWork = unitOfWork;
+            
+            // The UnitOfWork to use for building the list of Ids. If passing in a UnitOfWorkNoDb, go ahead and use it.  Otherwise, create a new one.
+            if (unitOfWork is UnitOfWorkNoDb)
+            {
+                _query = unitOfWork.GetEntities<T>();
+            }
+            else
+            {
+                _initialUnitOfWork = Factory.CreateUnitOfWork();
+                _query = _initialUnitOfWork.GetEntities<T>();
+            }
+
+            // The initial query to get all entities.  This can be filtered via Where.
+        }
+
+        /// <summary>
+        /// Create a new BatchUnitOfWork with a data source.
+        /// </summary>
+        /// <param name="dataSource">Datasource to be enumerated.</param>
+        public BatchUnitOfWork(IUnitOfWork unitOfWork, IEnumerable<T> dataSource) : this()
+        {
+            _includes = new Expression<Func<T, object>>[0];
+            _initialUnitOfWork = null;
+            _query = dataSource.AsQueryable();
+            _hasDataSource = true;
+            _parentUnitOfWork = unitOfWork;
+        }
+
+        private BatchUnitOfWork()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
             OnNextBatch = null;
             OnCompletion = null;
-            _includes = includes;
-            _initialUnitOfWork = Factory.CreateUnitOfWork();  // The UnitOfWork to use for building the list of Ids.
-            _query = _initialUnitOfWork.GetEntities<T>();  // The initial query to get all entities.  This can be filtered via Where.
             _sorters = new List<ISorter>();
         }
 
@@ -151,11 +186,22 @@ namespace DDI.Shared
                 }
 
                 // Create a UnitOfWork for this batch.
-                using (UnitOfWork = Factory.CreateUnitOfWork())
+                using (UnitOfWork = CreateUnitOfWork())
                 {
 
                     // Create a EF set of entities for this batch of Id's.
-                    IQueryable<T> entities = UnitOfWork.GetEntities<T>(_includes).Where(p => idSet.Contains(p.Id)); // This EF "Where" pattern provides a list of Ids to the SELECT statement.
+                    IQueryable<T> entities;
+                    if (_hasDataSource)
+                    {
+                        // Using datasource provided via constructor.
+                        entities = _query.Where(p => idSet.Contains(p.Id)); 
+                    }
+                    else
+                    {
+                        // Using datasource from UnitOfWork.
+                        // This EF "Where" pattern provides a list of Ids to the SELECT statement.
+                        entities = UnitOfWork.GetEntities<T>(_includes).Where(p => idSet.Contains(p.Id)); 
+                    }
 
                     // Apply any sorters to the query.
                     foreach (var sorter in _sorters)
@@ -217,6 +263,11 @@ namespace DDI.Shared
 
         #region Private Methods
 
+        private IUnitOfWork CreateUnitOfWork()
+        {
+            return _parentUnitOfWork.CreateUnitOfWork() ?? Factory.CreateUnitOfWork();
+        }
+
         /// <summary>
         /// Logic to load the Ids of all selected entities into a list.
         /// </summary>
@@ -230,7 +281,7 @@ namespace DDI.Shared
                 _count = 0;
                 _skip = BatchesToSkip * BatchSize;
                 _loaded = true;
-                _initialUnitOfWork.Dispose();
+                _initialUnitOfWork?.Dispose();
                 _initialUnitOfWork = null;
             }
         }

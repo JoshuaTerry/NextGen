@@ -253,7 +253,7 @@ namespace DDI.Business.GL
             var mapper = new EntityMapper<AccountGroup>();
 
             // First pass copies the account groups.
-            using (var batch = new BatchUnitOfWork<AccountGroup>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<AccountGroup>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (AccountGroup group in batch)
                 {
@@ -270,7 +270,7 @@ namespace DDI.Business.GL
             }
 
             // Second pass links them up.
-            using (var batch = new BatchUnitOfWork<AccountGroup>().Where(p => p.FiscalYearId == fromYear.Id && p.ParentGroupId != null)
+            using (var batch = new BatchUnitOfWork<AccountGroup>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id && p.ParentGroupId != null)
                                                                   .AutoSaveChanges())
             {
                 batch.OnNextBatch = (count, entities) =>
@@ -301,7 +301,7 @@ namespace DDI.Business.GL
             var closingAccounts = new EntityMapper<Account>();
 
             // Copy the accounts
-            using (var batch = new BatchUnitOfWork<Account>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<Account>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (Account account in batch)
                 {
@@ -351,7 +351,7 @@ namespace DDI.Business.GL
             }
 
             // Now that all accounts have been copied, populate Account.ClosingAccount for those that couldn't be handled in the previous loop.
-            using (var batch = new BatchUnitOfWork<Account>().Where(p => p.FiscalYearId == toYear.Id && p.ClosingAccountId == null).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<Account>(UnitOfWork).Where(p => p.FiscalYearId == toYear.Id && p.ClosingAccountId == null).AutoSaveChanges())
             {
                 foreach (Account account in batch)
                 {
@@ -377,7 +377,7 @@ namespace DDI.Business.GL
 
             for (int level = 0; level < fromYear.Ledger.NumberOfSegments; level++)
             {
-                using (var batch = new BatchUnitOfWork<Segment>().Where(p => p.FiscalYearId == fromYear.Id && p.Level == level).AutoSaveChanges())
+                using (var batch = new BatchUnitOfWork<Segment>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id && p.Level == level).AutoSaveChanges())
                 {
                     foreach (Segment segment in batch)
                     {
@@ -402,7 +402,7 @@ namespace DDI.Business.GL
 
         private void CopyAccountSegments(FiscalYear fromYear, FiscalYear toYear, EntityMapper<Account> accounts, EntityMapper<Segment> segments)
         {
-            using (var batch = new BatchUnitOfWork<AccountSegment>().Where(p => p.Account.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<AccountSegment>(UnitOfWork).Where(p => p.Account.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (AccountSegment segment in batch)
                 {
@@ -417,7 +417,7 @@ namespace DDI.Business.GL
 
         private void CopyLedgerAccountYears(FiscalYear fromYear, FiscalYear toYear, EntityMapper<Account> accounts)
         {
-            using (var batch = new BatchUnitOfWork<LedgerAccountYear>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<LedgerAccountYear>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (LedgerAccountYear account in batch)
                 {
@@ -436,7 +436,7 @@ namespace DDI.Business.GL
         {
             var mapper = new EntityMapper<Fund>();
 
-            using (var batch = new BatchUnitOfWork<Fund>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<Fund>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (Fund fund in batch)
                 {
@@ -459,7 +459,7 @@ namespace DDI.Business.GL
 
         private void CopyFundFromTo(FiscalYear fromYear, FiscalYear toYear, EntityMapper<Fund> funds)
         {
-            using (var batch = new BatchUnitOfWork<FundFromTo>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<FundFromTo>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (FundFromTo fund in batch)
                 {
@@ -475,7 +475,7 @@ namespace DDI.Business.GL
 
         private void CopyBusinessUnitFromTo(FiscalYear fromYear, FiscalYear toYear)
         {
-            using (var batch = new BatchUnitOfWork<BusinessUnitFromTo>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<BusinessUnitFromTo>(UnitOfWork).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (BusinessUnitFromTo unit in batch)
                 {
@@ -518,7 +518,7 @@ namespace DDI.Business.GL
             // Closing from:
 
             // Iterate through each revenue & expense account in the fiscal year
-            using (var batch = new BatchUnitOfWork<Account>(p => p.ClosingAccount, p => p.FiscalYear, p => p.LedgerAccountYears)
+            using (var batch = new BatchUnitOfWork<Account>(UnitOfWork, p => p.ClosingAccount, p => p.FiscalYear, p => p.LedgerAccountYears)
                 .Where(p => p.FiscalYearId == year.Id && (p.Category == AccountCategory.Revenue || p.Category == AccountCategory.Expense))
                 .AutoSaveChanges())
             {
@@ -528,7 +528,7 @@ namespace DDI.Business.GL
                 foreach (Account account in batch)
                 {
                     // Calculate activity balance
-                    var balances = UnitOfWork.Where<AccountBalance>(p => p.Id == account.Id);
+                    var balances = batch.UnitOfWork.Where<AccountBalance>(p => p.Id == account.Id);
 
                     decimal activityBalance = balances.Where(p => p.DebitCredit == "DB").Sum(p => (decimal?)p.TotalAmount) -
                                               balances.Where(p => p.DebitCredit == "CR").Sum(p => (decimal?)p.TotalAmount) ?? 0m;
@@ -560,7 +560,7 @@ namespace DDI.Business.GL
                     tran.TransactionType = TransactionType.ClosingBalance;
                     tran.TransactionNumber = transactionNumber;
                     tran.LineNumber = ++lineNumber;
-                    repo.Insert(tran);
+                    batch.UnitOfWork.Insert(tran);
 
                     CloseTo info = closeDict.GetValueOrDefault(closingAccount);
                     if (info == null)
@@ -581,7 +581,7 @@ namespace DDI.Business.GL
             }
 
             // Closing To:
-            using (var batch = new BatchUnitOfWork<CloseTo>().Where(p => p.DebitAmount != 0m && p.CreditAmount != 0m).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<CloseTo>(UnitOfWork, closeDict.Values).Where(p => p.DebitAmount != 0m || p.CreditAmount != 0m).AutoSaveChanges())
             {
                 long transactionNumber = repo.Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
                 int lineNumber = 0;
@@ -601,7 +601,7 @@ namespace DDI.Business.GL
                         tran.TransactionType = TransactionType.ClosingBalance;
                         tran.TransactionNumber = transactionNumber;
                         tran.LineNumber = ++lineNumber;
-                        repo.Insert(tran);
+                        batch.UnitOfWork.Insert(tran);
                     }
                     if (entry.CreditAmount != 0m)
                     {
@@ -615,7 +615,7 @@ namespace DDI.Business.GL
                         tran.TransactionType = TransactionType.ClosingBalance;
                         tran.TransactionNumber = transactionNumber;
                         tran.LineNumber = ++lineNumber;
-                        repo.Insert(tran);
+                        batch.UnitOfWork.Insert(tran);
                     }
                 }
             }
@@ -623,7 +623,7 @@ namespace DDI.Business.GL
             // Ending and beginning balances
             if (nextYear != null)
             {
-                using (var batch = new BatchUnitOfWork<Account>(p => p.LedgerAccountYears)
+                using (var batch = new BatchUnitOfWork<Account>(UnitOfWork, p => p.LedgerAccountYears)
                     .Where(p => p.FiscalYearId == year.Id)
                     .AutoSaveChanges())
                 {
@@ -638,7 +638,7 @@ namespace DDI.Business.GL
                         decimal finalBalance = account.BeginningBalance;
                         foreach (var entry in account.LedgerAccountYears)
                         {
-                            finalBalance += UnitOfWork.Where<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id && p.PostedTransactionType != PostedTransactionType.BeginBal)
+                            finalBalance += batch.UnitOfWork.Where<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id && p.PostedTransactionType != PostedTransactionType.BeginBal)
                                                       .Sum(p => (decimal?)p.Amount) 
                                                       ?? 0m;
                         }
@@ -675,8 +675,8 @@ namespace DDI.Business.GL
                             tran.PeriodNumber = finalPeriodNumber;
                             tran.TransactionType = TransactionType.BeginningBalance;
                             tran.TransactionNumber = transactionNumberEnd;
-                            tran.LineNumber = ++lineNumberEnd;                                
-                            repo.Insert(tran);
+                            tran.LineNumber = ++lineNumberEnd;
+                            batch.UnitOfWork.Insert(tran);
 
                             // Create the "BeginBal" transaction(s) for the next year account(s)
                             decimal rem = 0m; // Roundoff error
@@ -685,7 +685,7 @@ namespace DDI.Business.GL
                                 decimal amt = (finalBalance * entry.Factor) + rem; // Unrounded amount
 
                                 tran = new PostedTransaction();
-                                tran.FiscalYearId = year.Id;
+                                tran.FiscalYearId = nextYear.Id;
                                 tran.PostedTransactionType = PostedTransactionType.BeginBal;
                                 tran.LedgerAccountYearId = accountLogic.GetLedgerAccountYear(entry.Account)?.Id;
                                 tran.TransactionDate = nextYear.StartDate;
@@ -694,7 +694,7 @@ namespace DDI.Business.GL
                                 tran.TransactionType = TransactionType.BeginningBalance;
                                 tran.TransactionNumber = transactionNumberBegin;
                                 tran.LineNumber = ++lineNumberBegin;
-                                repo.Insert(tran);
+                                batch.UnitOfWork.Insert(tran);
 
                                 rem += amt - tran.Amount; // Accumulate roundoff error
                                 entry.Account.BeginningBalance += tran.Amount;

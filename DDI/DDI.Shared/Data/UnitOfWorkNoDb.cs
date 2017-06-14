@@ -78,6 +78,7 @@ namespace DDI.Shared.Data
             else
             {
                 repository = _repositories[type] as RepositoryNoDb<T>;
+                repository.Entities = dataSource;
             }
 
             return repository;
@@ -89,6 +90,17 @@ namespace DDI.Shared.Data
         public IRepository<T> CreateRepositoryForDataSource<T>(IList<T> dataSource) where T : class
         {
             return CreateRepositoryForDataSource(dataSource.AsQueryable());
+        }
+
+        /// <summary>
+        /// Create another unit of work that shares this unit of work's repositories.
+        /// </summary>
+        public IUnitOfWork CreateUnitOfWork()
+        {
+            return new UnitOfWorkNoDb()
+            {
+                _repositories = this._repositories
+            };
         }
 
         public IRepository<T> GetRepository<T>() where T : class

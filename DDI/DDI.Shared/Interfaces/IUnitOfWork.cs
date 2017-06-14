@@ -73,6 +73,8 @@ namespace DDI.Shared
 
         IList<T> GetRepositoryDataSource<T>() where T : class;
 
+        IUnitOfWork CreateUnitOfWork();
+
         #endregion Public Methods
     }
 }

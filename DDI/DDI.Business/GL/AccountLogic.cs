@@ -282,7 +282,7 @@ namespace DDI.Business.GL
             }
 
             // Return the sort key.
-            return string.Join(" ", keys);
+            return string.Join(" ", keys).Trim();
         }
 
         /// <summary>
