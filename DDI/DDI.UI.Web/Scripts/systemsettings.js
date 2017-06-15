@@ -2593,7 +2593,7 @@ function LoadAccountingSettingsSectionSettings() {
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
 
     // transaction posted automatially
-    CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
+    CreateBasicFieldBlock('Post Transactions Automatically: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
 
     // how many days in advance recurring journals will be processed
     CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer, false, 3);
