@@ -85,8 +85,8 @@ div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; mar
 div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
 div.fieldblock { margin: 0 0 10px 0; }
-div.fieldblock label { display: block; width: 24%; }
-div.fieldblock label.inline { display: inline-block; }
+div.fieldblock label { display: block; }
+div.fieldblock label.inline { display: inline-block; width: 24%; }
 div.fieldblock input,
 div.fieldblock select { width: 100%; }
 div.fieldblock input { height: 15px; }
