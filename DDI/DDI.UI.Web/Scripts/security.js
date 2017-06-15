@@ -12,8 +12,7 @@ $(document).ready(function () {
     NewUserModal();
 
     PopulateDropDown('.ConstituentId', 'constituents', '', '');
-    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    PopulateDropDown($('.user-GroupId'), 'groups', null);
+    
 
 
 });
@@ -226,9 +225,10 @@ function EditGroup(id) {
 
             AddRolesToGroup(id);
 
-            $('.rolesmodal').hide();
+            //$('.rolesmodal').hide();
 
-            $('.rolestagbox').dxTagBox('instance').reset();
+            //$('.rolestagbox').dxTagBox('instance').reset();
+            //EditGroup(id);
 
         });
 
@@ -342,9 +342,13 @@ function AddRolesToGroup(id) {
 
         DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
 
+        //$('.rolesmodal').hide();
+
+        //LoadGroup(id)
         $('.rolesmodal').hide();
 
-        LoadGroup(id)
+        $('.rolestagbox').dxTagBox('instance').reset();
+        EditGroup(id);
 
     }, function (xhr, status, err) {
         DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -393,6 +397,7 @@ function NewUserModal() {
             beforeClose: function (e) {}
         });
 
+        
         $('.submituser').attr('value', 'Next...');
 
         $('.submituser').unbind('click');
@@ -440,6 +445,11 @@ function NewUserModal() {
 function EditUser(id) {
 
     LoadUser(id);
+
+    $('.user-DefaultBusinessUnitId').empty();
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+    $('.user-GroupId').empty();
+    PopulateDropDown($('.user-GroupId'), 'groups', null);
 
 
     modal = $('.usermodal').dialog({
@@ -534,9 +544,6 @@ function LoadUser(id) {
                         
                     });
                 }
-                //else {
-                    //$(modal).find('.user-GroupId').empty();
-                //}
             }
         }
 

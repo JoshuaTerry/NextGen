@@ -227,7 +227,6 @@ namespace DDI.WebApi.Controllers.General
             string groupId = userChanges["GroupId"].ToString();
             if (groupId != null && groupId != "")
             {
-
                 Guid gId = new Guid(groupId);
                 IDataResponse response = userService.AddGroupToUser(id, gId);
                 if (!response.IsSuccessful)
