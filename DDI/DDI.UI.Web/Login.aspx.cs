@@ -64,7 +64,7 @@ namespace DDI.UI.Web
             if (token != null)
             {
                 Login.AuthorizeUser(token.UserName, token.Access_Token);
-                return token.Access_Token;
+                return token.Access_Token + " " + token.UserName;
             }
 
             return null;

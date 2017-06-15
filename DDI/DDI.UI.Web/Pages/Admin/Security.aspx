@@ -33,7 +33,7 @@
 
                     <div class="fieldblock">
                         <label>Name:</label>
-                        <input type="text" class="gp-Name required" />
+                        <input type="text" class="gp-Name required" maxlength="128" />
                     </div>
 
                     <div class="rolesmodal" style="display: none;">
@@ -114,7 +114,7 @@
                  <div class="fieldblock">
                     <input type="hidden" class="rs-Constituent1Id" />
                     <label>Constituent</label>
-                    <input type="text" class="rs-Constituent1Information constituentlookup" />
+                    <input type="text" class="rs-Constituent1Information constituentlookup" maxlength="128" />
                 </div>
             </div>
 

@@ -208,16 +208,52 @@ namespace DDI.Services.GL
                     UnitOfWork.LoadReference(account, p => p.AccountSegments);
                 }
 
-                foreach (var entry in account.AccountSegments.ToList())
+                var tempSegments = new List<AccountSegment>();
+                JArray jSegments = token as JArray;
+
+                // Build a list of the account segments passed in via the patch.
+                foreach (JToken entry in jSegments)
                 {
-                    UnitOfWork.Delete(entry);
+                    string idText = entry.Value<string>(nameof(AccountSegment.Id));
+                    if (idText != null)
+                    {
+                        // Id was specified, so load up this specific account segment.
+                        AccountSegment segment = UnitOfWork.GetById<AccountSegment>(Guid.Parse(idText));
+                        if (segment != null)
+                        {
+                            tempSegments.Add(segment);
+                        }
+                    }
+                    else
+                    {
+                        idText = entry.Value<string>(nameof(AccountSegment.SegmentId));
+                        if (idText != null)
+                        {
+                            // SegmentId was specified, but no Id.  See if account.AccountSegments already has this segment.
+                            Guid id = Guid.Parse(idText);
+                            AccountSegment segment = account.AccountSegments.FirstOrDefault(p => p.SegmentId == id);
+                            if (segment != null)
+                            {
+                                tempSegments.Add(segment);
+                            }
+                            else
+                            {
+                                segment = new AccountSegment();
+                                segment.SegmentId = id;
+                                tempSegments.Add(segment);
+                            }
+                        }
+                        else
+                        { 
+                            throw new InvalidOperationException("Unable to process AccountSegment entry: No Id or SegmentId provided.");
+                        }
+
+                    }
                 }
 
-                account.AccountSegments.Clear();
-
-                AddUpdateFromJArray(account.AccountSegments, token as JArray);
-
-                foreach (var entry in account.AccountSegments)
+                // Process all entires in tempSegments and populate their properties.
+                // If an entry is not in account.AccountSegments, add it.
+                foreach (var entry in tempSegments)
                 {
                     // Ensure segment exists
                     Segment segment = entry.Segment;
@@ -236,7 +272,22 @@ namespace DDI.Services.GL
                     entry.Segment = segment;
                     entry.SegmentId = segment.Id;
                     entry.Level = segment.Level;
-                    entry.Account = account;
+
+                    if (entry.Id == Guid.Empty)
+                    {
+                        UnitOfWork.Insert(entry);
+                        account.AccountSegments.Add(entry);
+                    }
+                }
+
+                // Remove any entries in account.AccountSegments that aren't in tempSegments.
+                foreach (var entry in account.AccountSegments.ToList())
+                {
+                    if (!tempSegments.Any(p => p.Id == entry.Id))
+                    {
+                        UnitOfWork.Delete(entry);
+                        account.AccountSegments.Remove(entry);
+                    }
                 }
 
                 account.AccountNumber = _accountLogic.CalculateAccountNumber(account);

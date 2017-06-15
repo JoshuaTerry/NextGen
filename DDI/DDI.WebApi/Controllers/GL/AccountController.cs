@@ -160,6 +160,13 @@ namespace DDI.WebApi.Controllers.GL
         {
             return FinalizeResponse(Service.Copy(accountId, accountNUmber));
         }
+        //[HttpPost]
+        //[Route("api/v1/accounts/merge", Name = RouteNames.Account + RouteVerbs.Post)]
+        //public IHttpActionResult Merge(Guid sourceAccount, Guid destinationAccount)
+        //{
+
+        //    return base.Post(item);
+        //}
 
         [HttpPatch]
         [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Patch)]

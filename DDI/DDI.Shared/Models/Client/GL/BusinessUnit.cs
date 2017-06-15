@@ -31,7 +31,7 @@ namespace DDI.Shared.Models.Client.GL
         [InverseProperty(nameof(BusinessUnitFromTo.BusinessUnit))]
         public ICollection<BusinessUnitFromTo> BusinessUnitFromTos { get; set; }
 
-        public override string DisplayName => Code;
+        public override string DisplayName => Code + ": " + Name;
 
     }
 }
