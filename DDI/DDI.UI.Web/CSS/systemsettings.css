@@ -61,6 +61,12 @@ div.tagscontainer { height: 50vh }
 
 .fiscalyearcontainer { width: 30%; display: inline-block; margin-right: 3%; }
 .fiscalperiodscontainer { display: inline-block; width: 50%; }
-.as-daysinadvance { width: 30px;}
-.workingBudgetName, .fixedBudgetName, whatifBudgetName { width: 150px;}
-.fundsettingscontainer div.fieldblock label { width: 5%; }
+div.fieldblock input.as-daysinadvance { width: 30px;}
+
+div.fieldblock input.workingBudgetName { width: 150px; }
+div.fieldblock input.fixedBudgetName { width: 150px; }
+div.fieldblock input.whatifBudgetName { width: 150px; }
+ 
+.fundsettingscontainer div.fieldblock label { width: 7%; }
+.budgetsettingscontainer div.fieldblock label { width: 18%;}
+.accountingsettingscontainer div.fieldblock label { width: 10%}
