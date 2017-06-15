@@ -1720,31 +1720,69 @@ function RemoveValidation(formClassName) {
 
 // DYNAMIC MARKUP
 //
-function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+
+//    var fieldblock = $('<div>').addClass('fieldblock');
+//    $('<label>').text(labelText).appendTo(fieldblock);
+//    $(controlType).addClass(controlClass).appendTo(fieldblock);
+//    $(fieldblock).appendTo(appendContainer);
+
+//}
+
+function ValidateFields(containerClass, saveFunction) {
+    var validFields = true;
+    
+    // required items
+    $(containerClass).find('.required input').each(ValidateField);
+    $(containerClass).find('.required select').each(ValidateField);
+
+    if (validFields && saveFunction != null) {
+        saveFunction;
+    }
+
+    return validFields;
+}
+
+function ValidateField(index, el) {
+    var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+    $("#" + errorId).remove();
+    if ($(this).val() === "" || $(this).val() == null) {
+        $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
+        validFields = false;
+    }
+}
+
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, length, maxlength) {
 
     var fieldblock = $('<div>').addClass('fieldblock');
-    $('<label>').text(labelText).appendTo(fieldblock);
-    $(controlType).addClass(controlClass).appendTo(fieldblock);
-    $(fieldblock).appendTo(appendContainer);
+    var label = $('<label>').text(labelText).appendTo(fieldblock);
+    var control = $(controlType).addClass(controlClass).appendTo(fieldblock); 
 
+    if (maxlength != null) {
+        control.attr('maxlength', maxlength);
+    }
+        
+    if (length != null)
+        control.css('width', length + 'px');
+     
+    if (isRequired) {
+        fieldblock.addClass('required'); 
+    }     
+    
+    $(fieldblock).appendTo(appendContainer);
 }
 
 function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancelFunction, appendContainer) {
 
     var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
-
-    if (saveFunction) {
-
-        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
-
+     
+    if (saveFunction) {        
+        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(function () { ValidateFields($(appendContainer), saveFunction); }).appendTo(buttons);
     }
     
     if (cancelFunction) {
-
         $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
-
     }
-
 }
 //
 // END DYNAMIC MARKUP
