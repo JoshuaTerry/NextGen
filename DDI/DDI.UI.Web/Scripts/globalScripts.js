@@ -1752,7 +1752,7 @@ function ValidateField(index, el) {
     }
 }
 
-function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, length, maxlength) {
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
 
     var fieldblock = $('<div>').addClass('fieldblock');
     var label = $('<label>').text(labelText).appendTo(fieldblock);
@@ -1761,9 +1761,6 @@ function CreateBasicFieldBlock(labelText, controlType, controlClass, appendConta
     if (maxlength != null) {
         control.attr('maxlength', maxlength);
     }
-        
-    if (length != null)
-        control.css('width', length + 'px');
      
     if (isRequired) {
         fieldblock.addClass('required'); 

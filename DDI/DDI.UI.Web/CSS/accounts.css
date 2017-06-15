@@ -42,5 +42,7 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 
 .newaccountlinkcontainer { text-align: right; margin-bottom: 10px; }
 
+.dx-popup-content { overflow: scroll }
+
 
 
