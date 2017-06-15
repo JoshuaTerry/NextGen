@@ -17,7 +17,7 @@ namespace DDI.Shared
         IDataResponse<T> Add(T entity);
         IDataResponse Delete(T entity);
         IDataResponse<T> GetWhereExpression(Expression<Func<T, bool>> expression);
-        IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null);
+        IDataResponse<List<ICanTransmogrify>> GetAllWhereExpression(Expression<Func<T, bool>> expression, IPageable search = null, string fields = null);
         Expression<Func<T, object>>[] IncludesForSingle { set; }
         Expression<Func<T, object>>[] IncludesForList { set; }
 

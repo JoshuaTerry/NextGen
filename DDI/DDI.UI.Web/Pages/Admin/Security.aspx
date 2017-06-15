@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="DDI - Security" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Security.aspx.cs" Inherits="DDI.UI.Web.Security" %>
 
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="../../Scripts/security.js"></script>
@@ -34,7 +33,7 @@
 
                     <div class="fieldblock">
                         <label>Name:</label>
-                        <input type="text" class="gp-Name required" />
+                        <input type="text" class="gp-Name required" maxlength="128" />
                     </div>
 
                     <div class="rolesmodal" style="display: none;">

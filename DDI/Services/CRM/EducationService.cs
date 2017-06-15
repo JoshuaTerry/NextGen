@@ -14,7 +14,7 @@ namespace DDI.Services
 
         #region Properties
 
-        protected override Action<Education> FormatEntityForGet => FormatEducationForGet;
+        protected override Action<Education,string> FormatEntityForGet => FormatEducationForGet;
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace DDI.Services
 
         #region private Methods
 
-        private void FormatEducationForGet(Education education)
+        private void FormatEducationForGet(Education education, string fields)
         {
             if (education.School == null && education.SchoolId != null)
             {

@@ -25,11 +25,13 @@ div.options div.threecolumn > div { width: auto; }
 div.options { margin-left: 0px; }
 div.options fieldset { width: 96%; }
 
+div.fieldblock label { width: 24%; }
 div.fieldblock input { height: auto; }
 div.fieldblock input.cfoptioncode { width: 25px; }
 div.fieldblock input.cfoptiondesc { width: 140px; }
 div.fieldblock input.cfoptionorder { width: 25px; }
-
+div.fieldblock input[type=checkbox] { margin-left: -5px; padding-left: 0px; }
+div.fieldblock select {  width: auto; min-width: 100px; }
 a.customfieldmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 
