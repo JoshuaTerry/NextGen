@@ -14,13 +14,14 @@ namespace DDI.Shared.Data
     {
         #region Private Fields
 
+        private static Dictionary<Type, object> _repositories; // One set of repositories shared for all UnitOfWorkNoDb.  
+
         private bool _isDisposed = false;
-        private Dictionary<Type, object> _repositories;
         private List<object> _businessLogic;
         private List<Action> _saveActions;
 
         /// <summary>
-        /// Returns TRUE if the audit module is enabled.  Can be set to FALSE to disable auditing.
+        /// Returns TRUE if the audit module is enabled.  (Always disabled for this implementation.)
         /// </summary>
         public bool AuditingEnabled
         {
@@ -37,9 +38,13 @@ namespace DDI.Shared.Data
 
         public UnitOfWorkNoDb()
         {
-            _repositories = new Dictionary<Type, object>();
             _businessLogic = new List<object>();
             _saveActions = new List<Action>();
+        }
+
+        static UnitOfWorkNoDb()
+        {
+            _repositories = new Dictionary<Type, object>();
         }
 
         #endregion Public Constructors
@@ -93,14 +98,11 @@ namespace DDI.Shared.Data
         }
 
         /// <summary>
-        /// Create another unit of work that shares this unit of work's repositories.
+        /// Clear the static set of repositories.
         /// </summary>
-        public IUnitOfWork CreateUnitOfWork()
+        public static void ClearRepositories()
         {
-            return new UnitOfWorkNoDb()
-            {
-                _repositories = this._repositories
-            };
+            _repositories.Clear();
         }
 
         public IRepository<T> GetRepository<T>() where T : class

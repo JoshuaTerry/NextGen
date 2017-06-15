@@ -64,44 +64,31 @@ namespace DDI.Shared
 
         #region Constructors
 
-        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes) : this(null, includes) { }
-
         /// <summary>
         /// Create a new BatchUnitOfWork.
         /// </summary>
         /// <param name="autoSaveChanges">True to automatically save changed entities in each batch.</param>
         /// <param name="includes">Paths to include for the entity.</param>
-        public BatchUnitOfWork(IUnitOfWork unitOfWork, params Expression<Func<T, object>>[] includes) : this()
+        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes) : this()
         {
             _includes = includes;
             _hasDataSource = false;
-            _parentUnitOfWork = unitOfWork;
-            
-            // The UnitOfWork to use for building the list of Ids. If passing in a UnitOfWorkNoDb, go ahead and use it.  Otherwise, create a new one.
-            if (unitOfWork is UnitOfWorkNoDb)
-            {
-                _query = unitOfWork.GetEntities<T>();
-            }
-            else
-            {
-                _initialUnitOfWork = Factory.CreateUnitOfWork();
-                _query = _initialUnitOfWork.GetEntities<T>();
-            }
-
+            _initialUnitOfWork = Factory.CreateUnitOfWork();
             // The initial query to get all entities.  This can be filtered via Where.
+            _query = _initialUnitOfWork.GetEntities<T>();
+
         }
 
         /// <summary>
         /// Create a new BatchUnitOfWork with a data source.
         /// </summary>
         /// <param name="dataSource">Datasource to be enumerated.</param>
-        public BatchUnitOfWork(IUnitOfWork unitOfWork, IEnumerable<T> dataSource) : this()
+        public BatchUnitOfWork(IEnumerable<T> dataSource) : this()
         {
             _includes = new Expression<Func<T, object>>[0];
             _initialUnitOfWork = null;
             _query = dataSource.AsQueryable();
             _hasDataSource = true;
-            _parentUnitOfWork = unitOfWork;
         }
 
         private BatchUnitOfWork()
@@ -186,7 +173,7 @@ namespace DDI.Shared
                 }
 
                 // Create a UnitOfWork for this batch.
-                using (UnitOfWork = CreateUnitOfWork())
+                using (UnitOfWork = Factory.CreateUnitOfWork())
                 {
 
                     // Create a EF set of entities for this batch of Id's.
@@ -262,11 +249,6 @@ namespace DDI.Shared
         #endregion
 
         #region Private Methods
-
-        private IUnitOfWork CreateUnitOfWork()
-        {
-            return _parentUnitOfWork.CreateUnitOfWork() ?? Factory.CreateUnitOfWork();
-        }
 
         /// <summary>
         /// Logic to load the Ids of all selected entities into a list.

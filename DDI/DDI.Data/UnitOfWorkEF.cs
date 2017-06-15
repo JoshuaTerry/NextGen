@@ -462,14 +462,6 @@ namespace DDI.Data
             return GetEntities<T>().ToList();
         }
 
-        /// <summary>
-        /// Create another UnitOfWork.  (Nothing, including EF contexts, are shared.)
-        /// </summary>
-        public IUnitOfWork CreateUnitOfWork()
-        {
-            return Factory.CreateUnitOfWork();
-        }
-
         #endregion Public Methods
 
         #region Protected Methods

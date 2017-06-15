@@ -68,6 +68,7 @@ namespace DDI.Shared
             {
                 _repositoryFactoryType = typeof(RepositoryFactoryNoDb);
             }
+            UnitOfWorkNoDb.ClearRepositories();
             _isForTesting = true;
         }
 
