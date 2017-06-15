@@ -601,10 +601,10 @@
                         <label>On</label>
                         <label class="nd-UpdatedOn"></label>
                     </div>
-
                 </div>
             </div>
-
+            <div class="attachmentscontainer">
+            </div>
             <div class="modalbuttons">
                 <input type="button" class="savenotedetails" value="Save" />
                 <a href="#" class="cancelnotesmodal">Cancel</a>

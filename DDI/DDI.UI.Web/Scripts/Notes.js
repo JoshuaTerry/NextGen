@@ -151,7 +151,7 @@ function LoadNoteDetails(id) {
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
         $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
         $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
-
+        LoadAttachments(id, entityType);
 
     }, function (xhr, status, err) {
         DisplayErrorMessage('Error', 'An error occurred during loading the Note Details.');
