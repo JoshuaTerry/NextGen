@@ -41,6 +41,10 @@ namespace DDI.Business.GL
 
         #region Public Methods
 
+        /// <summary>
+        /// Close a fiscal period.
+        /// </summary>
+        /// <param name="fiscalPeriodId">Id of fiscal period to be closed.</param>
         public void CloseFiscalPeriod(Guid fiscalPeriodId)
         {
             FiscalPeriod period = UnitOfWork.GetById<FiscalPeriod>(fiscalPeriodId, p => p.FiscalYear, p => p.FiscalYear.FiscalPeriods);
@@ -92,6 +96,10 @@ namespace DDI.Business.GL
             UnitOfWork.SaveChanges();
         }
 
+        /// <summary>
+        /// Re-open a closed fiscal period.
+        /// </summary>
+        /// <param name="fiscalPeriodId">Id of fiscal period to be re-opened.</param>
         public void ReopenFiscalPeriod(Guid fiscalPeriodId)
         {
             FiscalPeriod period = UnitOfWork.GetById<FiscalPeriod>(fiscalPeriodId, p => p.FiscalYear, p => p.FiscalYear.FiscalPeriods);
@@ -128,6 +136,10 @@ namespace DDI.Business.GL
             UnitOfWork.SaveChanges();
         }
 
+        /// <summary>
+        /// Close a fiscal year.
+        /// </summary>
+        /// <param name="fiscalYearId">Id of fiscal year to be closed.</param>
         public void CloseFiscalYear(Guid fiscalYearId)
         {
             FiscalYear year = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.FiscalPeriods);
@@ -159,6 +171,72 @@ namespace DDI.Business.GL
             PerformYearClose(year);
         }
 
+        /// <summary>
+        /// Re-open a closed fiscal year.
+        /// </summary>
+        /// <param name="fiscalYearId">Id of fiscal year to be re-opened.</param>
+        public void ReopenFiscalYear(Guid fiscalYearId)
+        {
+            FiscalYear year = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.FiscalPeriods);
+
+            if (year == null)
+            {
+                throw new InvalidOperationException(UserMessagesGL.BadFiscalYear);
+            }
+
+            if (year.Status != FiscalYearStatus.Closed)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearOpen, year.Name));
+            }
+
+            // Get the final non-adjustment period in the year
+            FiscalPeriod finalPeriod = year.FiscalPeriods.Where(p => p.IsAdjustmentPeriod == false).OrderByDescending(p => p.PeriodNumber).FirstOrDefault();
+            if (finalPeriod == null)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearCantReopen, year.Name));
+            }
+
+            // Reopen the year.
+            year.Status = FiscalYearStatus.Reopened;
+            UnitOfWork.SaveChanges();
+
+            // Reopen the final period.
+            ReopenFiscalPeriod(finalPeriod.Id);
+        }
+
+        /// <summary>
+        /// Re-close a closed fiscal year.
+        /// </summary>
+        /// <param name="fiscalYearId">Id of fiscal year to be re-closed.</param>
+        public void RecloseFiscalYear(Guid fiscalYearId)
+        {
+            FiscalYear year = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.FiscalPeriods);
+
+            if (year == null)
+            {
+                throw new InvalidOperationException(UserMessagesGL.BadFiscalYear);
+            }
+
+            if (year.Status != FiscalYearStatus.Closed)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearOpen, year.Name));
+            }
+
+            if (UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetNextFiscalYear(year) == null)
+            {
+                throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearCantReclose, year.Name));
+            }
+
+            PerformYearClose(year);
+        }
+
+        /// <summary>
+        /// Create a new fiscal year.
+        /// </summary>
+        /// <param name="fiscalYearId">Id of fiscal year to be copied.</param>
+        /// <param name="newYearName">Name of new fiscal year.</param>
+        /// <param name="startDate">Start date of new fiscal year.</param>
+        /// <param name="copyInactiveAccounts">TRUE to copy all inactive accounts.</param>
         public void CreateNewFiscalYear(Guid fiscalYearId, string newYearName, DateTime startDate, bool copyInactiveAccounts)
         {
             FiscalYear currentYear = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.Ledger.OrgLedger, p => p.Ledger.BusinessUnit, p => p.FiscalPeriods);
@@ -215,6 +293,7 @@ namespace DDI.Business.GL
             newYear.Status = FiscalYearStatus.Empty;
             newYear.HasAdjustmentPeriod = fromYear.HasAdjustmentPeriod;
             newYear.CurrentPeriodNumber = 1;
+            newYear.AssignPrimaryKey();
             UnitOfWork.Insert(newYear);
 
             // Calculate start/end dates for each period.
@@ -231,21 +310,25 @@ namespace DDI.Business.GL
                 newYear.EndDate = period.EndDate;
                 period.Status = FiscalPeriodStatus.Open;
                 period.IsAdjustmentPeriod = (newYear.HasAdjustmentPeriod && period.PeriodNumber == newYear.NumberOfPeriods);
+                period.AssignPrimaryKey();
                 UnitOfWork.Insert(period);
             }
 
             UnitOfWork.SaveChanges();
 
-            // Copy entities into the new fiscal year.  The order is significant due to dependencies.
-            EntityMapper<AccountGroup> accountGroups = CopyAccountGroups(fromYear, newYear);
-            EntityMapper<Account> accounts = CopyAccounts(fromYear, newYear, copyInactiveAccounts, accountGroups);
-            EntityMapper<Segment> segments = CopySegments(fromYear, newYear);
-            CopyAccountSegments(fromYear, newYear, accounts, segments);
-            CopyLedgerAccountYears(fromYear, newYear, accounts);
+            if (fromYear.Ledger == newYear.Ledger)
+            {
+                // Copy entities into the new fiscal year.  The order is significant due to dependencies.
+                EntityMapper<AccountGroup> accountGroups = CopyAccountGroups(fromYear, newYear);
+                EntityMapper<Account> accounts = CopyAccounts(fromYear, newYear, copyInactiveAccounts, accountGroups);
+                EntityMapper<Segment> segments = CopySegments(fromYear, newYear);
+                CopyAccountSegments(fromYear, newYear, accounts, segments);
+                CopyLedgerAccountYears(fromYear, newYear, accounts);
 
-            EntityMapper<Fund> funds = CopyFunds(fromYear, newYear, segments);
-            CopyFundFromTo(fromYear, newYear, funds);
-            CopyBusinessUnitFromTo(fromYear, newYear);
+                EntityMapper<Fund> funds = CopyFunds(fromYear, newYear, segments);
+                CopyFundFromTo(fromYear, newYear, funds);
+                CopyBusinessUnitFromTo(fromYear, newYear);
+            }
         }
 
         private EntityMapper<AccountGroup> CopyAccountGroups(FiscalYear fromYear, FiscalYear toYear)
@@ -301,7 +384,7 @@ namespace DDI.Business.GL
             var closingAccounts = new EntityMapper<Account>();
 
             // Copy the accounts
-            using (var batch = new BatchUnitOfWork<Account>().Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<Account>(p => p.LedgerAccountYears).Where(p => p.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (Account account in batch)
                 {
@@ -310,7 +393,7 @@ namespace DDI.Business.GL
                     if (!copyInactive && !account.IsActive)
                     {
                         bool hasTrans = false;
-                        foreach (var entry in batch.UnitOfWork.GetReference(account, p => p.LedgerAccountYears))
+                        foreach (var entry in account.LedgerAccountYears)
                         {
                             hasTrans = batch.UnitOfWork.Any<PostedTransaction>(p => p.LedgerAccountYearId == entry.Id);
                             if (hasTrans)
@@ -326,7 +409,7 @@ namespace DDI.Business.GL
                     }
 
                     Account newAccount = new Account();
-                    newAccount.FiscalYearId = account.FiscalYearId;
+                    newAccount.FiscalYearId = toYear.Id;
                     newAccount.AccountNumber = account.AccountNumber;
                     newAccount.Name = account.Name;
                     newAccount.Category = account.Category;
@@ -340,6 +423,8 @@ namespace DDI.Business.GL
                     newAccount.BeginningBalance = 0m;
                     newAccount.ClosingAccountId = mapper.Get(account.ClosingAccountId);
                     newAccount.AssignPrimaryKey();
+
+                    batch.UnitOfWork.Insert(newAccount);
 
                     mapper.Add(account, newAccount);
 
@@ -375,7 +460,7 @@ namespace DDI.Business.GL
 
             Ledger ledger = UnitOfWork.GetReference(fromYear, p => p.Ledger);
 
-            for (int level = 0; level < fromYear.Ledger.NumberOfSegments; level++)
+            for (int level = 1; level <= fromYear.Ledger.NumberOfSegments; level++)
             {
                 using (var batch = new BatchUnitOfWork<Segment>().Where(p => p.FiscalYearId == fromYear.Id && p.Level == level).AutoSaveChanges())
                 {
@@ -408,8 +493,9 @@ namespace DDI.Business.GL
                 {
                     AccountSegment newSegment = new AccountSegment();
                     newSegment.AccountId = accounts.Get(segment.AccountId);
-                    newSegment.SegmentId = accounts.Get(segment.SegmentId);
+                    newSegment.SegmentId = segments.Get(segment.SegmentId);
                     newSegment.Level = segment.Level;
+                    newSegment.AssignPrimaryKey();
                     batch.UnitOfWork.Insert(newSegment);
                 }
             }
@@ -426,7 +512,7 @@ namespace DDI.Business.GL
                     newAccount.FiscalYearId = toYear.Id;
                     newAccount.IsMerge = account.IsMerge;
                     newAccount.LedgerAccountId = account.LedgerAccountId;
-
+                    newAccount.AssignPrimaryKey();
                     batch.UnitOfWork.Insert(newAccount);
                 }
             }
@@ -469,6 +555,8 @@ namespace DDI.Business.GL
                     newFund.OffsettingFundId = funds.Get(fund.OffsettingFundId);
                     newFund.FromLedgerAccountId = fund.FromLedgerAccountId;
                     newFund.ToLedgerAccountId = fund.ToLedgerAccountId;
+                    newFund.AssignPrimaryKey();
+                    batch.UnitOfWork.Insert(newFund);
                 }
             }
         }
@@ -485,6 +573,8 @@ namespace DDI.Business.GL
                     newUnit.OffsettingBusinessUnitId = unit.OffsettingBusinessUnitId;
                     newUnit.FromLedgerAccountId = unit.FromLedgerAccountId;
                     newUnit.ToLedgerAccountId = unit.ToLedgerAccountId;
+                    newUnit.AssignPrimaryKey();
+                    batch.UnitOfWork.Insert(newUnit);
                 }
             }
 

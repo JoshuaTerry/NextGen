@@ -123,10 +123,6 @@ namespace DDI.Business.Tests.GL.DataSources
 
                     AddAccount(year, "01-150-50-50", "Due From Other Entities", AccountCategory.Asset);
                     AddAccount(year, "01-150-50-51", "Due To Other Entities", AccountCategory.Asset);
-                    AddAccount(year, "01-150-50-52", "Due From ABC Entity", AccountCategory.Asset);
-                    AddAccount(year, "01-150-50-53", "Due To ABC Entity", AccountCategory.Asset);
-                    AddAccount(year, "01-150-50-54", "Due From DEF Entity", AccountCategory.Asset);
-                    AddAccount(year, "01-150-50-55", "Due To DEF Entity", AccountCategory.Asset);
 
                     SetAccountGroups(year, "LIABILITIES", "NOTES", "");
                     AddAccount(year, "01-200-00-20", "Demand Notes", AccountCategory.Liability, -125m);
@@ -278,7 +274,8 @@ namespace DDI.Business.Tests.GL.DataSources
                     {
                         Segment = segment,
                         Level = segment.Level,
-                        Account = account
+                        Account = account,
+                        Id = GuidHelper.NewSequentialGuid()
                     };
                     list.Add(accountSegment);
                     _accountSegments.Add(accountSegment);

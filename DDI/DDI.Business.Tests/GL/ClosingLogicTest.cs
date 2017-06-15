@@ -51,21 +51,21 @@ namespace DDI.Business.Tests.GL
                 "Non-existent period should throw exception.");
 
             // Try to close a period for a closed fiscal year
-            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Closed);
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Closed);
             FiscalPeriod period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 4);
 
             AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.CloseFiscalPeriod(period.Id), UserMessagesGL.FiscalYearClosed,
                 "Closing a period in a closed fiscal year should throw exception.");
 
             // Try to close a closed period in an open fiscal year
-            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Open);
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
             period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == FiscalYearDataSource.CURRENT_PERIOD - 1);
 
             AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.CloseFiscalPeriod(period.Id), UserMessagesGL.FiscalPeriodClosed,
                 "Closing a closed fiscal period should throw exception.");
 
             // Closing an open period
-            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Open);
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
             period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == FiscalYearDataSource.CURRENT_PERIOD + 1);
 
             AssertNoException(() => _bl.CloseFiscalPeriod(period.Id), "Closing an open period should succeed.");
@@ -82,27 +82,49 @@ namespace DDI.Business.Tests.GL
                 "Non-existent period should throw exception.");
 
             // Try to reopen a period for a closed fiscal year
-            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Closed);
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Closed);
             FiscalPeriod period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 4);
 
             AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.ReopenFiscalPeriod(period.Id), UserMessagesGL.FiscalYearClosed,
                 "Reopening a period in a closed fiscal year should throw exception.");
 
             // Try to reopen an open period in an open fiscal year
-            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Open);
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
             period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == FiscalYearDataSource.CURRENT_PERIOD);
 
             AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.ReopenFiscalPeriod(period.Id), UserMessagesGL.FiscalPeriodOpen,
                 "Reopening an open fiscal period should throw exception.");
 
             // Reopening a closed period
-            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == Shared.Enums.GL.FiscalYearStatus.Open);
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
             period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 1);
 
             AssertNoException(() => _bl.ReopenFiscalPeriod(period.Id), "Reopening a closed period should succeed.");
             Assert.IsTrue(year.FiscalPeriods.All(p => p.Status == FiscalPeriodStatus.Open),
                 $"All fiscal periods should be open. ");
             Assert.AreEqual(1, year.CurrentPeriodNumber, $"Fiscal year current period number was updated to 1.");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ClosingLogic_ReopenFiscalYear()
+        {
+            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.ReopenFiscalYear(Guid.Empty), UserMessagesGL.BadFiscalYear,
+                "Non-existent year should throw exception.");
+
+            // Try to reopen an open fiscal year.
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Open);
+            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.ReopenFiscalYear(year.Id), UserMessagesGL.FiscalYearOpen,
+    "Reopening an open fiscal year should throw exception.");
+
+            // Reopen a closed year.
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Closed);
+
+            AssertNoException(() => _bl.ReopenFiscalYear(year.Id), "Reopening a closed year should succeed.");
+
+            Assert.AreEqual(FiscalYearStatus.Reopened, year.Status, "Fiscal year status is Reopened.");
+            Assert.AreEqual(12, year.CurrentPeriodNumber, "Current period is 12.");
+            FiscalPeriod period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 12);
+            Assert.AreEqual(FiscalPeriodStatus.Open, period.Status, "Period 12 status is open.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -181,5 +203,80 @@ namespace DDI.Business.Tests.GL
             Assert.IsTrue(isEqual, "Beginning balance and prior year ending balance are equal.");
 
         }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void ClosingLogic_CreateNewFiscalYear()
+        {
+            IList<Account> accounts = AccountDataSource.GetDataSource(_uow);
+            PostedTransactionDataSource.GetDataSource(_uow);
+            FundDataSource.GetDataSource(_uow);
+
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Status == FiscalYearStatus.Empty);
+            int newYearNumber = int.Parse(year.Name) + 1;
+            string newYearName = newYearNumber.ToString();
+
+            // Find an account and flag it as inactive.
+            Account inactiveAccount = accounts.FirstOrDefault(p => p.FiscalYear == year && p.AccountNumber == "02-480-80-10-07");
+            inactiveAccount.IsActive = false;
+
+            // Create the new fiscal year
+            _bl.CreateNewFiscalYear(year.Id, newYearName, new DateTime(newYearNumber, 1, 1), false);
+
+            // Get the new year in UNIT_CODE1
+            FiscalYear newYear = _uow.FirstOrDefault<FiscalYear>(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Name == newYearName);
+
+            // Must populate the new year's fiscal period collection (because we're not using EF.)
+            newYear.FiscalPeriods = _uow.Where<FiscalPeriod>(p => p.FiscalYear == newYear).ToList();
+
+            // ASSERTIONS
+
+            // Determine the list of ledgers that should now have the fiscal year.
+            IEnumerable<Ledger> ledgers = _uow.Where<Ledger>(p => p.BusinessUnit.BusinessUnitType != BusinessUnitType.Separate);
+
+            Assert.AreEqual(ledgers.Count(), 
+                            _uow.Where<FiscalYear>(p => p.Name == newYearName).Count(), 
+                            "Each common ledger has the new fiscal year.");
+
+            Assert.AreEqual(ledgers.Count() * year.FiscalPeriods.Count(),
+                            _uow.Where<FiscalPeriod>(p => p.FiscalYear.Name == newYearName).Count(),
+                            "Each common ledger has the new fiscal periods.");
+
+
+            // Ensure the fiscal period dates are all in the new year
+            Assert.IsTrue(newYear.FiscalPeriods.All(p => p.StartDate.Value.Year == newYearNumber && p.EndDate.Value.Year == newYearNumber), 
+                $"Each fiscal period in the new year is in {newYearNumber}.");
+
+            // Ensure all active accounts were copied.
+            Assert.AreEqual(_uow.Where<Account>(p => p.FiscalYearId == year.Id & p.IsActive).Count(),
+                            _uow.Where<Account>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each account was copied to the new year.");
+
+            // Ensure all account groups were copied.
+            Assert.AreEqual(_uow.Where<AccountGroup>(p => p.FiscalYearId == year.Id).Count(),
+                            _uow.Where<AccountGroup>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each account group was copied to the new year.");
+
+            // Ensure all segments were copied.
+            Assert.AreEqual(_uow.Where<Segment>(p => p.FiscalYearId == year.Id).Count(),
+                            _uow.Where<Segment>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each segment was copied to the new year.");
+
+            // Ensure all funds were copied.
+            Assert.AreEqual(_uow.Where<Fund>(p => p.FiscalYearId == year.Id).Count(),
+                            _uow.Where<Fund>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each fund was copied to the new year.");
+
+            // Ensure all FundFromTo's were copied.
+            Assert.AreEqual(_uow.Where<FundFromTo>(p => p.FiscalYearId == year.Id).Count(),
+                            _uow.Where<FundFromTo>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each FundFromTo was copied to the new year.");
+
+            // Ensure all BusinessUnitFromTo's were copied.
+            Assert.AreEqual(_uow.Where<BusinessUnitFromTo>(p => p.FiscalYearId == year.Id).Count(),
+                            _uow.Where<BusinessUnitFromTo>(p => p.FiscalYearId == newYear.Id).Count(),
+                            "Each BusinessUnitFromTo was copied to the new year.");
+        }
+
+
     }
 }

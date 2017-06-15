@@ -41,7 +41,10 @@
         public static string FiscalPeriodClosed => "Fiscal period {0} in year {0} has already been closed.";
         public static string FiscalPeriodOpen => "Fiscal period {0} in year {0} is open.";
         public static string FiscalYearClosed => "Fiscal year {0} has been closed.";
+        public static string FiscalYearOpen => "Fiscal year {0} is open.";
         public static string FiscalPeriodsRange => $"The number of fiscal periods must be between 1 and {ConstantsGL.MaxFiscalPeriods}.";
+        public static string FiscalYearCantReopen => "Fiscal year {0} has no fiscal period that can be re-opened.";
+        public static string FiscalYearCantReclose => "Fiscal year {0} cannot be re-closed:  No fiscal years defined after fiscal year {0}.";
         public static string CurrentPeriodRange => "The current period number must be between 1 and {0}.";
         public static string FiscalYearDatesInvalid => "Fiscal year date range is invalid.";
         public static string FiscalYearDuplicateName => "Fiscal year {0} already exists.";
