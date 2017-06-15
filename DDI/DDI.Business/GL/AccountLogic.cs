@@ -262,7 +262,7 @@ namespace DDI.Business.GL
             var segmentLevels = ledgerLogic.GetSegmentLevels(account.FiscalYear.LedgerId.Value);
 
             // Array to hold keys.
-            string[] keys = new string[segmentLevels.Length - 1];
+            string[] keys = new string[segmentLevels.Length];
 
             // Initialize it to empty strings.
             for (int idx = 0; idx < keys.Length; idx++)

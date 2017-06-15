@@ -74,6 +74,8 @@ namespace DDI.WebApi.Controllers.GL
         {
             var search = PageableSearch.Max;
 
+            search.OrderBy = OrderByProperties.SortKey;
+
             var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
 
             return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
@@ -144,6 +146,14 @@ namespace DDI.WebApi.Controllers.GL
         {
             return base.Post(item);
         }
+
+        //[HttpPost]
+        //[Route("api/v1/accounts/merge", Name = RouteNames.Account + RouteVerbs.Post)]
+        //public IHttpActionResult Merge(Guid sourceAccount, Guid destinationAccount)
+        //{
+
+        //    return base.Post(item);
+        //}
 
         [HttpPatch]
         [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Patch)]
