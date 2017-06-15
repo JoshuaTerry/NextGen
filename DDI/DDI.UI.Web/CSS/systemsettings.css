@@ -25,7 +25,7 @@ div.options div.threecolumn > div { width: auto; }
 div.options { margin-left: 0px; }
 div.options fieldset { width: 96%; }
 
-div.fieldblock label { width: 24%; }
+div.fieldblock label {  }
 div.fieldblock input { height: auto; }
 div.fieldblock input.cfoptioncode { width: 25px; }
 div.fieldblock input.cfoptiondesc { width: 140px; }
@@ -61,3 +61,6 @@ div.tagscontainer { height: 50vh }
 
 .fiscalyearcontainer { width: 30%; display: inline-block; margin-right: 3%; }
 .fiscalperiodscontainer { display: inline-block; width: 50%; }
+.as-daysinadvance { width: 30px;}
+.workingBudgetName, .fixedBudgetName, whatifBudgetName { width: 150px;}
+.fundsettingscontainer div.fieldblock label { width: 5%; }
