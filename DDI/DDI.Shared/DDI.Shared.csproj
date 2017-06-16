@@ -213,6 +213,7 @@
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
     <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />
+    <Compile Include="Models\Client\GL\FiscalYearTemplate.cs" />
     <Compile Include="Models\Client\GL\JournalLine.cs" />
     <Compile Include="Models\Client\GL\Journal.cs" />
     <Compile Include="Models\Client\GL\AccountBalance.cs" />

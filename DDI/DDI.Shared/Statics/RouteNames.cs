@@ -27,6 +27,7 @@
         public const string ConstituentType = "ConstituentType";
         public const string ContactCategory = "ContactCategory";
         public const string ContactType = "ContactType";
+        public const string Copy = "Copy";
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";

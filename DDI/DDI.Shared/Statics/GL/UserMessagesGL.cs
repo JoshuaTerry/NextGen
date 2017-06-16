@@ -50,6 +50,7 @@
         public static string FiscalYearDuplicateName => "Fiscal year {0} already exists.";
         public static string FiscalYearDuplicateStartDate => "A fiscal year with a start date of {0} already exists.";
         public static string BadFiscalPeriod => "Invalid fiscal period.";
+        public static string FiscalYearNoName => "Fiscal year name is required.";
 
         public static string FiscalPeriodMissing => "Fiscal period {0} not defined for fiscal year {1}.";
         public static string FiscalPeriodDuplicate => "Fiscal period {0} appears more than once in fiscal year {1}.";

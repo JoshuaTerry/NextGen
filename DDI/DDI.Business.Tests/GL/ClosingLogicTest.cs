@@ -100,7 +100,7 @@ namespace DDI.Business.Tests.GL
             period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 1);
 
             AssertNoException(() => _bl.ReopenFiscalPeriod(period.Id), "Reopening a closed period should succeed.");
-            Assert.IsTrue(year.FiscalPeriods.All(p => p.Status == FiscalPeriodStatus.Open),
+            Assert.IsTrue(year.FiscalPeriods.All(p => p.Status == FiscalPeriodStatus.Open || p.Status == FiscalPeriodStatus.Reopened),
                 $"All fiscal periods should be open. ");
             Assert.AreEqual(1, year.CurrentPeriodNumber, $"Fiscal year current period number was updated to 1.");
         }

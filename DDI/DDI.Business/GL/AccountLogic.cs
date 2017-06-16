@@ -272,8 +272,7 @@ namespace DDI.Business.GL
 
             
             foreach (var entry in segmentLevels.OrderBy(p => p.SortOrder > 0 ? p.SortOrder : 100 + p.Level) // Order the segments by sort order, or if zero by their level - although sort order takes precedence.
-                                               .Zip(Enumerable.Range(0, keys.Length), 
-                                                    (segmentLevel, n) => new { Index = n, Level = segmentLevel.Level }) // Assign a numeric order (0 thru n - 1) to the levels (1 - n)
+                                               .Select((segmentLevel, Index) => new { Index, Level = segmentLevel.Level }) // Assign a numeric order (0 thru n - 1) to the levels (1 - n)
                                                .Join(account.AccountSegments, outer => outer.Level, 
                                                      accountSegment => accountSegment.Level, 
                                                      (outer, accountSegment) => new { Index = outer.Index, Segment = accountSegment.Segment})) // Join with account.AccountSegments

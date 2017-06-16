@@ -124,7 +124,7 @@ namespace DDI.Business.GL
             // Open all periods after the one being re-opened.
             foreach (var entry in year.FiscalPeriods.Where(p => p.PeriodNumber >= period.PeriodNumber && p.Status == FiscalPeriodStatus.Closed))
             {
-                entry.Status = FiscalPeriodStatus.Open;
+                entry.Status = FiscalPeriodStatus.Reopened;
             }
 
             // Update the fiscal year
@@ -237,8 +237,15 @@ namespace DDI.Business.GL
         /// <param name="newYearName">Name of new fiscal year.</param>
         /// <param name="startDate">Start date of new fiscal year.</param>
         /// <param name="copyInactiveAccounts">TRUE to copy all inactive accounts.</param>
-        public void CreateNewFiscalYear(Guid fiscalYearId, string newYearName, DateTime startDate, bool copyInactiveAccounts)
+        public Guid CreateNewFiscalYear(Guid fiscalYearId, string newYearName, DateTime startDate, bool copyInactiveAccounts)
         {
+            Guid newYearId = Guid.Empty;
+
+            if (string.IsNullOrWhiteSpace(newYearName))
+            {
+                throw new InvalidOperationException(UserMessagesGL.FiscalYearNoName);
+            }
+
             FiscalYear currentYear = UnitOfWork.GetById<FiscalYear>(fiscalYearId, p => p.Ledger.OrgLedger, p => p.Ledger.BusinessUnit, p => p.FiscalPeriods);
             if (currentYear == null)
             {
@@ -273,16 +280,22 @@ namespace DDI.Business.GL
                 FiscalYear childYear = childLedger.FiscalYears.FirstOrDefault(p => p.StartDate == currentYear.StartDate);
                 if (childYear != null)
                 {
-                    CreateNewFiscalYearForLedger(childLedger, currentYear, yearLogic, newYearName, startDate, copyInactiveAccounts);
+                    Guid id = CreateNewFiscalYearForLedger(childLedger, childYear, yearLogic, newYearName, startDate, copyInactiveAccounts);
+                    if (childYear == currentYear)
+                    {
+                        newYearId = id; // Returning the Id of the new fiscal year
+                    }
                 }
             }
+
+            return newYearId;
         }
 
         #endregion
 
         #region Private Methods
 
-        private void CreateNewFiscalYearForLedger(Ledger ledger, FiscalYear fromYear, FiscalYearLogic yearLogic, string newYearName, DateTime startDate, bool copyInactiveAccounts)
+        private Guid CreateNewFiscalYearForLedger(Ledger ledger, FiscalYear fromYear, FiscalYearLogic yearLogic, string newYearName, DateTime startDate, bool copyInactiveAccounts)
         {
             // Create the new fiscal year
             FiscalYear newYear = new FiscalYear();
@@ -329,6 +342,8 @@ namespace DDI.Business.GL
                 CopyFundFromTo(fromYear, newYear, funds);
                 CopyBusinessUnitFromTo(fromYear, newYear);
             }
+
+            return newYear.Id;
         }
 
         private EntityMapper<AccountGroup> CopyAccountGroups(FiscalYear fromYear, FiscalYear toYear)
