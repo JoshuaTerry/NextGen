@@ -1,3 +1,4 @@
+using DDI.Logger;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
@@ -16,7 +17,7 @@ namespace DDI.WebApi.Controllers.Core
 {
     [Authorize]
     public class GroupController : GenericController<Group>
-    {
+    { 
         protected override string FieldsForAll => FieldListBuilder
             .Include(p => p.DisplayName)
             .Include(p => p.Roles);
@@ -109,7 +110,33 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/groups/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
-            return base.Delete(id);
+            try
+            {
+                var entity = Service.GetById(id);
+
+                if (entity.Data == null)
+                {
+                    return NotFound();
+                }
+
+                if (!entity.IsSuccessful)
+                {
+                    return BadRequest(string.Join(",", entity.ErrorMessages));
+                }
+
+                var response = Service.Delete(entity.Data);
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }         
     }
 }
