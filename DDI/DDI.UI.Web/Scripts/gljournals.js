@@ -5,6 +5,7 @@ $(document).ready(function () {
 
     Resize();
 
+    //PopulateDropDowns();
     
 
     $('.clearsearch').click(function () {
@@ -37,6 +38,8 @@ $(document).ready(function () {
 
 });
 
+
+
 function Resize() {
 
     var windowHeight = $(window).height();
@@ -47,6 +50,47 @@ function Resize() {
 
     $('.searchresults div.scrollable').height(adjustedHeight + 30);
 }
+
+//function PopulateDropDowns() {
+
+//    LoadCreatedBy();
+//}
+
+//function LoadCreatedBy() {
+
+//    PopulateDropDown('.searchCreatedby', 'CreatedBy', '', '');
+
+//    $('.searchCreatedby').change(function () {
+
+//        PopulateDropDown('.searchCreatedby', 'Journals/?CreatedBy=' + $('.searchCreatedby').val(), '', '');
+
+//    });
+
+//}
+
+//function LoadCreatedBy() {
+
+//    $.ajax({
+//        url: WEB_API_ADDRESS + 'journals/?' + 'fields=CreatedBy&',
+//        method: 'GET',
+//        contentType: 'application/json; charset-utf-8',
+//        dataType: 'json',
+//        headers: GetApiHeaders(),
+//        crossDomain: true,
+//        success: function (data) {
+            
+
+//            $('.gridcontainer').dxDataGrid({
+//                dataSource: data.Data,
+//                columns: [
+//                    { dataField: 'CreatedBy', caption: 'Created By' },
+            
+
+       
+    
+
+//}}
+//    }
 
 function AddColumnHeaders() {
 
