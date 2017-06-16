@@ -24,6 +24,24 @@ namespace DDI.Shared.Test.Extensions
             Assert.IsFalse(default(DateTime?).IsValidSQLDate(), "Null is not a valid SQL date.");
         }
 
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void DateTimeExtensions_ToRoundTripString()
+        {
+            DateTime dt = DateTime.SpecifyKind(new DateTime(2014, 6, 1).AddSeconds(47205).AddTicks(4196823), DateTimeKind.Utc);
+            DateTime? dtn = null;
+            const string EXPECTED_RESULT = "2014-06-01T13:06:45.4196823Z";
+
+            Assert.AreEqual(string.Empty, dtn.ToRoundTripString(), "Null date returns blank.");
+            Assert.AreEqual(EXPECTED_RESULT, dt.ToRoundTripString(), "Returns correct formatted value.");
+
+            dtn = dt;
+            Assert.AreEqual(EXPECTED_RESULT, dtn.ToRoundTripString(), "Test for nullable version.");
+
+            dt = dt = DateTime.SpecifyKind(new DateTime(2014, 6, 1).AddSeconds(47205).AddTicks(4196823), DateTimeKind.Unspecified);
+            Assert.AreEqual(EXPECTED_RESULT, dt.ToRoundTripString(), "Assumes UTC if kind is unspecified");
+        }
+
+
     }
 
 

@@ -61,8 +61,9 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search, fields);
+                return FinalizeResponse(response, "", search, fields);
             }
             catch (Exception ex)
             {
@@ -79,8 +80,9 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ConstituentTypes.Any(c => c.Id == id), search);
-                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.ConstituentTypes.Any(c => c.Id == id), search, fields);
+                return FinalizeResponse(response, "", search, fields);
             }
             catch (Exception ex)
             {
@@ -97,8 +99,9 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.TagGroupId == id, search);
-                return FinalizeResponse(response, "", search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.TagGroupId == id, search, fields);
+                return FinalizeResponse(response, "", search, fields);
             }
             catch (Exception ex)
             {

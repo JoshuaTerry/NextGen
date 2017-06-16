@@ -16,7 +16,7 @@
 .systemsettings div.controlContainer { width: 10%; text-align: right; display: inline-block; }
 .systemsettings div.controlContainer a { margin-left: 10px; }
 
-.systemsettingsheader { display: inline-block; width: 86%; margin-bottom: 10px; }
+.systemsettingsheader { display: inline-block; width: 86%; margin: 10px 0px; }
 
 .gridcontainer { vertical-align: top; }
 

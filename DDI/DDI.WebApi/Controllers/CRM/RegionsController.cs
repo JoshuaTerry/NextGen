@@ -38,8 +38,9 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search);
-                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search, fields);
+                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, fields);
             }
             catch (Exception ex)
             {
@@ -55,8 +56,9 @@ namespace DDI.WebApi.Controllers.CRM
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ParentRegionId == null, search);
-                return FinalizeResponse(response, RouteNames.Region, search, ConvertFieldList(fields, FieldsForList));
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.ParentRegionId == null, search, fields);
+                return FinalizeResponse(response, RouteNames.Region, search, fields);
             }
             catch (Exception ex)
             {

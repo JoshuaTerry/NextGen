@@ -73,6 +73,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ServiceBaseTest.cs" />
     <Compile Include="DIContainerTest.cs" />
     <Compile Include="Extensions\PageableSearchExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

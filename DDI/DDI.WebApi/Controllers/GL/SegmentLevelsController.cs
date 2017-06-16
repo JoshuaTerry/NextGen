@@ -40,9 +40,10 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search, fields);
                 
-                return FinalizeResponse(response, ROUTENAME_GETBYLEDGERID, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(response, ROUTENAME_GETBYLEDGERID, search, fields);
             }
             catch (Exception ex)
             {
@@ -60,9 +61,10 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.Ledger.BusinessUnitId == id, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.Ledger.BusinessUnitId == id, search, fields);
 
-                return FinalizeResponse(response, ROUTENAME_GETBYUNITID, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(response, ROUTENAME_GETBYUNITID, search, fields);
             }
             catch (Exception ex)
             {

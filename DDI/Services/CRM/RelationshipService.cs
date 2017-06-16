@@ -24,7 +24,7 @@ namespace DDI.Services
 
         #region Properties
 
-        protected override Action<Relationship> FormatEntityForGet => FormatRelationshipForTarget;
+        protected override Action<Relationship, string> FormatEntityForGet => FormatRelationshipForTarget;
 
         /// <summary>
         /// The target constituent used for reformatting Relationship entities.
@@ -56,7 +56,7 @@ namespace DDI.Services
         #endregion
 
 
-        private void FormatRelationshipForTarget(Relationship entity)
+        private void FormatRelationshipForTarget(Relationship entity, string fields)
         {
             if (entity != null && TargetConstituent != null)
             {
