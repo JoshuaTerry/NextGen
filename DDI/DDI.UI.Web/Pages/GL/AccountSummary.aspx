@@ -52,7 +52,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment1code segmentcode"></label>
-                <label class="segment1name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -71,7 +70,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment2code segmentcode"></label>
-                <label class="segment2name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -90,7 +88,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment3code segmentcode"></label>
-                <label class="segment3name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -109,7 +106,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment4code segmentcode"></label>
-                <label class="segment4name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -128,7 +124,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment5code segmentcode"></label>
-                <label class="segment5name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -147,7 +142,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment6code segmentcode"></label>
-                <label class="segment5name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -166,7 +160,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment7code segmentcode"></label>
-                <label class="segment7name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -185,7 +178,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment8code segmentcode"></label>
-                <label class="segment8name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -204,7 +196,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment9code segmentcode"></label>
-                <label class="segment9name segmentname readonly"></label>
             </span>
             <br />
         </div>
@@ -223,7 +214,6 @@
 
             <span class="summarysegmentdisplay">
                 <label class="segment10code segmentcode"></label>
-                <label class="segment10name segmentname readonly"></label>
             </span>
         </div>
       </fieldset>

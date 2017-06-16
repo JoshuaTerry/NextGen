@@ -549,7 +549,6 @@ function LoadSegmentDropDowns() {
             }
             if (accountSegmentArray[i].Id != null) {
                 $('.segment' + (i + 1) + 'code').html(accountSegmentArray[i].Segment.Code);
-                $('.segment' + (i + 1) + 'name').html(accountSegmentArray[i].Segment.Name);
             }
         }
         else {
@@ -570,8 +569,14 @@ function LoadSegmentDropDown(segmentLevel, parentId, initialId) {
 }
 
 function StoreSegmentData(element, data) {
+
     var dropdownlevel = element.substring(8, 9);
     segmentData[parseInt(dropdownlevel) - 1] = data.Data;
+
+    //var idx = $(element).prop('selectedIndex')
+
+    //$('.segment' + dropdownlevel + 'code').html(data.Data[idx - 1].Code);
+    //BuildAccountNumber();
 }
 
 function SegmentChange(element) {
@@ -590,7 +595,6 @@ function SegmentChange(element) {
         segmentCode = '';
     }
     $('.segment' + level + 'code').html(segmentCode);
-    $('.segment' + level + 'name').html(segmentName);
 
     BuildAccountNumber();
 
@@ -600,14 +604,12 @@ function SegmentChange(element) {
             if (segmentLevelArray[i - 1].IsLinked === true && parentVal != null) {
                 PopulateDropDown('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
         else {
             if (segmentLevelArray[i - 1].IsLinked === true) {
                 $('.Segment' + i + 'Id').empty();
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
     }
@@ -752,7 +754,6 @@ function ClearAccountFields() {
 
     $(summaryContainer + ' input[type="text"]').val('');
     $(summaryContainer + ' input[type="number"]').val('');
-    $(summaryContainer + ' .segmentname').html('');
     $(summaryContainer + ' .segmentcode').html('');
     $(summaryContainer + ' select').val(0);
     $(summaryContainer + ' input:checkbox').prop('checked', false);
@@ -939,6 +940,8 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             if (editMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });
@@ -990,6 +993,8 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             if (editMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });

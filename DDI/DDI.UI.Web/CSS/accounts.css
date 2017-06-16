@@ -19,7 +19,7 @@ span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
 
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmentinput select {width: 20%; display: inline-block; margin: 5px 0 5px 0}
+span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
 .segmentcode {display: none;}
 .segmentname {margin-left: 5px;}
 
