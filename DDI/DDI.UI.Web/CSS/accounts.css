@@ -13,7 +13,7 @@ span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5
 span.summaryleftinput input,
 span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
 
-span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
+span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 0; }
 span.summaryrightinput input,
 span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
@@ -25,8 +25,13 @@ span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 
 
 div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
 
-.accountsegmentscontainer {display: none;}
-.hidebuttons {display: none;}
+.segmentgroup {
+    visibility: hidden;
+}
+
+.hidebuttons {
+    visibility: hidden;
+}
 .activeadjust {margin: 0 0 0 -3px;}
 
 .invisible {visibility: hidden;}
@@ -37,8 +42,24 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
 
 .fiscalyearselectioncontainr { float: right; }
 
-.newbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
-.editbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
+.newbuttoninline {
+    background-color: white;
+    border: solid 1px black;
+    background-image: url('../../Images/New_16.png');
+    width: 16px;
+    height: 16px;
+    margin: 3px 0 3px 0;
+    vertical-align: middle;
+}
+.editbuttoninline {
+    background-color: white;
+    border: solid 1px black;
+    background-image: url('../../Images/Edit_16Old.png');
+    width: 16px;
+    height: 16px;
+    margin: 3px 0 3px 0;
+    vertical-align: middle;
+}
 
 .newaccountlinkcontainer { text-align: right; margin-bottom: 10px; }
 

@@ -38,15 +38,15 @@
       <fieldset>
         <legend>Account Segments: </legend>
 
-        <div class="inlinecontainer segmentgroup1">
+        <div class="inlinecontainer segmentgroup segmentgroup1">
             <span class="accountsegment1">
                 <span class="summarysegmentprompt">
                     <label class="segment1prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment1Id segmentselect" />
-                    <a href="#" title="" class="editsegment1 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment1 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment1 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment1 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -56,15 +56,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup2">
+        <div class="inlinecontainer segmentgroup segmentgroup2">
             <span class="accountsegment2">
                 <span class="summarysegmentprompt">
                     <label class="segment2prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment2Id segmentselect" />
-                    <a href="#" title="" class="editsegment2 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment2 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment2 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment2 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -74,15 +74,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup3">
+        <div class="inlinecontainer segmentgroup segmentgroup3">
             <span class="accountsegment3">
                 <span class="summarysegmentprompt">
                     <label class="segment3prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment3Id segmentselect" />
-                    <a href="#" title="" class="editsegment3 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment3 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment3 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment3 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -92,15 +92,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup4">
+        <div class="inlinecontainer segmentgroup segmentgroup4">
             <span class="accountsegment4">
                 <span class="summarysegmentprompt">
                     <label class="segment4prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment4Id segmentselect" />
-                    <a href="#" title="" class="editsegment4 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment4 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment4 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment4 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -110,15 +110,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup5">
+        <div class="inlinecontainer segmentgroup segmentgroup5">
             <span class="accountsegment5">
                 <span class="summarysegmentprompt">
                     <label class="segment5prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment5Id segmentselect" />
-                    <a href="#" title="" class="editsegment5 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment5 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment5 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment5 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -128,15 +128,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup6">
+        <div class="inlinecontainer segmentgroup segmentgroup6">
             <span class="accountsegment6">
                 <span class="summarysegmentprompt">
                     <label class="segment6prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment6Id segmentselect" />
-                    <a href="#" title="" class="editsegment6 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment6 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment6 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment6 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -146,15 +146,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup7">
+        <div class="inlinecontainer segmentgroup segmentgroup7">
             <span class="accountsegment7">
                 <span class="summarysegmentprompt">
                     <label class="segment7prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment7Id segmentselect" />
-                    <a href="#" title="" class="editsegment7 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment7 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment7 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment7 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -164,15 +164,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup8">
+        <div class="inlinecontainer segmentgroup segmentgroup8">
             <span class="accountsegment8">
                 <span class="summarysegmentprompt">
                     <label class="segment8prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment8Id segmentselect" />
-                    <a href="#" title="" class="editsegment8 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment8 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment8 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment8 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -182,15 +182,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup9">
+        <div class="inlinecontainer segmentgroup segmentgroup9">
             <span class="accountsegment9">
                 <span class="summarysegmentprompt">
                     <label class="segment9prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment9Id segmentselect" />
-                    <a href="#" title="" class="editsegment9 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment9 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment9 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment9 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -200,15 +200,15 @@
             <br />
         </div>
 
-        <div class="inlinecontainer segmentgroup10">
+        <div class="inlinecontainer segmentgroup segmentgroup10">
             <span class="accountsegment10">
                 <span class="summarysegmentprompt">
                     <label class="segment10prompt"></label>
                 </span>
                 <span class="summarysegmentinput">
                     <select class="Segment10Id segmentselect" />
-                    <a href="#" title="" class="editsegment10 editbuttoninline"></a>
-                    <a href="#" title="" class="newsegment10 newbuttoninline"></a>
+                    <a href="#" title="" class="editsegment10 hidebuttons editbuttoninline"></a>
+                    <a href="#" title="" class="newsegment10 hidebuttons newbuttoninline"></a>
                 </span>
             </span>
 
@@ -249,8 +249,8 @@
             </span>
             <span class="summaryleftinput">
                 <select class="Group1Id editable" />
-                <a href="#" title="" class="editgroup1 editbuttoninline"></a>
-                <a href="#" title="" class="newgroup1 newbuttoninline"></a>
+                <a href="#" title="" class="editgroup1 hidebuttons editbuttoninline"></a>
+                <a href="#" title="" class="newgroup1 hidebuttons newbuttoninline"></a>
             </span>
         </span>
 
@@ -276,8 +276,8 @@
             </span>
             <span class="summaryleftinput">
                 <select class="Group2Id editable" />
-                <a href="#" title="" class="editgroup2 editbuttoninline"></a>
-                <a href="#" title="" class="newgroup2 newbuttoninline"></a>
+                <a href="#" title="" class="editgroup2 hidebuttons editbuttoninline"></a>
+                <a href="#" title="" class="newgroup2 hidebuttons newbuttoninline"></a>
             </span>
         </span>
 
@@ -300,8 +300,8 @@
             </span>
             <span class="summaryleftinput">
                 <select class="Group3Id editable" />
-                <a href="#" title="" class="editgroup3 editbuttoninline"></a>
-                <a href="#" title="" class="newgroup3 newbuttoninline"></a>
+                <a href="#" title="" class="editgroup3 hidebuttons editbuttoninline"></a>
+                <a href="#" title="" class="newgroup3 hidebuttons newbuttoninline"></a>
             </span>
         </span>
 
@@ -324,8 +324,8 @@
             </span>
             <span class="summaryleftinput">
                 <select class="Group4Id editable" />
-                <a href="#" title="" class="editgroup4 editbuttoninline"></a>
-                <a href="#" title="" class="newgroup4 newbuttoninline"></a>
+                <a href="#" title="" class="editgroup4 hidebuttons editbuttoninline"></a>
+                <a href="#" title="" class="newgroup4 hidebuttons newbuttoninline"></a>
             </span>
         </span>
 

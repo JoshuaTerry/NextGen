@@ -34,8 +34,6 @@ namespace DDI.Business.GL
 
             LedgerLogic _ledgerLogic = UnitOfWork.GetBusinessLogic<LedgerLogic>();
 
-            //Ledger ledger = new Ledger();
-            //ledger = UnitOfWork.FirstOrDefault<Ledger>(p => p.DefaultFiscalYearId == entity.FiscalYearId);
             Ledger ledger = UnitOfWork.GetById<FiscalYear>(entity.FiscalYearId.Value, p => p.Ledger).Ledger;
 
             if (ledger == null)

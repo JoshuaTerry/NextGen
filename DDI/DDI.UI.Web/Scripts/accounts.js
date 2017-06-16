@@ -212,7 +212,8 @@ function LoadSummaryTabContinued() {
             AccountAddMode();
         }
         else {
-            $('.accountsegmentscontainer').hide();
+            HideButtons()
+            //$('.accountsegmentscontainer').hide();
             AccountDisplayMode();
         }
     });
@@ -312,14 +313,6 @@ function RetrieveLedgerSettings() {
                 //segments
                 segmentLevels = data.Data.NumberOfSegments;
 
-                for (i = (segmentLevels + 1); i <= 10; i++) {
-                    $('.segmentgroup' + i).hide();
-                }
-
-                for (i = 1; i <= segmentLevels; i++) {
-                    $('.segmentgroup' + i).show();
-                    $('.segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Name + ':');
-                }
                 RetrieveSegmentLevels()
             }
         }
@@ -341,7 +334,15 @@ function RetrieveSegmentLevels() {
                 var segmentId;
                 var parentSegmentId;
 
+                for (i = (segmentLevels + 1); i <= 10; i++) {
+                    $('.segmentgroup' + i).hide();
+                }
+
                 for (var i = 1; i <= segmentLevels; i++) {
+
+                    $('.segmentgroup' + i).show();
+
+                    $('.segment' + i + 'prompt').html(data.Data[i - 1].Name + ':');
 
                     $('.editsegment' + i).click(function (e) {
                         e.preventDefault();
@@ -411,7 +412,8 @@ function RetrieveSegmentLevels() {
 
 function AccountDisplayMode() {
     editMode = 'display';
-    $('.accountsegmentscontainer').hide();
+    //$('.accountsegmentscontainer').hide();
+    HideButtons();
     $('.editaccountbutton').show();
     $('.saveaccountbuttons').hide();
     $(summaryContainer).find('.editable').each(function () {
@@ -429,13 +431,15 @@ function AccountAddMode() {
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
-    $('.accountsegmentscontainer').show();
+    //$('.accountsegmentscontainer').show();
+    ShowButtons();
 }
 
 function AccountEditMode() {
     editMode = 'edit';
     if (activityTotal === 0) {
-        $('.accountsegmentscontainer').show();
+        //$('.accountsegmentscontainer').show();
+        ShowButtons();
     }
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
@@ -760,6 +764,16 @@ function ClearAccountFields() {
     $(summaryContainer).find(".accountdescription").html('');
     $(summaryContainer).find(".accountnumber").val('');
     $(summaryContainer).find(".hidaccountid").val('');
+}
+
+function HideButtons() {
+    $('.editbuttoninline').prop('visibility', 'hidden')
+    $('.editbuttoninline').prop('visibility', 'hidden')
+}
+
+function ShowButtons() {
+    $('.editbuttoninline').prop('visibility', 'visible')
+    $('.editbuttoninline').prop('visibility', 'visible')
 }
 
 
