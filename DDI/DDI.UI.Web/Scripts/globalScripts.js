@@ -6,8 +6,7 @@ var lastActiveSection = null;
 var currentEntity = null;
 var previousEntity = null;
 var modal = null;
-var currentUser = null;
-var currentBusinessUnit = null;
+var currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
 var toolbox = null;
 var newContactInformationFields = null;
 
@@ -16,6 +15,10 @@ $(document).ready(function () {
     $.support.cors = true;
 
     LoadDefaultAuthToken();
+
+    LoadCurrentUser();
+
+    LoadCurrentBusinessUnit();
 
     LoadDatePickers();
 
@@ -76,15 +79,14 @@ $(document).ready(function () {
     else {
         $('.utilitynav').hide();
     }
-
     
-
     $(document).click(function (e) {
 
         if (toolbox) {
             toolbox.hide();
             toolbox = null;
         }
+
         
     });
 
@@ -103,7 +105,16 @@ function LoadDefaultAuthToken() {
             dataType: 'json',
             success: function (data) {
                 if (data.d) {
-                    sessionStorage.setItem(AUTH_TOKEN_KEY, data.d);
+
+                    split_token = data.d.split(' ');
+
+                    sessionStorage.setItem(AUTH_TOKEN_KEY, split_token[0]);
+
+                    MakeServiceCall('GET', 'userbyname/' + split_token[1] + '/', null, function (data) {
+
+                        sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
+
+                    }, null);
 
                     location.href = "/Default.aspx";
                 }
@@ -115,6 +126,54 @@ function LoadDefaultAuthToken() {
 
     }
 
+}
+
+function LoadCurrentUser() {
+
+    var userId = sessionStorage.getItem('CURRENT_USER_ID');
+    if (currentBusinessUnitId === null) {
+
+        MakeServiceCall('GET', 'users/' + userId, null, function (data) {
+
+            if (data.Data.DefaultBusinessUnitId === null) {
+
+                currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
+
+                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.BusinessUnits[0].Id);
+
+                $('.editbusinessunit').text(data.Data.BusinessUnits[0].DisplayName);
+
+            } else {
+
+                currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
+
+                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.DefaultBusinessUnit.Id);
+
+                $('.editbusinessunit').text(data.Data.DefaultBusinessUnit.DisplayName);
+
+            }
+
+        });
+
+    }
+
+    MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId, null, function (data) {
+
+        $('.editbusinessunit').text(data.Data.DisplayName);
+
+    });
+}
+
+function LoadCurrentBusinessUnit() {
+
+    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
+    
+    if (currentBusinessUnitId == null) {
+        
+        LoadCurrentUser();
+
+    }
+    
 }
 
 /* NEW CONSTITUENT */
@@ -486,7 +545,6 @@ function GetNewFields() {
 
 function LoadHeaderInfo() {
     LoadBusinessDate();
-    LoadBusinessUnit();
     LoadEnvironment();
 }
 
@@ -512,11 +570,6 @@ function LoadBusinessDate() {
         }, null);
 
     }
-}
-
-function LoadBusinessUnit() {
-    /* Will be implemented with Business Unit */
-
 }
 
 function LoadEnvironment() {
@@ -665,19 +718,23 @@ function LoadAccordions() {
     $('.accordion-collapseall').click(function (e) {
         e.preventDefault();
 
-        $('.accordions').accordion({
+        $(this).parent().next('.accordions').accordion({
             active: false
         });
 
-        $(".ui-accordion-content").hide('fast');
-        $('.ui-accordion-header').removeClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').hide('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').removeClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-s').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
     });
 
     $('.accordion-expandall').click(function (e) {
         e.preventDefault();
 
-        $(".ui-accordion-content").show('fast');
-        $('.ui-accordion-header').addClass('ui-state-active');
+        $(this).parent().next('.accordions').find('.ui-accordion-content').show('fast');
+        $(this).parent().next('.accordions').find('.ui-accordion-header').addClass('ui-state-active');
+
+        $(this).parent().next('.accordions').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
 
     });
 
@@ -1366,57 +1423,208 @@ function DisplayMessage(heading, text, icon, sticky) {
 //
 // END MESSAGING
 
-// FORM VALIDATION
-//
-function InitRequiredLabels(formClassName) {
-    formClassName.replace(".", "");
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var labelElement = $(this).prev();
-        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+
+
+/* Note Alerts Modal */
+function GetNoteAlerts(showalertsflag) {
+
+    if (showalertsflag) {
+
+        MakeServiceCall('GET', 'entity/' + currentEntity.Id + '/notes/alert', null, function (data) {
+
+            if (data.Data.length > 0) {
+
+                SetupNoteAlertModal();
+
+                LoadNoteAlertGrid(data.Data);
+
+                $('.notealertmodal').show();
+
+            }
+
+        },
+
+            function (xhr, status, err) {
+
+            });
+    }
+}
+
+function LoadNoteAlertGrid(data) {
+
+    var columns = [
+        { dataField: 'AlertStartDate', caption: 'Alert Date Start', dataType: 'date' },
+        { dataField: 'AlertEndDate', caption: 'Alert Date End', dataType: 'date' },
+        { dataField: 'Title', caption: 'Title' }
+    ];
+
+    LoadGridWithData('notealertgrid', '.notealertgridcontainer', columns, null, null, EditNoteDetails, null, data, null);
+}
+
+function EditNoteDetails(id) {
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.editnoteinfo').show();
+
+    LoadNoteDetails(id);
+
+    $('.noteTopicSelectImage').unbind('click');
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        SetupNoteTopicsMultiselectModal();
+
+        $(modal).find('.tagdropdowncontainer').show();
+
+        $('.savenotetopics').unbind('click');
+
+        $('.savenotetopics').click(function (e) {
+
+            var newsavednotetopics = GetCheckedNoteTopics();
+
+            $.map(newsavednotetopics, function (topicid) {
+
+                MakeServiceCall('GET', 'notetopics/' + topicid, null, function (data) {
+
+                    var topic = data.Data;
+
+                    StyleAndSetupIndividualTags(topic, function () {
+
+                        var removeid = '#' + data.Data.Id;
+
+                        $('.noteTopicSelect > div').remove(removeid);
+
+                        MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
+
+                            function (xhr, status, err) {
+                                DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                            });
+
+                    }, function (xhr, status, err) {
+                        DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+                    });
+
+                });
+
+            });
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+            newsavednotetopics = null;
+
+        });
+
+        $('.cancelnotetopics').click(function (e) {
+
+            e.preventDefault();
+
+            $(modal).find('.tagdropdowncontainer').hide();
+
+            ClearNoteTopicSelectModal();
+
+        });
+
+
+    });
+
+    $('.cancelnotesmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetNoteDetailsToSave(modal);
+
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
+
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
+
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
+
+            });
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+            CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
+            ClearNoteTopicTagBox(modal);
+
+            LoadNoteDetailsGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+        });
+
     });
 }
 
-function ValidateForm(formClassName) {
-    var validform = true;
-    formClassName.replace(".", "");
-    // required items
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
-        $("#" + errorId).remove();
-        if ($(this).val() === "") {
-            $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
-            validform = false;
-        }
+function SetupNoteAlertModal() {
+
+    var modal = $('.notealertmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
     });
-    return validform;
-}
 
-function RemoveValidation(formClassName) {
-    formClassName.replace(".", "");
-    $('.' + formClassName).find('.required').each(function (index, el) {
-        var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
-        $("#" + errorId).remove();
+    $('.cancelnotealertmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
     });
+
 }
-//
-// END FORM VALIDATION
+/* End Note Alerts Modal */
 
 
-
-// END MESSAGING
 
 // BUSINESS UNIT
 //
 
 function BusinessUnitModal() {
-
-    DummyUser('D3BFB26C-4603-E711-80E5-005056B7555A');
-    // Uncomment this to use currentBusinessUnit
-    // Add the guid of the user you want to use
-
+    
     $('.editbusinessunit').click(function (e) {
 
-        LoadBusinessUnitDropDown(currentBusinessUnit);
+        LoadBusinessUnitDropDown();
 
         e.preventDefault();
 
@@ -1431,22 +1639,28 @@ function BusinessUnitModal() {
 
         $('.savebusinessunit').click(function (e) {
 
-             $.each(currentUser.BusinessUnits, function(index, value) {
-                
-                if(value.Id === $('.bu-currentbu').val()) {
 
-                    currentBusinessUnit = value;
-                }
-                
-             }); 
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', null, function (data) {
 
-            $('.editbusinessunit').text(currentBusinessUnit.DisplayName); 
+                businessunits = data.Data
 
-            CloseModal(modal);
+                $.each(businessunits, function (index, value) {
 
+                    if (value.Id === $('.bu-currentbu').val()) {
+
+                        currentBusinessUnit = value; 
+                        sessionStorage.setItem('CURRENT_BUSINESS_UNIT', value.Id);
+
+                        window.location.reload();
+                    }
+
+                });
+
+            });
+            
         });
 
-        $('.cancelmodal').click(function (e) {
+        $('.cancelbumodal').click(function (e) {
 
             e.preventDefault();
 
@@ -1456,38 +1670,12 @@ function BusinessUnitModal() {
 
     });
 
-}
+} 
 
-function LoadBusinessUnitDropDown(currentBusinessUnit) {
+function LoadBusinessUnitDropDown() {
 
-    if (currentBusinessUnit != null) {
-
-        PopulateDropDown('.bu-currentbu', 'users/' + currentUser.Id + '/businessunit', '', '', currentBusinessUnit.Id);
-
-        $('.editbusinessunit').text(currentBusinessUnit.DisplayName);
-
-    } else {
-        
-        $('.editbusinessunit').text('BU');
-
-    }
-
-   
-
-}
-
-function DummyUser(dummyUserId) {
-    //THIS FUNCTION FOR TESTING/DEMONSTRATION PURPOSES ONLY
-
-    MakeServiceCall('GET', 'users/' + dummyUserId, null, function (data) {
-        
-        currentUser = data.Data;
-
-        currentBusinessUnit = data.Data.DefaultBusinessUnit;
-
-        LoadBusinessUnitDropDown(currentBusinessUnit);
-
-    });
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', '<Please Select>', null,  currentBusinessUnitId, null, null);
+    
 }
 
 //
@@ -1499,9 +1687,11 @@ function InitRequiredLabels(formClassName) {
     formClassName.replace(".", "");
     $('.' + formClassName).find('.required').each(function (index, el) {
         var labelElement = $(this).prev();
-        labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        if (labelElement[0].innerHTML.indexOf("*") === -1){
+            labelElement[0].innerHTML = labelElement[0].innerHTML + " *";
+        }
     });
-}
+    }
 
 function ValidateForm(formClassName) {
     var validform = true;
@@ -1530,31 +1720,66 @@ function RemoveValidation(formClassName) {
 
 // DYNAMIC MARKUP
 //
-function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
+
+//    var fieldblock = $('<div>').addClass('fieldblock');
+//    $('<label>').text(labelText).appendTo(fieldblock);
+//    $(controlType).addClass(controlClass).appendTo(fieldblock);
+//    $(fieldblock).appendTo(appendContainer);
+
+//}
+
+function ValidateFields(containerClass, saveFunction) {
+    var validFields = true;
+    
+    // required items
+    $(containerClass).find('.required input').each(ValidateField);
+    $(containerClass).find('.required select').each(ValidateField);
+
+    if (validFields && saveFunction != null) {
+        saveFunction;
+    }
+
+    return validFields;
+}
+
+function ValidateField(index, el) {
+    var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
+    $("#" + errorId).remove();
+    if ($(this).val() === "" || $(this).val() == null) {
+        $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
+        validFields = false;
+    }
+}
+
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
 
     var fieldblock = $('<div>').addClass('fieldblock');
-    $('<label>').text(labelText).appendTo(fieldblock);
-    $(controlType).addClass(controlClass).appendTo(fieldblock);
-    $(fieldblock).appendTo(appendContainer);
+    var label = $('<label>').text(labelText).appendTo(fieldblock);
+    var control = $(controlType).addClass(controlClass).appendTo(fieldblock); 
 
+    if (maxlength != null) {
+        control.attr('maxlength', maxlength);
+    }
+     
+    if (isRequired) {
+        fieldblock.addClass('required'); 
+    }     
+    
+    $(fieldblock).appendTo(appendContainer);
 }
 
 function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancelFunction, appendContainer) {
 
     var buttons = $('<div>').addClass('dynamicbuttons').appendTo(appendContainer);
-
-    if (saveFunction) {
-
-        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(saveFunction).appendTo(buttons);
-
+     
+    if (saveFunction) {        
+        $('<input>').attr('type', 'button').addClass(saveClass).val('Save').click(function () { ValidateFields($(appendContainer), saveFunction); }).appendTo(buttons);
     }
     
     if (cancelFunction) {
-
         $('<a>').addClass(cancelClass).text('Cancel').attr('href', '#').click(cancelFunction).appendTo(buttons);
-
     }
-
 }
 //
 // END DYNAMIC MARKUP
@@ -1563,7 +1788,10 @@ function MaskFields() {
     $('.date').mask('00/00/0000');
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
-    $('.money').mask("#,##0.00", { reverse: true });
+    $('.money').mask("#0.00", { reverse: true });
+    $('.money').each(function () {
+        $(this).val($(this).val().replace('$', '').replace(',', ''));
+    })
     $('.moneynegative').maskMoney({ prefix: '$', allowNegative: true, thousands: ',', decimal: '.', affixesStay: false });
     $('.phone').mask('(000) 000-0000');
     $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
@@ -1586,4 +1814,24 @@ function FormatFields() {
     $(".percent").each(function () {
         $(this).val($(this).val() + '%');
     });
+}
+
+// Take a string like "Approved on 2017-06-09T13:37:09.1111520Z" and return "Approved on 6/9/2017, 9:37:09 AM"
+// DateTime values should be in ToString("O") format.
+function FormatDateTimeStrings(str) { 
+    var rexp = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(.\d{0,9})?(Z|[+-]\d\d:\d\d)?/;
+    do {
+        var result = rexp.exec(str);
+        if (result) {
+            var dt = new Date(result[0]);
+            if (dt.getMilliseconds() == 0 && dt.getSeconds() == 0 && dt.getMinutes() == 0 && dt.getHours() == 0) {
+                str = str.replace(rexp, dt.toLocaleDateString());
+            }
+            else {
+                str = str.replace(rexp, dt.toLocaleString());
+            }
+        }
+    } while (result);    
+
+    return str;
 }

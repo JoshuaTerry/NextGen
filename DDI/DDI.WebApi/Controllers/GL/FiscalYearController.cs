@@ -4,7 +4,9 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using DDI.Services.GL;
 using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
@@ -18,6 +20,7 @@ namespace DDI.WebApi.Controllers.GL
 
         private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
         private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
+        private const string ROUTENAME_GETYEARFOROTHERBUSINESSUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + "Id" + RouteVerbs.Get;
 
         private string _fieldsForAll = null;
 
@@ -25,7 +28,8 @@ namespace DDI.WebApi.Controllers.GL
 
         protected override string FieldsForAll => _fieldsForAll ?? (_fieldsForAll = FieldListBuilder
             .IncludeAll()
-            .Exclude(p => p.Ledger)
+            .Include(p => p.Ledger.Name)
+            .Include(p => p.Ledger.Code)
             .Exclude(p => p.LedgerAccounts)
             .Exclude(p => p.Segments)
             .Include(p => p.FiscalPeriods.First().Id)
@@ -40,7 +44,8 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<FiscalYear, object>>[]
             {
-                p => p.FiscalPeriods
+                p => p.FiscalPeriods,
+                p => p.Ledger                
             };
         }
 
@@ -52,11 +57,45 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search, fields);
 
-                return FinalizeResponse(result, ROUTENAME_GETALLBYLEDGER, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, ROUTENAME_GETALLBYLEDGER, search, fields);
             }
             catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/businessunits/{unitId}/fiscalyears/{fiscalYearId}", Name = ROUTENAME_GETYEARFOROTHERBUSINESSUNIT)]
+        public IHttpActionResult GetYearForOtherBusinessUnit(Guid unitId, Guid fiscalYearId, string fields = null)
+        {
+            try
+            {
+                var result = ((IFiscalYearService)Service).GetYearForOtherBusinessUnit(unitId, fiscalYearId);
+
+                return FinalizeResponse(result, ROUTENAME_GETYEARFOROTHERBUSINESSUNIT, PageableSearch.Default, ConvertFieldList(fields, FieldsForSingle));
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+        [HttpGet]
+        [Route("api/v1/businessunits/{unitId}/currentfiscalyear")]
+        public IHttpActionResult GetCurrentFiscalYear(Guid unitId, string fields = null)
+        {
+            try
+            {
+                var result = Service.GetWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId && fy.Id == fy.Ledger.DefaultFiscalYearId);
+
+                return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle), null);
+            }
+            catch(Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
@@ -71,9 +110,10 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var result = Service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var result = Service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search, fields);
 
-                return FinalizeResponse(result, ROUTENAME_GETALLBYUNIT, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, ROUTENAME_GETALLBYUNIT, search, fields);
             }
             catch (Exception ex)
             {

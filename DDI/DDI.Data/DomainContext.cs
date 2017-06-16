@@ -30,6 +30,7 @@ namespace DDI.Data
 
         #region Core Entities
 
+        public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Configuration> Configurations { get; set; }
         public DbSet<CustomField> CustomField { get; set; }
         public DbSet<CustomFieldData> CustomFieldData { get; set; }

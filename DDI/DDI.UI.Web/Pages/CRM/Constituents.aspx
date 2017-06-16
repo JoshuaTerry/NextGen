@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
@@ -62,7 +63,7 @@
 
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li style="display: none;"><a href="#tab-donor">Donor</a></li>
                 <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
@@ -82,7 +83,7 @@
 
                         <div class="fieldblock">
                             <label>Name</label>
-                            <label class="editable FormattedName"></label>
+                            <label class="editable FormattedName" maxlength="255"></label>
                         </div>
 
                         <div class="fieldblock">
@@ -115,46 +116,46 @@
 
                                 <div class="fieldblock">
                                     <label>First</label>
-                                    <input type="text" class="editable FirstName" />
+                                    <input type="text" class="editable FirstName" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Middle</label>
-                                    <input type="text" class="editable MiddleName" />
+                                    <input type="text" class="editable MiddleName" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Last</label>
-                                    <input type="text" class="editable LastName" />
+                                    <input type="text" class="editable LastName" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Suffix</label>
-                                    <input type="text" class="editable Suffix" />
+                                    <input type="text" class="editable Suffix" maxlength="128" />
                                 </div>
                             </div>
 
                             <div class="threecolumn">
                                 <div class="fieldblock">
                                     <label>Name 2</label>
-                                    <input type="text" class="editable Name2" />
+                                    <input type="text" class="editable Name2" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Nickname</label>
-                                <input type="text" class="editable Nickname" />
+                                <input type="text" class="editable Nickname" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Salutation</label>
-                                    <input type="text" class="editable Salutation" />
+                                    <input type="text" class="editable Salutation" maxlength="255" />
                                 </div>
                             </div>
 
                             <div class="threecolumn">
                                 <div class="fieldblock">
                                     <label>Tax ID</label>
-                                    <input type="text" class="editable TaxId" />
+                                    <input type="text" class="editable TaxId" maxlength="128" />
                                 </div>
                                 <div class="fieldblock">
                                     <label>Gender</label>
@@ -162,7 +163,7 @@
                                 </div>
                                 <div class="fieldblock">
                                     <label>Source</label>
-                                    <input type="text" class="editable Source" />
+                                    <input type="text" class="editable Source" maxlength="128" />
                                 </div>
                             </div>
                         </div>
@@ -171,29 +172,29 @@
                             <div class="threecolumn">
                                 <div class="fieldblock">
                                     <label>Name</label>
-                                    <input type="text" class="editable Name" />
+                                    <input type="text" class="editable Name" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Name 2</label>
-                                    <input type="text" class="editable Name2" />
+                                    <input type="text" class="editable Name2" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Salutation</label>
-                                    <input type="text" class="editable Salutation" />
+                                    <input type="text" class="editable Salutation" maxlength="128" />
                                 </div>
                             </div>
 
                             <div class="twocolumn">
                                 <div class="fieldblock">
                                     <label>Tax ID</label>
-                                    <input type="text" name="taxIdOrganization" class="editable TaxId" pattern="^\d{2}-?\d{7}$" title="Must be in format: 12-3456789" />
+                                    <input type="text" name="taxIdOrganization" class="editable TaxId" pattern="^\d{2}-?\d{7}$" title="Must be in format: 12-3456789" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Source</label>
-                                    <input type="text" class="editable Source" />
+                                    <input type="text" class="editable Source" maxlength="128" />
                                 </div>
                             </div>
 
@@ -219,12 +220,12 @@
 
                             <div class="fieldblock">
                                 <label>Ordination Date</label>
-                                <input type="text" class="editable OrdinationDate datepicker" />
+                                <input type="text" class="editable OrdinationDate datepicker" maxlength="10" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Place of Ordination</label>
-                                <input type="text" class="editable PlaceOfOrdination" />
+                                <input type="text" class="editable PlaceOfOrdination" maxlength="128" />
                             </div>
                         </div>
 
@@ -273,18 +274,18 @@
                         <div class="inline">
                             <div class="fieldblock">
                                 <label>Membership</label>
-                                <input type="text" class="editable MembershipCount" />
+                                <input type="text" class="editable MembershipCount" maxlength="4" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>Year Established</label>
-                                <input type="text" class="editable YearEstablished" />
+                                <input type="text" class="editable YearEstablished" maxlength="4" />
                             </div>
                         </div>
 
                         <div class="fieldblock">
                             <label>Business</label>
-                            <input type="text" class="editable Business" />
+                            <input type="text" class="editable Business" maxlength="128" />
                         </div>
 
                         <div class="twocolumn">
@@ -295,7 +296,7 @@
 
                             <div class="fieldblock">
                                 <label>Verify Date</label>
-                                <input type="text" class="editable TaxExemptVerifyDate datepicker" />
+                                <input type="text" class="editable TaxExemptVerifyDate datepicker" maxlength="10" />
                             </div>
                         </div>
 
@@ -363,17 +364,17 @@
 
                                 <div class="fieldblock">
                                     <label>Deceased</label>
-                                    <input type="text" class="editable DeceasedDate datepicker" />
+                                    <input type="text" class="editable DeceasedDate datepicker" maxlength="10" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Marriage Date</label>
-                                    <input type="text" class="editable MarriageDate datepicker" />
+                                    <input type="text" class="editable MarriageDate datepicker" maxlength="10" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Divorce Date</label>
-                                    <input type="text" class="editable DivorceDate datepicker" />
+                                    <input type="text" class="editable DivorceDate datepicker" maxlength="10" />
                                 </div>
                             </div>
 
@@ -392,7 +393,7 @@
 
                                 <div class="fieldblock">
                                     <label>Prospect Date</label>
-                                    <input type="text" class="editable ProspectDate datepicker" />
+                                    <input type="text" class="editable ProspectDate datepicker" maxlength="10"/>
                                 </div>
                             </div>
 
@@ -417,7 +418,7 @@
 
                             <div class="fieldblock">
                                 <label>First Employed</label>
-                                <input type="text" class="editable FirstEmploymentDate datepicker" />
+                                <input type="text" class="editable FirstEmploymentDate datepicker" maxlength="10" />
                             </div>
                         </div>
                         
@@ -429,19 +430,19 @@
 
                             <div class="fieldblock">
                                 <label>Position</label>
-                                <input type="text" class="editable Position" />
+                                <input type="text" class="editable Position" maxlength="128" />
                             </div>
                         </div>
                             
                         <div class="twocolumn">
                             <div class="fieldblock">
                                 <label>Start</label>
-                                <input type="text" class="editable EmploymentStartDate datepicker" />
+                                <input type="text" class="editable EmploymentStartDate datepicker" maxlength="10" />
                             </div>
 
                             <div class="fieldblock">
                                 <label>End</label>
-                                <input type="text" class="editable EmploymentEndDate datepicker" />
+                                <input type="text" class="editable EmploymentEndDate datepicker" maxlength="10" />
                             </div>
                         </div>
 
@@ -471,7 +472,7 @@
 
                                 <div class="fieldblock">
                                     <label>Name</label>
-                                    <input type="text"  class="ai-Name" />
+                                    <input type="text"  class="ai-Name" maxlength="128" />
                                 </div>
 
                                  <input type="hidden" class="ai-ConstituentId parentid" />
@@ -505,40 +506,7 @@
             </div>
 
              <!-- Notes Tab -->
-            <div id="tab-notes" class="scrollable">
-
-                <div class="tabscontainer inner">
-
-                    <ul> 
-                        <li><a href="#tab-notedetail">Note Detail</a></li>
-                        <li><a href="#tab-attachments">Attachments</a></li>
-                    </ul>
-
-                    <div id="tab-notedetail">
-
-                        <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
-                        <div class="notedetailsgridcontainer"></div>
-                        
-                    </div>
-
-                    <div id="tab-attachments">
-
-                        <table class="datagrid attachmentstable">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>File Name</th>
-                                    <th>Private</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
-                    </div>
-                    
-                </div>
-
-            </div>
+            
             
             <!-- Relationships Tab -->
             <div id="tab-relationships" class="scrollable">
@@ -658,7 +626,7 @@
                                 <label>Status: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStatusDescription" disabled="disabled"/>
+                                <input type="text" class="InvestorStatusDescription" disabled="disabled" maxlength="128"/>
                             </div>
                         </div>
 
@@ -667,7 +635,7 @@
                                 <label>Since: </label>
                             </div>
                             <div>
-                                <input type="text" class="InvestorStartDate date" disabled="disabled"/>
+                                <input type="text" class="InvestorStartDate date" disabled="disabled" maxlength="10"/>
                             </div>
                         </div>
 
@@ -730,17 +698,17 @@
 
             <div class="fieldblock">
                 <label>Address Line 1</label>
-                <input type="text" class="na-AddressLine1 autoaddress1" />
+                <input type="text" class="na-AddressLine1 autoaddress1" maxlength="255" />
             </div>
 
             <div class="fieldblock">
                 <label>Address Line 2</label>
-                <input type="text" class="na-AddressLine2 autoaddress2" />
+                <input type="text" class="na-AddressLine2 autoaddress2" maxlength="255" />
             </div>
 
             <div class="fieldblock">
                 <label>Postal code</label>
-                <input type="text" class="na-PostalCode autozip" />
+                <input type="text" class="na-PostalCode autozip" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -751,7 +719,7 @@
             <div class="inline">
                 <div class="fieldblock">
                     <label style="width: 100px;">City</label>
-                    <input type="text" class="na-City autocity" style="width: 85px;" />
+                    <input type="text" class="na-City autocity" style="width: 85px;" maxlength="128" />
                 </div>
 
                 <div class="fieldblock">
@@ -791,9 +759,9 @@
 
                 <div class="fieldblock range">
                     <label>Dates</label>
-                    <input type="text" class="na-StartDate datepicker" />
+                    <input type="text" class="na-StartDate datepicker" maxlength="10" />
                     <span>to</span>
-                    <input type="text" class="na-EndDate datepicker" />
+                    <input type="text" class="na-EndDate datepicker" maxlength="10" />
                 </div>
 
             </fieldset>
@@ -814,22 +782,22 @@
             <input type="hidden" class="dba-ConstituentId parentid" />
 
             <div class="fieldblock">
-                <label>DBA Name:</label>
-                <input type="text" class="dba-Name" />
+                <label class="required">DBA Name:</label>
+                <input type="text" required="required" class="dba-Name" maxlength="128" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
                     <label>From:</label>
-                    <input type="text" class="dba-StartDate datepicker" />
+                    <input type="text" class="dba-StartDate datepicker" maxlength="10" />
 
                 </div>
 
 
                 <div class="fieldblock">
                     <label>To:</label>
-                    <input type="text" class="dba-EndDate datepicker" />
+                    <input type="text" class="dba-EndDate datepicker" maxlength="10" />
 
                 </div>
 
@@ -849,25 +817,25 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="pp-Description" />
+                <label class="required">Description</label>
+                <input type="text" required="required" class="pp-Description" maxlength="128" />
             </div>
 
             <div class="fieldblock">
-                <label>Bank Name</label>
-                <input type="text" class="pp-BankName" />
+                <label class="required">Bank Name</label>
+                <input type="text" required="required" class="pp-BankName" maxlength="128" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Routing Number</label>
-                    <input type="text" class="pp-RoutingNumber" />
+                    <label class="required">Routing Number</label>
+                    <input type="text" required="required" class="pp-RoutingNumber" maxlength="64" />
                 </div>
 
                 <div class="fieldblock">
-                    <label>Account Number</label>
-                    <input type="text" class="pp-BankAccount" />
+                    <label class="required">Account Number</label>
+                    <input type="text" required="required" class="pp-BankAccount" maxlength="64" />
                 </div>
 
             </div>
@@ -875,8 +843,8 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Account Type</label>
-                    <select class="pp-AccountType">
+                    <label class="required">Account Type</label>
+                    <select class="pp-AccountType" required="required">
                         <option value=""></option>
                         <option value="0">Checking Account</option>
                         <option value="1">Savings Account</option>
@@ -884,8 +852,8 @@
                 </div>
 
                 <div class="fieldblock">
-                    <label>EFT Format</label>
-                    <select class="pp-EFTFormatId eftformats"></select>
+                    <label class="required">EFT Format</label>
+                    <select class="pp-EFTFormatId eftformats" required="required"></select>
                 </div>
 
             </div>
@@ -927,13 +895,13 @@
             <input type="hidden" class="phone-ConstituentId parentid" />
 
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="phone-ContactTypeId"></select>
+                <label class="required">Type:</label>
+                <select class="phone-ContactTypeId" required="required"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Phone:</label>
-                <input type="text"  class="phone-Info" />
+                <label class="required">Phone:</label>
+                <input type="text" required="required" class="phone-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -962,13 +930,13 @@
             <input type="hidden" class="email-ConstituentId parentid" />
 
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="email-ContactTypeId"></select>
+                <label class="required">Type:</label>
+                <select class="email-ContactTypeId" required="required"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Email:</label>
-                <input type="text"  class="email-Info" />
+                <label class="required">Email:</label>
+                <input type="email" class="email-Info" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Invalid Email Address" maxlength="255" />
             </div>
 
             <div class="fieldblock">
@@ -997,13 +965,13 @@
             <input type="hidden" class="web-ConstituentId parentid" />
             
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="web-ContactTypeId" ></select>
+                <label class="required">Type:</label>
+                <select class="web-ContactTypeId" required="required" ></select>
             </div>
 
             <div class="fieldblock">
-                <label>Web Site:</label>
-                <input type="text"  class="web-Info" />
+                <label class="required">Web Site:</label>
+                <input type="text" required="required" class="web-Info" />
             </div>
 
             <div class="fieldblock">
@@ -1032,13 +1000,13 @@
             <input type="hidden" class="person-ConstituentId parentid" />
             
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="person-ContactTypeId"></select>
+                <label class="required">Type:</label>
+                <select class="person-ContactTypeId" required="required"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Info:</label>
-                <input type="text"  class="person-Info" />
+                <label class="required">Info:</label>
+                <input type="text" required="required" class="person-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1065,13 +1033,13 @@
         <div class="modalcontent">
             
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="sm-ContactTypeId"></select>
+                <label class="required">Type:</label>
+                <select class="sm-ContactTypeId" required="required"></select>
             </div>
 
             <div class="fieldblock">
-                <label>URL:</label>
-                <input type="text"  class="sm-Info" />
+                <label class="required">URL:</label>
+                <input type="text" required="required" class="sm-Info" />
             </div>
 
             <div class="fieldblock">
@@ -1100,13 +1068,13 @@
             <input type="hidden" class="other-ConstituentId parentid" />
             
             <div class="fieldblock">
-                <label>Type:</label>
-                <select class="other-ContactTypeId"></select>
+                <label class="required">Type:</label>
+                <select class="other-ContactTypeId" required="required"></select>
             </div>
 
             <div class="fieldblock">
-                <label>Info:</label>
-                <input type="text"  class="other-Info" />
+                <label class="required">Info:</label>
+                <input type="text" required="required" class="other-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1164,28 +1132,28 @@
         <div class="modalcontent">
             
             <div class="fieldblock">
-                <label>Major</label>
-                <input type="text" class="ed-Major" />
+                <label class="required">Major</label>
+                <input type="text" required="required" class="ed-Major" maxlength="128" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Start Date</label>
-                    <input type="text" class="ed-StartDate datepicker" />
+                    <label class="required">Start Date</label>
+                    <input type="text" required="required" class="ed-StartDate datepicker" maxlength="10" />
                 </div>
 
                 <div class="fieldblock">
                     <label>End Date</label>
-                    <input type="text" class="ed-EndDate datepicker" />
+                    <input type="text" class="ed-EndDate datepicker" maxlength="10" />
                 </div>
 
             </div>
 
             <div class="twocolumn">
                 <div class="fieldblock">
-                    <label>School</label>
-                    <input type="text" class="ed-SchoolOther schoolLookup" />
+                    <label class="required">School</label>
+                    <input type="text" required="required" class="ed-SchoolOther schoolLookup" />
                 </div>
 
                 <div class="fieldblock">
@@ -1205,141 +1173,4 @@
 
     </div>
 
-    <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
-
-        <div class="modalcontent">
-            <input type="hidden" class="nd-hidparententityid" />
-            <input type="hidden" class="hidentitytype" />
-
-            <div class="fieldblock">
-                <label>Title</label>
-                <input type="text" class="nd-Title" />
-            </div>
-
-            <div class="fieldblock">
-                <label>Description</label>
-                <textarea rows ="4" cols ="86" class="nd-Description"></textarea>
-            </div>
-
-            <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>Alert Start Date</label>
-                    <input type="text" class="nd-AlertStartDate datepicker" />
-                </div>
-
-                <div class="fieldblock">
-                    <label>Alert End Date</label>
-                    <input type="text" class="nd-AlertEndDate datepicker" />
-                </div>
-
-            </div>
-
-            <div class="fieldblock">
-                <label>Note Topics</label>
-                <div class="nd-Topics noteTopicSelect"></div> 
-                <div class="noteTopicSelectImage" style="display: inline-block;"></div>
-                <div class="tagdropdowncontainer" style="display:none;">
-                    <div class="tagdropdowndivcontainer"></div>
-                    <div class="modalbuttons">
-                        <input type="button" class="savenotetopics" value="Save" />
-                        <a href="#" class="cancelnotetopics">Cancel</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>Note Code</label>
-                    <select class="nd-NoteCode"></select>
-                </div>
-
-                <div class="fieldblock">
-                    <label>Note Category</label>
-                    <select class="nd-Category Id"></select>
-                </div>
-
-            </div>
-
-             <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>Contact Date</label>
-                    <input type="text" class="nd-ContactDate datepicker" />
-                </div>
-
-                 <div class="fieldblock">
-                    <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact"></select>
-                </div>
-
-            </div>
-
-            <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label>Person Responsible</label>
-                    <select class="nd-PersonResponsible"></select>
-                </div>
-
-                <div class="fieldblock">
-                    <label>Contact Method</label>
-                    <select class="nd-ContactMethod"></select>
-                </div>
-
-            </div>
-
-            <div class="editnoteinfo" style="display: none;">
-                <div class="twocolumn">
-
-                    <div class="fieldblock">
-                        <label>Created By</label>
-                        <label class="nd-CreatedBy"></label>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>Updated By</label>
-                        <label class="nd-UpdatedBy"></label>
-                    </div>
-
-                </div>
-
-                 <div class="twocolumn">
-
-                    <div class="fieldblock">
-                        <label>On</label>
-                        <label class="nd-CreatedOn"></label>
-                    </div>
-
-                    <div class="fieldblock">
-                        <label>On</label>
-                        <label class="nd-UpdatedOn"></label>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savenotedetails" value="Save" />
-                <a href="#" class="cancelnotesmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="notealertmodal" title="Note Alerts" style="display: none;">
-
-        <div class="modalcontent">
-
-            <div class="notealertgridcontainer"></div>
-
-            <div class="modalbuttons">
-                <a href="#" class="cancelnotealertmodal">Cancel</a>
-            </div>
-
-        </div>
-
-    </div>
 </asp:Content>

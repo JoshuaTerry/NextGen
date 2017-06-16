@@ -81,9 +81,9 @@
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Helpers\EntityFrameworkHelpers.cs" />
-    <Compile Include="Migrations\201706051932213_Initial.cs" />
-    <Compile Include="Migrations\201706051932213_Initial.Designer.cs">
-      <DependentUpon>201706051932213_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\Client\201706162112069_Initial.cs" />
+    <Compile Include="Migrations\Client\201706162112069_Initial.Designer.cs">
+      <DependentUpon>201706162112069_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.cs" />
     <Compile Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.Designer.cs">
@@ -125,8 +125,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201706051932213_Initial.resx">
-      <DependentUpon>201706051932213_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Client\201706162112069_Initial.resx">
+      <DependentUpon>201706162112069_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Common\201701031915336_RemoveIdentityFromPK.resx">
       <DependentUpon>201701031915336_RemoveIdentityFromPK.cs</DependentUpon>

@@ -53,7 +53,7 @@
 
              <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
-                <li id="tab-notes-main"><a href="#tab-notes">Notes</a></li>
+                <li id="tab-notes-main"><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
             </ul>
 
 
@@ -65,7 +65,7 @@
                         
                         <div class="fieldblock">
                             <label>ID</label>
-                            <input type="text" class="editable Id" />
+                            <input type="text" class="editable Id" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
@@ -112,7 +112,7 @@
 
                         <div class="fieldblock">
                             <label>Maturity Date</label>
-                            <input type="text" class="editable CurrentMaturityDate" />
+                            <input type="text" class="editable CurrentMaturityDate" maxlength="10" />
                         </div>
 
                     </div>
@@ -178,7 +178,7 @@
 
                                     <div class="fieldblock">
                                         <label>Step-up Date</label>
-                                        <input type="text" class="editable StepUpDate" />
+                                        <input type="text" class="editable StepUpDate" maxlength="10" />
                                     </div>
 
                                      <div class="modalbuttons">
@@ -241,7 +241,7 @@
                                     <label>Last Interest Calculation Dt:</label>
                                 </div>
                                 <div>
-                                    <input type="text" class="LastInterestCalculatedDate date" disabled="disabled" />
+                                    <input type="text" class="LastInterestCalculatedDate date" disabled="disabled" maxlength="128" />
                                 </div>
 
                             </div>
@@ -325,7 +325,7 @@
                                 
                                 <div class="fieldblock">
                                     <label>Last Maturity Date</label>
-                                    <input type="text" class="LastMaturityDate editable datepicker" />
+                                    <input type="text" class="LastMaturityDate editable datepicker" maxlength="10" />
                                 </div>
 
                             </div>

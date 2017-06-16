@@ -13,7 +13,7 @@ namespace DDI.Data.Migrations.Client
         
         string IMigrationMetadata.Id
         {
-            get { return "201706051932213_Initial"; }
+            get { return "201706162112069_Initial"; }
         }
         
         string IMigrationMetadata.Source

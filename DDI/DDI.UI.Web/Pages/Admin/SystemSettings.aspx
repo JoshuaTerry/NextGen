@@ -53,7 +53,6 @@
                     <li><a href="#" class="LoadDBA">Doing Business As</a></li>
                     <li><a href="#" class="LoadEducation">Education</a></li>
                     <li><a href="#" class="LoadGender">Gender</a></li>
-                    <li><a href="#" class="LoadHubSearch">Hub Search</a></li>
                     <li><a href="#" class="LoadOrganization">Organization</a></li>
                     <li><a href="#" class="LoadPaymentPreferences">Payment Preferences</a></li>
                     <li><a href="#" class="LoadPersonal">Personal</a></li>
@@ -111,7 +110,7 @@
         </div>
         
         <div class="contentcontainer">
-            <h1 class="systemsettingsheader"></h1>
+            <h1 class="systemsettingsheader"></h1> 
             <div class="gridcontainer"></div>
         </div>
 
@@ -122,13 +121,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="cstat-Code" />
+                <label class="required">Code</label>
+                <input type="text" class="cstat-Code" required="required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="cstat-Name" />
+                <label class="required">Description</label>
+                <input type="text" class="cstat-Name" required="required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -149,13 +148,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="ctype-Code" />
+                <label class="required">Code</label>
+                <input type="text" class="ctype-Code" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="ctype-Name" />
+                <label class="required">Description</label>
+                <input type="text" class="ctype-Name" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -180,13 +179,13 @@
             <input type="hidden" class="consttype-IsRequired" />
 
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="consttype-Code" />
+                <label class="required">Code</label>
+                <input type="text" class="consttype-Code" required="required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="consttype-Name" />
+                <label class="required">Description</label>
+                <input type="text" class="consttype-Name" required="required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -200,17 +199,17 @@
 
             <div class="fieldblock">
                 <label>Name Format</label>
-                <input type="text" class="consttype-NameFormat" />
+                <input type="text" class="consttype-NameFormat" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Formal Salutation</label>
-                <input type="text" class="consttype-SalutationFormal" />
+                <input type="text" class="consttype-SalutationFormal" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Informal Salutation</label>
-                <input type="text" class="consttype-SalutationInformal" />
+                <input type="text" class="consttype-SalutationInformal" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -249,7 +248,7 @@
 
                     <div class="fieldblock">
                         <label>Display Order</label>
-                        <input type="text" class="cforder" />
+                        <input type="text" class="cforder" maxlength="2" />
                     </div>
 
                     <div class="fieldblock">
@@ -328,13 +327,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="deg-Code" />
+                <label class="required">Code</label>
+                <input type="text" class="deg-Code" required="required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label>Description</label>
-                <input type="text" class="deg-Name" />
+                <label class="required">Description</label>
+                <input type="text" class="deg-Name" required="required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -356,13 +355,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label>Code</label>
-                <input type="text" class="den-Code" />
+                <label class="requiredlbl">Code</label>
+                <input type="text" class="den-Code" required="required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label>Name</label>
-                <input type="text" class="den-Name" />
+                <label class="requiredlbl">Name</label>
+                <input type="text" class="den-Name" required="required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -414,12 +413,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="eduLev-Code required" />
+                <input type="text" class="eduLev-Code required required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="eduLev-Name required" />
+                <input type="text" class="eduLev-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -442,12 +441,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="eth-Code" />
+                <input type="text" class="eth-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="eth-Name" />
+                <input type="text" class="eth-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -470,12 +469,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="gen-Code" />
+                <input type="text" class="gen-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="gen-Name" />
+                <input type="text" class="gen-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -503,12 +502,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="inc-Code" />
+                <input type="text" class="inc-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="inc-Name" />
+                <input type="text" class="inc-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -531,12 +530,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="lang-Code" />
+                <input type="text" class="lang-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="lang-Name" />
+                <input type="text" class="lang-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -559,12 +558,12 @@
 
             <div class="fieldblock">
                 <label>Label</label>
-                <input type="text" class="noteCategory-Label" />
+                <input type="text" class="noteCategory-Label" maxlength="64" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="noteCategory-Name" />
+                <input type="text" class="noteCategory-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -587,12 +586,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="noteCode-Code" />
+                <input type="text" class="noteCode-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="noteCode-Name" />
+                <input type="text" class="noteCode-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -615,12 +614,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="noteTopic-Code" />
+                <input type="text" class="noteTopic-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="noteTopic-Name" />
+                <input type="text" class="noteTopic-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -645,27 +644,27 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="prefix-Code" />
+                <input type="text" class="prefix-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="prefix-Name" />
+                <input type="text" class="prefix-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Salutation Prefix</label>
-                <input type="text" class="prefix-Salutation" />
+                <input type="text" class="prefix-Salutation" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Label Prefix</label>
-                <input type="text" class="prefix-LabelPrefix" />
+                <input type="text" class="prefix-LabelPrefix" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Label Prefix Short</label>
-                <input type="text" class="prefix-LabelAbbreviation" />
+                <input type="text" class="prefix-LabelAbbreviation" maxlength="128"/>
             </div>
             
             <div class="modalbuttons">
@@ -683,12 +682,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="pro-Code" />
+                <input type="text" class="pro-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="pro-Name" />
+                <input type="text" class="pro-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -713,17 +712,17 @@
 
             <div class="fieldblock">
                 <label>Level</label>
-                <input type="text" class="number rl-Level" />
+                <input type="text" class="number rl-Level" maxlength="2" />
             </div>
 
             <div class="fieldblock">
                 <label>Label</label>
-                <input type="text" class="rl-Label" />
+                <input type="text" class="rl-Label" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Abbreviation</label>
-                <input type="text" class="rl-Abbreviation" />
+                <input type="text" class="rl-Abbreviation" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -755,12 +754,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="reg-Code" />
+                <input type="text" class="reg-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="reg-Name" />
+                <input type="text" class="reg-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -783,12 +782,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="relcat-Code" />
+                <input type="text" class="relcat-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="relcat-Name" />
+                <input type="text" class="relcat-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -816,12 +815,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="reltype-Code" />
+                <input type="text" class="reltype-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="reltype-Name" />
+                <input type="text" class="reltype-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -873,12 +872,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="sch-Code" />
+                <input type="text" class="sch-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="sch-Name" />
+                <input type="text" class="sch-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -903,12 +902,12 @@
 
             <div class="fieldblock">
                 <label>Order</label>
-                <input type="text" class="tg-Order" />
+                <input type="text" class="tg-Order" maxlength="2" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="tg-Name" />
+                <input type="text" class="tg-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -942,17 +941,17 @@
 
             <div class="fieldblock">
                 <label>Order</label>
-                <input type="text" class="t-Order" />
+                <input type="text" class="t-Order" maxlength="2" />
             </div>
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="t-Code" />
+                <input type="text" class="t-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Description</label>
-                <input type="text" class="t-Name" />
+                <input type="text" class="t-Name required" maxlength="128" />
             </div>
 
 
@@ -972,12 +971,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="addrtype-Code" />
+                <input type="text" class="addrtype-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="addrtype-Name" />
+                <input type="text" class="addrtype-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock inline">
@@ -1002,22 +1001,22 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="contcat-Code" />
+                <input type="text" class="contcat-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="contcat-Name" />
+                <input type="text" class="contcat-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Section Title</label>
-                <input type="text" class="contcat-SectionTitle" />
+                <input type="text" class="contcat-SectionTitle" maxlength="128" />
             </div>
 
             <div class="fieldblock">
                 <label>Text Box Label</label>
-                <input type="text" class="contcat-TextBoxLabel" />
+                <input type="text" class="contcat-TextBoxLabel" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1047,12 +1046,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="conttype-Code" />
+                <input type="text" class="conttype-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="conttype-Name" />
+                <input type="text" class="conttype-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1086,7 +1085,7 @@
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="fy-Name" />
+                <input type="text" class="fy-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1122,17 +1121,17 @@
 
             <div class="fieldblock">
                 <label>Period Number</label>
-                <input type="text" maxlength="2" class="fp-PeriodNumber number" />
+                <input type="text" maxlength="2" class="fp-PeriodNumber number" maxlength="2" />
             </div>
 
             <div class="fieldblock">
                 <label>Start Date</label>
-                <input type="text" class="fp-StartDate datepicker" />
+                <input type="text" class="fp-StartDate datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">
                 <label>End Date</label>
-                <input type="text" class="fp-EndDate datepicker" />
+                <input type="text" class="fp-EndDate datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">
@@ -1161,7 +1160,7 @@
 
             <div class="fieldblock">
                 <label>Level</label>
-                <input type="text" class="glformat-Level" />
+                <input type="text" class="glformat-Level" maxlength="2" />
             </div>
 
             <div class="fieldblock">
@@ -1184,7 +1183,7 @@
 
             <div class="fieldblock">
                 <label>Length</label>
-                <input type="text" class="glformat-Length" />
+                <input type="text" class="glformat-Length" maxlength="2" />
             </div>
 
             <div class="fieldblock">
@@ -1199,12 +1198,12 @@
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="glformat-Name" />
+                <input type="text" class="glformat-Name required" maxlength="128" />
             </div>
             
             <div class="fieldblock">
                 <label>Abbreviation</label>
-                <input type="text" class="glformat-Abbreviation" />
+                <input type="text" class="glformat-Abbreviation" maxlength="16" />
             </div>
             
             <div class="fieldblock">
@@ -1291,12 +1290,12 @@
 
             <div class="fieldblock">
                 <label>Code</label>
-                <input type="text" class="en-Code" />
+                <input type="text" class="en-Code required" maxlength="8" />
             </div>
 
             <div class="fieldblock">
                 <label>Name</label>
-                <input type="text" class="en-Name" />
+                <input type="text" class="en-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">

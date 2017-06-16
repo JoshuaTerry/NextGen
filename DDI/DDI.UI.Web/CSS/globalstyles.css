@@ -7,10 +7,17 @@ h3 {  }
 
 a { text-decoration: none; color: #0f75b4; }
 a:hover { text-decoration: underline; }
+a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-events: none; }
 
 .justright {text-align: right}
+.justleft {text-align: left}
+.floatleft {float: left}
+.floatright {float: right}
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; }
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
+.newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
@@ -22,7 +29,7 @@ input:disabled,
 select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }
 select:disabled::-ms-expand { display: none; }
 
-.readonly { border: solid 1px transparent; background-color: #eeeeee; color: #333333; }
+.readonly { border: solid 1px transparent; background-color: #eeeeee; color: #333333; margin-bottom: 10px; }
 
 .scrollable { overflow-y: scroll; }
 
@@ -67,9 +74,10 @@ header { width: 100%; height: 75px; background-color: white; box-shadow: 3px 3px
 
 .maincontainer { width: 100%; }
 
-.dx-row:not(.dx-header-row):hover { background-color: #e9e9e9 !important; }
+.dx-row:not(.dx-header-row):hover { background-color: #e9e9e9 !important; cursor: pointer; }
 
 div.twocolumn>div { width: 49%; display: inline-block; vertical-align: top; margin-right: .8%; }
+div.twocolumn>fieldset { width: 47%; display: inline-block; vertical-align: top; margin: 0px .8% 0px 0px; }
 div.threecolumn>div { width: 32%; display: inline-block; vertical-align: top; margin-right: 1% }
 div.fourcolumn>div { width: 24%; display: inline-block; vertical-align: top; margin-right: .7%; }
 div.fivecolumn>div { width: 19%; display: inline-block; vertical-align: top; margin-right: .7%; }
@@ -78,7 +86,7 @@ div.inline div.fieldblock { display: inline-block; margin-right: 3px; }
 
 div.fieldblock { margin: 0 0 10px 0; }
 div.fieldblock label { display: block; }
-div.fieldblock label.inline { display: inline-block; }
+div.fieldblock label.inline { display: inline-block; width: 24%; }
 div.fieldblock input,
 div.fieldblock select { width: 100%; }
 div.fieldblock input { height: 15px; }
@@ -86,6 +94,7 @@ div.fieldblock select { height: 21px; }
 div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
+div.fieldblock.checkbox label { display: inline-block; }
 div.fieldblock.inline { display: inline-block; }
 div.fieldblock.inline label { display: inline-block }
 div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px; display: inline-block; }
@@ -212,6 +221,9 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 
 /*Account Number Selector*/
 .accountselectionsearch {background: url('../../Images/Search_16.png') no-repeat; width: 16px; height: 16px; display: inline-block; margin-right: 5px;  }
-.accountselectiongrid {width:50%; display: none;}
+.accountselectiongrid {width:75%; display: none;}
 .accountdescription {padding-left: 4px; padding-right: 4px}
 /* End Account Number Selector*/
+
+.required label:after { content: " *"; color: red; }
+.dynamicbuttons input { margin-right: 15px;}

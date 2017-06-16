@@ -30,6 +30,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        $('.customfieldmodallink').remove();
+
         $('.gridcontainer').html('');
 
         $('.systemsettings a').removeClass('selected');
@@ -41,8 +43,6 @@ $(document).ready(function () {
         $('.systemsettingsheader').text($(this).text());
 
         ExecuteFunction(functionToCall, window);
-
-        InitRequiredLabels("educationLevelmodal")
 
     });
 
@@ -117,7 +117,7 @@ function LoadSectionSettings(category, section, route, sectionKey) {
 
     var sectionLabel = $('<div>').addClass('fieldblock');
     $('<label>').text('Section Label: ').appendTo(sectionLabel);
-    var label = $('<input>').attr('type', 'text').addClass('sectionLabel').appendTo(sectionLabel);
+    var label = $('<input>').attr('type', 'text').addClass('sectionLabel').appendTo(sectionLabel).attr('maxlength', '128');
     $(sectionLabel).appendTo(container);
 
     var id = $('<input>').attr('type', 'hidden').addClass('hidSettingId').appendTo(container);
@@ -439,7 +439,11 @@ function LoadConstituentTypesSectionSettings() {
                         LoadConstituentTypeSettingsGrid();
                     }
 
-                }, null);
+                }, function (xhr, status, err) {
+
+                    DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+
+                });
 
             });
         })
@@ -1449,6 +1453,8 @@ function LoadEducationSectionSettings() {
     $(accordion).appendTo($('.gridcontainer'));
 
     LoadAccordions();
+
+    InitRequiredLabels("educationLevelmodal")
 }
 
 function LoadDegreeSettingsGrid() {
@@ -2532,13 +2538,11 @@ function GetTagGroupToSave(modal, isUpdate) {
 function NewTagGroupModal(modalLinkClass) {
 
     NewEntityModal(modalLinkClass, '.taggroupmodal', '.savetaggroup', 250, LoadTagGroupData, LoadTagGroupSectionSettings, GetTagGroupToSave, 'Tag Group', 'taggroups');
-
 }
 
 function NewTagModal(modalLinkClass) {
 
     NewEntityModal(modalLinkClass, '.tagmodal', '.savetag', 250, LoadTagData, TagGroupSelected, GetTagToSave, 'Tag', 'tags');
-
 }
 
 function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addToContainer, modalLinkClass) {
@@ -2550,52 +2554,35 @@ function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addT
     if (modalLinkClass.indexOf('.') != 0)
         modalLinkClass = '.' + modalLinkClass;
 
-    newEntityModalMethod(modalLinkClass);
-
+    newEntityModalMethod(modalLinkClass); 
 }
 /* END CRM SETTINGS */
 
 
 /* DONATIONS SETTINGS */
-function LoadDonationSettingsSectionSettings() {
+function LoadDonationSettingsSectionSettings() {}
 
+function LoadDonorSettingsSectionSettings() {}
 
+function LoadGLAccountAutoAssignSectionSettings() { }
 
-}
-
-function LoadDonorSettingsSectionSettings() {
-
-
-
-}
-
-function LoadGLAccountAutoAssignSectionSettings() {
-
-
-
-}
-
-function LoadDonationHomeScreenSectionSettings() {
-
-
-
-}
+function LoadDonationHomeScreenSectionSettings() {}
 /* END DONATIONS SETTINGS */
 
 
 /* GENERAL LEDGER SETTINGS */
 function LoadAccountingSettingsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.contentcontainer'));
+    var acctsettingscontainer = $('<div>').addClass('accountingsettingscontainer onecolumn').appendTo($('.gridcontainer'));
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
     // Select the ledger
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer);
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
         LoadAccountingSettings($('.hidLedgerId').val());
@@ -2603,31 +2590,29 @@ function LoadAccountingSettingsSectionSettings() {
     }, null);
 
     // fiscal year
-    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer);
+    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
 
     // transaction posted automatially
-    CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer);
+    CreateBasicFieldBlock('Post Transactions Automatically: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
 
-    // how many days in advane recurring journals will be processed
-    CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer);
+    // how many days in advance recurring journals will be processed
+    CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer, false, 3);
 
     // disable or enable approvals for journals
-    CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer);
+    CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
 
     // if approval is enabled: load users and select who can approve
     $('.as-approval').change(function () {
 
         if (this.checked) {
 
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
+            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
             // PopulateDropDown(); // users with permissions to post approvals
 
         } else {
 
             $('.as-approvedusers').parent().remove();
-
         }
-
     });
 
     CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
@@ -2641,7 +2626,6 @@ function LoadAccountingSettingsSectionSettings() {
             PostAutomatically: $('.as-postedtransaction').prop('checked'),
             PostDaysInAdvance: $('.as-daysinadvance').val(),
             ApproveJournals: $('.as-approval').prop('checked')
-
         };
 
         MakeServiceCall('PATCH', 'ledgers/' + $('.hidLedgerId').val(), JSON.stringify(data), function () {
@@ -2653,11 +2637,8 @@ function LoadAccountingSettingsSectionSettings() {
 
 
     }, 'cancel', function (e) {
-
         e.preventDefault();
-
         LoadAccountingSettings($('.hidLedgerId').val());
-
     },
 
     acctsettingscontainer);
@@ -2672,108 +2653,67 @@ function LoadAccountingSettings(id) {
         $('.as-daysinadvance').val(data.Data.PostDaysInAdvance);
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
-        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val() + '?fields=DisplayName', '', '', data.Data.DefaultFiscalYearId, null);
+        PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
 
         if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
 
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent());
+            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
             // PopulateDropDown(); // users with permissions to post approvals
-
         }
 
     }, null);
-
 }
 
-function PickLedger() {
-
-
-
-}
+function PickLedger() { }
 
 function LoadBudgetSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var businessunitid = currentBusinessUnit.Id;
-    var ledgerid;
+    var container = $('<div>').addClass('budgetsettingscontainer onecolumn').css('width', '50%').appendTo($('.gridcontainer'));
+     
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'budgetLedgerId', container, true); 
 
-    var container = $('<div>').addClass('budgetsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    var ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').addClass('').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
-
-    var selectledgergroup = $('<div>');
-    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    var selectledgername = $('<select>').addClass('budgetLedgerId').appendTo(selectledgergroup);
-    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
-
-    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + businessunitid, '', '', '', function () {
-        //update on change  (not working so added .change logic below
-        //GetBudgetSetting();
-    }, function () {
-        //retrieve initial value on populate complete
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {       
+    }, function () {      
         GetBudgetSetting();
-    });
+        });
 
-    selectledgername.change(function () {
-        GetBudgetSetting();
-    });
+    $(container).find('.budgetLedgerId').change(function () { GetBudgetSetting(); });
+         
+    CreateBasicFieldBlock('Working Budget Name: ', '<input>', 'workingBudgetName', container, true, 128);
 
-    var workingbudgetgroup = $('<div>').addClass('fieldblock');
-    $('<label>').text('Name of working budget: ').appendTo(workingbudgetgroup);
-    var workingbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('workingBudgetName required').appendTo(workingbudgetgroup);
-    $(workingbudgetgroup).appendTo(container);
+    CreateBasicFieldBlock('Fixed Budget Name: ', '<input>', 'fixedBudgetName', container, true, 128);
 
-    var fixedbudgetgroup = $('<div>').addClass('fieldblock');
-    $('<label>').text('Name of fixed budget: ').appendTo(fixedbudgetgroup);
-    var fixedbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('fixedBudgetName required').appendTo(fixedbudgetgroup);
-    $(fixedbudgetgroup).appendTo(container);
-
-    var whatifbudgetgroup = $('<div>').addClass('fieldblock');
-    $('<label>').text('Name of "what if" budget: ').appendTo(whatifbudgetgroup);
-    var whatifbudgetname = $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('whatifBudgetName required').appendTo(whatifbudgetgroup);
-    $(whatifbudgetgroup).append('<br />').appendTo(container);
-
-    var errorgroup = $('<div>').addClass('fieldblock');
-    $('<label>').text('').addClass('validateerror budgetsettingerror').append('<br />').appendTo(errorgroup);
-    $(errorgroup).append('<br />').appendTo(container);
-
+    CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
+     
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
 
-    var controlContainer = $('<div>').addClass('controlContainer');
+        e.preventDefault();
 
-    $('<input>').attr('type', 'button').addClass('saveEntity').val('Save')
-        .click(function () {
-            if (ValidBudgetSettingForm() === true) {
-                SaveBudgetSetting(id);
-            }
-        })
-        .appendTo(controlContainer);
+        var data = {
+            Id: $(id).val(),
+            WorkingBudgetName: $('.workingBudgetName').val(),
+            FixedBudgetName: $('.fixedBudgetName').val(),
+            WhatIfBudgetName: $('.whatifBudgetName').val(),
+        }
 
-    $('<a>').addClass('cancel').text('Cancel').attr('href', '#')
-        .click(function (e) {
-            e.preventDefault();
-            $('.budgetsettingerror').text('');
-            RemoveValidation('budgetsettingscontainer')
+        MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function () {
 
-            GetBudgetSetting();
-        })
-        .appendTo(controlContainer);
+            LoadAccountingSettings($('.hidLedgerId').val());
+            DisplaySuccessMessage('Success', 'Accounting settings saved successfully.');
 
-    $(controlContainer).appendTo(container);
+        }, null);
 
-    $(container).appendTo($('.contentcontainer'));
+    }, 'cancel', function (e) {
 
-    InitRequiredLabels('budgetsettingscontainer')
+        e.preventDefault();
 
+        GetBudgetSetting();
+
+    }, container);
+     
 }
 
 function ValidBudgetSettingForm() {
@@ -2796,7 +2736,6 @@ function GetBudgetSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.workingBudgetName').val(data.Data.WorkingBudgetName)
                 $('.fixedBudgetName').val(data.Data.FixedBudgetName)
                 $('.whatifBudgetName').val(data.Data.WhatIfBudgetName)
@@ -2809,28 +2748,18 @@ function GetBudgetSetting() {
 
 function LoadChartAccountsSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
-
-    var ledgernamegroup = $('<div>').addClass('');
-    $('<label>').text('Ledger: ').appendTo(ledgernamegroup);
-    ledgernamedisplay = $('<label>').addClass('ledgernamedisplay').appendTo(ledgernamegroup);
-    $('<hr>').appendTo(ledgernamegroup);
-    $(ledgernamegroup).append('<br />').appendTo(container);
-
-    var headinggroup = $('<div>');
-    $('<label>').text('Settings for Organizational Ledger').addClass('pageheading').appendTo(headinggroup);
-    $(headinggroup).append('<br />').append('<br />').appendTo(container);
 
     var selectledgergroup = $('<div>');
     $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
     var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
     $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
-    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', '', function () {
+    PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
         //update on change  (not working so added .change logic below
         //GetChartSetting();
     }, function () {
@@ -2907,9 +2836,7 @@ function LoadChartAccountsSectionSettings() {
 
     $(controlContainer).appendTo(container);
 
-    $(container).appendTo($('.contentcontainer'));
-
-    InitRequiredLabels("chartsettingscontainer")
+    $(container).appendTo($('.gridcontainer'));
 }
 
 function SaveBudgetSetting(id) {
@@ -2930,7 +2857,6 @@ function SaveBudgetSetting(id) {
     }, null);
 }
 
-
 function ValidChartSettingForm() {
     var validform = true;
 
@@ -2943,7 +2869,6 @@ function ValidChartSettingForm() {
 }
 
 function GetChartSetting() {
-
     var ledgerid = $('.chartLedgerId').val();
 
     MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
@@ -2952,7 +2877,6 @@ function GetChartSetting() {
             if (data.IsSuccessful) {
 
                 $('.hidLedgerId').val(data.Data.Id);
-                $('.ledgernamedisplay').text(data.Data.Name)
                 $('.capitalizeheaders').prop('checked', data.Data.CapitalizeHeaders);
                 $('.groupLevels').val(data.Data.AccountGroupLevels);
                 $('.accountGroup1Title').val(data.Data.AccountGroup1Title)
@@ -2968,7 +2892,6 @@ function GetChartSetting() {
 }
 
 function SaveChartSetting(id) {
-
     var data = {
         Id: $(id).val(),
         CapitalizeHeaders: $('.capitalizeheaders').prop('checked'),
@@ -3013,26 +2936,16 @@ function GroupLevelsChange() {
             break;
     }
 }
-
-
-function LoadEntitiesSectionSettings() {
-
-
-}
-function LoadChartAccountsSettingsSectionSettings() {
-
-
-
-}
+function LoadChartAccountsSettingsSectionSettings() {}
 
 /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
     var entityColumns = [
       
-      { dataField: 'Code', caption: 'Code' },
+      { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
       { dataField: 'Name', caption: 'Description' },
       {
           caption: 'Entity Type', cellTemplate: function (container, options) {
@@ -3052,16 +2965,10 @@ function LoadEntitiesSectionSettings() {
 
               $('<label>').text(entity).appendTo(container);
           }
-      },
-      {
-          caption: '', cellTemplate: function (container, options) {
-
-
-          }
       }
     ];
 
-    LoadGrid('.contentcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
+    LoadGrid('gridcontainer', 'bugridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
@@ -3069,34 +2976,37 @@ function LoadEntitiesSectionSettings() {
 
 function LoadFiscalYearSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
-    var selectledgergroup = $('<div>').addClass('twocolumn');
-    var selectledgername = $('<h1>').text('Fiscal Year Settings for Ledger: ');
+    var selectledgergroup = $('<div style="margin-bottom: 20px;">');
+    var selectledgername = $('<h2>').text('Ledger: ');
+
     $('<select>').addClass('LedgerId').appendTo(selectledgername);
     $(selectledgername).appendTo(selectledgergroup);
     $(selectledgergroup).appendTo(container);
 
     var gridgroup = $('<div>').addClass('twocolumn');
 
-    var fycontainer = $('<div>').addClass('fiscalyearcontainer');
+    var fycontainer = $('<fieldset style="display: none;">').addClass('fiscalyearcontainer');
+    $('<legend>').text('Fiscal Years').appendTo($(fycontainer));
     $('.gridcontainer').append($(fycontainer));
-    $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
+    // $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
 
     $('.fiscalperiodscontainer').remove();
-    var fpcontainer = $('<div>').addClass('fiscalperiodscontainer');
+    var fpcontainer = $('<fieldset style="display: none;">').addClass('fiscalperiodscontainer');
+    $('<legend>').text('Fiscal Perods').appendTo($(fpcontainer));
     $('.gridcontainer').append($(fpcontainer));
-    $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
+    // $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
 
     $(fycontainer).appendTo(gridgroup);
     $(fpcontainer).appendTo(gridgroup);
 
     $(gridgroup).appendTo(container);
-    $(container).appendTo($('.contentcontainer'));
+    $(container).appendTo($('.gridcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
         var ledgerid = $('.LedgerId').val();
 
@@ -3130,7 +3040,25 @@ function LoadFiscalYearSectionSettings() {
             },
         ];
 
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, null);
+        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
+
+            if (data.Data.length > 0) {
+                $('.fiscalyearcontainer').show();
+            }
+            else {
+                $('.fiscalyearcontainer').hide();
+            }
+
+        });
+
+
+
+    }, function (element, data) {
+
+        if (data.Data.length == 1) {
+            $(element).val(data.Data[0].Id);
+            $(element).change();
+        }
 
     });
 }
@@ -3138,14 +3066,13 @@ function LoadFiscalYearSectionSettings() {
 function LoadFiscalPeriods(info) {
 
     if (!info) {
-        var dataGrid = $('.taggroupsgrid').dxDataGrid('instance');
+        var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
     } else {
         selectedRow = info.data;
     }
-
-    /*
+        /*
     <option value="0">Open</option>
     <option value="1">Closed</option>
     <option value="2">Reopened</option>
@@ -3177,7 +3104,16 @@ function LoadFiscalPeriods(info) {
         }
     ]
 
-    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, null);
+    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
+
+        if (data.Data.length > 0) {
+            $('.fiscalperiodscontainer').show();
+        }
+        else {
+            $('.fiscalperiodscontainer').hide();
+        }
+
+    });
 
 }
 
@@ -3185,39 +3121,23 @@ function LoadFiscalPeriods(info) {
 function LoadFundAccountingSectionSettings() {
 
 
-    var fund = '';
-    var container = $('<div>').addClass('fundsettingscontainer onecolumn');
-
-    /* FISCAL YEAR */
-    $('.contentcontainer').empty();
-    var container = $('<div>').appendTo('.contentcontainer');
-    var header = $('<div>');
-    $('<label>').text('Setting for ').appendTo(header);
-    var fundnamedisplay = $('<label>').addClass('FundLedgerId').appendTo(header);
-    $('<hr>').addClass('').appendTo(header);
-    $(header).append('<br />').appendTo(container);
-
-    /* FUND */
-    var selectfiscalyeargroup = $('<div>').addClass('twocolumn');
-    var selectfiscalyearname = $('<label>').text('Fiscal Year: ');
-    $('<select>').addClass('selectfiscalyear').appendTo(selectfiscalyearname);
-    $(selectfiscalyearname).appendTo(selectfiscalyeargroup);
-    $(selectfiscalyeargroup).append('<br />').append('<br />').appendTo(container);
-
-    /* ACCOUNT/REVENUE/EXPENSE ACCORDION */
-    var selectfundgroup = $('<div>');
-    var selectfundname = $('<label>').text('Fund: ');
-    $('<select>').addClass('selectfund').appendTo(selectfundname);
-    $(selectfundname).appendTo(selectfundgroup);
-    $(selectfundgroup).appendTo(container);
+    var fund = ''; 
+     
+    $('.gridcontainer').empty();
+    var container = $('<div>').addClass('fundsettingscontainer onecolumn').appendTo('.gridcontainer');
+    
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'FundLedgerId', container, false); 
+    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'selectfiscalyear', container, true); 
+    CreateBasicFieldBlock('Fund: ', '<select>', 'selectfund', container, true); 
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
     var header = $('<h1>').text('G/L Account Settings ').appendTo($(accordions));
     $(accountrevenuegroup).appendTo($(accordions));
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
+    //CreateBasicFieldBlock('Fund Balance Aaccount: ', '<select>', 'selectfundbalanceaccount', selectfundbalanceaccountgroup, true); 
     var selectfundbalanceaccountgroup = $('<div>');
     var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
     $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
@@ -3260,7 +3180,6 @@ function LoadFundAccountingSectionSettings() {
 
         MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), JSON.stringify(item), function () {
 
-
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
             DisplaySuccessMessage('Success', 'Setting saved successfully.');
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
@@ -3270,20 +3189,18 @@ function LoadFundAccountingSectionSettings() {
     },
 
     'cancel', function (e) {
-
         e.preventDefault();
 
         LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-
     },
 
    accountrevenuegroup);
-
-   // var fiscalyearid = '';
-
-    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnit.Id + '?fields=all', null, function (data) {
+    
+    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
         var ledger = data.Data[0];
+        $('.FundLedgerId').val(ledger.Id);
         $('.FundLedgerId').text(ledger.Code);
+       
         fundid = $('.selectfund').val();
 
         //fiscalyearid = ledger.DefaultFiscalYearId;
@@ -3321,10 +3238,7 @@ function LoadFundAccountingSectionSettings() {
 
 
     }, null);
-    //function (xhr, status, err) {
-    //    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-    //}
-
+  
     /* BUSINESS UNIT & FUND DUE ACCORDION */
     var businessunitdue = $('<div>').addClass('businessunitduecontainer');
     var funddue = $('<div>').addClass('fundduecontainer');
@@ -3335,18 +3249,14 @@ function LoadFundAccountingSectionSettings() {
     var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordions));
     $(funddue).appendTo($(accordions));
 
-    $(accordions).appendTo($('.contentcontainer'));
+    $(accordions).appendTo($('.gridcontainer'));
 
     LoadAccordions();
-
 }
 
 /* POPULATING FUND FROM FISCAL YEAR GRID */
 function PopulateFundFromFiscalYear(fiscalyear, ledger, fundid) {
-
-    //PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
     
-
     PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', '', '', '', function () {
 
         fundid = $('.selectfund').val();
@@ -3384,15 +3294,11 @@ function LoadFundGLAccountSelector(fiscalyearid, ledger, fundid) {
             LoadSelectedAccount($('.selectclosingrevenueaccount'), fund.ClosingRevenueAccountId);
             LoadSelectedAccount($('.selectclosingexpenseaccount'), fund.ClosingExpenseAccountId);
         });
-
     }
 }
 
 /* POPULATING FUND DUE FROM FUND */
 function PopulateFundDueFromFund(fundid) {
-
-
-
     var fundduecolumns = [
               { dataField: 'Id', width: '0px' },
               { dataField: 'DisplayName', caption: 'Fund' },
@@ -3410,8 +3316,6 @@ function PopulateFundDueFromFund(fundid) {
 
 /* POPULATING BUSINESS UNIT */
 function PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger) {
-
-
     PopulateFundFromFiscalYear(fiscalyearid, ledger,$('.selectfund').val());
 
     var businessduecolumns = [
@@ -3423,14 +3327,10 @@ function PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger) {
         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
 
-      CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);
-    //LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', 'businessunitfromtos', null, 'bus-',
-    //'.businessunitduemodal', '', 250, false, false, false, null
-    //);
+      CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);   
 }
 
 function LoadFundSettings(fundid) {
-
     MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
 
         $('.selectfund').val(data.Data.fundid);
@@ -3439,17 +3339,14 @@ function LoadFundSettings(fundid) {
         $('.selectclosingexpenseaccount').val(data.Data.ClosingExpenseAccountId);
      
     }, null);
-  
-
-
 }
-function EditBusinessUnit(bufromtoid) {
 
+function EditBusinessUnit(bufromtoid) {
     MakeServiceCall('GET', 'businessunitfromtos/' + bufromtoid, null, function (data) {
         modal = $('.businessunitduemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 400,
+            width: 900,
             resizable: false,
             beforeClose: function (e) {
                 $('.bus-FromLedgerAccount').empty();
@@ -3458,15 +3355,15 @@ function EditBusinessUnit(bufromtoid) {
          
         });
 
-        $('.businessunitduemodal').show();
+        // $('.businessunitduemodal').show();
 
-                    
-            GLAccountSelector($('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-            GLAccountSelector($('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+        var foo = currentBusinessUnit;
+            GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+            GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
      
             
-            LoadSelectedAccount($('.bus-FromLedgerAccount'), data.Data.FromAccountId);
-            LoadSelectedAccount($('.bus-ToLedgerAccount'), data.Data.ToAccountId);
+            LoadSelectedAccount($(modal).find('.bus-FromLedgerAccount'), data.Data.FromAccountId);
+            LoadSelectedAccount($(modal).find('.bus-ToLedgerAccount'), data.Data.ToAccountId);
       
        //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
 
@@ -3518,8 +3415,6 @@ function EditBusinessUnit(bufromtoid) {
           
 
     }, null);
-
-
 }
 
 function EditFundDue(funddueid) {
@@ -3528,7 +3423,7 @@ function EditFundDue(funddueid) {
         modal = $('.fundduemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 400,
+            width: 900,
             resizable: false,
             beforeClose: function (e) {
                 $('.fn-DueFromAccount').empty();
@@ -3597,32 +3492,22 @@ function EditFundDue(funddueid) {
     }, null);
 }
 
-
 function LoadGLFormatSectionSettings() {
 
-    $('.contentcontainer').empty();
+    $('.gridcontainer').empty();
 
-    var container = $('<div>');
+    var container = $('<div>').addClass('twocolumn');
 
     var glaccountformat = '';
-
-    var selectledgergroup = $('<div>').addClass('twocolumn');
-    var selectledgername = $('<h1>').text('GL Format for Ledger: ');
-    $('<select>').addClass('LedgerId').appendTo(selectledgername);
-    $(selectledgername).appendTo(selectledgergroup);
-    $(selectledgergroup).appendTo(container);
-
-    var glformat = $('<div>').addClass('glformatcontainer');
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
+     
+    var glformat = $('<div>').addClass('glformatcontainer').css('display', 'block');
     $(glformat).appendTo($(container));
+    $(container).appendTo($('.gridcontainer'));
 
+    PopulateDropDown('.glf-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', $('.LedgerId').val(), function () {
 
-    $(container).appendTo($('.contentcontainer'));
-
-
-
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnit.Id, '', '', $('.LedgerId').val(), function () {
-
-        var ledgerId = $('.LedgerId').val();
+        var ledgerId = $('.glf-ledgerselect').val();
         var canDeleteSegmentLevels = false;
         var editModalClass = '';
 
@@ -3641,9 +3526,7 @@ function LoadGLFormatSectionSettings() {
 
                     canDeleteSegmentLevels = true;
                     editModalClass = '.glformatmodal';
-
                     NewModalLink('.glformatcontainer', 'segmentlevels', 'glformat-', editModalClass, 250, '');
-
                 }
                 else {
                     canDeleteSegmentLevels = false;
@@ -3696,38 +3579,13 @@ function LoadGLFormatSectionSettings() {
             {
                 caption: 'Separator', cellTemplate: function (container, options) {
                     var separator = 'None';
+                    options.data.Separator.replace(' ', '(Space)');
 
-                    switch (options.data.Separator) {
-                        case " ":
-                            separator = "(Space)";
-                            break;
-                        case "-":
-                            separator = "-";
-                            break;
-                        case ".":
-                            separator = ".";
-                            break;
-                        case ",":
-                            separator = ",";
-                            break;
-                        case "/":
-                            separator = "/";
-                            break;
-                        case "(":
-                            separator = "(";
-                            break;
-                        case ")":
-                            separator = ")";
-                            break;
-                        case "[":
-                            separator = "[";
-                            break;
-                        case "]":
-                            separator = "]";
-                            break;
-                    }
+                    if (options.data.Separator == '') {
+                        options.data.Separator = 'None';
+                    }                      
 
-                    $('<label>').text(separator).appendTo(container);
+                    $('<label>').text(options.data.Separator).appendTo(container);
                 }
             },
             {
@@ -3747,73 +3605,49 @@ function LoadGLFormatSectionSettings() {
                 }
             }
                 ];
-
-
+                
                 LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
                     editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
 
-                        $('.AccountFormat').remove();
-                        $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                        MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
 
+                            if (data && data.Data && data.IsSuccessful) {
+
+                                glaccountformat = data.Data.DisplayFormat;
+
+                            }
+                            else {
+                                glaccountformat = '';
+                            }
+                            $('.AccountFormat').remove();
+                            $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                        }, null);       
                     });
             }
-
-
-
         }, null);
-
-    });
-
-
-
-
-
-
-
+    });    
 }
 
 function LoadJournalSectionSettings() {
 
-    $('.contentcontainer').empty();
-
-
+    $('.gridcontainer').empty(); 
 }
 
 function LoadUtilitiesSectionSettings() {
 
-    $('.contentcontainer').empty();
-
-
+    $('.gridcontainer').empty(); 
 }
 /* END GENERAL LEDGER SETTINGS */
 
-
 /* REPORTS SETTINGS */
-function LoadPageFootersSectionSettings() {
+function LoadPageFootersSectionSettings() {}
 
+function LoadPageHeadersSectionSettings() {}
 
+function LoadReportFootersSectionSettings() {}
 
-}
-
-function LoadPageHeadersSectionSettings() {
-
-
-
-}
-
-function LoadReportFootersSectionSettings() {
-
-
-
-}
-
-function LoadReportHeadersSectionSettings() {
-
-
-
-}
+function LoadReportHeadersSectionSettings() {}
 /* END REPORTS SETTINGS */
-
 
 /* CUSTOM FIELDS */
 var modalLeft = 0;
@@ -3824,7 +3658,6 @@ function LoadCRMClientCustomFieldsSectionSettings() {
     DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.CRM); // CRM = 19
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.CRM, 'New CRM Custom Field');
-
 }
 
 function LoadDonationClientCustomFieldsSectionSettings() {
@@ -3832,7 +3665,6 @@ function LoadDonationClientCustomFieldsSectionSettings() {
     DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.Gifts); // Gifts = 9
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.Gifts, 'New Donations Custom Field');
-
 }
 
 function LoadGLClientCustomFieldsSectionSettings() {
@@ -3840,7 +3672,6 @@ function LoadGLClientCustomFieldsSectionSettings() {
     DisplayCustomFieldsGrid('gridcontainer', CustomFieldEntity.GeneralLedger); // GeneralLedger = 1
 
     CreateNewCustomFieldModalLink(CustomFieldEntity.GeneralLedger, 'New General Ledger Custom Field');
-
 }
 
 function RefreshCustomFieldsGrid() {
@@ -3848,12 +3679,11 @@ function RefreshCustomFieldsGrid() {
     $('.gridcontainer').html('');
 
     DisplayCustomFieldsGrid('gridcontainer', currentCustomFieldEntity);
-
 }
 
 function CreateNewCustomFieldModalLink(entity, title) {
 
-    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field').appendTo($('.gridcontainer'));
+    var modallink = $('<a>').attr('href', '#').addClass('customfieldmodallink').text('New Custom Field');
     $('.gridcontainer').before($(modallink));
 
     $(modallink).unbind('click');
@@ -3863,9 +3693,7 @@ function CreateNewCustomFieldModalLink(entity, title) {
         e.preventDefault();
 
         CreateNewCustomFieldModal(entity, title);
-
     });
-
 }
 
 function CreateNewCustomFieldModal(entity, title) {
@@ -3888,9 +3716,7 @@ function CreateNewCustomFieldModal(entity, title) {
 
     $('<option>').text('').val('').appendTo($(type));
     $.each(CustomFieldType, function (key, value) {
-
         $('<option>').text(key).val(value).appendTo($(type));
-
     });
 
     $('.addoption').click(function () {
@@ -3900,19 +3726,15 @@ function CreateNewCustomFieldModal(entity, title) {
     $(type).change(function () {
 
         CustomFieldTypeSelected($(this).val());
-
     });
 
     $(save).unbind('click');
 
     $(save).click(function () {
-
         SaveCustomField(modal);
-
     });
 
     $('.cancelmodal').click(function (e) {
-
         e.preventDefault();
 
         ClearModal(modal);
@@ -3921,9 +3743,7 @@ function CreateNewCustomFieldModal(entity, title) {
         $('.fieldproperties').attr('style', 'width: 100%');
 
         $(modal).dialog('close');
-
     });
-
 }
 
 function AddOption() {
@@ -3965,7 +3785,6 @@ function ClearModal(modal) {
     $(modal).find('select').not('.noclear').each(function () {
         $(this).html('');
     });
-
 }
 
 function CustomFieldTypeSelected(selectedvalue) {
@@ -4040,9 +3859,7 @@ function CustomFieldTypeSelected(selectedvalue) {
 
         $('.minmaxvalues').hide()
         $('.decimalplacecontainer').hide();
-
     }
-
 }
 
 function SaveCustomField(modal) {
@@ -4088,13 +3905,10 @@ function SaveCustomField(modal) {
     }
 
     if (options && options.length > 0) {
-
         data.Options = options;
-
     }
 
     SendCustomField(method, 'customfields', data, modal);
-
 }
 
 function SendCustomField(method, route, data, modal) {
@@ -4109,11 +3923,9 @@ function SendCustomField(method, route, data, modal) {
             RefreshCustomFieldsGrid();
 
             CreateNewCustomFieldModalLink(currentCustomFieldEntity, '');
-
         }
 
     }, null);
-
 }
 /* END CUSTOM FIELDS */
 
