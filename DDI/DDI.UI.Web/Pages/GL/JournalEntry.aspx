@@ -11,9 +11,9 @@
 
     <div class="journaltypeselect" style="display: none">
         <div class="threecolumn">
-            <img src="../../Images/Calendar_16.png" alt="One-Time Journal" class="onetimejournaloption" />
-            <img src="../../Images/Calendar1_16.png" alt="Recurring Journal" class="recurringjournaloption" />
-            <img src="../../Images/Calendar5_16.png" alt="Journal Template" class="journaltemplateoption" />
+            <img src="../../Images/OneTimeJournal.gif" alt="One-Time Journal" class="onetimejournaloption" />
+            <img src="../../Images/RecurringJournal.gif" alt="Recurring Journal" class="recurringjournaloption" />
+            <img src="../../Images/TemplateJournal.gif" alt="Journal Template" class="journaltemplateoption" />
         </div>
     </div>
 

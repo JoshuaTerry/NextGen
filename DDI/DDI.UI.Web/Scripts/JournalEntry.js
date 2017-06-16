@@ -7,14 +7,6 @@ var journalContainer = '.journalbody'
 
 //$(document).ready(function () {
 function JournalDetailLoad() {
-    //if (sessionStorage.getItem('journalid')) {
-    //    $('.hidjournalid').val(sessionStorage.getItem('journalid'))
-    //}
-    //else {
-    //    $('.hidjournalid').val('')
-    //}
-    //$('.hidjournalid').val(journalId)       // testing
-
     $('.editjournal').click(function (e) {
         e.preventDefault()
         JournalEditMode()
@@ -39,7 +31,7 @@ function JournalDetailLoad() {
     })
 
     JournalLoad()
-    InitJournalLineModal()
+    InitNewJournalLineModal()
 }
 
 function JournalDisplayMode() {
@@ -51,8 +43,7 @@ function JournalDisplayMode() {
         $(this).prop('disabled', true)
 
     })
-    $('.journallinegrid').prop('disabled', true)
-    $('.newjournalentrymodallink').prop('disabled', true)
+    $('.newjournallinemodallink').hide()
     FormatFields()
 }
 
@@ -61,16 +52,14 @@ function JournalAddMode() {
     MaskFields()
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
-    $('.journallinegrid').prop('disabled', false)
-    $('.newjournalentrymodallink').prop('disabled', false)
+    $('.newjournallinemodallink').show()
 }
 
 function JournalEditMode() {
     editMode = 'edit'
     $('.editjournalbutton').hide()
     $('.savejournalbuttons').show()
-    $('.journallinegrid').prop('disabled', false)
-    $('.newjournalentrymodallink').prop('disabled', false)
+    $('.newjournallinemodallink').show()
 
     MaskFields()
 
@@ -303,8 +292,7 @@ function LoadJournalLineGrid(data) {
 
 // modal section
 
-function InitJournalLineModal() {
-
+function InitNewJournalLineModal() {
 
     $('.newjournallinemodallink').click(function (e) {
 
@@ -315,8 +303,11 @@ function InitJournalLineModal() {
         modal = $('.journallinemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 500,
-            resizable: false
+            width: 900,
+            resizable: false,
+            beforeClose: function (e) {
+                $('.journallineledgeraccountid').empty();
+            }
         });
 
         $('.canceljournallinemodal').click(function (e) {
@@ -354,15 +345,21 @@ function InitJournalLineModal() {
 
 function EditJournalLineModal(id) {
 
+    if (editMode === 'display') {
+        return
+    }
+
     var modal = $('.journallinemodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
-        resizable: false
+        width: 900,
+        resizable: false,
+        beforeClose: function (e) {
+            $('.journallineledgeraccountid').empty();
+        }
     });
 
     LoadJournalLine(id);
-
 
     $('.canceljournallinemodal').click(function (e) {
 
@@ -394,9 +391,35 @@ function EditJournalLineModal(id) {
         });
 
     });
+    $('.savenewjournalline').unbind('click');
+
+    $('.savenewjournalline').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetJournalLineToSave();
+
+        MakeServiceCall('PATCH', 'JournalLine/' + id, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Journal Line saved successfully.');
+
+            CloseModal(modal);
+
+            LoadJournalLineGrid();
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Journal Line.');
+        });
+
+    });
 }
 
 function DeleteJournalLine(id) {
+
+    if (editMode === 'display') {
+        return
+    }
 
     MakeServiceCall('DELETE', 'JournalLines/' + id, null, function (data) {
 

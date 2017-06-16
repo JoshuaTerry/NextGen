@@ -87,7 +87,7 @@
             <br />
 
             <div>
-                <a href="#" class="newjournallinemodallink">New Item</a>
+                <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
                 <div class="journallinegridcontainer">
                     <div class="journallinegrid"></div>
                 </div>
@@ -96,9 +96,9 @@
             <br />
             <br />
 
-            <div class="savejournallinebuttons hidebuttons floatright">
-                <input type="button" class="savejournalline" value="Save" />
-                <a href="#" class="cancelsavejournalline">Cancel</a>
+            <div class="savejournalbuttons hidebuttons floatright">
+                <input type="button" class="savejournal" value="Save" />
+                <a href="#" class="cancelsavejournal">Cancel</a>
             </div>
 
 
@@ -111,29 +111,46 @@
         <div class="modalcontent">
 
             <div class="journallineaccountgroup">
-                <label class="accountselectorlabel">GL Account: </label>
+                <select class="SourceFundId">
+
+                </select>
+                <div>
+                    <label class="accountselectorlabel">GL Account: </label>
+                    <div class="journallineledgeraccountid"></div>
+                </div>
             </div>
 
-            <div class="threecolumn">
-                <div class="fieldblock">
+            <div class="twocolumn">
+                <span class="fieldblock">
                     <label>Amount: </label>
                     <input type="text" class="Amount editable money justright" />
-                </div>
+                </span>
 
-                <div class="fieldblock">
-                    <input type="radio" name="debitcreditradio" value="Debit" />
-                    Debit<br />
-                    <input type="radio" name="debitcreditradio" value="Credit" />
-                    Credit<br />
-                </div>
+                <span class="fieldblock">
+                    <span>
+                        <input type="radio" name="debitcreditradio" value="Debit" />
+                        <label>Debit</label>
+                    </span>
+                    <span>
+                        <input type="radio" name="debitcreditradio" value="Credit" />
+                        <label>Credit</label>
+                        <br />
+                    </span>
+                </span>
 
-                <div class="fieldblock">
-                    <textarea rows="2" cols="70" maxlength="255" class="JournalLineComment"></textarea>
-                </div>
             </div>
 
-            <div class="threecolumn">
-                <div class="fieldblock">
+            <br />
+
+            <div class="fieldblock">
+                <label>Memo:</label>
+                <textarea rows="2" cols="70" maxlength="255" class="JournalLineComment"></textarea>
+            </div>
+
+            <br />
+
+            <div class="twocolumn">
+                <span class="fieldblock">
                     <label>Due: </label>
                     <select class="DoToMode editable">
                         <option value="0">None</option>
@@ -143,12 +160,14 @@
                     <label>Fund: </label>
                     <select class="SourceFundId">
                     </select>
-                </div>
+                </span>
             </div>
 
+            <br />
+
             <div class="modalbuttons">
-                <input type="button" class="savenewjournallinebutton" value="Save/New" />
-                <input type="button" class="savejournallinebutton" value="Save" />
+                <input type="button" class="savenewjournalline" value="Save/New" />
+                <input type="button" class="savejournalline" value="Save" />
                 <a href="#" class="canceljournallinemodal">Cancel</a>
             </div>
 

@@ -1733,8 +1733,8 @@ function MaskFields() {
         if ($(this).val() != null && $(this).val() != '') {
             $(this).val($.datepicker.formatDate('mm/dd/yy', new Date($(this).val())));
         }
-        $(this).mask('00/00/0000');
     })
+    $('.date').mask('00/00/0000');
 
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
