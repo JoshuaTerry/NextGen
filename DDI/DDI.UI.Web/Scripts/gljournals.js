@@ -27,6 +27,10 @@ $(document).ready(function () {
         DoSearch();
     });
 
+    $('.addnewjournal').click(function () {
+        addnewjournal();
+    });
+
     $(window).resize(function () {
         Resize();
     });
@@ -47,7 +51,7 @@ function Resize() {
 function AddColumnHeaders() {
 
     var header = $('.searchresultstable thead');
-    var columns = ['ID', 'Journal#', 'JournalType', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Year', 'Status'];
+    var columns = ['ID', 'Journal#', 'JournalType', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Created Date', 'Status'];
     var tr = $('<tr>');
 
     $(columns).each(function () {
@@ -62,6 +66,8 @@ function AddColumnHeaders() {
 function DoSearch() {
 
     var parameters = GetSearchParameters();
+
+
 
     $.ajax({
         url: WEB_API_ADDRESS + 'journals/?' + parameters,
@@ -88,8 +94,7 @@ function DoSearch() {
                         { dataField: 'Amount', caption: 'Amount' },
                         { dataField: 'CreatedBy', caption: 'Created By' },
                         { dataField: 'CreatedOn', caption: 'Year' },
-                       
-                        
+
                     ],
                     paging: {
                         pageSize: 15
@@ -108,9 +113,10 @@ function DoSearch() {
                         visible: true,
                         showOperationChooser: false
                     },
+
                     onRowClick: function (info) {
                      
-                        DisplayJournals(info.values[0]);
+                       DisplayJournals(info.values[0]);
                     }
                 });
 
@@ -158,11 +164,102 @@ function GetSearchParameters() {
 function DisplayJournals(id) {
 
     sessionStorage.setItem("ID", id);
-    location.href = "Journals.aspx";
+    location.href = "../Admin/SystemSettings.aspx";
 
 }
 
+function addnewjournal() {
 
+   // sessionStorage.setItem("ID", id);
+    location.href = "../Admin/SystemSettings.aspx";
+
+}
+
+function EditBusinessUnit(bufromtoid) {
+
+    MakeServiceCall('GET', 'businessunitfromtos/' + bufromtoid, null, function (data) {
+        modal = $('.businessunitduemodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            resizable: false,
+            beforeClose: function (e) {
+                $('.bus-FromLedgerAccount').empty();
+                $('.bus-ToLedgerAccount').empty();
+            }
+
+        });
+
+        $('.businessunitduemodal').show();
+
+
+        GLAccountSelector($('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+        GLAccountSelector($('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+
+
+        LoadSelectedAccount($('.bus-FromLedgerAccount'), data.Data.FromAccountId);
+        LoadSelectedAccount($('.bus-ToLedgerAccount'), data.Data.ToAccountId);
+
+        //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
+
+        //$('.bus-ToLedgerAccount').val(data.Data.ToLedgerAccount.AccountNumber);
+
+
+        $('.cancelbusinessunitduedetailsmodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+
+            PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
+
+            $('.bus-FromLedgerAccount').empty();
+            $('.bus-ToLedgerAccount').empty();
+
+        });
+
+        $('.Savebusinessunitduedetails').unbind('click');
+
+        $('.Savebusinessunitduedetails').click(function () {
+
+            var item = {
+                FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
+                ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
+
+            }
+
+            MakeServiceCall('PATCH', 'businessunitfromtos/' + bufromtoid, JSON.stringify(item), function (data) {
+
+                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
+                CloseModal(modal);
+                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
+                // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
+                $('.bus-FromLedgerAccount').empty();
+                $('.bus-ToLedgerAccount').empty();
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Business Due.');
+
+            });
+
+
+
+        });
+
+
+
+    }, null);
+
+
+}
+
+function DisplayJournal(id) {
+
+    sessionStorage.setItem("id", id);
+    location.href = "/Admin/SystemSettings.aspx";
+
+}
 
 
 function LoadjournalsaccountSettings() {
@@ -195,8 +292,13 @@ function LoadjournalsaccountSettings() {
          
         ];
 
-        LoadGrid('.journalsinquirycontainer', 'journalsinquiry', journalsinquirycolumns, 'journals?fields=all', '', null, '',
-        '.journalsinquirymodal', '', 250, false, false, false, null);
+                CustomLoadGrid('journalsinquiry', '.journalsinquirycontainer', journalsinquirycolumns, 'journals?fields=all', null, EditBusinessUnit, null, null);
+        //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
+
+       // CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);
+        //LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', 'businessunitfromtos', null, 'bus-',
+        //'.businessunitduemodal', '', 250, false, false, false, null
+        //
     }
 
 }

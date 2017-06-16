@@ -62,10 +62,10 @@ div.tagscontainer { height: 50vh }
 .searchcriteria div.fieldblock input,
 .searchcriteria div.fieldblock select { width: 100%; }
 .searchcriteria div.buttons { margin-top: 10px; }
-
+    
 .searchcriteria fieldset { background-color: white; }
 
-.searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
+.searchresults { width: 80%; display: inline-block; float:right; margin: 10px 0 0 1%; background-color: white; vertical-align: top; ali}
 .searchresults div.scrollable { width: 100%; }
 
 
