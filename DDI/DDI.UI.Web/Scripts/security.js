@@ -2,17 +2,61 @@
 
 $(document).ready(function () {
 
-   // SetupNewUserModal();
+    $('.groupnav').click(function (e) {
 
-    LoadGroupsGrid();
-    LoadRolesTagBox();
+        e.preventDefault();
 
+        ShowGroupSection();
 
-    NewGroupModal();
-    PopulateDropDown('.ConstituentId', 'constituents', '', '');
-    LoadUsersGrid();
+    });
+
+    $('.usernav').click(function (e) {
+
+        e.preventDefault();
+
+        ShowUsersSection();
+
+    });
+
+    ShowGroupSection();
 
 });
+
+function ShowGroupSection() {
+
+    $('li').removeClass('selected');
+
+    $('.groupscotainer').show();
+    $('.userscontainer').hide();
+
+    $('.groupnav').parent().addClass('selected');
+
+}
+
+function LoadGroups() {
+
+    $('.groupselectcontainer').show();
+
+
+
+}
+
+function ShowUsersSection() {
+
+    $('li').removeClass('selected');
+
+    $('.userscontainer').show();
+    $('.groupscotainer').hide();
+
+    $('.usernav').parent().addClass('selected');
+
+}
+
+function LoadUsers() {
+
+    $('.userselectcontainer').show();
+
+}
 
 function SetupNewUserModal() {
 

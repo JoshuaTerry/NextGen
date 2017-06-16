@@ -14,6 +14,12 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .floatleft {float: left}
 .floatright {float: right}
 
+/* ICONS */
+
+.view-icon { background: url('../../Images/Search_Mono_16.png') no-repeat; width: 16px; height: 16px; margin: 0px; padding: 0px; }
+
+/* END ICONS */
+
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
 .editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }

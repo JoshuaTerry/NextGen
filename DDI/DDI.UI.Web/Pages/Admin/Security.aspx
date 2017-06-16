@@ -11,116 +11,56 @@
 
     <div class="adminsecurity">
 
-        <div class="tabscontainer">
-
+        <div class="securitynav">
             <ul>
-                <li><a href="#tab-groups">Groups</a></li>
-                <li><a href="#tab-users">Users</a></li>
+                <li><a href="#" class="groupnav">Groups</a></li>
+                <li><a href="#" class="usernav">Users</a></li>
             </ul>
+        </div>
 
-            <!-- Groups Tab -->
-            <div id="tab-groups">
-                <h1 class="GroupsSectionLabel">Groups</h1>
-                <div class="newlinkcontainer"><a href="#" class="newgroupmodal newlink">New Group</a></div>
-                <div class="groupstable"></div>
-            </div>
+        <div class="contentcontainer groupscotainer" style="display: none;">
 
-            <div class="groupmodal" title="Groups" style="display: none;">
+            <h1>Groups</h1>
+
+            <div class="groupselectcontainer"></div>
+
+            <div class="groupdetailscontainer">
 
                 <input type="hidden" class="hidgroupid" />
 
-                <div class="modalcontent">
+                <div class="fieldblock">
+                    <label>Name</label>
+                    <input type="text" class="gp-Name" maxlength="128" />
+                </div>
 
-                    <div class="fieldblock">
-                        <label>Name:</label>
-                        <input type="text" class="gp-Name required" maxlength="128" />
+                <div class="accordions">
+
+                    <h1>Roles</h1>
+                    <div>
+                        <div class="grouprolesgridcontainer"></div>
                     </div>
 
-                    <div class="rolesmodal" style="display: none;">
-
-                        <div class="fieldblock">
-                            <label>Roles:</label>
-                            <div class="gp-rolesdropdowncontainer"></div>
-                        </div>
-                    
-                        <div class="modalbuttons roleaddbuttons">
-                            <input type="button" class="saverolesbutton" value="Add" />
-                            <a href="#" class="cancelrolesmodal">Cancel</a>
-                        </div>
-
-                    </div>
-
-                    <div class="rolesgriditems" style="display: none;">
-
-                        <div class="rolesgridcontainer"></div>
-
-                        <input type="button" class="addrolesbutton" value="Add Roles" />
-                    </div>
-
-                    <div class="modalbuttons">
-                        <input type="button" class="savegroupbutton" value="Save" />
-                        <a href="#" class="cancelgroupmodal">Cancel</a>
+                    <h1>Users in Group</h1>
+                    <div>
+                        <div class="groupusersgridcontainer"></div>
                     </div>
 
                 </div>
 
             </div>
 
-            
-
-            <!-- Users Tab -->
-            <div id="tab-users">
-                <div class="usersgridcontainer">
-                    <div class="usergrid"></div>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <div class="newgroupmodal " title="New Group" style="display: none;">
-        <div class="modalcontent">
-        </div>
-    </div>
+        <div class="contentcontainer userscontainer" style="display: none;">
 
-    <div class="usermodal" title="New User" style="display: none;">
-        <div class="modalcontent">
+            <h1>Users</h1>
 
-            <div class="fieldblock">
-                <label>Email</label>
-                <input type="email" name="email" class="user-Email" />
-            </div>
+            <div class="userselectcontainer"></div>
 
-            <div class="fieldblock">
-                <label>Password</label>
-                <input type="password" name="password" class="user-Password" />
-            </div>
+            <div class="userdetailscontainer">
 
-            <div class="fieldblock">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
-            </div>
 
-            <div class="fieldblock">
-                <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select>
-            </div>
 
-            <div class="fieldblock">
-                <div class="businessUnits">
-                </div>
-            </div>
-
-            <div class="fieldblock">
-                 <div class="fieldblock">
-                    <input type="hidden" class="rs-Constituent1Id" />
-                    <label>Constituent</label>
-                    <input type="text" class="rs-Constituent1Information constituentlookup" maxlength="128" />
-                </div>
-            </div>
-
-            <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
             </div>
 
         </div>
