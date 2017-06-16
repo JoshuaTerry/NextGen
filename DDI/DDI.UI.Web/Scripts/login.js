@@ -90,6 +90,8 @@ function Login() {
 
                 sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
 
+                LoadCurrentUser();
+
             }, null);
             // set user id
 

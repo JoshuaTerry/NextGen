@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     LoadDefaultAuthToken();
 
-    LoadCurrentUser();
+    //LoadCurrentUser();
 
     LoadCurrentBusinessUnit();
 
@@ -114,6 +114,9 @@ function LoadDefaultAuthToken() {
 
                         sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
 
+                        LoadCurrentUser(data);
+
+
                     }, null);
 
                     location.href = "/Default.aspx";
@@ -128,12 +131,13 @@ function LoadDefaultAuthToken() {
 
 }
 
-function LoadCurrentUser() {
+function LoadCurrentUser(data) {
 
-    var userId = sessionStorage.getItem('CURRENT_USER_ID');
+    //var userId = sessionStorage.getItem('CURRENT_USER_ID');
+
     if (currentBusinessUnitId === null) {
 
-        MakeServiceCall('GET', 'users/' + userId, null, function (data) {
+        //MakeServiceCall('GET', 'users/' + userId, null, function (data) {
 
             if (data.Data.DefaultBusinessUnitId === null) {
 
@@ -153,7 +157,7 @@ function LoadCurrentUser() {
 
             }
 
-        });
+        //});
 
     }
 
@@ -169,8 +173,13 @@ function LoadCurrentBusinessUnit() {
     currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
     
     if (currentBusinessUnitId == null) {
-        
-        LoadCurrentUser();
+
+
+    } else {
+
+
+        $('.editbusinessunit').text($('.bu-currentbu').val());
+
 
     }
     
@@ -1641,7 +1650,7 @@ function BusinessUnitModal() {
 
 
             MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', null, function (data) {
-
+                // just need to get user
                 businessunits = data.Data
 
                 $.each(businessunits, function (index, value) {
@@ -1650,6 +1659,9 @@ function BusinessUnitModal() {
 
                         currentBusinessUnit = value; 
                         sessionStorage.setItem('CURRENT_BUSINESS_UNIT', value.Id);
+
+                        $('.editbusinessunit').text(value.DisplayName);
+
 
                         window.location.reload();
                     }
