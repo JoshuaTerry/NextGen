@@ -13,8 +13,7 @@ namespace DDI.Services.ServiceInterfaces
     {
         IDataResponse AddUserToGroup(Guid userId, Guid groupId);
         IDataResponse RemoveUserFromGroup(Guid userId, Guid groupId);
-        IDataResponse<Group> AddRolesToGroup(Guid groupId, JObject roleIds);
-        IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, Guid roleId);
+        IDataResponse<Group> UpdateGroupRoles(Guid groupId, JObject roleIds);
 
     }
 }

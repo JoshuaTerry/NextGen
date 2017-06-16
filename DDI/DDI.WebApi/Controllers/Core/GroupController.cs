@@ -84,12 +84,11 @@ namespace DDI.WebApi.Controllers.Core
 
         [HttpPost]
         [Route("api/v1/groups/{groupId}/roles/")]
-        public IHttpActionResult AddRolesToGroup(Guid groupId, [FromBody] JObject roles, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult UpdateGroupRoles(Guid groupId, [FromBody] JObject roles)
         {
             try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.AddRolesToGroup(groupId, roles);
+            { 
+                var response = Service.UpdateGroupRoles(groupId, roles);
                 return FinalizeResponse(response);
             }
             catch (Exception ex)
@@ -111,23 +110,6 @@ namespace DDI.WebApi.Controllers.Core
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
-        }
-
-        [HttpPatch]
-        [Route("api/v1/groups/remove/{groupId}/role")]
-        public IHttpActionResult RemoveRolesFromGroup(Guid groupId, [FromBody] Guid role, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
-        {
-            try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.RemoveRolesFromGroup(groupId, role);
-                return FinalizeResponse(response);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.ToString);
-                return InternalServerError();
-            }
-        }
+        }         
     }
 }
