@@ -18,10 +18,10 @@
             </ul>
         </div>
 
-        <div class="contentcontainer groupscotainer" style="display: none;">
+        <div class="contentcontainer groupscontainer" style="display: none;">
 
             <h1>Groups</h1>
-
+            <hr />
             <div class="groupselectcontainer"></div>
 
             <div class="groupdetailscontainer">
@@ -54,6 +54,7 @@
         <div class="contentcontainer userscontainer" style="display: none;">
 
             <h1>Users</h1>
+            <hr />
 
             <div class="userselectcontainer"></div>
 

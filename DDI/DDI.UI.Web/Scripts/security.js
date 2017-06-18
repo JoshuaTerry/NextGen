@@ -26,10 +26,12 @@ function ShowGroupSection() {
 
     $('li').removeClass('selected');
 
-    $('.groupscotainer').show();
+    $('.groupscontainer').show();
     $('.userscontainer').hide();
 
     $('.groupnav').parent().addClass('selected');
+
+    LoadGroups();
 
 }
 
@@ -37,7 +39,45 @@ function LoadGroups() {
 
     $('.groupselectcontainer').show();
 
+    MakeServiceCall('GET', 'groups', null, function (data) {
 
+        var groups = $('<ul>');
+
+        $.map(data.Data, function(item) {
+
+            var group = $('<li>').text(item.Name).click(function () {
+                // Select the group
+                LoadGroup(item.Id);
+
+                $(this).parent().find('li').removeClass('selected');
+                $(this).addClass('selected');
+            });
+
+            $(groups).append($(group));
+
+        });
+
+        $('.groupselectcontainer').append($(groups));
+
+    }, null)
+
+}
+
+function LoadGroup(id) {
+
+    MakeServiceCall('GET', 'groups/' + id, null, function (data) {
+
+        $('.gp-Name').val(data.Data.DisplayName);
+
+    });
+
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Name' }
+    ];
+
+    LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'group/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
+
+    // CustomLoadGrid('rolesgrid', '.grouprolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null);
 
 }
 
@@ -46,7 +86,7 @@ function ShowUsersSection() {
     $('li').removeClass('selected');
 
     $('.userscontainer').show();
-    $('.groupscotainer').hide();
+    $('.groupscontainer').hide();
 
     $('.usernav').parent().addClass('selected');
 
@@ -384,21 +424,6 @@ function DeleteGroup(id) {
 
 }
 
-function LoadGroup(id) {
-
-    var columns = [
-        { dataField: 'DisplayName', caption: 'Roles' }
-    ];
-
-    MakeServiceCall('GET', 'groups/' + id, null, function (data) {
-
-        $('.gp-Name').val(data.Data.DisplayName);
-
-    });
-
-    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null); 
-
-}
 
 function DeleteRole(role) {
 
