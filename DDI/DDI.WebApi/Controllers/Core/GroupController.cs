@@ -20,7 +20,8 @@ namespace DDI.WebApi.Controllers.Core
     { 
         protected override string FieldsForAll => FieldListBuilder
             .Include(p => p.DisplayName)
-            .Include(p => p.Roles);
+            .Include(p => p.Roles)
+            .Include(p => p.Users);
 
         protected override string FieldsForSingle => FieldListBuilder
             .Include(p => p.DisplayName)
@@ -76,6 +77,30 @@ namespace DDI.WebApi.Controllers.Core
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/group/{groupId}/users")]
+        public IHttpActionResult GetUsersByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var group = Service.GetById(groupId);
+                var users = group.Data.Users.ToList();
+
+                var response = new DataResponse<List<User>>
+                {
+                    Data = users,
+                    IsSuccessful = true
+                };
+
+                return FinalizeResponse<User>(response, "", search, ConvertFieldList(fields, FieldsForList));
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
+        }
         [HttpPost]
         [Route("api/v1/groups")]
         public IHttpActionResult Post([FromBody] Group entityToSave)
