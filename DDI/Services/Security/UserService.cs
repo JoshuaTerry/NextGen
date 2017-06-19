@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Newtonsoft.Json.Linq;
+using DDI.Shared.Extensions;
 
 namespace DDI.Services.Security
 {
@@ -63,6 +65,43 @@ namespace DDI.Services.Security
             IDataResponse response = new DataResponse<User>
             {
                 Data = result,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+        public IDataResponse UpdateUserBusinessUnits(Guid userId, JObject collection)
+        {
+            var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
+             
+            IDataResponse response = null;
+            List<BusinessUnit> newBUs = new List<BusinessUnit>();
+            List<BusinessUnit> existingBUs = new List<BusinessUnit>();
+
+            foreach (var pair in collection)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    newBUs.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<BusinessUnit>(id));
+                }
+            }
+
+            existingBUs = user.BusinessUnits.ToList();
+
+            var removes = existingBUs.Except(newBUs);
+            var adds = newBUs.Except(existingBUs);
+
+            if (user != null)
+            {
+                removes.ForEach(e => user.BusinessUnits.Remove(e));
+                adds.ForEach(e => user.BusinessUnits.Add(e));
+            }
+
+            UnitOfWork.SaveChanges();
+
+            response = new DataResponse()
+            {
                 IsSuccessful = true
             };
 
