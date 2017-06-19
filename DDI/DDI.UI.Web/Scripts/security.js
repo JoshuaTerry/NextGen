@@ -1,5 +1,4 @@
-﻿var currentGroup = null;
-
+﻿
 $(document).ready(function () {
 
     $('.groupnav').click(function (e) {
@@ -432,180 +431,210 @@ function SaveUser(id) {
 
 }
 
+function LoadUserGroups() {
+
+    var userid = $('.hiduserid').val();
+
+    modal = $('.usergroupsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
+    });
+
+    $(modal).find('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(modal).find('.saveusergroups').unbind('click');
+
+    $(modal).find('.saveusergroups').click(function () {
+
+        var groupIds = []
+
+        $(modal).find('.usergroupsselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                groupIds.push($(v).attr('id'));
+            }
+        });
+
+        var item = {
+            groups: groupIds
+        }
+
+        MakeServiceCall('POST', 'users/' + userid + '/groups', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+
+            LoadUser(userid);
+        }, null);
+
+    });
+
+    MakeServiceCall('GET', 'groups', null, function (data) {
+
+        $('.usergroupsselection div').empty();
+
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
+
+        // display all groups
+        $.map(data.Data, function (item) {
+
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
+
+            if (cid === 0) {
+
+                $(field).appendTo($(left));
+
+                cid = 1;
+            }
+            else {
+
+                $(field).appendTo($(right));
+
+                cid = 0;
+            }
 
 
+            $(modal).find('.usergroupsselection').append($(concon));
+
+        });
+
+        // check selected groups
+        if (userid) {
+
+            MakeServiceCall('GET', 'users/' + userid + '/groups', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
 
 
+    }, null);
+
+}
+
+function LoadUserBusinessUnits() {
+
+    var userid = $('.hiduserid').val();
+
+    modal = $('.userbusinessunitsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
+    });
+
+    $(modal).find('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(modal).find('.saveuserbu').unbind('click');
+
+    $(modal).find('.saveuserbu').click(function () {
+
+        var buIds = []
+
+        $(modal).find('.userbuselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                buIds.push($(v).attr('id'));
+            }
+        });
+
+        var item = {
+            businessUnits: buIds
+        }
+
+        MakeServiceCall('POST', 'users/' + userid + '/businessunits', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+
+            LoadUser(userid);
+        }, null);
+
+    });
+
+    MakeServiceCall('GET', 'businessunits', null, function (data) {
+
+        $('.userbuselection div').empty();
+
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
+
+        // display all business units
+        $.map(data.Data, function (item) {
+
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
+
+            if (cid === 0) {
+
+                $(field).appendTo($(left));
+
+                cid = 1;
+            }
+            else {
+
+                $(field).appendTo($(right));
+
+                cid = 0;
+            }
 
 
+            $(modal).find('.userbuselection').append($(concon));
+
+        });
+
+        // check selected business unit
+        if (userid) {
+
+            MakeServiceCall('GET', 'users/' + userid + '/businessunits', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
 
 
+    }, null);
 
-
-//function SetupNewUserModal() {
-
-//    $('.addnewuser').click(function (e) {
-
-//        e.preventDefault();
-
-//        $('.newusermodal').dialog({
-//            closeOnEscape: false,
-//            modal: true,
-//            width: 400,
-//            height: 225,
-//            resizable: false
-//        });
-
-//        $('.submitnewuser').click(function () {
-
-//            var model = {
-//                Email: $('.newusername').val(),
-//                Password: $('.newpassword').val(),
-//                ConfirmPassword: $('.newconfirmpassword').val()
-//            }
-
-//            $.ajax({
-//                type: 'POST',
-//                url: WEB_API_ADDRESS + 'users',
-//                data: model,
-//                contentType: 'application/x-www-form-urlencoded',
-//                crossDomain: true,
-//                headers: GetApiHeaders(),
-//                success: function () {
-
-//                    AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
-
-//                    location.href = "/Login.aspx";
-
-//                },
-//                error: function (xhr, status, err) {
-//                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-//                }
-//            });
-
-//        });
-
-//    });
-
-//}
-
-//function LoadSecuritySettingsGrid() {
-
-//    var columns = [
-//        { dataField: 'UserId', caption: 'User ID' },
-//        { dataField: 'Name', caption: 'Name' }
-//    ];
-
-//    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
-
-//}
-
-//function LoadUsersGrid() {
-
-//    var columns = [
-//        { dataField: 'DisplayName', caption: 'User Name' },
-//        { dataField: 'Email', caption: 'Email Address' },
-//        { caption: 'Active', cellTemplate: function (container, options) {
-//                var type = 'Yes';
-
-//                if (options.data.IsActive != '1') {
-//                    type = 'No';
-//                }
-//                $('<label>').text(type).appendTo(container);
-//            }
-//        }
-//    ];
-
-//    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-//   // PopulateBusinessUnits();
-//    LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
-//       , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
-   
-
-//}
-
-//function LoadBusinessUnits()
-//{
-   
-//}
-
-//function CreateBusinessUnitCheckBoxes(data)
-//{
-
-
-//}
-
-//function LoadUsersGroupsGrid() {
-
-//    var columns = [
-//        { dataField: 'UserId', caption: 'User ID' },
-//        { dataField: 'Name', caption: 'Name' }
-//    ];
-
-//    LoadGrid('usersgroupsgrid', 'usergroupsgridcontainer', columns, 'usergroups');
-
-//}
-
-//function DisplayUserInfo(id) {
-
-//    $.ajax({
-//        url: WEB_API_ADDRESS + 'users/' + id,
-//        method: 'GET',
-//        contentType: 'application/json; charset-utf-8',
-//        dataType: 'json',
-//        crossDomain: true,
-//        headers: GetApiHeaders(),
-//        success: function (data) {
-
-//            if (IsSuccessful) {
-
-//                $('.userid').val(data.Data.UserId);
-//                $('.username').val(data.Data.Name);
-//                $('.useremail').val(data.Data.Email);
-
-//                if (data.Data.IsActive && data.Data.IsActive == 1) {
-//                    $('.userstatus').prop('checked', true);
-//                }
-//                else {
-//                    $('.userstatus').prop('checked', false);
-//                }
-                
-//            }
-
-//        },
-//        error: function (xhr, status, err) {
-//            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-//        }
-//    })
-
-//}
-
-//function AddUsersToRoles(user, roles) {
-
-//    var data = {
-//        Email: user,
-//        Roles: roles
-//    }
-
-//    $.ajax({
-//        type: 'POST',
-//        url: WEB_API_ADDRESS + 'users/roles/add',
-//        data: data,
-//        contentType: 'application/x-www-form-urlencoded',
-//        crossDomain: true,
-//        headers: GetApiHeaders(),
-//        success: function () {
-
-//        },
-//        error: function (xhr, status, err) {
-//            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-//        }
-//    });
-
-//}
-/* END USERS TAB */
-
-
-
-
-
+}

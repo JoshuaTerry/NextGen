@@ -142,16 +142,29 @@
 
             </div>
 
-            <div class="newusermodal" title="Manage Groups..." style="display: none;">
+            <div class="usergroupsmodal" title="Manage Groups..." style="display: none;">
                 
                 <div class="modalcontent">
 
-                    <div class="fieldblock">
-                        <label>Something</label>
-                    </div>
+                    <div class="usergroupsselection"></div>
                     
                     <div class="modalbuttons">
-                        <input type="button" class="savegroups" value="Save" />
+                        <input type="button" class="saveusergroups" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="userbusinessunitsmodal" title="Manage Business Units..." style="display: none;">
+
+                <div class="modalcontent">
+
+                    <div class="userbuselection"></div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="saveuserbu" value="Save" />
                         <a href="#" class="cancelmodal">Cancel</a>
                     </div>
 

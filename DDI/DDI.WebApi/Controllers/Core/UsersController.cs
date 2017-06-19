@@ -221,6 +221,11 @@ namespace DDI.WebApi.Controllers.General
                 {
                     var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
                 }
+
+                var response = new DataResponse<User>(user);
+                response.IsSuccessful = true;
+
+                return Ok(response);
             }
             catch(Exception ex)
             {
@@ -228,27 +233,27 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
 
-            try
-            {
-                var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                code = HttpUtility.UrlEncode(code);
-                var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
+            //try
+            //{
+            //    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            //    code = HttpUtility.UrlEncode(code);
+            //    var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
 
-                var service = new EmailService();
-                var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
-                var to = new MailAddress(model.Email);
-                var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
-                var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
+            //    var service = new EmailService();
+            //    var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
+            //    var to = new MailAddress(model.Email);
+            //    var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
+            //    var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
 
-                service.SendMailMessage(message);
+            //    service.SendMailMessage(message);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }        
+            //    return Ok();
+            //}
+            //catch (Exception ex)
+            //{
+            //    base.Logger.LogError(ex);
+            //    return InternalServerError(new Exception(ex.Message));
+            //}        
         }
 
         [HttpPost]

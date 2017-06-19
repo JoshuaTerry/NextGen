@@ -18,7 +18,7 @@ namespace DDI.WebApi.Models.BindingModels
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } = "Password!1";
         [Display(Name = "Default Business Unit")]
         public Guid? DefaultBusinessUnitId { get; set; }
         [Display(Name = "Consitituent")]
