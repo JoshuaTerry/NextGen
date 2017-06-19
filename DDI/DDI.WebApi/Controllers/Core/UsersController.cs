@@ -287,7 +287,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPost]
         [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(Guid id, User user)
+        public IHttpActionResult Update(Guid id, User user)
         {             
             try
             {               
@@ -296,9 +296,9 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                UserManager.Update(user);
-                var result = await UserManager.FindByIdAsync(user.Id);
-                return Ok(result);
+                //UserManager.Update(user);
+                var response = Service.Update(user); 
+                return Ok(response);
             }
             catch (Exception ex)
             {
