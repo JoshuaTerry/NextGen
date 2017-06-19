@@ -11,7 +11,7 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 
 .roleaddbuttons { margin : 0 0 15px 0; }
 
-.adminsecurity { width: 1000px; margin: 10px auto 0 auto; background-color: white; border: solid 2px black; }
+.adminsecurity { width: 75%; margin: 10px auto 0 auto; background-color: white; border: solid 2px black; }
 .adminsecurity a { color: #0f75b4 !important; }
 
 .adminsecurity div.contentcontainer { width: 82%; display: inline-block; vertical-align: top; margin: 0 0 0 -3px; padding: 10px; border: solid 4px #0f75b4; min-height: 100px; }
@@ -42,7 +42,14 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .groupdetailscontainer { width: 74%; display: inline-block; vertical-align: top; margin-left: 10px; } 
 
 .roleselection {  }
-.roleselection div.fieldblock label { display: inline-block; }
+
+.roleselection div.fieldblock,
+.usergroupsselection div.fieldblock,
+.userbuselection div.fieldblock { vertical-align: middle; }
+
+.roleselection div.fieldblock label,
+.usergroupsselection div.fieldblock label,
+.userbuselection div.fieldblock label { display: inline-block; vertical-align: middle; margin-bottom: 5px; }
 
 .userscontainer {  }
 .userselectcontainer { width: 24%; display: inline-block; vertical-align: top; }
@@ -52,7 +59,7 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .userselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
 
 .userdetailscontainer { width: 75%; display: inline-block; vertical-align: top; }
-.userdetailscontainer div.twocolumn { width: 90%; margin-left: 10px; }
+.userdetailscontainer div.twocolumn { margin-left: 20px; }
 .userdetailscontainer div.twocolumn>div { width: 48%; }
 
 

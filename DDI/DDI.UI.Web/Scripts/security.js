@@ -106,7 +106,7 @@ function LoadGroups() {
                 $('.accordions').show();
             });
 
-            var delImg = $('<img>').attr('src', '../../Images/Delete_Alt_16.png').click(function () {
+            var delImg = $('<img>').attr('src', '../../Images/erase-16.png').click(function () {
 
                 ConfirmModal('Are you sure you want to delete this Group?', function () {
 
@@ -341,8 +341,7 @@ function ShowUsersSection() {
 function LoadUsers() {
 
     $('.userselectcontainer').show();
-
-//  PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback)
+    
     PopulateDropDown('.user-DefaultBusinessUnitId', 'businessunits', null, null, null, null, null);
 
     MakeServiceCall('GET', 'users', null, function (data) {
@@ -370,6 +369,7 @@ function LoadUsers() {
 
             $('.userdetailscontainer').show();
             $('.newlinkcontainer').hide();
+            $('.userextendeddetails').hide();
 
         }).prependTo($('.userselectcontainer'));
 
@@ -419,11 +419,16 @@ function LoadUser(id) {
 
         if (data.Data.Constituent) {
             $('.rs-Constituent1Information').val(data.Data.Constituent.ConstituentNumber + ": " + data.Data.Constituent.Name + ", " + data.Data.Constituent.PrimaryAddress);
+            $('.rs-Constituent1Id').val(data.Data.ConstituentId);
+        }
+        else {
+            $('.rs-Constituent1Information').val('');
+            $('.rs-ConstituentId').val('');
         }
         
-        $('.rs-Constituent1Id').val(data.Data.ConstituentId);
-        
         $('.user-IsActive').prop('checked', data.Data.IsActive);
+
+        $('.userextendeddetails').show();
 
         LoadUserGroups();
 
@@ -434,9 +439,7 @@ function LoadUser(id) {
 }
 
 function LoadUserGroups() {
-
-
-
+    
     var columns = [
         { dataField: 'DisplayName', caption: 'Name' }
     ];
@@ -597,7 +600,7 @@ function LoadUserBusinessUnitsModal() {
             businessUnits: buIds
         }
 
-        MakeServiceCall('POST', 'users/' + userid + '/businessunits', JSON.stringify(item), function () {
+        MakeServiceCall('PATCH', 'users/' + userid + '/businessunits', JSON.stringify(item), function () {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
@@ -644,7 +647,7 @@ function LoadUserBusinessUnitsModal() {
         // check selected business unit
         if (userid) {
 
-            MakeServiceCall('GET', 'users/' + userid + '/businessunits', null, function (data) {
+            MakeServiceCall('GET', 'users/' + userid + '/businessunit', null, function (data) {
 
                 $(modal).find('input[type="checkbox"]').prop('checked', false);
 

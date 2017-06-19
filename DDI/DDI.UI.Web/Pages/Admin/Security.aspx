@@ -148,7 +148,7 @@
 
                 <br /><br />
 
-                <div class="twocolumn">
+                <div class="userextendeddetails twocolumn">
 
                     <div>
                         <h2>Groups</h2>

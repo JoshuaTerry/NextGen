@@ -102,6 +102,7 @@
     <Content Include="CSS\search.css" />
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
+    <Content Include="Images\erase-16.png" />
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
