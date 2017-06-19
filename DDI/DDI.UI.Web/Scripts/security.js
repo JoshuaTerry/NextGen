@@ -12,6 +12,8 @@ $(document).ready(function () {
     NewUserModal();
 
     PopulateDropDown('.ConstituentId', 'constituents', '', '');
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+    PopulateDropDown($('.user-GroupId'), 'groups', null);
     
 
 
@@ -74,6 +76,8 @@ function NewGroupModal() {
 
         $('.savegroupbutton').click(function (e) {
 
+            $('.savegroupbutton').attr('value', 'Save');
+
             var item = {
                 Name: $('.gp-Name').val()
             };
@@ -83,6 +87,8 @@ function NewGroupModal() {
                 id = data.Data.Id;
 
                 LoadGroup(id);
+
+                PopulateDropDown($('.user-GroupId'), 'groups', null);
 
                 $('.hidgroupid').val(id);
 
@@ -98,11 +104,11 @@ function NewGroupModal() {
 
                         AddRolesToGroup(id);
 
-                        $('.rolesmodal').hide();
+                        //$('.rolesmodal').hide();
 
-                        LoadGroup(id);
+                        //LoadGroup(id);
 
-                        $('.rolestagbox').dxTagBox('instance').reset();
+                        //$('.rolestagbox').dxTagBox('instance').reset();
 
 
                     });
@@ -122,6 +128,8 @@ function NewGroupModal() {
                             CloseModal(modal);
 
                             LoadGroupsGrid();
+
+                            PopulateDropDown($('.user-GroupId'), 'groups', null);
 
                             $('.gp-Name').val("");
 
@@ -206,6 +214,8 @@ function EditGroup(id) {
             CloseModal(modal);
 
             LoadGroupsGrid();
+
+            PopulateDropDown($('.user-GroupId'), 'groups', null);
 
             $('.rolestagbox').dxTagBox('instance').reset();
 
@@ -336,24 +346,27 @@ function DeleteRole(role) {
 function AddRolesToGroup(id) {
 
     var values = $('.rolestagbox').dxTagBox('instance').option('values');
-    var items = "{ item: " + JSON.stringify(values) + " }";
+    if (values != null)
+    {
+        var items = "{ item: " + JSON.stringify(values) + " }";
 
-    MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
+        MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
 
-        DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
+            DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
 
-        //$('.rolesmodal').hide();
+            //$('.rolesmodal').hide();
 
-        //LoadGroup(id)
-        $('.rolesmodal').hide();
+            //LoadGroup(id)
+            $('.rolesmodal').hide();
 
-        $('.rolestagbox').dxTagBox('instance').reset();
-        EditGroup(id);
+            //$('.rolestagbox').dxTagBox('instance').reset();
+            EditGroup(id);
 
-    }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }, function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
 
-    });
+        });
+    }
 }
 
 
@@ -444,12 +457,12 @@ function NewUserModal() {
 // USER SETTINGS 
 function EditUser(id) {
 
-    LoadUser(id);
 
-    $('.user-DefaultBusinessUnitId').empty();
-    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    $('.user-GroupId').empty();
-    PopulateDropDown($('.user-GroupId'), 'groups', null);
+    //ARECA These dropdowns need to populate on edit of a user. or maybe on save of a new group, we do a re
+    //$('.user-DefaultBusinessUnitId').empty();
+    //$('.user-GroupId').empty();
+    
+    LoadUser(id);
 
 
     modal = $('.usermodal').dialog({

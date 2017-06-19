@@ -110,7 +110,18 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/groups/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
-            return base.Delete(id);
+            {
+                try
+                {
+                    var response = Service.DeleteGroup(id);
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex.ToString);
+                    return InternalServerError();
+                }
+            }
         }
 
         [HttpPatch]
@@ -119,7 +130,6 @@ namespace DDI.WebApi.Controllers.Core
         {
             try
             {
-                var search = new PageableSearch(offset, limit, orderBy);
                 var response = Service.RemoveRolesFromGroup(groupId, roleId);
                 return FinalizeResponse(response);
             }

@@ -28,48 +28,48 @@ namespace DDI.Services.Security
             };
         }
 
-        public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
-        {
-            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
-            var defaultbu = UnitOfWork.GetById<BusinessUnit>(defaultbuid);
+        //public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        //{
+        //    var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
+        //    var defaultbu = UnitOfWork.GetById<BusinessUnit>(defaultbuid);
 
-            if (!result.BusinessUnits.Contains(defaultbu))
-            {
-                result.BusinessUnits.Add(defaultbu);
-            }
+        //    if (!result.BusinessUnits.Contains(defaultbu))
+        //    {
+        //        result.BusinessUnits.Add(defaultbu);
+        //    }
 
-            result.DefaultBusinessUnitId = defaultbuid;
+        //    result.DefaultBusinessUnitId = defaultbuid;
 
-           UnitOfWork.SaveChanges();
+        //   UnitOfWork.SaveChanges();
 
-            DataResponse<User> response = new DataResponse<User>
-            {
-                Data = result,
-                IsSuccessful = true
-            };
+        //    DataResponse<User> response = new DataResponse<User>
+        //    {
+        //        Data = result,
+        //        IsSuccessful = true
+        //    };
 
-            return response;
-        }
+        //    return response;
+        //}
 
-        public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
-        {
-            var result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
-            var bu = UnitOfWork.GetById<BusinessUnit>(buid);
+        //public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
+        //{
+        //    var result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
+        //    var bu = UnitOfWork.GetById<BusinessUnit>(buid);
 
-            if (!result.BusinessUnits.Contains(bu))
-            {
-                result.BusinessUnits.Add(bu);
-                UnitOfWork.SaveChanges();
-            }
+        //    if (!result.BusinessUnits.Contains(bu))
+        //    {
+        //        result.BusinessUnits.Add(bu);
+        //        UnitOfWork.SaveChanges();
+        //    }
 
-            IDataResponse response = new DataResponse<User>
-            {
-                Data = result,
-                IsSuccessful = true
-            };
+        //    IDataResponse response = new DataResponse<User>
+        //    {
+        //        Data = result,
+        //        IsSuccessful = true
+        //    };
 
-            return response;
-        }
+        //    return response;
+        //}
 
         public IDataResponse SyncBusinessUnitsToUser(Guid id, List<Guid> buids)
         {
@@ -130,7 +130,7 @@ namespace DDI.Services.Security
         private void CheckUser(User user)
         {
             if (user == null)
-            {                
+            {
                 throw new ArgumentNullException("User");
             }
         }
@@ -182,8 +182,8 @@ namespace DDI.Services.Security
         Task<IList<string>> IUserRoleStore<User, Guid>.GetRolesAsync(User user)
         {
             CheckUser(user);
-            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();              
-            var roles = UnitOfWork.Where<Role>(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
+            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();
+            var roles = UnitOfWork.Where<Role>(r => roleIds.Contains(r.Id)).Select(r => r.Name).ToList();
             return Task.FromResult<IList<string>>(roles);
         }
 
@@ -191,7 +191,7 @@ namespace DDI.Services.Security
         {
             CheckUser(user);
 
-            var role = GetRole(roleName); 
+            var role = GetRole(roleName);
             bool result = user.Roles.Any(ur => ur.RoleId == role.Id);
 
             return Task.FromResult<bool>(result);
@@ -236,9 +236,9 @@ namespace DDI.Services.Security
 
         void IDisposable.Dispose()
         {
-            
+
         }
-         
+
         Task<User> IUserStore<User, Guid>.FindByIdAsync(Guid userId)
         {
             var response = base.GetById(userId);
@@ -249,7 +249,7 @@ namespace DDI.Services.Security
         {
             var response = base.GetWhereExpression(u => u.UserName == userName);
             return Task.FromResult<User>(response.Data);
-        }        
+        }
 
         Task IUserStore<User, Guid>.UpdateAsync(User user)
         {

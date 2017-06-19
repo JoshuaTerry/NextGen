@@ -266,51 +266,51 @@ namespace DDI.WebApi.Controllers.General
 
         
         
-        [HttpPatch]
-        [Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
-        public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
-        {
-            try
-            {                
-                var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
+        //[HttpPatch]
+        //[Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
+        //public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        //{
+        //    try
+        //    {                
+        //        var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
+        //        if (result == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        base.Logger.LogError(ex);
+        //        return InternalServerError(new Exception(ex.Message));
+        //    }
 
-        }
+        //}
 
-        [HttpPatch]
-        [Route("api/v1/users/{id}/businessunit/{buid}")]
-        public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
-        {
-            try
-            {                
-                var result = userService.AddBusinessUnitToUser(id, buid);
+        //[HttpPatch]
+        //[Route("api/v1/users/{id}/businessunit/{buid}")]
+        //public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
+        //{
+        //    try
+        //    {                
+        //        var result = userService.AddBusinessUnitToUser(id, buid);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
+        //        if (result == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        base.Logger.LogError(ex);
+        //        return InternalServerError(new Exception(ex.Message));
+        //    }
 
-        }
+        //}
 
         [HttpDelete]
         [Route("api/v1/users/{id}")]
