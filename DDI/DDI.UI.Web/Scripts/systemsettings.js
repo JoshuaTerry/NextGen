@@ -3304,8 +3304,8 @@ function PopulateFundDueFromFund(fundid) {
               { dataField: 'DisplayName', caption: 'Fund' },
               { dataField: 'FromLedgerAccount.AccountNumber', caption: 'Due From Account' },
               { dataField: 'FromLedgerAccount.Name', caption: 'Description' },
-             { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
-         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
+              { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
+              { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
     //LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, 'funds/' + fundid + '/fundfromto', 'funds', null, 'fn-',
     //   '.fundduemodal', '', 250, false, false, false, null);
@@ -3398,7 +3398,7 @@ function EditBusinessUnit(bufromtoid) {
                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                CloseModal(modal);
                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                             
+              // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
                $('.bus-FromLedgerAccount').empty();
                $('.bus-ToLedgerAccount').empty();
               
