@@ -124,7 +124,7 @@ namespace DDI.Services.Security
             var removes = existingList.Except(newList);
             var adds = newList.Except(existingList);
 
-            var groupService = new GroupService(new UnitOfWorkEF());
+            var groupService = new GroupService(UnitOfWork);
 
             removes.ForEach(e => groupService.RemoveUserFromGroup(userId, e.Id));
             adds.ForEach(e => groupService.AddUserToGroup(userId, e.Id));
