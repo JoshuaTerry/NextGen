@@ -31,7 +31,19 @@ function ShowGroupSection() {
 
     $('.groupnav').parent().addClass('selected');
 
+    $('.cancelgroup').click(function (e) {
+
+        e.preventDefault();
+
+        LoadGroup($('.hidgroupid').val());
+
+    });
+
     LoadGroups();
+
+    $('.hidgroupid').val('');
+    $('.groupdetailscontainer').hide();
+    $('.groupselectcontainer ul li').removeClass('selected');
 
 }
 
@@ -41,17 +53,54 @@ function LoadGroups() {
 
     MakeServiceCall('GET', 'groups', null, function (data) {
 
+        $('.groupselectcontainer').html('');
         var groups = $('<ul>');
+
+        var newgroup = $('<li>').text('New Group').addClass('newgroup').click(function () {
+
+            $('.hidgroupid').val('');
+            $('.gp-Name').val('');
+
+            $('.savegroup').unbind('click');
+            $('.savegroup').click(function () {
+                SaveGroup(null);
+
+                $('.newlinkcontainer').show();
+                $('.accordions').show();
+            });
+
+            $(this).parent().find('li').removeClass('selected');
+
+            $('.groupdetailscontainer').show();
+            $('.newlinkcontainer').hide();
+            $('.accordions').hide();
+
+        }).appendTo($(groups));
 
         $.map(data.Data, function(item) {
 
             var group = $('<li>').text(item.Name).click(function () {
                 // Select the group
+                $('.hidgroupid').val(item.Id);
                 LoadGroup(item.Id);
+
+                $('.savegroup').unbind('click');
+                $('.savegroup').click(function () {
+                    SaveGroup(item.Id);
+                });
 
                 $(this).parent().find('li').removeClass('selected');
                 $(this).addClass('selected');
+
+                $('.groupdetailscontainer').show();
+                $('.newlinkcontainer').show();
+                $('.accordions').show();
             });
+
+            if ($('.hidgroupid').val() == item.Id) {
+                $(group).addClass('selected');
+                LoadGroup(item.Id);
+            }
 
             $(groups).append($(group));
 
@@ -65,6 +114,15 @@ function LoadGroups() {
 
 function LoadGroup(id) {
 
+    // Add roles link
+    $('.addroles').click(function (e) {
+
+        e.preventDefault();
+
+        AddRolesModal(id);
+
+    });
+
     MakeServiceCall('GET', 'groups/' + id, null, function (data) {
 
         $('.gp-Name').val(data.Data.DisplayName);
@@ -75,9 +133,142 @@ function LoadGroup(id) {
         { dataField: 'DisplayName', caption: 'Name' }
     ];
 
+//  LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete)
     LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'group/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
+}
 
-    // CustomLoadGrid('rolesgrid', '.grouprolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null);
+function SaveGroup(id) {
+
+    var item = {
+        Name: $('.gp-Name').val()
+    }
+
+    if (id) {
+
+        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
+
+            DisplaySuccessMessage("Save successful.");
+
+            LoadGroups();
+
+        }, null);
+
+    }
+    else {
+
+        MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
+
+            DisplaySuccessMessage("Save successful.");
+
+            $('.hidgroupid').val(data.Data.Id);
+
+            LoadGroups();
+
+        }, null);
+
+    }
+
+}
+
+function AddRolesModal(groupid) {
+
+    modal = $('.rolesmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
+    });
+
+    $(modal).find('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(modal).find('.saveroles').unbind('click');
+
+    $(modal).find('.saveroles').click(function () {
+        
+        var roleIds = []
+
+        $(modal).find('.roleselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                roleIds.push($(v).attr('id'));
+            }
+        });
+
+        var item = {
+            roles: roleIds
+        }
+
+        MakeServiceCall('POST', 'groups/' + groupid + '/roles', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+
+            LoadGroup(groupid);
+        }, null);
+
+    });
+
+    MakeServiceCall('GET', 'roles', null, function (data) {
+
+        $(modal).find('.roleselection').html('');
+
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
+
+        // display all roles
+        $.map(data.Data, function (item) {
+
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
+
+            if (cid === 0) {
+
+                $(field).appendTo($(left));
+
+                cid = 1;
+            }
+            else {
+
+                $(field).appendTo($(right));
+
+                cid = 0;
+            }
+            
+
+            $(modal).find('.roleselection').append($(concon));
+
+        });
+
+        // check selected roles
+        if (groupid) {
+
+            MakeServiceCall('GET', 'group/' + groupid + '/roles', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
+        
+
+    }, null);
 
 }
 
@@ -96,7 +287,19 @@ function LoadUsers() {
 
     $('.userselectcontainer').show();
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
 
 function SetupNewUserModal() {
 
@@ -156,314 +359,6 @@ function LoadSecuritySettingsGrid() {
 
 }
 
-/* GROUPS TAB */
-function LoadGroupsGrid() {
-
-    var columns = [
-        { dataField: 'DisplayName', caption: 'Group Name' }
-    ];
-
-    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', '', EditGroup, DeleteGroup, null); 
-
-}
-
-
-function LoadRolesTagBox() {
-
-    DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
-
-}
-
-
-function NewGroupModal() {
-
-    $('.newgroupmodal').click(function (e) {
-
-        e.preventDefault();
-
-        modal = $('.groupmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            resizable: false,
-            beforeClose: function (e) {
-
-                $('.rolesmodal, .rolesgriditems').hide();
-
-                $('.gp-Name').val("");
-
-            }
-        });
-
-        $('.savegroupbutton').unbind('click');
-
-        $('.savegroupbutton').click(function (e) {
-
-            var item = {
-                Name: $('.gp-Name').val()
-            };
-
-            MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
-
-                id = data.Data.Id;
-
-                LoadGroup(id);
-
-                $('.hidgroupid').val(id);
-
-                $('.rolesgriditems').show();
-
-                $('.addrolesbutton').unbind('click');
-
-                $('.addrolesbutton').click(function (e) {
-
-                    $('.rolesmodal').show();
-
-                    $('.saverolesbutton').click(function (e) {
-
-                        AddRolesToGroup(id);
-
-                        $('.rolesmodal').hide();
-
-                        LoadGroup(id);
-
-                        $('.rolestagbox').dxTagBox('instance').reset();
-
-
-                    });
-
-                    $('.savegroupbutton').unbind('click');
-
-                    $('.savegroupbutton').click(function (e) {
-
-                        var item = {
-                            Name: $('.gp-Name').val()
-                        };
-
-                        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
-
-                            LoadGroup(id);
-
-                            CloseModal(modal);
-
-                            LoadGroupsGrid();
-
-                            $('.gp-Name').val("");
-
-                        });
-
-                    });
-
-                    $('.cancelrolesmodal').click(function (e) {
-
-                        e.preventDefault();
-
-                        $('.rolesmodal').hide();
-
-                        $('.rolestagbox').dxTagBox('instance').reset();
-
-
-                    });
-                });
-
-                LoadGroupsGrid();
-            });
-
-        });
-
-
-        $('.cancelgroupmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-            $('.rolesmodal, .rolesgriditems').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-
-            $('.gp-Name').val("");
-
-        });
-
-    });
-
-}
-
-function EditGroup(id) {
-    
-    LoadGroup(id);
-
-    $('.hidgroupid').val(id);
-
-    modal = $('.groupmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 400,
-        resizable: false,
-        beforeClose: function (e) {
-
-            $('.rolesmodal, .rolesgriditems').hide();
-
-            $('.gp-Name').val("");
-
-        }
-    });
-
-    $('.rolesgriditems').show();
-
-    $('.groupmodal').show();
-
-    $('.savegroupbutton').unbind('click');
-
-    $('.savegroupbutton').click(function (e) {
-
-        var item = {
-            Name: $('.gp-Name').val()
-        };
-
-        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
-
-            LoadGroup(id);
-
-            CloseModal(modal);
-
-            LoadGroupsGrid();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-
-            $('.gp-Name').val("");
-
-        });
-
-    });
-
-    $('.addrolesbutton').unbind('click');
-
-    $('.addrolesbutton').click(function (e) {
-
-        $('.rolesmodal').show();
-
-        $('.saverolesbutton').click(function (e) {
-
-            AddRolesToGroup(id);
-
-            $('.rolesmodal').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-
-        });
-
-        $('.cancelrolesmodal').click(function (e) {
-
-            e.preventDefault();
-
-            $('.rolesmodal').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-            
-
-        });
-
-    });
-
-    $('.cancelgroupmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-        $('.rolesmodal, .rolesgriditems').hide();
-
-        $('.rolestagbox').dxTagBox('instance').reset();
-
-        $('.gp-Name').val("");
-
-    });
-
-}
-
-function SaveGroup(id) {
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save group title
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save roles to group
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-}
-
-function DeleteGroup(id) {
-
-    MakeServiceCall('DELETE', 'groups/' + id, null, function (data) {
-
-        DisplaySuccessMessage('Success', 'Group deleted successfully.');
-
-        LoadGroupsGrid();
-
-    }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-
-}
-
-
-function DeleteRole(role) {
-
-    var groupid = $('.hidgroupid').val();
-
-    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role', null, function (data) {
-
-        DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
-
-        LoadGroup(id);
-
-
-    });
-
-}
-
-function AddRolesToGroup(id) {
-
-    var values = $('.rolestagbox').dxTagBox('instance').option('values');
-    var items = "{ item: " + JSON.stringify(values) + " }";
-
-    MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
-
-        DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
-
-        $('.rolesmodal').hide();
-
-        LoadGroup(id)
-
-    }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-    });
-}
-
-
-/* END GROUPS TAB */
-
-
-/* USERS TAB */
 function LoadUsersGrid() {
 
     var columns = [

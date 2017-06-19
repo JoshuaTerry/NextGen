@@ -4,8 +4,8 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .newlinkcontainer { width: 100%; text-align: right; }
 
 .adminsecurity .tabscontainer { width: 100%; }
-
 .adminsecurity div.contentcontainer { width: 80%; display: inline-block; vertical-align: top; }
+.adminsecurity div.buttons { text-align: right; }
 
 .dx-popup-content {  overflow: scroll; }
 
@@ -23,6 +23,8 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .securitynav ul li.selected { background-color: #0f75b4; }
 .securitynav ul li.selected a { color: white; }
 
+.newgroup { border: solid 1px #0f75b4; }
+
 .groupscontainer { vertical-align: top; }
 .groupselectcontainer { width: 24%; display: inline-block; vertical-align: top; overflow-y: scroll; }
 .groupselectcontainer ul { list-style: none; margin: 0px; padding: 0px; }
@@ -30,6 +32,9 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .groupselectcontainer ul li:hover { cursor: pointer; background-color: #c2ddf4; }
 .groupselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
 .groupdetailscontainer { width: 75%; display: inline-block; vertical-align: top; } 
+
+.roleselection {  }
+.roleselection div.fieldblock label { display: inline-block; }
 
 .userscontainer {  }
 

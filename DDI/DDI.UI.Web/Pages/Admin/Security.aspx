@@ -24,7 +24,7 @@
             <hr />
             <div class="groupselectcontainer"></div>
 
-            <div class="groupdetailscontainer">
+            <div class="groupdetailscontainer" style="display: none;">
 
                 <input type="hidden" class="hidgroupid" />
 
@@ -33,7 +33,17 @@
                     <input type="text" class="gp-Name" maxlength="128" />
                 </div>
 
-                <div class="accordions">
+                <div class="buttons">
+                    <input type="button" value="Save" class="savegroup" />
+                    <a href="cancel" class="cancelgroup">Cancel</a>
+                </div>
+
+                <br /><br />
+
+                <div class="newlinkcontainer">
+                    <a href="#" class="addroles">Manage Roles</a>
+                </div>
+                <div class="accordions nocontrols">
 
                     <h1>Roles</h1>
                     <div>
@@ -43,6 +53,21 @@
                     <h1>Users in Group</h1>
                     <div>
                         <div class="groupusersgridcontainer"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="rolesmodal" title="Add Roles..." style="display: none;">
+
+                <div class="modalcontent">
+
+                    <div class="roleselection"></div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="saveroles" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
                     </div>
 
                 </div>
@@ -61,6 +86,16 @@
             <div class="userdetailscontainer">
 
 
+
+            </div>
+
+            <div class="newusermodal" title="New User..." style="display: none;">
+                
+                <div class="modalcontent">
+
+
+
+                </div>
 
             </div>
 
