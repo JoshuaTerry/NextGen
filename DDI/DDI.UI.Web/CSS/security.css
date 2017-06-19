@@ -34,7 +34,9 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .groupselectcontainer { width: 24%; display: inline-block; vertical-align: top; }
 .groupselectcontainer ul { list-style: none; margin: 0px; padding: 0px; overflow-y: scroll; }
 .groupselectcontainer ul li { display: block; padding: 8px 15px; }
+.groupselectcontainer ul li img { margin: 0 0 -2px 0; float: right; }
 .groupselectcontainer ul li:hover { cursor: pointer; background-color: #c2ddf4; }
+.groupselectcontainer ul li:hover img { display: inline-block; }
 .groupselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
 .groupdetailscontainer { width: 74%; display: inline-block; vertical-align: top; margin-left: 10px; } 
 

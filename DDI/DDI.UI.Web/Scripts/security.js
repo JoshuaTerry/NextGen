@@ -88,7 +88,7 @@ function LoadGroups() {
 
         $.map(data.Data, function(item) {
 
-            var group = $('<li>').text(item.DisplayName).click(function () {
+            var group = $('<li>').html(item.DisplayName).click(function () {
                 // Select the group
                 $('.hidgroupid').val(item.Id);
                 LoadGroup(item.Id);
@@ -105,6 +105,22 @@ function LoadGroups() {
                 $('.newlinkcontainer').show();
                 $('.accordions').show();
             });
+
+            var delImg = $('<img>').attr('src', '../../Images/Delete_Alt_16.png').click(function () {
+
+                ConfirmModal('Are you sure you want to delete this Group?', function () {
+
+                    MakeServiceCall('DELETE', 'groups/' + item.Id, null, function () {
+
+                        DisplaySuccessMessage("Delete successful.");
+
+                        LoadGroups();
+
+                    }, null);
+
+                }, function () { return; });
+
+            }).appendTo($(group));
 
             if ($('.hidgroupid').val() == item.Id) {
                 $(group).addClass('selected');
@@ -133,8 +149,11 @@ function LoadGroup(id) {
         { dataField: 'DisplayName', caption: 'Name' }
     ];
 
-//  LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, prefix, editModalClass, newModalClass, modalWidth, showDelete, showFilter, showGroup, onComplete)
+    // Roles in Group Grid
     LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'group/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
+
+    // Users in Group Grid    
+    LoadGrid('groupusersgridcontainer', 'groupusersgrid', columns, 'group/' + id + '/users', null, null, null, null, null, null, false, false, false, null);
 }
 
 function SaveGroup(id) {
@@ -388,50 +407,25 @@ function LoadUser(id) {
         
         $('.user-IsActive').prop('checked', data.Data.IsActive);
 
+        LoadUserGroups();
+
+        LoadUserBusinessUnits();
+
     }, null);
 
 }
 
-function SaveUser(id) {
+function LoadUserGroups() {
 
-    var item = {
-        UserName: $('.user-UserName').val(),
-        FullName: $('.user-FullName').val(),
-        Email: $('.user-Email').val(),
-        PhoneNumber: $('.user-PhoneNumber').val(),
-        ConstituentId: $('.user-ConstituentId').val(),
-        DefaultBusinessUnitId: $('.user-DefaultBusinessUnitId').val(),
-        IsActive: $('.user-IsActive').prop('checked')
-    }
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Name' }
+    ];
 
-    if (id) {
-
-        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
-
-            DisplaySuccessMessage("Save successful.");
-
-            LoadUsers();
-
-        }, null);
-
-    }
-    else {
-
-        MakeServiceCall('POST', 'users/', JSON.stringify(item), function (data) {
-
-            DisplaySuccessMessage("Save successful.");
-
-            $('.hiduserid').val(data.Data.Id);
-
-            LoadUsers();
-
-        }, null);
-
-    }
+    LoadGrid('usergroupsgridcontainer', 'usergroupsgrid', columns, 'users/' + $('.hiduserid').val() + '/groups', null, null, null, null, null, null, false, false, false, null);
 
 }
 
-function LoadUserGroups() {
+function LoadUserGroupsModal() {
 
     var userid = $('.hiduserid').val();
 
@@ -537,6 +531,16 @@ function LoadUserGroups() {
 
 function LoadUserBusinessUnits() {
 
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Name' }
+    ];
+
+    LoadGrid('userbugridcontainer', 'userbugrid', columns, 'users/' + $('.hiduserid').val() + '/businessunit', null, null, null, null, null, null, false, false, false, null);
+
+}
+
+function LoadUserBusinessUnitsModal() {
+
     var userid = $('.hiduserid').val();
 
     modal = $('.userbusinessunitsmodal').dialog({
@@ -636,5 +640,44 @@ function LoadUserBusinessUnits() {
 
 
     }, null);
+
+}
+
+function SaveUser(id) {
+
+    var item = {
+        UserName: $('.user-UserName').val(),
+        FullName: $('.user-FullName').val(),
+        Email: $('.user-Email').val(),
+        PhoneNumber: $('.user-PhoneNumber').val(),
+        ConstituentId: $('.user-ConstituentId').val(),
+        DefaultBusinessUnitId: $('.user-DefaultBusinessUnitId').val(),
+        IsActive: $('.user-IsActive').prop('checked')
+    }
+
+    if (id) {
+
+        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
+
+            DisplaySuccessMessage("Save successful.");
+
+            LoadUsers();
+
+        }, null);
+
+    }
+    else {
+
+        MakeServiceCall('POST', 'users/', JSON.stringify(item), function (data) {
+
+            DisplaySuccessMessage("Save successful.");
+
+            $('.hiduserid').val(data.Data.Id);
+
+            LoadUsers();
+
+        }, null);
+
+    }
 
 }
