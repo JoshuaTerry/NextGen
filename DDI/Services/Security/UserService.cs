@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Extensions;
+using DDI.Services.General;
 
 namespace DDI.Services.Security
 {
@@ -97,6 +98,42 @@ namespace DDI.Services.Security
                 removes.ForEach(e => user.BusinessUnits.Remove(e));
                 adds.ForEach(e => user.BusinessUnits.Add(e));
             }
+
+            UnitOfWork.SaveChanges();
+
+            response = new DataResponse()
+            {
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+        public IDataResponse UpdateUserGroups(Guid userId, JObject collection)
+        {
+            var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
+
+            IDataResponse response = null;
+            List<Group> newList = new List<Group>();
+            List<Group> existingList = new List<Group>();
+
+            foreach (var pair in collection)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    newList.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<Group>(id));
+                }
+            }
+
+            existingList = user.Groups.ToList();
+
+            var removes = existingList.Except(newList);
+            var adds = newList.Except(existingList);
+
+            var groupService = new GroupService(this.UnitOfWork);
+
+            removes.ForEach(e => groupService.RemoveUserFromGroup(userId, e.Id));
+            adds.ForEach(e => groupService.AddUserToGroup(userId, e.Id));
 
             UnitOfWork.SaveChanges();
 
