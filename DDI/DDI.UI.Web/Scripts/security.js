@@ -666,6 +666,7 @@ function LoadUserBusinessUnitsModal() {
 function SaveUser(id) {
 
     var item = {
+        Id: id,
         UserName: $('.user-UserName').val(),
         FullName: $('.user-FullName').val(),
         Email: $('.user-Email').val(),

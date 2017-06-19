@@ -43,13 +43,13 @@
 
                 <br /><br />
 
-                <div class="newlinkcontainer">
-                    <a href="#" class="addroles">Manage Roles</a>
-                </div>
                 <div class="accordions nocontrols">
 
                     <h1>Roles</h1>
                     <div>
+                        <div class="newlinkcontainer">
+                            <a href="#" class="addroles">Manage Roles</a>
+                        </div>
                         <div class="grouprolesgridcontainer"></div>
                     </div>
 
