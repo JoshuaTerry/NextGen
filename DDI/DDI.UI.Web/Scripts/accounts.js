@@ -84,7 +84,6 @@ function LoadAccountActivityAndBudgetTab(id) {
 
 var segmentLevelArray = [];
 var segmentLevels;
-var segmentLevel;
 var groupLevels;
 var group1Data = [];
 var saveGroupId;
@@ -212,8 +211,6 @@ function LoadSummaryTabContinued() {
             AccountAddMode();
         }
         else {
-            HideButtons()
-            //$('.accountsegmentscontainer').hide();
             AccountDisplayMode();
         }
     });
@@ -267,7 +264,6 @@ function RetrieveLedgerSettings() {
 
                     $('.editgroup' + i).click(function (e) {
                         e.preventDefault();
-                        var test = $(this).attr('class');
                         groupLevel = $(this).attr('class').substring(9, 10);
                         groupId = '.Group' + groupLevel + 'Id';
                         groupPrompt = '.group' + groupLevel + 'prompt';
@@ -412,8 +408,8 @@ function RetrieveSegmentLevels() {
 
 function AccountDisplayMode() {
     editMode = 'display';
-    //$('.accountsegmentscontainer').hide();
     HideButtons();
+    DisableSegments();
     $('.editaccountbutton').show();
     $('.saveaccountbuttons').hide();
     $(summaryContainer).find('.editable').each(function () {
@@ -431,16 +427,20 @@ function AccountAddMode() {
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
-    //$('.accountsegmentscontainer').show();
     ShowButtons();
+    EnableSegments();
 }
 
 function AccountEditMode() {
     editMode = 'edit';
     if (activityTotal === 0) {
-        //$('.accountsegmentscontainer').show();
-        ShowButtons();
+        EnableSegments();
     }
+    else {
+        DisableSegments();
+    }
+    ShowButtons();
+
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
 
@@ -464,6 +464,7 @@ function AccountEditMode() {
     }
 
 }
+
 
 // account group section
 
@@ -495,10 +496,14 @@ function GroupChange(element) {
             if (category < 4) {
                 $('.BeginningBalance').removeAttr("disabled");
                 $('.accountnumberlookup').attr('disabled', true);
+                $('.closingaccountgroup').find(".hidaccountid").val(null);
+                $('.closingaccountgroup').find(".accountnumber").val('');
+                $('.closingaccountgroup').find(".accountdescription").html('');
                 $('.accountselectionsearch').css('visibility', 'hidden');
             }
             else {
                 $('.BeginningBalance').attr('disabled', true);
+                $('.BeginningBalance').val('0.00');
                 $('.accountnumberlookup').removeAttr("disabled");
                 $('.accountselectionsearch').css('visibility', 'visible');
             }
@@ -524,7 +529,24 @@ function GroupChange(element) {
 
 // end group section
 
+
 // segment section
+
+function EnableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', false);
+
+    });
+}
+
+function DisableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', true);
+
+    });
+}
 
 // load non linked drop downs for adds
 function InitSegmentDropDowns() {
@@ -577,10 +599,6 @@ function StoreSegmentData(element, data) {
     var dropdownlevel = element.substring(8, 9);
     segmentData[parseInt(dropdownlevel) - 1] = data.Data;
 
-    //var idx = $(element).prop('selectedIndex')
-
-    //$('.segment' + dropdownlevel + 'code').html(data.Data[idx - 1].Code);
-    //BuildAccountNumber();
 }
 
 function SegmentChange(element) {
@@ -664,8 +682,7 @@ function SaveAccount() {
             if ($('.Activity').val() === '' || $('.Activity').val() === null) {
                 $('.Activity').val(0);
             }
-            $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
-            sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
+            CalcEndingBalance();
             accountId = data.Data.Id;
             AccountDisplayMode();
         }
@@ -680,6 +697,10 @@ function SaveAccount() {
             }
         }
     );
+}
+
+function CalcEndingBalance() {
+    $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
 }
 
 function GetAccountFields() {
@@ -767,13 +788,52 @@ function ClearAccountFields() {
 }
 
 function HideButtons() {
-    $('.editbuttoninline').prop('visibility', 'hidden')
-    $('.editbuttoninline').prop('visibility', 'hidden')
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
 }
 
 function ShowButtons() {
-    $('.editbuttoninline').prop('visibility', 'visible')
-    $('.editbuttoninline').prop('visibility', 'visible')
+    var buttonClasses = '';
+    var buttonClass = '';
+    var level = 0;
+
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf('newgroup') > -1) {
+            level = parseInt(buttonClass.substring(8, 9));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf("editgroup") > -1) {
+            level = parseInt(buttonClass.substring(9, 10));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
 }
 
 

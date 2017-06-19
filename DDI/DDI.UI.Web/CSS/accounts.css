@@ -9,36 +9,45 @@ div.accounts div.tabscontainer { width: 100%; }
 .as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
 /* gl summary widths*/
 
-span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
+div.inlinecontainer {
+    width: 100%;
+    display: inline;
+    vertical-align: top;
+    margin-top: 1%;
+}
+
+span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 12px; }
 span.summaryleftinput input,
 span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
 
-span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 0; }
+span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 span.summaryrightinput input,
 span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
 span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
 
 span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
 span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
-.segmentcode {display: none;}
-.segmentname {margin-left: 5px;}
 
-div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
+.segmentcode {
+    display: none;
+}
 
 .segmentgroup {
-    visibility: hidden;
+    display: none;
 }
 
 .hidebuttons {
     visibility: hidden;
 }
-.activeadjust {margin: 0 0 0 -3px;}
-
 .invisible {visibility: hidden;}
 
 .accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
 .accountgroup {visibility: hidden;}
 .accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
+
+.activeadjust {
+    margin: 0 0 0 -4px;
+}
 
 .fiscalyearselectioncontainr { float: right; }
 
@@ -48,7 +57,7 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
     background-image: url('../../Images/New_16.png');
     width: 16px;
     height: 16px;
-    margin: 3px 0 3px 0;
+    margin: -1px 0 0 0;
     vertical-align: middle;
 }
 .editbuttoninline {
@@ -57,7 +66,7 @@ div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-t
     background-image: url('../../Images/Edit_16Old.png');
     width: 16px;
     height: 16px;
-    margin: 3px 0 3px 0;
+    margin: -1px 0 0 0;
     vertical-align: middle;
 }
 
