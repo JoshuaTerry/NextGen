@@ -324,6 +324,52 @@ namespace DDI.WebApi.Controllers.General
 
         }
 
+        [HttpPatch]
+        [Route("api/v1/users/{id}/businessunits")]
+        public IHttpActionResult UpdateUserBusinessUnits(Guid id, [FromBody] JObject businessUnits)
+        {
+            try
+            {
+                var result = userService.UpdateUserBusinessUnits(id, businessUnits);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+
+        }
+
+        [HttpPatch]
+        [Route("api/v1/users/{id}/groups")]
+        public IHttpActionResult UpdateUserGroups(Guid id, [FromBody] JObject groups)
+        {
+            try
+            {
+                var result = userService.UpdateUserGroups(id, groups);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+
+        }
+
         [HttpDelete]
         [Route("api/v1/users/{id}")]
         public new async Task<IHttpActionResult> Delete(Guid id)
