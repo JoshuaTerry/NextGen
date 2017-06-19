@@ -91,7 +91,17 @@ namespace DDI.Services.General
                 IsSuccessful = true
             };
             return response;
+        }
 
+        public IDataResponse<ICollection<User>> GetUsersInGroup(Guid groupId)
+        {
+            var users = UnitOfWork.GetById<Group>(groupId).Users;
+            var response = new DataResponse<ICollection<User>>()
+            {
+                Data = users,
+                IsSuccessful = true
+            };
+            return response;
         }
 
         public IDataResponse<Group> UpdateGroupRoles(Guid groupId, JObject roleIds)
