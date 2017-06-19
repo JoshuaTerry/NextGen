@@ -38,7 +38,7 @@ namespace DDI.Services.General
                 var newRoles = user.Groups.SelectMany(g => g.Roles).Select(r => r.Id).Distinct().ToList();
 
                 var adds = newRoles.Except(user.Roles.Select(r => r.RoleId));
-                adds.ForEach(r => user.Roles.Add(new UserRole() { UserId = user.Id, RoleId = r }));
+                adds.ForEach(r => user.Roles.Add(new UserRole() { Id = Guid.NewGuid(), UserId = user.Id, RoleId = r }));
                 UnitOfWork.Update(user);
                 UnitOfWork.SaveChanges();
             }

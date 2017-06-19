@@ -295,9 +295,10 @@ namespace DDI.WebApi.Controllers.General
                 {
                     return NotFound();
                 }
-                
-                var result = userService.Update(user);
-                return Ok(result);
+
+                //UserManager.Update(user);
+                var response = Service.Update(user); 
+                return Ok(response);
             }
             catch (Exception ex)
             {
