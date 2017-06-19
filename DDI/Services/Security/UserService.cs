@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using DDI.Shared.Extensions;
 using DDI.Services.General;
 using DDI.Shared.Models;
+using DDI.Data;
 
 namespace DDI.Services.Security
 {
@@ -114,7 +115,7 @@ namespace DDI.Services.Security
         }
         public IDataResponse UpdateUserGroups(Guid userId, JObject collection)
         {
-            var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
+            var user = UnitOfWork.GetById<User>(userId, u => u.Groups);
 
             IDataResponse response = null;
             var newList = GetBusinessObjectsFromJObject<Group>(collection);    
@@ -123,7 +124,7 @@ namespace DDI.Services.Security
             var removes = existingList.Except(newList);
             var adds = newList.Except(existingList);
 
-            var groupService = new GroupService(this.UnitOfWork);
+            var groupService = new GroupService(new UnitOfWorkEF());
 
             removes.ForEach(e => groupService.RemoveUserFromGroup(userId, e.Id));
             adds.ForEach(e => groupService.AddUserToGroup(userId, e.Id));
