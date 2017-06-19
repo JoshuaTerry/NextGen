@@ -103,7 +103,6 @@
                   
 
                 </div>
-                  <%--  </div>--%>
                 
 
             </fieldset>
@@ -114,18 +113,7 @@
             <input type="button" class="dosearch" value="Search" />
         </div>
 
-    
-
-<%--     <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            LoadjournalsaccountSettings();
-
-        });
-
-    </script>--%>
-         </div>
+        </div>
     
     
     <div class="searchresults">

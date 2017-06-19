@@ -4,10 +4,7 @@
 $(document).ready(function () {
 
     Resize();
-
-    //PopulateDropDowns();
-    
-
+ 
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
             $(this).val('');
@@ -51,46 +48,6 @@ function Resize() {
     $('.searchresults div.scrollable').height(adjustedHeight + 30);
 }
 
-//function PopulateDropDowns() {
-
-//    LoadCreatedBy();
-//}
-
-//function LoadCreatedBy() {
-
-//    PopulateDropDown('.searchCreatedby', 'CreatedBy', '', '');
-
-//    $('.searchCreatedby').change(function () {
-
-//        PopulateDropDown('.searchCreatedby', 'Journals/?CreatedBy=' + $('.searchCreatedby').val(), '', '');
-
-//    });
-
-//}
-
-//function LoadCreatedBy() {
-
-//    $.ajax({
-//        url: WEB_API_ADDRESS + 'journals/?' + 'fields=CreatedBy&',
-//        method: 'GET',
-//        contentType: 'application/json; charset-utf-8',
-//        dataType: 'json',
-//        headers: GetApiHeaders(),
-//        crossDomain: true,
-//        success: function (data) {
-            
-
-//            $('.gridcontainer').dxDataGrid({
-//                dataSource: data.Data,
-//                columns: [
-//                    { dataField: 'CreatedBy', caption: 'Created By' },
-            
-
-       
-    
-
-//}}
-//    }
 
 function AddColumnHeaders() {
 
@@ -110,7 +67,6 @@ function AddColumnHeaders() {
 function DoSearch() {
 
     var parameters = GetSearchParameters();
-
 
 
     $.ajax({
@@ -219,84 +175,7 @@ function addnewjournal() {
 
 }
 
-function EditBusinessUnit(bufromtoid) {
 
-    MakeServiceCall('GET', 'businessunitfromtos/' + bufromtoid, null, function (data) {
-        modal = $('.businessunitduemodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            resizable: false,
-            beforeClose: function (e) {
-                $('.bus-FromLedgerAccount').empty();
-                $('.bus-ToLedgerAccount').empty();
-            }
-
-        });
-
-        $('.businessunitduemodal').show();
-
-
-        GLAccountSelector($('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-        GLAccountSelector($('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-
-
-        LoadSelectedAccount($('.bus-FromLedgerAccount'), data.Data.FromAccountId);
-        LoadSelectedAccount($('.bus-ToLedgerAccount'), data.Data.ToAccountId);
-
-        //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
-
-        //$('.bus-ToLedgerAccount').val(data.Data.ToLedgerAccount.AccountNumber);
-
-
-        $('.cancelbusinessunitduedetailsmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-            PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-
-            $('.bus-FromLedgerAccount').empty();
-            $('.bus-ToLedgerAccount').empty();
-
-        });
-
-        $('.Savebusinessunitduedetails').unbind('click');
-
-        $('.Savebusinessunitduedetails').click(function () {
-
-            var item = {
-                FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
-                ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
-
-            }
-
-            MakeServiceCall('PATCH', 'businessunitfromtos/' + bufromtoid, JSON.stringify(item), function (data) {
-
-                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
-                CloseModal(modal);
-                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
-                $('.bus-FromLedgerAccount').empty();
-                $('.bus-ToLedgerAccount').empty();
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Business Due.');
-
-            });
-
-
-
-        });
-
-
-
-    }, null);
-
-
-}
 
 function DisplayJournal(id) {
 
@@ -305,44 +184,3 @@ function DisplayJournal(id) {
 
 }
 
-
-function LoadjournalsaccountSettings() {
-
-    var accordion = $('<div>').addClass('accordions');
-    var journals = $('<div>').addClass('journalsinquirycontainer');
-    
-
-    var header = $('<h1>').text('').appendTo($(accordion));
-    $(journals).appendTo($(accordion));
-    PopulatejournalsGrid();
-
-    $(accordion).appendTo($('.gridcontainer'));
-
-    LoadAccordions();
-
-    function PopulatejournalsGrid() {
-        
-        var journalsinquirycolumns = [
-         //   { dataField: 'Appr', width: '0px' },
-            { dataField: 'Id', width: '0px' },
-            { dataField: 'JournalNumber', caption: 'Journal#' },
-            { dataField: 'JournalType', caption: 'Type' },
-            { dataField: 'TransactionDate', caption: 'Tran Dt' },
-            { dataField: 'Comment', caption: 'Memo' },
-            { dataField: 'Amount', caption: 'Amount' },
-            { dataField: 'CreatedBy', caption: 'Created By' },
-            { dataField: 'CreatedOn', caption: 'Year' },
-            { dataField: 'ToLedgerAccount.Name', caption: 'Status' },
-         
-        ];
-
-                CustomLoadGrid('journalsinquiry', '.journalsinquirycontainer', journalsinquirycolumns, 'journals?fields=all', null, EditBusinessUnit, null, null);
-        //function CustomLoadGrid(grid, container, columns, route, selected, editMethod, deleteMethod, oncomplete) {
-
-       // CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);
-        //LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', 'businessunitfromtos', null, 'bus-',
-        //'.businessunitduemodal', '', 250, false, false, false, null
-        //
-    }
-
-}
