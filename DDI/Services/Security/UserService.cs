@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using Newtonsoft.Json.Linq;
 using DDI.Shared.Extensions;
 using DDI.Services.General;
+using DDI.Shared.Models;
 
 namespace DDI.Services.Security
 {
@@ -77,21 +78,11 @@ namespace DDI.Services.Security
             var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
              
             IDataResponse response = null;
-            List<BusinessUnit> newBUs = new List<BusinessUnit>();
-            List<BusinessUnit> existingBUs = new List<BusinessUnit>();
+            var newList = GetBusinessObjectsFromJObject<BusinessUnit>(collection);             
+            var existingList = user.BusinessUnits.ToList();
 
-            foreach (var pair in collection)
-            {
-                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
-                {
-                    newBUs.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<BusinessUnit>(id));
-                }
-            }
-
-            existingBUs = user.BusinessUnits.ToList();
-
-            var removes = existingBUs.Except(newBUs);
-            var adds = newBUs.Except(existingBUs);
+            var removes = existingList.Except(newList);
+            var adds = newList.Except(existingList);
 
             if (user != null)
             {
@@ -109,23 +100,25 @@ namespace DDI.Services.Security
             return response;
         }
 
+        private List<T> GetBusinessObjectsFromJObject<T>(JObject collection) where T : class, IEntity, new()
+        {
+            var list = new List<T>();
+            foreach (var pair in collection)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    list.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<T>(id));
+                }
+            }
+            return list;
+        }
         public IDataResponse UpdateUserGroups(Guid userId, JObject collection)
         {
             var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
 
             IDataResponse response = null;
-            List<Group> newList = new List<Group>();
-            List<Group> existingList = new List<Group>();
-
-            foreach (var pair in collection)
-            {
-                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
-                {
-                    newList.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<Group>(id));
-                }
-            }
-
-            existingList = user.Groups.ToList();
+            var newList = GetBusinessObjectsFromJObject<Group>(collection);    
+            var existingList = user.Groups.ToList();
 
             var removes = existingList.Except(newList);
             var adds = newList.Except(existingList);
