@@ -417,6 +417,8 @@ function LoadUser(id) {
 
 function LoadUserGroups() {
 
+
+
     var columns = [
         { dataField: 'DisplayName', caption: 'Name' }
     ];

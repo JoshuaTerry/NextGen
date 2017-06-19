@@ -140,13 +140,29 @@
                     <a href="cancel" class="canceluser">Cancel</a>
                 </div>
 
-            </div>
+                <br /><br />
 
-            <div class="twocolumn">
+                <div class="twocolumn">
 
-                <div class="usergroupsgridcontainer"></div>
+                    <div>
+                        <h2>Groups</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managegroups">Manage Groups</a>
+                        </div>
+                        <div class="usergroupsgridcontainer"></div>
+                    </div>
 
-                <div class="userbugridcontainer"></div>
+                    <div>
+                        <h2>Business Units</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managebu">Manage Business Units</a>
+                        </div>
+                        <div class="userbugridcontainer"></div>
+                    </div>
+
+                </div>
 
             </div>
 

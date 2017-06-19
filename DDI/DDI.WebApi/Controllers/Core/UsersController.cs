@@ -71,7 +71,8 @@ namespace DDI.WebApi.Controllers.General
             {
                 c => c.DefaultBusinessUnit,
                 c => c.BusinessUnits,
-                c => c.Constituent
+                c => c.Constituent,
+                c => c.Groups
             };
         }
 
