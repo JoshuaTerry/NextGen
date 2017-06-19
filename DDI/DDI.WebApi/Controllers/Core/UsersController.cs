@@ -71,7 +71,9 @@ namespace DDI.WebApi.Controllers.General
             {
                 c => c.DefaultBusinessUnit,
                 c => c.BusinessUnits,
-                c => c.Constituent
+                c => c.Constituent,
+                c => c.Groups,
+                c => c.Roles
             };
         }
 
@@ -180,6 +182,34 @@ namespace DDI.WebApi.Controllers.General
                 }
 
                 var response = new DataResponse<ICollection<BusinessUnit>>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/users/{id}/groups")]
+        public IHttpActionResult GetGroupsByUserId(Guid id)
+        {
+            try
+            {
+                var result = Service.GetById(id).Data.Groups;
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                var response = new DataResponse<ICollection<Group>>
                 {
                     Data = result,
                     IsSuccessful = true
