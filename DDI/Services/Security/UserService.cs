@@ -114,7 +114,7 @@ namespace DDI.Services.Security
         }
         public IDataResponse UpdateUserGroups(Guid userId, JObject collection)
         {
-            var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
+            var user = UnitOfWork.GetById<User>(userId, u => u.Groups);
 
             IDataResponse response = null;
             var newList = GetBusinessObjectsFromJObject<Group>(collection);    

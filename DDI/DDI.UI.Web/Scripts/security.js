@@ -318,6 +318,24 @@ function ShowUsersSection() {
     $('.userdetailscontainer').hide();
     $('.userselectcontainer ul li').removeClass('selected');
 
+    $('.managegroups').unbind('click');
+    $('.managegroups').click(function (e) {
+
+        e.preventDefault();
+
+        LoadUserGroupsModal();
+
+    });
+
+    $('.managebu').unbind('click');
+    $('.managebu').click(function (e) {
+
+        e.preventDefault();
+
+        LoadUserBusinessUnitsModal();
+
+    });
+
 }
 
 function LoadUsers() {
@@ -434,7 +452,7 @@ function LoadUserGroupsModal() {
     modal = $('.usergroupsmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 550,
         resizable: false,
         beforeClose: function (e) {
             ClearFields('.modalcontent');
@@ -465,7 +483,7 @@ function LoadUserGroupsModal() {
             groups: groupIds
         }
 
-        MakeServiceCall('POST', 'users/' + userid + '/groups', JSON.stringify(item), function () {
+        MakeServiceCall('PATCH', 'users/' + userid + '/groups', JSON.stringify(item), function () {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
@@ -659,7 +677,7 @@ function SaveUser(id) {
 
     if (id) {
 
-        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
+        MakeServiceCall('POST', 'users/' + id, JSON.stringify(item), function (data) {
 
             DisplaySuccessMessage("Save successful.");
 

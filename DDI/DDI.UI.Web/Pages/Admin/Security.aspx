@@ -28,6 +28,9 @@
 
                 <input type="hidden" class="hidgroupid" />
 
+                <h1>Group Details</h1>
+                <hr />
+
                 <div class="fieldblock required">
                     <label>Name</label>
                     <input type="text" class="gp-Name" maxlength="128" />
@@ -86,6 +89,9 @@
             <div class="userdetailscontainer">
 
                 <input type="hidden" class="hiduserid" />
+
+                <h1>User Details</h1>
+                <hr />
 
                 <div class="twocolumn">
 
