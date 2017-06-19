@@ -142,6 +142,14 @@
 
             </div>
 
+            <div class="twocolumn">
+
+                <div class="usergroupsgridcontainer"></div>
+
+                <div class="userbugridcontainer"></div>
+
+            </div>
+
             <div class="usergroupsmodal" title="Manage Groups..." style="display: none;">
                 
                 <div class="modalcontent">

@@ -31,7 +31,8 @@ namespace DDI.WebApi.Controllers.Core
         {
             return new Expression<Func<Group, object>>[]
             {
-                n => n.Roles
+                n => n.Roles,
+                n => n.Users
             };
         }
         public GroupController(IService<Group> service) : base(service) { }
