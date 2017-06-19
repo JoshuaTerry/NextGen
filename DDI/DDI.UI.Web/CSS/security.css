@@ -24,6 +24,7 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .securitynav ul li.selected a { color: white; }
 
 .newgroup { border: solid 1px #0f75b4; }
+.newuser { border: solid 1px #0f75b4; }
 
 .groupscontainer { vertical-align: top; }
 .groupselectcontainer { width: 24%; display: inline-block; vertical-align: top; overflow-y: scroll; }
@@ -37,6 +38,11 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .roleselection div.fieldblock label { display: inline-block; }
 
 .userscontainer {  }
-
+.userselectcontainer { width: 24%; display: inline-block; vertical-align: top; overflow-y: scroll; }
+.userselectcontainer ul { list-style: none; margin: 0px; padding: 0px; }
+.userselectcontainer ul li { display: block; padding: 8px 15px; }
+.userselectcontainer ul li:hover { cursor: pointer; background-color: #c2ddf4; }
+.userselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
+.userdetailscontainer { width: 75%; display: inline-block; vertical-align: top; }
 
 

@@ -59,7 +59,7 @@
 
             </div>
 
-            <div class="rolesmodal" title="Add Roles..." style="display: none;">
+            <div class="rolesmodal" title="Manage Roles..." style="display: none;">
 
                 <div class="modalcontent">
 
@@ -85,15 +85,42 @@
 
             <div class="userdetailscontainer">
 
+                <input type="hidden" class="hiduserid" />
 
+                <div class="fieldblock">
+                    <label>Full Name</label>
+                    <input type="text" class="user-FullName" maxlength="256" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>User Name</label>
+                    <input type="text" class="user-UserName" maxlength="256" />
+                </div>
+
+                <div class="fieldblock">
+                    <label>Is Active</label>
+                    <input type="checkbox" class="user-IsActive" />
+                </div>
+
+                <div class="buttons">
+                    <input type="button" value="Save" class="saveuser" />
+                    <a href="cancel" class="canceluser">Cancel</a>
+                </div>
 
             </div>
 
-            <div class="newusermodal" title="New User..." style="display: none;">
+            <div class="newusermodal" title="Manage Groups..." style="display: none;">
                 
                 <div class="modalcontent">
 
-
+                    <div class="fieldblock">
+                        <label>Something</label>
+                    </div>
+                    
+                    <div class="modalbuttons">
+                        <input type="button" class="savegroups" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
+                    </div>
 
                 </div>
 

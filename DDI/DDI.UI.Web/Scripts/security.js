@@ -79,7 +79,7 @@ function LoadGroups() {
 
         $.map(data.Data, function(item) {
 
-            var group = $('<li>').text(item.Name).click(function () {
+            var group = $('<li>').text(item.DisplayName).click(function () {
                 // Select the group
                 $('.hidgroupid').val(item.Id);
                 LoadGroup(item.Id);
@@ -281,11 +281,91 @@ function ShowUsersSection() {
 
     $('.usernav').parent().addClass('selected');
 
+    $('.canceluser').click(function (e) {
+
+        e.preventDefault();
+
+        LoadGroup($('.hiduserid').val());
+
+    });
+
+    LoadUsers();
+
+    $('.hiduserid').val('');
+    $('.userdetailscontainer').hide();
+    $('.userselectcontainer ul li').removeClass('selected');
+
 }
 
 function LoadUsers() {
 
     $('.userselectcontainer').show();
+
+    MakeServiceCall('GET', 'users', null, function (data) {
+
+        $('.userselectcontainer').html('');
+        var users = $('<ul>');
+
+        var newuser = $('<li>').text('New User').addClass('newuser').click(function () {
+
+            $('.hiduserid').val('');
+            $('.user-UserName').val('');
+
+            $('.saveuser').unbind('click');
+            $('.saveuser').click(function () {
+                SaveUser(null);
+
+                $('.newlinkcontainer').show();
+            });
+
+            $(this).parent().find('li').removeClass('selected');
+
+            $('.userdetailscontainer').show();
+            $('.newlinkcontainer').hide();
+
+        }).appendTo($(users));
+
+        $.map(data.Data, function (item) {
+
+            var user = $('<li>').text(item.DisplayName).click(function () {
+                // Select the user
+                $('.hiduserid').val(item.Id);
+                LoadGroup(item.Id);
+
+                $('.saveuser').unbind('click');
+                $('.saveuser').click(function () {
+                    SaveUser(item.Id);
+                });
+
+                $(this).parent().find('li').removeClass('selected');
+                $(this).addClass('selected');
+
+                $('.userdetailscontainer').show();
+                $('.newlinkcontainer').show();
+            });
+
+            if ($('.hiduserid').val() == item.Id) {
+                $(group).addClass('selected');
+                LoadGroup(item.Id);
+            }
+
+            $(users).append($(user));
+
+        });
+
+        $('.userselectcontainer').append($(users));
+
+    }, null)
+
+}
+
+function LoadUser(id) {
+
+
+
+}
+
+function SaveUser(id) {
 
 
 
