@@ -28,6 +28,9 @@
 
                 <input type="hidden" class="hidgroupid" />
 
+                <h1>Group Details</h1>
+                <hr />
+
                 <div class="fieldblock required">
                     <label>Name</label>
                     <input type="text" class="gp-Name" maxlength="128" />
@@ -87,6 +90,9 @@
 
                 <input type="hidden" class="hiduserid" />
 
+                <h1>User Details</h1>
+                <hr />
+
                 <div class="twocolumn">
 
                     <div>
@@ -140,13 +146,29 @@
                     <a href="cancel" class="canceluser">Cancel</a>
                 </div>
 
-            </div>
+                <br /><br />
 
-            <div class="twocolumn">
+                <div class="twocolumn">
 
-                <div class="usergroupsgridcontainer"></div>
+                    <div>
+                        <h2>Groups</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managegroups">Manage Groups</a>
+                        </div>
+                        <div class="usergroupsgridcontainer"></div>
+                    </div>
 
-                <div class="userbugridcontainer"></div>
+                    <div>
+                        <h2>Business Units</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managebu">Manage Business Units</a>
+                        </div>
+                        <div class="userbugridcontainer"></div>
+                    </div>
+
+                </div>
 
             </div>
 
