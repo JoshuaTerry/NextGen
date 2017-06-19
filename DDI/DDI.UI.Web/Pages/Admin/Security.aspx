@@ -28,7 +28,7 @@
 
                 <input type="hidden" class="hidgroupid" />
 
-                <div class="fieldblock">
+                <div class="fieldblock required">
                     <label>Name</label>
                     <input type="text" class="gp-Name" maxlength="128" />
                 </div>
@@ -87,19 +87,52 @@
 
                 <input type="hidden" class="hiduserid" />
 
-                <div class="fieldblock">
-                    <label>Full Name</label>
-                    <input type="text" class="user-FullName" maxlength="256" />
-                </div>
+                <div class="twocolumn">
 
-                <div class="fieldblock">
-                    <label>User Name</label>
-                    <input type="text" class="user-UserName" maxlength="256" />
-                </div>
+                    <div>
 
-                <div class="fieldblock">
-                    <label>Is Active</label>
-                    <input type="checkbox" class="user-IsActive" />
+                        <div class="fieldblock required">
+                            <label>User Name</label>
+                            <input type="text" class="user-UserName" maxlength="256" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Full Name</label>
+                            <input type="text" class="user-FullName" maxlength="256" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>E-mail</label>
+                            <input type="text" class="user-Email email" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Phone Number</label>
+                            <input type="text" class="user-PhoneNumber phone" />
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="fieldblock">
+                            <label>Is Active</label>
+                            <input type="checkbox" class="user-IsActive" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Constituent</label>
+                            <input type="text" class="rs-Constituent1Information constituentlookup" />
+                            <input type="hidden" class="rs-Constituent1Id" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Business Unit</label>
+                            <select class="user-DefaultBusinessUnitId"></select>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="buttons">

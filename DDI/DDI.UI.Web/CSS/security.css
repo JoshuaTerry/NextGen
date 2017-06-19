@@ -23,26 +23,33 @@ a.newlink { color: #0f75b4 !important; margin-right: 20px; }
 .securitynav ul li.selected { background-color: #0f75b4; }
 .securitynav ul li.selected a { color: white; }
 
-.newgroup { border: solid 1px #0f75b4; }
-.newuser { border: solid 1px #0f75b4; }
+.newgroup { padding: 8px 15px; border: solid 2px #0f75b4; font-weight: bold; color: #0f75b4; font-size: 14px; vertical-align: top; }
+.newgroup:hover { cursor: pointer; background-color: #c2ddf4; }
+.newgroup img { border: 0px; padding: 0px; margin: 0px 0px -3px 0px; }
+.newuser { padding: 8px 15px; border: solid 2px #0f75b4; font-weight: bold; color: #0f75b4; font-size: 14px; vertical-align: top; }
+.newuser:hover { cursor: pointer; background-color: #c2ddf4; }
+.newuser img { border: 0px; padding: 0px; margin: 0px 0px -3px 0px; }
 
 .groupscontainer { vertical-align: top; }
-.groupselectcontainer { width: 24%; display: inline-block; vertical-align: top; overflow-y: scroll; }
-.groupselectcontainer ul { list-style: none; margin: 0px; padding: 0px; }
+.groupselectcontainer { width: 24%; display: inline-block; vertical-align: top; }
+.groupselectcontainer ul { list-style: none; margin: 0px; padding: 0px; overflow-y: scroll; }
 .groupselectcontainer ul li { display: block; padding: 8px 15px; }
 .groupselectcontainer ul li:hover { cursor: pointer; background-color: #c2ddf4; }
 .groupselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
-.groupdetailscontainer { width: 75%; display: inline-block; vertical-align: top; } 
+.groupdetailscontainer { width: 74%; display: inline-block; vertical-align: top; margin-left: 10px; } 
 
 .roleselection {  }
 .roleselection div.fieldblock label { display: inline-block; }
 
 .userscontainer {  }
-.userselectcontainer { width: 24%; display: inline-block; vertical-align: top; overflow-y: scroll; }
-.userselectcontainer ul { list-style: none; margin: 0px; padding: 0px; }
+.userselectcontainer { width: 24%; display: inline-block; vertical-align: top; }
+.userselectcontainer ul { list-style: none; margin: 0px; padding: 0px; overflow-y: scroll; }
 .userselectcontainer ul li { display: block; padding: 8px 15px; }
 .userselectcontainer ul li:hover { cursor: pointer; background-color: #c2ddf4; }
 .userselectcontainer ul li.selected { background-color: #0f75b4; color: white; }
+
 .userdetailscontainer { width: 75%; display: inline-block; vertical-align: top; }
+.userdetailscontainer div.twocolumn { width: 90%; margin-left: 10px; }
+.userdetailscontainer div.twocolumn>div { width: 48%; }
 
 

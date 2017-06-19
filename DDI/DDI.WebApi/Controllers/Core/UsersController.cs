@@ -70,7 +70,8 @@ namespace DDI.WebApi.Controllers.General
             return new Expression<Func<User, object>>[]
             {
                 c => c.DefaultBusinessUnit,
-                c => c.BusinessUnits
+                c => c.BusinessUnits,
+                c => c.Constituent
             };
         }
 
