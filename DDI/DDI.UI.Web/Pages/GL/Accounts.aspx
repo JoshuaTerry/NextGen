@@ -39,13 +39,14 @@
 
                     var ledgerId = data.Data[0].Id;
 
+                    $('.ma-selectaccount1').html('');
+                    $('.ma-selectaccount2').html('');
+
                     GLAccountSelector($('.ma-selectaccount1'), ledgerId, fiscalYearId);
                     GLAccountSelector($('.ma-selectaccount2'), ledgerId, fiscalYearId);
 
                 });
-
                 
-
                 $('.cancelmodal').click(function (e) {
 
                     e.preventDefault();
@@ -61,7 +62,15 @@
                     var acctId1 = $('.ma-selectaccount1').find('.hidaccountid').val();
                     var acctId2 = $('.ma-selectaccount2').find('.hidaccountid').val();
 
-                    alert('Account 1: ' + acctId1 + '\r\n\r\n' + 'Account 2: ' + acctId2);
+                    MakeServiceCall('POST', 'accounts/' + acctId1 + '/merge/' + acctId2, null, function (data) {
+
+                        CloseModal(modal);
+
+                        DisplaySuccessMessage('Success', 'Accounts merged successfully.');
+
+                        LoadAccountSelectorGrid($('.as-fiscalyear').val());
+
+                    }, null);
 
                 });
 

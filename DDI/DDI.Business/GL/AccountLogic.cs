@@ -106,8 +106,8 @@ namespace DDI.Business.GL
 
             try
             {
-                var sourceAccount = UnitOfWork.GetById<Account>(sourceAccountId, p => p.FiscalYear.Ledger, p => p.Budgets);
-                var destinationAccount = UnitOfWork.GetById<Account>(destinationAccountId, p => p.FiscalYear.Ledger, p => p.Budgets);
+                var sourceAccount = UnitOfWork.GetById<Account>(sourceAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
+                var destinationAccount = UnitOfWork.GetById<Account>(destinationAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
 
                 response.Data = destinationAccount;
 
