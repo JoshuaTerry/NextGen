@@ -303,7 +303,7 @@ function InitNewJournalLineModal() {
         modal = $('.journallinemodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 900,
+            width: 1000,
             resizable: false,
             beforeClose: function (e) {
                 $('.journallineledgeraccountid').empty();

@@ -71,7 +71,7 @@
             </div>
             <div class="info">
                 <ul>
-                    <li title="Business Unit"><a href="#" class="editbusinessunit">BU</a> </li>
+                    <li title="Business Unit"><a href="#" class="editbusinessunit">No Business Units Available</a> </li>
                     <li title="Business Date"><a href="#" class="businessdate"></a> </li>
                     <li title="Environment"><span class="environment"></span> </li>
                 </ul>
@@ -145,22 +145,22 @@
 
                                     <div class="fieldblock">
                                         <label>First</label>
-                                        <input type="text" class="nc-FirstName" />
+                                        <input type="text" class="nc-FirstName" maxlength="128" />
                                     </div>
 
                                     <div class="fieldblock">
                                         <label>Middle</label>
-                                        <input type="text" class="nc-MiddleName" />
+                                        <input type="text" class="nc-MiddleName" maxlength="128"  />
                                     </div>
 
                                     <div class="fieldblock">
                                         <label>Last</label>
-                                        <input type="text" class="nc-LastName" />
+                                        <input type="text" class="nc-LastName" maxlength="128"  />
                                     </div>
 
                                     <div class="fieldblock">
                                         <label>Suffix</label>
-                                        <input type="text" class="nc-Suffix" />
+                                        <input type="text" class="nc-Suffix" maxlength="128"  />
                                     </div>
                                 </div>
                             </div>
@@ -168,31 +168,31 @@
                             <div class="OrganizationContainer">
                                 <div class="fieldblock">
                                     <label>Name</label>
-                                    <input type="text" class="nc-Name" />
+                                    <input type="text" class="nc-Name" maxlength="128"  />
                                 </div>
                             </div>
 
                             <div class="threecolumn IndividualContainer">
                                 <div class="fieldblock">
                                     <label>Nick Name</label>
-                                    <input type="text" class="nc-NickName" />
+                                    <input type="text" class="nc-NickName" maxlength="128"  />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Name 2</label>
-                                    <input type="text" class="nc-Name2" />
+                                    <input type="text" class="nc-Name2" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock">
                                     <label>Salutation</label>
-                                    <input type="text" class="nc-Salutation" />
+                                    <input type="text" class="nc-Salutation" maxlength="255" />
                                 </div>
                             </div>
 
                             <div class="threecolumn">
                                 <div class="fieldblock">
                                     <label>Tax ID</label>
-                                    <input type="text" class="nc-TaxID" />
+                                    <input type="text" class="nc-TaxID" maxlength="128" />
                                 </div>
 
                                 <div class="fieldblock IndividualContainer">
@@ -202,7 +202,7 @@
 
                                 <div class="fieldblock">
                                     <label>Source</label>
-                                    <input type="text" class="nc-Source" />
+                                    <input type="text" class="nc-Source" maxlength="128" />
                                 </div>
                             </div>
 
@@ -219,12 +219,12 @@
 
                                         <div class="fieldblock">
                                             <label>Address Line 1</label>
-                                            <input type="text" class="nca-AddressLine1 autoaddress1" />
+                                            <input type="text" class="nca-AddressLine1 autoaddress1" maxlength="255" />
                                         </div>
 
                                         <div class="fieldblock">
                                             <label>Address Line 2</label>
-                                            <input type="text" class="nca-AddressLine2 autoaddress2" />
+                                            <input type="text" class="nca-AddressLine2 autoaddress2" maxlength="255" />
                                         </div>
                                     </div>
 
@@ -236,7 +236,7 @@
 
                                         <div class="fieldblock">
                                             <label>Postal Code</label>
-                                            <input type="text" class="nca-PostalCode autozip" />
+                                            <input type="text" class="nca-PostalCode autozip" maxlength="128" />
                                         </div>
 
                                         <div class="fieldblock">
@@ -246,7 +246,7 @@
 
                                         <div class="fieldblock">
                                             <label>City</label>
-                                            <input type="text" class="nca-City autocity" />
+                                            <input type="text" class="nca-City autocity" maxlength="128" />
                                         </div>
 
                                         <div class="fieldblock">
@@ -361,7 +361,7 @@
 
                 <div class="modalbuttons">
                     <input type="button" class="savebusinessunit" value="Save" />
-                    <a href="#" class="cancelmodal">Cancel</a>
+                    <a href="#" class="cancelbumodal">Cancel</a>
                 </div>
                             
             </div>        
@@ -498,7 +498,7 @@
 
             <div class="fieldblock">
                 <label>Title</label>
-                <input type="text" class="nd-Title" />
+                <input type="text" class="nd-Title required" maxlength="256" />
             </div>
 
             <div class="fieldblock">

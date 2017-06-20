@@ -25,11 +25,13 @@ div.options div.threecolumn > div { width: auto; }
 div.options { margin-left: 0px; }
 div.options fieldset { width: 96%; }
 
+div.fieldblock label {  }
 div.fieldblock input { height: auto; }
 div.fieldblock input.cfoptioncode { width: 25px; }
 div.fieldblock input.cfoptiondesc { width: 140px; }
 div.fieldblock input.cfoptionorder { width: 25px; }
-
+div.fieldblock input[type=checkbox] { margin-left: -5px; padding-left: 0px; }
+div.fieldblock select {  width: auto; min-width: 100px; }
 a.customfieldmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 
@@ -59,3 +61,12 @@ div.tagscontainer { height: 50vh }
 
 .fiscalyearcontainer { width: 30%; display: inline-block; margin-right: 3%; }
 .fiscalperiodscontainer { display: inline-block; width: 50%; }
+div.fieldblock input.as-daysinadvance { width: 30px;}
+
+div.fieldblock input.workingBudgetName { width: 150px; }
+div.fieldblock input.fixedBudgetName { width: 150px; }
+div.fieldblock input.whatifBudgetName { width: 150px; }
+ 
+.fundsettingscontainer div.fieldblock label { width: 7%; }
+.budgetsettingscontainer div.fieldblock label { width: 18%;}
+.accountingsettingscontainer div.fieldblock label { width: 10%}

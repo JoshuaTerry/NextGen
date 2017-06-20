@@ -23,7 +23,7 @@
             <label>GL Account: </label>
         </span>
         <span class="summaryleftinput">
-            <input type="text" class="AccountNumber readonly editable" readonly="read-only" />
+            <input type="text" class="AccountNumber readonly editable" readonly="read-only" maxlength="64" />
         </span>
 
         <span class="editaccountbutton hidebuttons floatright">
@@ -376,12 +376,12 @@
 
         <div class="fieldblock">
             <label>Code</label>
-            <input type="text" class="as-Code editable" />
+            <input type="text" class="as-Code editable" maxlength="30" />
         </div>
 
         <div class="fieldblock">
             <label>Name</label>
-            <input type="text" class="as-Name editable" />
+            <input type="text" class="as-Name editable" maxlength="128" />
         </div>
 
         <div class="modalbuttons">
@@ -404,7 +404,7 @@
 
         <div class="fieldblock">
             <label>Name</label>
-            <input type="text" class="ag-Name editable" />
+            <input type="text" class="ag-Name editable" maxlength="128" />
         </div>
         
         <div class="fieldblock group1only">

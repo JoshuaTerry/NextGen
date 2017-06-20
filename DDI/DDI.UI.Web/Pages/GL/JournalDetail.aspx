@@ -112,7 +112,6 @@
 
             <div class="journallineaccountgroup">
                 <select class="SourceFundId">
-
                 </select>
                 <div>
                     <label class="accountselectorlabel">GL Account: </label>

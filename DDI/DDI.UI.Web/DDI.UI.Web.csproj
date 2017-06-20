@@ -157,6 +157,7 @@
     <Content Include="Scripts\JournalEntry.js" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\gljournals.js" />
     <Content Include="Scripts\importwizard.js" />
     <Content Include="Scripts\dx.aspnet.data.js" />
     <Content Include="Scripts\InvestmentDetails.js" />
