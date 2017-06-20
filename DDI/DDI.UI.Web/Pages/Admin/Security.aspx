@@ -89,18 +89,18 @@
             <div class="user-editonly1" style="display: none;">
                 <div class="fieldblock">
                     <label>Full Name</label>
-                    <input type="text" class="user-FullName" />
+                    <input type="text" class="user-FullName" maxlength="256" />
                 </div>
 
                 <div class="fieldblock">
                     <label>User Name</label>
-                    <input type="text" class="user-UserName" />
+                    <input type="text" class="user-UserName" maxlength="256" />
                 </div>
             </div>
 
             <div class="fieldblock">
                 <label>Email</label>
-                <input type="email" name="email" class="user-Email" />
+                <input type="email" name="email required" class="user-Email" />
             </div>
 
             <div class="user-editonly2" style="display: none;">

@@ -359,7 +359,7 @@ function AddRolesToGroup(id) {
             //LoadGroup(id)
             $('.rolesmodal').hide();
 
-            //$('.rolestagbox').dxTagBox('instance').reset();
+            $('.rolestagbox').dxTagBox('instance').reset();
             EditGroup(id);
 
         }, function (xhr, status, err) {

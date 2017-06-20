@@ -28,49 +28,7 @@ namespace DDI.Services.Security
             };
         }
 
-        //public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
-        //{
-        //    var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
-        //    var defaultbu = UnitOfWork.GetById<BusinessUnit>(defaultbuid);
-
-        //    if (!result.BusinessUnits.Contains(defaultbu))
-        //    {
-        //        result.BusinessUnits.Add(defaultbu);
-        //    }
-
-        //    result.DefaultBusinessUnitId = defaultbuid;
-
-        //   UnitOfWork.SaveChanges();
-
-        //    DataResponse<User> response = new DataResponse<User>
-        //    {
-        //        Data = result,
-        //        IsSuccessful = true
-        //    };
-
-        //    return response;
-        //}
-
-        //public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
-        //{
-        //    var result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
-        //    var bu = UnitOfWork.GetById<BusinessUnit>(buid);
-
-        //    if (!result.BusinessUnits.Contains(bu))
-        //    {
-        //        result.BusinessUnits.Add(bu);
-        //        UnitOfWork.SaveChanges();
-        //    }
-
-        //    IDataResponse response = new DataResponse<User>
-        //    {
-        //        Data = result,
-        //        IsSuccessful = true
-        //    };
-
-        //    return response;
-        //}
-
+        
         public IDataResponse SyncBusinessUnitsToUser(Guid id, List<Guid> buids)
         {
             User result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
