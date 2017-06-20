@@ -20,7 +20,7 @@ namespace DDI.Services.General
         public override IDataResponse Delete(Group entity)
         {
             UnitOfWork.GetReference(entity, g => g.Users);
-            entity.Users.ForEach(u => RemoveUser(u.Id, entity.Id));
+            entity.Users.ToList().ForEach(u => RemoveUser(u.Id, entity.Id));
 
             // Parallel.ForEach(entity.Users, u => RemoveUser(u.Id, entity.Id));
 
@@ -81,8 +81,16 @@ namespace DDI.Services.General
             var newRoles = user.Groups.SelectMany(g => g.Roles).Select(r => r.Id).Distinct().ToList();
 
             var removes = user.Roles.Select(r => r.RoleId).Except(newRoles);
-            removes.ForEach(r => user.Roles.Remove(user.Roles.First(ur => ur.RoleId == r)));
-            UnitOfWork.Update(user);
+            //removes.ForEach(r => user.Roles.Remove(user.Roles.First(ur => ur.RoleId == r)));
+            //UnitOfWork.Update(user);
+
+            foreach (Guid id in removes)
+            {
+                var ur = user.Roles.First(r => r.RoleId == id);
+                //user.Roles.Remove(ur);
+                var userRole = UnitOfWork.GetById<UserRole>(ur.Id);
+                UnitOfWork.Delete(userRole);
+            }
         }
 
         public IDataResponse<ICollection<Role>> GetRolesInGroup(Guid groupId)
