@@ -100,7 +100,6 @@ function GetSystemSettings(category, callback) {
         }
 
     }, null);
-
 }
 
 
@@ -2754,10 +2753,11 @@ function LoadChartAccountsSectionSettings() {
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
 
-    var selectledgergroup = $('<div>');
-    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
-    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'chartLedgerId', container, true); 
+    //var selectledgergroup = $('<div>');
+    //$('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    //var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
+    //$(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
     PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
         //update on change  (not working so added .change logic below
@@ -2767,7 +2767,7 @@ function LoadChartAccountsSectionSettings() {
         GetChartSetting();
     });
 
-    selectledgername.change(function () {
+    $('.chartLedgerId').change(function () {
         GetChartSetting();
     });
 
@@ -2775,6 +2775,7 @@ function LoadChartAccountsSectionSettings() {
     var capitalizeheaderscheckbox = $('<input>').attr('type', 'checkbox').addClass('capitalizeheaders').appendTo(capitalizeheadersgroup);
     $('<span>').text('Capitalize account group descriptions').appendTo(capitalizeheadersgroup);
     $(capitalizeheadersgroup).append('<br />').appendTo(container);
+    //CreateBasicFieldBlock('Capitalize Account Groups: ', '<input type="checkbox">', 'chartLedgerId', container, true); 
 
     var grouplevelsgroup = $('<div>');
     $('<label>').text('Number of account groups: ').appendTo(grouplevelsgroup);
@@ -2788,22 +2789,22 @@ function LoadChartAccountsSectionSettings() {
     grouplevels.appendTo(grouplevelsgroup);
     $(grouplevelsgroup).append('<br />').append('<br />').appendTo(container);
 
-    var group1 = $('<div>').addClass('fieldblock AccountGroup1group');
+    var group1 = $('<div>').addClass('fieldblock AccountGroup1group ');
     $('<label>').text('Account Group 1: ').appendTo(group1);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup1Title').appendTo(group1);
     $(group1).appendTo(container);
 
-    var group2 = $('<div>').addClass('fieldblock AccountGroup2group');
+    var group2 = $('<div>').addClass('fieldblock AccountGroup2group AccountGroup ag2 ag3 ag4');
     $('<label>').text('Account Group 2: ').appendTo(group2);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup2Title').appendTo(group2);
     $(group2).hide().appendTo(container);
 
-    var group3 = $('<div>').addClass('fieldblock AccountGroup3group');
+    var group3 = $('<div>').addClass('fieldblock AccountGroup3group AccountGroup ag3 ag4');
     $('<label>').text('Account Group 3: ').appendTo(group3);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup3Title').appendTo(group3);
     $(group3).hide().appendTo(container);
 
-    var group4 = $('<div>').addClass('fieldblock AccountGroup4group');
+    var group4 = $('<div>').addClass('fieldblock AccountGroup4group AccountGroup ag4');
     $('<label>').text('Account Group 4: ').appendTo(group4);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup4Title').appendTo(group4);
     $(group4).hide().appendTo(container);
@@ -2913,28 +2914,11 @@ function SaveChartSetting(id) {
 
 function GroupLevelsChange() {
     var groupLevels = $('.groupLevels').val();
-    switch (groupLevels) {
-        case '1':
-            $('.AccountGroup2group').hide();
-            $('.AccountGroup3group').hide();
-            $('.AccountGroup4group').hide();
-            break;
-        case '2':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').hide();
-            $('.AccountGroup4group').hide();
-            break;
-        case '3':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').show();
-            $('.AccountGroup4group').hide();
-            break;
-        case '4':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').show();
-            $('.AccountGroup4group').show();
-            break;
-    }
+
+    $('.AccountGroup').hide();
+    $('.ag' + groupLevels).show(); 
+
+   
 }
 function LoadChartAccountsSettingsSectionSettings() {}
 
