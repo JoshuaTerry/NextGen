@@ -2,8 +2,6 @@
 
 $(document).ready(function () {
 
-    //SetupNewUserModal();
-
     LoadGroupsGrid();
     LoadRolesTagBox();
     NewGroupModal();
@@ -20,16 +18,6 @@ $(document).ready(function () {
 });
 
 
-//function LoadSecuritySettingsGrid() {
-
-//    var columns = [
-//        { dataField: 'UserId', caption: 'User ID' },
-//        { dataField: 'Name', caption: 'Name' }
-//    ];
-
-//    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
-
-//}
 
 /* GROUPS TAB */
 function LoadGroupsGrid() {
@@ -103,12 +91,6 @@ function NewGroupModal() {
                     $('.saverolesbutton').click(function (e) {
 
                         AddRolesToGroup(id);
-
-                        //$('.rolesmodal').hide();
-
-                        //LoadGroup(id);
-
-                        //$('.rolestagbox').dxTagBox('instance').reset();
 
 
                     });
@@ -235,10 +217,6 @@ function EditGroup(id) {
 
             AddRolesToGroup(id);
 
-            //$('.rolesmodal').hide();
-
-            //$('.rolestagbox').dxTagBox('instance').reset();
-            //EditGroup(id);
 
         });
 
@@ -271,29 +249,6 @@ function EditGroup(id) {
 
 }
 
-function SaveGroup(id) {
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save group title
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save roles to group
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-}
 
 function DeleteGroup(id) {
 
@@ -354,9 +309,6 @@ function AddRolesToGroup(id) {
 
             DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
 
-            //$('.rolesmodal').hide();
-
-            //LoadGroup(id)
             $('.rolesmodal').hide();
 
             $('.rolestagbox').dxTagBox('instance').reset();
@@ -458,10 +410,6 @@ function NewUserModal() {
 function EditUser(id) {
 
 
-    //ARECA These dropdowns need to populate on edit of a user. or maybe on save of a new group, we do a re
-    //$('.user-DefaultBusinessUnitId').empty();
-    //$('.user-GroupId').empty();
-    
     LoadUser(id);
 
 
