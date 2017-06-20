@@ -2593,7 +2593,7 @@ function LoadAccountingSettingsSectionSettings() {
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
 
     // transaction posted automatially
-    CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
+    CreateBasicFieldBlock('Post Transactions Automatically: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
 
     // how many days in advance recurring journals will be processed
     CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer, false, 3);
@@ -2945,7 +2945,7 @@ function LoadEntitiesSectionSettings() {
 
     var entityColumns = [
       
-      { dataField: 'Code', caption: 'Code' },
+      { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
       { dataField: 'Name', caption: 'Description' },
       {
           caption: 'Entity Type', cellTemplate: function (container, options) {
@@ -2968,7 +2968,7 @@ function LoadEntitiesSectionSettings() {
       }
     ];
 
-    LoadGrid('.gridcontainer', 'gridcontainer', entityColumns, 'businessunits', 'businessunits', null, 'en-',
+    LoadGrid('gridcontainer', 'bugridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
@@ -3304,8 +3304,8 @@ function PopulateFundDueFromFund(fundid) {
               { dataField: 'DisplayName', caption: 'Fund' },
               { dataField: 'FromLedgerAccount.AccountNumber', caption: 'Due From Account' },
               { dataField: 'FromLedgerAccount.Name', caption: 'Description' },
-             { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
-         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
+              { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
+              { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
     //LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, 'funds/' + fundid + '/fundfromto', 'funds', null, 'fn-',
     //   '.fundduemodal', '', 250, false, false, false, null);
@@ -3398,7 +3398,7 @@ function EditBusinessUnit(bufromtoid) {
                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                CloseModal(modal);
                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                             
+              // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
                $('.bus-FromLedgerAccount').empty();
                $('.bus-ToLedgerAccount').empty();
               

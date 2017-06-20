@@ -16,7 +16,7 @@
 .systemsettings div.controlContainer { width: 10%; text-align: right; display: inline-block; }
 .systemsettings div.controlContainer a { margin-left: 10px; }
 
-.systemsettingsheader { display: inline-block; width: 86%; margin: 10px 0px; }
+.systemsettingsheader { display: inline-block; width: 86%; margin-bottom: 10px; }
 
 .gridcontainer { vertical-align: top; }
 
@@ -25,13 +25,11 @@ div.options div.threecolumn > div { width: auto; }
 div.options { margin-left: 0px; }
 div.options fieldset { width: 96%; }
 
-div.fieldblock label {  }
 div.fieldblock input { height: auto; }
 div.fieldblock input.cfoptioncode { width: 25px; }
 div.fieldblock input.cfoptiondesc { width: 140px; }
 div.fieldblock input.cfoptionorder { width: 25px; }
-div.fieldblock input[type=checkbox] { margin-left: -5px; padding-left: 0px; }
-div.fieldblock select {  width: auto; min-width: 100px; }
+
 a.customfieldmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 a.newmodallink { text-align: right; margin: 0 10px 10px 0; display: block; }
 
@@ -58,15 +56,16 @@ div.tagscontainer { height: 50vh }
 .tagselectgridcontainer { height: 175px; }
 .tagSelectImage { margin-left: 350px; }
 
+.dx-data-row:hover { background-color: #cccccc; cursor: pointer; }
 
-.fiscalyearcontainer { width: 30%; display: inline-block; margin-right: 3%; }
-.fiscalperiodscontainer { display: inline-block; width: 50%; }
-div.fieldblock input.as-daysinadvance { width: 30px;}
+.searchcriteria { width: 15%; display: inline-block; margin: 10px 0 0 1%; vertical-align: top; }
+.searchcriteria div.fieldblock input,
+.searchcriteria div.fieldblock select { width: 100%; }
+.searchcriteria div.buttons { margin-top: 10px; }
+    
+.searchcriteria fieldset { background-color: white; }
 
-div.fieldblock input.workingBudgetName { width: 150px; }
-div.fieldblock input.fixedBudgetName { width: 150px; }
-div.fieldblock input.whatifBudgetName { width: 150px; }
- 
-.fundsettingscontainer div.fieldblock label { width: 7%; }
-.budgetsettingscontainer div.fieldblock label { width: 18%;}
-.accountingsettingscontainer div.fieldblock label { width: 10%}
+.searchresults { width: 80%; display: inline-block; float:right; margin: 10px 0 0 1%; background-color: white; vertical-align: top; ali}
+.searchresults div.scrollable { width: 100%; }
+
+
