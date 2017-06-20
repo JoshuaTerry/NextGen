@@ -179,31 +179,31 @@ namespace DDI.Business.Tests.GL
             Assert.AreEqual("01-100-10-10", _bl.CalculateAccountNumber(ledger, segments), "Using list of segments in wrong order.");
         }
 
-        [TestMethod, TestCategory(TESTDESCR)]
-        public void AccountLogic_CalculateSortKey()
-        {
-            string unit = BusinessUnitDataSource.UNIT_CODE1;
+        //[TestMethod, TestCategory(TESTDESCR)]
+        //public void AccountLogic_CalculateSortKey()
+        //{
+        //    string unit = BusinessUnitDataSource.UNIT_CODE1;
 
-            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.OPEN_YEAR);
-            var ledger = year.Ledger;
-            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
+        //    var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.OPEN_YEAR);
+        //    var ledger = year.Ledger;
+        //    var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
 
-            var segmentLevels = _uow.GetBusinessLogic<LedgerLogic>().GetSegmentLevels(ledger.Id);
-            foreach (var entry in segmentLevels)
-            {
-                entry.SortOrder = 0;
-            }
+        //    var segmentLevels = _uow.GetBusinessLogic<LedgerLogic>().GetSegmentLevels(ledger.Id);
+        //    foreach (var entry in segmentLevels)
+        //    {
+        //        entry.SortOrder = 0;
+        //    }
 
-            Assert.AreEqual("01 150 50 42", _bl.CalculateSortKey(account), "Using default order");
+        //    Assert.AreEqual("01 150 50 42", _bl.CalculateSortKey(account), "Using default order");
 
-            segmentLevels[0].SortOrder = 1;
-            segmentLevels[1].SortOrder = 4;
-            segmentLevels[2].SortOrder = 3;
-            segmentLevels[3].SortOrder = 2;
+        //    segmentLevels[0].SortOrder = 1;
+        //    segmentLevels[1].SortOrder = 4;
+        //    segmentLevels[2].SortOrder = 3;
+        //    segmentLevels[3].SortOrder = 2;
 
-            Assert.AreEqual("01 42 50 150", _bl.CalculateSortKey(account), "Using default order");
+        //    Assert.AreEqual("01 42 50 150", _bl.CalculateSortKey(account), "Using default order");
 
-        }
+        //}
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void AccountLogic_ValidateAccountNumber_FiscalYear()

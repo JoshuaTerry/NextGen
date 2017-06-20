@@ -30,9 +30,7 @@ namespace DDI.Services.Test.Services
             uow.Setup(m => m.GetById<Role>(roles[0].Id)).Returns(roles[0]);
             uow.Setup(m => m.GetById<Role>(roles[1].Id)).Returns(roles[1]);
             uow.Setup(m => m.GetById<Role>(roles[2].Id)).Returns(roles[2]);
-
-            //var service = new Mock<GroupService>(uow.Object);
-            //service.Setup(s => s.GetRoleListFromJObject(It.IsAny<JObject>())).Returns(JObjectRoles());
+            
             var service = new GroupService(uow.Object);
             string roleid = "{ Ids: ['82CD5D29-34A6-419A-B93D-CCAF5CB910F6'] }";
             JObject jRole = JObject.Parse(roleid);
@@ -40,8 +38,7 @@ namespace DDI.Services.Test.Services
             var response = service.UpdateGroupRoles(groupId, jRole);
 
             Assert.AreEqual(response.Data.Roles.Count(), 1);
-            Assert.AreEqual(response.Data.Roles.ToList()[0].Id, Guid.Parse("82cd5d29-34a6-419a-b93d-ccaf5cb910f6"));
-            Assert.AreEqual(response.Data.Users.ToList()[0].Roles.ToList()[0].RoleId, Guid.Parse("82cd5d29-34a6-419a-b93d-ccaf5cb910f6"));
+            Assert.AreEqual(response.Data.Roles.ToList()[0].Id, Guid.Parse("82cd5d29-34a6-419a-b93d-ccaf5cb910f6"));            
         }
 
          
