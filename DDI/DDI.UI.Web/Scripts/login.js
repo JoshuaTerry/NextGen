@@ -89,6 +89,8 @@ function Login() {
             sessionStorage.setItem('CURRENT_USER_NAME', data.userName);
             // set userName
 
+            LoadCurrentUser();
+
             var user = {};
             user.username = $('.username').val();
             user.token = data.access_token;

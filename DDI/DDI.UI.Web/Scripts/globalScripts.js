@@ -110,6 +110,8 @@ function LoadDefaultAuthToken() {
 
                     sessionStorage.setItem('CURRENT_USER_NAME', split_token[1]);
 
+                    LoadCurrentUser();
+
                     location.href = "/Default.aspx";
                 }
             },
@@ -125,38 +127,41 @@ function LoadDefaultAuthToken() {
 function LoadCurrentUser() {
 
     var userName = sessionStorage.getItem('CURRENT_USER_NAME');
+    if (userName !== null) {
 
-    if (currentBusinessUnitId === null) {
+        if (currentBusinessUnitId === null) {
 
-        MakeServiceCall('GET', 'userbyname/' + userName + '/', null, function (data) {
+            MakeServiceCall('GET', 'userbyname/' + userName + '/', null, function (data) {
 
-            if (data.Data.DefaultBusinessUnitId === null) {
+                if (data.Data.DefaultBusinessUnitId === null) {
 
-                currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
+                    currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
 
-                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.BusinessUnits[0].Id);
+                    sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.BusinessUnits[0].Id);
 
-                $('.editbusinessunit').text(data.Data.BusinessUnits[0].DisplayName);
+                    $('.editbusinessunit').text(data.Data.BusinessUnits[0].DisplayName);
 
-            } else {
+                } else {
 
-                currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
+                    currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
 
-                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.DefaultBusinessUnit.Id);
+                    sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.DefaultBusinessUnit.Id);
 
-                $('.editbusinessunit').text(data.Data.DefaultBusinessUnit.DisplayName);
+                    $('.editbusinessunit').text(data.Data.DefaultBusinessUnit.DisplayName);
 
-            }
+                }
+
+            });
+
+        }
+
+        MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId, null, function (data) {
+
+            $('.editbusinessunit').text(data.Data.DisplayName);
 
         });
 
     }
-
-    MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId, null, function (data) {
-
-        $('.editbusinessunit').text(data.Data.DisplayName);
-
-    });
 }
 
 
