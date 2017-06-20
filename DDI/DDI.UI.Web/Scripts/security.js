@@ -56,6 +56,19 @@ function ShowGroupSection() {
 
 }
 
+function ClearGroupFields() {
+
+    $('.hidgroupid').val('');
+    $('.gp-Name').val('');
+
+    $(this).parent().find('li').removeClass('selected');
+
+    $('.groupdetailscontainer').show();
+    $('.newlinkcontainer').hide();
+    $('.accordions').hide();
+
+}
+
 function LoadGroups() {
 
     $('.groupselectcontainer').show();
@@ -67,8 +80,7 @@ function LoadGroups() {
 
         var newgroup = $('<div>').html('<img src="../../Images/New_16.png" /> New Group').addClass('newgroup').click(function () {
 
-            $('.hidgroupid').val('');
-            $('.gp-Name').val('');
+            ClearGroupFields();
 
             $('.savegroup').unbind('click');
             $('.savegroup').click(function () {
@@ -77,12 +89,6 @@ function LoadGroups() {
                 $('.newlinkcontainer').show();
                 $('.accordions').show();
             });
-
-            $(this).parent().find('li').removeClass('selected');
-
-            $('.groupdetailscontainer').show();
-            $('.newlinkcontainer').hide();
-            $('.accordions').hide();
 
         }).prependTo($('.groupselectcontainer'));
 
@@ -111,6 +117,8 @@ function LoadGroups() {
                 ConfirmModal('Are you sure you want to delete this Group?', function () {
 
                     MakeServiceCall('DELETE', 'groups/' + item.Id, null, function () {
+
+                        ClearGroupFields();
 
                         DisplaySuccessMessage("Delete successful.");
 
