@@ -5,6 +5,7 @@ using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
+using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
@@ -167,7 +168,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/users/{id}/businessunit")]
-        public IHttpActionResult GetBusinessUnitsByUserId(Guid id)
+        public IHttpActionResult getbusinessunitsbyuserid(Guid id)
         {
             try
             {
@@ -192,6 +193,35 @@ namespace DDI.WebApi.Controllers.General
                 return InternalServerError(new Exception(ex.Message));
             }
         }
+
+        [HttpGet]
+        [Route("api/v1/users/{userName}/businessunit")]
+        public IHttpActionResult GetBusinessUnitsByUserName(string userName, int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        {
+            try
+            {
+                var result = Service.GetWhereExpression(u => u.UserName == userName).Data.BusinessUnits;
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                var response = new DataResponse<ICollection<BusinessUnit>>
+                {
+                    Data = result,
+                    IsSuccessful = true
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpPost]

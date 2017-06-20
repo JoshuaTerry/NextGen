@@ -86,14 +86,8 @@ function Login() {
 
             sessionStorage.setItem(AUTH_TOKEN_KEY, data.access_token);
 
-            MakeServiceCall('GET', 'userbyname/' + data.userName + '/', null, function (data) {
-
-                sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
-
-                LoadCurrentUser();
-
-            }, null);
-            // set user id
+            sessionStorage.setItem('CURRENT_USER_NAME', data.userName);
+            // set userName
 
             var user = {};
             user.username = $('.username').val();

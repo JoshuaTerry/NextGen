@@ -16,10 +16,6 @@ $(document).ready(function () {
 
     LoadDefaultAuthToken();
 
-    //LoadCurrentUser();
-
-    LoadCurrentBusinessUnit();
-
     LoadDatePickers();
 
     LoadDatePair();
@@ -29,6 +25,8 @@ $(document).ready(function () {
     LoadTabs();
 
     LoadAccordions();
+
+    LoadCurrentUser();
 
     NewConstituentModal();
 
@@ -110,14 +108,9 @@ function LoadDefaultAuthToken() {
 
                     sessionStorage.setItem(AUTH_TOKEN_KEY, split_token[0]);
 
-                    MakeServiceCall('GET', 'userbyname/' + split_token[1] + '/', null, function (data) {
+                    sessionStorage.setItem('CURRENT_USER_NAME', split_token[1]);
 
-                        sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
-
-                        LoadCurrentUser(data);
-
-
-                    }, null);
+                    // LoadCurrentUser();
 
                     location.href = "/Default.aspx";
                 }
@@ -131,13 +124,13 @@ function LoadDefaultAuthToken() {
 
 }
 
-function LoadCurrentUser(data) {
+function LoadCurrentUser() {
 
-    //var userId = sessionStorage.getItem('CURRENT_USER_ID');
+    var userName = sessionStorage.getItem('CURRENT_USER_NAME');
 
     if (currentBusinessUnitId === null) {
 
-        //MakeServiceCall('GET', 'users/' + userId, null, function (data) {
+        MakeServiceCall('GET', 'userbyname/' + userName + '/', null, function (data) {
 
             if (data.Data.DefaultBusinessUnitId === null) {
 
@@ -157,7 +150,7 @@ function LoadCurrentUser(data) {
 
             }
 
-        //});
+        });
 
     }
 
@@ -168,22 +161,6 @@ function LoadCurrentUser(data) {
     });
 }
 
-function LoadCurrentBusinessUnit() {
-
-    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
-    
-    if (currentBusinessUnitId == null) {
-
-
-    } else {
-
-
-        $('.editbusinessunit').text($('.bu-currentbu').val());
-
-
-    }
-    
-}
 
 /* NEW CONSTITUENT */
 function NewConstituentModal() {
@@ -1640,7 +1617,7 @@ function BusinessUnitModal() {
         var modal = $('.changebusinessunitmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 250,
+            width: 275,
             resizable: false,
         });
 
@@ -1649,8 +1626,8 @@ function BusinessUnitModal() {
         $('.savebusinessunit').click(function (e) {
 
 
-            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', null, function (data) {
-                // just need to get user
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', null, function (data) {
+
                 businessunits = data.Data
 
                 $.each(businessunits, function (index, value) {
@@ -1659,9 +1636,6 @@ function BusinessUnitModal() {
 
                         currentBusinessUnit = value; 
                         sessionStorage.setItem('CURRENT_BUSINESS_UNIT', value.Id);
-
-                        $('.editbusinessunit').text(value.DisplayName);
-
 
                         window.location.reload();
                     }
@@ -1686,7 +1660,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown() {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', '<Please Select>', null,  currentBusinessUnitId, null, null);
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', '<Please Select>', null, currentBusinessUnitId, null, null);
     
 }
 
