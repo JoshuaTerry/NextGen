@@ -158,10 +158,11 @@ namespace DDI.WebApi.Controllers.CRM
             {    
                 Service.TargetConstituentId = id;
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response1 = Service.GetAllWhereExpression(a => a.Constituent1Id == id, search);
-                var response2 = Service.GetAllWhereExpression(a => a.Constituent2Id == id, search);
+                fields = ConvertFieldList(fields, DefaultFields);
+                var response1 = Service.GetAllWhereExpression(a => a.Constituent1Id == id, search, fields);
+                var response2 = Service.GetAllWhereExpression(a => a.Constituent2Id == id, search, fields);
                 response1.Data = response1.Data.Union(response2.Data).ToList();
-                return FinalizeResponse(response1, RouteNames.Constituent + RouteNames.Relationship, search, ConvertFieldList(fields, DefaultFields));
+                return FinalizeResponse(response1, RouteNames.Constituent + RouteNames.Relationship, search, fields);
             }
             catch (Exception ex)
             {

@@ -8,5 +8,7 @@ namespace DDI.Shared.Statics
         /// </summary>
         public static string CodeFields => $"{nameof(IEntity.Id)},{nameof(IEntity.DisplayName)},{nameof(ICodeEntity.IsActive)}";
 
+        public static string AllFields => "all";
+
     }
 }

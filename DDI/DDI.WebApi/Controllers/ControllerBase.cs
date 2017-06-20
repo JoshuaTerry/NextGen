@@ -8,6 +8,7 @@ using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
+using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
 
@@ -26,7 +27,7 @@ namespace DDI.WebApi.Controllers
         protected PathHelper.FieldListBuilder<T> FieldListBuilder => _fieldListBuilder?.Clear() ?? (_fieldListBuilder = new PathHelper.FieldListBuilder<T>());
 
         protected virtual string FieldsForList => string.Empty;
-        protected virtual string FieldsForSingle => "all";
+        protected virtual string FieldsForSingle => FieldLists.AllFields;
         protected virtual string FieldsForAll => string.Empty;
 
         #region Constructors 
@@ -66,7 +67,7 @@ namespace DDI.WebApi.Controllers
             {
                 fields = defaultFields;
             }
-            if (string.Compare(fields, "all", true) == 0)
+            if (string.Compare(fields, FieldLists.AllFields, true) == 0)
             {
                 fields = FieldsForAll;
             }

@@ -95,6 +95,7 @@
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
     <Content Include="CSS\fileupload\jquery.fileupload.css" />
     <Content Include="CSS\fileupload\uploader.css" />
+    <Content Include="CSS\Journals.css" />
     <Content Include="CSS\importwizard.css" />
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
@@ -150,6 +151,7 @@
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\gljournals.js" />
     <Content Include="Scripts\importwizard.js" />
     <Content Include="Scripts\dx.aspnet.data.js" />
     <Content Include="Scripts\InvestmentDetails.js" />

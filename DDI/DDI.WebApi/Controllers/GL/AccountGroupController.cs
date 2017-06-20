@@ -24,7 +24,8 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.ParentGroupId == parentgroupid, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.ParentGroupId == parentgroupid, search, fields);
                 return FinalizeResponse(response, RouteNames.AccountGroup, search, fields);
             }
             catch (Exception ex)
@@ -40,7 +41,8 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.GetAllWhereExpression(a => a.FiscalYearId == fiscalYearId && a.ParentGroupId == null, search);
+                fields = ConvertFieldList(fields, FieldsForList);
+                var response = Service.GetAllWhereExpression(a => a.FiscalYearId == fiscalYearId && a.ParentGroupId == null, search, fields);
                 return FinalizeResponse(response, RouteNames.AccountGroup, search, fields);
             }
             catch (Exception ex)

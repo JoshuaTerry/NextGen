@@ -10,7 +10,7 @@ namespace DDI.Services
     {
         public PaymentMethodService(IUnitOfWork uow) : base(uow) { }
 
-        protected override Action<PaymentMethod> FormatEntityForGet => p => SetDateTimeKind(p, q => q.StatusDate);
+        protected override Action<PaymentMethod, string> FormatEntityForGet => (p, fields) => SetDateTimeKind(p, q => q.StatusDate);
 
         public override IDataResponse<PaymentMethod> Add(PaymentMethod entity)
         {
