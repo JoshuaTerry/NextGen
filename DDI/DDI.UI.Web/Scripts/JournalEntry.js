@@ -18,6 +18,17 @@ function JournalDetailLoad() {
         SaveJournal()
     })
 
+    $('.reversejournal').unbind('click')
+    $('.reversejournal').click(function () {
+        if ($('.reversejournal').prop('checked') === true) {
+            $('.reverseondategroup').css('visibility', 'visible')
+        }
+        else {
+            $('.reverseondategroup').css('visibility', 'hidden')
+            $('.ReverseOnDate').val('')
+        }
+    })
+
     $('.cancelsavejournal').click(function (e) {
         e.preventDefault()
         ClearJournalFields()
@@ -120,11 +131,27 @@ function LoadJournalData() {
 
         if (data.Data) {
             if (data.IsSuccessful) {
-                $('.journaltype').html(GetJournalType(data))
-                $('.JournalNumber').html(data.Data.JournalNumber)
+                $('.journaltype').html(data.Data.JournalDescription)
+                $('.StatusDescription').html(data.Data.StatusDescription)
                 $('.TransactionDate').val(data.Data.TransactionDate)
                 $('.Comment').val(data.Data.Comment)
-                $('.ReverseOnDate').val(data.Data.ReverseOnDate)
+                switch (data.Data.JournalType) {
+                    case 0:
+                        if (data.Data.ReverseOnDate === null) {
+                            $('.reverseondategroup').css('visibility', 'hidden')
+                        }
+                        else {
+                            $('.reverseondategroup').css('visibility', 'visible')
+                            $('.ReverseOnDate').val(data.Data.ReverseOnDate)
+                        }
+                        break
+
+                    case 1:
+                        $('.recurringgroup').show()
+                        break
+                    case 2:
+                        break
+                }
                 $('.CreatedBy').html(data.Data.CreatedBy)
                 $('.CreatedOn').html(data.Data.CreatedOn)
                 $('.LastChangedBy').html(data.Data.LastChangedBy)
@@ -136,7 +163,7 @@ function LoadJournalData() {
 
     }, null)
 
-}
+    }
 
 function GetJournalType(data) {
     switch (data.Data.JournalType) {
@@ -262,11 +289,9 @@ function ClearJournalFields() {
     $(journalContainer + ' textarea').val('')
     $(journalContainer + ' select').val(0)
     $(journalContainer + ' input:checkbox').prop('checked', false)
-    $(journalContainer).find(".journaldescription").html('')
-    $(journalContainer).find(".JournalNumber").val('')
-    $(journalContainer).find(".JournalStatus").val('')
-    $(journalContainer).find(".CreatedBy").val('')
-    $(journalContainer).find(".CreatedOn").val('')
+    $(journalContainer).find(".StatusDescription").html('')
+    $(journalContainer).find(".CreatedBy").html('')
+    $(journalContainer).find(".CreatedOn").html('')
     $('.journallinegridcontainer').hide()
 }
 
@@ -275,19 +300,62 @@ function LoadJournalLineGrid(data) {
     var columns = [
         { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0},
         { dataField: 'LedgerAccount.AccountNumber', caption: 'GL Account', alignment: 'left' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'Name', caption: 'Debit' },
-        { dataField: 'Name', caption: 'Credit' },
-        { dataField: 'Name', caption: '%' },
-        { dataField: 'Name', caption: 'Due' },
-        { dataField: 'Name', caption: 'Fund' },
-        { dataField: 'Name', caption: 'Entity' },
+        { dataField: 'LedgerAccount.Name', caption: 'Description' },
+        {
+            name: 'debit', dataField: 'Amount', caption: 'Debit', dataType: 'number', format: 'currency', precision: 2, alignment: 'right', calculateCellValue: function (data) {
+                return (data.Amount >= 0 ? data.Amount : 0);
+            }
+        },
+        {
+            name: 'credit', dataField: 'Amount', caption: 'Credit', dataType: 'number', format: 'currency', precision: 2, alignment: 'right', calculateCellValue: function (data) {
+                return (data.Amount < 0 ? (data.Amount * -1): 0);
+            }
+        },
+        {
+            dataField: 'DueToMode', caption: 'Due', calculateCellValue: function (data) {
+                return [GetDueToMode(data.DueToMode)];
+            }
+        },
+        { dataField: 'SourceFund', caption: 'Fund' },
+        { dataField: 'SourceBusinessUnit', caption: '' },
     ];
 
     $('.journallinegridcontainer').show()
     LoadGridWithData('journallinegrid', '.journallinegridcontainer', columns, '', '', EditJournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
-        var test = data
+        $('.journallinegrid').dxDataGrid({
+            summary: {
+                totalItems: [
+                    { column: 'debit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}'},
+                    { column: 'credit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}'}
+                ]
+            }
+        });
     });
+}
+
+function GetDebitCredit(amount, type) {
+    if (type === 'Debit') {
+        return (amount >= 0 ? amount : 0);
+    }
+    if (type === 'Credit') {
+        return (amount < 0 ? amount : 0);
+    }
+}
+
+function GetDueToMode(dueToMode) {
+    switch (dueToMode) {
+        case 0:
+            return 'None'
+            break;
+        case 1:
+            return 'Due From'
+            break;
+        case 2:
+            return 'Due To'
+            break;
+        default:
+            return 'Undefined'
+    }
 }
 
 // modal section

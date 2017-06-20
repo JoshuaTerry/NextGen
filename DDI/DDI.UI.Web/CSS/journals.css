@@ -74,6 +74,10 @@ div.tagscontainer { height: 50vh }
     display: none;
 }
 
+.hidden {
+    display: none;
+}
+
 .invisible {
     visibility: hidden;
 }

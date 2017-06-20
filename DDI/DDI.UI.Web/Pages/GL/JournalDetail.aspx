@@ -22,14 +22,16 @@
 
         <div class="editcontainer">
             <div>
-                <div class="fieldblock">
-                    <label class="journalstatus">Status: </label>
-                    <label class="JournalStatus"></label>
-                </div>
-                <div class="editjournalbutton hidebuttons floatright">
+                <span class="fieldblock">
+                    <label>Status: </label>
+                    <label class="StatusDescription"></label>
+                </span>
+                <span class="editjournalbutton hidebuttons floatright">
                     <a href="#" class="editjournal editbutton">Edit</a>
-                </div>
+                </span>
             </div>
+
+            <br />
 
             <div class="inlinecontainer">
                 <span class="journalcolumn">
@@ -52,11 +54,9 @@
 
             <div class="inlinecontainer">
                 <span class="journalcolumn">
-                    <span class="fieldblock leftprompt reverseondategroup">
-                        <label>Reverse on this Date:</label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <input type="text" class="editable ReverseOnDate date datepicker" />
+                    <span class="fieldblock onetime">
+                        <input type="checkbox" class="reversejournal editable" />
+                        <label>Reverse this journal at a later date: </label>
                     </span>
                 </span>
                 <span class="journalcolumn fieldblock">
@@ -73,13 +73,101 @@
             <br />
 
             <div class="inlinecontainer">
-                <span class="journalcolumn fieldblock"></span>
+                <span class="journalcolumn reverseondategroup invisible">
+                    <span class="leftprompt">
+                        <label>Reverse on:</label>
+                    </span>
+                    <span class="fieldblock leftinput">
+                        <input type="text" class="ReverseOnDate editable date datepicker" />
+                    </span>
+                </span>
                 <span class="journalcolumn fieldblock"></span>
                 <span class="journalcolumn fieldblock">
                     <label>Last changed by: </label>
                     <label class="LastModifiedBy"></label>
                     <label>on: </label>
                     <label class="LastModifiedOn date"></label>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer">
+                <span class="journalcolumn recurringgroup hidden">
+                    <span class="leftprompt">
+                        <label>Occurs: </label>
+                    </span>
+                    <span class="fieldblock leftinput">
+                        <select class="IsNormallyDebit editable">
+                            <option value="0">Monthly</option>
+                            <option value="1">Daily</option>
+                            <option value="2">Weekly</option>
+                            <option value="3">Yearly</option>
+                        </select>
+                    </span>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer recurringgroup hidden">
+                <span class="journalcolumn">
+                    <span class="leftprompt">
+                        <label>Expires: </label>
+                    </span>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer recurringgroup hidden">
+                <span class="journalcolumn">
+                    <span class="leftprompt">
+                        <input type="radio" name="expires" value="0" />
+                        <label>Never</label>
+                    </span>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer recurringgroup hidden">
+                <span class="journalcolumn">
+                    <span class="leftprompt">
+                        <input type="radio" name="expires" value="1" />
+                        <label>After date</label>
+                    </span>
+                    <span class="fieldblock leftinput">
+                        <input type="text" class="editable ExpireDate date datepicker" />
+                    </span>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer recurringgroup hidden">
+                <span class="journalcolumn">
+                    <span class="leftprompt">
+                        <input type="radio" name="expires" value="2" />
+                        <label>After count</label>
+                    </span>
+                    <span class="fieldblock leftinput">
+                        <input type="text" class="editable ExpireCount number" />
+                    </span>
+                </span>
+            </div>
+
+            <br />
+
+            <div class="inlinecontainer recurringgroup hidden">
+                <span class="journalcolumn">
+                    <span class="leftprompt">
+                        <input type="radio" name="expires" value="2" />
+                        <label>After amount</label>
+                    </span>
+                    <span class="fieldblock leftinput">
+                        <input type="text" class="editable ExpireAmount money" />
+                    </span>
                 </span>
             </div>
 
