@@ -110,8 +110,6 @@ function LoadDefaultAuthToken() {
 
                     sessionStorage.setItem('CURRENT_USER_NAME', split_token[1]);
 
-                    // LoadCurrentUser();
-
                     location.href = "/Default.aspx";
                 }
             },
