@@ -55,7 +55,7 @@
             <div class="inlinecontainer">
                 <span class="journalcolumn">
                     <span class="fieldblock onetime">
-                        <input type="checkbox" class="reversejournal editable" />
+                        <input type="checkbox" class="reversejournal editable invisible" />
                         <label>Reverse this journal at a later date: </label>
                     </span>
                 </span>
