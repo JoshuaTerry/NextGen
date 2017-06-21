@@ -84,7 +84,6 @@ function LoadAccountActivityAndBudgetTab(id) {
 
 var segmentLevelArray = [];
 var segmentLevels;
-var segmentLevel;
 var groupLevels;
 var group1Data = [];
 var saveGroupId;
@@ -212,7 +211,6 @@ function LoadSummaryTabContinued() {
             AccountAddMode();
         }
         else {
-            $('.accountsegmentscontainer').hide();
             AccountDisplayMode();
         }
     });
@@ -266,7 +264,6 @@ function RetrieveLedgerSettings() {
 
                     $('.editgroup' + i).click(function (e) {
                         e.preventDefault();
-                        var test = $(this).attr('class');
                         groupLevel = $(this).attr('class').substring(9, 10);
                         groupId = '.Group' + groupLevel + 'Id';
                         groupPrompt = '.group' + groupLevel + 'prompt';
@@ -312,14 +309,6 @@ function RetrieveLedgerSettings() {
                 //segments
                 segmentLevels = data.Data.NumberOfSegments;
 
-                for (i = (segmentLevels + 1); i <= 10; i++) {
-                    $('.segmentgroup' + i).hide();
-                }
-
-                for (i = 1; i <= segmentLevels; i++) {
-                    $('.segmentgroup' + i).show();
-                    $('.segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Name + ':');
-                }
                 RetrieveSegmentLevels()
             }
         }
@@ -341,7 +330,15 @@ function RetrieveSegmentLevels() {
                 var segmentId;
                 var parentSegmentId;
 
+                for (i = (segmentLevels + 1); i <= 10; i++) {
+                    $('.segmentgroup' + i).hide();
+                }
+
                 for (var i = 1; i <= segmentLevels; i++) {
+
+                    $('.segmentgroup' + i).show();
+
+                    $('.segment' + i + 'prompt').html(data.Data[i - 1].Name + ':');
 
                     $('.editsegment' + i).click(function (e) {
                         e.preventDefault();
@@ -411,7 +408,8 @@ function RetrieveSegmentLevels() {
 
 function AccountDisplayMode() {
     editMode = 'display';
-    $('.accountsegmentscontainer').hide();
+    HideButtons();
+    DisableSegments();
     $('.editaccountbutton').show();
     $('.saveaccountbuttons').hide();
     $(summaryContainer).find('.editable').each(function () {
@@ -429,14 +427,20 @@ function AccountAddMode() {
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
-    $('.accountsegmentscontainer').show();
+    ShowButtons();
+    EnableSegments();
 }
 
 function AccountEditMode() {
     editMode = 'edit';
     if (activityTotal === 0) {
-        $('.accountsegmentscontainer').show();
+        EnableSegments();
     }
+    else {
+        DisableSegments();
+    }
+    ShowButtons();
+
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
 
@@ -460,6 +464,7 @@ function AccountEditMode() {
     }
 
 }
+
 
 // account group section
 
@@ -491,10 +496,14 @@ function GroupChange(element) {
             if (category < 4) {
                 $('.BeginningBalance').removeAttr("disabled");
                 $('.accountnumberlookup').attr('disabled', true);
+                $('.closingaccountgroup').find(".hidaccountid").val(null);
+                $('.closingaccountgroup').find(".accountnumber").val('');
+                $('.closingaccountgroup').find(".accountdescription").html('');
                 $('.accountselectionsearch').css('visibility', 'hidden');
             }
             else {
                 $('.BeginningBalance').attr('disabled', true);
+                $('.BeginningBalance').val('0.00');
                 $('.accountnumberlookup').removeAttr("disabled");
                 $('.accountselectionsearch').css('visibility', 'visible');
             }
@@ -520,7 +529,24 @@ function GroupChange(element) {
 
 // end group section
 
+
 // segment section
+
+function EnableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', false);
+
+    });
+}
+
+function DisableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', true);
+
+    });
+}
 
 // load non linked drop downs for adds
 function InitSegmentDropDowns() {
@@ -549,7 +575,6 @@ function LoadSegmentDropDowns() {
             }
             if (accountSegmentArray[i].Id != null) {
                 $('.segment' + (i + 1) + 'code').html(accountSegmentArray[i].Segment.Code);
-                $('.segment' + (i + 1) + 'name').html(accountSegmentArray[i].Segment.Name);
             }
         }
         else {
@@ -570,8 +595,10 @@ function LoadSegmentDropDown(segmentLevel, parentId, initialId) {
 }
 
 function StoreSegmentData(element, data) {
+
     var dropdownlevel = element.substring(8, 9);
     segmentData[parseInt(dropdownlevel) - 1] = data.Data;
+
 }
 
 function SegmentChange(element) {
@@ -590,7 +617,6 @@ function SegmentChange(element) {
         segmentCode = '';
     }
     $('.segment' + level + 'code').html(segmentCode);
-    $('.segment' + level + 'name').html(segmentName);
 
     BuildAccountNumber();
 
@@ -600,14 +626,12 @@ function SegmentChange(element) {
             if (segmentLevelArray[i - 1].IsLinked === true && parentVal != null) {
                 PopulateDropDown('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
         else {
             if (segmentLevelArray[i - 1].IsLinked === true) {
                 $('.Segment' + i + 'Id').empty();
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
     }
@@ -658,8 +682,7 @@ function SaveAccount() {
             if ($('.Activity').val() === '' || $('.Activity').val() === null) {
                 $('.Activity').val(0);
             }
-            $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
-            sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
+            CalcEndingBalance();
             accountId = data.Data.Id;
             AccountDisplayMode();
         }
@@ -674,6 +697,10 @@ function SaveAccount() {
             }
         }
     );
+}
+
+function CalcEndingBalance() {
+    $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
 }
 
 function GetAccountFields() {
@@ -752,13 +779,61 @@ function ClearAccountFields() {
 
     $(summaryContainer + ' input[type="text"]').val('');
     $(summaryContainer + ' input[type="number"]').val('');
-    $(summaryContainer + ' .segmentname').html('');
     $(summaryContainer + ' .segmentcode').html('');
     $(summaryContainer + ' select').val(0);
     $(summaryContainer + ' input:checkbox').prop('checked', false);
     $(summaryContainer).find(".accountdescription").html('');
     $(summaryContainer).find(".accountnumber").val('');
     $(summaryContainer).find(".hidaccountid").val('');
+}
+
+function HideButtons() {
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
+}
+
+function ShowButtons() {
+    var buttonClasses = '';
+    var buttonClass = '';
+    var level = 0;
+
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf('newgroup') > -1) {
+            level = parseInt(buttonClass.substring(8, 9));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf("editgroup") > -1) {
+            level = parseInt(buttonClass.substring(9, 10));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
 }
 
 
@@ -939,6 +1014,8 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             if (editMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });
@@ -990,6 +1067,8 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             if (editMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });
