@@ -12,6 +12,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
+using System.Reflection;
 
 namespace DDI.Business.GL
 {
@@ -96,7 +97,79 @@ namespace DDI.Business.GL
                     }
                 }
             }
+        }
 
+        
+        public IDataResponse<Account> MergeAccounts(Guid sourceAccountId, Guid destinationAccountId)
+        {
+            DataResponse<Account> response = new DataResponse<Account>(); ;
+
+            try
+            {
+                var sourceAccount = UnitOfWork.GetById<Account>(sourceAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
+                var destinationAccount = UnitOfWork.GetById<Account>(destinationAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
+
+                response.Data = destinationAccount;
+
+                if (sourceAccount.FiscalYearId != destinationAccount.FiscalYearId)
+                    throw new InvalidOperationException("Source and Destination Account must have the same Fiscal Year.");
+
+                // Update budgets
+                MergeAccountBudgets(sourceAccount, destinationAccount);
+
+                //Delete the Account Segments
+                sourceAccount.AccountSegments.ToList().ForEach(s => UnitOfWork.Delete(s));
+
+                //Create Merge Record
+                CreateMergeRecord(sourceAccount, destinationAccount);
+
+                //Delete Source Account
+                UnitOfWork.Delete(sourceAccount);
+
+                //Update Destination Account
+                UnitOfWork.Update(destinationAccount);
+
+                UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        //Merge Budgets for 2 different Accounts
+        internal void MergeAccountBudgets(Account source, Account destination)
+        {
+            // Add the Beginning Account Balance
+            destination.BeginningBalance += source.BeginningBalance;
+
+            // Add the source Budget Amounts to Destination Budget Amounts
+            var destinationBudgets = destination.Budgets.ToList();
+            var sourceBudgets = source.Budgets.ToList();
+            var amountProperties = typeof(PeriodAmountList).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.Name.StartsWith("Amount") && p.CanWrite).ToList();
+
+            // Get each amount from the source PeriodAmountList and add them to the destination PeriodAmountList
+            foreach (var budget in sourceBudgets)
+            {
+                var dbudget = destinationBudgets.FirstOrDefault(b => b.BudgetType == budget.BudgetType)?.Budget;
+                amountProperties.ForEach(p => p.SetValue(dbudget, (decimal)p.GetValue(budget.Budget) + (decimal)p.GetValue(dbudget)));
+               
+                UnitOfWork.Update(dbudget);
+            }
+        }
+       
+        //Create a Merge Record for merging 2 accounts
+        internal void CreateMergeRecord(Account source, Account destintation)
+        {
+            var merge = new LedgerAccountMerge();
+            merge.FiscalYear = destintation.FiscalYear;
+            merge.FromAccount = GetLedgerAccount(source);
+            merge.ToAccount = GetLedgerAccount(destintation);
+            UnitOfWork.Insert(merge);
         }
 
         /// <summary>

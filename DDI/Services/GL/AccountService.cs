@@ -197,7 +197,12 @@ namespace DDI.Services.GL
             
             return base.Add(account);
         }
-        
+
+        public IDataResponse<Account> Merge(Guid sourceAccountId, Guid destinationAccountId)
+        {
+            return _accountLogic.MergeAccounts(sourceAccountId, destinationAccountId);
+        }
+
         protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
             if (name == nameof(Account.AccountSegments) && entity is Account)

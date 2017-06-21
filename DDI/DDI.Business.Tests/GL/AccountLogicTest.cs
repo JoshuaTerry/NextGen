@@ -8,6 +8,8 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 
 namespace DDI.Business.Tests.GL
 {
@@ -37,7 +39,6 @@ namespace DDI.Business.Tests.GL
 
             _bl = new AccountLogic(_uow);
         }
-
 
         [TestMethod, TestCategory(TESTDESCR)]
         public void AccountLogic_GetPrefixedAccountNumber()
@@ -399,5 +400,72 @@ namespace DDI.Business.Tests.GL
             }
         }
 
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_MergeAccounts_FailOnDifferentFiscalYears()
+        {
+            var sourceAccountId = Guid.Parse("B6965B84-0BB5-413D-B4EA-38AD5BE96AA3");
+            var sourceFiscalYearId = Guid.Parse("2228F185-69CB-4C9C-8D25-BA3BDF31276D");
+            var destinationAccountId = Guid.Parse("C8FE7892-5BB9-4C24-A8D3-55B9D9101F35");            
+            var destinationFiscalYearId = Guid.Parse("6A1D6A9C-7AF0-4C19-B324-8222F16A91F1");
+
+            var uow = new Mock<IUnitOfWork>();            
+            uow.Setup(u => u.GetById<Account>(sourceAccountId)).Returns(new Account() { Id = sourceAccountId, FiscalYearId = sourceFiscalYearId });
+            uow.Setup(u => u.GetById<Account>(destinationAccountId)).Returns(new Account() { Id = destinationAccountId, FiscalYearId = destinationFiscalYearId });
+
+            var logic = new AccountLogic(uow.Object);
+            var response = logic.MergeAccounts(sourceAccountId, destinationAccountId);
+
+            Assert.AreEqual(false, response.IsSuccessful);  
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_MergeBudgets_Success()
+        {
+            var source = CreateAccount(10000.00m, 500.00m);
+            var destination = CreateAccount(20000.00m, 1000.00m);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(u => u.Update(It.IsAny<PeriodAmountList>()));
+             
+            var logic = new AccountLogic(uow.Object);
+            logic.MergeAccountBudgets(source, destination);
+
+            Assert.AreEqual(destination.BeginningBalance, 30000.00m);
+            Assert.AreEqual(destination.Budgets.ToList()[0].Budget.Amount01, 1500.00m);
+            Assert.AreEqual(destination.Budgets.ToList()[1].Budget.Amount01, 1500.00m);
+            Assert.AreEqual(destination.Budgets.ToList()[2].Budget.Amount01, 1500.00m);
+        }
+
+        private Account CreateAccount(decimal beginningBalance, decimal periodAmounts)
+        {
+            Account account = new Account();
+            account.BeginningBalance = beginningBalance;
+
+            account.Budgets.Add(new AccountBudget() { BudgetType = BudgetType.Fixed, Budget = CreatePeriodAmountList(periodAmounts) });
+            account.Budgets.Add(new AccountBudget() { BudgetType = BudgetType.WhatIf, Budget = CreatePeriodAmountList(periodAmounts) });
+            account.Budgets.Add(new AccountBudget() { BudgetType = BudgetType.Working, Budget = CreatePeriodAmountList(periodAmounts) });
+            
+            return account;
+        }
+
+        private PeriodAmountList CreatePeriodAmountList(decimal value)
+        {
+            var pamounts = new PeriodAmountList();
+            pamounts.Amount01 = value;
+            pamounts.Amount02 = value;
+            pamounts.Amount03 = value;
+            pamounts.Amount04 = value;
+            pamounts.Amount05 = value;
+            pamounts.Amount06 = value;
+            pamounts.Amount07 = value;
+            pamounts.Amount08 = value;
+            pamounts.Amount09 = value;
+            pamounts.Amount10 = value;
+            pamounts.Amount11 = value;
+            pamounts.Amount12 = value;
+            pamounts.Amount13 = value;
+            pamounts.Amount14 = value;
+
+            return pamounts;
+        } 
     }
 }

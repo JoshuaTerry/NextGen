@@ -154,19 +154,12 @@ namespace DDI.WebApi.Controllers.GL
             return base.Post(item);
         }
 
-        [HttpPost]
-        [Route("api/v1/accounts/copy/source/{accountId}/dest/{accountNumber}", Name = RouteNames.Account + RouteVerbs.Post + RouteVerbs.Patch)]
-        public IHttpActionResult Post(Guid accountId, string accountNUmber)
+        [Route("api/v1/accounts/{sourceAccountId}/merge/{destinationAccountId}", Name = RouteNames.AccountMerge + RouteVerbs.Post)]
+        public IHttpActionResult Post(Guid sourceAccountId, Guid destinationAccountId)
         {
-            return FinalizeResponse(Service.Copy(accountId, accountNUmber));
+            var response = Service.Merge(sourceAccountId, destinationAccountId);
+            return FinalizeResponse(response);
         }
-        //[HttpPost]
-        //[Route("api/v1/accounts/merge", Name = RouteNames.Account + RouteVerbs.Post)]
-        //public IHttpActionResult Merge(Guid sourceAccount, Guid destinationAccount)
-        //{
-
-        //    return base.Post(item);
-        //}
 
         [HttpPatch]
         [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Patch)]
