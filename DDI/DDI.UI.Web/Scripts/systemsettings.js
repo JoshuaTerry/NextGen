@@ -3620,7 +3620,7 @@ function LoadGLFormatSectionSettings() {
                                 glaccountformat = '';
                             }
                             $('.AccountFormat').remove();
-                            $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                            $('<span>').addClass('AccountFormat').text('Example: ' + glaccountformat).appendTo($('.glformatcontainer'));
                         }, null);       
                     });
             }
