@@ -123,6 +123,10 @@
     <Compile Include="Enums\Core\EntityNumberType.cs" />
     <Compile Include="Enums\Core\TransactionType.cs" />
     <Compile Include="Enums\Core\TransactionAmountType.cs" />
+    <Compile Include="Enums\CP\BankAccountStatus.cs" />
+    <Compile Include="Enums\CP\DisbursementStatus.cs" />
+    <Compile Include="Enums\CP\DisbursementType.cs" />
+    <Compile Include="Enums\CP\EFTInfo.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
@@ -208,6 +212,9 @@
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
+    <Compile Include="Models\Client\CP\BankAccount.cs" />
+    <Compile Include="Models\Client\CP\CheckFrom.cs" />
+    <Compile Include="Models\Client\CP\Disbursement.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
     <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />
