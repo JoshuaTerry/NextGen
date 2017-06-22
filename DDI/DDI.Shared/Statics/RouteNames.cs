@@ -7,6 +7,7 @@
         public const string Account = "Account";
         public const string AccountGroup = "AccountGroup";
         public const string AccountActivity = "AccountActivity";
+        public const string AccountMerge = "AccountMerge";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
         public const string Alert = "Alert";

@@ -57,7 +57,7 @@ namespace DDI.Shared.Models.Client.GL
         public AccountGroup Group4 { get; set; }
 
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
-        public ICollection<AccountBudget> Budgets { get; set; }        
+        public ICollection<AccountBudget> Budgets { get; set; } = new List<AccountBudget>();     
         public ICollection<AccountSegment> AccountSegments { get; set; }
 
         [InverseProperty(nameof(AccountPriorYear.PriorAccount))]
