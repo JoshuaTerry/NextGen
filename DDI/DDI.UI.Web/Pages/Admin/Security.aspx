@@ -101,9 +101,9 @@
             </div>
 
             <div class="fieldblock">
-                    <label>Email</label>
-                    <input type="email" name="email" class="user-Email" maxlength="256" />
-                </div>
+                <label>Email</label>
+                <input type="email" name="email" class="user-Email" maxlength="256" />
+            </div>
 
             <div class="user-editonly2" style="display: none;">
 

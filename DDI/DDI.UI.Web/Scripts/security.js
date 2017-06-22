@@ -58,13 +58,15 @@ function NewGroupModal() {
             }
         });
 
-        $('.savegroupbutton').attr('value', 'Next...');
+        //$('.savegroupbutton').attr('value', 'Next...');
+        $('.savegroupbutton').val('Next...');
 
         $('.savegroupbutton').unbind('click');
 
         $('.savegroupbutton').click(function (e) {
 
-            $('.savegroupbutton').attr('value', 'Save');
+            //$('.savegroupbutton').attr('value', 'Save');
+            $('.savegroupbutton').val('Save');
 
             var item = {
                 Name: $('.gp-Name').val()
@@ -179,7 +181,8 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
-    $('.savegroupbutton').attr('value', 'Save');
+    //$('.savegroupbutton').attr('value', 'Save');
+    $('.savegroupbutton').val('Save');
     
     $('.savegroupbutton').unbind('click');
 
@@ -363,7 +366,8 @@ function NewUserModal() {
         });
 
         
-        $('.submituser').attr('value', 'Next...');
+        //$('.submituser').attr('value', 'Next...');
+        $('.submituser').val('Next...');
 
         $('.submituser').unbind('click');
 
@@ -374,25 +378,12 @@ function NewUserModal() {
                 Email: $(modal).find('.user-Email').val()
             }
 
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'users',
-                data: item,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                headers: GetApiHeaders(),
-                success: function (data) {
+            MakeServiceCall('POST', 'users', item, function (data) {
 
-                    DisplaySuccessMessage('Success', 'User saved successfully.');
+                CloseModal(modal);
+                EditUser(data.Id);
 
-                    CloseModal(modal);
-                    EditUser(data.Id);
-                            
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                }
-            });
+            }, null);
 
         });
 
@@ -435,7 +426,8 @@ function EditUser(id) {
 
     });
 
-    $('.submituser').attr('value', 'Save');
+    //$('.submituser').attr('value', 'Save');
+    $('submituser').val('Save');
 
     $('.submituser').unbind('click');
 

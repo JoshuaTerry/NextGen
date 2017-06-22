@@ -78,6 +78,7 @@ namespace DDI.WebApi.Controllers.General
             };
         }
 
+        [Authorize(Roles = Permissions.Security_Read)]
         [HttpGet]
         [Route("api/v1/users")]
         public IHttpActionResult Get()
@@ -198,7 +199,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPost]
         [Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
         public async Task<IHttpActionResult> Add(RegisterBindingModel model)
@@ -218,27 +219,9 @@ namespace DDI.WebApi.Controllers.General
 
         }
 
-        //[AllowAnonymous]
-        //[HttpPost]
-        //[Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
-        //public IHttpActionResult Add(JObject model)
-        //{
-        //    string userName = model["UserName"].ToString();
-        //    var user = new User() { UserName = userName };
-        //    try
-        //    {
-        //        var result = UserManager.Create(user);
-        //        return Ok(user);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        base.Logger.LogError(ex);
-        //        return InternalServerError(new Exception(ex.Message));
-        //    }
+        
 
-        //}
-
-        //[Authorize(Roles = Permissions.CRM_ReadWrite)]
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject userChanges)
@@ -285,54 +268,10 @@ namespace DDI.WebApi.Controllers.General
             return base.Patch(id, userChanges);
         }
 
-        
-        
-        //[HttpPatch]
-        //[Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
-        //public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
-        //{
-        //    try
-        //    {                
-        //        var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
 
-        //        if (result == null)
-        //        {
-        //            return NotFound();
-        //        }
 
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        base.Logger.LogError(ex);
-        //        return InternalServerError(new Exception(ex.Message));
-        //    }
 
-        //}
-
-        //[HttpPatch]
-        //[Route("api/v1/users/{id}/businessunit/{buid}")]
-        //public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
-        //{
-        //    try
-        //    {                
-        //        var result = userService.AddBusinessUnitToUser(id, buid);
-
-        //        if (result == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        base.Logger.LogError(ex);
-        //        return InternalServerError(new Exception(ex.Message));
-        //    }
-
-        //}
-
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/users/{id}")]
         public new async Task<IHttpActionResult> Delete(Guid id)
