@@ -1,12 +1,32 @@
-﻿body {  }
+﻿body {
+}
 
 
-div.accounts { width: 90%; margin: 10px auto 0 auto; }
-div.accounts div.tabscontainer { width: 100%; }
+div.accounts {
+    width: 90%;
+    margin: 10px auto 0 auto;
+}
 
-.as-accounts { margin-top: 10px; width: 90%; margin: 10px auto 0 auto; background-color: white; padding: 20px; }
-.as-accounts h1 { margin-bottom: 10px; }
-.as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
+    div.accounts div.tabscontainer {
+        width: 100%;
+    }
+
+.as-accounts {
+    margin-top: 10px;
+    width: 90%;
+    margin: 10px auto 0 auto;
+    background-color: white;
+    padding: 20px;
+}
+
+    .as-accounts h1 {
+        margin-bottom: 10px;
+    }
+
+    .as-accounts div.gridContainer {
+        width: 100%;
+        margin: 0 auto;
+    }
 /* gl summary widths*/
 
 div.inlinecontainer {
@@ -16,17 +36,49 @@ div.inlinecontainer {
     margin-top: 1%;
 }
 
-span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 12px; }
+span.summaryleftprompts label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 12px;
+}
+
 span.summaryleftinput input,
-span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryleftinput select {
+    width: 30%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
+span.summaryrightprompts label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 10px;
+}
+
 span.summaryrightinput input,
-span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
-span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightinput select {
+    width: 13%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightcheckbox {
+    width: 16px;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
+
+span.summarysegmentprompt label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
+
+span.summarysegmentinput select {
+    width: 30%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
 .segmentcode {
     display: none;
@@ -39,17 +91,34 @@ span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 
 .hidebuttons {
     visibility: hidden;
 }
-.invisible {visibility: hidden;}
 
-.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
-.accountgroup {visibility: hidden;}
-.accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
+.invisible {
+    visibility: hidden;
+}
+
+.accountselectorprompt {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 10px;
+}
+
+.accountgroup {
+    visibility: hidden;
+}
+
+.accountsearch {
+    vertical-align: middle;
+    margin-left: 5px;
+    width: 16px;
+}
 
 .activeadjust {
     margin: 0 0 0 -4px;
 }
 
-.fiscalyearselectioncontainr { float: right; }
+.fiscalyearselectioncontainr {
+    float: right;
+}
 
 .newbuttoninline {
     background-color: white;
@@ -60,6 +129,7 @@ span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 
     margin: -1px 0 0 0;
     vertical-align: middle;
 }
+
 .editbuttoninline {
     background-color: white;
     border: solid 1px black;
@@ -70,9 +140,11 @@ span.summarysegmentinput select {width: 30%; display: inline-block; margin: 5px 
     vertical-align: middle;
 }
 
-.newaccountlinkcontainer { text-align: right; margin-bottom: 10px; }
+.newaccountlinkcontainer {
+    text-align: right;
+    margin-bottom: 10px;
+}
 
-.dx-popup-content { overflow: scroll }
-
-
-
+.dx-popup-content {
+    overflow: scroll
+}

@@ -24,18 +24,18 @@ namespace DDI.Shared.Models.Client.GL
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public bool IsActive { get; set; } 
+        public bool IsActive { get; set; }
 
         [DecimalPrecision(14, 2)]
         public decimal BeginningBalance { get; set; }
-        
-        public AccountCategory Category { get; set; }            
-            
-        public bool IsNormallyDebit { get; set; } 
 
-        [Index,MaxLength(128)]
-        public string SortKey { get; set; }      
-             
+        public AccountCategory Category { get; set; }
+
+        public bool IsNormallyDebit { get; set; }
+
+        [Index, MaxLength(128)]
+        public string SortKey { get; set; }
+
         public Guid? ClosingAccountId { get; set; }
         [ForeignKey(nameof(ClosingAccountId))]
         public Account ClosingAccount { get; set; }
@@ -57,8 +57,8 @@ namespace DDI.Shared.Models.Client.GL
         public AccountGroup Group4 { get; set; }
 
         public ICollection<LedgerAccountYear> LedgerAccountYears { get; set; }
-        public ICollection<AccountBudget> Budgets { get; set; } = new List<Budgets>();
-        public ICollection<AccountSegment> AccountSegments { get; set; } = new List<AccountSegment>();
+        public ICollection<AccountBudget> Budgets { get; set; } = new List<AccountBudget>();
+        public ICollection<AccountSegment> AccountSegments { get; set; }
 
         [InverseProperty(nameof(AccountPriorYear.PriorAccount))]
         public ICollection<AccountPriorYear> PriorYearAccounts { get; set; }

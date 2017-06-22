@@ -424,7 +424,12 @@ function RetrieveSegmentLevels() {
                 }
                 else {
                     LoadSegmentDropDowns();
-                    AccountDisplayMode();
+                    if (editMode === "copy") {
+                        AccountCopyMode();
+                    }
+                    else {
+                        AccountDisplayMode();
+                    }
                 }
             }
         }
@@ -432,6 +437,8 @@ function RetrieveSegmentLevels() {
     }, null);
 
 }
+
+// edit modes
 
 function AccountDisplayMode() {
     editMode = 'display';
@@ -492,6 +499,41 @@ function AccountEditMode() {
 
 }
 
+function AccountCopyMode() {
+    editMode = 'add';
+
+    accountId = null;
+
+    EnableSegments();
+    ShowButtons();
+
+    $('.editaccountbutton').hide();
+    $('.saveaccountbuttons').show();
+
+    MaskFields();
+
+    $(summaryContainer).find('.editable').each(function () {
+
+        $(this).prop('disabled', false);
+
+    });
+
+    if (category < 4) {
+        $('.BeginningBalance').removeAttr("disabled");
+        $('.accountnumberlookup').attr('disabled', true);
+        $('.accountselectionsearch').css('visibility', 'hidden');
+    }
+    else {
+        $('.BeginningBalance').attr('disabled', true);
+        $('.accountnumberlookup').removeAttr("disabled");
+        $('.accountselectionsearch').css('visibility', 'visible');
+    }
+
+    $('.BeginningBalance').val(0);
+    $('.Activity').val(0);
+    $('.EndingBalance').val(0);
+
+}
 
 // account group section
 
@@ -1152,14 +1194,21 @@ function ValidateAccountNumber() {
 
 function CopyAccount() {
 
-    // Clear the account Id and all other information except
-    // FiscalYear, four account groups, the Category, IsNormallyDebit, AccountNumber, ClosingAccount, Name, and the AccountSegment collection.  Also set IsActive to true.  
+    if (accountId === null || accountId === '') {
+        DisplayErrorMessage('Error', 'You cannot copy a new account until it is saved.');
+        return;
+    }
 
+    if (editMode === 'edit') {
+        DisplayErrorMessage('Error', 'You cannot copy an account while editing.');
+        return;
+    }
+
+    $('.tabscontainer').tabs("option", "active", 1);
+
+    editMode = 'copy';
     LoadSummaryTab(accountId);
 
-    $('.IsActive').prop('checked', true);
-
-    AccountAddMode();
 }
 
 // END COPY ACCOUNT
