@@ -27,9 +27,5 @@ namespace DDI.WebApi.Models.BindingModels
         public Guid? DefaultBusinessUnitId { get; set; }
         public string UserName { get; internal set; }
         public string FullName { get; internal set; }
-        [InverseProperty(nameof(BusinessUnit.Users))]
-        public ICollection<BusinessUnit> BusinessUnits { get; set; }
-        [InverseProperty(nameof(Group.Users))]
-        public ICollection<Group> Groups { get; set; }
     }
 }

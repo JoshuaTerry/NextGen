@@ -92,18 +92,21 @@
                     <input type="text" class="user-FullName" maxlength="256" />
                 </div>
 
-                <div class="fieldblock">
-                    <label>User Name</label>
-                    <input type="text" class="user-UserName" maxlength="256" />
-                </div>
             </div>
 
             <div class="fieldblock">
-                <label>Email</label>
-                <input type="email" name="email required" class="user-Email" />
+                <label>User Name</label>
+                <input type="text" class="user-UserName required" maxlength="256" />
             </div>
 
+            
             <div class="user-editonly2" style="display: none;">
+
+                <div class="fieldblock">
+                    <label>Email</label>
+                    <input type="email" name="email" class="user-Email" maxlength="256" />
+                </div>
+
                 <div class="fieldblock">
                     <label>Default Business Unit</label>
                     <select class="user-DefaultBusinessUnitId"></select>
