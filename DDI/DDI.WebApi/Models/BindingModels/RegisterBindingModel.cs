@@ -9,7 +9,7 @@ namespace DDI.WebApi.Models.BindingModels
 {
     public class RegisterBindingModel
     {
-        [Required]
+        //[Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -25,7 +25,7 @@ namespace DDI.WebApi.Models.BindingModels
         public string ConfirmPassword { get; set; }
         [Display(Name = "Default Business Unit")]
         public Guid? DefaultBusinessUnitId { get; set; }
-        public string UserName { get; internal set; }
+        public string UserName { get; set; }
         public string FullName { get; internal set; }
     }
 }

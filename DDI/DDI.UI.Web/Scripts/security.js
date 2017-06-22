@@ -370,6 +370,7 @@ function NewUserModal() {
         $('.submituser').click(function (e) {
 
             var item = {
+                UserName: $(modal).find('.user-UserName').val(),
                 Email: $(modal).find('.user-Email').val()
             }
 

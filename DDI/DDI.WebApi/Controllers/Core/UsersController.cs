@@ -203,19 +203,39 @@ namespace DDI.WebApi.Controllers.General
         public async Task<IHttpActionResult> Add(RegisterBindingModel model)
         {
 
-            var user = new User() { UserName = model.Email, Email = model.Email};
+            var user = new User() { UserName = model.UserName, Email = model.Email };
             try
             {
                 var result = UserManager.Create(user);
                 return Ok(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
 
         }
+
+        //[AllowAnonymous]
+        //[HttpPost]
+        //[Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
+        //public IHttpActionResult Add(JObject model)
+        //{
+        //    string userName = model["UserName"].ToString();
+        //    var user = new User() { UserName = userName };
+        //    try
+        //    {
+        //        var result = UserManager.Create(user);
+        //        return Ok(user);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        base.Logger.LogError(ex);
+        //        return InternalServerError(new Exception(ex.Message));
+        //    }
+
+        //}
 
         //[Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]

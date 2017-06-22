@@ -87,6 +87,7 @@
         <div class="modalcontent">
 
             <div class="user-editonly1" style="display: none;">
+
                 <div class="fieldblock">
                     <label>Full Name</label>
                     <input type="text" class="user-FullName" maxlength="256" />
@@ -99,13 +100,13 @@
                 <input type="text" class="user-UserName required" maxlength="256" />
             </div>
 
-            
-            <div class="user-editonly2" style="display: none;">
-
-                <div class="fieldblock">
+            <div class="fieldblock">
                     <label>Email</label>
                     <input type="email" name="email" class="user-Email" maxlength="256" />
                 </div>
+
+            <div class="user-editonly2" style="display: none;">
+
 
                 <div class="fieldblock">
                     <label>Default Business Unit</label>
