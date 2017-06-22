@@ -502,12 +502,12 @@ namespace DDI.Business.GL
 
         private void CopyAccountSegments(FiscalYear fromYear, FiscalYear toYear, EntityMapper<Account> accounts, EntityMapper<Segment> segments)
         {
-            using (var batch = new BatchUnitOfWork<AccountSegment>().Where(p => p.Account.FiscalYearId == fromYear.Id).AutoSaveChanges())
+            using (var batch = new BatchUnitOfWork<AccountSegment>().Where(p => p.Account != null && p.Account.FiscalYearId == fromYear.Id).AutoSaveChanges())
             {
                 foreach (AccountSegment segment in batch)
                 {
                     AccountSegment newSegment = new AccountSegment();
-                    newSegment.AccountId = accounts.Get(segment.AccountId);
+                    newSegment.AccountId = accounts.Get(segment.AccountId);                    
                     newSegment.SegmentId = segments.Get(segment.SegmentId);
                     newSegment.Level = segment.Level;
                     newSegment.AssignPrimaryKey();

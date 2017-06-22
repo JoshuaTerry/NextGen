@@ -124,7 +124,7 @@ namespace DDI.Business.Tests.GL
             Assert.AreEqual(FiscalYearStatus.Reopened, year.Status, "Fiscal year status is Reopened.");
             Assert.AreEqual(12, year.CurrentPeriodNumber, "Current period is 12.");
             FiscalPeriod period = year.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == 12);
-            Assert.AreEqual(FiscalPeriodStatus.Open, period.Status, "Period 12 status is open.");
+            Assert.AreEqual(FiscalPeriodStatus.Reopened, period.Status, "Period 12 status is open.");
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
