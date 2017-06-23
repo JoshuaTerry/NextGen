@@ -4,6 +4,7 @@ var accountId;
 
 $(document).ready(function () {
 
+
     $('.editbusinessunit').addClass('disabled');
 
     accountId = sessionStorage.getItem('ACCOUNT_ID');
@@ -45,25 +46,27 @@ function LoadAccountActivityAndBudgetTab(id) {
             { dataField: 'PeriodNumber', caption: 'Period Number', visible: false },
             { dataField: 'PeriodName', caption: 'Period Name' },
 
-            { dataField: 'BeginningBalance', caption: 'Beginning Balance', format: 'currency', visible: false},
-            { dataField: 'Debits', caption: 'Debits', format: 'currency' },
-            { dataField: 'Credits', caption: 'Credits', format: 'currency' },
-            { dataField: 'Activity', caption: 'Activity', format: 'currency' },
-            { dataField: 'EndingBalance', caption: 'Ending Balance', format: 'currency' },
+            {
+                dataField: 'BeginningBalance', caption: 'Beginning Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'Debits', caption: 'Debits', format: { type: 'currency', precision: 2 } },
+            { dataField: 'Credits', caption: 'Credits', format: { type: 'currency', precision: 2 } },
+            {
+                dataField: 'Activity', caption: 'Activity', format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'EndingBalance', caption: 'Ending Balance', format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'PriorBeginningBalance', caption: 'Prior Beginning Balance', format: 'currency', visible: false },
-            { dataField: 'PriorDebits', caption: 'Prior Debits',  format: 'currency', visible: false },
-            { dataField: 'PriorCredits', caption: 'Prior Credits',  format: 'currency', visible: false },
-            { dataField: 'PriorActivity', caption: 'Prior Activity',  format: 'currency', visible: false },
-            { dataField: 'PriorEndingBalance', caption: 'Prior Ending Balance',  format: 'currency', visible: false },
+            { dataField: 'PriorBeginningBalance', caption: 'Prior Beginning Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorDebits', caption: 'Prior Debits', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorCredits', caption: 'Prior Credits', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorActivity', caption: 'Prior Activity', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorEndingBalance', caption: 'Prior Ending Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'WorkingBudget', caption: dataActivity.Data.WorkingBudgetName, allowEditing: true, format: 'currency' },
-            { dataField: 'FixedBudget', caption: dataActivity.Data.FixedBudgetName, allowEditing: true, format: 'currency'},
-            { dataField: 'WhatIfBudget', caption: dataActivity.Data.WhatIfBudgetName, allowEditing: true, format: 'currency', visible: false },
+            { dataField: 'WorkingBudget', caption: dataActivity.Data.WorkingBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'FixedBudget', caption: dataActivity.Data.FixedBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'WhatIfBudget', caption: dataActivity.Data.WhatIfBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'WorkingBudgetVariance', caption: 'Working Budget Variance', allowEditing: true, format: 'currency' },
-            { dataField: 'FixedBudgetVariance', caption: 'Fixed Budget Variance', allowEditing: true, format: 'currency', visible: false},
-            { dataField: 'WhatIfBudgetVariance', caption: 'What-If Budget Variance', allowEditing: true, format: 'currency', visible: false}
+            { dataField: 'WorkingBudgetVariance', caption: 'Working Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'FixedBudgetVariance', caption: 'Fixed Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'WhatIfBudgetVariance', caption: 'What-If Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } }
         ];
 
         $('.activitytitle').empty();
@@ -79,6 +82,22 @@ function LoadAccountActivityAndBudgetTab(id) {
     }, null);
 
 }
+
+function NegativeCellText(cellInfo) {
+
+    if (cellInfo.value < 0) {
+
+        var text = cellInfo.valueText.replace('-', '');
+        return '(' + text + ')';
+
+    } else {
+
+        return cellInfo.valueText;
+
+    }
+
+}
+
 
 //summary tab section
 
