@@ -202,14 +202,22 @@ namespace DDI.WebApi.Controllers.General
         [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPost]
         [Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
-        public async Task<IHttpActionResult> Add(RegisterBindingModel model)
+        public IHttpActionResult Post(JObject newUser)
         {
-
-            var user = new User() { UserName = model.UserName, Email = model.Email };
+            var user = new User() { UserName = newUser["UserName"].ToString(), Email = newUser["Email"].ToString() };
             try
             {
                 var result = UserManager.Create(user);
-                return Ok(user);
+                if (result.Succeeded)
+                {
+                    DataResponse<User> response  = new DataResponse<User> { Data = user, IsSuccessful = true };
+                    return FinalizeResponse(response);
+                }
+                else
+                {
+                    DataResponse<User> response = new DataResponse<User> { Data = user, IsSuccessful = false };
+                    return FinalizeResponse(response);
+                }
             }
             catch (Exception ex)
             {
@@ -219,7 +227,6 @@ namespace DDI.WebApi.Controllers.General
 
         }
 
-        
 
         [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPatch]

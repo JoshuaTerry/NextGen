@@ -58,14 +58,12 @@ function NewGroupModal() {
             }
         });
 
-        //$('.savegroupbutton').attr('value', 'Next...');
         $('.savegroupbutton').val('Next...');
 
         $('.savegroupbutton').unbind('click');
 
         $('.savegroupbutton').click(function (e) {
 
-            //$('.savegroupbutton').attr('value', 'Save');
             $('.savegroupbutton').val('Save');
 
             var item = {
@@ -181,7 +179,6 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
-    //$('.savegroupbutton').attr('value', 'Save');
     $('.savegroupbutton').val('Save');
     
     $('.savegroupbutton').unbind('click');
@@ -366,7 +363,6 @@ function NewUserModal() {
         });
 
         
-        //$('.submituser').attr('value', 'Next...');
         $('.submituser').val('Next...');
 
         $('.submituser').unbind('click');
@@ -378,10 +374,11 @@ function NewUserModal() {
                 Email: $(modal).find('.user-Email').val()
             }
 
-            MakeServiceCall('POST', 'users', item, function (data) {
+            
+            MakeServiceCall('POST', 'users', JSON.stringify(item), function (data) {
 
                 CloseModal(modal);
-                EditUser(data.Id);
+                EditUser(data.Data.Id);
 
             }, null);
 
@@ -426,7 +423,6 @@ function EditUser(id) {
 
     });
 
-    //$('.submituser').attr('value', 'Save');
     $('submituser').val('Save');
 
     $('.submituser').unbind('click');
@@ -489,7 +485,7 @@ function LoadUser(id) {
                     $(modal).find('.rs-Constituent1Information').empty();
                 }
 
-                LoadBusinessUnits('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + id + '/businessunit');
+                LoadBusinessUnits('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + data.Data.UserName + '/businessunit');
 
                 if (data.Data.Groups.length > 0) {
                     $(data.Data.Groups).each(function (i, group) {
