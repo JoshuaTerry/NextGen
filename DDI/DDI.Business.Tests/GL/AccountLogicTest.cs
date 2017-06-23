@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
@@ -9,7 +10,6 @@ using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 
 namespace DDI.Business.Tests.GL
 {
@@ -106,9 +106,12 @@ namespace DDI.Business.Tests.GL
             ledgerAccount = ledger.LedgerAccounts.FirstOrDefault(p => p.AccountNumber == account.AccountNumber);
 
             Assert.IsNull(_bl.GetAccount(ledgerAccount, null), "Returns null if year is null.");
-            Assert.IsNull(_bl.GetAccount(null, year), "Returns null if ledger account is null.");
+            Assert.IsNull(_bl.GetAccount((LedgerAccount)null, year), "Returns null if ledger account is null.");
+            Assert.IsNull(_bl.GetAccount((Guid?)null, year), "Returns null if ledger account id is null.");
 
             Assert.AreEqual(account, _bl.GetAccount(ledgerAccount, year), "Account is in fiscal year provided.");
+            Assert.AreEqual(account, _bl.GetAccount(ledgerAccount.Id, year), "Account is in fiscal year provided.");
+
             var newYear = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == LedgerDataSource.NEW_LEDGER_CODE);
             account = _accounts.FirstOrDefault(p => p.FiscalYear == newYear && p.AccountNumber == "1001.CORP");
             ledgerAccount = newYear.Ledger.LedgerAccounts.FirstOrDefault(p => p.AccountNumber == account.AccountNumber);
@@ -337,6 +340,41 @@ namespace DDI.Business.Tests.GL
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_GetNextYearAccounts()
+        {
+            // Test a simple account
+            string unit = BusinessUnitDataSource.UNIT_CODE1;
+            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.CLOSED_YEAR);
+            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
+
+            var result = _bl.GetNextYearAccounts(account);
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(1, result.Count, "Returns a single mapped account.");
+            Account nextAccount = result.First().Account;
+            Assert.IsNotNull(nextAccount, "Returned non-null next year account.");
+            Assert.AreEqual(account.AccountNumber, nextAccount.AccountNumber, "Next year account has same account number.");
+            Assert.AreEqual(FiscalYearDataSource.OPEN_YEAR, nextAccount.FiscalYear.Name, "Next year account is in correct fiscal year.");
+            Assert.AreEqual(1.00m, result.First().Factor, "Factor is 1.00");
+
+            // Test an account with no next year account.
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == unit && p.Name == FiscalYearDataSource.EMPTY_YEAR);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-150-50-42");
+
+            result = _bl.GetNextYearAccounts(account);
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(0, result.Count, "Returns no mapped accounts if no next year.");
+
+            // Test an account that is mapped via AccountPriorYear
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE_SEPARATE && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-100-10-10");
+            result = _bl.GetNextYearAccounts(account);
+
+            Assert.IsNotNull(result, "Returns non-null value.");
+            Assert.AreEqual(1, result.Count, "Returns one mapped accounts for 01-100-10-10.");
+            Assert.AreEqual("1001.CORP", result.First().Account.AccountNumber, "Next year account is 1001.CORP.");
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
         public void AccountLogic_GetAccountActivity()
         {
             AccountBalanceDataSource.GetDataSource(_uow);
@@ -401,6 +439,75 @@ namespace DDI.Business.Tests.GL
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_GetDefaultClosingAccount()
+        {
+            var funds = FundDataSource.GetDataSource(_uow);
+
+            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == LedgerDataSource.NEW_LEDGER_CODE);
+            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "4001.MIDW");
+            Account closingAccount = _bl.GetDefaultClosingAccount(account);
+
+            Assert.IsNotNull(closingAccount, "Returns non-null value.");
+            Assert.AreEqual("3002.CORP", closingAccount.AccountNumber, "Revenue closing account is correct.");
+
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "5001.CORP");
+            closingAccount = _bl.GetDefaultClosingAccount(account);
+
+            Assert.IsNotNull(closingAccount, "Returns non-null value.");
+            Assert.AreEqual("3003.CORP", closingAccount.AccountNumber, "Expense closing account is correct.");
+
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "02-480-80-10-07");
+            closingAccount = _bl.GetDefaultClosingAccount(account);
+            Assert.AreEqual("02-380-50-02", closingAccount.AccountNumber, "Specific closing account is ignored and default is returned.");
+            
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_GetClosingAccount()
+        {
+            var funds = FundDataSource.GetDataSource(_uow);
+
+            var year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == LedgerDataSource.NEW_LEDGER_CODE);
+            var account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "4001.MIDW");
+            Account closingAccount = _bl.GetClosingAccount(account);
+
+            Assert.IsNotNull(closingAccount, "Returns non-null value.");
+            Assert.AreEqual("3002.CORP", closingAccount.AccountNumber, "Revenue closing account is correct.");
+
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "5001.CORP");
+            closingAccount = _bl.GetClosingAccount(account);
+
+            Assert.IsNotNull(closingAccount, "Returns non-null value.");
+            Assert.AreEqual("3003.CORP", closingAccount.AccountNumber, "Expense closing account is correct.");
+
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "02-480-80-10-07");
+
+            closingAccount = _bl.GetClosingAccount(account);
+            Assert.AreEqual("02-380-90-01", closingAccount.AccountNumber, "Specific closing account is returned.");
+
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void AccountLogic_AccountIsEquivalent()
+        {
+            FiscalYear year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Name == FiscalYearDataSource.OPEN_YEAR);
+            Account account = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-100-10-10");
+
+            Assert.IsTrue(_bl.AccountIsEquivalent(account, account.Id), "Account is equivalent to account Id");
+            Assert.IsTrue(_bl.AccountIsEquivalent(account, account.LedgerAccountYears.First().Id), "Account is equivalent to LedgerAccountYear.Id");
+            Assert.IsTrue(_bl.AccountIsEquivalent(account, account.LedgerAccountYears.First().LedgerAccountId), "Account is equivalent to LedgerAccount.Id");
+
+            Account otherAccount = _accounts.First(p => p.FiscalYear == year && p.AccountNumber == "01-100-10-01");
+
+            Assert.IsFalse(_bl.AccountIsEquivalent(otherAccount, account.Id), "Other account is not equivalent to account Id");
+            Assert.IsFalse(_bl.AccountIsEquivalent(otherAccount, account.LedgerAccountYears.First().Id), "Other account is not equivalent to LedgerAccountYear.Id");
+            Assert.IsFalse(_bl.AccountIsEquivalent(otherAccount, account.LedgerAccountYears.First().LedgerAccountId), "Other account is not equivalent to LedgerAccount.Id");
+        }
+
+
+       [TestMethod, TestCategory(TESTDESCR)]
         public void AccountLogic_MergeAccounts_FailOnDifferentFiscalYears()
         {
             var sourceAccountId = Guid.Parse("B6965B84-0BB5-413D-B4EA-38AD5BE96AA3");

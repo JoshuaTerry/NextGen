@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Shared.Helpers
 {
@@ -26,7 +27,10 @@ namespace DDI.Shared.Helpers
             {
                 return (T)obj;
             }
-
+            else if (obj is JToken)
+            {
+                return GetBestMatch<T>(((JToken)obj).ToString(), defaultValue);
+            }
             return defaultValue;
         }
 
