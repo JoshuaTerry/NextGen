@@ -38,7 +38,7 @@
         public static string SegmentLevelFundZero => "A segment level can not be of type \"Fund\" unless fund accounting is enabled.";
 
         public static string FiscalYearNotEditable => "Fiscal year settings cannot be modified once transactions have been posted.";
-        public static string FiscalPeriodClosed => "Fiscal period {0} in year {0} has already been closed.";
+        public static string FiscalPeriodClosed => "Fiscal period {0} in year {0} is closed.";
         public static string FiscalPeriodOpen => "Fiscal period {0} in year {0} is open.";
         public static string FiscalYearClosed => "Fiscal year {0} has been closed.";
         public static string FiscalYearOpen => "Fiscal year {0} is open.";
@@ -58,6 +58,7 @@
         public static string AdjustmentPeriodNotLast => "Adjustment period for fiscal year {0} must be the last period.";
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
+        public static string NoFiscalPeriodForDate => "No fiscal period defined for {0} in fiscal year {1}.";
 
         public static string FundNoFiscalYear => "Fund has no fiscal year.";
         public static string FundNoFundSegment => "No fund segment specified for fund.";
@@ -81,6 +82,15 @@
         public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
 
         public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
-        public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";        
+        public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
+
+        public static string TransactionNoTranDate => "Transaction #{0} has no transaction date.";
+        public static string TransactionCantGetFund => "Cannot determine fund for transaction #{0}.";
+        public static string TransactionImbalance => "Transaction {0} is out of balance by {1:C2}.";
+        public static string TransactionImbalanceForDate => "Transaction {0} is out of balance by {1:C2} on {2:d}.";
+        public static string TransactionImbalanceForBU => "Transaction {0} is out of balance by {1:C2} for {2} on {3:d}.";
+        public static string TransactionImbalanceForFund => "Transaction {0} is out of balance by {1:C2} for fund {2} on {3:d}.";
+
+
     }
 }
