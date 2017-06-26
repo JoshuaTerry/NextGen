@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="tabscontainer" style="display: none">
+    <div class="tabscontainer journaltabs">
 
         <ul>
             <li><a href="JournalDetail.aspx">Journal</a></li>

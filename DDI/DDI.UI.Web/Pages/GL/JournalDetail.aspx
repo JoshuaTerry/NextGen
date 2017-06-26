@@ -14,175 +14,117 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <div class="journalbody maincontainer">
+    <div class="journalbody">
 
         <h1 class="journaltype"></h1>
 
-        <br />
+        <div class="editcontrols">
+            <a href="#" class="editjournal editbutton">Edit</a>
+        </div>
 
         <div class="editcontainer">
-            <div>
-                <span class="fieldblock">
-                    <label>Status: </label>
-                    <label class="StatusDescription"></label>
-                </span>
-                <span class="editjournalbutton hidebuttons floatright">
-                    <a href="#" class="editjournal editbutton">Edit</a>
-                </span>
+            <div class="fieldblock">
+                <label class="inline">Status: </label>
+                <label class="StatusDescription inline"></label>
             </div>
 
-            <br />
+            <div class="threecolumn">
 
-            <div class="inlinecontainer">
-                <span class="journalcolumn">
-                    <span class="fieldblock leftprompt">
-                        <label>Transaction Date:</label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <input type="text" class="editable TransactionDate date datepicker" />
-                    </span>
-                </span>
-                <span class="journalcolumn fieldblock">
-                    <label>Journal Memo:</label>
-                </span>
-                <span class="journalcolumn fieldblock">
-                    <label>Journal Information:</label>
-                </span>
-            </div>
+                <div class="fieldblock">
+                    <h3>Transaction Date:</h3>
+                    <input type="text" class="TransactionDate editable datepicker" />
 
-            <br />
+                    <div>
+                        <input id="ReverseJournal" type="checkbox" class="reversejournal editable" />
+                        <label for="ReverseJournal" class="inline">Reverse this journal at a later date: </label>
+                    </div>
 
-            <div class="inlinecontainer">
-                <span class="journalcolumn">
-                    <span class="fieldblock onetime">
-                        <input type="checkbox" class="reversejournal editable invisible" />
-                        <label>Reverse this journal at a later date: </label>
-                    </span>
-                </span>
-                <span class="journalcolumn fieldblock">
-                    <textarea rows="2" cols="60" maxlength="255" class="Comment editable"></textarea>
-                </span>
-                <span class="journalcolumn fieldblock">
-                    <label>Created by: </label>
-                    <label class="CreatedBy"></label>
-                    <label>on: </label>
-                    <label class="CreatedOn date"></label>
-                </span>
-            </div>
-
-            <br />
-
-            <div class="inlinecontainer">
-                <span class="journalcolumn reverseondategroup invisible">
-                    <span class="leftprompt">
+                    <div>
                         <label>Reverse on:</label>
-                    </span>
-                    <span class="fieldblock leftinput">
                         <input type="text" class="ReverseOnDate editable date datepicker" />
-                    </span>
-                </span>
-                <span class="journalcolumn fieldblock"></span>
-                <span class="journalcolumn fieldblock">
-                    <label>Last changed by: </label>
-                    <label class="LastModifiedBy"></label>
-                    <label>on: </label>
-                    <label class="LastModifiedOn date"></label>
-                </span>
+                    </div>
+                </div>
+
+                <div class="fieldblock">
+                    <h3>Journal Memo:</h3>
+                    <textarea rows="2" cols="60" maxlength="255" class="Comment editable"></textarea>
+                </div>
+
+                <div class="fieldblock">
+                    <h3>Journal Information:</h3>
+                    <div>
+                        <label class="inline bold">Created by: </label>
+                        <label class="CreatedBy inline"></label>
+                        <label class="inline">on: </label>
+                        <label class="CreatedOn date inline"></label>
+                    </div>
+
+                    <div>
+                        <label class="inline bold">Last changed by: </label>
+                        <label class="LastModifiedBy inline"></label>
+                        <label class="inline">on: </label>
+                        <label class="LastModifiedOn date inline"></label>
+                    </div>
+
+                    <div>
+                        <label class="inline bold">Status:</label>
+                        <label class="Status inline"></label>
+                    </div>
+                </div>
+                
             </div>
 
-            <br />
+            <div class="fieldblock">
+                
 
-            <div class="inlinecontainer">
-                <span class="journalcolumn recurringgroup hidden">
-                    <span class="leftprompt">
-                        <label>Occurs: </label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <select class="IsNormallyDebit editable">
-                            <option value="0">Monthly</option>
-                            <option value="1">Daily</option>
-                            <option value="2">Weekly</option>
-                            <option value="3">Yearly</option>
-                        </select>
-                    </span>
-                </span>
+                
             </div>
 
-            <br />
-
-            <div class="inlinecontainer recurringgroup hidden">
-                <span class="journalcolumn">
-                    <span class="leftprompt">
-                        <label>Expires: </label>
-                    </span>
-                </span>
+            <div class="fieldblock">
+                <label>Occurs: </label>
+                <select class="IsNormallyDebit editable">
+                    <option value="0">Monthly</option>
+                    <option value="1">Daily</option>
+                    <option value="2">Weekly</option>
+                    <option value="3">Yearly</option>
+                </select>
             </div>
 
-            <br />
+            <div class="expirationselection">
+                <div class="fieldblock">
+                    <label>Expires: </label>
+                </div>
 
-            <div class="inlinecontainer recurringgroup hidden">
-                <span class="journalcolumn">
-                    <span class="leftprompt">
-                        <input type="radio" name="expires" value="0" />
-                        <label>Never</label>
-                    </span>
-                </span>
+                <div class="fieldblock">
+                    <input id="ExpiresNever" type="radio" name="expires" value="0" />
+                    <label for="ExpiresNever" class="inline">Never</label>
+                </div>
+
+                <div class="fieldblock">
+                    <input id="ExpiresAfterDate" type="radio" name="expires" value="1" />
+                    <label for="ExpiresAfterDate" class="inline">After date</label>
+                    <input type="text" class="ExpireDate editable datepicker inline" />
+                </div>
+
+                <div class="fieldblock">
+                    <input id="ExpiresAfterCount" type="radio" name="expires" value="2" />
+                    <label for="ExpiresAfterCount" class="inline">After count</label>
+                    <input type="text" class="ExpireCount editable number inline" />
+                </div>
+
+                <div class="fieldblock">
+                    <input id="ExpiresAfterAmount" type="radio" name="expires" value="3" />
+                    <label for="ExpiresAfterAmount" class="inline">After amount</label>
+                    <input type="text" class="ExpireAmount editable money inline" />
+                </div>
             </div>
-
-            <br />
-
-            <div class="inlinecontainer recurringgroup hidden">
-                <span class="journalcolumn">
-                    <span class="leftprompt">
-                        <input type="radio" name="expires" value="1" />
-                        <label>After date</label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <input type="text" class="editable ExpireDate date datepicker" />
-                    </span>
-                </span>
-            </div>
-
-            <br />
-
-            <div class="inlinecontainer recurringgroup hidden">
-                <span class="journalcolumn">
-                    <span class="leftprompt">
-                        <input type="radio" name="expires" value="2" />
-                        <label>After count</label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <input type="text" class="editable ExpireCount number" />
-                    </span>
-                </span>
-            </div>
-
-            <br />
-
-            <div class="inlinecontainer recurringgroup hidden">
-                <span class="journalcolumn">
-                    <span class="leftprompt">
-                        <input type="radio" name="expires" value="2" />
-                        <label>After amount</label>
-                    </span>
-                    <span class="fieldblock leftinput">
-                        <input type="text" class="editable ExpireAmount money" />
-                    </span>
-                </span>
-            </div>
-
-            <br />
-            <br />
-
+            
             <div>
                 <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
                 <div class="journallinegridcontainer">
                     <div class="journallinegrid"></div>
                 </div>
             </div>
-
-            <br />
-            <br />
 
             <div class="savejournalbuttons hidebuttons floatright">
                 <input type="button" class="savejournal" value="Save" />
@@ -199,58 +141,50 @@
         <div class="modalcontent">
 
             <div class="journallineaccountgroup">
-                <select class="SourceFundId">
-                </select>
-                <div>
-                    <label class="accountselectorlabel">GL Account: </label>
-                    <div class="journallineledgeraccountid"></div>
-                </div>
+                <select class="SourceFundId"></select>
+                <label class="accountselectorlabel">GL Account: </label>
+                <div class="journallineledgeraccountid"></div>
             </div>
 
             <div class="twocolumn">
-                <span class="fieldblock">
+                <div class="fieldblock">
                     <label>Amount: </label>
                     <input type="text" class="Amount editable money justright" />
-                </span>
+                </div>
 
-                <span class="fieldblock">
-                    <span>
-                        <input type="radio" name="debitcreditradio" value="Debit" />
-                        <label>Debit</label>
-                    </span>
-                    <span>
-                        <input type="radio" name="debitcreditradio" value="Credit" />
-                        <label>Credit</label>
-                        <br />
-                    </span>
-                </span>
+                <div class="fieldblock">
+                    <input type="radio" name="debitcreditradio" value="Debit" />
+                    <label>Debit</label>
+                </div>
+                <div class="fieldblock">
+                    <input type="radio" name="debitcreditradio" value="Credit" />
+                    <label>Credit</label>
+                </div>
 
             </div>
-
-            <br />
 
             <div class="fieldblock">
                 <label>Memo:</label>
                 <textarea rows="2" cols="70" maxlength="255" class="JournalLineComment"></textarea>
             </div>
 
-            <br />
-
             <div class="twocolumn">
-                <span class="fieldblock">
+
+                <div class="fieldblock">
                     <label>Due: </label>
                     <select class="DoToMode editable">
                         <option value="0">None</option>
                         <option value="1">Due From</option>
                         <option value="2">Due To</option>
                     </select>
-                    <label>Fund: </label>
-                    <select class="SourceFundId">
-                    </select>
-                </span>
-            </div>
+                </div>
 
-            <br />
+                <div class="fieldblock">
+                    <label>Fund: </label>
+                    <select class="SourceFundId"></select>
+                </div>
+
+            </div>
 
             <div class="modalbuttons">
                 <input type="button" class="savenewjournalline" value="Save/New" />
@@ -261,4 +195,5 @@
         </div>
 
     </div>
+
 </asp:Content>

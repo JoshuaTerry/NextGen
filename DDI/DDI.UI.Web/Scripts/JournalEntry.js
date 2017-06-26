@@ -1,4 +1,5 @@
-﻿var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
+﻿
+var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
 var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
@@ -358,6 +359,7 @@ function GetDueToMode(dueToMode) {
     }
 }
 
+
 // modal section
 
 function InitNewJournalLineModal() {
@@ -502,6 +504,7 @@ function DeleteJournalLine(id) {
     }, null);
 
 }
+
 function LoadJournalLine(id) {
 
     MakeServiceCall('GET', 'JournalLine/' + id, null, function (data) {
