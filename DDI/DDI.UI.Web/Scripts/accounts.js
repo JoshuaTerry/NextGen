@@ -122,7 +122,7 @@ var group2Id;
 var group3Id;
 var group4Id;
 var category = '0';
-var editMode = '';
+var entryMode = '';
 var activityTotal = 0;
 var summaryContainer = '.accountsummarycontainer';
 
@@ -222,7 +222,7 @@ function LoadSummaryTabContinued() {
 
     $('.editaccount').click(function (e) {
         e.preventDefault();
-        AccountEditMode();
+        AccountentryMode();
     });
 
     $('.saveaccount').unbind('click');
@@ -233,7 +233,7 @@ function LoadSummaryTabContinued() {
 
     $('.cancelsaveaccount').click(function (e) {
         e.preventDefault();
-        if (editMode === 'add') {
+        if (entryMode === 'add') {
             ClearAccountFields();
             AccountAddMode();
         }
@@ -424,7 +424,7 @@ function RetrieveSegmentLevels() {
                 }
                 else {
                     LoadSegmentDropDowns();
-                    if (editMode === "copy") {
+                    if (entryMode === "copy") {
                         AccountCopyMode();
                     }
                     else {
@@ -441,7 +441,7 @@ function RetrieveSegmentLevels() {
 // edit modes
 
 function AccountDisplayMode() {
-    editMode = 'display';
+    entryMode = 'display';
     HideButtons();
     DisableSegments();
     $('.editaccountbutton').show();
@@ -457,7 +457,7 @@ function AccountDisplayMode() {
 }
 
 function AccountAddMode() {
-    editMode = 'add';
+    entryMode = 'add';
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
@@ -465,8 +465,8 @@ function AccountAddMode() {
     EnableSegments();
 }
 
-function AccountEditMode() {
-    editMode = 'edit';
+function AccountentryMode() {
+    entryMode = 'edit';
     if (activityTotal === 0) {
         EnableSegments();
     }
@@ -500,7 +500,7 @@ function AccountEditMode() {
 }
 
 function AccountCopyMode() {
-    editMode = 'add';
+    entryMode = 'add';
 
     accountId = null;
 
@@ -735,7 +735,7 @@ function SaveAccount() {
 
     var fields = GetAccountFields();
 
-    if (editMode === 'add') {
+    if (entryMode === 'add') {
         var action = 'POST';
         var route = 'accounts'
     }
@@ -758,11 +758,11 @@ function SaveAccount() {
 
     },
         function () {
-            if (editMode === 'add') {
+            if (entryMode === 'add') {
                 AccountAddMode();
             }
             else {
-                AccountEditMode();
+                AccountentryMode();
             }
         }
     );
@@ -946,7 +946,7 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
             }
             else {
@@ -1006,7 +1006,7 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
             }
 
@@ -1081,7 +1081,7 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
                 $('.segment' + segmentLevel + 'code').html(data.Data.Code);
                 BuildAccountNumber();
@@ -1134,7 +1134,7 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
                 $('.segment' + segmentLevel + 'code').html(data.Data.Code);
                 BuildAccountNumber();
@@ -1180,18 +1180,6 @@ function GetAccountSegmentItemsToSave(modal, parentId, level) {
 
 // COPY ACCOUNT
 
-function ValidateAccountNumber() {
-
-    var bar = '';
-
-    MakeServiceCall('GET', 'accounts/fiscalyear/' + fiscalYearId + '/accountnumber/' + $(modal).find('.ac-AccountNumber').val(), null, function (data) {
-
-        var foo = data.Data;
-
-    }, null);
-
-}
-
 function CopyAccount() {
 
     if (accountId === null || accountId === '') {
@@ -1199,14 +1187,14 @@ function CopyAccount() {
         return;
     }
 
-    if (editMode === 'edit') {
+    if (entryMode === 'edit') {
         DisplayErrorMessage('Error', 'You cannot copy an account while editing.');
         return;
     }
 
     $('.tabscontainer').tabs("option", "active", 1);
 
-    editMode = 'copy';
+    entryMode = 'copy';
     LoadSummaryTab(accountId);
 
 }
