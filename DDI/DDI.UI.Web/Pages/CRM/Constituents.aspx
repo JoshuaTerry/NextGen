@@ -470,7 +470,7 @@
 
                             <div class="modalcontent">
 
-                                <div class="fieldblock">
+                                <div class="fieldblock required">
                                     <label>Name</label>
                                     <input type="text"  class="ai-Name" maxlength="128" />
                                 </div>

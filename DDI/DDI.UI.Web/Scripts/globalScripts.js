@@ -1719,15 +1719,6 @@ function RemoveValidation(formClassName) {
 // END FORM VALIDATION
 
 // DYNAMIC MARKUP
-//
-//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
-
-//    var fieldblock = $('<div>').addClass('fieldblock');
-//    $('<label>').text(labelText).appendTo(fieldblock);
-//    $(controlType).addClass(controlClass).appendTo(fieldblock);
-//    $(fieldblock).appendTo(appendContainer);
-
-//}
 
 function ValidateFields(containerClass, saveFunction) {
     var validFields = true;
@@ -1736,8 +1727,10 @@ function ValidateFields(containerClass, saveFunction) {
     $(containerClass).find('.required input').each(ValidateField);
     $(containerClass).find('.required select').each(ValidateField);
 
+    validFields = ($(containerClass).find('.validateerror').length == 0);
+
     if (validFields && saveFunction != null) {
-        saveFunction;
+        saveFunction();
     }
 
     return validFields;
@@ -1750,6 +1743,8 @@ function ValidateField(index, el) {
         $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
         validFields = false;
     }
+
+    return validFields;
 }
 
 function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
