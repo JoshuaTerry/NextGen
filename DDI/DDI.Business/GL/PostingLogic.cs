@@ -16,6 +16,9 @@ using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
 {
+    /// <summary>
+    /// Business Logic class for posting G/L transactions (Transaction to PostedTransaction)
+    /// </summary>
     public class PostingLogic : IBusinessLogic
     {
         #region Private Fields
@@ -71,18 +74,18 @@ namespace DDI.Business.GL
                         uow.BeginTransaction();
                         InitializeTransactionBalance(transactionNumber);
 
-                        foreach (var tran in TransactionFilter(uow.Where<Transaction>(p => p.TransactionNumber == transactionNumber).OrderBy(p => p.LineNumber)))
+                        foreach (var tran in GetTransctionsToPost(uow.Where<Transaction>(p => p.TransactionNumber == transactionNumber).OrderBy(p => p.LineNumber)))
                         {
                             PostTransaction(uow, tran, postDt);
                         }
 
                         VerifyTransactionIsBalanced(transactionNumber);
-                        UnitOfWork.CommitTransaction();
+                        uow.CommitTransaction();
                     }
                 }
                 catch
                 {
-                    UnitOfWork.RollbackTransaction();
+                    uow.RollbackTransaction();
                     throw;
                 }
             }
@@ -99,17 +102,17 @@ namespace DDI.Business.GL
                     uow.BeginTransaction();
                     InitializeTransactionBalance(transactionNumber);
 
-                    foreach (var tran in TransactionFilter(uow.Where<Transaction>(p => p.TransactionNumber == transactionNumber).OrderBy(p => p.LineNumber)))
+                    foreach (var tran in GetTransctionsToPost(uow.Where<Transaction>(p => p.TransactionNumber == transactionNumber).OrderBy(p => p.LineNumber)))
                     {
                         PostTransaction(uow, tran, postDt);
                     }
 
                     VerifyTransactionIsBalanced(transactionNumber);
-                    UnitOfWork.CommitTransaction();
+                    uow.CommitTransaction();
                 }
                 catch
                 {
-                    UnitOfWork.RollbackTransaction();
+                    uow.RollbackTransaction();
                     throw;
                 }
             }
@@ -136,7 +139,7 @@ namespace DDI.Business.GL
                     throw new InvalidOperationException(string.Format(UserMessagesGL.NoFiscalPeriodForDate, tran.TransactionDate.ToShortDateString(), year.Name));
                 }
 
-                if (year.Ledger.PriorPeriodPostingMode == PriorPeriodPostingMode.Prohibit)
+                if (false && year.Ledger.PriorPeriodPostingMode == PriorPeriodPostingMode.Prohibit)
                 {
                     if (year.Status == FiscalYearStatus.Closed && tran.IsAdjustment == false)
                     {
@@ -222,11 +225,13 @@ namespace DDI.Business.GL
             }
         }
 
-        private IEnumerable<Transaction> TransactionFilter(IEnumerable<Transaction> transactions)
+        private IEnumerable<Transaction> GetTransctionsToPost(IEnumerable<Transaction> transactions)
         {
+            // Select only transactions with Unposted status
             foreach (Transaction tran in transactions.Where(p => p.Status == TransactionStatus.Unposted))
             {
 
+                // Filtering on Business units to post
                 if (BusinessUnitsToPost != null && BusinessUnitsToPost.Count > 0)
                 {
                     FiscalYear year = GetFiscalYear(tran.FiscalYearId);
@@ -236,6 +241,7 @@ namespace DDI.Business.GL
                     }
                 }
 
+                // Filtering on business units to exclude
                 if (BusinessUnitsToExclude != null && BusinessUnitsToExclude.Count > 0)
                 {
                     FiscalYear year = GetFiscalYear(tran.FiscalYearId);
@@ -245,6 +251,7 @@ namespace DDI.Business.GL
                     }
                 }
 
+                // Filtering on transaction date
                 if (MaxTransactionDate.HasValue)
                 {
                     if (tran.TransactionDate > MaxTransactionDate)
