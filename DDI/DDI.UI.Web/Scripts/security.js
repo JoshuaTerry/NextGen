@@ -2,75 +2,22 @@
 
 $(document).ready(function () {
 
-   // SetupNewUserModal();
-
     LoadGroupsGrid();
     LoadRolesTagBox();
-
-
     NewGroupModal();
-    PopulateDropDown('.ConstituentId', 'constituents', '', '');
+
     LoadUsersGrid();
+    NewUserModal();
+
+    PopulateDropDown('.ConstituentId', 'constituents', '', '');
+    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
+    PopulateDropDown($('.user-GroupId'), 'groups', null);
+    
+
 
 });
 
-function SetupNewUserModal() {
 
-    $('.addnewuser').click(function (e) {
-
-        e.preventDefault();
-
-        $('.newusermodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            height: 225,
-            resizable: false
-        });
-
-        $('.submitnewuser').click(function () {
-
-            var model = {
-                Email: $('.newusername').val(),
-                Password: $('.newpassword').val(),
-                ConfirmPassword: $('.newconfirmpassword').val()
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: WEB_API_ADDRESS + 'users',
-                data: model,
-                contentType: 'application/x-www-form-urlencoded',
-                crossDomain: true,
-                headers: GetApiHeaders(),
-                success: function () {
-
-                    AddUsersToRoles($('.newusername').val(), ['Administrators', 'Users']);
-
-                    location.href = "/Login.aspx";
-
-                },
-                error: function (xhr, status, err) {
-                    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-                }
-            });
-
-        });
-
-    });
-
-}
-
-function LoadSecuritySettingsGrid() {
-
-    var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
-    ];
-
-    LoadGrid('securitysettingsgrid', 'securitysettingsgridcontainer', columns, 'groupsettings');
-
-}
 
 /* GROUPS TAB */
 function LoadGroupsGrid() {
@@ -111,9 +58,13 @@ function NewGroupModal() {
             }
         });
 
+        $('.savegroupbutton').val('Next...');
+
         $('.savegroupbutton').unbind('click');
 
         $('.savegroupbutton').click(function (e) {
+
+            $('.savegroupbutton').val('Save');
 
             var item = {
                 Name: $('.gp-Name').val()
@@ -124,6 +75,8 @@ function NewGroupModal() {
                 id = data.Data.Id;
 
                 LoadGroup(id);
+
+                PopulateDropDown($('.user-GroupId'), 'groups', null);
 
                 $('.hidgroupid').val(id);
 
@@ -138,12 +91,6 @@ function NewGroupModal() {
                     $('.saverolesbutton').click(function (e) {
 
                         AddRolesToGroup(id);
-
-                        $('.rolesmodal').hide();
-
-                        LoadGroup(id);
-
-                        $('.rolestagbox').dxTagBox('instance').reset();
 
 
                     });
@@ -163,6 +110,8 @@ function NewGroupModal() {
                             CloseModal(modal);
 
                             LoadGroupsGrid();
+
+                            PopulateDropDown($('.user-GroupId'), 'groups', null);
 
                             $('.gp-Name').val("");
 
@@ -230,6 +179,8 @@ function EditGroup(id) {
 
     $('.groupmodal').show();
 
+    $('.savegroupbutton').val('Save');
+    
     $('.savegroupbutton').unbind('click');
 
     $('.savegroupbutton').click(function (e) {
@@ -245,6 +196,8 @@ function EditGroup(id) {
             CloseModal(modal);
 
             LoadGroupsGrid();
+
+            PopulateDropDown($('.user-GroupId'), 'groups', null);
 
             $('.rolestagbox').dxTagBox('instance').reset();
 
@@ -264,9 +217,6 @@ function EditGroup(id) {
 
             AddRolesToGroup(id);
 
-            $('.rolesmodal').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
 
         });
 
@@ -299,29 +249,6 @@ function EditGroup(id) {
 
 }
 
-function SaveGroup(id) {
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save group title
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-    MakeServiceCall('PATCH', 'groups/' + id, function () {
-        // save roles to group
-
-    }, function (xhr, status, err) {
-
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
-}
 
 function DeleteGroup(id) {
 
@@ -359,12 +286,12 @@ function LoadGroup(id) {
 function DeleteRole(role) {
 
     var groupid = $('.hidgroupid').val();
-
-    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role', null, function (data) {
+    
+    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role/' + role, null, function (data) {
 
         DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
 
-        LoadGroup(id);
+        LoadGroup(groupid);
 
 
     });
@@ -374,20 +301,24 @@ function DeleteRole(role) {
 function AddRolesToGroup(id) {
 
     var values = $('.rolestagbox').dxTagBox('instance').option('values');
-    var items = "{ item: " + JSON.stringify(values) + " }";
+    if (values != null)
+    {
+        var items = "{ item: " + JSON.stringify(values) + " }";
 
-    MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
+        MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
 
-        DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
+            DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
 
-        $('.rolesmodal').hide();
+            $('.rolesmodal').hide();
 
-        LoadGroup(id)
+            $('.rolestagbox').dxTagBox('instance').reset();
+            EditGroup(id);
 
-    }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+        }, function (xhr, status, err) {
+            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
 
-    });
+        });
+    }
 }
 
 
@@ -398,7 +329,7 @@ function AddRolesToGroup(id) {
 function LoadUsersGrid() {
 
     var columns = [
-        { dataField: 'DisplayName', caption: 'User Name' },
+        { dataField: 'FullName', caption: 'Full Name' },
         { dataField: 'Email', caption: 'Email Address' },
         { caption: 'Active', cellTemplate: function (container, options) {
                 var type = 'Yes';
@@ -411,93 +342,205 @@ function LoadUsersGrid() {
         }
     ];
 
-    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-   // PopulateBusinessUnits();
-    LoadGrid('.usersgridcontainer', 'usergrid', columns, 'users', 'users'
-       , null, 'user-', '.usermodal', '.usermodal', 250, false, true, false, null);
-   
-
+    CustomLoadGrid('usergrid', 'usersgridcontainer', columns, 'users?fields=all', null, EditUser, null);
 }
 
-function LoadBusinessUnits()
-{
-   
-}
+function NewUserModal() {
 
-function CreateBusinessUnitCheckBoxes(data)
-{
+    $('.newusermodal').click(function (e) {
 
+        e.preventDefault();
 
-}
+        $('.user-editonly1').hide();
+        $('.user-editonly2').hide();
 
-function LoadUsersGroupsGrid() {
+        modal = $('.usermodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 400,
+            resizable: false,
+            beforeClose: function (e) {}
+        });
 
-    var columns = [
-        { dataField: 'UserId', caption: 'User ID' },
-        { dataField: 'Name', caption: 'Name' }
-    ];
+        
+        $('.submituser').val('Next...');
 
-    LoadGrid('usersgroupsgrid', 'usergroupsgridcontainer', columns, 'usergroups');
+        $('.submituser').unbind('click');
 
-}
+        $('.submituser').click(function (e) {
 
-function DisplayUserInfo(id) {
-
-    $.ajax({
-        url: WEB_API_ADDRESS + 'users/' + id,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function (data) {
-
-            if (IsSuccessful) {
-
-                $('.userid').val(data.Data.UserId);
-                $('.username').val(data.Data.Name);
-                $('.useremail').val(data.Data.Email);
-
-                if (data.Data.IsActive && data.Data.IsActive == 1) {
-                    $('.userstatus').prop('checked', true);
-                }
-                else {
-                    $('.userstatus').prop('checked', false);
-                }
-                
+            var item = {
+                UserName: $(modal).find('.user-UserName').val(),
+                Email: $(modal).find('.user-Email').val()
             }
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    })
+            
+            MakeServiceCall('POST', 'users', JSON.stringify(item), function (data) {
 
+                CloseModal(modal);
+                EditUser(data.Data.Id);
+
+            }, null);
+
+        });
+
+
+        $('.cancelusermodal').click(function (e) {
+
+            e.preventDefault();
+
+            CloseModal(modal);
+        });
+    });
 }
 
-function AddUsersToRoles(user, roles) {
 
-    var data = {
-        Email: user,
-        Roles: roles
-    }
+// USER SETTINGS 
+function EditUser(id) {
 
-    $.ajax({
-        type: 'POST',
-        url: WEB_API_ADDRESS + 'users/roles/add',
-        data: data,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function () {
 
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+    LoadUser(id);
+
+
+    modal = $('.usermodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+
+    $('.user-editonly1').show();
+    $('.user-editonly2').show();
+
+    $('.cancelusermodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        LoadUsersGrid()
+
+    });
+
+    $('submituser').val('Save');
+
+    $('.submituser').unbind('click');
+
+    $('.submituser').click(function () {
+
+        var buIds = $('.tagBoxBusinessUnits').dxTagBox('instance').option('values');
+
+        var item = {
+            FullName: $(modal).find('.user-FullName').val(),
+            UserName: $(modal).find('.user-UserName').val(),
+            Email: $(modal).find('.user-Email').val(),
+            DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
+            ConstituentId: $(modal).find('.rs-Constituent1Id').val(),
+            GroupId: $(modal).find('.user-GroupId').val(),
+            BusinessUnitIds: buIds,
+            IsActive: true
         }
+
+        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
+
+            if (data.Data) {
+
+                DisplaySuccessMessage('Success', 'User saved successfully.');
+                CloseModal(modal);
+                LoadUsersGrid();
+            }
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred while saving the User.');
+
+        });
+        
     });
 
 }
+
+
+function LoadUser(id) {
+
+    MakeServiceCall('GET', 'users/' + id, null, function (data) {
+
+        if (data.Data) {
+            if (data && data.Data && data.IsSuccessful) {
+
+                $(modal).find('.user-Id').val(data.Data.Id);
+                $(modal).find('.user-FullName').val(data.Data.FullName);
+                $(modal).find('.user-UserName').val(data.Data.UserName);
+                $(modal).find('.user-Email').val(data.Data.Email);
+                $(modal).find('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
+                $(modal).find('.rs-Constituent1Id').val(data.Data.ConstituentId);
+                $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
+
+                if (data.Data.Constituent != null) {
+                    var constituentLabel = data.Data.Constituent.ConstituentNumber + ": " + data.Data.Constituent.Name + ", " + data.Data.Constituent.PrimaryAddress;
+                    $(modal).find('.rs-Constituent1Information').val(constituentLabel);
+                }
+                else {
+                    $(modal).find('.rs-Constituent1Information').empty();
+                }
+
+                LoadBusinessUnits('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + data.Data.UserName + '/businessunit');
+
+                if (data.Data.Groups.length > 0) {
+                    $(data.Data.Groups).each(function (i, group) {
+
+                        $(modal).find('.user-GroupId').val(group.Id);
+                        
+                    });
+                }
+            }
+        }
+
+    }, null);
+
+}
+
+function LoadBusinessUnits(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
+    if ($.type(container) === "string" && container.indexOf('.') != 0)
+        container = '.' + container;
+
+    $(container).html('');
+
+    var selectedItems = [];
+
+    MakeServiceCall('GET', routeForSelectedOptions, null, function (data) {
+        data.Data.forEach(function (item) {
+            selectedItems.push(item.Id);
+        });
+        DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled);
+    }, null);
+
+}
+
+function DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled) {
+
+    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
+
+    MakeServiceCall('GET', routeForAllOptions, null, function (data) {
+        $(tagBoxControl).dxTagBox({
+            items: data.Data,
+            value: selectedItems,
+            displayExpr: 'DisplayName',
+            valueExpr: 'Id',
+            showClearButton: true,
+            disabled: disabled,
+            height: data.length,
+            scrollbar: true
+
+        });
+
+        $(tagBoxControl).appendTo(container);
+    }, null);
+
+}
+
+
 /* END USERS TAB */
 
 

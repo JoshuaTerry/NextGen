@@ -177,6 +177,30 @@ namespace DDI.WebApi.Tests.Controllers
             Assert.AreEqual(2, user.Roles.Count, "User collection is unchanged");
         }
 
+        
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void GroupController_RemoveGroup() 
+        {
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(m => m.GetEntities<Group>(null)).Returns(SetupRepo());
+
+            IGroupService service = new GroupService(uow.Object);
+            var controller = new GroupController(service);
+
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            Group group = service.GetAll().Data[2] as Group;
+            
+            uow.Setup(m => m.GetById<Group>(group.Id, g => g.Roles, g => g.Users)).Returns(group);
+            uow.Setup(m => m.GetById<Group>(group.Id)).Returns(group);
+            uow.Setup(m => m.Delete<Group>(group));
+
+
+            controller.Delete(group.Id);
+            uow.Verify(m => m.Delete<Group>(group));
+        }
+
         private IQueryable<Group> SetupRepo()
         {
 

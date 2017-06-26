@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System;
+using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Models.Client.Security;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.WebApi.Models.BindingModels
 {
     public class RegisterBindingModel
     {
-        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -20,6 +23,8 @@ namespace DDI.WebApi.Models.BindingModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         [Display(Name = "Default Business Unit")]
-        public Guid? DefaultBusinessUnitId { get; set; }
+
+        public string UserName { get; set; }
+        
     }
 }

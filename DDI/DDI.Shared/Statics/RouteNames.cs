@@ -86,5 +86,6 @@
         public const string State = "State";
         public const string Tag = "Tag";
         public const string TagGroup = "TagGroup";
+        public const string User = "User";
     }
 }

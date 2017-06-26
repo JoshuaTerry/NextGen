@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -71,10 +72,13 @@ namespace DDI.WebApi.Controllers.General
             return new Expression<Func<User, object>>[]
             {
                 c => c.DefaultBusinessUnit,
-                c => c.BusinessUnits
+                c => c.BusinessUnits,
+                c => c.Groups, 
+                c => c.Constituent
             };
         }
 
+        [Authorize(Roles = Permissions.Security_Read)]
         [HttpGet]
         [Route("api/v1/users")]
         public IHttpActionResult Get()
@@ -195,122 +199,86 @@ namespace DDI.WebApi.Controllers.General
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/users")]
-        public async Task<IHttpActionResult> Add(RegisterBindingModel model)
+        [Route("api/v1/users", Name = RouteNames.User + RouteVerbs.Post)]
+        public IHttpActionResult Post(JObject newUser)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = new User() { UserName = model.Email, Email = model.Email, DefaultBusinessUnitId = model.DefaultBusinessUnitId};
+            var user = new User() { UserName = newUser["UserName"].ToString(), Email = newUser["Email"].ToString() };
             try
             {
-                var result = UserManager.Create(user, model.Password);
-                if (user.DefaultBusinessUnitId.HasValue)
+                var result = UserManager.Create(user);
+                if (result.Succeeded)
                 {
-                    var buResult = AddBusinessUnitToUser(user.Id, user.DefaultBusinessUnitId.Value);
+                    DataResponse<User> response  = new DataResponse<User> { Data = user, IsSuccessful = true };
+                    return FinalizeResponse(response);
                 }
-            }
-            catch(Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
-
-            try
-            {
-                var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                code = HttpUtility.UrlEncode(code);
-                var callbackUrl = string.Format($"http://{WebConfigurationManager.AppSettings["WEBROOT"]}/registrationConfirmation.aspx?email={new HtmlString(user.Email)}&code={code}");
-
-                var service = new EmailService();
-                var from = new MailAddress(WebConfigurationManager.AppSettings["NoReplyEmail"]);
-                var to = new MailAddress(model.Email);
-                var body = "Please confirm your <a href=\"" + callbackUrl + "\">email</a>.";
-                var message = service.CreateMailMessage(from, to, "Confirm Your Email", body);
-
-                service.SendMailMessage(message);
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }        
-        }
-
-        [HttpPost]
-        [Route("api/v1/users/{id}")]
-        public async Task<IHttpActionResult> Update(Guid id, User user)
-        {             
-            try
-            {               
-                if (user == null)
+                else
                 {
-                    return NotFound();
+                    DataResponse<User> response = new DataResponse<User> { Data = user, IsSuccessful = false };
+                    return FinalizeResponse(response);
                 }
-
-                UserManager.Update(user);
-                var result = await UserManager.FindByIdAsync(user.Id);
-                return Ok(result);
             }
             catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
+
         }
 
+
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/users/{id}/default/businessunit/{defaultbuid}")]
-        public IHttpActionResult AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        [Route("api/v1/users/{id}", Name = RouteNames.User + RouteVerbs.Patch)]
+        public IHttpActionResult Patch(Guid id, JObject userChanges)
         {
-            try
-            {                
-                var result = userService.AddDefaultBusinessUnitToUser(id, defaultbuid);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
+            // add user to the group
+            // we only one group allowed at a time, which is why it is done outside the basic user patch
+            string groupId = userChanges["GroupId"].ToString();
+            if (groupId != null && groupId != "")
             {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
+                Guid gId = new Guid(groupId);
+                IDataResponse response = userService.AddGroupToUser(id, gId);
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(response.ErrorMessages.ToString());
+                }
+            }
+            userChanges["GroupId"].Parent.Remove();
+
+            List<Guid> businessUnits = new List<Guid>();
+            foreach (var child in userChanges["BusinessUnitIds"].Children())
+            {
+                string bu = child.ToString();
+                businessUnits.Add(new Guid(bu));
+            }
+            
+            //make sure default business unit is an allowed business unit for user and add if necessary
+            string defaultBusinessUnitId = userChanges["DefaultBusinessUnitId"].ToString();
+            if (defaultBusinessUnitId != null && defaultBusinessUnitId != "")
+            {
+                Guid dbuId = new Guid(defaultBusinessUnitId);
+                if (!businessUnits.Contains(dbuId))
+                {
+                    businessUnits.Add(dbuId);
+                }
             }
 
+            IDataResponse response2 = userService.SyncBusinessUnitsToUser(id, businessUnits);
+            if (!response2.IsSuccessful)
+            {
+                return BadRequest(response2.ErrorMessages.ToString());
+            }
+            userChanges["BusinessUnitIds"].Parent.Remove();
+
+            return base.Patch(id, userChanges);
         }
 
-        [HttpPatch]
-        [Route("api/v1/users/{id}/businessunit/{buid}")]
-        public IHttpActionResult AddBusinessUnitToUser(Guid id, Guid buid)
-        {
-            try
-            {                
-                var result = userService.AddBusinessUnitToUser(id, buid);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
 
-        }
-
+        [Authorize(Roles = Permissions.Security_ReadWrite)]
         [HttpDelete]
         [Route("api/v1/users/{id}")]
         public new async Task<IHttpActionResult> Delete(Guid id)

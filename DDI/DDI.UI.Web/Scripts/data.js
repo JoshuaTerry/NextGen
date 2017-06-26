@@ -185,46 +185,45 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
     var refreshGrid = function () {
         LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
     }
+    
+    columns.push({
+        width: '100px',
+        alignment: 'center',
+        allowResizing: false,
+        cellTemplate: function (container, options) {
+            if (editModalClass) {
+                // Add button for edit
 
-    if (editModalClass) {
-        // Add column for edit
-        columns.push({
-            width: '100px',
-            alignment: 'center',
-            cellTemplate: function(container, options) {
                 $('<a/>')
-                    .addClass('editLink')
-                    .text('Edit')
-                    .click(function(e) {
+                    .addClass('actionbuttons')
+                    .addClass('editbutton')
+                    .attr('title', 'Edit')
+                    .click(function (e) {
                         e.preventDefault();
-                        
+
                         EditEntity(saveRoute, prefix, options.data.Id, editModalClass, modalWidth, refreshGrid);
                     })
                     .appendTo(container);
             }
-        });
-    }
 
-    if (showDelete) {
-        // add column for delete
-        columns.push({
-            width: '100px',
-            alignment: 'center',
-            cellTemplate: function (container, options) {
+            if (showDelete) {
+                // Add button for delete
+
                 $('<a/>')
-                    .addClass('deleteLink')
-                    .text('Delete')
+                    .addClass('actionbuttons')
+                    .addClass('deletebutton')
+                    .attr('title', 'Delete')
                     .click(function (e) {
                         e.preventDefault();
-                        
+
                         ConfirmModal('Are you sure you want to delete this item?', function () {
                             DeleteEntity(saveRoute, options.data.Id, refreshGrid);
                         }, null);
                     })
                     .appendTo(container);
             }
-        });
-    }
+        }
+    });
 
     LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
 
@@ -272,6 +271,7 @@ function LoadGridData(container, grid, columns, getRoute, selected, newlink, sho
                 visible: showFilter,
                 showOperationChooser: false
             },
+            allowColumnResizing: true,
             selection: {
                 mode: 'single',
                 allowSelectAll: false
@@ -397,10 +397,11 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
         filterRow: {
             visible: true,
             showOperationChooser: false
-            },
-            selection: {
-                mode: 'single',
-                allowSelectAll: false
+        },
+        allowColumnResizing: true,
+        selection: {
+            mode: 'single',
+            allowSelectAll: false
         },
         onRowClick: function (info) {
 
